@@ -454,8 +454,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="89"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:89</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="87"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:87</a></div>
                 </td>
             </tr>
 
@@ -548,8 +548,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="138"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:138</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="136"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:136</a></div>
                 </td>
             </tr>
 
@@ -1009,8 +1009,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="156"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:156</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="154"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:154</a></div>
                 </td>
             </tr>
 
@@ -1123,8 +1123,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="121"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:121</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="119"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:119</a></div>
                 </td>
             </tr>
 
@@ -1328,8 +1328,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="103"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:103</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="101"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:101</a></div>
                 </td>
             </tr>
 
@@ -1886,9 +1886,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * @param etag The etag for the entity.
    * @param options The options for the request.
    */
-  public fetchOne(
-    options?: ODataOptions &amp; { etag?: string }
-  ) {
+  public fetchOne(options?: ODataOptions &amp; { etag?: string }) {
     return this.entities().fetchOne(options);
   }
 
@@ -1969,12 +1967,14 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     attrs: Partial&lt;T&gt;,
     { etag, ...options }: { etag?: string } &amp; ODataOptions &#x3D; {}
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
-    return this.entity(key).fetch({ etag, ...options }).pipe(
-      catchError((error: HttpErrorResponse) &#x3D;&gt; {
-        if (error.status &#x3D;&#x3D;&#x3D; 404) return this.create(attrs, options);
-        else return throwError(() &#x3D;&gt; error);
-      })
-    );
+    return this.entity(key)
+      .fetch({ etag, ...options })
+      .pipe(
+        catchError((error: HttpErrorResponse) &#x3D;&gt; {
+          if (error.status &#x3D;&#x3D;&#x3D; 404) return this.create(attrs, options);
+          else return throwError(() &#x3D;&gt; error);
+        })
+      );
   }
 
   /**

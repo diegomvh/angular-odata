@@ -2367,9 +2367,9 @@ export class ODataModelField&lt;F&gt; {
   annotationsFactory&lt;T, F&gt;(
     base: ODataEntityAnnotations&lt;T&gt;
   ): ODataEntityAnnotations&lt;F&gt; | ODataEntitiesAnnotations&lt;F&gt; {
-    return this.parser.collection ? 
-      base.property(this.parser.name as keyof T, &#x27;collection&#x27;) : 
-      base.property(this.parser.name as keyof T, &#x27;single&#x27;);
+    return this.parser.collection
+      ? base.property(this.parser.name as keyof T, &#x27;collection&#x27;)
+      : base.property(this.parser.name as keyof T, &#x27;single&#x27;);
   }
 
   schemaFactory&lt;T, F&gt;(
@@ -2946,31 +2946,29 @@ export class ODataModelOptions&lt;T&gt; {
     );
   }
 
+  hasKey(self: ODataModel&lt;T&gt;) {
+    return this.resolveKey(self) !&#x3D;&#x3D; undefined;
+  }
   asEntity&lt;R, M extends ODataModel&lt;T&gt;&gt;(self: M, func: (model: M) &#x3D;&gt; R): R {
     // Build new resource
     const query &#x3D; self._resource?.cloneQuery&lt;T&gt;();
     let resource &#x3D; this.modelResourceFactory(query);
     if (resource &#x3D;&#x3D;&#x3D; undefined)
       throw new Error(&#x27;Model does not have associated Entity endpoint&#x27;);
-    // Store parent and resource
-    const store &#x3D; { parent: self._parent, resource: self._resource };
-    // Replace parent and resource
-    self._parent &#x3D; null;
-    self._resource &#x3D; resource;
+    // Push
+    self.pushResource(resource);
     // Execute function
     const result &#x3D; func(self);
     if (result instanceof Observable) {
       return (result as any).pipe(
         finalize(() &#x3D;&gt; {
-          // Restore parent and resource
-          self._parent &#x3D; store.parent;
-          self._resource &#x3D; store.resource;
+          // Pop
+          self.popResource();
         })
       );
     } else {
-      // Restore parent and resource
-      self._parent &#x3D; store.parent;
-      self._resource &#x3D; store.resource;
+      // Pop
+      self.popResource();
       return result;
     }
   }

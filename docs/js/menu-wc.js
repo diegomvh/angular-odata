@@ -106,6 +106,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ConditionalFunctions.html" data-type="entity-link" >ConditionalFunctions</a>
                             </li>
                             <li class="link">
+                                <a href="classes/CountExpression.html" data-type="entity-link" >CountExpression</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/CountField.html" data-type="entity-link" >CountField</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/CsdlAction.html" data-type="entity-link" >CsdlAction</a>
                             </li>
                             <li class="link">

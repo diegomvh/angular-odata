@@ -140,6 +140,9 @@
                                 <a href="#setLocation" >setLocation</a>
                             </li>
                             <li>
+                                <a href="#setPreferenceApplied" >setPreferenceApplied</a>
+                            </li>
+                            <li>
                                 <a href="#setVersion" >setVersion</a>
                             </li>
                         </ul>
@@ -474,8 +477,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="70"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/options.ts:70</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="76"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/options.ts:76</a></div>
                 </td>
             </tr>
 
@@ -635,6 +638,75 @@
                             <tbody>
                                 <tr>
                                     <td>location</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setPreferenceApplied"></a>
+                    <span class="name">
+                        <span ><b>setPreferenceApplied</b></span>
+                        <a href="#setPreferenceApplied"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setPreferenceApplied(preference: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="70"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/options.ts:70</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>preference</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -834,6 +906,12 @@ export class ODataResponseOptions implements ResponseOptions {
   setLocation(location: string) {
     // TODO: resolve location?
     this.location &#x3D; location;
+  }
+
+  setPreferenceApplied(preference: string) {
+    preference.split(&#x27;,&#x27;).forEach((prefer) &#x3D;&gt; {
+      // TODO: resolve preference
+    });
   }
 
   setCache(cacheControl: string) {

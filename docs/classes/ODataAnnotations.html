@@ -360,8 +360,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="33"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:33</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="36"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:36</a></div>
                 </td>
             </tr>
 
@@ -399,8 +399,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:37</a></div>
                 </td>
             </tr>
 
@@ -470,8 +470,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="32"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:32</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="35"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:35</a></div>
                 </td>
             </tr>
 
@@ -539,8 +539,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="16"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:16</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:19</a></div>
                 </td>
             </tr>
 
@@ -614,7 +614,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:23</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:26</a></div>
                                 </td>
                             </tr>
 
@@ -636,7 +636,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:27</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:30</a></div>
                                 </td>
                             </tr>
 
@@ -658,7 +658,10 @@ export abstract class ODataAnnotations&lt;T&gt; {
     protected context?: ODataContext
   ) {}
 
-  attributes(data: { [key: string]: any }, metadata: ODataMetadataType): Partial&lt;T&gt; {
+  attributes(
+    data: { [key: string]: any },
+    metadata: ODataMetadataType
+  ): Partial&lt;T&gt; {
     return this.helper.attributes(data, metadata) as Partial&lt;T&gt;;
   }
 
@@ -843,7 +846,9 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
   }
 
   get skiptoken() {
-    let match &#x3D; (this.nextLink || &#x27;&#x27;).match(/[&amp;?]{1}\$skiptoken&#x3D;([\d\w\s&#x27;]+)/);
+    let match &#x3D; (this.nextLink || &#x27;&#x27;).match(
+      /[&amp;?]{1}\$skiptoken&#x3D;([\d\w\s&#x27;\-]+)/
+    );
     return match !&#x3D;&#x3D; null ? match[1] : undefined;
   }
 

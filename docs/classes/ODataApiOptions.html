@@ -171,7 +171,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">projects/angular-odata/src/lib/options.ts:95</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="99" class="link-to-prism">projects/angular-odata/src/lib/options.ts:99</a></div>
                             </td>
                         </tr>
 
@@ -654,7 +654,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="114" class="link-to-prism">projects/angular-odata/src/lib/options.ts:114</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="118" class="link-to-prism">projects/angular-odata/src/lib/options.ts:118</a></div>
                                 </td>
                             </tr>
 
@@ -676,7 +676,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="125" class="link-to-prism">projects/angular-odata/src/lib/options.ts:125</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="129" class="link-to-prism">projects/angular-odata/src/lib/options.ts:129</a></div>
                                 </td>
                             </tr>
 
@@ -781,6 +781,10 @@ export class ODataApiOptions implements ApiOptions {
      * @link http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398237
      */
     includeAnnotations?: string;
+    /**
+     * @link https://devblogs.microsoft.com/odata/extension-omit-null-value-properties-in-asp-net-core-odata/
+     */
+    omitNullValues?: boolean;
   };
 
   constructor(config: ApiOptions) {
