@@ -190,10 +190,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
 
     this._entries.forEach(({ model }) => {
-      const mr = this._model.meta.modelResourceFactory(
+      const modelResource = this._model.meta.modelResourceFactory(
         resource.cloneQuery<T>()
       ) as ODataEntityResource<T>;
-      model.attach(mr);
+      if (modelResource !== undefined)
+        model.attach(modelResource);
     });
 
     const current = this._resource;
