@@ -218,9 +218,9 @@ export class ODataBatchResource extends ODataResource<any> {
     let changesetBoundary: string | null = null;
     let changesetId = 1;
 
-    for (const batch of requests) {
+    for (const request of requests) {
       // if method is GET and there is a changeset boundary open then close it
-      if (batch.request.method === 'GET' && changesetBoundary !== null) {
+      if (request.request.method === 'GET' && changesetBoundary !== null) {
         res.push(
           `${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`
         );
@@ -233,7 +233,7 @@ export class ODataBatchResource extends ODataResource<any> {
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
-      if (batch.request.method !== 'GET') {
+      if (request.request.method !== 'GET') {
         if (changesetBoundary === null) {
           changesetBoundary = Strings.uniqueId(CHANGESET_PREFIX);
           res.push(
@@ -247,17 +247,17 @@ export class ODataBatchResource extends ODataResource<any> {
       res.push(`${CONTENT_TYPE}: ${APPLICATION_HTTP}`);
       res.push(`${CONTENT_TRANSFER_ENCODING}: ${BINARY}`);
 
-      if (batch.request.method !== 'GET') {
+      if (request.request.method !== 'GET') {
         res.push(`${CONTENT_ID}: ${changesetId++}`);
       }
 
       res.push(NEWLINE);
-      res.push(`${batch}`);
+      res.push(`${request}`);
 
-      if (batch.request.method === 'GET' || batch.request.method === 'DELETE') {
+      if (request.request.method === 'GET' || request.request.method === 'DELETE') {
         res.push(NEWLINE);
       } else {
-        res.push(`${NEWLINE}${JSON.stringify(batch.request.body)}`);
+        res.push(`${NEWLINE}${JSON.stringify(request.request.body)}`);
       }
     }
 
