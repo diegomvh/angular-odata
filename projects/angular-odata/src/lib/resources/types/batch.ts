@@ -292,6 +292,12 @@ export class ODataBatchResource extends ODataResource<any> {
     );
   }
 
+  json() {
+    return ODataBatchResource.buildJsonBody(
+      this._requests
+    );
+  }
+
   static buildLegacyBody(
     batchBoundary: string,
     requests: ODataBatchRequest<any>[]
@@ -492,7 +498,7 @@ export class ODataBatchResource extends ODataResource<any> {
     requests: ODataBatchRequest<any>[],
     response: ODataResponse<any>
   ): HttpResponseBase[] {
-    const responses: Object[] = (response.body ? response.body : {})['responses'];
+    const responses: Object[] = (response.body ? response.body : {})['responses'] ?? [];
 
     return responses.map((response: any, index: number) => {
       let request = requests[index].request;

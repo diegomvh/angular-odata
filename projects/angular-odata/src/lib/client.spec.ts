@@ -628,7 +628,9 @@ describe('ODataClient', () => {
     req.flush('');
   });
 
-  it('should execute one batch', () => {
+  it('should execute one legacy batch', () => {
+    const api = client.apiFor(CONFIG_NAME);
+    api.options.jsonBatchFormat = false; 
     const payload = {
       '@odata.context':
         'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
@@ -674,7 +676,9 @@ ${JSON.stringify(payload)}
     req.flush(data, { headers });
   });
 
-  it('should execute two batch', () => {
+  it('should execute two legacy batch', () => {
+    const api = client.apiFor(CONFIG_NAME);
+    api.options.jsonBatchFormat = false; 
     const payload = {
       '@odata.context':
         'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
@@ -727,5 +731,104 @@ ${JSON.stringify(payload)}
     const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe('POST');
     req.flush(data, { headers });
+  });
+
+  it('should execute one batch', () => {
+    const payload = {
+      'responses': [{
+        'id': '',
+        'status': 200,
+        'body': {
+          '@odata.context':
+            'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
+          '@odata.id':
+            "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+          '@odata.etag': 'W/"08D814450D6BDB6F"',
+          UserName: 'russellwhyte',
+          FirstName: 'Russell',
+          LastName: 'Whyte',
+          Emails: ['Russell@example.com', 'Russell@contoso.com'],
+        }
+      }]
+    };
+    const data = `${JSON.stringify(payload)}`;
+    const entity: ODataEntityResource<Person> = client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte');
+    client
+      .batch()
+      .exec((batch) => {
+        expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
+        return entity.fetch();
+      })
+      .subscribe(({ annots }) => {
+        expect(annots.entitySet).toEqual('People');
+        expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
+      });
+
+    const headers = new HttpHeaders({
+      'Content-Length': data.length.toString(),
+      'OData-Version': '4.01',
+      'Content-Type': 'application/json'
+    });
+    const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
+    expect(req.request.method).toBe('POST');
+    req.flush(payload, { headers });
+  });
+
+  it('should execute two batch', () => {
+    const payload = {
+      'responses': [{
+        'id': '',
+        'status': 200,
+        'body': {
+          '@odata.context':
+            'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
+          '@odata.id':
+            "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+          '@odata.etag': 'W/"08D814450D6BDB6F"',
+          UserName: 'russellwhyte',
+          FirstName: 'Russell',
+          LastName: 'Whyte',
+          Emails: ['Russell@example.com', 'Russell@contoso.com'],
+        }
+      }, {
+        'id': '',
+        'status': 200,
+        'body': {
+          '@odata.context':
+            'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
+          '@odata.id':
+            "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+          '@odata.etag': 'W/"08D814450D6BDB6F"',
+          UserName: 'russellwhyte',
+          FirstName: 'Russell',
+          LastName: 'Whyte',
+          Emails: ['Russell@example.com', 'Russell@contoso.com'],
+        }
+      }]
+    };
+    const data = `${JSON.stringify(payload)}`;
+    const entity: ODataEntityResource<Person> = client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte');
+    client
+      .batch()
+      .exec(() =>
+        combineLatest({
+          one: entity.fetch(),
+          two: entity.fetch(),
+        })
+      )
+      .subscribe((resp) => {});
+
+    const headers = new HttpHeaders({
+      'Content-Length': data.length.toString(),
+      'OData-Version': '4.01',
+      'Content-Type': 'application/json'
+    });
+    const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
+    expect(req.request.method).toBe('POST');
+    req.flush(payload, { headers });
   });
 });
