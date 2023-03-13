@@ -6,7 +6,7 @@ function now() {
   return (glast = time > last ? time : last + 1);
 }
 export const Strings = {
-  uniqueId(prefix?: string, suffix?: string): string {
+  uniqueId({ prefix, suffix }: { prefix?: string, suffix?: string } = {}): string {
     return (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : '');
   },
 
