@@ -72,6 +72,7 @@ export interface ApiOptions {
   deleteRefBy?: 'path' | 'id';
   //https://github.com/OData/AspNetCoreOData/issues/171
   nonParenthesisForEmptyParameterFunction?: boolean;
+  jsonBatchFormat?: boolean;
 }
 
 export interface ParserOptions {

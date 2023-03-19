@@ -36,6 +36,10 @@ export class ODataApiOptions implements ApiOptions {
    */
   stripMetadata: ODataMetadataType;
   /**
+   * Use JSON Batch Format 
+   */
+  jsonBatchFormat: boolean;
+  /**
    * Cache fetch policy
    */
   fetchPolicy: FetchPolicy;
@@ -110,9 +114,10 @@ export class ODataApiOptions implements ApiOptions {
     this.accept = config.accept;
     Object.assign(this.etag, config.etag || {});
     this.prefer = config.prefer;
-    this.deleteRefBy = config.deleteRefBy || 'path';
+    this.deleteRefBy = config.deleteRefBy ?? 'path';
     this.nonParenthesisForEmptyParameterFunction =
-      config.nonParenthesisForEmptyParameterFunction || false;
+      config.nonParenthesisForEmptyParameterFunction ?? false;
+    this.jsonBatchFormat = config.jsonBatchFormat ?? true;
   }
 
   get parserOptions(): ParserOptions {

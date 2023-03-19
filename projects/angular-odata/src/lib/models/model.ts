@@ -121,7 +121,7 @@ export class ODataModel<T> {
     // Client Id
     (<any>this)[this._meta.cid] =
       (<any>data)[this._meta.cid] ||
-      Strings.uniqueId(`${Klass.meta.schema.name.toLowerCase()}-`);
+      Strings.uniqueId({ prefix: `${Klass.meta.schema.name.toLowerCase()}-` });
 
     let attrs = this.annots().attributes(data, 'full');
     let defaults = this.defaults();
