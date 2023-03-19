@@ -4,7 +4,15 @@ import {
   HttpResponse,
   HttpResponseBase,
 } from '@angular/common/http';
-import { firstValueFrom, map, Observable, of, Subject } from 'rxjs';
+import {
+  concatMap,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { ODataApi } from '../../api';
 import {
   $BATCH,
@@ -138,22 +146,18 @@ export class ODataBatchResource extends ODataResource<any> {
    * @param ctx The context for the request
    * @returns The result of execute the context
    */
-  add<R>(ctx: (batch: this) => Observable<R>): Observable<R> {
+  add<R>(ctx: (batch: this) => R): R {
     // Store original requester
     var handler = this.storeRequester();
     // Execute the context
-    const obs$ = ctx(this);
+    const result = ctx(this);
     // Restore original requester
     this.restoreRequester(handler);
 
-    return obs$;
+    return result;
   }
 
-  send(options?: ODataOptions): Observable<null | ODataResponse<string>> {
-    if (this._requests.length == 0) {
-      return of(null);
-    }
-
+  send(options?: ODataOptions): Observable<ODataResponse<string>> {
     const bound = Strings.uniqueId(BATCH_PREFIX);
     const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
@@ -161,7 +165,7 @@ export class ODataBatchResource extends ODataResource<any> {
       [ACCEPT]: MULTIPART_MIXED,
     });
     return this.api
-      .request('POST', this, {
+      .request<ODataResponse<string>>('POST', this, {
         body: ODataBatchResource.buildBody(bound, this._requests),
         responseType: 'text',
         observe: 'response',
@@ -193,14 +197,11 @@ export class ODataBatchResource extends ODataResource<any> {
    * @returns The result of execute the context
    */
   exec<R>(
-    ctx: (batch: this) => Observable<R>,
+    ctx: (batch: this) => R,
     options?: ODataOptions
-  ): Observable<R> {
-    let ctx$ = this.add(ctx);
-    let send$ = this.send(options);
-    firstValueFrom(send$);
-    return ctx$;
-    //return this.send(options).pipe(switchMap(() => ctx$));
+  ): Observable<[R, ODataResponse<string>]> {
+    let result = this.add(ctx);
+    return this.send(options).pipe(map((response) => [result, response]));
   }
 
   body() {
