@@ -210,6 +210,7 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
     }
     return this._functions;
   }
+
   function(name: string) {
     return this.functions[name];
   }
