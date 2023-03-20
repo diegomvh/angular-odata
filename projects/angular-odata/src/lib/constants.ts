@@ -60,7 +60,6 @@ export const CONTENT_ID = 'Content-ID';
 export const MAX_AGE = 'max-age';
 
 // VERSIONS
-export const VERSION_4_01 = '4.01';
 export const VERSION_4_0 = '4.0';
 export const VERSION_3_0 = '3.0';
 export const VERSION_2_0 = '2.0';

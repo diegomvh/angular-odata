@@ -33,7 +33,6 @@ import {
   NEWLINE_REGEXP,
   ODATA_VERSION,
   VERSION_4_0,
-  VERSION_4_01,
   XSSI_PREFIX,
 } from '../../constants';
 import { PathSegmentNames } from '../../types';
@@ -51,8 +50,8 @@ export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
   group: string;
   constructor(public request: ODataRequest<any>) {
     super();
-    this.id = Strings.uniqueId({prefix: 'r'});
-    this.group = Strings.uniqueId({prefix: 'g'});
+    this.id = Strings.uniqueId({ prefix: 'r' });
+    this.group = Strings.uniqueId({ prefix: 'g' });
   }
 
   override toString() {
@@ -82,25 +81,21 @@ export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
       ];
     }
 
-    if (
-      this.request.method === 'GET' ||
-      this.request.method === 'DELETE'
-    ) {
+    if (this.request.method === 'GET' || this.request.method === 'DELETE') {
       res.push(NEWLINE);
     } else {
       res.push(`${NEWLINE}${JSON.stringify(this.request.body)}`);
     }
-
 
     return res.join(NEWLINE);
   }
 
   toJson() {
     //TODO: Relative or Absolute url ?
-    let res: {[name: string]: any} = {
-      'id': this.id,
-      'method': this.request.method,
-      'url': this.request.pathWithParams,
+    let res: { [name: string]: any } = {
+      id: this.id,
+      method: this.request.method,
+      url: this.request.pathWithParams,
       //'atomicityGroup': this.group
       //"dependsOn": ["g1", "g2", "r2"]
     };
@@ -110,10 +105,7 @@ export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
         .keys()
         .map((key) => `${key}: ${(headers.getAll(key) || []).join(',')}`);
     }
-    if (
-      !(this.request.method === 'GET' ||
-      this.request.method === 'DELETE')
-    ) {
+    if (!(this.request.method === 'GET' || this.request.method === 'DELETE')) {
       res['body'] = this.request.body;
     }
 
@@ -201,8 +193,48 @@ export class ODataBatchResource extends ODataResource<any> {
     return result;
   }
 
-  sendLegacy(options?: ODataOptions): Observable<ODataResponse<string>> {
-    const bound = Strings.uniqueId(BATCH_PREFIX);
+  send(options?: ODataOptions): Observable<ODataResponse<any>> {
+    if (this.api.options.jsonBatchFormat) {
+      return this.sendJson(options);
+    } else {
+      return this.sendLegacy(options);
+    }
+  }
+
+  private sendJson(options?: ODataOptions): Observable<ODataResponse<Object>> {
+    const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
+      [ODATA_VERSION]: VERSION_4_0,
+    });
+    return this.api
+      .request<object>('POST', this, {
+        body: ODataBatchResource.buildJsonBody(this._requests),
+        responseType: 'json',
+        observe: 'response',
+        headers: headers,
+        params: options ? options.params : undefined,
+        withCredentials: options ? options.withCredentials : undefined,
+      })
+      .pipe(
+        map((response: ODataResponse<Object>) => {
+          if (this._responses == null) {
+            this._responses = [];
+          }
+          this._responses = [
+            ...this._responses,
+            ...ODataBatchResource.parseJsonResponse(this._requests, response),
+          ];
+          Arrays.zip(this._requests, this._responses).forEach((tuple) => {
+            if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
+          });
+          return response;
+        })
+      );
+  }
+
+  private sendLegacy(
+    options?: ODataOptions
+  ): Observable<ODataResponse<string>> {
+    const bound = Strings.uniqueId({ prefix: BATCH_PREFIX });
     const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
@@ -254,11 +286,9 @@ export class ODataBatchResource extends ODataResource<any> {
       this._requests
     );
   }
-  
+
   json() {
-    return ODataBatchResource.buildJsonBody(
-      this._requests
-    );
+    return ODataBatchResource.buildJsonBody(this._requests);
   }
 
   static buildLegacyBody(
@@ -322,7 +352,7 @@ export class ODataBatchResource extends ODataResource<any> {
 
   static buildJsonBody(requests: ODataBatchRequest<any>[]): Object {
     return {
-      "requests": requests.map(request => request.toJson()),
+      requests: requests.map((request) => request.toJson()),
     };
   }
 
@@ -461,7 +491,8 @@ export class ODataBatchResource extends ODataResource<any> {
     requests: ODataBatchRequest<any>[],
     response: ODataResponse<any>
   ): HttpResponseBase[] {
-    const responses: Object[] = (response.body ? response.body : {})['responses'] ?? [];
+    const responses: Object[] =
+      (response.body ? response.body : {})['responses'] ?? [];
 
     return responses.map((response: any, index: number) => {
       let request = requests[index].request;
