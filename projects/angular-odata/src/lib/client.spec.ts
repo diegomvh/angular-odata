@@ -4,7 +4,7 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { combineLatest, forkJoin } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { ODataClient } from './client';
 import { ODataModule } from './module';
 import {
@@ -628,9 +628,7 @@ describe('ODataClient', () => {
     req.flush('');
   });
 
-  it('should execute one legacy batch', () => {
-    const api = client.apiFor(CONFIG_NAME);
-    api.options.jsonBatchFormat = false; 
+  it('should execute one batch', () => {
     const payload = {
       '@odata.context':
         'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
@@ -659,12 +657,13 @@ ${JSON.stringify(payload)}
       .batch()
       .exec((batch) => {
         expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
-        return entity.fetch();
+        entity.fetch()
+          .subscribe(({ annots }) => {
+            expect(annots.entitySet).toEqual('People');
+            expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
+          });
       })
-      .subscribe(({ annots }) => {
-        expect(annots.entitySet).toEqual('People');
-        expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
-      });
+      .subscribe();
 
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),
@@ -676,9 +675,7 @@ ${JSON.stringify(payload)}
     req.flush(data, { headers });
   });
 
-  it('should execute two legacy batch', () => {
-    const api = client.apiFor(CONFIG_NAME);
-    api.options.jsonBatchFormat = false; 
+  it('should execute two batch', () => {
     const payload = {
       '@odata.context':
         'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
@@ -733,7 +730,9 @@ ${JSON.stringify(payload)}
     req.flush(data, { headers });
   });
 
-  it('should execute one batch', () => {
+  it('should execute one json batch', () => {
+    const api = client.apiFor(CONFIG_NAME);
+    api.options.jsonBatchFormat = true;
     const payload = {
       'responses': [{
         'id': '',
@@ -759,12 +758,13 @@ ${JSON.stringify(payload)}
       .batch()
       .exec((batch) => {
         expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
-        return entity.fetch();
+        entity.fetch()
+          .subscribe(({ annots }) => {
+            expect(annots.entitySet).toEqual('People');
+            expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
+          });
       })
-      .subscribe(({ annots }) => {
-        expect(annots.entitySet).toEqual('People');
-        expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
-      });
+      .subscribe(); 
 
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),
@@ -777,6 +777,8 @@ ${JSON.stringify(payload)}
   });
 
   it('should execute two batch', () => {
+    const api = client.apiFor(CONFIG_NAME);
+    api.options.jsonBatchFormat = true;
     const payload = {
       'responses': [{
         'id': '',
