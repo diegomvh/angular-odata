@@ -260,14 +260,12 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
     res.query((q) => q.top(1));
-    return res
-      .fetch({ responseType: 'entities', ...options })
-      .pipe(
-        map(({ entities, annots }) => ({
-          entity: entities !== null ? entities[0] || null : null,
-          annots,
-        }))
-      );
+    return res.fetch({ responseType: 'entities', ...options }).pipe(
+      map(({ entities, annots }) => ({
+        entity: entities !== null ? entities[0] || null : null,
+        annots,
+      }))
+    );
   }
 
   fetchMany(

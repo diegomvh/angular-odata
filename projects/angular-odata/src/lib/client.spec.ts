@@ -657,11 +657,10 @@ ${JSON.stringify(payload)}
       .batch()
       .exec((batch) => {
         expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
-        entity.fetch()
-          .subscribe(({ annots }) => {
-            expect(annots.entitySet).toEqual('People');
-            expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
-          });
+        entity.fetch().subscribe(({ annots }) => {
+          expect(annots.entitySet).toEqual('People');
+          expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
+        });
       })
       .subscribe();
 
@@ -734,21 +733,23 @@ ${JSON.stringify(payload)}
     const api = client.apiFor(CONFIG_NAME);
     api.options.jsonBatchFormat = true;
     const payload = {
-      'responses': [{
-        'id': '',
-        'status': 200,
-        'body': {
-          '@odata.context':
-            'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
-          '@odata.id':
-            "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
-          '@odata.etag': 'W/"08D814450D6BDB6F"',
-          UserName: 'russellwhyte',
-          FirstName: 'Russell',
-          LastName: 'Whyte',
-          Emails: ['Russell@example.com', 'Russell@contoso.com'],
-        }
-      }]
+      responses: [
+        {
+          id: '',
+          status: 200,
+          body: {
+            '@odata.context':
+              'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
+            '@odata.id':
+              "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+            '@odata.etag': 'W/"08D814450D6BDB6F"',
+            UserName: 'russellwhyte',
+            FirstName: 'Russell',
+            LastName: 'Whyte',
+            Emails: ['Russell@example.com', 'Russell@contoso.com'],
+          },
+        },
+      ],
     };
     const data = `${JSON.stringify(payload)}`;
     const entity: ODataEntityResource<Person> = client
@@ -758,18 +759,17 @@ ${JSON.stringify(payload)}
       .batch()
       .exec((batch) => {
         expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
-        entity.fetch()
-          .subscribe(({ annots }) => {
-            expect(annots.entitySet).toEqual('People');
-            expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
-          });
+        entity.fetch().subscribe(({ annots }) => {
+          expect(annots.entitySet).toEqual('People');
+          expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
+        });
       })
-      .subscribe(); 
+      .subscribe();
 
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),
       'OData-Version': '4.01',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
     const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe('POST');
@@ -780,35 +780,38 @@ ${JSON.stringify(payload)}
     const api = client.apiFor(CONFIG_NAME);
     api.options.jsonBatchFormat = true;
     const payload = {
-      'responses': [{
-        'id': '',
-        'status': 200,
-        'body': {
-          '@odata.context':
-            'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
-          '@odata.id':
-            "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
-          '@odata.etag': 'W/"08D814450D6BDB6F"',
-          UserName: 'russellwhyte',
-          FirstName: 'Russell',
-          LastName: 'Whyte',
-          Emails: ['Russell@example.com', 'Russell@contoso.com'],
-        }
-      }, {
-        'id': '',
-        'status': 200,
-        'body': {
-          '@odata.context':
-            'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
-          '@odata.id':
-            "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
-          '@odata.etag': 'W/"08D814450D6BDB6F"',
-          UserName: 'russellwhyte',
-          FirstName: 'Russell',
-          LastName: 'Whyte',
-          Emails: ['Russell@example.com', 'Russell@contoso.com'],
-        }
-      }]
+      responses: [
+        {
+          id: '',
+          status: 200,
+          body: {
+            '@odata.context':
+              'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
+            '@odata.id':
+              "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+            '@odata.etag': 'W/"08D814450D6BDB6F"',
+            UserName: 'russellwhyte',
+            FirstName: 'Russell',
+            LastName: 'Whyte',
+            Emails: ['Russell@example.com', 'Russell@contoso.com'],
+          },
+        },
+        {
+          id: '',
+          status: 200,
+          body: {
+            '@odata.context':
+              'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
+            '@odata.id':
+              "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+            '@odata.etag': 'W/"08D814450D6BDB6F"',
+            UserName: 'russellwhyte',
+            FirstName: 'Russell',
+            LastName: 'Whyte',
+            Emails: ['Russell@example.com', 'Russell@contoso.com'],
+          },
+        },
+      ],
     };
     const data = `${JSON.stringify(payload)}`;
     const entity: ODataEntityResource<Person> = client
@@ -827,7 +830,7 @@ ${JSON.stringify(payload)}
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),
       'OData-Version': '4.01',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
     const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe('POST');

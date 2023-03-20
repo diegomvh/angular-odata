@@ -193,8 +193,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       const modelResource = this._model.meta.modelResourceFactory(
         resource.cloneQuery<T>()
       ) as ODataEntityResource<T>;
-      if (modelResource !== undefined)
-        model.attach(modelResource);
+      if (modelResource !== undefined) model.attach(modelResource);
     });
 
     const current = this._resource;
