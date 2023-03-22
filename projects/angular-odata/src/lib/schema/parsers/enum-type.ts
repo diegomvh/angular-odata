@@ -97,12 +97,12 @@ export class ODataEnumTypeParser<E>
     // string -> number
     const parserOptions = { ...this.parserOptions, ...options };
     if (this.flags) {
-      return Enums.toValues<E>(this.members as any, value).reduce(
+      return Enums.toValues<any>(this.members, value).reduce(
         (acc, v) => acc | v,
         0
       ) as any;
     } else {
-      return Enums.toValue<E>(this.members as any, value) as any;
+      return Enums.toValue<any>(this.members, value) as any;
     }
   }
 

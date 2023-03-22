@@ -444,7 +444,7 @@ export class ODataStructuredTypeParser<T>
   }
 
   // Serialize
-  serialize(value: T, options?: ParserOptions): any {
+  serialize(value: Partial<T>, options?: ParserOptions): any {
     const parserOptions = { ...this.parserOptions, ...options };
     const fields = this.fields({
       include_navigation: true,
