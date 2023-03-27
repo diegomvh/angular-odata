@@ -32,7 +32,7 @@ describe('ODataClient', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule, ODataModule.forRoot(TripPinConfig)],
+      imports: [HttpClientModule, ODataModule.forRoot({ config: TripPinConfig })],
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);

@@ -88,6 +88,10 @@ export class ODataClient {
     return api || this.settings!.defaultApi();
   }
 
+  defaultApi() {
+    return this.settings!.defaultApi();
+  }
+
   /**
    * Resolve the parser for the given string type.
    * @param type The string type of the parser.
