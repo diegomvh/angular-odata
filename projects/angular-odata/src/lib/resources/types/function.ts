@@ -12,7 +12,6 @@ import { ODataEntities, ODataEntity, ODataProperty } from '../responses';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
-  ODataNoneOptions,
   ODataOptions,
   ODataPropertyOptions,
 } from './options';
@@ -136,17 +135,27 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   ): Observable<ODataProperty<R>>;
   call(
     params: P | null,
-    options?: { alias?: boolean } & ODataNoneOptions
+    options?: { alias?: boolean; responseType?: 'blob' } & ODataOptions
+  ): Observable<Blob>;
+  call(
+    params: P | null,
+    options?: { alias?: boolean; responseType?: 'arraybuffer' } & ODataOptions
+  ): Observable<ArrayBuffer>;
+  call(
+    params: P | null,
+    options?: { alias?: boolean; responseType?: 'none' } & ODataOptions
   ): Observable<null>;
   call(
     params: P | null,
     {
       alias,
       ...options
-    }: { alias?: boolean } & ODataEntityOptions &
+    }: {
+      alias?: boolean;
+      responseType?: 'blob' | 'arraybuffer';
+    } & ODataEntityOptions &
       ODataEntitiesOptions &
-      ODataPropertyOptions &
-      ODataNoneOptions = {}
+      ODataPropertyOptions = {}
   ): Observable<any> {
     return this.parameters(params, { alias }).get(options);
   }
@@ -251,4 +260,22 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     );
   }
   //#endregion
+
+  callArraybuffer(
+    params: P | null,
+    { alias, ...options }: { alias?: boolean } & ODataOptions = {}
+  ): Observable<ArrayBuffer> {
+    return this.call(params, {
+      responseType: 'arraybuffer',
+      alias,
+      ...options,
+    });
+  }
+
+  callBlob(
+    params: P | null,
+    { alias, ...options }: { alias?: boolean } & ODataOptions = {}
+  ): Observable<Blob> {
+    return this.call(params, { responseType: 'blob', alias, ...options });
+  }
 }

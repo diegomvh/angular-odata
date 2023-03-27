@@ -643,9 +643,22 @@ export class ODataModel<T> {
   callFunction<P, R>(
     name: string,
     params: P | null,
-    responseType: 'property' | 'model' | 'collection' | 'none',
+    responseType:
+      | 'property'
+      | 'model'
+      | 'collection'
+      | 'none'
+      | 'blob'
+      | 'arraybuffer',
     { ...options }: {} & ODataFunctionOptions<R> = {}
-  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+  ): Observable<
+    | R
+    | ODataModel<R>
+    | ODataCollection<R, ODataModel<R>>
+    | null
+    | Blob
+    | ArrayBuffer
+  > {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
       return throwError(
@@ -663,6 +676,10 @@ export class ODataModel<T> {
         return func.callModel(params, options);
       case 'collection':
         return func.callCollection(params, options);
+      case 'blob':
+        return func.callBlob(params, options);
+      case 'arraybuffer':
+        return func.callArraybuffer(params, options);
       default:
         return func.call(params, { responseType, ...options });
     }
@@ -671,9 +688,22 @@ export class ODataModel<T> {
   callAction<P, R>(
     name: string,
     params: P | null,
-    responseType: 'property' | 'model' | 'collection' | 'none',
+    responseType?:
+      | 'property'
+      | 'model'
+      | 'collection'
+      | 'none'
+      | 'blob'
+      | 'arraybuffer',
     { ...options }: {} & ODataActionOptions<R> = {}
-  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+  ): Observable<
+    | R
+    | ODataModel<R>
+    | ODataCollection<R, ODataModel<R>>
+    | null
+    | Blob
+    | ArrayBuffer
+  > {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
       return throwError(
@@ -691,6 +721,10 @@ export class ODataModel<T> {
         return action.callModel(params, options);
       case 'collection':
         return action.callCollection(params, options);
+      case 'blob':
+        return action.callBlob(params, options);
+      case 'arraybuffer':
+        return action.callArraybuffer(params, options);
       default:
         return action.call(params, { responseType, ...options });
     }

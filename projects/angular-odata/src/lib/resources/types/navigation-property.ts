@@ -1,5 +1,5 @@
 import { EMPTY, Observable, throwError } from 'rxjs';
-import { concatMap, expand, map, reduce, toArray } from 'rxjs/operators';
+import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema';

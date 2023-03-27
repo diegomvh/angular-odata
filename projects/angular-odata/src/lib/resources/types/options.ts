@@ -26,8 +26,6 @@ export type ODataEntitiesOptions = ODataOptions & {
   withCount?: boolean;
 };
 export type ODataPropertyOptions = ODataOptions & { responseType?: 'property' };
-export type ODataNoneOptions = ODataOptions & { responseType?: 'none' };
-
 export type ODataQueryArgumentsOptions<T> = ODataOptions &
   ODataQueryArguments<T>;
 export type ODataActionOptions<T> = ODataQueryArgumentsOptions<T>;
