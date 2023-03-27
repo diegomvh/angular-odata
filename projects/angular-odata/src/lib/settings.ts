@@ -13,7 +13,7 @@ import { ApiConfig, Parser } from './types';
 
 export class ODataSettings {
   apis: ODataApi[];
-  constructor(...configs: ApiConfig[]) {
+  constructor(configs: ApiConfig[]) {
     this.apis = configs.map((config) => new ODataApi(config));
     if (this.apis.length > 1) {
       if (this.apis.some((c) => c.name === undefined))

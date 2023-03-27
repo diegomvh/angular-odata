@@ -1,32 +1,39 @@
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { InjectionToken, ModuleWithProviders, NgModule, Provider } from '@angular/core';
 import { ODataClient } from './client';
+import { ODataConfigLoader, ODataConfigStaticLoader } from './loaders';
 import { ODataServiceFactory } from './services/index';
-import { ODataSettings } from './settings';
-import { ODATA_CONFIGURATIONS } from './tokens';
 import { ApiConfig } from './types';
 
-export function createSettings(configs: ApiConfig[]) {
-  return new ODataSettings(...configs);
+export interface PassedInitialConfig {
+  config?: ApiConfig | ApiConfig[];
+  loader?: Provider;
+}
+
+export const ODATA_CONFIG = new InjectionToken<ApiConfig>(
+  'odata.config'
+);
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function createStaticLoader(passedConfig: PassedInitialConfig) {
+  return new ODataConfigStaticLoader(passedConfig.config!);
 }
 
 @NgModule({
-  imports: [HttpClientModule],
+  imports: [CommonModule, HttpClientModule],
   providers: [ODataClient, ODataServiceFactory],
 })
 export class ODataModule {
-  public static forRoot(
-    ...configs: ApiConfig[]
-  ): ModuleWithProviders<ODataModule> {
+  static forRoot(passedConfig: PassedInitialConfig): ModuleWithProviders<ODataModule> {
     return {
       ngModule: ODataModule,
       providers: [
-        { provide: ODATA_CONFIGURATIONS, useValue: configs },
-        {
-          provide: ODataSettings,
-          useFactory: createSettings,
-          deps: [ODATA_CONFIGURATIONS],
-        },
+        // Make the ODATA_CONFIG available through injection
+        { provide: ODATA_CONFIG, useValue: passedConfig },
+
+        // Create the loader: Either the one getting passed or a static one
+        passedConfig?.loader || { provide: ODataConfigLoader, useFactory: createStaticLoader, deps: [ODATA_CONFIG] },
         ODataClient,
         ODataServiceFactory,
       ],

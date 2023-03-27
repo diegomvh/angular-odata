@@ -2,6 +2,7 @@ import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ODataApi } from './api';
+import { ODataConfigLoader } from './loaders';
 import { ODataCollection, ODataModel } from './models/index';
 import {
   ODataActionResource,
@@ -45,23 +46,27 @@ function addBody<T>(
   providedIn: 'root',
 })
 export class ODataClient {
+  settings?: ODataSettings;
   constructor(
     private http: HttpClient,
-    private settings: ODataSettings,
+    private loader: ODataConfigLoader,
     private injector: Injector
   ) {
-    this.settings.configure({
-      requester: (req: ODataRequest<any>): Observable<any> =>
-        this.http.request(req.method, `${req.url}`, {
-          body: req.body,
-          context: req.context,
-          headers: req.headers,
-          observe: req.observe,
-          params: req.params,
-          reportProgress: req.reportProgress,
-          responseType: req.responseType,
-          withCredentials: req.withCredentials,
-        }),
+    this.loader.loadConfigs().subscribe(config => { 
+      this.settings = new ODataSettings(config);
+      this.settings.configure({
+        requester: (req: ODataRequest<any>): Observable<any> =>
+          this.http.request(req.method, `${req.url}`, {
+            body: req.body,
+            context: req.context,
+            headers: req.headers,
+            observe: req.observe,
+            params: req.params,
+            reportProgress: req.reportProgress,
+            responseType: req.responseType,
+            withCredentials: req.withCredentials,
+          }),
+      });
     });
   }
 
@@ -75,12 +80,12 @@ export class ODataClient {
   apiFor(value?: ODataResource<any> | string): ODataApi {
     let api: ODataApi | undefined = undefined;
     if (value instanceof ODataResource)
-      api = this.settings.findApiForTypes(value.types());
+      api = this.settings!.findApiForTypes(value.types());
     else if (typeof value === 'string')
       api =
-        this.settings.findApiByName(value) ||
-        this.settings.findApiForType(value);
-    return api || this.settings.defaultApi();
+        this.settings!.findApiByName(value) ||
+        this.settings!.findApiForType(value);
+    return api || this.settings!.defaultApi();
   }
 
   /**
@@ -89,7 +94,7 @@ export class ODataClient {
    * @returns The parser for the given type.
    */
   parserForType<T>(type: string) {
-    return this.settings.parserForType<T>(type);
+    return this.settings!.parserForType<T>(type);
   }
 
   /**
@@ -98,7 +103,7 @@ export class ODataClient {
    * @returns The enum type for the given type.
    */
   enumTypeForType<T>(type: string) {
-    return this.settings.enumTypeForType<T>(type);
+    return this.settings!.enumTypeForType<T>(type);
   }
 
   /**
@@ -107,7 +112,7 @@ export class ODataClient {
    * @returns The structured type for the given type.
    */
   structuredTypeForType<T>(type: string) {
-    return this.settings.structuredTypeForType<T>(type);
+    return this.settings!.structuredTypeForType<T>(type);
   }
 
   /**
@@ -116,7 +121,7 @@ export class ODataClient {
    * @returns The callable for the given type.
    */
   callableForType<T>(type: string) {
-    return this.settings.callableForType<T>(type);
+    return this.settings!.callableForType<T>(type);
   }
 
   /**
@@ -125,7 +130,7 @@ export class ODataClient {
    * @returns The entity set for the given type.
    */
   entitySetForType(type: string) {
-    return this.settings.entitySetForType(type);
+    return this.settings!.entitySetForType(type);
   }
 
   /**
@@ -134,7 +139,7 @@ export class ODataClient {
    * @returns The model for the given type.
    */
   modelForType(type: string): typeof ODataModel {
-    return this.settings.modelForType(type);
+    return this.settings!.modelForType(type);
   }
 
   /**
@@ -143,7 +148,7 @@ export class ODataClient {
    * @returns The collection for the given type.
    */
   collectionForType(type: string): typeof ODataCollection {
-    return this.settings.collectionForType(type);
+    return this.settings!.collectionForType(type);
   }
 
   /**
@@ -152,7 +157,7 @@ export class ODataClient {
    * @returns The service for the given type.
    */
   serviceForType(type: string): ODataEntityService<any> {
-    return this.injector.get(this.settings.serviceForType(type));
+    return this.injector.get(this.settings!.serviceForType(type));
   }
 
   /**
@@ -161,29 +166,29 @@ export class ODataClient {
    * @returns The service for the given entity type.
    */
   serviceForEntityType(type: string): ODataEntityService<any> {
-    return this.injector.get(this.settings.serviceForEntityType(type));
+    return this.injector.get(this.settings!.serviceForEntityType(type));
   }
 
   enumTypeByName<T>(name: string) {
-    return this.settings.enumTypeByName<T>(name);
+    return this.settings!.enumTypeByName<T>(name);
   }
   structuredTypeByName<T>(name: string) {
-    return this.settings.structuredTypeByName<T>(name);
+    return this.settings!.structuredTypeByName<T>(name);
   }
   callableByName<T>(name: string) {
-    return this.settings.callableByName<T>(name);
+    return this.settings!.callableByName<T>(name);
   }
   entitySetByName(name: string) {
-    return this.settings.entitySetByName(name);
+    return this.settings!.entitySetByName(name);
   }
   modelByName(name: string): typeof ODataModel {
-    return this.settings.modelByName(name);
+    return this.settings!.modelByName(name);
   }
   collectionByName(name: string): typeof ODataCollection {
-    return this.settings.collectionByName(name);
+    return this.settings!.collectionByName(name);
   }
   serviceByName(name: string): ODataEntityService<any> {
-    return this.injector.get(this.settings.serviceByName(name));
+    return this.injector.get(this.settings!.serviceByName(name));
   }
   //#endregion
 
