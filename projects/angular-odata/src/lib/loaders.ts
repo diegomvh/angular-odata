@@ -6,7 +6,7 @@ export abstract class ODataConfigLoader {
   abstract loadConfigs(): Observable<ApiConfig[]>;
 }
 
-export class ODataConfigStaticLoader implements ODataConfigLoader {
+export class ODataConfigSyncLoader implements ODataConfigLoader {
   constructor(private readonly passedConfigs: ApiConfig | ApiConfig[]) {}
 
   loadConfigs(): Observable<ApiConfig[]> {
@@ -18,9 +18,12 @@ export class ODataConfigStaticLoader implements ODataConfigLoader {
   }
 }
 
-export class ODataConfigHttpLoader implements ODataConfigLoader {
+export class ODataConfigAsyncLoader implements ODataConfigLoader {
   constructor(
-    private readonly configs$: Observable<ApiConfig> | Observable<ApiConfig>[] | Observable<ApiConfig[]>
+    private readonly configs$:
+      | Observable<ApiConfig>
+      | Observable<ApiConfig>[]
+      | Observable<ApiConfig[]>
   ) {}
 
   loadConfigs(): Observable<ApiConfig[]> {
