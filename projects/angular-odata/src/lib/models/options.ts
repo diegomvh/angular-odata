@@ -495,7 +495,7 @@ export class ODataModelField<F> {
     parent: ODataModel<any>;
     value?: Partial<F>[] | { [name: string]: any }[];
     reset?: boolean;
-  }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
+  }): ODataCollection<F, ODataModel<F>> {
     // Collection Factory
     const annots = this.annotationsFactory(
       parent.annots()
