@@ -1559,7 +1559,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: T, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>serialize(value: Partial<T>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
@@ -1590,7 +1590,7 @@
                                 <tr>
                                     <td>value</td>
                                     <td>
-                                            <code>T</code>
+                                            <code>Partial&lt;T&gt;</code>
                                     </td>
 
                                     <td>
@@ -2494,7 +2494,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   }
 
   // Serialize
-  serialize(value: T, options?: ParserOptions): any {
+  serialize(value: Partial&lt;T&gt;, options?: ParserOptions): any {
     const parserOptions &#x3D; { ...this.parserOptions, ...options };
     const fields &#x3D; this.fields({
       include_navigation: true,

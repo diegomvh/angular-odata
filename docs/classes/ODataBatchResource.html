@@ -141,7 +141,11 @@
                             </li>
                             <li>
                                     <span class="modifier">Static</span>
-                                <a href="#buildBody" >buildBody</a>
+                                <a href="#buildJsonBody" >buildJsonBody</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#buildLegacyBody" >buildLegacyBody</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
@@ -155,8 +159,15 @@
                                 <a href="#factory" >factory</a>
                             </li>
                             <li>
+                                <a href="#json" >json</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Static</span>
-                                <a href="#parseResponse" >parseResponse</a>
+                                <a href="#parseJsonResponse" >parseJsonResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#parseLegacyResponse" >parseLegacyResponse</a>
                             </li>
                             <li>
                                 <a href="#requests" >requests</a>
@@ -170,6 +181,14 @@
                             </li>
                             <li>
                                 <a href="#send" >send</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#sendJson" >sendJson</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#sendLegacy" >sendLegacy</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
@@ -315,7 +334,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:92</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="136" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:136</a></div>
                         </td>
                     </tr>
 
@@ -347,7 +366,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="97" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:97</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:141</a></div>
                         </td>
                     </tr>
 
@@ -518,8 +537,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="141"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:141</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="185"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:185</a></div>
                 </td>
             </tr>
 
@@ -572,7 +591,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;R&gt;</code>
+                        <b>Returns : </b>    <code>R</code>
 
                     </div>
                     <div class="io-description">
@@ -603,8 +622,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="206"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:206</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="283"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:283</a></div>
                 </td>
             </tr>
 
@@ -624,26 +643,97 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="buildBody"></a>
+                    <a name="buildJsonBody"></a>
                     <span class="name">
                         <span class="modifier">Static</span>
-                        <span ><b>buildBody</b></span>
-                        <a href="#buildBody"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>buildJsonBody</b></span>
+                        <a href="#buildJsonBody"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>buildBody(batchBoundary: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, requests: <a href="../classes/ODataBatchRequest.html" target="_self">ODataBatchRequest&lt;any&gt;[]</a>)</code>
+                    <code>buildJsonBody(requests: <a href="../classes/ODataBatchRequest.html" target="_self">ODataBatchRequest&lt;any&gt;[]</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="213"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:213</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="353"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:353</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>requests</td>
+                                    <td>
+                                                <code><a href="../classes/ODataBatchRequest.html" target="_self" >ODataBatchRequest&lt;any&gt;[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank" >Object</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildLegacyBody"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>buildLegacyBody</b></span>
+                        <a href="#buildLegacyBody"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildLegacyBody(batchBoundary: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, requests: <a href="../classes/ODataBatchRequest.html" target="_self">ODataBatchRequest&lt;any&gt;[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="294"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:294</a></div>
                 </td>
             </tr>
 
@@ -731,7 +821,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:109</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:153</a></code>
 </div>
                 </td>
             </tr>
@@ -768,8 +858,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="195"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:195</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="275"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:275</a></div>
                 </td>
             </tr>
 
@@ -838,7 +928,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;R&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -871,8 +961,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="103"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:103</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="147"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:147</a></div>
                 </td>
             </tr>
 
@@ -924,26 +1014,146 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="parseResponse"></a>
+                    <a name="json"></a>
+                    <span class="name">
+                        <span ><b>json</b></span>
+                        <a href="#json"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>json()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="290"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:290</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank" >Object</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseJsonResponse"></a>
                     <span class="name">
                         <span class="modifier">Static</span>
-                        <span ><b>parseResponse</b></span>
-                        <a href="#parseResponse"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>parseJsonResponse</b></span>
+                        <a href="#parseJsonResponse"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>parseResponse(requests: <a href="../classes/ODataBatchRequest.html" target="_self">ODataBatchRequest&lt;any&gt;[]</a>, response: <a href="../classes/ODataResponse.html" target="_self">ODataResponse&lt;string&gt;</a>)</code>
+                    <code>parseJsonResponse(requests: <a href="../classes/ODataBatchRequest.html" target="_self">ODataBatchRequest&lt;any&gt;[]</a>, response: <a href="../classes/ODataResponse.html" target="_self">ODataResponse&lt;any&gt;</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="278"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:278</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="490"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:490</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>requests</td>
+                                    <td>
+                                                <code><a href="../classes/ODataBatchRequest.html" target="_self" >ODataBatchRequest&lt;any&gt;[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>response</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#Http" target="_self" >HttpResponseBase[]</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseLegacyResponse"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>parseLegacyResponse</b></span>
+                        <a href="#parseLegacyResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseLegacyResponse(requests: <a href="../classes/ODataBatchRequest.html" target="_self">ODataBatchRequest&lt;any&gt;[]</a>, response: <a href="../classes/ODataResponse.html" target="_self">ODataResponse&lt;string&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="359"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:359</a></div>
                 </td>
             </tr>
 
@@ -1023,8 +1233,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="93"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:93</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="137"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:137</a></div>
                 </td>
             </tr>
 
@@ -1060,8 +1270,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="98"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:98</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="142"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:142</a></div>
                 </td>
             </tr>
 
@@ -1099,8 +1309,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="130"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:130</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="174"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:174</a></div>
                 </td>
             </tr>
 
@@ -1168,8 +1378,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="152"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:152</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="196"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:196</a></div>
                 </td>
             </tr>
 
@@ -1207,7 +1417,149 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;null | ODataResponse&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendJson"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>sendJson</b></span>
+                        <a href="#sendJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendJson(options?: <a href="../objects/OData.html" target="_self">ODataOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="204"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:204</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;Object&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendLegacy"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>sendLegacy</b></span>
+                        <a href="#sendLegacy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendLegacy(options?: <a href="../objects/OData.html" target="_self">ODataOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="234"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:234</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;string&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1239,8 +1591,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="116"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:116</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="160"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:160</a></div>
                 </td>
             </tr>
 
@@ -3428,7 +3780,15 @@ Create an object handler for mutate the path segments of the resource</p>
   HttpResponse,
   HttpResponseBase,
 } from &#x27;@angular/common/http&#x27;;
-import { firstValueFrom, map, Observable, of, Subject } from &#x27;rxjs&#x27;;
+import {
+  concatMap,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+} from &#x27;rxjs&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import {
   $BATCH,
@@ -3462,11 +3822,19 @@ import { ODataResponse } from &#x27;../responses&#x27;;
 import { ODataOptions } from &#x27;./options&#x27;;
 
 export class ODataBatchRequest&lt;T&gt; extends Subject&lt;HttpResponseBase&gt; {
+  id: string;
+  group: string;
   constructor(public request: ODataRequest&lt;any&gt;) {
     super();
+    this.id &#x3D; Strings.uniqueId({ prefix: &#x27;r&#x27; });
+    this.group &#x3D; Strings.uniqueId({ prefix: &#x27;g&#x27; });
   }
 
   override toString() {
+    return this.toLegacy();
+  }
+
+  toLegacy() {
     //TODO: Relative or Absolute url ?
     let res &#x3D; [
       &#x60;${this.request.method} ${this.request.pathWithParams} ${HTTP11}&#x60;,
@@ -3489,7 +3857,35 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;HttpResponseBase&gt; 
       ];
     }
 
+    if (this.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; || this.request.method &#x3D;&#x3D;&#x3D; &#x27;DELETE&#x27;) {
+      res.push(NEWLINE);
+    } else {
+      res.push(&#x60;${NEWLINE}${JSON.stringify(this.request.body)}&#x60;);
+    }
+
     return res.join(NEWLINE);
+  }
+
+  toJson() {
+    //TODO: Relative or Absolute url ?
+    let res: { [name: string]: any } &#x3D; {
+      id: this.id,
+      method: this.request.method,
+      url: this.request.pathWithParams,
+      //&#x27;atomicityGroup&#x27;: this.group
+      //&quot;dependsOn&quot;: [&quot;g1&quot;, &quot;g2&quot;, &quot;r2&quot;]
+    };
+    if (this.request.headers instanceof HttpHeaders) {
+      let headers &#x3D; this.request.headers;
+      res[&#x27;headers&#x27;] &#x3D; headers
+        .keys()
+        .map((key) &#x3D;&gt; &#x60;${key}: ${(headers.getAll(key) || []).join(&#x27;,&#x27;)}&#x60;);
+    }
+    if (!(this.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; || this.request.method &#x3D;&#x3D;&#x3D; &#x27;DELETE&#x27;)) {
+      res[&#x27;body&#x27;] &#x3D; this.request.body;
+    }
+
+    return res;
   }
 
   onLoad(response: HttpResponseBase) {
@@ -3562,31 +3958,67 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
    * @param ctx The context for the request
    * @returns The result of execute the context
    */
-  add&lt;R&gt;(ctx: (batch: this) &#x3D;&gt; Observable&lt;R&gt;): Observable&lt;R&gt; {
+  add&lt;R&gt;(ctx: (batch: this) &#x3D;&gt; R): R {
     // Store original requester
     var handler &#x3D; this.storeRequester();
     // Execute the context
-    const obs$ &#x3D; ctx(this);
+    const result &#x3D; ctx(this);
     // Restore original requester
     this.restoreRequester(handler);
 
-    return obs$;
+    return result;
   }
 
-  send(options?: ODataOptions): Observable&lt;null | ODataResponse&lt;string&gt;&gt; {
-    if (this._requests.length &#x3D;&#x3D; 0) {
-      return of(null);
+  send(options?: ODataOptions): Observable&lt;ODataResponse&lt;any&gt;&gt; {
+    if (this.api.options.jsonBatchFormat) {
+      return this.sendJson(options);
+    } else {
+      return this.sendLegacy(options);
     }
+  }
 
-    const bound &#x3D; Strings.uniqueId(BATCH_PREFIX);
+  private sendJson(options?: ODataOptions): Observable&lt;ODataResponse&lt;Object&gt;&gt; {
+    const headers &#x3D; Http.mergeHttpHeaders((options &amp;&amp; options.headers) || {}, {
+      [ODATA_VERSION]: VERSION_4_0,
+    });
+    return this.api
+      .request&lt;object&gt;(&#x27;POST&#x27;, this, {
+        body: ODataBatchResource.buildJsonBody(this._requests),
+        responseType: &#x27;json&#x27;,
+        observe: &#x27;response&#x27;,
+        headers: headers,
+        params: options ? options.params : undefined,
+        withCredentials: options ? options.withCredentials : undefined,
+      })
+      .pipe(
+        map((response: ODataResponse&lt;Object&gt;) &#x3D;&gt; {
+          if (this._responses &#x3D;&#x3D; null) {
+            this._responses &#x3D; [];
+          }
+          this._responses &#x3D; [
+            ...this._responses,
+            ...ODataBatchResource.parseJsonResponse(this._requests, response),
+          ];
+          Arrays.zip(this._requests, this._responses).forEach((tuple) &#x3D;&gt; {
+            if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
+          });
+          return response;
+        })
+      );
+  }
+
+  private sendLegacy(
+    options?: ODataOptions
+  ): Observable&lt;ODataResponse&lt;string&gt;&gt; {
+    const bound &#x3D; Strings.uniqueId({ prefix: BATCH_PREFIX });
     const headers &#x3D; Http.mergeHttpHeaders((options &amp;&amp; options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
       [ACCEPT]: MULTIPART_MIXED,
     });
     return this.api
-      .request(&#x27;POST&#x27;, this, {
-        body: ODataBatchResource.buildBody(bound, this._requests),
+      .request&lt;ODataResponse&lt;string&gt;&gt;(&#x27;POST&#x27;, this, {
+        body: ODataBatchResource.buildLegacyBody(bound, this._requests),
         responseType: &#x27;text&#x27;,
         observe: &#x27;response&#x27;,
         headers: headers,
@@ -3600,7 +4032,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
           }
           this._responses &#x3D; [
             ...this._responses,
-            ...ODataBatchResource.parseResponse(this._requests, response),
+            ...ODataBatchResource.parseLegacyResponse(this._requests, response),
           ];
           Arrays.zip(this._requests, this._responses).forEach((tuple) &#x3D;&gt; {
             if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
@@ -3617,24 +4049,25 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
    * @returns The result of execute the context
    */
   exec&lt;R&gt;(
-    ctx: (batch: this) &#x3D;&gt; Observable&lt;R&gt;,
+    ctx: (batch: this) &#x3D;&gt; R,
     options?: ODataOptions
-  ): Observable&lt;R&gt; {
-    let ctx$ &#x3D; this.add(ctx);
-    let send$ &#x3D; this.send(options);
-    firstValueFrom(send$);
-    return ctx$;
-    //return this.send(options).pipe(switchMap(() &#x3D;&gt; ctx$));
+  ): Observable&lt;[R, ODataResponse&lt;string&gt;]&gt; {
+    let result &#x3D; this.add(ctx);
+    return this.send(options).pipe(map((response) &#x3D;&gt; [result, response]));
   }
 
   body() {
-    return ODataBatchResource.buildBody(
-      Strings.uniqueId(BATCH_PREFIX),
+    return ODataBatchResource.buildLegacyBody(
+      Strings.uniqueId({ prefix: BATCH_PREFIX }),
       this._requests
     );
   }
 
-  static buildBody(
+  json() {
+    return ODataBatchResource.buildJsonBody(this._requests);
+  }
+
+  static buildLegacyBody(
     batchBoundary: string,
     requests: ODataBatchRequest&lt;any&gt;[]
   ): string {
@@ -3642,9 +4075,9 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     let changesetBoundary: string | null &#x3D; null;
     let changesetId &#x3D; 1;
 
-    for (const batch of requests) {
+    for (const request of requests) {
       // if method is GET and there is a changeset boundary open then close it
-      if (batch.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; &amp;&amp; changesetBoundary !&#x3D;&#x3D; null) {
+      if (request.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; &amp;&amp; changesetBoundary !&#x3D;&#x3D; null) {
         res.push(
           &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
         );
@@ -3657,9 +4090,9 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
-      if (batch.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
+      if (request.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
         if (changesetBoundary &#x3D;&#x3D;&#x3D; null) {
-          changesetBoundary &#x3D; Strings.uniqueId(CHANGESET_PREFIX);
+          changesetBoundary &#x3D; Strings.uniqueId({ prefix: CHANGESET_PREFIX });
           res.push(
             &#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;
           );
@@ -3671,18 +4104,12 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       res.push(&#x60;${CONTENT_TYPE}: ${APPLICATION_HTTP}&#x60;);
       res.push(&#x60;${CONTENT_TRANSFER_ENCODING}: ${BINARY}&#x60;);
 
-      if (batch.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
+      if (request.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
         res.push(&#x60;${CONTENT_ID}: ${changesetId++}&#x60;);
       }
 
       res.push(NEWLINE);
-      res.push(&#x60;${batch}&#x60;);
-
-      if (batch.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; || batch.request.method &#x3D;&#x3D;&#x3D; &#x27;DELETE&#x27;) {
-        res.push(NEWLINE);
-      } else {
-        res.push(&#x60;${NEWLINE}${JSON.stringify(batch.request.body)}&#x60;);
-      }
+      res.push(&#x60;${request.toLegacy()}&#x60;);
     }
 
     if (res.length) {
@@ -3699,7 +4126,13 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     return res.join(NEWLINE);
   }
 
-  static parseResponse(
+  static buildJsonBody(requests: ODataBatchRequest&lt;any&gt;[]): Object {
+    return {
+      requests: requests.map((request) &#x3D;&gt; request.toJson()),
+    };
+  }
+
+  static parseLegacyResponse(
     requests: ODataBatchRequest&lt;any&gt;[],
     response: ODataResponse&lt;string&gt;
   ): HttpResponseBase[] {
@@ -3825,6 +4258,56 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
             headers,
             status: code,
             statusText: message,
+            url: request.urlWithParams,
+          });
+    });
+  }
+
+  static parseJsonResponse(
+    requests: ODataBatchRequest&lt;any&gt;[],
+    response: ODataResponse&lt;any&gt;
+  ): HttpResponseBase[] {
+    const responses: Object[] &#x3D;
+      (response.body ? response.body : {})[&#x27;responses&#x27;] ?? [];
+
+    return responses.map((response: any, index: number) &#x3D;&gt; {
+      let request &#x3D; requests[index].request;
+      let code &#x3D; response[&#x27;status&#x27;];
+
+      let headers: HttpHeaders &#x3D; new HttpHeaders(response[&#x27;headers&#x27;]);
+      let body: string | { error: any; text: string } &#x3D; response[&#x27;body&#x27;];
+      if (code &#x3D;&#x3D;&#x3D; 0) {
+        code &#x3D; !!body ? 200 : 0;
+      }
+
+      let ok &#x3D; code &gt;&#x3D; 200 &amp;&amp; code &lt; 300;
+      if (request.responseType &#x3D;&#x3D;&#x3D; &#x27;json&#x27; &amp;&amp; typeof body &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+        const originalBody &#x3D; body;
+        body &#x3D; body.replace(XSSI_PREFIX, &#x27;&#x27;);
+        try {
+          body &#x3D; body !&#x3D;&#x3D; &#x27;&#x27; ? JSON.parse(body) : null;
+        } catch (error) {
+          body &#x3D; originalBody;
+
+          if (ok) {
+            ok &#x3D; false;
+            body &#x3D; { error, text: body };
+          }
+        }
+      }
+
+      return ok
+        ? new HttpResponse&lt;any&gt;({
+            body,
+            headers,
+            status: code,
+            url: request.urlWithParams,
+          })
+        : new HttpErrorResponse({
+            // The error in this case is the response body (error from the server).
+            error: body,
+            headers,
+            status: code,
             url: request.urlWithParams,
           });
     });

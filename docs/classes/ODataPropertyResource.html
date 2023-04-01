@@ -876,8 +876,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="308"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/property.ts:308</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="306"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/property.ts:306</a></div>
                 </td>
             </tr>
 
@@ -1197,8 +1197,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="273"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/property.ts:273</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="271"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/property.ts:271</a></div>
                 </td>
             </tr>
 
@@ -4260,14 +4260,12 @@ export class ODataPropertyResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   ): Observable&lt;{ entity: T | null; annots: ODataEntitiesAnnotations&lt;T&gt; }&gt; {
     let res &#x3D; this.clone();
     res.query((q) &#x3D;&gt; q.top(1));
-    return res
-      .fetch({ responseType: &#x27;entities&#x27;, ...options })
-      .pipe(
-        map(({ entities, annots }) &#x3D;&gt; ({
-          entity: entities !&#x3D;&#x3D; null ? entities[0] || null : null,
-          annots,
-        }))
-      );
+    return res.fetch({ responseType: &#x27;entities&#x27;, ...options }).pipe(
+      map(({ entities, annots }) &#x3D;&gt; ({
+        entity: entities !&#x3D;&#x3D; null ? entities[0] || null : null,
+        annots,
+      }))
+    );
   }
 
   fetchMany(

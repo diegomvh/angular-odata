@@ -901,7 +901,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModel | ODataCollection</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -2421,7 +2421,7 @@ export class ODataModelField&lt;F&gt; {
     parent: ODataModel&lt;any&gt;;
     value?: Partial&lt;F&gt;[] | { [name: string]: any }[];
     reset?: boolean;
-  }): ODataModel&lt;F&gt; | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt; {
+  }): ODataCollection&lt;F, ODataModel&lt;F&gt;&gt; {
     // Collection Factory
     const annots &#x3D; this.annotationsFactory(
       parent.annots()
@@ -3037,6 +3037,7 @@ export class ODataModelOptions&lt;T&gt; {
               client_id,
               include_navigation,
               include_concurrency,
+              include_computed,
               include_non_field,
               field_mapping,
               changes_only: changesOnly,
@@ -3051,6 +3052,7 @@ export class ODataModelOptions&lt;T&gt; {
               client_id,
               include_navigation,
               include_concurrency,
+              include_computed,
               include_non_field,
               field_mapping,
               changes_only: changesOnly,

@@ -1991,7 +1991,7 @@ import { ApiConfig, Parser } from &#x27;./types&#x27;;
 
 export class ODataSettings {
   apis: ODataApi[];
-  constructor(...configs: ApiConfig[]) {
+  constructor(configs: ApiConfig[]) {
     this.apis &#x3D; configs.map((config) &#x3D;&gt; new ODataApi(config));
     if (this.apis.length &gt; 1) {
       if (this.apis.some((c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; undefined))

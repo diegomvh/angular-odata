@@ -295,7 +295,7 @@
                             <a href="#ODATA_ALIAS_PREFIX" title="projects/angular-odata/src/lib/constants.ts" ><b>ODATA_ALIAS_PREFIX</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
-                            <a href="#ODATA_CONFIGURATIONS" title="projects/angular-odata/src/lib/tokens.ts" ><b>ODATA_CONFIGURATIONS</b>&nbsp;&nbsp;&nbsp;(projects/.../tokens.ts)</a>
+                            <a href="#ODATA_CONFIG" title="projects/angular-odata/src/lib/module.ts" ><b>ODATA_CONFIG</b>&nbsp;&nbsp;&nbsp;(projects/.../module.ts)</a>
                         </li>
                         <li>
                             <a href="#ODATA_ENTITYID" title="projects/angular-odata/src/lib/constants.ts" ><b>ODATA_ENTITYID</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
@@ -3513,57 +3513,57 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
-  names&lt;E&gt;(Enum: E): string[] {
-    return Object.values&lt;string&gt;(Enum as any).filter(
+  names&lt;E extends { [key: string]: any }&gt;(enums: E): string[] {
+    return Object.values&lt;string&gt;(enums).filter(
       (v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
     );
   },
 
-  values&lt;E&gt;(Enum: E): number[] {
-    return Object.values&lt;number&gt;(Enum as any).filter(
+  values&lt;E extends { [key: string]: any }&gt;(enums: E): number[] {
+    return Object.values&lt;number&gt;(enums).filter(
       (v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;
     );
   },
 
-  toValue&lt;E&gt;(Enum: E, value: any): number | undefined {
-    if (value in Enum)
-      return typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? (Enum as any)[value] : value;
+  toValue&lt;E extends { [key: string]: any }&gt;(enums: E, value: any): number | undefined {
+    if (value in enums)
+      return typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? enums[value] : value;
     return undefined;
   },
 
-  toValues&lt;E&gt;(Enum: E, value: any): number[] {
+  toValues&lt;E extends { [key: string]: any }&gt;(enums: E, value: any): number[] {
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
-      return this.values(Enum).filter((v) &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v);
+      return this.values(enums).filter((v) &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v);
     }
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
       value &#x3D; value.split(&#x27;,&#x27;).map((o) &#x3D;&gt; o.trim());
     }
-    if (Array.isArray(value) &amp;&amp; value.every((v) &#x3D;&gt; v in Enum)) {
-      return value.map((o) &#x3D;&gt; this.toValue(Enum, o) as number);
+    if (Array.isArray(value) &amp;&amp; value.every((v) &#x3D;&gt; v in enums)) {
+      return value.map((o) &#x3D;&gt; this.toValue(enums, o) as number);
     }
     return [];
   },
 
-  toName&lt;E&gt;(Enum: E, value: any): string | undefined {
-    if (value in Enum)
-      return typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? (Enum as any)[value] : value;
+  toName&lt;E extends { [key: string]: any }&gt;(enums: E, value: any): string | undefined {
+    if (value in enums)
+      return typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? enums[value] : value;
     return undefined;
   },
 
-  toNames&lt;E&gt;(Enum: E, value: any): string[] {
+  toNames&lt;E extends { [key: string]: any }&gt;(enums: E, value: any): string[] {
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
-      return this.values(Enum)
+      return this.values(enums)
         .filter((v) &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v)
-        .map((v) &#x3D;&gt; this.toName(Enum, v) as string);
+        .map((v) &#x3D;&gt; this.toName(enums, v) as string);
     }
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
       value &#x3D; value.split(&#x27;,&#x27;).map((o) &#x3D;&gt; o.trim());
     }
-    if (Array.isArray(value) &amp;&amp; value.every((v) &#x3D;&gt; v in Enum)) {
-      return value.map((o) &#x3D;&gt; this.toName(Enum, o) as string);
+    if (Array.isArray(value) &amp;&amp; value.every((v) &#x3D;&gt; v in enums)) {
+      return value.map((o) &#x3D;&gt; this.toName(enums, o) as string);
     }
     return [];
-  },
+  }
 }</code>
                     </td>
                 </tr>
@@ -3696,7 +3696,10 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
-  uniqueId(prefix?: string, suffix?: string): string {
+  uniqueId({
+    prefix,
+    suffix,
+  }: { prefix?: string; suffix?: string } &#x3D; {}): string {
     return (prefix ? prefix : &#x27;&#x27;) + now().toString(36) + (suffix ? suffix : &#x27;&#x27;);
   },
 
@@ -4215,24 +4218,22 @@
         </tbody>
     </table>
 </section>
-    <h3>projects/angular-odata/src/lib/tokens.ts</h3>
+    <h3>projects/angular-odata/src/lib/module.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ODATA_CONFIGURATIONS"></a>
+                    <a name="ODATA_CONFIG"></a>
                     <span class="name">
-                        <span ><b>ODATA_CONFIGURATIONS</b></span>
-                        <a href="#ODATA_CONFIGURATIONS"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>ODATA_CONFIG</b></span>
+                        <a href="#ODATA_CONFIG"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>new InjectionToken&lt;ApiConfig&gt;(
-  &#x27;odata.configuraions&#x27;
-)</code>
+                        <i>Default value : </i><code>new InjectionToken&lt;ApiConfig&gt;(&#x27;odata.config&#x27;)</code>
                     </td>
                 </tr>
 

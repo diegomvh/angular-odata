@@ -1330,15 +1330,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>callAction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", undefined)</code>
+<code>callAction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType?: "property" | "model" | "collection" | "none" | "blob" | "arraybuffer", undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="671"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:671</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="688"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:688</a></div>
                 </td>
             </tr>
 
@@ -1399,11 +1399,11 @@
                                 <tr>
                                     <td>responseType</td>
                                     <td>
-                                            <code>&quot;property&quot; | &quot;model&quot; | &quot;collection&quot; | &quot;none&quot;</code>
+                                            <code>&quot;property&quot; | &quot;model&quot; | &quot;collection&quot; | &quot;none&quot; | &quot;blob&quot; | &quot;arraybuffer&quot;</code>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
                                     <td>
@@ -1429,7 +1429,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;R | ODataModel | ODataCollection | null&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;R | ODataModel | ODataCollection | null | Blob | ArrayBuffer&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1452,7 +1452,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>callFunction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", undefined)</code>
+<code>callFunction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none" | "blob" | "arraybuffer", undefined)</code>
                 </td>
             </tr>
 
@@ -1521,7 +1521,7 @@
                                 <tr>
                                     <td>responseType</td>
                                     <td>
-                                            <code>&quot;property&quot; | &quot;model&quot; | &quot;collection&quot; | &quot;none&quot;</code>
+                                            <code>&quot;property&quot; | &quot;model&quot; | &quot;collection&quot; | &quot;none&quot; | &quot;blob&quot; | &quot;arraybuffer&quot;</code>
                                     </td>
 
                                     <td>
@@ -1551,7 +1551,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;R | ODataModel | ODataCollection | null&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;R | ODataModel | ODataCollection | null | Blob | ArrayBuffer&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1581,8 +1581,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="700"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:700</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="734"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:734</a></div>
                 </td>
             </tr>
 
@@ -1775,8 +1775,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="854"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:854</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="888"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:888</a></div>
                 </td>
             </tr>
 
@@ -1917,8 +1917,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="837"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:837</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="871"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:871</a></div>
                 </td>
             </tr>
 
@@ -2054,8 +2054,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="714"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:714</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="748"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:748</a></div>
                 </td>
             </tr>
 
@@ -2230,8 +2230,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="809"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:809</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="843"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:843</a></div>
                 </td>
             </tr>
 
@@ -2307,8 +2307,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="732"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:732</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="766"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:766</a></div>
                 </td>
             </tr>
 
@@ -2798,8 +2798,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="861"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:861</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="895"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:895</a></div>
                 </td>
             </tr>
 
@@ -2872,8 +2872,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="865"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:865</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="899"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:899</a></div>
                 </td>
             </tr>
 
@@ -3598,8 +3598,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="764"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:764</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="798"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:798</a></div>
                 </td>
             </tr>
 
@@ -3886,7 +3886,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="850" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:850</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="884" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:884</a></div>
                                 </td>
                             </tr>
 
@@ -4020,7 +4020,7 @@ export class ODataModel&lt;T&gt; {
     // Client Id
     (&lt;any&gt;this)[this._meta.cid] &#x3D;
       (&lt;any&gt;data)[this._meta.cid] ||
-      Strings.uniqueId(&#x60;${Klass.meta.schema.name.toLowerCase()}-&#x60;);
+      Strings.uniqueId({ prefix: &#x60;${Klass.meta.schema.name.toLowerCase()}-&#x60; });
 
     let attrs &#x3D; this.annots().attributes(data, &#x27;full&#x27;);
     let defaults &#x3D; this.defaults();
@@ -4542,9 +4542,22 @@ export class ODataModel&lt;T&gt; {
   callFunction&lt;P, R&gt;(
     name: string,
     params: P | null,
-    responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
+    responseType:
+      | &#x27;property&#x27;
+      | &#x27;model&#x27;
+      | &#x27;collection&#x27;
+      | &#x27;none&#x27;
+      | &#x27;blob&#x27;
+      | &#x27;arraybuffer&#x27;,
     { ...options }: {} &amp; ODataFunctionOptions&lt;R&gt; &#x3D; {}
-  ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
+  ): Observable&lt;
+    | R
+    | ODataModel&lt;R&gt;
+    | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt;
+    | null
+    | Blob
+    | ArrayBuffer
+  &gt; {
     const resource &#x3D; this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
       return throwError(
@@ -4562,6 +4575,10 @@ export class ODataModel&lt;T&gt; {
         return func.callModel(params, options);
       case &#x27;collection&#x27;:
         return func.callCollection(params, options);
+      case &#x27;blob&#x27;:
+        return func.callBlob(params, options);
+      case &#x27;arraybuffer&#x27;:
+        return func.callArraybuffer(params, options);
       default:
         return func.call(params, { responseType, ...options });
     }
@@ -4570,9 +4587,22 @@ export class ODataModel&lt;T&gt; {
   callAction&lt;P, R&gt;(
     name: string,
     params: P | null,
-    responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
+    responseType?:
+      | &#x27;property&#x27;
+      | &#x27;model&#x27;
+      | &#x27;collection&#x27;
+      | &#x27;none&#x27;
+      | &#x27;blob&#x27;
+      | &#x27;arraybuffer&#x27;,
     { ...options }: {} &amp; ODataActionOptions&lt;R&gt; &#x3D; {}
-  ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
+  ): Observable&lt;
+    | R
+    | ODataModel&lt;R&gt;
+    | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt;
+    | null
+    | Blob
+    | ArrayBuffer
+  &gt; {
     const resource &#x3D; this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
       return throwError(
@@ -4590,6 +4620,10 @@ export class ODataModel&lt;T&gt; {
         return action.callModel(params, options);
       case &#x27;collection&#x27;:
         return action.callCollection(params, options);
+      case &#x27;blob&#x27;:
+        return action.callBlob(params, options);
+      case &#x27;arraybuffer&#x27;:
+        return action.callArraybuffer(params, options);
       default:
         return action.call(params, { responseType, ...options });
     }

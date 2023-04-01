@@ -64,13 +64,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/ODataModule.html" data-type="entity-link" >ODataModule</a>
                                 <li class="chapter inner">
                                     <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                        'data-target="#injectables-links-module-ODataModule-8894340f0aa30aceeba5e20490af7cac3c99165819b2d3e3bb2cecbfdbc0625a2352053ca35316b1da4c9ccb871a763ecdec4b160307a5e7aff25c00e4c1d866"' : 'data-target="#xs-injectables-links-module-ODataModule-8894340f0aa30aceeba5e20490af7cac3c99165819b2d3e3bb2cecbfdbc0625a2352053ca35316b1da4c9ccb871a763ecdec4b160307a5e7aff25c00e4c1d866"' }>
+                                        'data-target="#injectables-links-module-ODataModule-450a75df8a15969c5917f153c30274efeed85ec58242376ab41652535c6a151a1aa95257ea9cae3122ea34f0aaa93a3288be310cf001b483686b2731b678f8f8"' : 'data-target="#xs-injectables-links-module-ODataModule-450a75df8a15969c5917f153c30274efeed85ec58242376ab41652535c6a151a1aa95257ea9cae3122ea34f0aaa93a3288be310cf001b483686b2731b678f8f8"' }>
                                         <span class="icon ion-md-arrow-round-down"></span>
                                         <span>Injectables</span>
                                         <span class="icon ion-ios-arrow-down"></span>
                                     </div>
-                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-ODataModule-8894340f0aa30aceeba5e20490af7cac3c99165819b2d3e3bb2cecbfdbc0625a2352053ca35316b1da4c9ccb871a763ecdec4b160307a5e7aff25c00e4c1d866"' :
-                                        'id="xs-injectables-links-module-ODataModule-8894340f0aa30aceeba5e20490af7cac3c99165819b2d3e3bb2cecbfdbc0625a2352053ca35316b1da4c9ccb871a763ecdec4b160307a5e7aff25c00e4c1d866"' }>
+                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-ODataModule-450a75df8a15969c5917f153c30274efeed85ec58242376ab41652535c6a151a1aa95257ea9cae3122ea34f0aaa93a3288be310cf001b483686b2731b678f8f8"' :
+                                        'id="xs-injectables-links-module-ODataModule-450a75df8a15969c5917f153c30274efeed85ec58242376ab41652535c6a151a1aa95257ea9cae3122ea34f0aaa93a3288be310cf001b483686b2731b678f8f8"' }>
                                         <li class="link">
                                             <a href="injectables/ODataClient.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >ODataClient</a>
                                         </li>
@@ -283,6 +283,15 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataCollection.html" data-type="entity-link" >ODataCollection</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataConfigAsyncLoader.html" data-type="entity-link" >ODataConfigAsyncLoader</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataConfigLoader.html" data-type="entity-link" >ODataConfigLoader</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataConfigSyncLoader.html" data-type="entity-link" >ODataConfigSyncLoader</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataCountResource.html" data-type="entity-link" >ODataCountResource</a>
                             </li>
                             <li class="link">
@@ -493,6 +502,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/ParserOptions.html" data-type="entity-link" >ParserOptions</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/PassedInitialConfig.html" data-type="entity-link" >PassedInitialConfig</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/Renderable.html" data-type="entity-link" >Renderable</a>

@@ -640,12 +640,12 @@ export class ODataEnumTypeParser&lt;E&gt;
     // string -&gt; number
     const parserOptions &#x3D; { ...this.parserOptions, ...options };
     if (this.flags) {
-      return Enums.toValues&lt;E&gt;(this.members as any, value).reduce(
+      return Enums.toValues&lt;any&gt;(this.members, value).reduce(
         (acc, v) &#x3D;&gt; acc | v,
         0
       ) as any;
     } else {
-      return Enums.toValue&lt;E&gt;(this.members as any, value) as any;
+      return Enums.toValue&lt;any&gt;(this.members, value) as any;
     }
   }
 
