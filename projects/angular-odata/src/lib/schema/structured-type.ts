@@ -111,6 +111,10 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
     return this.keys().length > 1;
   }
 
+  isOpenType() {
+    return this.open;
+  }
+
   /**
    * Find the field parser for the given field name.
    * @param name Name of the field

@@ -236,6 +236,10 @@ export class ODataModel<T> {
     return this._meta.resolveKey(this, { field_mapping, resolve });
   }
 
+  isOpenModel() {
+    return this.schema().isOpenType();
+  }
+
   isParentOf(
     child: ODataModel<any> | ODataCollection<any, ODataModel<any>>
   ): boolean {
@@ -376,7 +380,8 @@ export class ODataModel<T> {
       return model.set(pathArray.slice(1), value);
     }
     if (pathArray.length === 1) {
-      return ((<any>this)[pathArray[0]] = value);
+      let field = this._meta.field(pathArray[0]);
+      return this._meta._set(this, field, value);
     }
   }
 
@@ -385,7 +390,8 @@ export class ODataModel<T> {
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
     if (pathArray.length === 0) return undefined;
-    const value = (<any>this)[pathArray[0]];
+    let field = this._meta.field(pathArray[0]);
+    const value = this._meta._get(this, field);
     if (
       pathArray.length > 1 &&
       (value instanceof ODataModel || value instanceof ODataCollection)

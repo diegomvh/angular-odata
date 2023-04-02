@@ -1353,7 +1353,7 @@ export class ODataModelOptions<T> {
     return model.hasChanged();
   }
 
-  private _get<F>(
+  _get<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
@@ -1564,7 +1564,7 @@ export class ODataModelOptions<T> {
     return changed;
   }
 
-  private _set<F>(
+  _set<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
     value:
