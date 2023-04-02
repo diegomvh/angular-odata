@@ -1,12 +1,12 @@
 import { PATH_SEPARATOR } from '../../constants';
-import { PathSegmentNames } from '../../types';
+import { PathSegment } from '../../types';
 import { Objects } from '../../utils';
 import { buildPathAndQuery, raw } from '../query';
 import { EntityKey } from '../resource';
 import { SegmentHandler } from './handlers';
 
 export type ODataSegment = {
-  name: PathSegmentNames;
+  name: PathSegment;
   path: string;
   type?: string;
   key?: any;
@@ -17,7 +17,7 @@ function pathSegmentsBuilder(
   segment: ODataSegment,
   escape: boolean = false
 ): [string, { [name: string]: any }] {
-  if (segment.name === PathSegmentNames.function) {
+  if (segment.name === PathSegment.function) {
     let [path, params] = segment.parameters
       ? buildPathAndQuery({
           func: { [segment.path]: segment.parameters },
@@ -125,9 +125,9 @@ export class ODataPathSegments {
       segments = segments.filter(
         (s) =>
           [
-            PathSegmentNames.entitySet,
-            PathSegmentNames.navigationProperty,
-            PathSegmentNames.property,
+            PathSegment.entitySet,
+            PathSegment.navigationProperty,
+            PathSegment.property,
           ].indexOf(s.name) !== -1
       );
     return segments.map((s) => new SegmentHandler(s));

@@ -4,7 +4,7 @@ import {
   ODataMetadataType,
   ODataVersion,
   ParserOptions,
-  QueryOptionNames,
+  QueryOption,
 } from './types';
 import {
   DEFAULT_FETCH_POLICY,
@@ -58,7 +58,7 @@ export class ODataApiOptions implements ApiOptions {
   /**
    * Send query options in the request body
    */
-  bodyQueryOptions: QueryOptionNames[];
+  bodyQueryOptions: QueryOption[];
   /**
    * Customize accept header with OData options
    * @link http://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat

@@ -1,4 +1,4 @@
-import { QueryOptionNames } from '../../../types';
+import { QueryOption } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
@@ -31,8 +31,8 @@ export class CountField<T extends object> implements Renderable {
     prefix?: string;
   }): string {
     const params: { [key: string]: string } = [
-      QueryOptionNames.filter,
-      QueryOptionNames.search,
+      QueryOption.filter,
+      QueryOption.search,
     ]
       .filter((key) => !Types.isEmpty(this.values[key]))
       .reduce((acc, key) => {
@@ -58,8 +58,8 @@ export class CountField<T extends object> implements Renderable {
     ) => FilterExpression<T>
   ) {
     return this.option(
-      QueryOptionNames.filter,
-      FilterExpression.filter<T>(opts, this.values[QueryOptionNames.filter])
+      QueryOption.filter,
+      FilterExpression.filter<T>(opts, this.values[QueryOption.filter])
     );
   }
 
@@ -73,7 +73,7 @@ export class CountField<T extends object> implements Renderable {
   }
 
   // Option Handler
-  private option<O>(name: QueryOptionNames, opts?: O) {
+  private option<O>(name: QueryOption, opts?: O) {
     if (opts !== undefined) this.values[name] = opts;
     return this.values[name];
   }

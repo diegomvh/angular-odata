@@ -1,4 +1,4 @@
-import { QueryOptionNames } from '../../../types';
+import { QueryOption } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
@@ -34,14 +34,14 @@ export class ExpandField<T> implements Renderable {
     prefix?: string;
   }): string {
     const params: { [key: string]: string } = [
-      QueryOptionNames.select,
-      QueryOptionNames.expand,
-      QueryOptionNames.filter,
-      QueryOptionNames.search,
-      QueryOptionNames.orderBy,
-      QueryOptionNames.skip,
-      QueryOptionNames.top,
-      QueryOptionNames.levels,
+      QueryOption.select,
+      QueryOption.expand,
+      QueryOption.filter,
+      QueryOption.search,
+      QueryOption.orderBy,
+      QueryOption.skip,
+      QueryOption.top,
+      QueryOption.levels,
     ]
       .filter((key) => !Types.isEmpty(this.values[key]))
       .reduce((acc, key) => {
@@ -76,8 +76,8 @@ export class ExpandField<T> implements Renderable {
     ) => SelectExpression<T>
   ): SelectExpression<T> {
     return this.option(
-      QueryOptionNames.select,
-      SelectExpression.select<T>(opts, this.values[QueryOptionNames.select])
+      QueryOption.select,
+      SelectExpression.select<T>(opts, this.values[QueryOption.select])
     );
   }
 
@@ -88,8 +88,8 @@ export class ExpandField<T> implements Renderable {
     ) => ExpandExpression<T>
   ) {
     return this.option(
-      QueryOptionNames.expand,
-      ExpandExpression.expand<T>(opts, this.values[QueryOptionNames.expand])
+      QueryOption.expand,
+      ExpandExpression.expand<T>(opts, this.values[QueryOption.expand])
     );
   }
 
@@ -100,8 +100,8 @@ export class ExpandField<T> implements Renderable {
     ) => FilterExpression<T>
   ) {
     return this.option(
-      QueryOptionNames.filter,
-      FilterExpression.filter<T>(opts, this.values[QueryOptionNames.filter])
+      QueryOption.filter,
+      FilterExpression.filter<T>(opts, this.values[QueryOption.filter])
     );
   }
 
@@ -109,8 +109,8 @@ export class ExpandField<T> implements Renderable {
     opts: (builder: SearchExpressionBuilder<T>) => SearchExpression<T>
   ) {
     return this.option(
-      QueryOptionNames.search,
-      SearchExpression.search<T>(opts, this.values[QueryOptionNames.search])
+      QueryOption.search,
+      SearchExpression.search<T>(opts, this.values[QueryOption.search])
     );
   }
 
@@ -121,25 +121,25 @@ export class ExpandField<T> implements Renderable {
     ) => OrderByExpression<T>
   ) {
     return this.option(
-      QueryOptionNames.orderBy,
-      OrderByExpression.orderBy<T>(opts, this.values[QueryOptionNames.orderBy])
+      QueryOption.orderBy,
+      OrderByExpression.orderBy<T>(opts, this.values[QueryOption.orderBy])
     );
   }
 
   skip(n: number) {
-    return this.option<number>(QueryOptionNames.skip, n);
+    return this.option<number>(QueryOption.skip, n);
   }
 
   top(n: number) {
-    return this.option<number>(QueryOptionNames.top, n);
+    return this.option<number>(QueryOption.top, n);
   }
 
   levels(n: number | 'max') {
-    return this.option<number | 'max'>(QueryOptionNames.levels, n);
+    return this.option<number | 'max'>(QueryOption.levels, n);
   }
 
   // Option Handler
-  private option<O>(name: QueryOptionNames, opts?: O) {
+  private option<O>(name: QueryOption, opts?: O) {
     if (opts !== undefined) this.values[name] = opts;
     return this.values[name];
   }

@@ -35,7 +35,7 @@ import {
   VERSION_4_0,
   XSSI_PREFIX,
 } from '../../constants';
-import { PathSegmentNames } from '../../types';
+import { PathSegment } from '../../types';
 import { Arrays } from '../../utils/arrays';
 import { Http } from '../../utils/http';
 import { Strings } from '../../utils/strings';
@@ -146,7 +146,7 @@ export class ODataBatchResource extends ODataResource<any> {
   //#region Factory
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
-    segments.add(PathSegmentNames.batch, $BATCH);
+    segments.add(PathSegment.batch, $BATCH);
     return new ODataBatchResource(api, { segments });
   }
 

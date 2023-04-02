@@ -10,7 +10,7 @@ export type FetchPolicy =
 export type ODataMetadataType = 'minimal' | 'full' | 'none';
 export type CacheCacheability = 'public' | 'private' | 'no-cache' | 'no-store';
 
-export enum PathSegmentNames {
+export enum PathSegment {
   batch = 'batch',
   metadata = 'metadata',
   entitySet = 'entitySet',
@@ -25,7 +25,7 @@ export enum PathSegmentNames {
   action = 'action',
 }
 
-export enum QueryOptionNames {
+export enum QueryOption {
   select = 'select',
   expand = 'expand',
   compute = 'compute',
@@ -39,6 +39,74 @@ export enum QueryOptionNames {
   format = 'format',
   levels = 'levels',
   count = 'count',
+}
+export enum EdmType {
+  //Edm.Guid 16-byte (128-bit) unique identifier
+  Guid = 'Edm.Guid',
+  //Edm.Int16 Signed 16-bit integer
+  Int16 = 'Edm.Int16',
+  //Edm.String Sequence of UTF-8 characters
+  String = 'Edm.String',
+  //Edm.Boolean Binary-valued logic
+  Boolean = 'Edm.Boolean',
+  //Edm.Byte Unsigned 8-bit integer
+  Byte = 'Edm.Byte',
+  //Edm.SByte Signed 8-bit integer
+  SByte = 'Edm.SByte',
+  //Edm.Int32 Signed 16-bit integer
+  Int32 = 'Edm.Int32',
+  //Edm.Int64 Signed 16-bit integer
+  Int64 = 'Edm.Int64',
+  //Edm.Date Date without a time-zone offset
+  Date = 'Edm.Date',
+  //Edm.TimeOfDay Clock time 00:00-23:59:59.999999999999
+  TimeOfDay = 'Edm.TimeOfDay',
+  //Edm.DateTimeOffset Date and time with a time-zone offset, no leap seconds
+  DateTimeOffset = 'Edm.DateTimeOffset',
+  //Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
+  Duration = 'Edm.Duration',
+  //Edm.Decimal Numeric values with fixed precision and scale
+  Decimal = 'Edm.Decimal',
+  //Edm.Double IEEE 754 binary64 floating-point number (15-17 decimal digits)
+  Double = 'Edm.Double',
+  //Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
+  Single = 'Edm.Single',
+  //Edm.Binary Binary data
+  Binary = 'Edm.Binary',
+  //Edm.Stream Binary data stream
+  Stream = 'Edm.Stream',
+  //Edm.Geography Abstract base type for all Geography types
+  Geography = 'Edm.Geography',
+  //Edm.GeographyPoint A point in a round-earth coordinate system
+  GeographyPoint = 'Edm.GeographyPoint',
+  //Edm.GeographyLineString Line string in a round-earth coordinate system
+  GeographyLineString = 'Edm.GeographyLineString',
+  //Edm.GeographyPolygon Polygon in a round-earth coordinate system
+  GeographyPolygon = 'Edm.GeographyPolygon',
+  //Edm.GeographyMultiPoint Collection of points in a round-earth coordinate system
+  GeographyMultiPoint = 'Edm.GeographyMultiPoint',
+  //Edm.GeographyMultiLineString Collection of line strings in a round-earth coordinate system
+  GeographyMultiLineString = 'Edm.GeographyMultiLineString',
+  //Edm.GeographyMultiPolygon Collection of polygons in a round-earth coordinate system
+  GeographyMultiPolygon = 'Edm.GeographyMultiPolygon',
+  //Edm.GeographyCollection Collection of arbitrary Geography values
+  GeographyCollection = 'Edm.GeographyCollection',
+  //Edm.Geometry Abstract base type for all Geometry types
+  Geometry = 'Edm.Geometry',
+  //Edm.GeometryPoint Point in a flat-earth coordinate system
+  GeometryPoint = 'Edm.GeometryPoint',
+  //Edm.GeometryLineString Line string in a flat-earth coordinate system
+  GeometryLineString = 'Edm.GeometryLineString',
+  //Edm.GeometryPolygon Polygon in a flat-earth coordinate system
+  GeometryPolygon = 'Edm.GeometryPolygon',
+  //Edm.GeometryMultiPoint Collection of points in a flat-earth coordinate system
+  GeometryMultiPoint = 'Edm.GeometryMultiPoint',
+  //Edm.GeometryMultiLineString Collection of line strings in a flat-earth coordinate system
+  GeometryMultiLineString = 'Edm.GeometryMultiLineString',
+  //Edm.GeometryMultiPolygon Collection of polygons in a flat-earth coordinate system
+  GeometryMultiPolygon = 'Edm.GeometryMultiPolygon',
+  //Edm.GeometryCollection Collection of arbitrary Geometry values
+  GeometryCollection = 'Edm.GeometryCollection',
 }
 
 export interface ApiOptions {
@@ -65,7 +133,7 @@ export interface ApiOptions {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
-  bodyQueryOptions?: QueryOptionNames[];
+  bodyQueryOptions?: QueryOption[];
   stringAsEnum?: boolean;
   //https://github.com/OData/WebApi/issues/1974
   //https://github.com/OData/WebApi/issues/1647

@@ -3,7 +3,7 @@ import { concatMap, expand, map, reduce, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema/structured-type';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -33,7 +33,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     }
   ) {
     const segments = new ODataPathSegments();
-    const segment = segments.add(PathSegmentNames.entitySet, path);
+    const segment = segments.add(PathSegment.entitySet, path);
     if (schema !== undefined) segment.type(schema.type());
     return new ODataEntitySetResource<E>(api, { segments, query, schema });
   }
@@ -79,7 +79,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     )
       throw new Error(`Cannot cast to ${type}`);
     const segments = this.cloneSegments();
-    segments.add(PathSegmentNames.type, type).type(type);
+    segments.add(PathSegment.type, type).type(type);
     return new ODataEntitySetResource<C>(this.api, {
       segments,
       schema: castSchema,
@@ -98,7 +98,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   protected override get(
     options: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<any> {
     return super.get({ responseType: 'entities', ...options });
@@ -116,7 +116,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   fetch(
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<ODataEntities<T>> {
     return this.get(options);
@@ -125,7 +125,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   fetchAll(
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
@@ -157,7 +157,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     top: number,
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
@@ -186,7 +186,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   fetchOne(
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }> {
     return this.fetchMany(1, options).pipe(
@@ -200,7 +200,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   fetchEntities(
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<T[] | null> {
     return this.fetch(options).pipe(map(({ entities }) => entities));
@@ -209,7 +209,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<C | null> {
     return this.fetch(options).pipe(

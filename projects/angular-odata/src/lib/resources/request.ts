@@ -9,7 +9,7 @@ import {
   PREFER,
   TEXT_PLAIN,
 } from '../constants';
-import { QueryOptionNames } from '../types';
+import { QueryOption } from '../types';
 import { Http, Types } from '../utils';
 import { ODataResource } from './resource';
 import { ODataOptions } from './types';
@@ -20,7 +20,7 @@ export class ODataRequest<T> {
   readonly context?: HttpContext;
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
-  readonly bodyQueryOptions: QueryOptionNames[];
+  readonly bodyQueryOptions: QueryOption[];
   readonly fetchPolicy:
     | 'cache-first'
     | 'cache-and-network'
@@ -78,7 +78,7 @@ export class ODataRequest<T> {
       | 'no-cache'
       | 'cache-only';
     withCredentials?: boolean;
-    bodyQueryOptions?: QueryOptionNames[];
+    bodyQueryOptions?: QueryOption[];
   }) {
     this._method = init.method;
     this.resource = init.resource;
@@ -241,7 +241,7 @@ export class ODataRequest<T> {
         | 'entities';
       observe: 'events' | 'response';
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ) {
     const apiOptions = api.options;

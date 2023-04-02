@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -29,7 +29,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     }
   ) {
     const segments = new ODataPathSegments();
-    const segment = segments.add(PathSegmentNames.singleton, path);
+    const segment = segments.add(PathSegment.singleton, path);
     if (schema !== undefined) segment.type(schema.type());
     return new ODataSingletonResource<S>(api, { segments, query, schema });
   }
@@ -102,7 +102,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   protected override get(
     options: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<any> {
     return super.get({ responseType: 'entity', ...options });
@@ -165,7 +165,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    */
   fetch(
     options?: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<ODataEntity<T>> {
     return this.get(options);
@@ -178,7 +178,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    */
   fetchEntity(
     options?: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<T | null> {
     return this.fetch(options).pipe(map(({ entity }) => entity));
@@ -191,7 +191,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    */
   fetchModel<M extends ODataModel<T>>(
     options?: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<M | null> {
     return this.fetch(options).pipe(

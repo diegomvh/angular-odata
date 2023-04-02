@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { $ID, $REF, ODATA_ID } from '../../constants';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -23,7 +23,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
       query,
     }: { segments: ODataPathSegments; query?: ODataQueryOptions<P> }
   ) {
-    segments.add(PathSegmentNames.reference, $REF);
+    segments.add(PathSegment.reference, $REF);
     query?.clear();
     return new ODataReferenceResource<P>(api, { segments, query });
   }
@@ -122,18 +122,18 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   fetch(
     options?: ODataEntityOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<ODataEntity<T>>;
   fetch(
     options?: ODataEntitiesOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<ODataEntities<T>>;
   fetch(
     options: ODataEntityOptions &
       ODataEntitiesOptions & {
-        bodyQueryOptions?: QueryOptionNames[];
+        bodyQueryOptions?: QueryOption[];
       } = {}
   ): Observable<any> {
     return this.get(options);
@@ -146,7 +146,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   fetchEntity(
     options: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<T | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
@@ -161,7 +161,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   fetchEntities(
     options: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<T[] | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(

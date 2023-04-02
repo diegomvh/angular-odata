@@ -30,7 +30,7 @@ import {
   Flight,
   CONFIG_NAME,
 } from './trippin.spec';
-import { QueryOptionNames } from './types';
+import { QueryOption } from './types';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -38,7 +38,10 @@ describe('ODataClient', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ODataModule.forRoot({ config: TripPinConfig }), HttpClientTestingModule],
+      imports: [
+        ODataModule.forRoot({ config: TripPinConfig }),
+        HttpClientTestingModule,
+      ],
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
@@ -558,10 +561,7 @@ describe('ODataClient', () => {
       `${NAMESPACE}.Person`
     );
     const api = client.apiFor(people);
-    api.options.bodyQueryOptions = [
-      QueryOptionNames.select,
-      QueryOptionNames.expand,
-    ];
+    api.options.bodyQueryOptions = [QueryOption.select, QueryOption.expand];
     people
       .query((q) => {
         q.select(['FistName', 'LastName']);
@@ -586,7 +586,7 @@ describe('ODataClient', () => {
         q.expand({ Friends: {} });
       })
       .fetchAll({
-        bodyQueryOptions: [QueryOptionNames.select, QueryOptionNames.expand],
+        bodyQueryOptions: [QueryOption.select, QueryOption.expand],
       })
       .subscribe((people) => {
         expect(people).toBeDefined();
@@ -604,7 +604,7 @@ describe('ODataClient', () => {
       `${NAMESPACE}.Person`
     );
     const api = client.apiFor(people);
-    api.options.bodyQueryOptions = [QueryOptionNames.select];
+    api.options.bodyQueryOptions = [QueryOption.select];
     people
       .query((q, s) => {
         q.select(['FistName', 'LastName']);
@@ -613,7 +613,7 @@ describe('ODataClient', () => {
           Gender: s?.field<PersonGender>('Gender')?.encode(PersonGender.Male),
         });
       })
-      .fetchAll({ bodyQueryOptions: [QueryOptionNames.filter] })
+      .fetchAll({ bodyQueryOptions: [QueryOption.filter] })
       .subscribe((people) => {
         expect(people).toBeDefined();
       });

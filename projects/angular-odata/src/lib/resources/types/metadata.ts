@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { $METADATA } from '../../constants';
-import { PathSegmentNames } from '../../types';
+import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
 import { ODataMetadata } from '../responses';
@@ -16,7 +16,7 @@ export class ODataMetadataResource extends ODataResource<any> {
   //#region Factory
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
-    segments.add(PathSegmentNames.metadata, $METADATA);
+    segments.add(PathSegment.metadata, $METADATA);
     return new ODataMetadataResource(api, segments);
   }
   override clone(): ODataMetadataResource {

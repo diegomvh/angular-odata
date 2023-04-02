@@ -36,8 +36,8 @@ import {
   ApiOptions,
   NONE_PARSER,
   Parser,
-  PathSegmentNames,
-  QueryOptionNames,
+  PathSegment,
+  QueryOption,
 } from './types';
 
 /**
@@ -121,20 +121,20 @@ export class ODataApi {
   }) {
     const segments = new ODataPathSegments(json.segments);
     const query = new ODataQueryOptions(json.options);
-    switch (segments.last()?.name as PathSegmentNames) {
-      case PathSegmentNames.entitySet:
+    switch (segments.last()?.name as PathSegment) {
+      case PathSegment.entitySet:
         if (segments.last()?.hasKey()) {
           return new ODataEntityResource(this, { segments, query });
         } else {
           return new ODataEntitySetResource(this, { segments, query });
         }
-      case PathSegmentNames.navigationProperty:
+      case PathSegment.navigationProperty:
         return new ODataNavigationPropertyResource(this, { segments, query });
-      case PathSegmentNames.singleton:
+      case PathSegment.singleton:
         return new ODataSingletonResource(this, { segments, query });
-      case PathSegmentNames.action:
+      case PathSegment.action:
         return new ODataActionResource(this, { segments, query });
-      case PathSegmentNames.function:
+      case PathSegment.function:
         return new ODataFunctionResource(this, { segments, query });
     }
     throw new Error('No Resource for json');
@@ -222,7 +222,7 @@ export class ODataApi {
         | 'entities';
       observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<any> {
     let req = ODataRequest.factory(this, method, resource, {

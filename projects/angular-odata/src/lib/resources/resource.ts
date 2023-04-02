@@ -10,12 +10,7 @@ import { ODataHelper } from '../helper';
 import { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
-import {
-  ParserOptions,
-  Parser,
-  QueryOptionNames,
-  PathSegmentNames,
-} from '../types';
+import { ParserOptions, Parser, QueryOption, PathSegment } from '../types';
 import { Objects, Types } from '../utils/index';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {
@@ -91,7 +86,7 @@ export class ODataResource<T> {
   }
 
   hasEntityKey() {
-    return Boolean(this.pathSegments.get(PathSegmentNames.entitySet)?.hasKey());
+    return Boolean(this.pathSegments.get(PathSegment.entitySet)?.hasKey());
   }
 
   clearKey() {
@@ -352,7 +347,7 @@ export class ODataResource<T> {
         | 'entity'
         | 'entities';
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<any> {
     return this.api.request<T>('GET', this, options);

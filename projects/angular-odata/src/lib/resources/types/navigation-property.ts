@@ -3,7 +3,7 @@ import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -45,10 +45,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       query?: ODataQueryOptions<N>;
     }
   ) {
-    const segment = segments.add(PathSegmentNames.navigationProperty, path);
+    const segment = segments.add(PathSegment.navigationProperty, path);
     if (schema !== undefined) segment.type(schema.type());
     else if (type !== undefined) segment.type(type);
-    query?.keep(QueryOptionNames.format);
+    query?.keep(QueryOption.format);
     return new ODataNavigationPropertyResource<N>(api, {
       segments,
       query,
@@ -159,7 +159,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     )
       throw new Error(`Cannot cast to ${type}`);
     const segments = this.cloneSegments();
-    segments.add(PathSegmentNames.type, type).type(type);
+    segments.add(PathSegment.type, type).type(type);
     return new ODataNavigationPropertyResource<C>(this.api, {
       segments,
       schema: castSchema,
@@ -196,7 +196,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   protected override get(
     options: ODataEntityOptions &
       ODataEntitiesOptions & {
-        bodyQueryOptions?: QueryOptionNames[];
+        bodyQueryOptions?: QueryOption[];
       } = {}
   ): Observable<any> {
     return super.get(options);
@@ -260,18 +260,18 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    */
   fetch(
     options?: ODataEntityOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<ODataEntity<T>>;
   fetch(
     options?: ODataEntitiesOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<ODataEntities<T>>;
   fetch(
     options: ODataEntityOptions &
       ODataEntitiesOptions & {
-        bodyQueryOptions?: QueryOptionNames[];
+        bodyQueryOptions?: QueryOption[];
       } = {}
   ): Observable<any> {
     if (!this.hasEntityKey())
@@ -288,7 +288,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    */
   fetchEntity(
     options: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<T | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
@@ -303,7 +303,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    */
   fetchModel<M extends ODataModel<T>>(
     options: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<M | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
@@ -320,7 +320,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    */
   fetchEntities(
     options: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<T[] | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
@@ -336,7 +336,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     options: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<C | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
@@ -356,7 +356,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   fetchAll(
     options: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
@@ -389,7 +389,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     top: number,
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
@@ -418,7 +418,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   fetchOne(
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }> {
     return this.fetchMany(1, options).pipe(

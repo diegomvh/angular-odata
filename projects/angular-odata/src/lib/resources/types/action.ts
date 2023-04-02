@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataCallable } from '../../schema/callable';
-import { PathSegmentNames } from '../../types';
+import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -36,7 +36,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     if (path === undefined)
       throw new Error(`ODataActionResource: path is required`);
 
-    const segment = segments.add(PathSegmentNames.action, path);
+    const segment = segments.add(PathSegment.action, path);
     if (schema !== undefined) segment.type(schema.type());
     return new ODataActionResource<P, R>(api, {
       segments,

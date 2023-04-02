@@ -1,4 +1,4 @@
-import { QueryOptionNames } from '../../types';
+import { QueryOption } from '../../types';
 import { Objects, Types } from '../../utils';
 import {
   buildPathAndQuery,
@@ -21,50 +21,48 @@ import { SelectExpression } from './expressions/select';
 import { ODataQueryOptionHandler } from './handlers';
 
 export type ODataQueryArguments<T> = {
-  [QueryOptionNames.select]?: Select<T> | SelectExpression<T> | null;
-  [QueryOptionNames.expand]?: Expand<T> | ExpandExpression<T> | null;
-  [QueryOptionNames.compute]?: string | ComputeExpression<T> | null;
-  [QueryOptionNames.filter]?: Filter<T> | FilterExpression<T> | null;
-  [QueryOptionNames.search]?: string | SearchExpression<T> | null;
-  [QueryOptionNames.transform]?: Transform<T> | null;
-  [QueryOptionNames.orderBy]?: OrderBy<T> | OrderByExpression<T> | null;
-  [QueryOptionNames.top]?: number | null;
-  [QueryOptionNames.skip]?: number | null;
-  [QueryOptionNames.skiptoken]?: string | null;
-  [QueryOptionNames.format]?: string | null;
-  [QueryOptionNames.levels]?: number | 'max' | null;
-  [QueryOptionNames.count]?: boolean | null;
+  [QueryOption.select]?: Select<T> | SelectExpression<T> | null;
+  [QueryOption.expand]?: Expand<T> | ExpandExpression<T> | null;
+  [QueryOption.compute]?: string | ComputeExpression<T> | null;
+  [QueryOption.filter]?: Filter<T> | FilterExpression<T> | null;
+  [QueryOption.search]?: string | SearchExpression<T> | null;
+  [QueryOption.transform]?: Transform<T> | null;
+  [QueryOption.orderBy]?: OrderBy<T> | OrderByExpression<T> | null;
+  [QueryOption.top]?: number | null;
+  [QueryOption.skip]?: number | null;
+  [QueryOption.skiptoken]?: string | null;
+  [QueryOption.format]?: string | null;
+  [QueryOption.levels]?: number | 'max' | null;
+  [QueryOption.count]?: boolean | null;
 };
 
 export class ODataQueryOptions<T> {
-  values: Map<QueryOptionNames, any>;
+  values: Map<QueryOption, any>;
 
-  constructor(values?: Map<QueryOptionNames, any> | { [name: string]: any }) {
+  constructor(values?: Map<QueryOption, any> | { [name: string]: any }) {
     this.values =
       values instanceof Map
         ? values
-        : new Map(
-            Object.entries(values || {}) as Array<[QueryOptionNames, any]>
-          );
+        : new Map(Object.entries(values || {}) as Array<[QueryOption, any]>);
   }
 
   // Params
   pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
     let aliases: QueryCustomType[] = [];
     let options = [
-      QueryOptionNames.select,
-      QueryOptionNames.filter,
-      QueryOptionNames.search,
-      QueryOptionNames.compute,
-      QueryOptionNames.transform,
-      QueryOptionNames.orderBy,
-      QueryOptionNames.top,
-      QueryOptionNames.skip,
-      QueryOptionNames.skiptoken,
-      QueryOptionNames.expand,
-      QueryOptionNames.format,
-      QueryOptionNames.levels,
-      QueryOptionNames.count,
+      QueryOption.select,
+      QueryOption.filter,
+      QueryOption.search,
+      QueryOption.compute,
+      QueryOption.transform,
+      QueryOption.orderBy,
+      QueryOption.top,
+      QueryOption.skip,
+      QueryOption.skiptoken,
+      QueryOption.expand,
+      QueryOption.format,
+      QueryOption.levels,
+      QueryOption.count,
     ]
       .filter((key) => !Types.isEmpty(this.values.get(key)))
       .reduce((acc, key) => {
@@ -109,18 +107,18 @@ export class ODataQueryOptions<T> {
 
   toQueryArguments(): ODataQueryArguments<T> {
     return {
-      select: this.values.get(QueryOptionNames.select) || null,
-      expand: this.values.get(QueryOptionNames.expand) || null,
-      transform: this.values.get(QueryOptionNames.transform) || null,
-      compute: this.values.get(QueryOptionNames.compute) || null,
-      search: this.values.get(QueryOptionNames.search) || null,
-      filter: this.values.get(QueryOptionNames.filter) || null,
-      orderBy: this.values.get(QueryOptionNames.orderBy) || null,
-      top: this.values.get(QueryOptionNames.top) || null,
-      skip: this.values.get(QueryOptionNames.skip) || null,
-      skiptoken: this.values.get(QueryOptionNames.skiptoken) || null,
-      levels: this.values.get(QueryOptionNames.levels) || null,
-      count: this.values.get(QueryOptionNames.count) || null,
+      select: this.values.get(QueryOption.select) || null,
+      expand: this.values.get(QueryOption.expand) || null,
+      transform: this.values.get(QueryOption.transform) || null,
+      compute: this.values.get(QueryOption.compute) || null,
+      search: this.values.get(QueryOption.search) || null,
+      filter: this.values.get(QueryOption.filter) || null,
+      orderBy: this.values.get(QueryOption.orderBy) || null,
+      top: this.values.get(QueryOption.top) || null,
+      skip: this.values.get(QueryOption.skip) || null,
+      skiptoken: this.values.get(QueryOption.skiptoken) || null,
+      levels: this.values.get(QueryOption.levels) || null,
+      count: this.values.get(QueryOption.count) || null,
     } as ODataQueryArguments<T>;
   }
 
@@ -129,23 +127,23 @@ export class ODataQueryOptions<T> {
   }
 
   // Set Renderable
-  expression(key: QueryOptionNames, exp?: Expression<T>) {
+  expression(key: QueryOption, exp?: Expression<T>) {
     if (exp !== undefined) this.values.set(key, exp);
     return this.values.get(key);
   }
 
   // Option Handler
-  option<O>(key: QueryOptionNames, opts?: O) {
+  option<O>(key: QueryOption, opts?: O) {
     if (opts !== undefined) this.values.set(key, opts);
     return new ODataQueryOptionHandler<O>(this.values, key);
   }
 
   // Query Options tools
-  has(key: QueryOptionNames) {
+  has(key: QueryOption) {
     return this.values.has(key);
   }
 
-  remove(...keys: QueryOptionNames[]) {
+  remove(...keys: QueryOption[]) {
     [...this.values.keys()]
       .filter((k) => keys.indexOf(k) !== -1)
       .forEach((key) => {
@@ -153,7 +151,7 @@ export class ODataQueryOptions<T> {
       });
   }
 
-  keep(...keys: QueryOptionNames[]) {
+  keep(...keys: QueryOption[]) {
     [...this.values.keys()]
       .filter((k) => keys.indexOf(k) === -1)
       .forEach((key) => {

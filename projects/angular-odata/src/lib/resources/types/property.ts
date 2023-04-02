@@ -3,7 +3,7 @@ import { concatMap, expand, map, reduce, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -39,7 +39,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       query?: ODataQueryOptions<P>;
     }
   ) {
-    const segment = segments.add(PathSegmentNames.property, path);
+    const segment = segments.add(PathSegment.property, path);
     if (schema !== undefined) segment.type(schema.type());
     else if (type !== undefined) segment.type(type);
 
@@ -255,7 +255,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   fetchOne(
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
@@ -272,7 +272,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     top: number,
     options?: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
@@ -306,7 +306,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   fetchAll(
     options: ODataOptions & {
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     } = {}
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ODataApi } from '../../api';
 import { $VALUE } from '../../constants';
-import { PathSegmentNames } from '../../types';
+import { PathSegment } from '../../types';
 import { Http } from '../../utils';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
@@ -20,7 +20,7 @@ export class ODataMediaResource extends ODataResource<any> {
       query?: ODataQueryOptions<V>;
     }
   ) {
-    segments.add(PathSegmentNames.value, $VALUE);
+    segments.add(PathSegment.value, $VALUE);
     return new ODataMediaResource(api, { segments, query });
   }
 

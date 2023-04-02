@@ -4,7 +4,7 @@ import { ODataApi } from '../../api';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
 import { ODataCallable } from '../../schema/callable';
-import { PathSegmentNames } from '../../types';
+import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -37,7 +37,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     if (path === undefined)
       throw new Error(`ODataActionResource: path is required`);
 
-    const segment = segments.add(PathSegmentNames.function, path);
+    const segment = segments.add(PathSegment.function, path);
     if (schema !== undefined) segment.type(schema.type());
     return new ODataFunctionResource<P, R>(api, {
       segments,

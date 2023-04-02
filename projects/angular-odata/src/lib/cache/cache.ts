@@ -2,7 +2,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from '../constants';
 import { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
-import { Cache, PathSegmentNames } from '../types';
+import { Cache, PathSegment } from '../types';
 
 /**
  * A cache entry that holds a payload, a last read time, and a timeout for the entry.
@@ -39,7 +39,7 @@ export abstract class ODataCache implements Cache {
     const segments = req.resource.cloneSegments();
     return segments.segments({ key: true }).reduce(
       (acc, s) => {
-        if (s.name === PathSegmentNames.entitySet)
+        if (s.name === PathSegment.entitySet)
           acc = [...acc, s.path() as string];
         return acc;
       },
