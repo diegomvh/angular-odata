@@ -213,7 +213,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       ...options,
     }).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel<M>(entity, { annots, reset: true }) : null
+        entity ? this.asModel<M>(entity, { annots }) : null
       )
     );
   }
@@ -254,7 +254,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     }).pipe(
       map(({ entities, annots }) =>
         entities
-          ? this.asCollection<M, C>(entities, { annots, reset: true })
+          ? this.asCollection<M, C>(entities, { annots })
           : null
       )
     );

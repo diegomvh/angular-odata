@@ -9,7 +9,7 @@ import {
   ODataStructuredType,
 } from './schema';
 import { ODataEntityService } from './services/entity';
-import { ApiConfig, Parser } from './types';
+import { ApiConfig, EdmType, Parser } from './types';
 
 export class ODataSettings {
   apis: ODataApi[];
@@ -100,7 +100,7 @@ export class ODataSettings {
     return values[0] as ODataEntitySet;
   }
 
-  public parserForType<T>(type: string) {
+  public parserForType<T>(type: string | EdmType) {
     let values = this.apis
       .map((api) => api.parserForType<T>(type))
       .filter((e) => e);

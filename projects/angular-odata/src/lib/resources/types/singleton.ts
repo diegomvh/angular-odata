@@ -196,7 +196,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   ): Observable<M | null> {
     return this.fetch(options).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel<M>(entity, { annots, reset: true }) : null
+        entity ? this.asModel<M>(entity, { annots }) : null
       )
     );
   }

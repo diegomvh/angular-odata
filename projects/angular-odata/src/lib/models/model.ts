@@ -100,8 +100,7 @@ export class ODataModel<T> {
     {
       parent,
       resource,
-      annots,
-      reset = false,
+      annots
     }: {
       parent?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
@@ -109,7 +108,6 @@ export class ODataModel<T> {
       ];
       resource?: ODataResource<T>;
       annots?: ODataEntityAnnotations<T>;
-      reset?: boolean;
     } = {}
   ) {
     const Klass = this.constructor as typeof ODataModel;
@@ -126,9 +124,7 @@ export class ODataModel<T> {
     let attrs = this.annots().attributes(data, 'full');
     let defaults = this.defaults();
 
-    this.assign(Objects.merge(defaults, attrs as { [name: string]: any }), {
-      reset,
-    });
+    this.assign(Objects.merge(defaults, attrs as { [name: string]: any }), {reset: true});
   }
 
   //#region Resources
@@ -389,7 +385,7 @@ export class ODataModel<T> {
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
     if (pathArray.length === 0) return undefined;
-    const value = this._meta.get(this, pathArray[0]);
+    const value = this._meta.get<any>(this, pathArray[0]);
     if (
       pathArray.length > 1 &&
       (value instanceof ODataModel || value instanceof ODataCollection)
@@ -397,6 +393,21 @@ export class ODataModel<T> {
       return value.get(pathArray.slice(1));
     }
     return value;
+  }
+
+  has(path: string | string[]): boolean {
+    const pathArray = (
+      Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
+    ) as any[];
+    if (pathArray.length === 0) return false;
+    const value = this._meta.get<any>(this, pathArray[0]);
+    if (
+      pathArray.length > 1 &&
+      (value instanceof ODataModel || value instanceof ODataCollection)
+    ) {
+      return value.has(pathArray.slice(1));
+    }
+    return value !== undefined;
   }
 
   reset({
@@ -454,7 +465,9 @@ export class ODataModel<T> {
     }) as M;
   }
 
-  private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
+  private _request(
+    obs$: Observable<ODataEntity<any>>
+  ): Observable<this> {
     this.events$.emit(
       new ODataModelEvent('request', {
         model: this,
@@ -464,9 +477,7 @@ export class ODataModel<T> {
     return obs$.pipe(
       map(({ entity, annots }) => {
         this._annotations = annots;
-        this.assign(annots.attributes(entity || {}, 'full'), {
-          reset: true,
-        });
+        this.assign(annots.attributes(entity || {}, 'full'), { reset: true });
         this.events$.emit(
           new ODataModelEvent('sync', {
             model: this,

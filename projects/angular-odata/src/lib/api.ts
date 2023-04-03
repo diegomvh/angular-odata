@@ -34,6 +34,7 @@ import { ODataEntityService } from './services/entity';
 import {
   ApiConfig,
   ApiOptions,
+  EdmType,
   NONE_PARSER,
   Parser,
   PathSegment,
@@ -97,7 +98,7 @@ export class ODataApi {
     this.schemas.forEach((schema) => {
       schema.configure({
         options: this.options.parserOptions,
-        parserForType: (type: string) => this.parserForType(type),
+        parserForType: (type: string | EdmType) => this.parserForType(type),
         findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
     });
@@ -393,7 +394,7 @@ export class ODataApi {
       // Configure
       Model.meta.configure({
         options: this.options.parserOptions,
-        parserForType: (type: string) => this.parserForType(type),
+        parserForType: (type: string | EdmType) => this.parserForType(type),
         findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
       // Store New Model for next time
@@ -531,7 +532,7 @@ export class ODataApi {
       | undefined;
   }
 
-  public parserForType<T>(type: string, bindingType?: string) {
+  public parserForType<T>(type: string | EdmType, bindingType?: string) {
     const key = bindingType !== undefined ? `${bindingType}/${type}` : type;
     if (this.memo.forType.parser.has(key)) {
       return this.memo.forType.parser.get(key) as Parser<T>;

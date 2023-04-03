@@ -98,8 +98,7 @@ export class ODataResource<T> {
     entity?: Partial<T> | { [name: string]: any },
     {
       annots,
-      reset,
-    }: { annots?: ODataEntityAnnotations<T>; reset?: boolean } = {}
+    }: { annots?: ODataEntityAnnotations<T> } = {}
   ): M {
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type || this.returnType();
@@ -110,15 +109,14 @@ export class ODataResource<T> {
       resource = this.api.entitySet<T>(entitySet).entity(entity as Partial<T>);
       resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
     }
-    return new Model(entity, { resource, annots, reset }) as M;
+    return new Model(entity, { resource, annots }) as M;
   }
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities?: Partial<T>[] | { [name: string]: any }[],
     {
       annots,
-      reset,
-    }: { annots?: ODataEntitiesAnnotations<T>; reset?: boolean } = {}
+    }: { annots?: ODataEntitiesAnnotations<T>; } = {}
   ): C {
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type || this.returnType();
@@ -129,7 +127,7 @@ export class ODataResource<T> {
       resource = this.api.entitySet<T>(path);
       resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
     }
-    return new Collection(entities, { resource, annots, reset }) as C;
+    return new Collection(entities, { resource, annots }) as C;
   }
   //#endregion
 

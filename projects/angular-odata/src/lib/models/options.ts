@@ -455,11 +455,9 @@ export class ODataModelField<F> {
   modelFactory<F>({
     parent,
     value,
-    reset,
   }: {
     parent: ODataModel<any>;
     value?: Partial<F> | { [name: string]: any };
-    reset?: boolean;
   }): ODataModel<F> {
     // Model
     const annots = this.annotationsFactory(
@@ -482,7 +480,6 @@ export class ODataModelField<F> {
 
     return new Model((value || {}) as Partial<F> | { [name: string]: any }, {
       annots,
-      reset,
       parent: [parent, this],
     });
   }
@@ -490,11 +487,9 @@ export class ODataModelField<F> {
   collectionFactory<F>({
     parent,
     value,
-    reset,
   }: {
     parent: ODataModel<any>;
     value?: Partial<F>[] | { [name: string]: any }[];
-    reset?: boolean;
   }): ODataCollection<F, ODataModel<F>> {
     // Collection Factory
     const annots = this.annotationsFactory(
@@ -508,7 +503,6 @@ export class ODataModelField<F> {
       {
         annots: annots,
         parent: [parent, this],
-        reset,
       }
     );
   }
@@ -652,17 +646,21 @@ export class ODataModelOptions<T> {
   }
 
   field<F>(name: keyof T | string) {
-    let field = this.fields({
+    let field = this.findField<F>(name);
+    //Throw error if not found
+    if (field === undefined)
+      throw new Error(`No field with name ${name as string}`);
+    return field as ODataModelField<F>;
+  }
+
+  findField<F>(name: keyof T | string) {
+    return this.fields({
       include_parents: true,
       include_navigation: true,
     }).find(
       (modelField: ODataModelField<F>) =>
         modelField.name === name || modelField.field === name
-    );
-    //Throw error if not found
-    if (field === undefined)
-      throw new Error(`No field with name ${name as string}`);
-    return field as ODataModelField<F>;
+    ) as ODataModelField<F> | undefined;
   }
 
   attach(
@@ -1361,17 +1359,15 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     field: ODataModelField<F> | string
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
-    if (!(field instanceof ODataModelField)) {
-      field = this.field(field);
-    }
-    if (field.isStructuredType()) {
-      const relation = self._relations.get(field.name);
+    let modelField = (field instanceof ODataModelField) ? field : this.findField<F>(field);
+    if (modelField !== undefined && modelField.isStructuredType()) {
+      const relation = self._relations.get(modelField.name);
       if (
-        field.navigation &&
+        modelField.navigation &&
         (relation?.model === null || ODataModelOptions.isModel(relation?.model))
       ) {
         // Check for reference
-        const referenced = this.resolveReferenced(self, field);
+        const referenced = this.resolveReferenced(self, modelField);
         if (
           relation?.model !== null &&
           referenced !== null &&
@@ -1390,12 +1386,13 @@ export class ODataModelOptions<T> {
         }
       }
       return relation?.model;
-    } else {
+    } else if (modelField !== undefined) {
       return this.attributes(self, {
         include_concurrency: true,
         include_computed: true,
-      })[field.name];
+      })[modelField.name];
     }
+    return undefined;
   }
 
   private _setStructured<F>(
@@ -1489,12 +1486,10 @@ export class ODataModelOptions<T> {
           ? field.collectionFactory<F>({
               parent: self,
               value: value as F[] | { [name: string]: any }[],
-              reset: self._reset,
             })
           : field.modelFactory<F>({
               parent: self,
               value: value,
-              reset: self._reset,
             });
       // Link new model/collection
       this._link(self, relation);
@@ -1583,12 +1578,10 @@ export class ODataModelOptions<T> {
       | ODataCollection<F, ODataModel<F>>
       | null
   ): boolean {
-    if (!(field instanceof ODataModelField)) {
-      field = this.field(field);
-    }
-    return field.isStructuredType()
-      ? this._setStructured(self, field, value)
-      : this._setValue(self, field, value, field.isKey());
+    let modelField = (field instanceof ODataModelField) ? field : this.field<F>(field);
+    return modelField.isStructuredType()
+      ? this._setStructured(self, modelField, value)
+      : this._setValue(self, modelField, value, modelField.isKey());
   }
 
   private _unlink<F>(self: ODataModel<T>, relation: ODataModelRelation<F>) {

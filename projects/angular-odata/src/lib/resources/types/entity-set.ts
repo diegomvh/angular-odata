@@ -215,7 +215,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return this.fetch(options).pipe(
       map(({ entities, annots }) =>
         entities
-          ? this.asCollection<M, C>(entities, { annots, reset: true })
+          ? this.asCollection<M, C>(entities, { annots })
           : null
       )
     );

@@ -308,7 +308,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   ): Observable<M | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel<M>(entity, { annots, reset: true }) : null
+        entity ? this.asModel<M>(entity, { annots }) : null
       )
     );
   }
@@ -342,7 +342,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
         entities
-          ? this.asCollection<M, C>(entities, { annots, reset: true })
+          ? this.asCollection<M, C>(entities, { annots })
           : null
       )
     );
