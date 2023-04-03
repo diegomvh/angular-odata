@@ -237,7 +237,7 @@ export class ODataModel<T> {
   }
 
   isOpenModel() {
-    return this.schema().isOpenType();
+    return this._meta.isOpenType();
   }
 
   isParentOf(
@@ -380,8 +380,7 @@ export class ODataModel<T> {
       return model.set(pathArray.slice(1), value);
     }
     if (pathArray.length === 1) {
-      let field = this._meta.field(pathArray[0]);
-      return this._meta._set(this, field, value);
+      return this._meta.set(this, pathArray[0], value);
     }
   }
 
@@ -390,8 +389,7 @@ export class ODataModel<T> {
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
     if (pathArray.length === 0) return undefined;
-    let field = this._meta.field(pathArray[0]);
-    const value = this._meta._get(this, field);
+    const value = this._meta.get(this, pathArray[0]);
     if (
       pathArray.length > 1 &&
       (value instanceof ODataModel || value instanceof ODataCollection)

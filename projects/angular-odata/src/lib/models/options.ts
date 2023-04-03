@@ -571,6 +571,10 @@ export class ODataModelOptions<T> {
     return this.schema.type({ alias });
   }
 
+  isOpenType() {
+    return this.schema.isOpenType();
+  }
+
   isTypeOf(type: string) {
     return this.schema.isTypeOf(type);
   }
@@ -843,9 +847,9 @@ export class ODataModelOptions<T> {
     for (let field of fields) {
       Object.defineProperty(self, field.name, {
         configurable: true,
-        get: () => this._get(self, field as ODataModelField<any>),
+        get: () => this.get(self, field as ODataModelField<any>),
         set: (value: any) =>
-          this._set(self, field as ODataModelField<any>, value),
+          this.set(self, field as ODataModelField<any>, value),
       });
     }
   }
@@ -1288,7 +1292,7 @@ export class ODataModelOptions<T> {
 
         if (field !== undefined) {
           // Delegated to private setter
-          if (this._set(self, field, value)) {
+          if (this.set(self, field, value)) {
             changes.push(field.name);
           }
         } else {
@@ -1353,10 +1357,13 @@ export class ODataModelOptions<T> {
     return model.hasChanged();
   }
 
-  _get<F>(
+  get<F>(
     self: ODataModel<T>,
-    field: ODataModelField<F>
+    field: ODataModelField<F> | string
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
+    if (!(field instanceof ODataModelField)) {
+      field = this.field(field);
+    }
     if (field.isStructuredType()) {
       const relation = self._relations.get(field.name);
       if (
@@ -1564,9 +1571,9 @@ export class ODataModelOptions<T> {
     return changed;
   }
 
-  _set<F>(
+  set<F>(
     self: ODataModel<T>,
-    field: ODataModelField<F>,
+    field: ODataModelField<F> | string,
     value:
       | F
       | F[]
@@ -1576,6 +1583,9 @@ export class ODataModelOptions<T> {
       | ODataCollection<F, ODataModel<F>>
       | null
   ): boolean {
+    if (!(field instanceof ODataModelField)) {
+      field = this.field(field);
+    }
     return field.isStructuredType()
       ? this._setStructured(self, field, value)
       : this._setValue(self, field, value, field.isKey());

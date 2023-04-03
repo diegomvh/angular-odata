@@ -396,9 +396,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     ...options
   }: ODataOptions & {
     withCount?: boolean;
-  } = {}): Observable<M | null> {
+  } = {}) {
     return this.fetchMany(1, { withCount, ...options }).pipe(
-      map((col) => col.first() || null)
+      map((col) => col.first())
     );
   }
 
