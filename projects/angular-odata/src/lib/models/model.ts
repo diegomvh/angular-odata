@@ -100,7 +100,8 @@ export class ODataModel<T> {
     {
       parent,
       resource,
-      annots
+      annots,
+      reset = false,
     }: {
       parent?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
@@ -108,6 +109,7 @@ export class ODataModel<T> {
       ];
       resource?: ODataResource<T>;
       annots?: ODataEntityAnnotations<T>;
+      reset?: boolean;
     } = {}
   ) {
     const Klass = this.constructor as typeof ODataModel;
@@ -124,7 +126,9 @@ export class ODataModel<T> {
     let attrs = this.annots().attributes(data, 'full');
     let defaults = this.defaults();
 
-    this.assign(Objects.merge(defaults, attrs as { [name: string]: any }), {reset: true});
+    this.assign(Objects.merge(defaults, attrs as { [name: string]: any }), {
+      reset,
+    });
   }
 
   //#region Resources
@@ -395,7 +399,7 @@ export class ODataModel<T> {
     return value;
   }
 
-  has(path: string | string[]): boolean {
+  _has(path: string | string[]): boolean {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -405,7 +409,7 @@ export class ODataModel<T> {
       pathArray.length > 1 &&
       (value instanceof ODataModel || value instanceof ODataCollection)
     ) {
-      return value.has(pathArray.slice(1));
+      return value._has(pathArray.slice(1));
     }
     return value !== undefined;
   }
@@ -465,9 +469,7 @@ export class ODataModel<T> {
     }) as M;
   }
 
-  private _request(
-    obs$: Observable<ODataEntity<any>>
-  ): Observable<this> {
+  private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
     this.events$.emit(
       new ODataModelEvent('request', {
         model: this,
@@ -746,18 +748,22 @@ export class ODataModel<T> {
   }
 
   // Cast
-  cast<S>(type: string): ODataModel<S> {
+  cast<S>(type: string) {
+    //: ODataModel<S> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource))
       throw new Error(
         `cast: Can't cast to derived model without ODataEntityResource`
       );
 
+    /* TODO: create model
     return resource
       .cast<S>(type)
       .asModel(this.toEntity(INCLUDE_DEEP) as { [name: string]: any }, {
         annots: this.annots() as any,
       });
+      */
+    return null;
   }
 
   fetchNavigationProperty<S>(

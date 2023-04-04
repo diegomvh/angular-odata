@@ -83,11 +83,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource,
       annots,
       model,
+      reset = false,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
       resource?: ODataResource<T>;
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
+      reset?: boolean;
     } = {}
   ) {
     const Klass = this.constructor as typeof ODataCollection;
@@ -125,7 +127,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
 
     entities = entities || [];
-    this.assign(entities, { reset: true });
+    this.assign(entities, { reset });
   }
 
   isParentOf(
@@ -234,6 +236,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private modelFactory(
     data: Partial<T> | { [name: string]: any },
+    { reset = false }: { reset?: boolean } = {}
   ): M {
     let Model = this._model;
     const annots = new ODataEntityAnnotations(this._annotations.helper);
@@ -250,6 +253,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     return new Model(data, {
       annots,
+      reset,
       parent: [this, null],
     }) as M;
   }
@@ -315,10 +319,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }) as C;
   }
 
-  private _request(
-    obs$: Observable<ODataEntities<any>>,
-    { reset }: { reset?: boolean } = {}
-  ): Observable<M[]> {
+  private _request(obs$: Observable<ODataEntities<any>>): Observable<M[]> {
     this.events$.emit(
       new ODataModelEvent('request', {
         collection: this,
@@ -329,8 +330,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return obs$.pipe(
       map(({ entities, annots }) => {
         this._annotations = annots;
-        const models = (entities || []).map(entity => this.modelFactory(entity) as M);
-        this.assign(models, { reset: reset ?? true });
+        const models = (entities || []).map(
+          (entity) => this.modelFactory(entity, { reset: true }) as M
+        ) as M[];
+        this.assign(models, { reset: true });
         this.events$.emit(
           new ODataModelEvent('sync', {
             collection: this,
@@ -344,10 +347,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   fetch({
     withCount,
-    reset,
+    remove,
     ...options
   }: ODataOptions & {
-    reset?: boolean;
+    remove?: boolean;
     withCount?: boolean;
   } = {}): Observable<M[]> {
     const resource = this.resource();
@@ -361,49 +364,52 @@ export class ODataCollection<T, M extends ODataModel<T>>
             ...options,
           });
 
-    return this._request(obs$, { reset });
+    return this._request(obs$);
   }
 
   fetchAll({
     withCount,
-    reset,
+    remove,
     ...options
   }: ODataOptions & {
-    reset?: boolean;
+    remove?: boolean;
     withCount?: boolean;
   } = {}): Observable<M[]> {
     const resource = this.resource();
 
     const obs$ = resource.fetchAll({ withCount, ...options });
 
-    return this._request(obs$, { reset });
+    return this._request(obs$);
   }
 
   fetchMany(
     top: number,
     {
       withCount,
+      remove,
       ...options
     }: ODataOptions & {
+      remove?: boolean;
       withCount?: boolean;
     } = {}
   ): Observable<M[]> {
     const resource = this.resource();
-    if (this.length > 0)
-      resource.query(q => q.skip(this.length));
+    if (this.length > 0) resource.query((q) => q.skip(this.length));
 
     const obs$ = resource.fetchMany(top, { withCount, ...options });
 
-    return this._request(obs$, {reset: false});
+    return this._request(obs$);
   }
 
   fetchOne({
     withCount,
+    remove,
     ...options
   }: ODataOptions & {
+    remove?: boolean;
     withCount?: boolean;
   } = {}) {
-    return this.fetchMany(1, { withCount, ...options }).pipe(
+    return this.fetchMany(1, { withCount, remove, ...options }).pipe(
       map((models) => models[0])
     );
   }
@@ -795,14 +801,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return value;
   }
 
-  has(path: number | string | string[]): boolean {
+  _has(path: number | string | string[]): boolean {
     const pathArray = (
       Types.isArray(path) ? path : `${path}`.match(/([^[.\]])+/g)
     ) as any[];
     if (pathArray.length === 0) return false;
     const value = this.models()[Number(pathArray[0])];
     if (pathArray.length > 1 && ODataModelOptions.isModel(value)) {
-      return value.has(pathArray.slice(1));
+      return value._has(pathArray.slice(1));
     }
     return value !== undefined;
   }

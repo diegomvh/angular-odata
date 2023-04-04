@@ -455,9 +455,11 @@ export class ODataModelField<F> {
   modelFactory<F>({
     parent,
     value,
+    reset,
   }: {
     parent: ODataModel<any>;
     value?: Partial<F> | { [name: string]: any };
+    reset?: boolean;
   }): ODataModel<F> {
     // Model
     const annots = this.annotationsFactory(
@@ -480,6 +482,7 @@ export class ODataModelField<F> {
 
     return new Model((value || {}) as Partial<F> | { [name: string]: any }, {
       annots,
+      reset,
       parent: [parent, this],
     });
   }
@@ -487,9 +490,11 @@ export class ODataModelField<F> {
   collectionFactory<F>({
     parent,
     value,
+    reset,
   }: {
     parent: ODataModel<any>;
     value?: Partial<F>[] | { [name: string]: any }[];
+    reset?: boolean;
   }): ODataCollection<F, ODataModel<F>> {
     // Collection Factory
     const annots = this.annotationsFactory(
@@ -502,6 +507,7 @@ export class ODataModelField<F> {
       (value || []) as Partial<F>[] | { [name: string]: any }[],
       {
         annots: annots,
+        reset,
         parent: [parent, this],
       }
     );
@@ -1359,7 +1365,8 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     field: ODataModelField<F> | string
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
-    let modelField = (field instanceof ODataModelField) ? field : this.findField<F>(field);
+    let modelField =
+      field instanceof ODataModelField ? field : this.findField<F>(field);
     if (modelField !== undefined && modelField.isStructuredType()) {
       const relation = self._relations.get(modelField.name);
       if (
@@ -1486,10 +1493,12 @@ export class ODataModelOptions<T> {
           ? field.collectionFactory<F>({
               parent: self,
               value: value as F[] | { [name: string]: any }[],
+              reset: self._reset,
             })
           : field.modelFactory<F>({
               parent: self,
               value: value,
+              reset: self._reset,
             });
       // Link new model/collection
       this._link(self, relation);
@@ -1578,7 +1587,8 @@ export class ODataModelOptions<T> {
       | ODataCollection<F, ODataModel<F>>
       | null
   ): boolean {
-    let modelField = (field instanceof ODataModelField) ? field : this.field<F>(field);
+    let modelField =
+      field instanceof ODataModelField ? field : this.field<F>(field);
     return modelField.isStructuredType()
       ? this._setStructured(self, modelField, value)
       : this._setValue(self, modelField, value, modelField.isKey());
