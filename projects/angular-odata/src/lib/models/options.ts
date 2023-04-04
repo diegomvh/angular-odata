@@ -1270,11 +1270,13 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     entity: Partial<T> | { [name: string]: any },
     {
+      remove = false,
       reset = false,
       reparent = false,
       silent = false,
-    }: { reset?: boolean; reparent?: boolean; silent?: boolean } = {}
+    }: { remove?: boolean; reset?: boolean; reparent?: boolean; silent?: boolean } = {}
   ) {
+    self._remove = reset;
     self._reset = reset;
     self._reparent = reparent;
     self._silent = silent;
@@ -1315,6 +1317,7 @@ export class ODataModelOptions<T> {
         })
       );
     }
+    self._remove = false;
     self._reset = false;
     self._reparent = false;
     self._silent = false;
@@ -1338,6 +1341,7 @@ export class ODataModelOptions<T> {
       self.annots()
     ) as ODataEntitiesAnnotations<F>;
     collection.assign(value as Partial<T>[] | { [name: string]: any }[], {
+      remove: self._remove,
       reset: self._reset,
       reparent: self._reparent,
       silent: self._silent,
@@ -1354,6 +1358,7 @@ export class ODataModelOptions<T> {
       self.annots()
     ) as ODataEntityAnnotations<F>;
     model.assign(value as F | { [name: string]: any }, {
+      remove: self._remove,
       reset: self._reset,
       reparent: self._reparent,
       silent: self._silent,

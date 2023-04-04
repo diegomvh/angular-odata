@@ -319,7 +319,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }) as C;
   }
 
-  private _request(obs$: Observable<ODataEntities<any>>): Observable<M[]> {
+  private _request(obs$: Observable<ODataEntities<any>>, { remove }: { remove?: boolean } = {}): Observable<M[]> {
     this.events$.emit(
       new ODataModelEvent('request', {
         collection: this,
@@ -333,7 +333,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         const models = (entities || []).map(
           (entity) => this.modelFactory(entity, { reset: true }) as M
         ) as M[];
-        this.assign(models, { reset: true });
+        this.assign(models, { reset: true, remove });
         this.events$.emit(
           new ODataModelEvent('sync', {
             collection: this,
@@ -364,7 +364,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             ...options,
           });
 
-    return this._request(obs$);
+    return this._request(obs$, {remove});
   }
 
   fetchAll({
@@ -379,7 +379,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     const obs$ = resource.fetchAll({ withCount, ...options });
 
-    return this._request(obs$);
+    return this._request(obs$, {remove});
   }
 
   fetchMany(
@@ -394,11 +394,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     } = {}
   ): Observable<M[]> {
     const resource = this.resource();
-    if (this.length > 0) resource.query((q) => q.skip(this.length));
+    resource.query((q) => remove || this.length == 0 ? q.skip().clear() : q.skip(this.length));
 
     const obs$ = resource.fetchMany(top, { withCount, ...options });
 
-    return this._request(obs$);
+    return this._request(obs$, {remove});
   }
 
   fetchOne({
@@ -898,12 +898,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
   assign(
     objects: Partial<T>[] | { [name: string]: any }[] | M[],
     {
+      remove = false,
       reset = false,
       reparent = false,
       silent = false,
-    }: { reset?: boolean; reparent?: boolean; silent?: boolean } = {}
+    }: { remove?: boolean; reset?: boolean; reparent?: boolean; silent?: boolean } = {}
   ) {
     const Model = this._model;
+    const skip = remove ? 0 : this.length;
 
     let toAdd: [M, number][] = [];
     let toChange: M[] = [];
@@ -912,6 +914,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let modelMap: string[] = [];
     objects.forEach((obj, index) => {
       const isModel = ODataModelOptions.isModel(obj);
+      const position = index + skip;
       const key =
         Model !== null && Model.meta ? Model.meta.resolveKey(obj) : undefined;
       const cid =
@@ -941,37 +944,37 @@ export class ODataCollection<T, M extends ODataModel<T>>
             );
             const entity = annots.attributes(obj, 'full');
             model._annotations = annots;
-            model.assign(entity, { reset, silent });
+            model.assign(entity, { reset, remove, silent });
           }
           // Model Change?
           if (model.hasChanged()) toChange.push(model);
         }
-        // Has Sort or Index Change?
-        if (toSort.length > 0 || index !== this.models().indexOf(model)) {
-          toSort.push([model, index]);
+        // Has Sort or Position Change?
+        if (toSort.length > 0 || position !== this.models().indexOf(model)) {
+          toSort.push([model, position]);
         }
       } else {
         // Add
         model = isModel
           ? (obj as M)
           : this.modelFactory(obj as Partial<T> | { [name: string]: any });
-        toAdd.push([model, index]);
+        toAdd.push([model, position]);
       }
       modelMap.push((<any>model)[Model.meta.cid]);
     });
 
-    if (reset) {
+    if (remove) {
       this._entries
         .filter((e) => modelMap.indexOf((<any>e.model)[Model.meta.cid]) === -1)
         .forEach((entry) => {
           toRemove.push(entry.model);
         });
-
-      toRemove.forEach((m) => {
-        this._removeModel(m, { silent, reset });
-      });
     }
 
+    // Apply remove, add and sort
+    toRemove.forEach((m) => {
+      this._removeModel(m, { silent, reset });
+    });
     toAdd.forEach((m) => {
       this._addModel(m[0], { silent, reset, reparent, position: m[1] });
     });

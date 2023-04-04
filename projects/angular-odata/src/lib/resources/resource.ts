@@ -94,37 +94,38 @@ export class ODataResource<T> {
   }
 
   //#region Models
-  //TODO: Protected for resource types only
   asModel<M extends ODataModel<T>>(
     entity?: Partial<T> | { [name: string]: any },
     { annots }: { annots?: ODataEntityAnnotations<T> } = {}
   ): M {
+    const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type || this.returnType();
     if (type === undefined) throw Error('');
-    const Model = this.api.modelForType(type);
+    const ModelType = this.api.modelForType(type);
     let entitySet = annots?.entitySet;
     if (entitySet !== undefined) {
       resource = this.api.entitySet<T>(entitySet).entity(entity as Partial<T>);
       resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
     }
-    return new Model(entity, { resource, annots, reset: true }) as M;
+    return new ModelType(entity, { resource, annots, reset }) as M;
   }
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities?: Partial<T>[] | { [name: string]: any }[],
     { annots }: { annots?: ODataEntitiesAnnotations<T> } = {}
   ): C {
+    const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type || this.returnType();
     if (type === undefined) throw Error('');
-    const Collection = this.api.collectionForType(type);
+    const CollectionType = this.api.collectionForType(type);
     let path = annots?.entitySet;
     if (path !== undefined) {
       resource = this.api.entitySet<T>(path);
       resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
     }
-    return new Collection(entities, { resource, annots, reset: true }) as C;
+    return new CollectionType(entities, { resource, annots, reset }) as C;
   }
   //#endregion
 

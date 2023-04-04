@@ -88,6 +88,7 @@ export class ODataModel<T> {
     ODataModelRelation<any>
   >();
   _annotations: ODataEntityAnnotations<T> | null = null;
+  _remove: boolean = false;
   _reset: boolean = false;
   _reparent: boolean = false;
   _silent: boolean = false;
@@ -453,12 +454,13 @@ export class ODataModel<T> {
   assign(
     entity: Partial<T> | { [name: string]: any },
     {
+      remove = false,
       reset = false,
       reparent = false,
       silent = false,
-    }: { reset?: boolean; reparent?: boolean; silent?: boolean } = {}
+    }: { remove?: boolean; reset?: boolean; reparent?: boolean; silent?: boolean } = {}
   ) {
-    return this._meta.assign(this, entity, { reset, silent, reparent });
+    return this._meta.assign(this, entity, { remove, reset, silent, reparent });
   }
 
   clone<M extends ODataModel<T>>() {
@@ -469,7 +471,7 @@ export class ODataModel<T> {
     }) as M;
   }
 
-  private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
+  private _request(obs$: Observable<ODataEntity<any>>, {remove}: {remove?: boolean} = {}): Observable<this> {
     this.events$.emit(
       new ODataModelEvent('request', {
         model: this,
@@ -479,7 +481,7 @@ export class ODataModel<T> {
     return obs$.pipe(
       map(({ entity, annots }) => {
         this._annotations = annots;
-        this.assign(annots.attributes(entity || {}, 'full'), { reset: true });
+        this.assign(annots.attributes(entity || {}, 'full'), { reset: true, remove });
         this.events$.emit(
           new ODataModelEvent('sync', {
             model: this,
@@ -492,8 +494,10 @@ export class ODataModel<T> {
   }
 
   fetch({
+    remove,
     ...options
   }: ODataOptions & {
+    remove?: boolean;
     options?: ODataOptions;
   } = {}): Observable<this> {
     let resource = this.resource();
@@ -511,7 +515,7 @@ export class ODataModel<T> {
         ...options,
       });
     }
-    return this._request(obs$);
+    return this._request(obs$, {remove});
   }
 
   save({
@@ -756,14 +760,11 @@ export class ODataModel<T> {
         `cast: Can't cast to derived model without ODataEntityResource`
       );
 
-    /* TODO: create model
     return resource
       .cast<S>(type)
       .asModel(this.toEntity(INCLUDE_DEEP) as { [name: string]: any }, {
         annots: this.annots() as any,
       });
-      */
-    return null;
   }
 
   fetchNavigationProperty<S>(
