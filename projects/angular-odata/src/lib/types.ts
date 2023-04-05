@@ -178,6 +178,14 @@ export interface Parser<T> {
   encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
 }
 
+export interface FieldParser<T> extends Parser<T> {
+  nullable?: boolean;
+  default?: any;
+  maxLength?: number;
+  precision?: number;
+  scale?: number | 'variable';
+}
+
 export const NONE_PARSER = {
   deserialize: (value: any) => value,
   serialize: (value: any) => value,

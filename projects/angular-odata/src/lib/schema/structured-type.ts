@@ -1,6 +1,6 @@
 import { ODataCollection } from '../models';
 import { ODataModel } from '../models/model';
-import { Parser, ParserOptions, StructuredTypeConfig } from '../types';
+import { Parser, ParserOptions, StructuredTypeConfig, StructuredTypeFieldConfig } from '../types';
 import { ODataSchemaElement } from './element';
 import {
   JsonSchemaOptions,
@@ -122,6 +122,10 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
    */
   field<F>(name: keyof T) {
     return this.parser.field<F>(name);
+  }
+
+  addField<F>(name: string, config: StructuredTypeFieldConfig): ODataStructuredTypeFieldParser<F> {
+    return this.parser.addField(name, config);
   }
 
   /**

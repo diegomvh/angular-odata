@@ -4,6 +4,7 @@ import {
   EnumTypeFieldConfig,
   ParserOptions,
   Parser,
+  FieldParser,
 } from '../../types';
 import { Enums } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
@@ -25,7 +26,7 @@ export class ODataEnumTypeFieldParser<E> extends ODataAnnotatable {
 
 export class ODataEnumTypeParser<E>
   extends ODataAnnotatable
-  implements Parser<E>
+  implements FieldParser<E>
 {
   name: string;
   namespace: string;

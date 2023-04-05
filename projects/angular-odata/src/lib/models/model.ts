@@ -24,6 +24,7 @@ import { ODataCollection } from './collection';
 import {
   INCLUDE_DEEP,
   INCLUDE_SHALLOW,
+  ModelFieldOptions,
   ModelOptions,
   ODataModelEvent,
   ODataModelField,
@@ -371,17 +372,17 @@ export class ODataModel<T> {
     });
   }
 
-  set(path: string | string[], value: any) {
+  set(path: string | string[], value: any, { type }: { type?: string } = {}) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
     if (pathArray.length === 0) return undefined;
     if (pathArray.length > 1) {
       const model = (<any>this)[pathArray[0]];
-      return model.set(pathArray.slice(1), value);
+      return model.set(pathArray.slice(1), value, {});
     }
     if (pathArray.length === 1) {
-      return this._meta.set(this, pathArray[0], value);
+      return this._meta.set(this, pathArray[0], value, {type});
     }
   }
 
@@ -400,7 +401,7 @@ export class ODataModel<T> {
     return value;
   }
 
-  _has(path: string | string[]): boolean {
+  has(path: string | string[]): boolean {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -410,7 +411,7 @@ export class ODataModel<T> {
       pathArray.length > 1 &&
       (value instanceof ODataModel || value instanceof ODataCollection)
     ) {
-      return value._has(pathArray.slice(1));
+      return value.has(pathArray.slice(1));
     }
     return value !== undefined;
   }

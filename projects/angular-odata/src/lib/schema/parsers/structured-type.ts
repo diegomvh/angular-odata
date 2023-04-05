@@ -13,6 +13,8 @@ import {
   StructuredTypeConfig,
   StructuredTypeFieldConfig,
   StructuredTypeFieldOptions,
+  FieldParser,
+  EdmType,
 } from '../../types';
 import { Objects, Strings, Types } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
@@ -61,17 +63,17 @@ export class ODataReferential {
 
 export class ODataStructuredTypeFieldParser<T>
   extends ODataAnnotatable
-  implements Parser<T>
+  implements FieldParser<T>
 {
   name: string;
   private structuredType: ODataStructuredTypeParser<any>;
-  type: string;
+  type: string | EdmType;
   private parser: Parser<T>;
+  collection: boolean;
+  navigation: boolean;
+  nullable?: boolean;
   default?: any;
   maxLength?: number;
-  collection: boolean;
-  nullable: boolean;
-  navigation: boolean;
   precision?: number;
   scale?: number | 'variable';
   referentials: ODataReferential[];
@@ -92,7 +94,7 @@ export class ODataStructuredTypeFieldParser<T>
     );
     this.default = field.default;
     this.maxLength = field.maxLength;
-    this.nullable = field.nullable !== undefined ? field.nullable : true;
+    this.nullable = field.nullable ?? true;
     this.collection = Boolean(field.collection);
     this.navigation = Boolean(field.navigation);
     this.precision = field.precision;
@@ -258,34 +260,34 @@ export class ODataStructuredTypeFieldParser<T>
 
     if (
       [
-        'Edm.String',
-        'Edm.Date',
-        'Edm.TimeOfDay',
-        'Edm.DateTimeOffset',
-        'Edm.Guid',
-        'Edm.Binary',
-      ].indexOf(this.type) !== -1
+        EdmType.Stream,
+        EdmType.Date,
+        EdmType.TimeOfDay,
+        EdmType.DateTimeOffset,
+        EdmType.Guid,
+        EdmType.Binary,
+      ].indexOf(this.type as EdmType) !== -1
     ) {
       schema.type = 'string';
-      if (this.type === 'Edm.Date') schema.format = 'date';
-      else if (this.type === 'Edm.TimeOfDay') schema.format = 'time';
-      else if (this.type === 'Edm.DateTimeOffset') schema.format = 'date-time';
-      else if (this.type === 'Edm.Guid')
+      if (this.type === EdmType.Date) schema.format = 'date';
+      else if (this.type === EdmType.TimeOfDay) schema.format = 'time';
+      else if (this.type === EdmType.DateTimeOffset) schema.format = 'date-time';
+      else if (this.type === EdmType.Guid)
         schema.pattern =
           '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$';
-      else if (this.type === 'Edm.Binary') schema.contentEncoding = 'base64';
-      else if (this.type === 'Edm.String' && this.maxLength)
+      else if (this.type === EdmType.Binary) schema.contentEncoding = 'base64';
+      else if (this.type === EdmType.String && this.maxLength)
         schema.maxLength = this.maxLength;
     } else if (
-      ['Edm.Int64', 'Edm.Int32', 'Edm.Int16', 'Edm.Byte', 'Edm.SByte'].indexOf(
-        this.type
+      [EdmType.Int64, EdmType.Int32, EdmType.Int16, EdmType.Byte, EdmType.SByte].indexOf(
+        this.type as EdmType
       ) !== -1
     ) {
       //TODO: Range
       schema.type = 'integer';
-    } else if (['Edm.Decimal', 'Edm.Double'].indexOf(this.type) !== -1) {
+    } else if ([EdmType.Decimal, EdmType.Double].indexOf(this.type as EdmType) !== -1) {
       schema.type = 'number';
-    } else if (['Edm.Boolean'].indexOf(this.type) !== -1) {
+    } else if ([EdmType.Boolean].indexOf(this.type as EdmType) !== -1) {
       schema.type = 'boolean';
     }
     if (this.default) schema.default = this.default;
@@ -358,7 +360,7 @@ export class ODataStructuredTypeParser<T>
   base?: string;
   parent?: ODataStructuredTypeParser<any>;
   private _keys?: ODataEntityTypeKey[];
-  private _fields: ODataStructuredTypeFieldParser<any>[];
+  private _fields: ODataStructuredTypeFieldParser<any>[] = [];
   parserOptions?: ParserOptions;
 
   constructor(
@@ -374,11 +376,17 @@ export class ODataStructuredTypeParser<T>
     this.alias = alias;
     if (Array.isArray(config.keys))
       this._keys = config.keys.map((key) => new ODataEntityTypeKey(key));
-    this._fields = Object.entries<StructuredTypeFieldConfig>(
+    Object.entries<StructuredTypeFieldConfig>(
       config.fields as { [P in keyof T]: StructuredTypeFieldConfig }
-    ).map(
-      ([name, config]) => new ODataStructuredTypeFieldParser(name, this, config)
+    ).forEach(
+      ([name, config]) => this.addField(name, config)
     );
+  }
+
+  addField<F>(name: string, config: StructuredTypeFieldConfig): ODataStructuredTypeFieldParser<F> {
+    const field = new ODataStructuredTypeFieldParser<F>(name, this, config);
+    this._fields.push(field);
+    return field;
   }
 
   /**

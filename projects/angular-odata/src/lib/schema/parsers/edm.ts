@@ -1,5 +1,5 @@
 import { raw } from '../../resources/query';
-import { EdmType, Parser, StructuredTypeFieldOptions } from '../../types';
+import { EdmType, FieldParser, StructuredTypeFieldOptions } from '../../types';
 import { ArrayBuffers } from '../../utils/arraybuffers';
 import { Duration, Durations } from '../../utils/durations';
 
@@ -8,7 +8,7 @@ const EdmParser = <T>(
   _d: (v: any, o: StructuredTypeFieldOptions) => T,
   _s: (v: any, o: StructuredTypeFieldOptions) => any,
   _e: (v: any, o: StructuredTypeFieldOptions) => any
-): Parser<T | T[]> => ({
+): FieldParser<T | T[]> => ({
   deserialize(value: any, options: StructuredTypeFieldOptions): T | T[] {
     return Array.isArray(value)
       ? value.map((v) => _d(v, options))
@@ -32,7 +32,7 @@ const toString = (v: any) => v.toString();
 const toBoolean = (v: any) => Boolean(v);
 const toDate = (v: any) => new Date(v);
 
-export const EDM_PARSERS: { [type: string]: Parser<any> } = {
+export const EDM_PARSERS: { [type: string]: FieldParser<any> } = {
   //Edm.Guid 16-byte (128-bit) unique identifier
   [EdmType.Guid]: EdmParser<string>(Identity, Identity, (v: string) => raw(v)),
   //Edm.Int16 Signed 16-bit integer

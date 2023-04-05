@@ -25,6 +25,7 @@ import {
   BUBBLING,
   INCLUDE_DEEP,
   INCLUDE_SHALLOW,
+  ModelFieldOptions,
   ODataModelEntry,
   ODataModelEvent,
   ODataModelField,
@@ -749,14 +750,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  set(path: string | string[], value: any) {
+  set(path: string | string[], value: any, { }: {} & ModelFieldOptions) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
     if (pathArray.length === 0) return undefined;
     if (pathArray.length > 1) {
       const model = this._entries[Number(pathArray[0])].model;
-      return model.set(pathArray.slice(1), value);
+      return model.set(pathArray.slice(1), value, {});
     }
     if (pathArray.length === 1 && ODataModelOptions.isModel(value)) {
       let toAdd: M[] = [];
@@ -801,14 +802,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return value;
   }
 
-  _has(path: number | string | string[]): boolean {
+  has(path: number | string | string[]): boolean {
     const pathArray = (
       Types.isArray(path) ? path : `${path}`.match(/([^[.\]])+/g)
     ) as any[];
     if (pathArray.length === 0) return false;
     const value = this.models()[Number(pathArray[0])];
     if (pathArray.length > 1 && ODataModelOptions.isModel(value)) {
-      return value._has(pathArray.slice(1));
+      return value.has(pathArray.slice(1));
     }
     return value !== undefined;
   }

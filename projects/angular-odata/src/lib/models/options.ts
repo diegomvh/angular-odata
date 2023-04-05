@@ -25,7 +25,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';
-import { Parser, ParserOptions } from '../types';
+import { EdmType, Parser, ParserOptions } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
@@ -182,6 +182,7 @@ export type ModelOptions = {
 
 export type ModelFieldOptions = {
   field?: string;
+  parser?: ODataStructuredTypeFieldParser<any>;
   default?: any;
   required?: boolean;
   concurrency?: boolean;
@@ -533,7 +534,7 @@ export class ODataModelOptions<T> {
   cid: string;
   base?: string;
   open?: boolean;
-  private _fields: ODataModelField<any>[];
+  private _fields: ODataModelField<any>[] = [];
   schema: ODataStructuredType<T>;
   entitySet?: ODataEntitySet;
   // Hierarchy
@@ -552,15 +553,9 @@ export class ODataModelOptions<T> {
     this.open = schema.open;
     this.schema = schema;
     this.cid = options?.cid || CID_FIELD_NAME;
-    this._fields = Object.entries(options.fields).map(([name, options]) => {
-      const { field, ...opts } = options;
-      if (field === undefined || name === undefined)
-        throw new Error('Model Properties need name and field');
-      const parser = this.schema.field<T>(field as keyof T);
-      if (parser === undefined)
-        throw new Error(`No parser for ${field} with name = ${name}`);
-      return new ODataModelField<T>(this, { name, field, parser, ...opts });
-    });
+    Object.entries(options.fields).forEach(([name, options]) =>
+      this.addField<any>(name, options)
+    );
   }
 
   get api() {
@@ -667,6 +662,58 @@ export class ODataModelOptions<T> {
       (modelField: ODataModelField<F>) =>
         modelField.name === name || modelField.field === name
     ) as ODataModelField<F> | undefined;
+  }
+
+  addField<F>(name: string, options: ModelFieldOptions) {
+    const { field, parser, ...opts } = options;
+    if (field === undefined || name === undefined)
+      throw new Error('Model Properties need name and field');
+    const fieldParser = parser ?? this.schema.field<F>(field as keyof T);
+    if (fieldParser === undefined)
+      throw new Error(`No parser for ${field} with name = ${name}`);
+    const modelField = new ODataModelField<F>(this, {
+      name,
+      field,
+      parser: fieldParser,
+      ...opts,
+    });
+    this._fields.push(modelField);
+    return modelField;
+  }
+
+  tsToEdm: Record<string, EdmType> = {
+    string: EdmType.String,
+    number: EdmType.Int32,
+    bigint: EdmType.Int64,
+    boolean: EdmType.Boolean,
+  };
+  private modelFieldFactory<F>(
+    self: ODataModel<T>,
+    name: string,
+    type: string | EdmType
+  ) {
+    const structuredFieldParser = this.schema.addField<F>(name, { type });
+    structuredFieldParser.configure({
+      findOptionsForType: (type: string) => this.api.findOptionsForType(type),
+      parserForType: (type: string | EdmType) => this.api.parserForType(type),
+      options: this.api.options,
+    });
+    const modelField = this.addField<F>(name, {
+      field: name,
+      parser: structuredFieldParser,
+    });
+    modelField.configure({
+      findOptionsForType: (type: string) => this.api.findOptionsForType(type),
+      options: this.api.options,
+      concurrency: false,
+    });
+    Object.defineProperty(self, modelField.name, {
+      configurable: true,
+      get: () => this.get(self, modelField as ODataModelField<any>),
+      set: (value: any) =>
+        this.set(self, modelField as ODataModelField<any>, value),
+    });
+    return modelField;
   }
 
   attach(
@@ -1274,9 +1321,14 @@ export class ODataModelOptions<T> {
       reset = false,
       reparent = false,
       silent = false,
-    }: { remove?: boolean; reset?: boolean; reparent?: boolean; silent?: boolean } = {}
+    }: {
+      remove?: boolean;
+      reset?: boolean;
+      reparent?: boolean;
+      silent?: boolean;
+    } = {}
   ) {
-    self._remove = reset;
+    self._remove = remove;
     self._reset = reset;
     self._reparent = reparent;
     self._silent = silent;
@@ -1331,7 +1383,7 @@ export class ODataModelOptions<T> {
     return Types.rawType(obj) === 'Collection';
   }
 
-  private updateCollection<F>(
+  private _updateCollection<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
     collection: ODataCollection<F, ODataModel<F>>,
@@ -1348,7 +1400,8 @@ export class ODataModelOptions<T> {
     });
     return collection.hasChanged();
   }
-  private updateModel<F>(
+
+  private _updateModel<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
     model: ODataModel<F>,
@@ -1370,7 +1423,7 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     field: ODataModelField<F> | string
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
-    let modelField =
+    const modelField =
       field instanceof ODataModelField ? field : this.findField<F>(field);
     if (modelField !== undefined && modelField.isStructuredType()) {
       const relation = self._relations.get(modelField.name);
@@ -1398,13 +1451,12 @@ export class ODataModelOptions<T> {
         }
       }
       return relation?.model;
-    } else if (modelField !== undefined) {
+    } else {
       return this.attributes(self, {
         include_concurrency: true,
         include_computed: true,
-      })[modelField.name];
+      })[modelField !== undefined ? modelField.name : (field as string)];
     }
-    return undefined;
   }
 
   private _setStructured<F>(
@@ -1456,7 +1508,7 @@ export class ODataModelOptions<T> {
         }
       } else if (Types.isArray(value)) {
         // New value is array
-        changed = this.updateCollection<F>(
+        changed = this._updateCollection<F>(
           self,
           field,
           currentCollection,
@@ -1480,7 +1532,7 @@ export class ODataModelOptions<T> {
           changed = true;
         }
       } else if (Types.isPlainObject(value)) {
-        changed = this.updateModel<F>(
+        changed = this._updateModel<F>(
           self,
           field,
           currentModel,
@@ -1590,10 +1642,21 @@ export class ODataModelOptions<T> {
       | { [name: string]: any }[]
       | ODataModel<F>
       | ODataCollection<F, ODataModel<F>>
-      | null
+      | null,
+    { type }: { type?: string } = {}
   ): boolean {
     let modelField =
-      field instanceof ODataModelField ? field : this.field<F>(field);
+      field instanceof ODataModelField ? field : this.findField<F>(field);
+    if (
+      modelField === undefined &&
+      this.isOpenType() &&
+      typeof field === 'string'
+    ) {
+      type = type ?? (this.tsToEdm[typeof value] as EdmType) ?? '';
+      modelField = this.modelFieldFactory<F>(self, field, type);
+    }
+    if (modelField === undefined)
+      throw new Error(`No field with name ${field as string}`);
     return modelField.isStructuredType()
       ? this._setStructured(self, modelField, value)
       : this._setValue(self, modelField, value, modelField.isKey());
