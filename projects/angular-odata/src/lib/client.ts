@@ -1,5 +1,5 @@
 import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ODataApi } from './api';
 import { ODataConfigLoader } from './loaders';
@@ -42,17 +42,11 @@ function addBody<T>(
   };
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ODataClient {
   settings?: ODataSettings;
-  constructor(
-    private http: HttpClient,
-    private loader: ODataConfigLoader,
-    private injector: Injector
-  ) {
-    this.loader.loadConfigs().subscribe(config => { 
+  constructor(private http: HttpClient, private loader: ODataConfigLoader) {
+    this.loader.loadConfigs().subscribe((config) => {
       this.settings = new ODataSettings(config);
       this.settings.configure({
         requester: (req: ODataRequest<any>): Observable<any> =>
@@ -160,8 +154,9 @@ export class ODataClient {
    * @param type The string type of the service.
    * @returns The service for the given type.
    */
-  serviceForType(type: string): ODataEntityService<any> {
-    return this.injector.get(this.settings!.serviceForType(type));
+  serviceForType(type: string): ODataEntityService<any> | undefined {
+    //return this.injector.get(this.settings!.serviceForType(type));
+    return undefined;
   }
 
   /**
@@ -169,8 +164,9 @@ export class ODataClient {
    * @param type The string entity type binding to the service.
    * @returns The service for the given entity type.
    */
-  serviceForEntityType(type: string): ODataEntityService<any> {
-    return this.injector.get(this.settings!.serviceForEntityType(type));
+  serviceForEntityType(type: string): ODataEntityService<any> | undefined {
+    //return this.injector.get(this.settings!.serviceForEntityType(type));
+    return undefined;
   }
 
   enumTypeByName<T>(name: string) {
@@ -191,8 +187,9 @@ export class ODataClient {
   collectionByName(name: string): typeof ODataCollection {
     return this.settings!.collectionByName(name);
   }
-  serviceByName(name: string): ODataEntityService<any> {
-    return this.injector.get(this.settings!.serviceByName(name));
+  serviceByName(name: string): ODataEntityService<any> | undefined {
+    //return this.injector.get(this.settings!.serviceByName(name));
+    return undefined;
   }
   //#endregion
 
