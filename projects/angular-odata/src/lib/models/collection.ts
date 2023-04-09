@@ -209,19 +209,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
     }
   }
-
-  asEntitySet<R>(func: (collection: this) => R): R {
-    // Build new resource
-    const query = this._resource?.cloneQuery<T>();
-    let resource = this._model.meta.collectionResourceFactory(query);
-    if (resource === undefined)
-      throw new Error(
-        'asEntitySet: Collection does not have associated EntitySet endpoint'
-      );
+  withResource<R>(
+    resource:
+      | ODataEntitySetResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>,
+    ctx: (collection: this) => R
+  ): R {
     // Push
     this.pushResource(resource);
     // Execute
-    const result = func(this);
+    const result = ctx(this);
     if (result instanceof Observable) {
       return (result as any).pipe(finalize(() => this.popResource()));
     } else {
@@ -229,6 +227,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this.popResource();
       return result;
     }
+  }
+
+  asEntitySet<R>(ctx: (collection: this) => R): R {
+    // Build new resource
+    const query = this._resource?.cloneQuery<T>();
+    let resource = this._model.meta.collectionResourceFactory(query);
+    if (resource === undefined)
+      throw new Error(
+        'asEntitySet: Collection does not have associated EntitySet endpoint'
+      );
+    return this.withResource(resource, ctx);
   }
 
   annots() {
@@ -320,7 +329,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }) as C;
   }
 
-  private _request(obs$: Observable<ODataEntities<any>>, { remove }: { remove?: boolean } = {}): Observable<M[]> {
+  private _request(
+    obs$: Observable<ODataEntities<any>>,
+    { remove }: { remove?: boolean } = {}
+  ): Observable<M[]> {
     this.events$.emit(
       new ODataModelEvent('request', {
         collection: this,
@@ -365,7 +377,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             ...options,
           });
 
-    return this._request(obs$, {remove});
+    return this._request(obs$, { remove });
   }
 
   fetchAll({
@@ -380,7 +392,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     const obs$ = resource.fetchAll({ withCount, ...options });
 
-    return this._request(obs$, {remove});
+    return this._request(obs$, { remove });
   }
 
   fetchMany(
@@ -395,11 +407,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
     } = {}
   ): Observable<M[]> {
     const resource = this.resource();
-    resource.query((q) => remove || this.length == 0 ? q.skip().clear() : q.skip(this.length));
+    resource.query((q) =>
+      remove || this.length == 0 ? q.skip().clear() : q.skip(this.length)
+    );
 
     const obs$ = resource.fetchMany(top, { withCount, ...options });
 
-    return this._request(obs$, {remove});
+    return this._request(obs$, { remove });
   }
 
   fetchOne({
@@ -750,7 +764,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  set(path: string | string[], value: any, { }: {} & ModelFieldOptions) {
+  set(path: string | string[], value: any, {}: {} & ModelFieldOptions) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -903,7 +917,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset = false,
       reparent = false,
       silent = false,
-    }: { remove?: boolean; reset?: boolean; reparent?: boolean; silent?: boolean } = {}
+    }: {
+      remove?: boolean;
+      reset?: boolean;
+      reparent?: boolean;
+      silent?: boolean;
+    } = {}
   ) {
     const Model = this._model;
     const skip = remove ? 0 : this.length;
@@ -1008,10 +1027,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   query(
-    func: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
+    ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
     const resource = this.resource();
-    resource.query(func);
+    resource.query(ctx);
     this.attach(resource);
     return this;
   }

@@ -382,7 +382,7 @@ export class ODataModel<T> {
       return model.set(pathArray.slice(1), value, {});
     }
     if (pathArray.length === 1) {
-      return this._meta.set(this, pathArray[0], value, {type});
+      return this._meta.set(this, pathArray[0], value, { type });
     }
   }
 
@@ -459,7 +459,12 @@ export class ODataModel<T> {
       reset = false,
       reparent = false,
       silent = false,
-    }: { remove?: boolean; reset?: boolean; reparent?: boolean; silent?: boolean } = {}
+    }: {
+      remove?: boolean;
+      reset?: boolean;
+      reparent?: boolean;
+      silent?: boolean;
+    } = {}
   ) {
     return this._meta.assign(this, entity, { remove, reset, silent, reparent });
   }
@@ -472,7 +477,10 @@ export class ODataModel<T> {
     }) as M;
   }
 
-  private _request(obs$: Observable<ODataEntity<any>>, {remove}: {remove?: boolean} = {}): Observable<this> {
+  private _request(
+    obs$: Observable<ODataEntity<any>>,
+    { remove }: { remove?: boolean } = {}
+  ): Observable<this> {
     this.events$.emit(
       new ODataModelEvent('request', {
         model: this,
@@ -482,7 +490,10 @@ export class ODataModel<T> {
     return obs$.pipe(
       map(({ entity, annots }) => {
         this._annotations = annots;
-        this.assign(annots.attributes(entity || {}, 'full'), { reset: true, remove });
+        this.assign(annots.attributes(entity || {}, 'full'), {
+          reset: true,
+          remove,
+        });
         this.events$.emit(
           new ODataModelEvent('sync', {
             model: this,
@@ -516,7 +527,7 @@ export class ODataModel<T> {
         ...options,
       });
     }
-    return this._request(obs$, {remove});
+    return this._request(obs$, { remove });
   }
 
   save({
@@ -630,12 +641,12 @@ export class ODataModel<T> {
 
   /**
    * Create an execution context for change the internal query of a resource
-   * @param func Function to execute
+   * @param ctx Function to execute
    */
   query(
-    func: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
+    ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
-    return this._meta.query(this, this.resource(), func) as this;
+    return this._meta.query(this, this.resource(), ctx) as this;
   }
 
   /**
@@ -651,6 +662,9 @@ export class ODataModel<T> {
 
   isNew() {
     return !this._meta.hasKey(this);
+  }
+  withResource<R>(resource: any, ctx: (model: this) => R): R {
+    return this._meta.withResource(this, resource, ctx);
   }
 
   /**

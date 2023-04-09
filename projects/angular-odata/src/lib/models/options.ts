@@ -1078,16 +1078,20 @@ export class ODataModelOptions<T> {
   hasKey(self: ODataModel<T>) {
     return this.resolveKey(self) !== undefined;
   }
-  asEntity<R, M extends ODataModel<T>>(self: M, func: (model: M) => R): R {
-    // Build new resource
-    const query = self._resource?.cloneQuery<T>();
-    let resource = this.modelResourceFactory(query);
-    if (resource === undefined)
-      throw new Error('Model does not have associated Entity endpoint');
+
+  withResource<R, M extends ODataModel<T>>(
+    self: M,
+    resource:
+      | ODataEntityResource<T>
+      | ODataPropertyResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataSingletonResource<T>,
+    ctx: (model: M) => R
+  ): R {
     // Push
     self.pushResource(resource);
     // Execute function
-    const result = func(self);
+    const result = ctx(self);
     if (result instanceof Observable) {
       return (result as any).pipe(
         finalize(() => {
@@ -1100,6 +1104,14 @@ export class ODataModelOptions<T> {
       self.popResource();
       return result;
     }
+  }
+  asEntity<R, M extends ODataModel<T>>(self: M, ctx: (model: M) => R): R {
+    // Build new resource
+    const query = self._resource?.cloneQuery<T>();
+    let resource = this.modelResourceFactory(query);
+    if (resource === undefined)
+      throw new Error('Model does not have associated Entity endpoint');
+    return this.withResource(self, resource, ctx);
   }
 
   toEntity(
