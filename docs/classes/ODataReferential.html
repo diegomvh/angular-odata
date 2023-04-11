@@ -112,7 +112,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:51</a></div>
                             </td>
                         </tr>
 
@@ -173,7 +173,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:48</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:50</a></div>
                         </td>
                     </tr>
 
@@ -199,7 +199,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -233,6 +233,8 @@ import {
   StructuredTypeConfig,
   StructuredTypeFieldConfig,
   StructuredTypeFieldOptions,
+  FieldParser,
+  EdmType,
 } from &#x27;../../types&#x27;;
 import { Objects, Strings, Types } from &#x27;../../utils&#x27;;
 import { ODataAnnotatable } from &#x27;../annotation&#x27;;
@@ -281,17 +283,17 @@ export class ODataReferential {
 
 export class ODataStructuredTypeFieldParser&lt;T&gt;
   extends ODataAnnotatable
-  implements Parser&lt;T&gt;
+  implements FieldParser&lt;T&gt;
 {
   name: string;
   private structuredType: ODataStructuredTypeParser&lt;any&gt;;
-  type: string;
+  type: string | EdmType;
   private parser: Parser&lt;T&gt;;
+  collection: boolean;
+  navigation: boolean;
+  nullable?: boolean;
   default?: any;
   maxLength?: number;
-  collection: boolean;
-  nullable: boolean;
-  navigation: boolean;
   precision?: number;
   scale?: number | &#x27;variable&#x27;;
   referentials: ODataReferential[];
@@ -312,7 +314,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     );
     this.default &#x3D; field.default;
     this.maxLength &#x3D; field.maxLength;
-    this.nullable &#x3D; field.nullable !&#x3D;&#x3D; undefined ? field.nullable : true;
+    this.nullable &#x3D; field.nullable ?? true;
     this.collection &#x3D; Boolean(field.collection);
     this.navigation &#x3D; Boolean(field.navigation);
     this.precision &#x3D; field.precision;
@@ -478,34 +480,41 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
 
     if (
       [
-        &#x27;Edm.String&#x27;,
-        &#x27;Edm.Date&#x27;,
-        &#x27;Edm.TimeOfDay&#x27;,
-        &#x27;Edm.DateTimeOffset&#x27;,
-        &#x27;Edm.Guid&#x27;,
-        &#x27;Edm.Binary&#x27;,
-      ].indexOf(this.type) !&#x3D;&#x3D; -1
+        EdmType.String,
+        EdmType.Date,
+        EdmType.TimeOfDay,
+        EdmType.DateTimeOffset,
+        EdmType.Guid,
+        EdmType.Binary,
+      ].indexOf(this.type as EdmType) !&#x3D;&#x3D; -1
     ) {
       schema.type &#x3D; &#x27;string&#x27;;
-      if (this.type &#x3D;&#x3D;&#x3D; &#x27;Edm.Date&#x27;) schema.format &#x3D; &#x27;date&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; &#x27;Edm.TimeOfDay&#x27;) schema.format &#x3D; &#x27;time&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; &#x27;Edm.DateTimeOffset&#x27;) schema.format &#x3D; &#x27;date-time&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; &#x27;Edm.Guid&#x27;)
+      if (this.type &#x3D;&#x3D;&#x3D; EdmType.Date) schema.format &#x3D; &#x27;date&#x27;;
+      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.TimeOfDay) schema.format &#x3D; &#x27;time&#x27;;
+      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.DateTimeOffset)
+        schema.format &#x3D; &#x27;date-time&#x27;;
+      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.Guid)
         schema.pattern &#x3D;
           &#x27;^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; &#x27;Edm.Binary&#x27;) schema.contentEncoding &#x3D; &#x27;base64&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; &#x27;Edm.String&#x27; &amp;&amp; this.maxLength)
+      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.Binary) schema.contentEncoding &#x3D; &#x27;base64&#x27;;
+      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.String &amp;&amp; this.maxLength)
         schema.maxLength &#x3D; this.maxLength;
     } else if (
-      [&#x27;Edm.Int64&#x27;, &#x27;Edm.Int32&#x27;, &#x27;Edm.Int16&#x27;, &#x27;Edm.Byte&#x27;, &#x27;Edm.SByte&#x27;].indexOf(
-        this.type
-      ) !&#x3D;&#x3D; -1
+      [
+        EdmType.Int64,
+        EdmType.Int32,
+        EdmType.Int16,
+        EdmType.Byte,
+        EdmType.SByte,
+      ].indexOf(this.type as EdmType) !&#x3D;&#x3D; -1
     ) {
       //TODO: Range
       schema.type &#x3D; &#x27;integer&#x27;;
-    } else if ([&#x27;Edm.Decimal&#x27;, &#x27;Edm.Double&#x27;].indexOf(this.type) !&#x3D;&#x3D; -1) {
+    } else if (
+      [EdmType.Decimal, EdmType.Double].indexOf(this.type as EdmType) !&#x3D;&#x3D; -1
+    ) {
       schema.type &#x3D; &#x27;number&#x27;;
-    } else if ([&#x27;Edm.Boolean&#x27;].indexOf(this.type) !&#x3D;&#x3D; -1) {
+    } else if ([EdmType.Boolean].indexOf(this.type as EdmType) !&#x3D;&#x3D; -1) {
       schema.type &#x3D; &#x27;boolean&#x27;;
     }
     if (this.default) schema.default &#x3D; this.default;
@@ -578,7 +587,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   base?: string;
   parent?: ODataStructuredTypeParser&lt;any&gt;;
   private _keys?: ODataEntityTypeKey[];
-  private _fields: ODataStructuredTypeFieldParser&lt;any&gt;[];
+  private _fields: ODataStructuredTypeFieldParser&lt;any&gt;[] &#x3D; [];
   parserOptions?: ParserOptions;
 
   constructor(
@@ -594,11 +603,18 @@ export class ODataStructuredTypeParser&lt;T&gt;
     this.alias &#x3D; alias;
     if (Array.isArray(config.keys))
       this._keys &#x3D; config.keys.map((key) &#x3D;&gt; new ODataEntityTypeKey(key));
-    this._fields &#x3D; Object.entries&lt;StructuredTypeFieldConfig&gt;(
+    Object.entries&lt;StructuredTypeFieldConfig&gt;(
       config.fields as { [P in keyof T]: StructuredTypeFieldConfig }
-    ).map(
-      ([name, config]) &#x3D;&gt; new ODataStructuredTypeFieldParser(name, this, config)
-    );
+    ).forEach(([name, config]) &#x3D;&gt; this.addField(name, config));
+  }
+
+  addField&lt;F&gt;(
+    name: string,
+    config: StructuredTypeFieldConfig
+  ): ODataStructuredTypeFieldParser&lt;F&gt; {
+    const field &#x3D; new ODataStructuredTypeFieldParser&lt;F&gt;(name, this, config);
+    this._fields.push(field);
+    return field;
   }
 
   /**

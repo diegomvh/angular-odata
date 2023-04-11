@@ -998,14 +998,14 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PATH_SEPARATOR } from &#x27;../../constants&#x27;;
-import { PathSegmentNames } from &#x27;../../types&#x27;;
+import { PathSegment } from &#x27;../../types&#x27;;
 import { Objects } from &#x27;../../utils&#x27;;
 import { buildPathAndQuery, raw } from &#x27;../query&#x27;;
 import { EntityKey } from &#x27;../resource&#x27;;
 import { SegmentHandler } from &#x27;./handlers&#x27;;
 
 export type ODataSegment &#x3D; {
-  name: PathSegmentNames;
+  name: PathSegment;
   path: string;
   type?: string;
   key?: any;
@@ -1016,7 +1016,7 @@ function pathSegmentsBuilder(
   segment: ODataSegment,
   escape: boolean &#x3D; false
 ): [string, { [name: string]: any }] {
-  if (segment.name &#x3D;&#x3D;&#x3D; PathSegmentNames.function) {
+  if (segment.name &#x3D;&#x3D;&#x3D; PathSegment.function) {
     let [path, params] &#x3D; segment.parameters
       ? buildPathAndQuery({
           func: { [segment.path]: segment.parameters },
@@ -1124,9 +1124,9 @@ export class ODataPathSegments {
       segments &#x3D; segments.filter(
         (s) &#x3D;&gt;
           [
-            PathSegmentNames.entitySet,
-            PathSegmentNames.navigationProperty,
-            PathSegmentNames.property,
+            PathSegment.entitySet,
+            PathSegment.navigationProperty,
+            PathSegment.property,
           ].indexOf(s.name) !&#x3D;&#x3D; -1
       );
     return segments.map((s) &#x3D;&gt; new SegmentHandler(s));

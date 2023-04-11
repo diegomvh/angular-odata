@@ -141,7 +141,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:14</a></div>
                             </td>
                         </tr>
 
@@ -215,7 +215,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:13</a></div>
                         </td>
                     </tr>
 
@@ -241,7 +241,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -308,8 +308,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="21"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:21</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="22"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:22</a></div>
                 </td>
             </tr>
 
@@ -547,6 +547,7 @@ import {
   EnumTypeFieldConfig,
   ParserOptions,
   Parser,
+  FieldParser,
 } from &#x27;../../types&#x27;;
 import { Enums } from &#x27;../../utils&#x27;;
 import { ODataAnnotatable } from &#x27;../annotation&#x27;;
@@ -568,7 +569,7 @@ export class ODataEnumTypeFieldParser&lt;E&gt; extends ODataAnnotatable {
 
 export class ODataEnumTypeParser&lt;E&gt;
   extends ODataAnnotatable
-  implements Parser&lt;E&gt;
+  implements FieldParser&lt;E&gt;
 {
   name: string;
   namespace: string;

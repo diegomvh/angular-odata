@@ -472,7 +472,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PathSegmentNames } from &#x27;../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PathSegment } from &#x27;../../types&#x27;;
 import { Types } from &#x27;../../utils&#x27;;
 import { EntityKey } from &#x27;../resource&#x27;;
 import type { ODataPathSegments, ODataSegment } from &#x27;./segments&#x27;;
@@ -515,25 +515,25 @@ export class SegmentHandler {
 export class ODataPathSegmentsHandler&lt;T&gt; {
   constructor(protected segments: ODataPathSegments) {}
   entitySet() {
-    return this.segments.get(PathSegmentNames.entitySet);
+    return this.segments.get(PathSegment.entitySet);
   }
   singleton() {
-    return this.segments.get(PathSegmentNames.singleton);
+    return this.segments.get(PathSegment.singleton);
   }
   action() {
-    return this.segments.get(PathSegmentNames.action);
+    return this.segments.get(PathSegment.action);
   }
   function() {
-    return this.segments.get(PathSegmentNames.function);
+    return this.segments.get(PathSegment.function);
   }
   keys(values?: (EntityKey&lt;T&gt; | undefined)[]) {
     return this.segments.keys(values);
   }
   property() {
-    return this.segments.get(PathSegmentNames.property);
+    return this.segments.get(PathSegment.property);
   }
   navigationProperty() {
-    return this.segments.get(PathSegmentNames.navigationProperty);
+    return this.segments.get(PathSegment.navigationProperty);
   }
 }
 </code></pre>

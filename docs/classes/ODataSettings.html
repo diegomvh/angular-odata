@@ -1531,7 +1531,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>parserForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>parserForType(type: <a href="../undefineds/EdmType.html" target="_self">string | EdmType</a>)</code>
                 </td>
             </tr>
 
@@ -1570,7 +1570,7 @@
                                 <tr>
                                     <td>type</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                <code><a href="../miscellaneous/enumerations.html#EdmType" target="_self" >string | EdmType</a></code>
                                     </td>
 
                                     <td>
@@ -1987,7 +1987,7 @@ import {
   ODataStructuredType,
 } from &#x27;./schema&#x27;;
 import { ODataEntityService } from &#x27;./services/entity&#x27;;
-import { ApiConfig, Parser } from &#x27;./types&#x27;;
+import { ApiConfig, EdmType, Parser } from &#x27;./types&#x27;;
 
 export class ODataSettings {
   apis: ODataApi[];
@@ -2078,7 +2078,7 @@ export class ODataSettings {
     return values[0] as ODataEntitySet;
   }
 
-  public parserForType&lt;T&gt;(type: string) {
+  public parserForType&lt;T&gt;(type: string | EdmType) {
     let values &#x3D; this.apis
       .map((api) &#x3D;&gt; api.parserForType&lt;T&gt;(type))
       .filter((e) &#x3D;&gt; e);

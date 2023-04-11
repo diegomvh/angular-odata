@@ -61,19 +61,22 @@
                 <td class="col-md-4">
                     <ul class="index-list">
                         <li>
+                            <a href="#EdmType" title="projects/angular-odata/src/lib/types.ts" ><b>EdmType</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                        </li>
+                        <li>
                             <a href="#FieldType" title="projects/angular-odata/src/lib/resources/responses/metadata.ts" ><b>FieldType</b>&nbsp;&nbsp;&nbsp;(projects/.../metadata.ts)</a>
                         </li>
                         <li>
                             <a href="#ODataModelState" title="projects/angular-odata/src/lib/models/options.ts" ><b>ODataModelState</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
                         </li>
                         <li>
-                            <a href="#PathSegmentNames" title="projects/angular-odata/src/lib/types.ts" ><b>PathSegmentNames</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#PathSegment" title="projects/angular-odata/src/lib/types.ts" ><b>PathSegment</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
                             <a href="#QueryCustomTypes" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>QueryCustomTypes</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
-                            <a href="#QueryOptionNames" title="projects/angular-odata/src/lib/types.ts" ><b>QueryOptionNames</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#QueryOption" title="projects/angular-odata/src/lib/types.ts" ><b>QueryOption</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
                             <a href="#StandardAggregateMethods" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>StandardAggregateMethods</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -85,70 +88,354 @@
     </table>
 </section>
 
-    <h3>projects/angular-odata/src/lib/resources/responses/metadata.ts</h3>
-    <section>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="FieldType"></a>
-                        <span class="name "><b>FieldType</b><a href="#FieldType"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;ATTRIBUTE
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;TAG
-                            </td>
-                        </tr>
-            </tbody>
-        </table>
-</section>
-    <h3>projects/angular-odata/src/lib/models/options.ts</h3>
-    <section>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="ODataModelState"></a>
-                        <span class="name "><b>ODataModelState</b><a href="#ODataModelState"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;Added
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;Removed
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;Changed
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;Unchanged
-                            </td>
-                        </tr>
-            </tbody>
-        </table>
-</section>
     <h3>projects/angular-odata/src/lib/types.ts</h3>
     <section>
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="PathSegmentNames"></a>
-                        <span class="name "><b>PathSegmentNames</b><a href="#PathSegmentNames"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="EdmType"></a>
+                        <span class="name "><b>EdmType</b><a href="#EdmType"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Guid
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Guid</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Int16
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Int16</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;String
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.String</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Boolean
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Boolean</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Byte
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Byte</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;SByte
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.SByte</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Int32
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Int32</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Int64
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Int64</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Date
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Date</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;TimeOfDay
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.TimeOfDay</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DateTimeOffset
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.DateTimeOffset</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Duration
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Duration</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Decimal
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Decimal</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Double
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Double</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Single
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Single</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Binary
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Binary</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Stream
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Stream</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Geography
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Geography</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeographyPoint
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeographyPoint</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeographyLineString
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeographyLineString</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeographyPolygon
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeographyPolygon</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeographyMultiPoint
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeographyMultiPoint</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeographyMultiLineString
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeographyMultiLineString</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeographyMultiPolygon
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeographyMultiPolygon</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeographyCollection
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeographyCollection</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Geometry
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.Geometry</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeometryPoint
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeometryPoint</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeometryLineString
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeometryLineString</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeometryPolygon
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeometryPolygon</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeometryMultiPoint
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeometryMultiPoint</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeometryMultiLineString
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeometryMultiLineString</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeometryMultiPolygon
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeometryMultiPolygon</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;GeometryCollection
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>Edm.GeometryCollection</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="PathSegment"></a>
+                        <span class="name "><b>PathSegment</b><a href="#PathSegment"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
                         <tr>
@@ -277,8 +564,8 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="QueryOptionNames"></a>
-                        <span class="name "><b>QueryOptionNames</b><a href="#QueryOptionNames"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="QueryOption"></a>
+                        <span class="name "><b>QueryOption</b><a href="#QueryOption"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
                         <tr>
@@ -409,6 +696,62 @@
                         <tr>
                             <td class="col-md-4">
                                 <i>Value : </i><code>count</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>projects/angular-odata/src/lib/resources/responses/metadata.ts</h3>
+    <section>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="FieldType"></a>
+                        <span class="name "><b>FieldType</b><a href="#FieldType"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ATTRIBUTE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;TAG
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>projects/angular-odata/src/lib/models/options.ts</h3>
+    <section>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ODataModelState"></a>
+                        <span class="name "><b>ODataModelState</b><a href="#ODataModelState"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Added
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Removed
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Changed
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;Unchanged
                             </td>
                         </tr>
             </tbody>

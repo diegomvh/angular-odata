@@ -263,7 +263,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >QueryOption[]</a></code>
 
                     </td>
                 </tr>
@@ -728,7 +728,7 @@
   ODataMetadataType,
   ODataVersion,
   ParserOptions,
-  QueryOptionNames,
+  QueryOption,
 } from &#x27;./types&#x27;;
 import {
   DEFAULT_FETCH_POLICY,
@@ -782,7 +782,7 @@ export class ODataApiOptions implements ApiOptions {
   /**
    * Send query options in the request body
    */
-  bodyQueryOptions: QueryOptionNames[];
+  bodyQueryOptions: QueryOption[];
   /**
    * Customize accept header with OData options
    * @link http://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat

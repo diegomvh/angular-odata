@@ -471,7 +471,7 @@ export type FetchPolicy &#x3D;
 export type ODataMetadataType &#x3D; &#x27;minimal&#x27; | &#x27;full&#x27; | &#x27;none&#x27;;
 export type CacheCacheability &#x3D; &#x27;public&#x27; | &#x27;private&#x27; | &#x27;no-cache&#x27; | &#x27;no-store&#x27;;
 
-export enum PathSegmentNames {
+export enum PathSegment {
   batch &#x3D; &#x27;batch&#x27;,
   metadata &#x3D; &#x27;metadata&#x27;,
   entitySet &#x3D; &#x27;entitySet&#x27;,
@@ -486,7 +486,7 @@ export enum PathSegmentNames {
   action &#x3D; &#x27;action&#x27;,
 }
 
-export enum QueryOptionNames {
+export enum QueryOption {
   select &#x3D; &#x27;select&#x27;,
   expand &#x3D; &#x27;expand&#x27;,
   compute &#x3D; &#x27;compute&#x27;,
@@ -500,6 +500,74 @@ export enum QueryOptionNames {
   format &#x3D; &#x27;format&#x27;,
   levels &#x3D; &#x27;levels&#x27;,
   count &#x3D; &#x27;count&#x27;,
+}
+export enum EdmType {
+  //Edm.Guid 16-byte (128-bit) unique identifier
+  Guid &#x3D; &#x27;Edm.Guid&#x27;,
+  //Edm.Int16 Signed 16-bit integer
+  Int16 &#x3D; &#x27;Edm.Int16&#x27;,
+  //Edm.String Sequence of UTF-8 characters
+  String &#x3D; &#x27;Edm.String&#x27;,
+  //Edm.Boolean Binary-valued logic
+  Boolean &#x3D; &#x27;Edm.Boolean&#x27;,
+  //Edm.Byte Unsigned 8-bit integer
+  Byte &#x3D; &#x27;Edm.Byte&#x27;,
+  //Edm.SByte Signed 8-bit integer
+  SByte &#x3D; &#x27;Edm.SByte&#x27;,
+  //Edm.Int32 Signed 16-bit integer
+  Int32 &#x3D; &#x27;Edm.Int32&#x27;,
+  //Edm.Int64 Signed 16-bit integer
+  Int64 &#x3D; &#x27;Edm.Int64&#x27;,
+  //Edm.Date Date without a time-zone offset
+  Date &#x3D; &#x27;Edm.Date&#x27;,
+  //Edm.TimeOfDay Clock time 00:00-23:59:59.999999999999
+  TimeOfDay &#x3D; &#x27;Edm.TimeOfDay&#x27;,
+  //Edm.DateTimeOffset Date and time with a time-zone offset, no leap seconds
+  DateTimeOffset &#x3D; &#x27;Edm.DateTimeOffset&#x27;,
+  //Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
+  Duration &#x3D; &#x27;Edm.Duration&#x27;,
+  //Edm.Decimal Numeric values with fixed precision and scale
+  Decimal &#x3D; &#x27;Edm.Decimal&#x27;,
+  //Edm.Double IEEE 754 binary64 floating-point number (15-17 decimal digits)
+  Double &#x3D; &#x27;Edm.Double&#x27;,
+  //Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
+  Single &#x3D; &#x27;Edm.Single&#x27;,
+  //Edm.Binary Binary data
+  Binary &#x3D; &#x27;Edm.Binary&#x27;,
+  //Edm.Stream Binary data stream
+  Stream &#x3D; &#x27;Edm.Stream&#x27;,
+  //Edm.Geography Abstract base type for all Geography types
+  Geography &#x3D; &#x27;Edm.Geography&#x27;,
+  //Edm.GeographyPoint A point in a round-earth coordinate system
+  GeographyPoint &#x3D; &#x27;Edm.GeographyPoint&#x27;,
+  //Edm.GeographyLineString Line string in a round-earth coordinate system
+  GeographyLineString &#x3D; &#x27;Edm.GeographyLineString&#x27;,
+  //Edm.GeographyPolygon Polygon in a round-earth coordinate system
+  GeographyPolygon &#x3D; &#x27;Edm.GeographyPolygon&#x27;,
+  //Edm.GeographyMultiPoint Collection of points in a round-earth coordinate system
+  GeographyMultiPoint &#x3D; &#x27;Edm.GeographyMultiPoint&#x27;,
+  //Edm.GeographyMultiLineString Collection of line strings in a round-earth coordinate system
+  GeographyMultiLineString &#x3D; &#x27;Edm.GeographyMultiLineString&#x27;,
+  //Edm.GeographyMultiPolygon Collection of polygons in a round-earth coordinate system
+  GeographyMultiPolygon &#x3D; &#x27;Edm.GeographyMultiPolygon&#x27;,
+  //Edm.GeographyCollection Collection of arbitrary Geography values
+  GeographyCollection &#x3D; &#x27;Edm.GeographyCollection&#x27;,
+  //Edm.Geometry Abstract base type for all Geometry types
+  Geometry &#x3D; &#x27;Edm.Geometry&#x27;,
+  //Edm.GeometryPoint Point in a flat-earth coordinate system
+  GeometryPoint &#x3D; &#x27;Edm.GeometryPoint&#x27;,
+  //Edm.GeometryLineString Line string in a flat-earth coordinate system
+  GeometryLineString &#x3D; &#x27;Edm.GeometryLineString&#x27;,
+  //Edm.GeometryPolygon Polygon in a flat-earth coordinate system
+  GeometryPolygon &#x3D; &#x27;Edm.GeometryPolygon&#x27;,
+  //Edm.GeometryMultiPoint Collection of points in a flat-earth coordinate system
+  GeometryMultiPoint &#x3D; &#x27;Edm.GeometryMultiPoint&#x27;,
+  //Edm.GeometryMultiLineString Collection of line strings in a flat-earth coordinate system
+  GeometryMultiLineString &#x3D; &#x27;Edm.GeometryMultiLineString&#x27;,
+  //Edm.GeometryMultiPolygon Collection of polygons in a flat-earth coordinate system
+  GeometryMultiPolygon &#x3D; &#x27;Edm.GeometryMultiPolygon&#x27;,
+  //Edm.GeometryCollection Collection of arbitrary Geometry values
+  GeometryCollection &#x3D; &#x27;Edm.GeometryCollection&#x27;,
 }
 
 export interface ApiOptions {
@@ -526,7 +594,7 @@ export interface ApiOptions {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
-  bodyQueryOptions?: QueryOptionNames[];
+  bodyQueryOptions?: QueryOption[];
   stringAsEnum?: boolean;
   //https://github.com/OData/WebApi/issues/1974
   //https://github.com/OData/WebApi/issues/1647
@@ -569,6 +637,14 @@ export interface Parser&lt;T&gt; {
   ): any;
   //Encode value/s for URL parameter or query-string.
   encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
+}
+
+export interface FieldParser&lt;T&gt; extends Parser&lt;T&gt; {
+  nullable?: boolean;
+  default?: any;
+  maxLength?: number;
+  precision?: number;
+  scale?: number | &#x27;variable&#x27;;
 }
 
 export const NONE_PARSER &#x3D; {

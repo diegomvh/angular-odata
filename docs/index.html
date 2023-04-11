@@ -63,7 +63,9 @@ import { ODataModule } from &#39;angular-odata&#39;;
   imports: [
     ...
     ODataModule.forRoot({
-      serviceRootUrl: &#39;https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/&#39;
+      config: {
+        serviceRootUrl: &#39;https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/&#39;
+      }
     })
     ...
   ]
@@ -80,7 +82,7 @@ import { TripPinConfig, TripPinModule } from &#39;./trippin&#39;;
 &#64;NgModule({
   imports: [
     ...
-    ODataModule.forRoot(TripPinConfig),
+    ODataModule.forRoot({ config: TripPinConfig }),
     TripPinModule
   ]
   ...

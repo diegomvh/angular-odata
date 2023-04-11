@@ -493,7 +493,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >QueryOption[]</a></code>
 
                     </td>
                 </tr>
@@ -1178,7 +1178,7 @@ import {
   PREFER,
   TEXT_PLAIN,
 } from &#x27;../constants&#x27;;
-import { QueryOptionNames } from &#x27;../types&#x27;;
+import { QueryOption } from &#x27;../types&#x27;;
 import { Http, Types } from &#x27;../utils&#x27;;
 import { ODataResource } from &#x27;./resource&#x27;;
 import { ODataOptions } from &#x27;./types&#x27;;
@@ -1189,7 +1189,7 @@ export class ODataRequest&lt;T&gt; {
   readonly context?: HttpContext;
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
-  readonly bodyQueryOptions: QueryOptionNames[];
+  readonly bodyQueryOptions: QueryOption[];
   readonly fetchPolicy:
     | &#x27;cache-first&#x27;
     | &#x27;cache-and-network&#x27;
@@ -1247,7 +1247,7 @@ export class ODataRequest&lt;T&gt; {
       | &#x27;no-cache&#x27;
       | &#x27;cache-only&#x27;;
     withCredentials?: boolean;
-    bodyQueryOptions?: QueryOptionNames[];
+    bodyQueryOptions?: QueryOption[];
   }) {
     this._method &#x3D; init.method;
     this.resource &#x3D; init.resource;
@@ -1410,7 +1410,7 @@ export class ODataRequest&lt;T&gt; {
         | &#x27;entities&#x27;;
       observe: &#x27;events&#x27; | &#x27;response&#x27;;
       withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOption[];
     }
   ) {
     const apiOptions &#x3D; api.options;

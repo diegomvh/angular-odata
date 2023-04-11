@@ -492,6 +492,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/Cache.html" data-type="entity-link" >Cache</a>
                             </li>
                             <li class="link">
+                                <a href="interfaces/FieldParser.html" data-type="entity-link" >FieldParser</a>
+                            </li>
+                            <li class="link">
                                 <a href="interfaces/ODataCacheEntry.html" data-type="entity-link" >ODataCacheEntry</a>
                             </li>
                             <li class="link">

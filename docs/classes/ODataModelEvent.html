@@ -749,7 +749,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from &#x27;../schema&#x27;;
-import { Parser, ParserOptions } from &#x27;../types&#x27;;
+import { EdmType, Parser, ParserOptions } from &#x27;../types&#x27;;
 import { Objects, Types } from &#x27;../utils&#x27;;
 import type { ODataCollection } from &#x27;./collection&#x27;;
 import type { ODataModel } from &#x27;./model&#x27;;
@@ -906,6 +906,7 @@ export type ModelOptions &#x3D; {
 
 export type ModelFieldOptions &#x3D; {
   field?: string;
+  parser?: ODataStructuredTypeFieldParser&lt;any&gt;;
   default?: any;
   required?: boolean;
   concurrency?: boolean;
@@ -1231,8 +1232,8 @@ export class ODataModelField&lt;F&gt; {
       (value || []) as Partial&lt;F&gt;[] | { [name: string]: any }[],
       {
         annots: annots,
-        parent: [parent, this],
         reset,
+        parent: [parent, this],
       }
     );
   }
@@ -1257,7 +1258,7 @@ export class ODataModelOptions&lt;T&gt; {
   cid: string;
   base?: string;
   open?: boolean;
-  private _fields: ODataModelField&lt;any&gt;[];
+  private _fields: ODataModelField&lt;any&gt;[] &#x3D; [];
   schema: ODataStructuredType&lt;T&gt;;
   entitySet?: ODataEntitySet;
   // Hierarchy
@@ -1276,15 +1277,9 @@ export class ODataModelOptions&lt;T&gt; {
     this.open &#x3D; schema.open;
     this.schema &#x3D; schema;
     this.cid &#x3D; options?.cid || CID_FIELD_NAME;
-    this._fields &#x3D; Object.entries(options.fields).map(([name, options]) &#x3D;&gt; {
-      const { field, ...opts } &#x3D; options;
-      if (field &#x3D;&#x3D;&#x3D; undefined || name &#x3D;&#x3D;&#x3D; undefined)
-        throw new Error(&#x27;Model Properties need name and field&#x27;);
-      const parser &#x3D; this.schema.field&lt;T&gt;(field as keyof T);
-      if (parser &#x3D;&#x3D;&#x3D; undefined)
-        throw new Error(&#x60;No parser for ${field} with name &#x3D; ${name}&#x60;);
-      return new ODataModelField&lt;T&gt;(this, { name, field, parser, ...opts });
-    });
+    Object.entries(options.fields).forEach(([name, options]) &#x3D;&gt;
+      this.addField&lt;any&gt;(name, options)
+    );
   }
 
   get api() {
@@ -1293,6 +1288,10 @@ export class ODataModelOptions&lt;T&gt; {
 
   type({ alias &#x3D; false }: { alias?: boolean } &#x3D; {}) {
     return this.schema.type({ alias });
+  }
+
+  isOpenType() {
+    return this.schema.isOpenType();
   }
 
   isTypeOf(type: string) {
@@ -1372,17 +1371,73 @@ export class ODataModelOptions&lt;T&gt; {
   }
 
   field&lt;F&gt;(name: keyof T | string) {
-    let field &#x3D; this.fields({
+    let field &#x3D; this.findField&lt;F&gt;(name);
+    //Throw error if not found
+    if (field &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x60;No field with name ${name as string}&#x60;);
+    return field as ODataModelField&lt;F&gt;;
+  }
+
+  findField&lt;F&gt;(name: keyof T | string) {
+    return this.fields({
       include_parents: true,
       include_navigation: true,
     }).find(
       (modelField: ODataModelField&lt;F&gt;) &#x3D;&gt;
         modelField.name &#x3D;&#x3D;&#x3D; name || modelField.field &#x3D;&#x3D;&#x3D; name
-    );
-    //Throw error if not found
-    if (field &#x3D;&#x3D;&#x3D; undefined)
-      throw new Error(&#x60;No field with name ${name as string}&#x60;);
-    return field as ODataModelField&lt;F&gt;;
+    ) as ODataModelField&lt;F&gt; | undefined;
+  }
+
+  addField&lt;F&gt;(name: string, options: ModelFieldOptions) {
+    const { field, parser, ...opts } &#x3D; options;
+    if (field &#x3D;&#x3D;&#x3D; undefined || name &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x27;Model Properties need name and field&#x27;);
+    const fieldParser &#x3D; parser ?? this.schema.field&lt;F&gt;(field as keyof T);
+    if (fieldParser &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x60;No parser for ${field} with name &#x3D; ${name}&#x60;);
+    const modelField &#x3D; new ODataModelField&lt;F&gt;(this, {
+      name,
+      field,
+      parser: fieldParser,
+      ...opts,
+    });
+    this._fields.push(modelField);
+    return modelField;
+  }
+
+  tsToEdm: Record&lt;string, EdmType&gt; &#x3D; {
+    string: EdmType.String,
+    number: EdmType.Int32,
+    bigint: EdmType.Int64,
+    boolean: EdmType.Boolean,
+  };
+  private modelFieldFactory&lt;F&gt;(
+    self: ODataModel&lt;T&gt;,
+    name: string,
+    type: string | EdmType
+  ) {
+    const structuredFieldParser &#x3D; this.schema.addField&lt;F&gt;(name, { type });
+    structuredFieldParser.configure({
+      findOptionsForType: (type: string) &#x3D;&gt; this.api.findOptionsForType(type),
+      parserForType: (type: string | EdmType) &#x3D;&gt; this.api.parserForType(type),
+      options: this.api.options,
+    });
+    const modelField &#x3D; this.addField&lt;F&gt;(name, {
+      field: name,
+      parser: structuredFieldParser,
+    });
+    modelField.configure({
+      findOptionsForType: (type: string) &#x3D;&gt; this.api.findOptionsForType(type),
+      options: this.api.options,
+      concurrency: false,
+    });
+    Object.defineProperty(self, modelField.name, {
+      configurable: true,
+      get: () &#x3D;&gt; this.get(self, modelField as ODataModelField&lt;any&gt;),
+      set: (value: any) &#x3D;&gt;
+        this.set(self, modelField as ODataModelField&lt;any&gt;, value),
+    });
+    return modelField;
   }
 
   attach(
@@ -1567,9 +1622,9 @@ export class ODataModelOptions&lt;T&gt; {
     for (let field of fields) {
       Object.defineProperty(self, field.name, {
         configurable: true,
-        get: () &#x3D;&gt; this._get(self, field as ODataModelField&lt;any&gt;),
+        get: () &#x3D;&gt; this.get(self, field as ODataModelField&lt;any&gt;),
         set: (value: any) &#x3D;&gt;
-          this._set(self, field as ODataModelField&lt;any&gt;, value),
+          this.set(self, field as ODataModelField&lt;any&gt;, value),
       });
     }
   }
@@ -1747,16 +1802,20 @@ export class ODataModelOptions&lt;T&gt; {
   hasKey(self: ODataModel&lt;T&gt;) {
     return this.resolveKey(self) !&#x3D;&#x3D; undefined;
   }
-  asEntity&lt;R, M extends ODataModel&lt;T&gt;&gt;(self: M, func: (model: M) &#x3D;&gt; R): R {
-    // Build new resource
-    const query &#x3D; self._resource?.cloneQuery&lt;T&gt;();
-    let resource &#x3D; this.modelResourceFactory(query);
-    if (resource &#x3D;&#x3D;&#x3D; undefined)
-      throw new Error(&#x27;Model does not have associated Entity endpoint&#x27;);
+
+  withResource&lt;R, M extends ODataModel&lt;T&gt;&gt;(
+    self: M,
+    resource:
+      | ODataEntityResource&lt;T&gt;
+      | ODataPropertyResource&lt;T&gt;
+      | ODataNavigationPropertyResource&lt;T&gt;
+      | ODataSingletonResource&lt;T&gt;,
+    ctx: (model: M) &#x3D;&gt; R
+  ): R {
     // Push
     self.pushResource(resource);
     // Execute function
-    const result &#x3D; func(self);
+    const result &#x3D; ctx(self);
     if (result instanceof Observable) {
       return (result as any).pipe(
         finalize(() &#x3D;&gt; {
@@ -1769,6 +1828,14 @@ export class ODataModelOptions&lt;T&gt; {
       self.popResource();
       return result;
     }
+  }
+  asEntity&lt;R, M extends ODataModel&lt;T&gt;&gt;(self: M, ctx: (model: M) &#x3D;&gt; R): R {
+    // Build new resource
+    const query &#x3D; self._resource?.cloneQuery&lt;T&gt;();
+    let resource &#x3D; this.modelResourceFactory(query);
+    if (resource &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x27;Model does not have associated Entity endpoint&#x27;);
+    return this.withResource(self, resource, ctx);
   }
 
   toEntity(
@@ -1989,7 +2056,11 @@ export class ODataModelOptions&lt;T&gt; {
       reset &#x3D; false,
       reparent &#x3D; false,
       silent &#x3D; false,
-    }: { reset?: boolean; reparent?: boolean; silent?: boolean } &#x3D; {}
+    }: {
+      reset?: boolean;
+      reparent?: boolean;
+      silent?: boolean;
+    } &#x3D; {}
   ) {
     self._reset &#x3D; reset;
     self._reparent &#x3D; reparent;
@@ -2012,7 +2083,7 @@ export class ODataModelOptions&lt;T&gt; {
 
         if (field !&#x3D;&#x3D; undefined) {
           // Delegated to private setter
-          if (this._set(self, field, value)) {
+          if (this.set(self, field, value)) {
             changes.push(field.name);
           }
         } else {
@@ -2044,7 +2115,7 @@ export class ODataModelOptions&lt;T&gt; {
     return Types.rawType(obj) &#x3D;&#x3D;&#x3D; &#x27;Collection&#x27;;
   }
 
-  private updateCollection&lt;F&gt;(
+  private _updateCollection&lt;F&gt;(
     self: ODataModel&lt;T&gt;,
     field: ODataModelField&lt;F&gt;,
     collection: ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;,
@@ -2060,7 +2131,8 @@ export class ODataModelOptions&lt;T&gt; {
     });
     return collection.hasChanged();
   }
-  private updateModel&lt;F&gt;(
+
+  private _updateModel&lt;F&gt;(
     self: ODataModel&lt;T&gt;,
     field: ODataModelField&lt;F&gt;,
     model: ODataModel&lt;F&gt;,
@@ -2077,18 +2149,20 @@ export class ODataModelOptions&lt;T&gt; {
     return model.hasChanged();
   }
 
-  private _get&lt;F&gt;(
+  get&lt;F&gt;(
     self: ODataModel&lt;T&gt;,
-    field: ODataModelField&lt;F&gt;
+    field: ODataModelField&lt;F&gt; | string
   ): F | ODataModel&lt;F&gt; | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt; | null | undefined {
-    if (field.isStructuredType()) {
-      const relation &#x3D; self._relations.get(field.name);
+    const modelField &#x3D;
+      field instanceof ODataModelField ? field : this.findField&lt;F&gt;(field);
+    if (modelField !&#x3D;&#x3D; undefined &amp;&amp; modelField.isStructuredType()) {
+      const relation &#x3D; self._relations.get(modelField.name);
       if (
-        field.navigation &amp;&amp;
+        modelField.navigation &amp;&amp;
         (relation?.model &#x3D;&#x3D;&#x3D; null || ODataModelOptions.isModel(relation?.model))
       ) {
         // Check for reference
-        const referenced &#x3D; this.resolveReferenced(self, field);
+        const referenced &#x3D; this.resolveReferenced(self, modelField);
         if (
           relation?.model !&#x3D;&#x3D; null &amp;&amp;
           referenced !&#x3D;&#x3D; null &amp;&amp;
@@ -2111,7 +2185,7 @@ export class ODataModelOptions&lt;T&gt; {
       return this.attributes(self, {
         include_concurrency: true,
         include_computed: true,
-      })[field.name];
+      })[modelField !&#x3D;&#x3D; undefined ? modelField.name : (field as string)];
     }
   }
 
@@ -2164,7 +2238,7 @@ export class ODataModelOptions&lt;T&gt; {
         }
       } else if (Types.isArray(value)) {
         // New value is array
-        changed &#x3D; this.updateCollection&lt;F&gt;(
+        changed &#x3D; this._updateCollection&lt;F&gt;(
           self,
           field,
           currentCollection,
@@ -2188,7 +2262,7 @@ export class ODataModelOptions&lt;T&gt; {
           changed &#x3D; true;
         }
       } else if (Types.isPlainObject(value)) {
-        changed &#x3D; this.updateModel&lt;F&gt;(
+        changed &#x3D; this._updateModel&lt;F&gt;(
           self,
           field,
           currentModel,
@@ -2288,9 +2362,9 @@ export class ODataModelOptions&lt;T&gt; {
     return changed;
   }
 
-  private _set&lt;F&gt;(
+  set&lt;F&gt;(
     self: ODataModel&lt;T&gt;,
-    field: ODataModelField&lt;F&gt;,
+    field: ODataModelField&lt;F&gt; | string,
     value:
       | F
       | F[]
@@ -2298,11 +2372,24 @@ export class ODataModelOptions&lt;T&gt; {
       | { [name: string]: any }[]
       | ODataModel&lt;F&gt;
       | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;
-      | null
+      | null,
+    { type }: { type?: string } &#x3D; {}
   ): boolean {
-    return field.isStructuredType()
-      ? this._setStructured(self, field, value)
-      : this._setValue(self, field, value, field.isKey());
+    let modelField &#x3D;
+      field instanceof ODataModelField ? field : this.findField&lt;F&gt;(field);
+    if (
+      modelField &#x3D;&#x3D;&#x3D; undefined &amp;&amp;
+      this.isOpenType() &amp;&amp;
+      typeof field &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
+    ) {
+      type &#x3D; type ?? (this.tsToEdm[typeof value] as EdmType) ?? &#x27;&#x27;;
+      modelField &#x3D; this.modelFieldFactory&lt;F&gt;(self, field, type);
+    }
+    if (modelField &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x60;No field with name ${field as string}&#x60;);
+    return modelField.isStructuredType()
+      ? this._setStructured(self, modelField, value)
+      : this._setValue(self, modelField, value, modelField.isKey());
   }
 
   private _unlink&lt;F&gt;(self: ODataModel&lt;T&gt;, relation: ODataModelRelation&lt;F&gt;) {

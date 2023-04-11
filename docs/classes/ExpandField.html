@@ -494,7 +494,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>option(name: <a href="../undefineds/QueryOptionNames.html" target="_self">QueryOptionNames</a>, opts?: O)</code>
+                    <code>option(name: <a href="../undefineds/QueryOption.html" target="_self">QueryOption</a>, opts?: O)</code>
                 </td>
             </tr>
 
@@ -533,7 +533,7 @@
                                 <tr>
                                     <td>name</td>
                                     <td>
-                                                <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames</a></code>
+                                                <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >QueryOption</a></code>
                                     </td>
 
                                     <td>
@@ -1081,7 +1081,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOptionNames } from &#x27;../../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOption } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
@@ -1117,14 +1117,14 @@ export class ExpandField&lt;T&gt; implements Renderable {
     prefix?: string;
   }): string {
     const params: { [key: string]: string } &#x3D; [
-      QueryOptionNames.select,
-      QueryOptionNames.expand,
-      QueryOptionNames.filter,
-      QueryOptionNames.search,
-      QueryOptionNames.orderBy,
-      QueryOptionNames.skip,
-      QueryOptionNames.top,
-      QueryOptionNames.levels,
+      QueryOption.select,
+      QueryOption.expand,
+      QueryOption.filter,
+      QueryOption.search,
+      QueryOption.orderBy,
+      QueryOption.skip,
+      QueryOption.top,
+      QueryOption.levels,
     ]
       .filter((key) &#x3D;&gt; !Types.isEmpty(this.values[key]))
       .reduce((acc, key) &#x3D;&gt; {
@@ -1159,8 +1159,8 @@ export class ExpandField&lt;T&gt; implements Renderable {
     ) &#x3D;&gt; SelectExpression&lt;T&gt;
   ): SelectExpression&lt;T&gt; {
     return this.option(
-      QueryOptionNames.select,
-      SelectExpression.select&lt;T&gt;(opts, this.values[QueryOptionNames.select])
+      QueryOption.select,
+      SelectExpression.select&lt;T&gt;(opts, this.values[QueryOption.select])
     );
   }
 
@@ -1171,8 +1171,8 @@ export class ExpandField&lt;T&gt; implements Renderable {
     ) &#x3D;&gt; ExpandExpression&lt;T&gt;
   ) {
     return this.option(
-      QueryOptionNames.expand,
-      ExpandExpression.expand&lt;T&gt;(opts, this.values[QueryOptionNames.expand])
+      QueryOption.expand,
+      ExpandExpression.expand&lt;T&gt;(opts, this.values[QueryOption.expand])
     );
   }
 
@@ -1183,8 +1183,8 @@ export class ExpandField&lt;T&gt; implements Renderable {
     ) &#x3D;&gt; FilterExpression&lt;T&gt;
   ) {
     return this.option(
-      QueryOptionNames.filter,
-      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOptionNames.filter])
+      QueryOption.filter,
+      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOption.filter])
     );
   }
 
@@ -1192,8 +1192,8 @@ export class ExpandField&lt;T&gt; implements Renderable {
     opts: (builder: SearchExpressionBuilder&lt;T&gt;) &#x3D;&gt; SearchExpression&lt;T&gt;
   ) {
     return this.option(
-      QueryOptionNames.search,
-      SearchExpression.search&lt;T&gt;(opts, this.values[QueryOptionNames.search])
+      QueryOption.search,
+      SearchExpression.search&lt;T&gt;(opts, this.values[QueryOption.search])
     );
   }
 
@@ -1204,25 +1204,25 @@ export class ExpandField&lt;T&gt; implements Renderable {
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;
   ) {
     return this.option(
-      QueryOptionNames.orderBy,
-      OrderByExpression.orderBy&lt;T&gt;(opts, this.values[QueryOptionNames.orderBy])
+      QueryOption.orderBy,
+      OrderByExpression.orderBy&lt;T&gt;(opts, this.values[QueryOption.orderBy])
     );
   }
 
   skip(n: number) {
-    return this.option&lt;number&gt;(QueryOptionNames.skip, n);
+    return this.option&lt;number&gt;(QueryOption.skip, n);
   }
 
   top(n: number) {
-    return this.option&lt;number&gt;(QueryOptionNames.top, n);
+    return this.option&lt;number&gt;(QueryOption.top, n);
   }
 
   levels(n: number | &#x27;max&#x27;) {
-    return this.option&lt;number | &#x27;max&#x27;&gt;(QueryOptionNames.levels, n);
+    return this.option&lt;number | &#x27;max&#x27;&gt;(QueryOption.levels, n);
   }
 
   // Option Handler
-  private option&lt;O&gt;(name: QueryOptionNames, opts?: O) {
+  private option&lt;O&gt;(name: QueryOption, opts?: O) {
     if (opts !&#x3D;&#x3D; undefined) this.values[name] &#x3D; opts;
     return this.values[name];
   }
