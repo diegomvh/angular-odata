@@ -89,7 +89,7 @@ export class ODataModel<T> {
     ODataModelRelation<any>
   >();
   _annotations: ODataEntityAnnotations<T> | null = null;
-  _remove: boolean = false;
+  _remove: boolean = true;
   _reset: boolean = false;
   _reparent: boolean = false;
   _silent: boolean = false;
@@ -103,6 +103,7 @@ export class ODataModel<T> {
       parent,
       resource,
       annots,
+      remove = true,
       reset = false,
     }: {
       parent?: [
@@ -111,6 +112,7 @@ export class ODataModel<T> {
       ];
       resource?: ODataResource<T>;
       annots?: ODataEntityAnnotations<T>;
+      remove?: boolean;
       reset?: boolean;
     } = {}
   ) {
@@ -129,6 +131,7 @@ export class ODataModel<T> {
     let defaults = this.defaults();
 
     this.assign(Objects.merge(defaults, attrs as { [name: string]: any }), {
+      remove,
       reset,
     });
   }
@@ -455,7 +458,7 @@ export class ODataModel<T> {
   assign(
     entity: Partial<T> | { [name: string]: any },
     {
-      remove = false,
+      remove = true,
       reset = false,
       reparent = false,
       silent = false,

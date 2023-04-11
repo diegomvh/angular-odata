@@ -456,10 +456,12 @@ export class ODataModelField<F> {
   modelFactory<F>({
     parent,
     value,
+    remove,
     reset,
   }: {
     parent: ODataModel<any>;
     value?: Partial<F> | { [name: string]: any };
+    remove?: boolean;
     reset?: boolean;
   }): ODataModel<F> {
     // Model
@@ -483,6 +485,7 @@ export class ODataModelField<F> {
 
     return new Model((value || {}) as Partial<F> | { [name: string]: any }, {
       annots,
+      remove,
       reset,
       parent: [parent, this],
     });
@@ -491,10 +494,12 @@ export class ODataModelField<F> {
   collectionFactory<F>({
     parent,
     value,
+    remove,
     reset,
   }: {
     parent: ODataModel<any>;
     value?: Partial<F>[] | { [name: string]: any }[];
+    remove?: boolean;
     reset?: boolean;
   }): ODataCollection<F, ODataModel<F>> {
     // Collection Factory
@@ -508,6 +513,7 @@ export class ODataModelField<F> {
       (value || []) as Partial<F>[] | { [name: string]: any }[],
       {
         annots: annots,
+        remove,
         reset,
         parent: [parent, this],
       }
@@ -1329,7 +1335,7 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     entity: Partial<T> | { [name: string]: any },
     {
-      remove = false,
+      remove = true,
       reset = false,
       reparent = false,
       silent = false,
@@ -1381,7 +1387,7 @@ export class ODataModelOptions<T> {
         })
       );
     }
-    self._remove = false;
+    self._remove = true;
     self._reset = false;
     self._reparent = false;
     self._silent = false;
@@ -1562,11 +1568,13 @@ export class ODataModelOptions<T> {
           ? field.collectionFactory<F>({
               parent: self,
               value: value as F[] | { [name: string]: any }[],
+              remove: self._remove,
               reset: self._reset,
             })
           : field.modelFactory<F>({
               parent: self,
               value: value,
+              remove: self._remove,
               reset: self._reset,
             });
       // Link new model/collection

@@ -84,12 +84,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource,
       annots,
       model,
+      remove = true,
       reset = false,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
       resource?: ODataResource<T>;
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
+      remove?: boolean;
       reset?: boolean;
     } = {}
   ) {
@@ -128,7 +130,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
 
     entities = entities || [];
-    this.assign(entities, { reset });
+    this.assign(entities, { reset, remove });
   }
 
   isParentOf(
@@ -913,7 +915,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   assign(
     objects: Partial<T>[] | { [name: string]: any }[] | M[],
     {
-      remove = false,
+      remove = true,
       reset = false,
       reparent = false,
       silent = false,
@@ -925,16 +927,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
     } = {}
   ) {
     const Model = this._model;
-    const skip = remove ? 0 : this.length;
 
     let toAdd: [M, number][] = [];
-    let toChange: M[] = [];
-    let toRemove: M[] = [];
+    let toChange: [M, number][] = [];
+    let toRemove: [M, number][] = [];
     let toSort: [M, number][] = [];
     let modelMap: string[] = [];
     objects.forEach((obj, index) => {
       const isModel = ODataModelOptions.isModel(obj);
-      const position = index + skip;
       const key =
         Model !== null && Model.meta ? Model.meta.resolveKey(obj) : undefined;
       const cid =
@@ -955,7 +955,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
               client_id: true,
               ...INCLUDE_DEEP,
             });
-            model.assign(entity, { reset, silent });
+            model.assign(entity, { reset, remove, silent });
           } else {
             const helper = this._annotations.helper;
             const annots = new ODataEntityAnnotations<T>(
@@ -967,18 +967,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
             model.assign(entity, { reset, remove, silent });
           }
           // Model Change?
-          if (model.hasChanged()) toChange.push(model);
+          if (model.hasChanged()) toChange.push([model, index]);
         }
-        // Has Sort or Position Change?
-        if (toSort.length > 0 || position !== this.models().indexOf(model)) {
-          toSort.push([model, position]);
+        // Has Sort or Index Change?
+        if (toSort.length > 0 || index !== this.models().indexOf(model)) {
+          toSort.push([model, index]);
         }
       } else {
         // Add
         model = isModel
           ? (obj as M)
           : this.modelFactory(obj as Partial<T> | { [name: string]: any });
-        toAdd.push([model, position]);
+        toAdd.push([model, index]);
       }
       modelMap.push((<any>model)[Model.meta.cid]);
     });
@@ -986,14 +986,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (remove) {
       this._entries
         .filter((e) => modelMap.indexOf((<any>e.model)[Model.meta.cid]) === -1)
-        .forEach((entry) => {
-          toRemove.push(entry.model);
+        .forEach((entry, index) => {
+          toRemove.push([entry.model, index]);
         });
     }
 
     // Apply remove, add and sort
     toRemove.forEach((m) => {
-      this._removeModel(m, { silent, reset });
+      this._removeModel(m[0], { silent, reset });
     });
     toAdd.forEach((m) => {
       this._addModel(m[0], { silent, reset, reparent, position: m[1] });
