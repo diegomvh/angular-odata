@@ -200,9 +200,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   ): Observable<C | null> {
     return this.call(params, { responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
-        entities
-          ? this.asCollection<M, C>(entities, { annots })
-          : null
+        entities ? this.asCollection<M, C>(entities, { annots }) : null
       )
     );
   }

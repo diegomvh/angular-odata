@@ -29,7 +29,7 @@ describe('ODataResource', () => {
         ODataModule.forRoot({
           config: {
             serviceRootUrl: SERVICE_ROOT,
-          }
+          },
         }),
         HttpClientTestingModule,
       ],

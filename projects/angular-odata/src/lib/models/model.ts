@@ -474,9 +474,7 @@ export class ODataModel<T> {
     }) as M;
   }
 
-  private _request(
-    obs$: Observable<ODataEntity<any>>,
-  ): Observable<this> {
+  private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
     this.events$.emit(
       new ODataModelEvent('request', {
         model: this,

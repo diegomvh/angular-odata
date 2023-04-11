@@ -1,19 +1,17 @@
 export const Enums = {
   names<E extends { [key: string]: any }>(enums: E): string[] {
-    return Object.values<string>(enums).filter(
-      (v) => typeof v === 'string'
-    );
+    return Object.values<string>(enums).filter((v) => typeof v === 'string');
   },
 
   values<E extends { [key: string]: any }>(enums: E): number[] {
-    return Object.values<number>(enums).filter(
-      (v) => typeof v === 'number'
-    );
+    return Object.values<number>(enums).filter((v) => typeof v === 'number');
   },
 
-  toValue<E extends { [key: string]: any }>(enums: E, value: any): number | undefined {
-    if (value in enums)
-      return typeof value === 'string' ? enums[value] : value;
+  toValue<E extends { [key: string]: any }>(
+    enums: E,
+    value: any
+  ): number | undefined {
+    if (value in enums) return typeof value === 'string' ? enums[value] : value;
     return undefined;
   },
 
@@ -30,9 +28,11 @@ export const Enums = {
     return [];
   },
 
-  toName<E extends { [key: string]: any }>(enums: E, value: any): string | undefined {
-    if (value in enums)
-      return typeof value === 'number' ? enums[value] : value;
+  toName<E extends { [key: string]: any }>(
+    enums: E,
+    value: any
+  ): string | undefined {
+    if (value in enums) return typeof value === 'number' ? enums[value] : value;
     return undefined;
   },
 
@@ -49,5 +49,5 @@ export const Enums = {
       return value.map((o) => this.toName(enums, o) as string);
     }
     return [];
-  }
+  },
 };

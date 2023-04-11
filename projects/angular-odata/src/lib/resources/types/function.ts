@@ -253,9 +253,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       ...options,
     }).pipe(
       map(({ entities, annots }) =>
-        entities
-          ? this.asCollection<M, C>(entities, { annots })
-          : null
+        entities ? this.asCollection<M, C>(entities, { annots }) : null
       )
     );
   }
