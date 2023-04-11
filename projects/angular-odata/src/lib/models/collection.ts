@@ -84,14 +84,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource,
       annots,
       model,
-      remove = true,
       reset = false,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
       resource?: ODataResource<T>;
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
-      remove?: boolean;
       reset?: boolean;
     } = {}
   ) {
@@ -130,7 +128,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
 
     entities = entities || [];
-    this.assign(entities, { reset, remove });
+    this.assign(entities, { reset });
   }
 
   isParentOf(
@@ -415,7 +413,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     const obs$ = resource.fetchMany(top, { withCount, ...options });
 
-    return this._request(obs$, { remove });
+    return this._request(obs$, { remove: remove ?? false });
   }
 
   fetchOne({
@@ -752,6 +750,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
+  private _moveModel(model: M, position: number): M {
+    const key = model.key();
+    let entry = this._findEntry({
+      model,
+      key,
+      cid: (<any>model)[this._model.meta.cid],
+    });
+    if (entry === undefined || entry.state === ODataModelState.Removed) {
+      return model;
+    }
+
+    // Now remove
+    const index = this._entries.indexOf(entry);
+    this._entries.splice(index, 1);
+    this._entries.splice(position, 0, entry);
+
+    return entry.model;
+  }
+
   create(
     attrs: T = {} as T,
     {
@@ -927,6 +944,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     } = {}
   ) {
     const Model = this._model;
+    const offset = remove ? 0 : this.length;
 
     let toAdd: [M, number][] = [];
     let toChange: [M, number][] = [];
@@ -935,6 +953,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let modelMap: string[] = [];
     objects.forEach((obj, index) => {
       const isModel = ODataModelOptions.isModel(obj);
+      const position = index + offset;
       const key =
         Model !== null && Model.meta ? Model.meta.resolveKey(obj) : undefined;
       const cid =
@@ -955,7 +974,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
               client_id: true,
               ...INCLUDE_DEEP,
             });
-            model.assign(entity, { reset, remove, silent });
+            model.assign(entity, { reset, silent });
           } else {
             const helper = this._annotations.helper;
             const annots = new ODataEntityAnnotations<T>(
@@ -964,43 +983,41 @@ export class ODataCollection<T, M extends ODataModel<T>>
             );
             const entity = annots.attributes(obj, 'full');
             model._annotations = annots;
-            model.assign(entity, { reset, remove, silent });
+            model.assign(entity, { reset, silent });
           }
           // Model Change?
-          if (model.hasChanged()) toChange.push([model, index]);
+          if (model.hasChanged()) toChange.push([model, position]);
         }
         // Has Sort or Index Change?
-        if (toSort.length > 0 || index !== this.models().indexOf(model)) {
-          toSort.push([model, index]);
+        if (toSort.length > 0 || position !== this.models().indexOf(model)) {
+          toSort.push([model, position]);
         }
       } else {
         // Add
         model = isModel
           ? (obj as M)
           : this.modelFactory(obj as Partial<T> | { [name: string]: any });
-        toAdd.push([model, index]);
+        toAdd.push([model, position]);
       }
       modelMap.push((<any>model)[Model.meta.cid]);
     });
 
     if (remove) {
-      this._entries
-        .filter((e) => modelMap.indexOf((<any>e.model)[Model.meta.cid]) === -1)
-        .forEach((entry, index) => {
-          toRemove.push([entry.model, index]);
-        });
+      this._entries.forEach((entry, position) => {
+        if (modelMap.indexOf((<any>entry.model)[Model.meta.cid]) === -1)
+          toRemove.push([entry.model, position]);
+      });
     }
 
     // Apply remove, add and sort
-    toRemove.forEach((m) => {
-      this._removeModel(m[0], { silent, reset });
+    toRemove.forEach(([model, position]) => {
+      this._removeModel(model, { silent, reset });
     });
-    toAdd.forEach((m) => {
-      this._addModel(m[0], { silent, reset, reparent, position: m[1] });
+    toAdd.forEach(([model, position]) => {
+      this._addModel(model, { silent, reset, reparent, position });
     });
-    toSort.forEach((m) => {
-      this._removeModel(m[0], { silent: true, reset });
-      this._addModel(m[0], { silent: true, reset, position: m[1], reparent });
+    toSort.forEach(([model, position]) => {
+      this._moveModel(model, position);
     });
 
     if (

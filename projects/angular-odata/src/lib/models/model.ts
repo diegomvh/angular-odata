@@ -89,7 +89,6 @@ export class ODataModel<T> {
     ODataModelRelation<any>
   >();
   _annotations: ODataEntityAnnotations<T> | null = null;
-  _remove: boolean = true;
   _reset: boolean = false;
   _reparent: boolean = false;
   _silent: boolean = false;
@@ -103,7 +102,6 @@ export class ODataModel<T> {
       parent,
       resource,
       annots,
-      remove = true,
       reset = false,
     }: {
       parent?: [
@@ -112,7 +110,6 @@ export class ODataModel<T> {
       ];
       resource?: ODataResource<T>;
       annots?: ODataEntityAnnotations<T>;
-      remove?: boolean;
       reset?: boolean;
     } = {}
   ) {
@@ -131,7 +128,6 @@ export class ODataModel<T> {
     let defaults = this.defaults();
 
     this.assign(Objects.merge(defaults, attrs as { [name: string]: any }), {
-      remove,
       reset,
     });
   }
@@ -458,18 +454,16 @@ export class ODataModel<T> {
   assign(
     entity: Partial<T> | { [name: string]: any },
     {
-      remove = true,
       reset = false,
       reparent = false,
       silent = false,
     }: {
-      remove?: boolean;
       reset?: boolean;
       reparent?: boolean;
       silent?: boolean;
     } = {}
   ) {
-    return this._meta.assign(this, entity, { remove, reset, silent, reparent });
+    return this._meta.assign(this, entity, { reset, silent, reparent });
   }
 
   clone<M extends ODataModel<T>>() {
@@ -482,7 +476,6 @@ export class ODataModel<T> {
 
   private _request(
     obs$: Observable<ODataEntity<any>>,
-    { remove }: { remove?: boolean } = {}
   ): Observable<this> {
     this.events$.emit(
       new ODataModelEvent('request', {
@@ -495,7 +488,6 @@ export class ODataModel<T> {
         this._annotations = annots;
         this.assign(annots.attributes(entity || {}, 'full'), {
           reset: true,
-          remove,
         });
         this.events$.emit(
           new ODataModelEvent('sync', {
@@ -509,10 +501,8 @@ export class ODataModel<T> {
   }
 
   fetch({
-    remove,
     ...options
   }: ODataOptions & {
-    remove?: boolean;
     options?: ODataOptions;
   } = {}): Observable<this> {
     let resource = this.resource();
@@ -530,7 +520,7 @@ export class ODataModel<T> {
         ...options,
       });
     }
-    return this._request(obs$, { remove });
+    return this._request(obs$);
   }
 
   save({
