@@ -866,7 +866,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
         if (ODataModelOptions.isModel(model)) {
           const entry = this._findEntry({ model }) as ODataModelEntry<T, M>;
           if (
-            entry.state === ODataModelState.Changed ||
             (entry.state === ODataModelState.Unchanged &&
               entry.model.hasChanged())
           ) {
@@ -878,11 +877,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     } else {
       // Reset all
       toAdd = this._entries.filter((e) => e.state === ODataModelState.Removed);
-      toChange = this._entries.filter(
-        (e) =>
-          e.state === ODataModelState.Changed ||
-          (e.state === ODataModelState.Unchanged && e.model.hasChanged())
-      );
+      toChange = this._entries.filter((e) => (e.state === ODataModelState.Unchanged && e.model.hasChanged()));
       toRemove = this._entries.filter((e) => e.state === ODataModelState.Added);
     }
 
@@ -1161,7 +1156,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   // Collection functions
-  equals(other: ODataCollection<T, ODataModel<T>>) {
+  equals(other: ODataCollection<T, ODataModel<T>>): boolean {
     return this === other;
   }
 

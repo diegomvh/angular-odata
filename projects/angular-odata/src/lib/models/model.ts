@@ -24,12 +24,11 @@ import { ODataCollection } from './collection';
 import {
   INCLUDE_DEEP,
   INCLUDE_SHALLOW,
-  ModelFieldOptions,
   ModelOptions,
   ODataModelEvent,
   ODataModelField,
   ODataModelOptions,
-  ODataModelRelation,
+  ODataModelAttribute,
 } from './options';
 
 // @dynamic
@@ -82,12 +81,7 @@ export class ODataModel<T> {
       | null;
     resource: ODataResource<T> | null;
   }[] = [];
-  _attributes: Map<string, any> = new Map<string, any>();
-  _changes: Map<string, any> = new Map<string, any>();
-  _relations: Map<string, ODataModelRelation<any>> = new Map<
-    string,
-    ODataModelRelation<any>
-  >();
+  _attributes: Map<string, ODataModelAttribute<any>> = new Map<string, ODataModelAttribute<any>>();
   _annotations: ODataEntityAnnotations<T> | null = null;
   _reset: boolean = false;
   _reparent: boolean = false;
@@ -349,28 +343,6 @@ export class ODataModel<T> {
     return this.toEntity();
   }
 
-  attributes({
-    changes_only = false,
-    include_concurrency = false,
-    include_computed = false,
-    include_non_field = false,
-    field_mapping = false,
-  }: {
-    changes_only?: boolean;
-    include_concurrency?: boolean;
-    include_computed?: boolean;
-    include_non_field?: boolean;
-    field_mapping?: boolean;
-  } = {}): { [name: string]: any } {
-    return this._meta.attributes(this, {
-      changes_only,
-      include_concurrency,
-      include_computed,
-      include_non_field,
-      field_mapping,
-    });
-  }
-
   set(path: string | string[], value: any, { type }: { type?: string } = {}) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
@@ -440,8 +412,8 @@ export class ODataModel<T> {
 
   clear({ silent = false }: { silent?: boolean } = {}) {
     this._attributes.clear();
-    this._changes.clear();
-    this._relations.clear();
+    //this._changes.clear();
+    //this._relations.clear();
     if (!silent) {
       this.events$.emit(
         new ODataModelEvent('update', {
@@ -654,6 +626,7 @@ export class ODataModel<T> {
   isNew() {
     return !this._meta.hasKey(this);
   }
+
   withResource<R>(resource: any, ctx: (model: this) => R): R {
     return this._meta.withResource(this, resource, ctx);
   }
@@ -896,7 +869,7 @@ export class ODataModel<T> {
   }
 
   // Model functions
-  equals(other: ODataModel<T>) {
+  equals(other: ODataModel<T>): boolean {
     const thisKey = this.key();
     const otherKey = other.key();
     return (
