@@ -29,6 +29,7 @@ import {
   ODataModelField,
   ODataModelOptions,
   ODataModelAttribute,
+  ODataModelEventType,
 } from './options';
 
 // @dynamic
@@ -46,17 +47,17 @@ export class ODataModel<T> {
     if (options === undefined) {
       let fields = schema
         .fields({ include_navigation: true, include_parents: true })
-        .reduce((acc, f) => {
-          let name = f.name;
+        .reduce((acc, field) => {
+          let name = field.name;
           // Prevent collision with reserved keywords
           while (RESERVED_FIELD_NAMES.includes(name)) {
             name = name + '_';
           }
           return Object.assign(acc, {
             [name]: {
-              field: f.name,
-              default: f.default,
-              required: !f.nullable,
+              field: field.name,
+              default: field.default,
+              required: !field.nullable,
             },
           });
         }, {});
@@ -245,26 +246,26 @@ export class ODataModel<T> {
   }
 
   referential(
-    field: ODataModelField<any>,
+    attr: ODataModelAttribute<any> | ODataModelField<any>,
     {
       field_mapping = false,
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): { [name: string]: any } | null | undefined {
-    return this._meta.resolveReferential(this, field, {
+    return this._meta.resolveReferential(this, attr, {
       field_mapping,
       resolve,
     });
   }
 
   referenced(
-    field: ODataModelField<any>,
+    attr: ODataModelAttribute<any> | ODataModelField<any>,
     {
       field_mapping = false,
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): { [name: string]: any } | null | undefined {
-    return this._meta.resolveReferenced(this, field, {
+    return this._meta.resolveReferenced(this, attr, {
       field_mapping,
       resolve,
     });
@@ -292,7 +293,7 @@ export class ODataModel<T> {
     this._errors = this.validate({ method, navigation });
     if (this._errors !== undefined)
       this.events$.emit(
-        new ODataModelEvent('invalid', {
+        new ODataModelEvent(ODataModelEventType.Invalid, {
           model: this,
           value: this._errors,
           options: { method },
@@ -416,7 +417,7 @@ export class ODataModel<T> {
     //this._relations.clear();
     if (!silent) {
       this.events$.emit(
-        new ODataModelEvent('update', {
+        new ODataModelEvent(ODataModelEventType.Update, {
           model: this,
         })
       );
@@ -448,7 +449,7 @@ export class ODataModel<T> {
 
   private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
     this.events$.emit(
-      new ODataModelEvent('request', {
+      new ODataModelEvent(ODataModelEventType.Request, {
         model: this,
         options: { observable: obs$ },
       })
@@ -460,7 +461,7 @@ export class ODataModel<T> {
           reset: true,
         });
         this.events$.emit(
-          new ODataModelEvent('sync', {
+          new ODataModelEvent(ODataModelEventType.Sync, {
             model: this,
             options: { entity, annots },
           })
@@ -597,7 +598,7 @@ export class ODataModel<T> {
       );
     return this._request(obs$).pipe(
       tap(() =>
-        this.events$.emit(new ODataModelEvent('destroy', { model: this }))
+        this.events$.emit(new ODataModelEvent(ODataModelEventType.Destroy, { model: this }))
       )
     );
   }
@@ -827,7 +828,7 @@ export class ODataModel<T> {
       obs$ = reference.unset({ etag, ...options });
     }
     this.events$.emit(
-      new ODataModelEvent('request', {
+      new ODataModelEvent(ODataModelEventType.Request, {
         model: this,
         options: { observable: obs$ },
       })
@@ -835,7 +836,7 @@ export class ODataModel<T> {
     return obs$.pipe(
       map((model) => {
         this.assign({ [name]: model });
-        this.events$.emit(new ODataModelEvent('sync', { model: this }));
+        this.events$.emit(new ODataModelEvent(ODataModelEventType.Sync, { model: this }));
         return this;
       })
     );
