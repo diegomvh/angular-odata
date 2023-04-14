@@ -518,18 +518,21 @@ export class ODataModelField<F> {
 export class ODataModelAttribute<T> {
   private value?: T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null;
   private change?: T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null;
-  field: ODataModelField<T>;
   private subscription?: Subscription;
   events$ = new EventEmitter<ODataModelEvent<T>>();
 
-  constructor(field: ODataModelField<T>) {
-    this.field = field;
-  }
+  constructor(
+    private _model: ODataModel<any>,
+    private _field: ODataModelField<T>
+  ) {}
 
   get navigation() {
-    return Boolean(this.field.navigation);
+    return Boolean(this._field.navigation);
   }
 
+  field() {
+    return this._field;
+  }
   get():
     | T
     | ODataModel<T>
@@ -546,7 +549,8 @@ export class ODataModelAttribute<T> {
       | ODataCollection<T, ODataModel<T>>
       | null
       | undefined,
-    reset: boolean = false
+    reset: boolean = false,
+    reparent: boolean = false
   ) {
     const current = this.get();
     const changed =
@@ -576,15 +580,10 @@ export class ODataModelAttribute<T> {
         this.subscription = (
           value as ODataModel<T> | ODataCollection<T, ODataModel<T>>
         ).events$.subscribe((e) => this.events$.emit(e));
-      }
-      if (
-        ODataModelOptions.isModel(value) ||
-        ODataModelOptions.isCollection(value) ||
-        value === null
-      ) {
-        this.setParent(
-          value as ODataModel<T> | ODataCollection<T, ODataModel<T>> | null
-        );
+        if (reparent) {
+          (value as ODataModel<T> | ODataCollection<T, ODataModel<T>>)._parent =
+            [this._model, this._field];
+        }
       }
     }
     return changed;
@@ -606,19 +605,6 @@ export class ODataModelAttribute<T> {
 
   reset() {
     this.change = undefined;
-  }
-
-  setParent<P>(
-    model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | null
-  ) {
-    const current = this.get();
-    if (
-      ODataModelOptions.isModel(current) ||
-      ODataModelOptions.isCollection(current)
-    ) {
-      (current as ODataModel<T> | ODataCollection<T, ODataModel<T>>)._parent =
-        model === null ? model : [model, this.field];
-    }
   }
 }
 
@@ -1252,7 +1238,7 @@ export class ODataModelOptions<T> {
           !attr.navigation
       )
       .reduce((acc, attr) => {
-        const field = attr.field;
+        const field = attr.field();
         const name = field_mapping ? field.field : field.name;
         const computed = field.annotatedValue<boolean>(COMPUTED);
         let value: any = attr.get();
@@ -1283,7 +1269,7 @@ export class ODataModelOptions<T> {
             chain: [self, ...chain],
           });
         }
-        if (attr.field.concurrency && include_concurrency) {
+        if (field.concurrency && include_concurrency) {
           return Object.assign(acc, { [name]: value });
         } else if (computed && include_computed) {
           return Object.assign(acc, { [name]: value });
@@ -1488,7 +1474,7 @@ export class ODataModelOptions<T> {
         ODataModelOptions.isModel(value)
       ) {
         // Check for reference
-        const referenced = this.resolveReferenced(self, attr.field);
+        const referenced = this.resolveReferenced(self, attr.field());
         if (value !== null && referenced !== null && referenced !== undefined) {
           (value as ODataModel<F>).assign(referenced as Partial<F>, {
             silent: true,
@@ -1543,7 +1529,7 @@ export class ODataModelOptions<T> {
 
     // Ensures that the attribute exists
     if (attr === undefined) {
-      attr = new ODataModelAttribute(modelField);
+      attr = new ODataModelAttribute(self, modelField);
       this._link(self, attr);
       self._attributes.set(modelField.name, attr);
     }
@@ -1553,7 +1539,7 @@ export class ODataModelOptions<T> {
     if (modelField.isStructuredType()) {
       if (value === null) {
         // New value is null
-        changed = attr.set(value as null, self._reset);
+        changed = attr.set(value as null, self._reset, self._reparent);
       } else if (ODataModelOptions.isCollection(current)) {
         // Current is collection
         let currentCollection = current as ODataCollection<F, ODataModel<F>>;
@@ -1561,7 +1547,8 @@ export class ODataModelOptions<T> {
           // New value is collection
           changed = attr.set(
             value as ODataCollection<F, ODataModel<F>>,
-            self._reset
+            self._reset,
+            self._reparent
           );
         } else if (Types.isArray(value)) {
           // New value is array
@@ -1577,7 +1564,11 @@ export class ODataModelOptions<T> {
         let currentModel = current as ODataModel<F>;
         if (ODataModelOptions.isModel(value)) {
           // New value is model
-          changed = attr.set(value as ODataModel<F>, self._reset);
+          changed = attr.set(
+            value as ODataModel<F>,
+            self._reset,
+            self._reparent
+          );
         } else if (Types.isPlainObject(value)) {
           changed = this._updateModel<F>(
             self,
@@ -1604,7 +1595,8 @@ export class ODataModelOptions<T> {
                 value: value,
                 reset: self._reset,
               }),
-          self._reset
+          self._reset,
+          self._reparent
         );
       }
 
@@ -1616,7 +1608,7 @@ export class ODataModelOptions<T> {
         }
       }
     } else {
-      changed = attr.set(value, self._reset);
+      changed = attr.set(value, self._reset, self._reparent);
     }
 
     if (!self._silent && changed) {
@@ -1635,8 +1627,6 @@ export class ODataModelOptions<T> {
   }
 
   private _link<F>(self: ODataModel<T>, attr: ODataModelAttribute<F>) {
-    if (self._reparent) attr.setParent(self);
-
     attr.events$.subscribe((event: ODataModelEvent<any>) => {
       if (
         BUBBLING.indexOf(event.name) !== -1 &&
@@ -1649,16 +1639,14 @@ export class ODataModelOptions<T> {
             attr.navigation &&
             event.options?.key
           ) {
-            let ref = (attr.get() as ODataModel<any>).referential(
-              attr.field
-            );
+            let ref = (attr.get() as ODataModel<any>).referential(attr.field());
             if (ref !== null && ref !== undefined) {
               Object.assign(self, ref);
             }
           }
         }
 
-        self.events$.emit(event.push(self, attr.field));
+        self.events$.emit(event.push(self, attr.field()));
       }
     });
   }
