@@ -574,10 +574,17 @@ export class ODataModelAttribute<T> {
     reset: boolean = false,
     reparent: boolean = false
   ) {
-    if (ODataModelOptions.isModel(this.change) || ODataModelOptions.isCollection(this.change))
-      this.unlink(this.change as ODataModel<T> | ODataCollection<T, ODataModel<T>>);
-
     const current = this.get();
+
+    if (
+      ODataModelOptions.isModel(current) ||
+      ODataModelOptions.isCollection(current)
+    )
+      this.unlink(
+        current as ODataModel<T> | ODataCollection<T, ODataModel<T>>
+        //this.value !== current
+      );
+
     const changed =
       ODataModelOptions.isModel(current) && ODataModelOptions.isModel(value)
         ? !(current as ODataModel<T>).equals(value as ODataModel<T>)
@@ -595,8 +602,14 @@ export class ODataModelAttribute<T> {
     } else if (changed) {
       this.change = value;
     }
-    if (ODataModelOptions.isModel(value) || ODataModelOptions.isCollection(value)) {
-      this.link(value as ODataModel<T> | ODataCollection<T, ODataModel<T>>, reparent);
+    if (
+      ODataModelOptions.isModel(value) ||
+      ODataModelOptions.isCollection(value)
+    ) {
+      this.link(
+        value as ODataModel<T> | ODataCollection<T, ODataModel<T>>,
+        reparent
+      );
     }
     return changed;
   }
@@ -616,24 +629,42 @@ export class ODataModelAttribute<T> {
   }
 
   reset() {
-    if (ODataModelOptions.isModel(this.change) || ODataModelOptions.isCollection(this.change))
-      this.unlink(this.change as ODataModel<T> | ODataCollection<T, ODataModel<T>>);
+    if (
+      ODataModelOptions.isModel(this.change) ||
+      ODataModelOptions.isCollection(this.change)
+    )
+      this.unlink(
+        this.change as ODataModel<T> | ODataCollection<T, ODataModel<T>>
+      );
     this.change = undefined;
-    if (ODataModelOptions.isModel(this.change) || ODataModelOptions.isCollection(this.value))
-      this.link(this.value as ODataModel<T> | ODataCollection<T, ODataModel<T>>);
+    if (
+      ODataModelOptions.isModel(this.value) ||
+      ODataModelOptions.isCollection(this.value)
+    )
+      this.link(
+        this.value as ODataModel<T> | ODataCollection<T, ODataModel<T>>
+      );
   }
 
-  private link(value: ODataModel<T> | ODataCollection<T, ODataModel<T>>, reparent: boolean = false) {
+  private link(
+    value: ODataModel<T> | ODataCollection<T, ODataModel<T>>,
+    reparent: boolean = false
+  ) {
     this.subscription = value.events$.subscribe((e) => this.events$.emit(e));
     if (reparent) {
       value._parent = [this._model, this._field];
     }
   }
 
-  private unlink(value: ODataModel<T> | ODataCollection<T, ODataModel<T>>) {
+  private unlink(
+    value: ODataModel<T> | ODataCollection<T, ODataModel<T>>,
+    reparent: boolean = false
+  ) {
     this.subscription?.unsubscribe();
     this.subscription = undefined;
-    value._parent = null; 
+    if (reparent) {
+      value._parent = null;
+    }
   }
 }
 
