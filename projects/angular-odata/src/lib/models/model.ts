@@ -82,7 +82,10 @@ export class ODataModel<T> {
       | null;
     resource: ODataResource<T> | null;
   }[] = [];
-  _attributes: Map<string, ODataModelAttribute<any>> = new Map<string, ODataModelAttribute<any>>();
+  _attributes: Map<string, ODataModelAttribute<any>> = new Map<
+    string,
+    ODataModelAttribute<any>
+  >();
   _annotations: ODataEntityAnnotations<T> | null = null;
   _reset: boolean = false;
   _reparent: boolean = false;
@@ -598,7 +601,9 @@ export class ODataModel<T> {
       );
     return this._request(obs$).pipe(
       tap(() =>
-        this.events$.emit(new ODataModelEvent(ODataModelEventType.Destroy, { model: this }))
+        this.events$.emit(
+          new ODataModelEvent(ODataModelEventType.Destroy, { model: this })
+        )
       )
     );
   }
@@ -836,7 +841,9 @@ export class ODataModel<T> {
     return obs$.pipe(
       map((model) => {
         this.assign({ [name]: model });
-        this.events$.emit(new ODataModelEvent(ODataModelEventType.Sync, { model: this }));
+        this.events$.emit(
+          new ODataModelEvent(ODataModelEventType.Sync, { model: this })
+        );
         return this;
       })
     );
