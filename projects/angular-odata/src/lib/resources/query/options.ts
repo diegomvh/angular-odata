@@ -82,7 +82,6 @@ export class ODataQueryOptions<T> {
         }
         return Object.assign(acc, { [key]: value });
       }, {});
-
     return buildPathAndQuery<any>({ ...options, aliases, escape });
   }
 

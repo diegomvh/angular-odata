@@ -260,7 +260,12 @@ export class ODataQueryOptionsHandler<T> {
    * If opts is given then set te value as new value for $select.
    * @param opts Select<T> value or builder function for SelectExpression<T>
    */
-  select(opts: SelectExpressionBuilder<T>): SelectExpression<T>;
+  select(
+    opts: (
+      builder: SelectExpressionBuilder<T>,
+      current?: SelectExpression<T>
+    ) => SelectExpression<T>
+  ): SelectExpression<T>;
   select(opts: Select<T>): ODataQueryOptionHandler<T>;
   select(): ODataQueryOptionHandler<T>;
   select(opts?: any): any {
@@ -281,7 +286,12 @@ export class ODataQueryOptionsHandler<T> {
    * If opts is given then set te value as new value for $expand.
    * @param opts Expand<T> value or builder function for ExpandExpression<T>
    */
-  expand(opts: ExpandExpressionBuilder<T>): ExpandExpression<T>;
+  expand(
+    opts: (
+      builder: ExpandExpressionBuilder<T>,
+      current?: ExpandExpression<T>
+    ) => ExpandExpression<T>
+  ): ExpandExpression<T>;
   expand(opts: Expand<T>): ODataQueryOptionHandler<T>;
   expand(): ODataQueryOptionHandler<T>;
   expand(opts?: any): any {

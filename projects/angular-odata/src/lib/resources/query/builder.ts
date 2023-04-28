@@ -649,6 +649,7 @@ function buildExpand<T>(
 ): string {
   if (typeof expands === 'number') {
     return expands as any;
+  /*
   } else if (typeof expands === 'string') {
     if (expands.indexOf('/') === -1) {
       return expands;
@@ -670,6 +671,7 @@ function buildExpand<T>(
           return `$expand=${item}(${results})`;
         }
       }, '');
+    */
   } else if (Array.isArray(expands)) {
     return `${(expands as Array<NestedExpandOptions<any>>)
       .map((e) => buildExpand(e, { aliases, escape }))

@@ -20,9 +20,9 @@ export abstract class Expression<T> implements Renderable {
     escape,
     prefix,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
   }): string;
 
   abstract clone(): Expression<T>;
