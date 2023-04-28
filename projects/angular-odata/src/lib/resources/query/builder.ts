@@ -108,6 +108,9 @@ export const isQueryCustomType = (value: any) =>
   typeof value === 'object' &&
   'type' in value &&
   value.type in QueryCustomTypes;
+
+export const isRawType = (value: any) => isQueryCustomType(value) && (value as QueryCustomType).type === QueryCustomTypes.Raw;
+
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
   transform: { [name: string]: any } | { [name: string]: any }[];
@@ -192,22 +195,27 @@ export function buildPathAndQuery<T>({
     path += `(${normalizeValue(key as Value, { aliases, escape })})`;
   }
 
+  // Select
   if (select) {
-    query.$select = Array.isArray(select) ? select.join(',') : select;
+    query.$select = isRawType(select) ? (select as unknown as QueryCustomType).value : Array.isArray(select) ? select.join(',') : select;
   }
 
+  // Search
   if (search) {
     query.$search = search;
   }
 
+  // Skiptoken
   if (skiptoken) {
     query.$skiptoken = skiptoken;
   }
 
+  // Format
   if (format) {
     query.$format = format;
   }
 
+  // Filter
   if (filter || typeof count === 'object') {
     query.$filter = buildFilter(typeof count === 'object' ? count : filter, {
       aliases,
@@ -215,31 +223,43 @@ export function buildPathAndQuery<T>({
     });
   }
 
+  // Transform
   if (transform) {
     query.$apply = buildTransforms(transform, { aliases, escape });
   }
 
+  // Expand
   if (expand) {
     query.$expand = buildExpand(expand, { aliases, escape });
   }
 
+  // OrderBy
   if (orderBy) {
     query.$orderby = buildOrderBy(orderBy);
   }
 
-  if (count) {
-    if (typeof count === 'boolean') {
-      query.$count = true;
-    } else {
-      path += '/$count';
-    }
+  // Count
+  if (isRawType(count)) {
+    query.$count = (count as QueryCustomType).value;
+  } else if (typeof count === 'boolean') {
+    query.$count = true;
+  } else if (count) {
+    path += '/$count';
   }
 
-  if (typeof top === 'number') {
+  // Top
+  if (isRawType(top)) {
+    query.$top = (top as unknown as QueryCustomType).value;
+  }
+  else if (typeof top === 'number') {
     query.$top = top;
   }
 
-  if (typeof skip === 'number') {
+  // Skip
+  if (isRawType(skip)) {
+    query.$top = (skip as unknown as QueryCustomType).value;
+  }
+  else if (typeof skip === 'number') {
     query.$skip = skip;
   }
 
@@ -334,7 +354,10 @@ function buildFilter(
     }: { aliases?: QueryCustomType[]; propPrefix?: string; escape?: boolean }
   ) {
     let filterExpr = '';
-    if (typeof filter === 'string') {
+    if (isRawType(filter)) {
+      // Use raw query custom filter string
+      filterExpr = (filter as QueryCustomType).value;
+    } else if (typeof filter === 'string') {
       // Use raw filter string
       filterExpr = filter;
     } else if (filter && typeof filter === 'object') {
@@ -647,9 +670,10 @@ function buildExpand<T>(
   expands: Expand<T>,
   { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean }
 ): string {
-  if (typeof expands === 'number') {
+  if (isRawType(expands)) {
+    return (expands as QueryCustomType).value;
+  } else if (typeof expands === 'number') {
     return expands as any;
-  /*
   } else if (typeof expands === 'string') {
     if (expands.indexOf('/') === -1) {
       return expands;
@@ -671,7 +695,6 @@ function buildExpand<T>(
           return `$expand=${item}(${results})`;
         }
       }, '');
-    */
   } else if (Array.isArray(expands)) {
     return `${(expands as Array<NestedExpandOptions<any>>)
       .map((e) => buildExpand(e, { aliases, escape }))
@@ -704,6 +727,8 @@ function buildExpand<T>(
             case 'top':
             case 'skip':
               value = `${(expands as NestedExpandOptions<any>)[key]}`;
+              if (isRawType(value))
+                value = (value as unknown as QueryCustomType).value;
               break;
             default:
               value = buildExpand(
@@ -817,7 +842,9 @@ function buildGroupBy<T>(
 }
 
 function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
-  if (Array.isArray(orderBy)) {
+  if (isRawType(orderBy)) {
+    return (orderBy as QueryCustomType).value
+  } else if (Array.isArray(orderBy)) {
     return (orderBy as OrderByObject<T>[])
       .map((value) =>
         Array.isArray(value) &&

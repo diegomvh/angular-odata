@@ -14,11 +14,10 @@ import {
 import { raw } from './query';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
+import { Person, Photo, PlanItem, Trip } from '../trippin.spec';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const ENTITY_SET = 'People';
-interface Person {}
-interface Photo {}
 
 describe('ODataResource', () => {
   let client: ODataClient;
@@ -513,4 +512,54 @@ describe('ODataResource', () => {
       .query((q) => q.expand({ Friends: {} }));
     expect(entity1.isEqualTo(entity2)).toBeTrue();
   });
+
+  it('should render big and nested query', () => {
+    const set1: ODataEntitySetResource<Person> =
+      ODataEntitySetResource.factory<Person>(client.defaultApi(), {
+        path: ENTITY_SET,
+      });
+    let russellwhyte = set1.entity('russellwhyte').query((q) => {
+      q.expand(({ e, t }) =>
+        e()
+          .field(t.Friends, (f) =>
+            f.expand<Person>(({ e, t }) =>
+              e()
+                .field(t.Friends, (f) => {
+                  f.orderBy<Person>(({ e, t }) => e().ascending(t.FirstName));
+                  f.top(1);
+                  f.skip(1);
+                  f.levels(1);
+                  f.count();
+                })
+                .field(t.Photo)
+                .field(t.Trips, (f) => {
+                  f.filter<Trip>(({ e, t, f }) =>
+                    e()
+                      .any(t.PlanItems, ({e, t}) => e().startsWith(t.ConfirmationCode, 'CO'))
+                      .eq(f.year(t.EndsAt), 1980)
+                      .or(
+                        e()
+                          .eq(f.year(t.StartsAt), 1980)
+                          .eq(f.year(t.EndsAt), 1981)
+                      )
+                  );
+                  f.expand<Trip>(({ e, t }) =>
+                    e()
+                      .field(t.Photos)
+                      .field(t.PlanItems, (f) =>
+                        f.filter<PlanItem>(({ e, t }) => e().startsWith(t.Description, 'My'))
+                      )
+                  );
+                })
+            )
+          )
+          .field(t.Photo)
+          .field(t.Trips)
+      );
+    });
+    expect(russellwhyte.toString()).toEqual(
+      "People('russellwhyte')?$expand=Friends($expand=Friends($orderBy=FirstName asc;$skip=1;$top=1;$count=true;$levels=1),Photo,Trips($expand=Photos,PlanItems($filter=startswith(Description, 'My'));$filter=(PlanItems/any(p:startswith(p/ConfirmationCode, 'CO')) and year(EndsAt) eq 1980) or (year(StartsAt) eq 1980 and year(EndsAt) eq 1981))),Photo,Trips"
+    );
+  });
+
 });

@@ -41,6 +41,7 @@ export class ExpandField<T> implements Renderable {
       QueryOption.orderBy,
       QueryOption.skip,
       QueryOption.top,
+      QueryOption.count,
       QueryOption.levels,
     ]
       .filter((key) => !Types.isEmpty(this.values[key]))
@@ -136,6 +137,10 @@ export class ExpandField<T> implements Renderable {
 
   levels(n: number | 'max') {
     return this.option<number | 'max'>(QueryOption.levels, n);
+  }
+
+  count() {
+    return this.option<boolean>(QueryOption.count, true);
   }
 
   // Option Handler

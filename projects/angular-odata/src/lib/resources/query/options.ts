@@ -6,6 +6,7 @@ import {
   Filter,
   OrderBy,
   QueryCustomType,
+  raw,
   Select,
   Transform,
 } from './builder';
@@ -75,10 +76,10 @@ export class ODataQueryOptions<T> {
           value = Types.isArray(value)
             ? value.map((v: Expression<T>) =>
                 Types.rawType(v).endsWith('Expression')
-                  ? v.render({ aliases })
+                  ? raw(v.render({ aliases }))
                   : v
               )
-            : (value as Expression<T>).render({ aliases });
+            : raw((value as Expression<T>).render({ aliases }));
         }
         return Object.assign(acc, { [key]: value });
       }, {});
