@@ -31,6 +31,7 @@ import {
   ODataModelAttribute,
   ODataModelEventType,
 } from './options';
+import { ParserOptions } from '../types';
 
 // @dynamic
 export class ODataModel<T> {
@@ -629,6 +630,13 @@ export class ODataModel<T> {
     return this._meta.hasChanged(this, { include_navigation });
   }
 
+  encode<E>(name: keyof T, options?: ParserOptions) {
+    let value = (<any>this)[name];
+    if (value === undefined) return undefined;
+    let field = this._meta.field<E>(name);
+    return field !== undefined ? field.encode(value, options) : value;
+  }
+
   isNew() {
     return !this._meta.hasKey(this);
   }
@@ -646,6 +654,7 @@ export class ODataModel<T> {
     return this._meta.asEntity(this, ctx);
   }
 
+  //#region Callables
   callFunction<P, R>(
     name: string,
     params: P | null,
@@ -735,6 +744,7 @@ export class ODataModel<T> {
         return action.call(params, { responseType, ...options });
     }
   }
+  //#endregion
 
   // Cast
   cast<S>(type: string) {
@@ -801,7 +811,7 @@ export class ODataModel<T> {
     return of(value as P);
   }
 
-  // Set Reference
+  //#region References
   setReference<N>(
     name: keyof T | string,
     model: ODataModel<N> | ODataCollection<N, ODataModel<N>> | null,
@@ -875,8 +885,12 @@ export class ODataModel<T> {
     }
     return model;
   }
+  //#endregion
 
-  // Model functions
+  //#region Model Identity
+  get [Symbol.toStringTag]() {
+    return 'Model';
+  }
   equals(other: ODataModel<T>): boolean {
     const thisKey = this.key();
     const otherKey = other.key();
@@ -889,11 +903,9 @@ export class ODataModel<T> {
             Types.isEqual(thisKey, otherKey))))
     );
   }
+  //#endregion
 
-  get [Symbol.toStringTag]() {
-    return 'Model';
-  }
-
+  //#region Collection Tools
   collection() {
     return this._parent !== null &&
       ODataModelOptions.isCollection(this._parent[0])
@@ -908,6 +920,7 @@ export class ODataModel<T> {
   prev(): ODataModel<T> | undefined {
     return this.collection()?.prev(this);
   }
+  //#endregion
 }
 
 export const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(
