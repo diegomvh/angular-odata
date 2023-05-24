@@ -2,6 +2,8 @@ import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { normalizeValue } from '../builder';
 
+export type Normalize = 'all' | 'right' | 'left' | 'none';
+
 export interface Renderable {
   render({
     aliases,
@@ -98,7 +100,7 @@ export class Function<T> implements Renderable {
   constructor(
     protected name: string,
     protected values: any[],
-    protected normalize: boolean = true,
+    protected normalize: Normalize,
     protected escape: boolean = false
   ) {}
 
@@ -126,11 +128,11 @@ export class Function<T> implements Renderable {
   }): string {
     let [field, ...values] = this.values;
 
-    field = render(field, { aliases, escape, prefix });
+    field = render(field, { aliases, escape, prefix, normalize: this.normalize === 'all' || this.normalize === 'left' });
     const params = [
       field,
       ...values.map((v) =>
-        render(v, { aliases, escape, prefix, normalize: this.normalize })
+        render(v, { aliases, escape, prefix, normalize: this.normalize === 'all' || this.normalize === 'right' })
       ),
     ];
     return `${this.name}(${params.join(', ')})`;
@@ -147,145 +149,145 @@ export class Function<T> implements Renderable {
 }
 
 export class StringAndCollectionFunctions<T> {
-  concat(field: any, value: any, normalize?: boolean) {
-    return new Function<T>('concat', [field, value], normalize);
+  concat(left: any, right: any, normalize: Normalize = 'right') {
+    return new Function<T>('concat', [left, right], normalize);
   }
 
-  contains(field: any, value: any, normalize?: boolean) {
-    return new Function<T>('contains', [field, value], normalize);
+  contains(left: any, right: any, normalize: Normalize = 'right') {
+    return new Function<T>('contains', [left, right], normalize);
   }
 
-  endsWith(field: any, value: any, normalize?: boolean) {
-    return new Function<T>('endswith', [field, value], normalize);
+  endsWith(left: any, right: any, normalize: Normalize = 'right') {
+    return new Function<T>('endswith', [left, right], normalize);
   }
 
-  indexOf(field: any, value: any, normalize?: boolean) {
-    return new Function<T>('indexof', [field, value], normalize);
+  indexOf(left: any, right: any, normalize: Normalize = 'right') {
+    return new Function<T>('indexof', [left, right], normalize);
   }
 
-  length(value: any, normalize?: boolean) {
-    return new Function<T>('length', [value], normalize);
+  length(left: any, normalize: Normalize = 'right') {
+    return new Function<T>('length', [left], normalize);
   }
 
-  startsWith(field: any, value: any, normalize?: boolean) {
-    return new Function<T>('startswith', [field, value], normalize);
+  startsWith(left: any, right: any, normalize: Normalize = 'right') {
+    return new Function<T>('startswith', [left, right], normalize);
   }
 
-  subString(field: any, start: number, length?: number) {
-    let values = [field, start];
+  subString(left: any, right: number, length?: number, normalize: Normalize = 'none') {
+    let values = [left, right];
     if (length !== undefined) {
       values.push(length);
     }
-    return new Function<T>('substring', values);
+    return new Function<T>('substring', values, normalize);
   }
 }
 
 export class CollectionFunctions<T> {
-  hasSubset(s1: T, s2: any) {
-    return new Function<T>('hassubset', [s1, s2]);
+  hasSubset(left: T, right: any, normalize: Normalize = 'none') {
+    return new Function<T>('hassubset', [left, right], normalize);
   }
-  hasSubsequence(s1: T, s2: any) {
-    return new Function<T>('hassubsequence', [s1, s2]);
+  hasSubsequence(left: T, right: any, normalize: Normalize = 'none') {
+    return new Function<T>('hassubsequence', [left, right], normalize);
   }
 }
 
 export class StringFunctions<T> {
-  matchesPattern(value: T | string, pattern: string) {
-    return new Function<T>('matchesPattern', [value, pattern]);
+  matchesPattern(left: T | string, pattern: string, normalize: Normalize = 'none') {
+    return new Function<T>('matchesPattern', [left, pattern], normalize);
   }
-  toLower(value: T) {
-    return new Function<T>('tolower', [value]);
+  toLower(left: T, normalize: Normalize = 'none') {
+    return new Function<T>('tolower', [left], normalize);
   }
-  toUpper(value: T) {
-    return new Function<T>('toupper', [value]);
+  toUpper(left: T, normalize: Normalize = 'none') {
+    return new Function<T>('toupper', [left], normalize);
   }
-  trim(value: T) {
-    return new Function<T>('trim', [value]);
+  trim(left: T, normalize: Normalize = 'none') {
+    return new Function<T>('trim', [left], normalize);
   }
 }
 
 export class DateAndTimeFunctions<T> {
-  date(value: any) {
-    return new Function<T>('date', [value]);
+  date(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('date', [left], normalize);
   }
-  day(value: any) {
-    return new Function<T>('day', [value]);
+  day(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('day', [left], normalize);
   }
-  fractionalseconds(value: any) {
-    return new Function<T>('fractionalseconds', [value]);
+  fractionalseconds(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('fractionalseconds', [left], normalize);
   }
-  hour(value: any) {
-    return new Function<T>('hour', [value]);
+  hour(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('hour', [left], normalize);
   }
-  maxdatetime(value: any) {
-    return new Function<T>('maxdatetime', [value]);
+  maxdatetime(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('maxdatetime', [left], normalize);
   }
-  mindatetime(value: any) {
-    return new Function<T>('mindatetime', [value]);
+  mindatetime(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('mindatetime', [left], normalize);
   }
-  minute(value: any) {
-    return new Function<T>('minute', [value]);
+  minute(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('minute', [left], normalize);
   }
-  month(value: any) {
-    return new Function<T>('month', [value]);
+  month(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('month', [left], normalize);
   }
   now() {
-    return new Function<T>('now', []);
+    return new Function<T>('now', [], 'none');
   }
-  second(value: any) {
-    return new Function<T>('second', [value]);
+  second(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('second', [left], normalize);
   }
-  time(value: any) {
-    return new Function<T>('time', [value]);
+  time(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('time', [left], normalize);
   }
-  totaloffsetminutes(value: any) {
-    return new Function<T>('totaloffsetminutes', [value]);
+  totaloffsetminutes(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('totaloffsetminutes', [left], normalize);
   }
-  totalseconds(value: any) {
-    return new Function<T>('totalseconds', [value]);
+  totalseconds(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('totalseconds', [left], normalize);
   }
-  year(value: any) {
-    return new Function<T>('year', [value]);
+  year(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('year', [left], normalize);
   }
 }
 
 export class ArithmeticFunctions<T> {
-  ceiling(value: T | string) {
-    return new Function<T>('ceiling', [value]);
+  ceiling(left: T | string, normalize: Normalize = 'none') {
+    return new Function<T>('ceiling', [left], normalize);
   }
-  floor(value: T | string) {
-    return new Function<T>('floor', [value]);
+  floor(left: T | string, normalize: Normalize = 'none') {
+    return new Function<T>('floor', [left], normalize);
   }
-  round(value: T | string) {
-    return new Function<T>('round', [value]);
+  round(left: T | string, normalize: Normalize = 'none') {
+    return new Function<T>('round', [left], normalize);
   }
 }
 
 export class TypeFunctions<T> {
-  cast(value: T | string, type?: string) {
-    return new Function<T>('cast', [value, type]);
+  cast(left: T | string, right?: string, normalize: Normalize = 'right') {
+    return new Function<T>('cast', [left, right], normalize);
   }
 
-  isof(value: T | string, type?: string) {
-    return new Function<T>('isof', [value, type]);
+  isof(left: T | string, right?: string, normalize: Normalize = 'right') {
+    return new Function<T>('isof', [left, right], normalize);
   }
 }
 
 export class GeoFunctions<T> {
-  geoDistance(value: T, point: string, normalize?: boolean) {
-    return new Function<T>('geo.distance', [value, point], normalize);
+  geoDistance(left: T, right: string, normalize: Normalize = 'right') {
+    return new Function<T>('geo.distance', [left, right], normalize);
   }
-  geoIntersects(value: T, polygon: string, normalize?: boolean) {
-    return new Function<T>('geo.intersects', [value, polygon], normalize);
+  geoIntersects(left: T, right: string, normalize: Normalize = 'right') {
+    return new Function<T>('geo.intersects', [left, right], normalize);
   }
-  geoLength(line: T, normalize?: boolean) {
-    return new Function<T>('geo.length', [line], normalize);
+  geoLength(left: T, normalize: Normalize = 'none') {
+    return new Function<T>('geo.length', [left], normalize);
   }
 }
 
 export class ConditionalFunctions<T> {
-  case(condition: T | string, value: any) {
-    return new Function<T>('case', [condition, value]);
+  case(left: T | string, right: any, normalize: Normalize = 'none') {
+    return new Function<T>('case', [left, right], normalize);
   }
 }
 
@@ -293,7 +295,7 @@ export class Operator<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: boolean = true
+    protected normalize: Normalize
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -320,7 +322,7 @@ export class Operator<T> implements Renderable {
   }): string {
     let [left, right] = this.values;
 
-    left = render(left, { aliases, escape, prefix });
+    left = render(left, { aliases, escape, prefix, normalize: this.normalize === 'all' || this.normalize === 'left' });
     if (right !== undefined) {
       right = Array.isArray(right)
         ? `(${right
@@ -329,7 +331,7 @@ export class Operator<T> implements Renderable {
                 aliases,
                 escape,
                 prefix,
-                normalize: this.normalize,
+                normalize: this.normalize === 'all' || this.normalize === 'right',
               })
             )
             .join(',')})`
@@ -337,7 +339,7 @@ export class Operator<T> implements Renderable {
             aliases,
             escape,
             prefix,
-            normalize: this.normalize,
+            normalize: this.normalize === 'all' || this.normalize === 'right',
           });
       return `${left} ${this.op} ${right}`;
     }
@@ -354,60 +356,60 @@ export class Operator<T> implements Renderable {
 }
 
 export class LogicalOperators<T> {
-  eq(left: any, right: any, normalize?: boolean) {
+  eq(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('eq', [left, right], normalize);
   }
-  ne(left: any, right: any, normalize?: boolean) {
+  ne(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('ne', [left, right], normalize);
   }
-  gt(left: any, right: any, normalize?: boolean) {
+  gt(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('gt', [left, right], normalize);
   }
-  ge(left: any, right: any, normalize?: boolean) {
+  ge(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('ge', [left, right], normalize);
   }
-  lt(left: any, right: any, normalize?: boolean) {
+  lt(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('lt', [left, right], normalize);
   }
-  le(left: any, right: any, normalize?: boolean) {
+  le(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('le', [left, right], normalize);
   }
   /*
-  and(left: any, right: any, normalize?: boolean) {
+  and(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('and', [left, right], normalize);
   }
-  or(left: any, right: any, normalize?: boolean) {
+  or(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('or', [left, right], normalize);
   }
   */
-  not(value: any, normalize?: boolean) {
-    return new Operator<T>('not', [value], normalize);
+  not(left: any, normalize: Normalize = 'none') {
+    return new Operator<T>('not', [left], normalize);
   }
-  has(left: any, right: any, normalize?: boolean) {
+  has(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('has', [left, right], normalize);
   }
-  in(left: any, right: any, normalize?: boolean) {
+  in(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('in', [left, right], normalize);
   }
 }
 
 export class ArithmeticOperators<T> {
-  add(left: any, right: any, normalize?: boolean) {
+  add(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator<T>('add', [left, right], normalize);
   }
-  sub(left: any, right: any, normalize?: boolean) {
+  sub(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('sub', [left, right], normalize);
   }
-  mul(left: any, right: any, normalize?: boolean) {
+  mul(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('mul', [left, right], normalize);
   }
-  div(left: any, right: any, normalize?: boolean) {
+  div(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('div', [left, right], normalize);
   }
-  mod(left: any, right: any, normalize?: boolean) {
+  mod(left: any, right: any, normalize: Normalize = 'right') {
     return new Operator('mod', [left, right], normalize);
   }
-  neg(value: any, normalize?: boolean) {
+  neg(value: any, normalize: Normalize = 'right') {
     return new Operator('-', [value], normalize);
   }
 }
@@ -497,12 +499,12 @@ export class Lambda<T> implements Renderable {
 }
 
 export class LambdaOperators<T> {
-  any(field: T, value: any, alias?: string) {
-    return new Lambda('any', [field, value], alias);
+  any(left: T, right: any, alias?: string) {
+    return new Lambda('any', [left, right], alias);
   }
 
-  all(field: T, value: any, alias?: string) {
-    return new Lambda('all', [field, value], alias);
+  all(left: T, right: any, alias?: string) {
+    return new Lambda('all', [left, right], alias);
   }
 }
 

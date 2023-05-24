@@ -5,6 +5,7 @@ import {
   Field,
   functions,
   Grouping,
+  Normalize,
   ODataFunctions,
   ODataOperators,
   operators,
@@ -164,47 +165,47 @@ export class FilterExpression<F> extends Expression<F> {
     return this._add(notExp, this._connector);
   }
 
-  eq(left: any, right: any, normalize?: boolean) {
+  eq(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(operators.eq(left, right, normalize));
   }
 
-  ne(left: any, right: any, normalize?: boolean) {
+  ne(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(operators.ne(left, right, normalize));
   }
 
-  gt(left: any, right: any, normalize?: boolean) {
+  gt(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(operators.gt(left, right, normalize));
   }
 
-  ge(left: any, right: any, normalize?: boolean) {
+  ge(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(operators.ge(left, right, normalize));
   }
 
-  lt(left: any, right: any, normalize?: boolean) {
+  lt(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(operators.lt(left, right, normalize));
   }
 
-  le(left: any, right: any, normalize?: boolean) {
+  le(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(operators.le(left, right, normalize));
   }
 
-  has(left: any, right: any, normalize?: boolean) {
+  has(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(operators.has(left, right, normalize));
   }
 
-  in(left: any, right: any, normalize?: boolean) {
+  in(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(operators.in(left, right, normalize));
   }
 
-  contains(left: any, right: any, normalize?: boolean) {
+  contains(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(functions.contains(left, right, normalize));
   }
 
-  startsWith(left: any, right: any, normalize?: boolean) {
+  startsWith(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(functions.startsWith(left, right, normalize));
   }
 
-  endsWith(left: any, right: any, normalize?: boolean) {
+  endsWith(left: any, right: any, normalize: Normalize = 'right') {
     return this._add(functions.endsWith(left, right, normalize));
   }
 

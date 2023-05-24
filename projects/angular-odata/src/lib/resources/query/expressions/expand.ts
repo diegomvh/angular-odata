@@ -67,7 +67,7 @@ export class ExpandField<T> implements Renderable {
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
       {}
     );
-    return new ExpandField(this.field.clone(), values);
+    return new ExpandField(typeof (this.field) === 'string' ? this.field : this.field.clone(), values);
   }
 
   select<T extends object>(
