@@ -31,6 +31,39 @@ describe('OData filter builder', () => {
   }
 
   describe('base condition', () => {
+    describe('normalize', () => {
+      it('all', () => {
+        const compare1 = FilterExpression.filter<Person>(({ e }) =>
+          e().eq('string', 'string', 'all').ne('strong', 'string', 'all')
+        );
+
+        expect(compare1.render()).toBe("'string' eq 'string' and 'strong' ne 'string'");
+      });
+
+      it('left', () => {
+        const compare1 = FilterExpression.filter<Person>(({ e }) =>
+          e().eq(1, "Id", 'left').ne(3, 'Car', 'left')
+        );
+
+        expect(compare1.render()).toBe('1 eq Id and 3 ne Car');
+      });
+
+      it('right', () => {
+        const compare1 = FilterExpression.filter<Person>(({ e }) =>
+          e().eq('Id', 1, 'right').ne('Car', 3, 'right')
+        );
+
+        expect(compare1.render()).toBe('Id eq 1 and Car ne 3');
+      });
+
+      it('none', () => {
+        const compare1 = FilterExpression.filter<Person>(({ e }) =>
+          e().eq('Id', 'FieldId', 'none').ne('Car', 'FieldCar', 'none')
+        );
+
+        expect(compare1.render()).toBe('Id eq FieldId and Car ne FieldCar');
+      });
+    });
     describe('as factory function', () => {
       it('and', () => {
         const compare1 = FilterExpression.filter<Person>(({ e }) =>
@@ -296,7 +329,7 @@ describe('OData filter builder', () => {
 
         it('trim', () => {
           const func = FilterExpression.filter<any>(({ e, f }) =>
-            e().eq(f.trim('CompanyName'), 'CompanyName', false)
+            e().eq(f.trim('CompanyName'), 'CompanyName', 'none')
           );
 
           expect(func.render()).toBe('trim(CompanyName) eq CompanyName');
@@ -334,7 +367,7 @@ describe('OData filter builder', () => {
         it('concat', () => {
           const func = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(
-              f.concat(f.concat('City', ', '), 'Country', false),
+              f.concat(f.concat('City', ', '), 'Country', 'none'),
               'Berlin, Germany'
             )
           );

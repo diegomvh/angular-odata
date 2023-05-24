@@ -231,7 +231,7 @@ describe('ODataClient', () => {
               $type: 'Operator',
               op: 'eq',
               values: ['Name', 'John'],
-              normalize: true,
+              normalize: 'right',
             },
           ],
           connector: 'and',
@@ -717,7 +717,7 @@ ${JSON.stringify(payload)}
           two: entity.fetch(),
         })
       )
-      .subscribe((resp) => {});
+      .subscribe((resp) => { });
 
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),
@@ -825,7 +825,7 @@ ${JSON.stringify(payload)}
           two: entity.fetch(),
         })
       )
-      .subscribe((resp) => {});
+      .subscribe((resp) => { });
 
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),
