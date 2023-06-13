@@ -1,6 +1,6 @@
 import { QueryOption } from '../../../types';
 import { Objects, Types } from '../../../utils';
-import type { QueryCustomType } from '../builder';
+import type { QueryCustomType, Unpacked } from '../builder';
 import { Expression } from './base';
 import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
@@ -204,8 +204,8 @@ export class ExpandExpression<T> extends Expression<T> {
     return this;
   }
 
-  field<F>(field: F, opts?: (e: ExpandField<F>) => void): ExpandExpression<F> {
-    let node = new ExpandField<F>(field);
+  field<F extends keyof T>(field: T[F], opts?: (e: ExpandField<Unpacked<T[F]>>) => void): ExpandExpression<T> {
+    let node = new ExpandField<Unpacked<T[F]>>(field);
     if (opts !== undefined) opts(node);
     return this._add(node);
   }
