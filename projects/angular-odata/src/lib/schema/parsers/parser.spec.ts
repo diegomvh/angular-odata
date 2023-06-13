@@ -170,8 +170,8 @@ describe('ODataClient', () => {
       `${NAMESPACE}.FlagEnums`
     ) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
-    expect(parser.serialize(3)).toEqual('Flag1, Flag2');
-    expect(parser.serialize(0)).toEqual('0');
+    expect(parser.serialize(<FlagEnums>3)).toEqual('Flag1, Flag2');
+    expect(parser.serialize(<FlagEnums>0)).toEqual('0');
     expect(parser.serialize(FlagEnums.Flag1 | FlagEnums.Flag4)).toEqual(
       'Flag1, Flag4'
     );
@@ -183,7 +183,7 @@ describe('ODataClient', () => {
     ) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
     expect(parser.deserialize('Flag4')).toEqual(FlagEnums.Flag4);
-    expect(parser.deserialize('0')).toEqual(0);
+    expect(parser.deserialize('0')).toEqual(<FlagEnums>0);
   });
 
   it('should pack flags', () => {
