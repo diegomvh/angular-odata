@@ -113,7 +113,7 @@ export class ODataEnumTypeParser<E>
     // string | number -> string
     const parserOptions = { ...this.parserOptions, ...options };
     if (this.flags) {
-      let names = Enums.toNames(this.members, value);
+      let names = Enums.toFlags(this.members, value);
       if (names.length === 0) names = [`${value}`];
       return !parserOptions?.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`

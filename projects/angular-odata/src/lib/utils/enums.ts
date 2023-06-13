@@ -50,4 +50,21 @@ export const Enums = {
     }
     return [];
   },
+
+  toFlags<E extends { [key: string]: any }>(enums: E, value: any): string[] {
+    if (typeof value === 'number') {
+      return this.values(enums)
+        .filter((v) => v !== 0 && (value & v) === v)
+        .map((v) => this.toName(enums, v) as string);
+    }
+    if (typeof value === 'string') {
+      value = value.split(',').map((o) => o.trim());
+    }
+    if (Array.isArray(value) && value.every((v) => v in enums)) {
+      return value
+        .filter((v) => enums[v])
+        .map((v) => this.toName(enums, v) as string);
+    }
+    return [];
+  },
 };
