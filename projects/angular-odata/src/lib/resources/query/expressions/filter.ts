@@ -92,7 +92,7 @@ export class FilterExpression<F> extends Expression<F> {
   }
 
   clone() {
-    return new FilterExpression({
+    return new FilterExpression<F>({
       children: this._children.map((c) => c.clone()),
       connector: this._connector,
       negated: this._negated,

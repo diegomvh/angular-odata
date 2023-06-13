@@ -46,7 +46,7 @@ export class SelectExpression<T> extends Expression<T> {
   }
 
   clone() {
-    return new SelectExpression({
+    return new SelectExpression<T>({
       children: this._children.map((c) => c.clone()),
     });
   }

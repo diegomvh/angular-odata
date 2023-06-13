@@ -136,7 +136,7 @@ export class SearchExpression<T> extends Expression<T> {
   }
 
   clone() {
-    return new SearchExpression({
+    return new SearchExpression<T>({
       children: this._children.map((c) => c.clone()),
       connector: this._connector,
       negated: this._negated,

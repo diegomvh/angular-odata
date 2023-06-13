@@ -60,7 +60,7 @@ export class ComputeExpression<T> extends Expression<T> {
   }
 
   clone() {
-    return new ComputeExpression({
+    return new ComputeExpression<T>({
       children: this._children.map((c) => c.clone()),
       names: [...this.names],
     });

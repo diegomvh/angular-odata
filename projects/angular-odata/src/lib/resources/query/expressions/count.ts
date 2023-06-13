@@ -69,7 +69,7 @@ export class CountField<T extends object> implements Renderable {
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
       {}
     );
-    return new CountField(this.field.clone(), values);
+    return new CountField<T>(this.field.clone(), values);
   }
 
   // Option Handler
@@ -129,7 +129,7 @@ export class CountExpression<T> extends Expression<T> {
   }
 
   clone() {
-    return new CountExpression({
+    return new CountExpression<T>({
       children: this._children.map((c) => c.clone()),
     });
   }

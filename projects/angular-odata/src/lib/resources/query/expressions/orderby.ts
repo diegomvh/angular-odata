@@ -83,7 +83,7 @@ export class OrderByExpression<T> extends Expression<T> {
   }
 
   clone() {
-    return new OrderByExpression({
+    return new OrderByExpression<T>({
       children: this._children.map((c) => c.clone()),
     });
   }

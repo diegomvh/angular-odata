@@ -67,7 +67,7 @@ export class ExpandField<T> implements Renderable {
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
       {}
     );
-    return new ExpandField(typeof (this.field) === 'string' ? this.field : this.field.clone(), values);
+    return new ExpandField<T>(typeof (this.field) === 'string' ? this.field : this.field.clone(), values);
   }
 
   select<T extends object>(
@@ -146,7 +146,7 @@ export class ExpandField<T> implements Renderable {
   // Option Handler
   private option<O>(name: QueryOption, opts?: O) {
     if (opts !== undefined) this.values[name] = opts;
-    return this.values[name];
+    return this.values[name] as O;
   }
 }
 
@@ -194,7 +194,7 @@ export class ExpandExpression<T> extends Expression<T> {
   }
 
   clone() {
-    return new ExpandExpression({
+    return new ExpandExpression<T>({
       children: this._children.map((c) => c.clone()),
     });
   }
