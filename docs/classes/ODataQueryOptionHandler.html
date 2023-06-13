@@ -13,7 +13,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">angular-odata documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -43,21 +43,27 @@
 
 
 <ol class="breadcrumb">
-  <li>Classes</li>
-  <li >ODataQueryOptionHandler</li>
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ODataQueryOptionHandler</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
-        <li >
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
         </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="c-info">
+    <div class="tab-pane fade active in" id="info">
         <p class="comment">
             <h3>File</h3>
         </p>
@@ -70,7 +76,7 @@
 
 
 
-            <section>
+            <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -162,7 +168,7 @@
     </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-constructor">
     <h3 id="constructor">Constructor</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -224,7 +230,7 @@
 </section>
 
 
-            <section>
+            <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -1393,7 +1399,7 @@
 
 
 
-            <section>
+            <section data-compodoc="block-accessors">
     <h3 id="accessors">
         Accessors
     </h3>
@@ -1430,7 +1436,7 @@
     </div>
 
 
-    <div class="tab-pane fade  tab-source-code" id="c-source">
+    <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOption } from &#x27;../../types&#x27;;
 import { Objects, Types } from &#x27;../../utils&#x27;;
 import {
@@ -1693,7 +1699,12 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
    * If opts is given then set te value as new value for $select.
    * @param opts Select&lt;T&gt; value or builder function for SelectExpression&lt;T&gt;
    */
-  select(opts: SelectExpressionBuilder&lt;T&gt;): SelectExpression&lt;T&gt;;
+  select(
+    opts: (
+      builder: SelectExpressionBuilder&lt;T&gt;,
+      current?: SelectExpression&lt;T&gt;
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;
+  ): SelectExpression&lt;T&gt;;
   select(opts: Select&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   select(): ODataQueryOptionHandler&lt;T&gt;;
   select(opts?: any): any {
@@ -1714,7 +1725,12 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
    * If opts is given then set te value as new value for $expand.
    * @param opts Expand&lt;T&gt; value or builder function for ExpandExpression&lt;T&gt;
    */
-  expand(opts: ExpandExpressionBuilder&lt;T&gt;): ExpandExpression&lt;T&gt;;
+  expand(
+    opts: (
+      builder: ExpandExpressionBuilder&lt;T&gt;,
+      current?: ExpandExpression&lt;T&gt;
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;
+  ): ExpandExpression&lt;T&gt;;
   expand(opts: Expand&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   expand(): ODataQueryOptionHandler&lt;T&gt;;
   expand(opts?: any): any {

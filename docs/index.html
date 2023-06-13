@@ -13,7 +13,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="./" class="navbar-brand">angular-odata documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -31,18 +31,18 @@
                <div class="content getting-started">
                    <div class="content-data">
 
-<h1 id="angular-odata">Angular OData</h1>
+<h1>Angular OData</h1>
 <p><a href="https://github.com/diegomvh/angular-odata/actions?query=workflow%3A%22Node.js+CI%22"><img src="https://github.com/diegomvh/angular-odata/workflows/Node.js%20CI/badge.svg" alt="build" class="img-responsive"></a>
 <a href="http://badge.fury.io/js/angular-odata"><img src="https://badge.fury.io/js/angular-odata.svg" alt="npm version" class="img-responsive"></a></p>
 <p>A fluent API for querying, creating, updating and deleting OData resources in Angular.
 OData service for Angular.</p>
 <p>Please check also my other related project, <a href="https://github.com/diegomvh/ODataApiGen">OData Angular Generator</a></p>
-<h2 id="demo">Demo:</h2>
+<h2>Demo:</h2>
 <p>Full examples of the library:</p>
 <ul>
 <li><a href="https://github.com/diegomvh/AngularODataEntity">AngularODataEntity</a></li>
 </ul>
-<h2 id="table-of-contents">Table of contents</h2>
+<h2>Table of contents</h2>
 <ul>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#without-schema">Without Schema</a></li>
@@ -52,9 +52,9 @@ OData service for Angular.</p>
 <li><a href="#query-builder">Query Builder</a></li>
 <li><a href="#documentation">Documentation</a></li>
 </ul>
-<h2 id="installation">Installation</h2>
+<h2>Installation</h2>
 <p>Install from npm:</p>
-<div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h2 id="without-schema">Without Schema</h2>
+<div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h2>Without Schema</h2>
 <p>Import ODataModule into your application module definition and setup the module for the <code>serviceRootUrl</code>.</p>
 <div><pre class="line-numbers"><code class="language-typescript">import { NgModule } from &#39;&#64;angular/core&#39;;
 import { ODataModule } from &#39;angular-odata&#39;;
@@ -70,7 +70,7 @@ import { ODataModule } from &#39;angular-odata&#39;;
     ...
   ]
 })
-export class AppModule {}</code></pre></div><h2 id="with-schema">With Schema</h2>
+export class AppModule {}</code></pre></div><h2>With Schema</h2>
 <p>Use <a href="https://github.com/diegomvh/ODataApiGen">OData Angular Generator</a> for generate the &lt;Api&gt;Config and the &lt;Api&gt;Module definition.</p>
 <p>Import ODataModule, &lt;Api&gt;Config and &lt;Api&gt;Module into your application module.
 Setup ODataModule with &lt;Api&gt;Config and import it along with &lt;Api&gt;Module.</p>
@@ -87,7 +87,7 @@ import { TripPinConfig, TripPinModule } from &#39;./trippin&#39;;
   ]
   ...
 })
-export class AppModule {}</code></pre></div><h2 id="usage">Usage</h2>
+export class AppModule {}</code></pre></div><h2>Usage</h2>
 <p>Inject and use the ODataServiceFactory</p>
 <div><pre class="line-numbers"><code class="language-typescript">import { Component } from &quot;&#64;angular/core&quot;;
 import { ODataClient, ODATA_ETAG } from &quot;angular-odata&quot;;
@@ -241,15 +241,15 @@ export class AppComponent {
       )
       .subscribe();
   }
-}</code></pre></div><h2 id="odata-version">OData Version</h2>
+}</code></pre></div><h2>OData Version</h2>
 <p>The library works mainly with OData Version 4, however, it incorporates basic support for versions 3 and 2.</p>
-<h2 id="query-builder">Query Builder</h2>
+<h2>Query Builder</h2>
 <p>For a deep query customizations the library use <code>odata-query</code> and <code>odata-filter-builder</code> as a builders.</p>
 <ul>
 <li><a href="https://github.com/techniq/odata-query">OData v4 query builder</a></li>
 <li><a href="https://github.com/bodia-uz/odata-filter-builder">OData Filter Builder</a></li>
 </ul>
-<h2 id="documentation">Documentation</h2>
+<h2>Documentation</h2>
 <p>The api documentation is generated using compodoc and can be viewed here: <a href="https://diegomvh.github.io/angular-odata/docs/">https://diegomvh.github.io/angular-odata/docs/</a></p>
 <p>Library documentation can be viewed on the wiki here: <a href="https://github.com/diegomvh/angular-odata/wiki">https://github.com/diegomvh/angular-odata/wiki</a></p>
 

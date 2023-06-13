@@ -13,7 +13,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">angular-odata documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -43,21 +43,27 @@
 
 
 <ol class="breadcrumb">
-  <li>Classes</li>
-  <li >ODataPropertyResource</li>
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ODataPropertyResource</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
-        <li >
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
         </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="c-info">
+    <div class="tab-pane fade active in" id="info">
         <p class="comment">
             <h3>File</h3>
         </p>
@@ -76,7 +82,7 @@
 
 
 
-            <section>
+            <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -288,7 +294,7 @@
 </section>
 
 
-            <section>
+            <section data-compodoc="block-properties">
     
     <h3 id="inputs">
         Properties
@@ -432,7 +438,7 @@
     </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -585,7 +591,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetch(options?: <a href="../objects/OData.html" target="_self">ODataEntityOptions</a>)</code>
+<code>fetch(options?: <a href="../undefineds/ODataEntityOptions.html" target="_self">ODataEntityOptions</a>)</code>
                 </td>
             </tr>
 
@@ -619,7 +625,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntityOptions</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#ODataEntityOptions" target="_self" >ODataEntityOptions</a></code>
                                     </td>
 
                                     <td>
@@ -662,7 +668,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetch(options?: <a href="../objects/OData.html" target="_self">ODataEntitiesOptions</a>)</code>
+<code>fetch(options?: <a href="../undefineds/ODataEntitiesOptions.html" target="_self">ODataEntitiesOptions</a>)</code>
                 </td>
             </tr>
 
@@ -693,7 +699,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntitiesOptions</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#ODataEntitiesOptions" target="_self" >ODataEntitiesOptions</a></code>
                                     </td>
 
                                     <td>
@@ -731,7 +737,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetch(options?: <a href="../objects/OData.html" target="_self">ODataPropertyOptions</a>)</code>
+<code>fetch(options?: <a href="../undefineds/ODataPropertyOptions.html" target="_self">ODataPropertyOptions</a>)</code>
                 </td>
             </tr>
 
@@ -762,7 +768,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataPropertyOptions</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#ODataPropertyOptions" target="_self" >ODataPropertyOptions</a></code>
                                     </td>
 
                                     <td>
@@ -1109,7 +1115,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchEntity(options: <a href="../objects/OData.html" target="_self">ODataOptions</a>)</code>
+<code>fetchEntity(options: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -1144,7 +1150,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataOptions</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#ODataOptions" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -1270,7 +1276,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchModel(options: <a href="../objects/OData.html" target="_self">ODataOptions</a>)</code>
+<code>fetchModel(options: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -1313,7 +1319,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataOptions</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#ODataOptions" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -1424,7 +1430,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchProperty(options: <a href="../objects/OData.html" target="_self">ODataOptions</a>)</code>
+<code>fetchProperty(options: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -1459,7 +1465,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataOptions</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#ODataOptions" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -3997,7 +4003,7 @@ Create an object handler for mutate the path segments of the resource</p>
     </div>
 
 
-    <div class="tab-pane fade  tab-source-code" id="c-source">
+    <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EMPTY, Observable } from &#x27;rxjs&#x27;;
 import { concatMap, expand, map, reduce, toArray } from &#x27;rxjs/operators&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;

@@ -13,7 +13,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">angular-odata documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -43,21 +43,27 @@
 
 
 <ol class="breadcrumb">
-  <li>Classes</li>
-  <li >LambdaOperators</li>
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >LambdaOperators</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
-        <li >
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
         </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="c-info">
+    <div class="tab-pane fade active in" id="info">
         <p class="comment">
             <h3>File</h3>
         </p>
@@ -70,7 +76,7 @@
 
 
 
-            <section>
+            <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -103,7 +109,7 @@
 
 
 
-            <section>
+            <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -121,15 +127,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>all(field: T, value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>all(left: T, right: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="504"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:504</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="506"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:506</a></div>
                 </td>
             </tr>
 
@@ -150,7 +156,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>field</td>
+                                    <td>left</td>
                                     <td>
                                             <code>T</code>
                                     </td>
@@ -162,7 +168,7 @@
 
                                 </tr>
                                 <tr>
-                                    <td>value</td>
+                                    <td>right</td>
                                     <td>
                                                 <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
@@ -214,15 +220,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>any(field: T, value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>any(left: T, right: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="500"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:500</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="502"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:502</a></div>
                 </td>
             </tr>
 
@@ -243,7 +249,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>field</td>
+                                    <td>left</td>
                                     <td>
                                             <code>T</code>
                                     </td>
@@ -255,7 +261,7 @@
 
                                 </tr>
                                 <tr>
-                                    <td>value</td>
+                                    <td>right</td>
                                     <td>
                                                 <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
@@ -303,10 +309,12 @@
     </div>
 
 
-    <div class="tab-pane fade  tab-source-code" id="c-source">
+    <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Objects, Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { normalizeValue } from &#x27;../builder&#x27;;
+
+export type Normalize &#x3D; &#x27;all&#x27; | &#x27;right&#x27; | &#x27;left&#x27; | &#x27;none&#x27;;
 
 export interface Renderable {
   render({
@@ -324,7 +332,7 @@ export interface Renderable {
 }
 
 export class Field&lt;T extends object&gt; implements ProxyHandler&lt;T&gt; {
-  constructor(public name: string &#x3D; &#x27;&#x27;) {}
+  constructor(public name: string &#x3D; &#x27;&#x27;) { }
 
   static factory&lt;T extends object&gt;(name: string &#x3D; &#x27;&#x27;) {
     return new Proxy({ _name: name } as T, new Field&lt;T&gt;());
@@ -362,7 +370,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
         derivedCtor.prototype,
         name,
         Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null)
+        Object.create(null)
       );
     });
   });
@@ -404,9 +412,9 @@ export class Function&lt;T&gt; implements Renderable {
   constructor(
     protected name: string,
     protected values: any[],
-    protected normalize: boolean &#x3D; true,
+    protected normalize: Normalize,
     protected escape: boolean &#x3D; false
-  ) {}
+  ) { }
 
   get [Symbol.toStringTag]() {
     return &#x27;Function&#x27;;
@@ -432,11 +440,11 @@ export class Function&lt;T&gt; implements Renderable {
   }): string {
     let [field, ...values] &#x3D; this.values;
 
-    field &#x3D; render(field, { aliases, escape, prefix });
+    field &#x3D; render(field, { aliases, escape, prefix, normalize: this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;left&#x27; });
     const params &#x3D; [
       field,
       ...values.map((v) &#x3D;&gt;
-        render(v, { aliases, escape, prefix, normalize: this.normalize })
+        render(v, { aliases, escape, prefix, normalize: this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;right&#x27; })
       ),
     ];
     return &#x60;${this.name}(${params.join(&#x27;, &#x27;)})&#x60;;
@@ -453,145 +461,145 @@ export class Function&lt;T&gt; implements Renderable {
 }
 
 export class StringAndCollectionFunctions&lt;T&gt; {
-  concat(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;concat&#x27;, [field, value], normalize);
+  concat(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;concat&#x27;, [left, right], normalize);
   }
 
-  contains(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;contains&#x27;, [field, value], normalize);
+  contains(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;contains&#x27;, [left, right], normalize);
   }
 
-  endsWith(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;endswith&#x27;, [field, value], normalize);
+  endsWith(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;endswith&#x27;, [left, right], normalize);
   }
 
-  indexOf(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;indexof&#x27;, [field, value], normalize);
+  indexOf(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;indexof&#x27;, [left, right], normalize);
   }
 
-  length(value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;length&#x27;, [value], normalize);
+  length(left: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;length&#x27;, [left], normalize);
   }
 
-  startsWith(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;startswith&#x27;, [field, value], normalize);
+  startsWith(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;startswith&#x27;, [left, right], normalize);
   }
 
-  subString(field: any, start: number, length?: number) {
-    let values &#x3D; [field, start];
+  subString(left: any, right: number, length?: number, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    let values &#x3D; [left, right];
     if (length !&#x3D;&#x3D; undefined) {
       values.push(length);
     }
-    return new Function&lt;T&gt;(&#x27;substring&#x27;, values);
+    return new Function&lt;T&gt;(&#x27;substring&#x27;, values, normalize);
   }
 }
 
 export class CollectionFunctions&lt;T&gt; {
-  hasSubset(s1: T, s2: any) {
-    return new Function&lt;T&gt;(&#x27;hassubset&#x27;, [s1, s2]);
+  hasSubset(left: T, right: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;hassubset&#x27;, [left, right], normalize);
   }
-  hasSubsequence(s1: T, s2: any) {
-    return new Function&lt;T&gt;(&#x27;hassubsequence&#x27;, [s1, s2]);
+  hasSubsequence(left: T, right: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;hassubsequence&#x27;, [left, right], normalize);
   }
 }
 
 export class StringFunctions&lt;T&gt; {
-  matchesPattern(value: T | string, pattern: string) {
-    return new Function&lt;T&gt;(&#x27;matchesPattern&#x27;, [value, pattern]);
+  matchesPattern(left: any | string, pattern: string, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;matchesPattern&#x27;, [left, pattern], normalize);
   }
-  toLower(value: T) {
-    return new Function&lt;T&gt;(&#x27;tolower&#x27;, [value]);
+  toLower(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;tolower&#x27;, [left], normalize);
   }
-  toUpper(value: T) {
-    return new Function&lt;T&gt;(&#x27;toupper&#x27;, [value]);
+  toUpper(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;toupper&#x27;, [left], normalize);
   }
-  trim(value: T) {
-    return new Function&lt;T&gt;(&#x27;trim&#x27;, [value]);
+  trim(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;trim&#x27;, [left], normalize);
   }
 }
 
 export class DateAndTimeFunctions&lt;T&gt; {
-  date(value: any) {
-    return new Function&lt;T&gt;(&#x27;date&#x27;, [value]);
+  date(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;date&#x27;, [left], normalize);
   }
-  day(value: any) {
-    return new Function&lt;T&gt;(&#x27;day&#x27;, [value]);
+  day(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;day&#x27;, [left], normalize);
   }
-  fractionalseconds(value: any) {
-    return new Function&lt;T&gt;(&#x27;fractionalseconds&#x27;, [value]);
+  fractionalseconds(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;fractionalseconds&#x27;, [left], normalize);
   }
-  hour(value: any) {
-    return new Function&lt;T&gt;(&#x27;hour&#x27;, [value]);
+  hour(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;hour&#x27;, [left], normalize);
   }
-  maxdatetime(value: any) {
-    return new Function&lt;T&gt;(&#x27;maxdatetime&#x27;, [value]);
+  maxdatetime(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;maxdatetime&#x27;, [left], normalize);
   }
-  mindatetime(value: any) {
-    return new Function&lt;T&gt;(&#x27;mindatetime&#x27;, [value]);
+  mindatetime(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;mindatetime&#x27;, [left], normalize);
   }
-  minute(value: any) {
-    return new Function&lt;T&gt;(&#x27;minute&#x27;, [value]);
+  minute(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;minute&#x27;, [left], normalize);
   }
-  month(value: any) {
-    return new Function&lt;T&gt;(&#x27;month&#x27;, [value]);
+  month(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;month&#x27;, [left], normalize);
   }
   now() {
-    return new Function&lt;T&gt;(&#x27;now&#x27;, []);
+    return new Function&lt;T&gt;(&#x27;now&#x27;, [], &#x27;none&#x27;);
   }
-  second(value: any) {
-    return new Function&lt;T&gt;(&#x27;second&#x27;, [value]);
+  second(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;second&#x27;, [left], normalize);
   }
-  time(value: any) {
-    return new Function&lt;T&gt;(&#x27;time&#x27;, [value]);
+  time(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;time&#x27;, [left], normalize);
   }
-  totaloffsetminutes(value: any) {
-    return new Function&lt;T&gt;(&#x27;totaloffsetminutes&#x27;, [value]);
+  totaloffsetminutes(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;totaloffsetminutes&#x27;, [left], normalize);
   }
-  totalseconds(value: any) {
-    return new Function&lt;T&gt;(&#x27;totalseconds&#x27;, [value]);
+  totalseconds(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;totalseconds&#x27;, [left], normalize);
   }
-  year(value: any) {
-    return new Function&lt;T&gt;(&#x27;year&#x27;, [value]);
+  year(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;year&#x27;, [left], normalize);
   }
 }
 
 export class ArithmeticFunctions&lt;T&gt; {
-  ceiling(value: T | string) {
-    return new Function&lt;T&gt;(&#x27;ceiling&#x27;, [value]);
+  ceiling(left: T | string, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;ceiling&#x27;, [left], normalize);
   }
-  floor(value: T | string) {
-    return new Function&lt;T&gt;(&#x27;floor&#x27;, [value]);
+  floor(left: T | string, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;floor&#x27;, [left], normalize);
   }
-  round(value: T | string) {
-    return new Function&lt;T&gt;(&#x27;round&#x27;, [value]);
+  round(left: T | string, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;round&#x27;, [left], normalize);
   }
 }
 
 export class TypeFunctions&lt;T&gt; {
-  cast(value: T | string, type?: string) {
-    return new Function&lt;T&gt;(&#x27;cast&#x27;, [value, type]);
+  cast(left: T | string, right?: string, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;cast&#x27;, [left, right], normalize);
   }
 
-  isof(value: T | string, type?: string) {
-    return new Function&lt;T&gt;(&#x27;isof&#x27;, [value, type]);
+  isof(left: T | string, right?: string, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;isof&#x27;, [left, right], normalize);
   }
 }
 
 export class GeoFunctions&lt;T&gt; {
-  geoDistance(value: T, point: string, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;geo.distance&#x27;, [value, point], normalize);
+  geoDistance(left: T, right: string, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;geo.distance&#x27;, [left, right], normalize);
   }
-  geoIntersects(value: T, polygon: string, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;geo.intersects&#x27;, [value, polygon], normalize);
+  geoIntersects(left: T, right: string, normalize: Normalize &#x3D; &#x27;right&#x27;) {
+    return new Function&lt;T&gt;(&#x27;geo.intersects&#x27;, [left, right], normalize);
   }
-  geoLength(line: T, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;geo.length&#x27;, [line], normalize);
+  geoLength(left: T, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;geo.length&#x27;, [left], normalize);
   }
 }
 
 export class ConditionalFunctions&lt;T&gt; {
-  case(condition: T | string, value: any) {
-    return new Function&lt;T&gt;(&#x27;case&#x27;, [condition, value]);
+  case(left: T | string, right: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;case&#x27;, [left, right], normalize);
   }
 }
 
@@ -599,8 +607,8 @@ export class Operator&lt;T&gt; implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: boolean &#x3D; true
-  ) {}
+    protected normalize: Normalize
+  ) { }
 
   get [Symbol.toStringTag]() {
     return &#x27;Operator&#x27;;
@@ -626,25 +634,25 @@ export class Operator&lt;T&gt; implements Renderable {
   }): string {
     let [left, right] &#x3D; this.values;
 
-    left &#x3D; render(left, { aliases, escape, prefix });
+    left &#x3D; render(left, { aliases, escape, prefix, normalize: this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;left&#x27; });
     if (right !&#x3D;&#x3D; undefined) {
       right &#x3D; Array.isArray(right)
         ? &#x60;(${right
-            .map((v) &#x3D;&gt;
-              render(v, {
-                aliases,
-                escape,
-                prefix,
-                normalize: this.normalize,
-              })
-            )
-            .join(&#x27;,&#x27;)})&#x60;
+          .map((v) &#x3D;&gt;
+            render(v, {
+              aliases,
+              escape,
+              prefix,
+              normalize: this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;right&#x27;,
+            })
+          )
+          .join(&#x27;,&#x27;)})&#x60;
         : render(right, {
-            aliases,
-            escape,
-            prefix,
-            normalize: this.normalize,
-          });
+          aliases,
+          escape,
+          prefix,
+          normalize: this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;right&#x27;,
+        });
       return &#x60;${left} ${this.op} ${right}&#x60;;
     }
     return &#x60;${this.op}(${left})&#x60;;
@@ -660,66 +668,66 @@ export class Operator&lt;T&gt; implements Renderable {
 }
 
 export class LogicalOperators&lt;T&gt; {
-  eq(left: any, right: any, normalize?: boolean) {
+  eq(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;eq&#x27;, [left, right], normalize);
   }
-  ne(left: any, right: any, normalize?: boolean) {
+  ne(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;ne&#x27;, [left, right], normalize);
   }
-  gt(left: any, right: any, normalize?: boolean) {
+  gt(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;gt&#x27;, [left, right], normalize);
   }
-  ge(left: any, right: any, normalize?: boolean) {
+  ge(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;ge&#x27;, [left, right], normalize);
   }
-  lt(left: any, right: any, normalize?: boolean) {
+  lt(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;lt&#x27;, [left, right], normalize);
   }
-  le(left: any, right: any, normalize?: boolean) {
+  le(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;le&#x27;, [left, right], normalize);
   }
   /*
-  and(left: any, right: any, normalize?: boolean) {
+  and(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;and&#x27;, [left, right], normalize);
   }
-  or(left: any, right: any, normalize?: boolean) {
+  or(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;or&#x27;, [left, right], normalize);
   }
   */
-  not(value: any, normalize?: boolean) {
-    return new Operator&lt;T&gt;(&#x27;not&#x27;, [value], normalize);
+  not(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Operator&lt;T&gt;(&#x27;not&#x27;, [left], normalize);
   }
-  has(left: any, right: any, normalize?: boolean) {
+  has(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;has&#x27;, [left, right], normalize);
   }
-  in(left: any, right: any, normalize?: boolean) {
+  in(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;in&#x27;, [left, right], normalize);
   }
 }
 
 export class ArithmeticOperators&lt;T&gt; {
-  add(left: any, right: any, normalize?: boolean) {
+  add(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator&lt;T&gt;(&#x27;add&#x27;, [left, right], normalize);
   }
-  sub(left: any, right: any, normalize?: boolean) {
+  sub(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;sub&#x27;, [left, right], normalize);
   }
-  mul(left: any, right: any, normalize?: boolean) {
+  mul(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;mul&#x27;, [left, right], normalize);
   }
-  div(left: any, right: any, normalize?: boolean) {
+  div(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;div&#x27;, [left, right], normalize);
   }
-  mod(left: any, right: any, normalize?: boolean) {
+  mod(left: any, right: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;mod&#x27;, [left, right], normalize);
   }
-  neg(value: any, normalize?: boolean) {
+  neg(value: any, normalize: Normalize &#x3D; &#x27;right&#x27;) {
     return new Operator(&#x27;-&#x27;, [value], normalize);
   }
 }
 
 export class Grouping&lt;T&gt; implements Renderable {
-  constructor(protected group: Renderable) {}
+  constructor(protected group: Renderable) { }
 
   get [Symbol.toStringTag]() {
     return &#x27;Grouping&#x27;;
@@ -754,7 +762,7 @@ export class Lambda&lt;T&gt; implements Renderable {
     protected op: string,
     protected values: any[],
     protected alias?: string
-  ) {}
+  ) { }
 
   get [Symbol.toStringTag]() {
     return &#x27;Lambda&#x27;;
@@ -803,20 +811,20 @@ export class Lambda&lt;T&gt; implements Renderable {
 }
 
 export class LambdaOperators&lt;T&gt; {
-  any(field: T, value: any, alias?: string) {
-    return new Lambda(&#x27;any&#x27;, [field, value], alias);
+  any(left: T, right: any, alias?: string) {
+    return new Lambda(&#x27;any&#x27;, [left, right], alias);
   }
 
-  all(field: T, value: any, alias?: string) {
-    return new Lambda(&#x27;all&#x27;, [field, value], alias);
+  all(left: T, right: any, alias?: string) {
+    return new Lambda(&#x27;all&#x27;, [left, right], alias);
   }
 }
 
-export class ODataOperators&lt;T&gt; {}
+export class ODataOperators&lt;T&gt; { }
 export interface ODataOperators&lt;T&gt;
   extends LogicalOperators&lt;T&gt;,
-    ArithmeticOperators&lt;T&gt;,
-    LambdaOperators&lt;T&gt; {}
+  ArithmeticOperators&lt;T&gt;,
+  LambdaOperators&lt;T&gt; { }
 
 applyMixins(ODataOperators, [
   LogicalOperators,
@@ -825,16 +833,16 @@ applyMixins(ODataOperators, [
 ]);
 export const operators: ODataOperators&lt;any&gt; &#x3D; new ODataOperators&lt;any&gt;();
 
-export class ODataFunctions&lt;T&gt; {}
+export class ODataFunctions&lt;T&gt; { }
 export interface ODataFunctions&lt;T&gt;
   extends StringAndCollectionFunctions&lt;T&gt;,
-    CollectionFunctions&lt;T&gt;,
-    StringFunctions&lt;T&gt;,
-    DateAndTimeFunctions&lt;T&gt;,
-    ArithmeticFunctions&lt;T&gt;,
-    TypeFunctions&lt;T&gt;,
-    GeoFunctions&lt;T&gt;,
-    ConditionalFunctions&lt;T&gt; {}
+  CollectionFunctions&lt;T&gt;,
+  StringFunctions&lt;T&gt;,
+  DateAndTimeFunctions&lt;T&gt;,
+  ArithmeticFunctions&lt;T&gt;,
+  TypeFunctions&lt;T&gt;,
+  GeoFunctions&lt;T&gt;,
+  ConditionalFunctions&lt;T&gt; { }
 
 applyMixins(ODataFunctions, [
   StringAndCollectionFunctions,
@@ -848,8 +856,8 @@ applyMixins(ODataFunctions, [
 ]);
 export const functions: ODataFunctions&lt;any&gt; &#x3D; new ODataFunctions&lt;any&gt;();
 
-export class ODataSyntax&lt;T&gt; {}
-export interface ODataSyntax&lt;T&gt; extends ODataOperators&lt;T&gt;, ODataFunctions&lt;T&gt; {}
+export class ODataSyntax&lt;T&gt; { }
+export interface ODataSyntax&lt;T&gt; extends ODataOperators&lt;T&gt;, ODataFunctions&lt;T&gt; { }
 applyMixins(ODataSyntax, [ODataOperators, ODataFunctions]);
 
 export const syntax: ODataSyntax&lt;any&gt; &#x3D; new ODataSyntax&lt;any&gt;();

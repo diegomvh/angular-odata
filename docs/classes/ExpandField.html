@@ -13,7 +13,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">angular-odata documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -43,21 +43,27 @@
 
 
 <ol class="breadcrumb">
-  <li>Classes</li>
-  <li >ExpandField</li>
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ExpandField</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
-        <li >
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
         </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="c-info">
+    <div class="tab-pane fade active in" id="info">
         <p class="comment">
             <h3>File</h3>
         </p>
@@ -76,7 +82,7 @@
             </p>
 
 
-            <section>
+            <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -91,6 +97,9 @@
                         <ul class="index-list">
                             <li>
                                 <a href="#clone" >clone</a>
+                            </li>
+                            <li>
+                                <a href="#count" >count</a>
                             </li>
                             <li>
                                 <a href="#expand" >expand</a>
@@ -152,7 +161,7 @@
     </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-constructor">
     <h3 id="constructor">Constructor</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -214,7 +223,7 @@
 </section>
 
 
-            <section>
+            <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -239,8 +248,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="63"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:63</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="64"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:64</a></div>
                 </td>
             </tr>
 
@@ -249,7 +258,44 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >ExpandField&lt;unknown&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandField&lt;T&gt;</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="count"></a>
+                    <span class="name">
+                        <span ><b>count</b></span>
+                        <a href="#count"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>count()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="142"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:142</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
 
                     </div>
                 </td>
@@ -276,8 +322,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="84"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:84</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:85</a></div>
                 </td>
             </tr>
 
@@ -323,7 +369,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -353,8 +399,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="96"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:96</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:97</a></div>
                 </td>
             </tr>
 
@@ -430,8 +476,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="137"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:137</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="138"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:138</a></div>
                 </td>
             </tr>
 
@@ -469,7 +515,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>    <code>number | &quot;max&quot;</code>
 
                     </div>
                     <div class="io-description">
@@ -501,8 +547,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="142"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:142</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="147"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:147</a></div>
                 </td>
             </tr>
 
@@ -560,7 +606,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>    <code>O</code>
 
                     </div>
                     <div class="io-description">
@@ -590,8 +636,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="117"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:117</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:118</a></div>
                 </td>
             </tr>
 
@@ -735,8 +781,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="108"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:108</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="109"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:109</a></div>
                 </td>
             </tr>
 
@@ -812,8 +858,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="72"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:72</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:73</a></div>
                 </td>
             </tr>
 
@@ -889,8 +935,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="129"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:129</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="130"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:130</a></div>
                 </td>
             </tr>
 
@@ -928,7 +974,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 
                     </div>
                     <div class="io-description">
@@ -995,8 +1041,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="133"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:133</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="134"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:134</a></div>
                 </td>
             </tr>
 
@@ -1034,7 +1080,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1050,7 +1096,7 @@
 
 
 
-            <section>
+            <section data-compodoc="block-accessors">
     <h3 id="accessors">
         Accessors
     </h3>
@@ -1080,10 +1126,10 @@
     </div>
 
 
-    <div class="tab-pane fade  tab-source-code" id="c-source">
+    <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOption } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
-import type { QueryCustomType } from &#x27;../builder&#x27;;
+import type { QueryCustomType, Unpacked } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
 import { OrderByExpression, OrderByExpressionBuilder } from &#x27;./orderby&#x27;;
@@ -1124,6 +1170,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
       QueryOption.orderBy,
       QueryOption.skip,
       QueryOption.top,
+      QueryOption.count,
       QueryOption.levels,
     ]
       .filter((key) &#x3D;&gt; !Types.isEmpty(this.values[key]))
@@ -1149,7 +1196,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
       {}
     );
-    return new ExpandField(this.field.clone(), values);
+    return new ExpandField&lt;T&gt;(typeof (this.field) &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? this.field : this.field.clone(), values);
   }
 
   select&lt;T extends object&gt;(
@@ -1221,10 +1268,14 @@ export class ExpandField&lt;T&gt; implements Renderable {
     return this.option&lt;number | &#x27;max&#x27;&gt;(QueryOption.levels, n);
   }
 
+  count() {
+    return this.option&lt;boolean&gt;(QueryOption.count, true);
+  }
+
   // Option Handler
   private option&lt;O&gt;(name: QueryOption, opts?: O) {
     if (opts !&#x3D;&#x3D; undefined) this.values[name] &#x3D; opts;
-    return this.values[name];
+    return this.values[name] as O;
   }
 }
 
@@ -1272,7 +1323,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   clone() {
-    return new ExpandExpression({
+    return new ExpandExpression&lt;T&gt;({
       children: this._children.map((c) &#x3D;&gt; c.clone()),
     });
   }
@@ -1282,8 +1333,8 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return this;
   }
 
-  field&lt;F&gt;(field: F, opts?: (e: ExpandField&lt;F&gt;) &#x3D;&gt; void): ExpandExpression&lt;F&gt; {
-    let node &#x3D; new ExpandField&lt;F&gt;(field);
+  field&lt;F extends keyof T&gt;(field: T[F], opts?: (e: ExpandField&lt;Unpacked&lt;T[F]&gt;&gt;) &#x3D;&gt; void): ExpandExpression&lt;T&gt; {
+    let node &#x3D; new ExpandField&lt;Unpacked&lt;T[F]&gt;&gt;(field);
     if (opts !&#x3D;&#x3D; undefined) opts(node);
     return this._add(node);
   }

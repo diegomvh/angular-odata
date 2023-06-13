@@ -13,7 +13,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">angular-odata documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -43,21 +43,27 @@
 
 
 <ol class="breadcrumb">
-  <li>Classes</li>
-  <li >ODataQueryOptions</li>
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ODataQueryOptions</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
-        <li >
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
         </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="c-info">
+    <div class="tab-pane fade active in" id="info">
         <p class="comment">
             <h3>File</h3>
         </p>
@@ -70,7 +76,7 @@
 
 
 
-            <section>
+            <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -142,7 +148,7 @@
     </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-constructor">
     <h3 id="constructor">Constructor</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -153,7 +159,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:41</a></div>
                             </td>
                         </tr>
 
@@ -191,7 +197,7 @@
         </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-properties">
     
     <h3 id="inputs">
         Properties
@@ -215,7 +221,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -224,7 +230,7 @@
     </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -639,8 +645,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="50"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:50</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="51"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:51</a></div>
                 </td>
             </tr>
 
@@ -874,7 +880,7 @@
     </div>
 
 
-    <div class="tab-pane fade  tab-source-code" id="c-source">
+    <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOption } from &#x27;../../types&#x27;;
 import { Objects, Types } from &#x27;../../utils&#x27;;
 import {
@@ -883,6 +889,7 @@ import {
   Filter,
   OrderBy,
   QueryCustomType,
+  raw,
   Select,
   Transform,
 } from &#x27;./builder&#x27;;
@@ -952,14 +959,13 @@ export class ODataQueryOptions&lt;T&gt; {
           value &#x3D; Types.isArray(value)
             ? value.map((v: Expression&lt;T&gt;) &#x3D;&gt;
                 Types.rawType(v).endsWith(&#x27;Expression&#x27;)
-                  ? v.render({ aliases })
+                  ? raw(v.render({ aliases }))
                   : v
               )
-            : (value as Expression&lt;T&gt;).render({ aliases });
+            : raw((value as Expression&lt;T&gt;).render({ aliases }));
         }
         return Object.assign(acc, { [key]: value });
       }, {});
-
     return buildPathAndQuery&lt;any&gt;({ ...options, aliases, escape });
   }
 

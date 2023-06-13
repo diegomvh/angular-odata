@@ -13,7 +13,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">angular-odata documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -49,11 +49,11 @@
 
 
 <ol class="breadcrumb">
-  <li>Miscellaneous</li>
-  <li>Variables</li>
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Variables</li>
 </ol>
 
-<section>
+<section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -250,6 +250,9 @@
                             <a href="#isQueryCustomType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>isQueryCustomType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
+                            <a href="#isRawType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>isRawType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#ITEM_ROOT" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>ITEM_ROOT</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -416,7 +419,7 @@
 </section>
 
     <h3>projects/angular-odata/src/lib/constants.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -2103,7 +2106,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/resources/query/builder.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -2319,6 +2322,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="isRawType"></a>
+                    <span class="name">
+                        <span ><b>isRawType</b></span>
+                        <a href="#isRawType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(value: any) &#x3D;&gt; isQueryCustomType(value) &amp;&amp; (value as QueryCustomType).type &#x3D;&#x3D;&#x3D; QueryCustomTypes.Raw</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="ITEM_ROOT"></a>
                     <span class="name">
                         <span ><b>ITEM_ROOT</b></span>
@@ -2426,7 +2449,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/arraybuffers.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -2555,7 +2578,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/arrays.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -2594,7 +2617,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/models/options.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -2690,7 +2713,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/helper.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3086,7 +3109,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/dates.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3148,7 +3171,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/durations.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3235,7 +3258,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/schema/parsers/edm.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3492,7 +3515,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/enums.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3564,6 +3587,23 @@
     }
     return [];
   },
+
+  toFlags&lt;E extends { [key: string]: any }&gt;(enums: E, value: any): string[] {
+    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
+      return this.values(enums)
+        .filter((v) &#x3D;&gt; v !&#x3D;&#x3D; 0 &amp;&amp; (value &amp; v) &#x3D;&#x3D;&#x3D; v)
+        .map((v) &#x3D;&gt; this.toName(enums, v) as string);
+    }
+    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+      value &#x3D; value.split(&#x27;,&#x27;).map((o) &#x3D;&gt; o.trim());
+    }
+    if (Array.isArray(value) &amp;&amp; value.every((v) &#x3D;&gt; v in enums)) {
+      return value
+        .filter((v) &#x3D;&gt; enums[v])
+        .map((v) &#x3D;&gt; this.toName(enums, v) as string);
+    }
+    return [];
+  },
 }</code>
                     </td>
                 </tr>
@@ -3573,7 +3613,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/resources/query/expressions/syntax.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3654,7 +3694,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/strings.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3719,7 +3759,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/http.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3879,7 +3919,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/types.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -3906,7 +3946,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/objects.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -4165,7 +4205,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/odata.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -4219,7 +4259,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/module.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -4242,7 +4282,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/models/model.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -4267,7 +4307,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/types.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -4434,7 +4474,7 @@
     </table>
 </section>
     <h3>projects/angular-odata/src/lib/utils/urls.ts</h3>
-    <section>
+    <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>

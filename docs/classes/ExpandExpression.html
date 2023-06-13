@@ -13,7 +13,7 @@
     </head>
     <body>
 
-        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">angular-odata documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
@@ -43,21 +43,27 @@
 
 
 <ol class="breadcrumb">
-  <li>Classes</li>
-  <li >ExpandExpression</li>
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ExpandExpression</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
-        <li >
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
         </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="c-info">
+    <div class="tab-pane fade active in" id="info">
         <p class="comment">
             <h3>File</h3>
         </p>
@@ -76,7 +82,7 @@
 
 
 
-            <section>
+            <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
@@ -142,7 +148,7 @@
     </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-constructor">
     <h3 id="constructor">Constructor</h3>
         <table class="table table-sm table-bordered">
             <tbody>
@@ -153,7 +159,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="152" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:152</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="157" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:157</a></div>
                             </td>
                         </tr>
 
@@ -190,7 +196,7 @@
         </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-properties">
     
     <h3 id="inputs">
         Properties
@@ -231,7 +237,7 @@
     </table>
 </section>
 
-            <section>
+            <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -258,8 +264,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="197"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:197</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="202"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:202</a></div>
                 </td>
             </tr>
 
@@ -333,7 +339,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:191</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:196</a></code>
 </div>
                 </td>
             </tr>
@@ -343,7 +349,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >ExpandExpression&lt;unknown&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
 
                     </div>
                 </td>
@@ -372,8 +378,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="161"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:161</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="166"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:166</a></div>
                 </td>
             </tr>
 
@@ -454,15 +460,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>field(field: F, opts?: (e?: <a href="../undefineds/Expand.html">ExpandField<F></a>) => void)</code>
+<code>field(field, opts?: (e?: ExpandField<Unpacked<>>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="202"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:202</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="207"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:207</a></div>
                 </td>
             </tr>
 
@@ -493,7 +499,6 @@
                                 <tr>
                                     <td>field</td>
                                     <td>
-                                            <code>F</code>
                                     </td>
 
                                     <td>
@@ -520,7 +525,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;F&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -556,7 +561,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:177</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:182</a></code>
 </div>
                 </td>
             </tr>
@@ -746,10 +751,10 @@
     </div>
 
 
-    <div class="tab-pane fade  tab-source-code" id="c-source">
+    <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOption } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
-import type { QueryCustomType } from &#x27;../builder&#x27;;
+import type { QueryCustomType, Unpacked } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
 import { OrderByExpression, OrderByExpressionBuilder } from &#x27;./orderby&#x27;;
@@ -790,6 +795,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
       QueryOption.orderBy,
       QueryOption.skip,
       QueryOption.top,
+      QueryOption.count,
       QueryOption.levels,
     ]
       .filter((key) &#x3D;&gt; !Types.isEmpty(this.values[key]))
@@ -815,7 +821,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
       {}
     );
-    return new ExpandField(this.field.clone(), values);
+    return new ExpandField&lt;T&gt;(typeof (this.field) &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? this.field : this.field.clone(), values);
   }
 
   select&lt;T extends object&gt;(
@@ -887,10 +893,14 @@ export class ExpandField&lt;T&gt; implements Renderable {
     return this.option&lt;number | &#x27;max&#x27;&gt;(QueryOption.levels, n);
   }
 
+  count() {
+    return this.option&lt;boolean&gt;(QueryOption.count, true);
+  }
+
   // Option Handler
   private option&lt;O&gt;(name: QueryOption, opts?: O) {
     if (opts !&#x3D;&#x3D; undefined) this.values[name] &#x3D; opts;
-    return this.values[name];
+    return this.values[name] as O;
   }
 }
 
@@ -938,7 +948,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   clone() {
-    return new ExpandExpression({
+    return new ExpandExpression&lt;T&gt;({
       children: this._children.map((c) &#x3D;&gt; c.clone()),
     });
   }
@@ -948,8 +958,8 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return this;
   }
 
-  field&lt;F&gt;(field: F, opts?: (e: ExpandField&lt;F&gt;) &#x3D;&gt; void): ExpandExpression&lt;F&gt; {
-    let node &#x3D; new ExpandField&lt;F&gt;(field);
+  field&lt;F extends keyof T&gt;(field: T[F], opts?: (e: ExpandField&lt;Unpacked&lt;T[F]&gt;&gt;) &#x3D;&gt; void): ExpandExpression&lt;T&gt; {
+    let node &#x3D; new ExpandField&lt;Unpacked&lt;T[F]&gt;&gt;(field);
     if (opts !&#x3D;&#x3D; undefined) opts(node);
     return this._add(node);
   }
