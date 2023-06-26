@@ -3320,13 +3320,7 @@
     (v: Duration) &#x3D;&gt; raw(Durations.toString(v))
   ),
   //Edm.Decimal Numeric values with fixed precision and scale
-  [EdmType.Decimal]: EdmParser&lt;number&gt;(
-    (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; {
-      if (typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; o.ieee754Compatible) {
-        return parseFloat(v);
-      }
-      return v;
-    },
+  [EdmType.Decimal]: EdmParser&lt;number&gt;(toNumber,
     (v: number, o: StructuredTypeFieldOptions) &#x3D;&gt; {
       if (o.ieee754Compatible) {
         let vstr &#x3D; v.toPrecision(o.field.precision);
