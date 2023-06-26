@@ -74,13 +74,7 @@ export const EDM_PARSERS: { [type: string]: FieldParser<any> } = {
     (v: Duration) => raw(Durations.toString(v))
   ),
   //Edm.Decimal Numeric values with fixed precision and scale
-  [EdmType.Decimal]: EdmParser<number>(
-    (v: any, o: StructuredTypeFieldOptions) => {
-      if (typeof v === 'string' && o.ieee754Compatible) {
-        return parseFloat(v);
-      }
-      return v;
-    },
+  [EdmType.Decimal]: EdmParser<number>(toNumber,
     (v: number, o: StructuredTypeFieldOptions) => {
       if (o.ieee754Compatible) {
         let vstr = v.toPrecision(o.field.precision);
