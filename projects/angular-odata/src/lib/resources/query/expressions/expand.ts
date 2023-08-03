@@ -12,7 +12,7 @@ export class ExpandField<T> implements Renderable {
   constructor(
     protected field: any,
     private values: { [name: string]: any } = {}
-  ) {}
+  ) { }
 
   get [Symbol.toStringTag]() {
     return 'ExpandField';
@@ -204,8 +204,8 @@ export class ExpandExpression<T> extends Expression<T> {
     return this;
   }
 
-  field<F extends keyof T>(field: T[F], opts?: (e: ExpandField<Unpacked<T[F]>>) => void): ExpandExpression<T> {
-    let node = new ExpandField<Unpacked<T[F]>>(field);
+  field<F>(field: F, opts?: (e: ExpandField<F>) => void): ExpandExpression<T> {
+    let node = new ExpandField<Unpacked<F>>(field);
     if (opts !== undefined) opts(node);
     return this._add(node);
   }

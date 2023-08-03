@@ -17,7 +17,6 @@ import { ODataSchema } from './schema';
 
 export class ODataStructuredType<T> extends ODataSchemaElement {
   base?: string;
-  open: boolean;
   parent?: ODataStructuredType<any>;
   children: ODataStructuredType<any>[] = [];
   model?: typeof ODataModel;
@@ -27,7 +26,6 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
   constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
     super(config, schema);
     this.base = config.base;
-    this.open = config.open || false;
     this.parser = new ODataStructuredTypeParser(
       config,
       schema.namespace,
@@ -117,7 +115,15 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
   }
 
   isOpenType() {
-    return this.open;
+    return this.parser.isOpenType();
+  }
+
+  isEntityType() {
+    return this.parser.isEntityType();
+  }
+
+  isComplexType() {
+    return this.parser.isComplexType();
   }
 
   /**

@@ -253,8 +253,8 @@ export class ODataStructuredTypeFieldParser<T>
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     let schema: any =
       this.parser instanceof ODataStructuredTypeFieldParser ||
-      this.parser instanceof ODataStructuredTypeParser ||
-      this.parser instanceof ODataEnumTypeParser
+        this.parser instanceof ODataStructuredTypeParser ||
+        this.parser instanceof ODataEnumTypeParser
         ? this.parser.toJsonSchema(options)
         : ({ title: this.name, type: 'object' } as any);
 
@@ -419,6 +419,10 @@ export class ODataStructuredTypeParser<T>
     return false;
   }
 
+  isOpenType() {
+    return this.open;
+  }
+
   findChildParser(
     predicate: (p: ODataStructuredTypeParser<any>) => boolean
   ): ODataStructuredTypeParser<any> | undefined {
@@ -548,6 +552,14 @@ export class ODataStructuredTypeParser<T>
         : []),
       ...(this._keys || []),
     ];
+  }
+
+  isEntityType(): boolean {
+    return this._keys !== undefined || (this.parent !== undefined && this.parent.isEntityType());
+  }
+
+  isComplexType(): boolean {
+    return !this.isEntityType();
   }
 
   /**

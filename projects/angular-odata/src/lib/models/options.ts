@@ -77,8 +77,8 @@ export class ODataModelEvent<T> {
     this.chain = [
       [
         (this.collection || this.model) as
-          | ODataModel<any>
-          | ODataCollection<any, ODataModel<any>>,
+        | ODataModel<any>
+        | ODataCollection<any, ODataModel<any>>,
         attr || null,
       ],
     ];
@@ -123,10 +123,10 @@ export class ODataModelEvent<T> {
         typeof field === 'number'
           ? `[${field}]`
           : field instanceof ODataModelField
-          ? index === 0
-            ? field.name
-            : `.${field.name}`
-          : ''
+            ? index === 0
+              ? field.name
+              : `.${field.name}`
+            : ''
       )
       .join('');
   }
@@ -196,7 +196,7 @@ export type ModelFieldOptions = {
 };
 
 export function Model({ cid = CID_FIELD_NAME }: { cid?: string } = {}) {
-  return <T extends { new (...args: any[]): {} }>(constructor: T) => {
+  return <T extends { new(...args: any[]): {} }>(constructor: T) => {
     const Klass = <any>constructor;
     if (!Klass.hasOwnProperty('options'))
       Klass.options = { fields: {} } as ModelOptions;
@@ -521,7 +521,7 @@ export class ODataModelAttribute<T> {
   constructor(
     private _model: ODataModel<any>,
     private _field: ODataModelField<T>
-  ) {}
+  ) { }
 
   get navigation() {
     return Boolean(this._field.navigation);
@@ -590,10 +590,10 @@ export class ODataModelAttribute<T> {
         ? !(current as ODataModel<T>).equals(value as ODataModel<T>)
         : ODataModelOptions.isCollection(current) &&
           ODataModelOptions.isCollection(value)
-        ? !(current as ODataCollection<T, ODataModel<T>>).equals(
+          ? !(current as ODataCollection<T, ODataModel<T>>).equals(
             value as ODataCollection<T, ODataModel<T>>
           )
-        : !Types.isEqual(current, value);
+          : !Types.isEqual(current, value);
     if (reset) {
       this.value = value;
       this.change = undefined;
@@ -679,7 +679,6 @@ export class ODataModelOptions<T> {
   name: string;
   cid: string;
   base?: string;
-  open?: boolean;
   private _fields: ODataModelField<any>[] = [];
   schema: ODataStructuredType<T>;
   entitySet?: ODataEntitySet;
@@ -696,7 +695,6 @@ export class ODataModelOptions<T> {
   }) {
     this.name = schema.name;
     this.base = schema.base;
-    this.open = schema.open;
     this.schema = schema;
     this.cid = options?.cid || CID_FIELD_NAME;
     Object.entries(options.fields).forEach(([name, options]) =>
@@ -714,6 +712,14 @@ export class ODataModelOptions<T> {
 
   isOpenType() {
     return this.schema.isOpenType();
+  }
+
+  isEntityType() {
+    return this.schema.isEntityType();
+  }
+
+  isComplexType() {
+    return this.schema.isComplexType();
   }
 
   isTypeOf(type: string) {
@@ -902,9 +908,9 @@ export class ODataModelOptions<T> {
     const chain = [] as any[];
     let tuple:
       | [
-          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-          ODataModelField<any> | null
-        ]
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null
+      ]
       | null = [child, null];
     while (tuple !== null) {
       const parent = tuple as [
@@ -1026,10 +1032,10 @@ export class ODataModelOptions<T> {
       this.attach(
         self,
         resource as
-          | ODataEntityResource<T>
-          | ODataPropertyResource<T>
-          | ODataNavigationPropertyResource<T>
-          | ODataSingletonResource<T>
+        | ODataEntityResource<T>
+        | ODataPropertyResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataSingletonResource<T>
       );
     }
 
@@ -1647,12 +1653,12 @@ export class ODataModelOptions<T> {
             ODataModelOptions.isModel(value)
             ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
             : modelField.collection
-            ? modelField.collectionFactory<F>({
+              ? modelField.collectionFactory<F>({
                 parent: self,
                 value: value as F[] | { [name: string]: any }[],
                 reset: self._reset,
               })
-            : modelField.modelFactory<F>({
+              : modelField.modelFactory<F>({
                 parent: self,
                 value: value,
                 reset: self._reset,

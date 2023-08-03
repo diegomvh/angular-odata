@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { forkJoin, NEVER, Observable, of, throwError } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from '../constants';
 import { ODataHelper } from '../helper';
 import {
@@ -69,18 +69,18 @@ export class ODataModel<T> {
   // Parent
   _parent:
     | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null
-      ]
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null
+    ]
     | null = null;
   _resource: ODataResource<T> | null = null;
   _resources: {
     parent:
-      | [
-          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-          ODataModelField<any> | null
-        ]
-      | null;
+    | [
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null
+    ]
+    | null;
     resource: ODataResource<T> | null;
   }[] = [];
   _attributes: Map<string, ODataModelAttribute<any>> = new Map<
@@ -400,8 +400,8 @@ export class ODataModel<T> {
       path === undefined
         ? []
         : Types.isArray(path)
-        ? path
-        : (path as string).match(/([^[.\]])+/g)
+          ? path
+          : (path as string).match(/([^[.\]])+/g)
     ) as any[];
     const name = pathArray[0];
     const value = name !== undefined ? (<any>this)[name] : undefined;
@@ -561,8 +561,8 @@ export class ODataModel<T> {
       (method === 'create'
         ? resource.create(_entity, options)
         : method === 'modify'
-        ? resource.modify(_entity, { etag: this.annots().etag, ...options })
-        : resource.update(_entity, { etag: this.annots().etag, ...options })
+          ? resource.modify(_entity, { etag: this.annots().etag, ...options })
+          : resource.update(_entity, { etag: this.annots().etag, ...options })
       ).pipe(
         map(({ entity, annots }) => ({ entity: entity || _entity, annots }))
       )
@@ -798,13 +798,13 @@ export class ODataModel<T> {
       ) as ODataPropertyResource<P>;
       return field.collection
         ? prop
-            .fetchCollection(options)
-            .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
+          .fetchCollection(options)
+          .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
         : field.isStructuredType()
-        ? prop
+          ? prop
             .fetchModel(options)
             .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
-        : prop
+          : prop
             .fetchProperty(options)
             .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })));
     }
@@ -892,16 +892,29 @@ export class ODataModel<T> {
     return 'Model';
   }
   equals(other: ODataModel<T>): boolean {
-    const thisKey = this.key();
-    const otherKey = other.key();
-    return (
-      this === other ||
-      (typeof this === typeof other &&
-        ((<any>this)[this._meta.cid] === (<any>other)[this._meta.cid] ||
-          (thisKey !== undefined &&
-            otherKey !== undefined &&
-            Types.isEqual(thisKey, otherKey))))
-    );
+    if (this === other) return true;
+    if (typeof this !== typeof other) return false;
+    const meta = this._meta;
+    const thisCid = (<any>this)[meta.cid];
+    const otherCid = (<any>other)[meta.cid];
+    if (
+      thisCid !== undefined &&
+      otherCid !== undefined &&
+      Types.isEqual(thisCid, otherCid)) return true;
+    if (meta.isEntityType()) {
+      const thisKey = this.key();
+      const otherKey = other.key();
+      if (
+        thisKey !== undefined &&
+        otherKey !== undefined &&
+        Types.isEqual(thisKey, otherKey)) return true;
+    } else if (meta.isComplexType()) {
+      const thisJson = this.toJSON();
+      const otherJson = other.toJSON();
+      if (
+        Types.isEqual(thisJson, otherJson)) return true;
+    }
+    return false;
   }
   //#endregion
 

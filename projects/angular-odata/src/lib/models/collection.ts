@@ -40,9 +40,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
   static model: typeof ODataModel | null = null;
   _parent:
     | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null
-      ]
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null
+    ]
     | null = null;
   _resource:
     | ODataEntitySetResource<T>
@@ -51,16 +51,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     | null = null;
   _resources: {
     parent:
-      | [
-          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-          ODataModelField<any> | null
-        ]
-      | null;
+    | [
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null
+    ]
+    | null;
     resource:
-      | ODataEntitySetResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>
-      | null;
+    | ODataEntitySetResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | null;
   }[] = [];
   _annotations!: ODataEntitiesAnnotations<T>;
   _entries: ODataModelEntry<T, M>[] = [];
@@ -115,9 +115,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (resource !== undefined) {
       this.attach(
         resource as
-          | ODataEntitySetResource<T>
-          | ODataPropertyResource<T>
-          | ODataNavigationPropertyResource<T>
+        | ODataEntitySetResource<T>
+        | ODataPropertyResource<T>
+        | ODataNavigationPropertyResource<T>
       );
     }
 
@@ -373,10 +373,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource instanceof ODataEntitySetResource
         ? resource.fetch({ withCount, ...options })
         : resource.fetch({
-            responseType: 'entities',
-            withCount,
-            ...options,
-          });
+          responseType: 'entities',
+          withCount,
+          ...options,
+        });
 
     return this._request(obs$, { remove });
   }
@@ -792,7 +792,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  set(path: string | string[], value: any, {}: {} & ModelFieldOptions) {
+  set(path: string | string[], value: any, { }: {} & ModelFieldOptions) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -994,6 +994,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
           // Model Change?
           if (model.hasChanged()) toChange.push([model, position]);
         }
+        if (reset)
+          entry.state = ODataModelState.Unchanged;
         // Has Sort or Index Change?
         if (toSort.length > 0 || position !== this.models().indexOf(model)) {
           toSort.push([model, position]);
@@ -1008,7 +1010,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       modelMap.push((<any>model)[Model.meta.cid]);
     });
 
-    if (remove) {
+    if (remove || reset) {
       this._entries.forEach((entry, position) => {
         if (modelMap.indexOf((<any>entry.model)[Model.meta.cid]) === -1)
           toRemove.push([entry.model, position]);
