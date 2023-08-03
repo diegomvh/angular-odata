@@ -36,7 +36,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
     if (this.model !== undefined) {
       const options = this.model.hasOwnProperty('options')
         ? this.model.options
-        : { fields: {} };
+        : { fields: new Map<string, any>() };
       this.model.buildMeta<T>({ options, schema: this });
     }
     if (this.collection !== undefined) {

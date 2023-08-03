@@ -85,7 +85,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource,
       annots,
       model,
-      reset = false,
+      reset = true,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
       resource?: ODataResource<T>;
@@ -982,20 +982,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
             });
             model.assign(entity, { reset, silent });
           } else {
-            const helper = this._annotations.helper;
-            const annots = new ODataEntityAnnotations<T>(
-              helper,
-              helper.annotations(obj)
-            );
-            const entity = annots.attributes(obj, 'full');
-            model._annotations = annots;
-            model.assign(entity, { reset, silent });
+            model._annotations.update(obj);
+            model.assign(model.annots().attributes(obj, 'full'), { reset, silent });
           }
-          // Model Change?
-          if (model.hasChanged()) toChange.push([model, position]);
         }
-        if (reset)
-          entry.state = ODataModelState.Unchanged;
+        if (entry.state === ODataModelState.Removed) {
+          toAdd.push([model, position]);
+        } else if (entry.state === ODataModelState.Added) {
+          toRemove.push([model, position]);
+        } else if (model.hasChanged()) {
+            // Model Change?
+            toChange.push([model, position]);
+            if (reset)
+              entry.state = ODataModelState.Unchanged;
+        }
         // Has Sort or Index Change?
         if (toSort.length > 0 || position !== this.models().indexOf(model)) {
           toSort.push([model, position]);
@@ -1004,7 +1004,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         // Add
         model = isModel
           ? (obj as M)
-          : this.modelFactory(obj as Partial<T> | { [name: string]: any });
+          : this.modelFactory(obj as Partial<T> | { [name: string]: any }, {reset});
         toAdd.push([model, position]);
       }
       modelMap.push((<any>model)[Model.meta.cid]);

@@ -30,6 +30,7 @@ import {
   ODataModelOptions,
   ODataModelAttribute,
   ODataModelEventType,
+  ModelFieldOptions,
 } from './options';
 import { ParserOptions } from '../types';
 
@@ -62,7 +63,7 @@ export class ODataModel<T> {
             },
           });
         }, {});
-      options = { fields };
+      options = { fields: new Map<string, ModelFieldOptions>(Object.entries(fields)) };
     }
     this.meta = new ODataModelOptions<T>({ options, schema });
   }
@@ -87,7 +88,7 @@ export class ODataModel<T> {
     string,
     ODataModelAttribute<any>
   >();
-  _annotations: ODataEntityAnnotations<T> | null = null;
+  _annotations!: ODataEntityAnnotations<T>;
   _reset: boolean = false;
   _reparent: boolean = false;
   _silent: boolean = false;
@@ -101,7 +102,7 @@ export class ODataModel<T> {
       parent,
       resource,
       annots,
-      reset = false,
+      reset = true,
     }: {
       parent?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
@@ -220,10 +221,7 @@ export class ODataModel<T> {
   }
 
   annots() {
-    return (
-      this._annotations ??
-      new ODataEntityAnnotations<T>(ODataHelper[DEFAULT_VERSION])
-    );
+    return this._annotations;
   }
 
   key({

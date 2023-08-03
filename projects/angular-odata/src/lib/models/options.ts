@@ -179,7 +179,7 @@ export enum ODataModelState {
 
 export type ModelOptions = {
   cid?: string;
-  fields: { [name: string]: ModelFieldOptions };
+  fields: Map<string, ModelFieldOptions>;
 };
 
 export type ModelFieldOptions = {
@@ -199,7 +199,7 @@ export function Model({ cid = CID_FIELD_NAME }: { cid?: string } = {}) {
   return <T extends { new(...args: any[]): {} }>(constructor: T) => {
     const Klass = <any>constructor;
     if (!Klass.hasOwnProperty('options'))
-      Klass.options = { fields: {} } as ModelOptions;
+      Klass.options = { fields: new Map<string, ModelFieldOptions>() } as ModelOptions;
     Klass.options.cid = cid;
     return constructor;
   };
@@ -212,9 +212,9 @@ export function ModelField({
   return (target: any, key: string): void => {
     const Klass = target.constructor;
     if (!Klass.hasOwnProperty('options'))
-      Klass.options = { fields: {} } as ModelOptions;
+      Klass.options = { fields: new Map<string, ModelFieldOptions>() } as ModelOptions;
     options.field = name || key;
-    Klass.options.fields[key] = options;
+    Klass.options.fields.set(key, options);
   };
 }
 
@@ -697,8 +697,8 @@ export class ODataModelOptions<T> {
     this.base = schema.base;
     this.schema = schema;
     this.cid = options?.cid || CID_FIELD_NAME;
-    Object.entries(options.fields).forEach(([name, options]) =>
-      this.addField<any>(name, options)
+    options.fields.forEach((value, key) =>
+      this.addField<any>(key, value)
     );
   }
 
