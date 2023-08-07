@@ -102,7 +102,7 @@ export class ODataModel<T> {
       parent,
       resource,
       annots,
-      reset = true,
+      reset = false,
     }: {
       parent?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
