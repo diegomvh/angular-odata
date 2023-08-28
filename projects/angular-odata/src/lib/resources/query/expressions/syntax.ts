@@ -109,7 +109,7 @@ export function resolve(values: any, parser?: Parser<any>) {
 
 export function encode(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
-    return values.map((v: any) => !Types.isObject(v) ? parser?.encode(v) : v); 
+    return values.map((v: any) => (Types.isObject(v) || v === null) ? v: parser?.encode(v)); 
   }
   return values;
 }
