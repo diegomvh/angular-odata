@@ -1,3 +1,4 @@
+import { Parser } from '../../../types';
 import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
@@ -23,12 +24,14 @@ export class SearchTerm implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<any>
   }): string {
-    return `${render(this.value, { aliases, escape, prefix })}`;
+    return `${render(this.value, { aliases, escape, prefix, parser })}`;
   }
 
   clone() {
@@ -56,7 +59,7 @@ export class SearchExpression<T> extends Expression<T> {
     this._negated = negated || false;
   }
 
-  static search<T extends object>(
+  static search<T>(
     opts: (
       builder: SearchExpressionBuilder<T>,
       current?: SearchExpression<T>
@@ -124,13 +127,15 @@ export class SearchExpression<T> extends Expression<T> {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>
   } = {}): string {
     let content = this._children
-      .map((n) => n.render({ aliases, escape, prefix }))
+      .map((n) => n.render({ aliases, escape, prefix, parser }))
       .join(` ${this._connector} `);
     return content;
   }

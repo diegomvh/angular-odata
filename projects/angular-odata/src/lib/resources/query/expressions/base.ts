@@ -1,3 +1,4 @@
+import { Parser } from '../../../types';
 import type { QueryCustomType } from '../builder';
 import { Renderable } from './syntax';
 
@@ -19,10 +20,12 @@ export abstract class Expression<T> implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<T>;
   }): string;
 
   abstract clone(): Expression<T>;

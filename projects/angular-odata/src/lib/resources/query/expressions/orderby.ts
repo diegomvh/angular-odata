@@ -1,6 +1,7 @@
+import { Parser } from '../../../types';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { render, Field, Renderable } from './syntax';
+import { render, FieldFactory, Renderable } from './syntax';
 
 export class OrderByField implements Renderable {
   constructor(protected field: Renderable, protected order: 'asc' | 'desc') {}
@@ -20,12 +21,14 @@ export class OrderByField implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<any>
   }): string {
-    return `${render(this.field, { aliases, escape, prefix })} ${this.order}`;
+    return `${render(this.field, { aliases, escape, prefix, parser })} ${this.order}`;
   }
 
   clone() {
@@ -46,7 +49,7 @@ export class OrderByExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  static orderBy<T extends object>(
+  static orderBy<T>(
     opts: (
       builder: OrderByExpressionBuilder<T>,
       current?: OrderByExpression<T>
@@ -55,7 +58,7 @@ export class OrderByExpression<T> extends Expression<T> {
   ): OrderByExpression<T> {
     return opts(
       {
-        t: Field.factory<Readonly<Required<T>>>(),
+        t: FieldFactory<Readonly<Required<T>>>(),
         e: () => new OrderByExpression<T>(),
       },
       current
@@ -71,13 +74,15 @@ export class OrderByExpression<T> extends Expression<T> {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>
   } = {}): string {
     let content = this._children
-      .map((n) => n.render({ aliases, escape, prefix }))
+      .map((n) => n.render({ aliases, escape, prefix, parser }))
       .join(`,`);
     return content;
   }

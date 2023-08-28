@@ -1,4 +1,4 @@
-import { QueryOption } from '../../types';
+import { Parser, QueryOption } from '../../types';
 import { Objects, Types } from '../../utils';
 import {
   buildPathAndQuery,
@@ -48,7 +48,7 @@ export class ODataQueryOptions<T> {
   }
 
   // Params
-  pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
+  pathAndParams(escape: boolean = false, parser?: Parser<T>): [string, { [name: string]: any }] {
     let aliases: QueryCustomType[] = [];
     let options = [
       QueryOption.select,
@@ -76,10 +76,10 @@ export class ODataQueryOptions<T> {
           value = Types.isArray(value)
             ? value.map((v: Expression<T>) =>
                 Types.rawType(v).endsWith('Expression')
-                  ? raw(v.render({ aliases }))
+                  ? raw(v.render({ aliases, parser }))
                   : v
               )
-            : raw((value as Expression<T>).render({ aliases }));
+            : raw((value as Expression<T>).render({ aliases, parser }));
         }
         return Object.assign(acc, { [key]: value });
       }, {});

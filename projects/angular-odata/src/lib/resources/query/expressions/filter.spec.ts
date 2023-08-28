@@ -1,5 +1,5 @@
 import { FilterExpression } from './filter';
-import { Field } from './syntax';
+import { FieldFactory } from './syntax';
 
 describe('OData filter builder', () => {
   interface Pet {
@@ -299,7 +299,7 @@ describe('OData filter builder', () => {
         });
 
         it('length', () => {
-          const t = Field.factory<Person>();
+          const t = FieldFactory<Person>();
           const func = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(f.length(t.Car!.Year), 19)
           );

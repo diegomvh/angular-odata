@@ -1,6 +1,7 @@
+import { Parser } from '../../../types';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { Field, Renderable } from './syntax';
+import { FieldFactory, Renderable } from './syntax';
 
 export type SelectExpressionBuilder<T> = {
   t: Readonly<Required<T>>;
@@ -15,7 +16,7 @@ export class SelectExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  static select<T extends object>(
+  static select<T>(
     opts: (
       builder: SelectExpressionBuilder<T>,
       current?: SelectExpression<T>
@@ -24,7 +25,7 @@ export class SelectExpression<T> extends Expression<T> {
   ): SelectExpression<T> {
     return opts(
       {
-        t: Field.factory<Readonly<Required<T>>>(),
+        t: FieldFactory<Readonly<Required<T>>>(),
         e: () => new SelectExpression<T>(),
       },
       current
@@ -35,13 +36,15 @@ export class SelectExpression<T> extends Expression<T> {
     aliases,
     escape,
     prefix,
+    parser
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>;
   } = {}): string {
     return this._children
-      .map((n) => n.render({ aliases, escape, prefix }))
+      .map((n) => n.render({ aliases, escape, prefix, parser }))
       .join(',');
   }
 

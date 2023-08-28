@@ -1,4 +1,4 @@
-import { QueryOption } from '../../../types';
+import { Parser, QueryOption } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType, Unpacked } from '../builder';
 import { Expression } from './base';
@@ -6,7 +6,7 @@ import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
 import { SearchExpression, SearchExpressionBuilder } from './search';
 import { SelectExpression, SelectExpressionBuilder } from './select';
-import { Field, render, Renderable } from './syntax';
+import { FieldFactory, render, Renderable } from './syntax';
 
 export class ExpandField<T> implements Renderable {
   constructor(
@@ -28,10 +28,12 @@ export class ExpandField<T> implements Renderable {
     aliases,
     escape,
     prefix,
+    parser
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<T>
   }): string {
     const params: { [key: string]: string } = [
       QueryOption.select,
@@ -48,11 +50,11 @@ export class ExpandField<T> implements Renderable {
       .reduce((acc, key) => {
         let value: any = this.values[key];
         if (Types.rawType(value).endsWith('Expression')) {
-          value = (value as Expression<T>).render({ aliases, prefix, escape });
+          value = (value as Expression<T>).render({ aliases, prefix, escape, parser });
         }
         return Object.assign(acc, { [key]: value });
       }, {});
-    let expand = `${render(this.field, { aliases, escape, prefix })}`;
+    let expand = `${render(this.field, { aliases, escape, prefix, parser })}`;
     if (!Types.isEmpty(params)) {
       expand = `${expand}(${Object.keys(params)
         .map((key) => `$${key}=${params[key]}`)
@@ -70,7 +72,7 @@ export class ExpandField<T> implements Renderable {
     return new ExpandField<T>(typeof (this.field) === 'string' ? this.field : this.field.clone(), values);
   }
 
-  select<T extends object>(
+  select<T>(
     opts: (
       builder: SelectExpressionBuilder<T>,
       current?: SelectExpression<T>
@@ -82,7 +84,7 @@ export class ExpandField<T> implements Renderable {
     );
   }
 
-  expand<T extends object>(
+  expand<T>(
     opts: (
       builder: ExpandExpressionBuilder<T>,
       current?: ExpandExpression<T>
@@ -94,7 +96,7 @@ export class ExpandField<T> implements Renderable {
     );
   }
 
-  filter<T extends object>(
+  filter<T>(
     opts: (
       builder: FilterExpressionBuilder<T>,
       current?: FilterExpression<T>
@@ -106,7 +108,7 @@ export class ExpandField<T> implements Renderable {
     );
   }
 
-  search<T extends object>(
+  search<T>(
     opts: (builder: SearchExpressionBuilder<T>) => SearchExpression<T>
   ) {
     return this.option(
@@ -115,7 +117,7 @@ export class ExpandField<T> implements Renderable {
     );
   }
 
-  orderBy<T extends object>(
+  orderBy<T>(
     opts: (
       builder: OrderByExpressionBuilder<T>,
       current?: OrderByExpression<T>
@@ -163,7 +165,7 @@ export class ExpandExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  static expand<T extends object>(
+  static expand<T>(
     opts: (
       builder: ExpandExpressionBuilder<T>,
       current?: ExpandExpression<T>
@@ -172,7 +174,7 @@ export class ExpandExpression<T> extends Expression<T> {
   ): ExpandExpression<T> {
     return opts(
       {
-        t: Field.factory<Readonly<Required<T>>>(),
+        t: FieldFactory<Readonly<Required<T>>>(),
         e: () => new ExpandExpression<T>(),
       },
       current
@@ -183,13 +185,15 @@ export class ExpandExpression<T> extends Expression<T> {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>
   } = {}): string {
     return this._children
-      .map((n) => n.render({ aliases, escape, prefix }))
+      .map((n) => n.render({ aliases, escape, prefix, parser }))
       .join(',');
   }
 
@@ -204,7 +208,7 @@ export class ExpandExpression<T> extends Expression<T> {
     return this;
   }
 
-  field<F>(field: F, opts?: (e: ExpandField<F>) => void): ExpandExpression<T> {
+  field<F>(field: F, opts?: (e: ExpandField<Unpacked<F>>) => void): ExpandExpression<T> {
     let node = new ExpandField<Unpacked<F>>(field);
     if (opts !== undefined) opts(node);
     return this._add(node);

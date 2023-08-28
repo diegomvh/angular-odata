@@ -1,3 +1,4 @@
+import { Parser } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { normalizeValue } from '../builder';
@@ -9,47 +10,43 @@ export interface Renderable {
     aliases,
     escape,
     prefix,
+    parser
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<any>
   }): string;
   toString(): string;
   toJSON(): any;
   clone(): any;
 }
 
-export class Field<T extends object> implements ProxyHandler<T> {
-  constructor(public name: string = '') { }
+export const FieldFactory = <T extends object>(names: string[] = []): any =>
+  new Proxy({ _names: names } as T, {
+    get(target: T, key: string | symbol) {
+      let names = (target as any)['_names'];
+      if (key === 'render') {
+        return ({ prefix }: { prefix?: string }) =>
+          prefix ? `${prefix}/${names.join('/')}` : names.join('/');
+      } else if (key === 'clone') {
+        return () => FieldFactory([...names]);
+      } else if (key === 'isField') {
+        return () => true;
+      } else if (key === 'toJSON') {
+        return () => ({
+          $type: 'Field',
+          names: names,
+        });
+      } else {
+        return FieldFactory([...names, key]);
+      }
+    },
 
-  static factory<T extends object>(name: string = '') {
-    return new Proxy({ _name: name } as T, new Field<T>());
-  }
-
-  get(target: T, key: string | symbol): any {
-    let name = (target as any)['_name'];
-    if (key === 'render') {
-      return ({ prefix }: { prefix?: string }) =>
-        prefix ? `${prefix}/${name}` : name;
-    } else if (key === 'clone') {
-      return () => Field.factory(name);
-    } else if (key === Symbol.toStringTag) {
-      return () => 'Field';
-    } else if (key === 'toJSON') {
-      return () => ({
-        $type: Types.rawType(this),
-        name: name,
-      });
-    } else {
-      name = name ? `${name}/${key as string}` : key;
-      return new Proxy({ _name: name } as any, this);
+    has(target: T, key: string): any {
+      return ['toJSON', 'isField', 'clone', 'render'].includes(key) || key in target;
     }
-  }
-
-  has(target: T, key: string): any {
-    return ['toJSON', 'clone', 'render'].includes(key) || key in target;
-  }
-}
+  })
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
@@ -71,26 +68,28 @@ export function render(
     normalize,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     normalize?: boolean;
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<any>;
   } = {}
 ): string | number | boolean | null {
-  if (typeof value === 'function') {
-    return render(value(syntax), { aliases, normalize, prefix });
+  if (Types.isFunction(value)) {
+    return render(value(syntax), { aliases, normalize, prefix, parser });
   }
   if (
-    typeof value === 'object' &&
-    value !== null &&
-    value.render !== undefined
+    Types.isObject(value) &&
+    'render' in value
   ) {
-    return render(value.render({ aliases, escape, prefix }), {
+    return render(value.render({ aliases, escape, prefix, parser }), {
       aliases,
       normalize,
       escape,
       prefix,
+      parser
     });
   }
   return normalize ? normalizeValue(value, { aliases, escape }) : value;
@@ -112,7 +111,7 @@ export class Function<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       name: this.name,
-      values: this.values,
+      values: this.values.map((v) => Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v),
       normalize: this.normalize,
     };
   }
@@ -121,18 +120,22 @@ export class Function<T> implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<T>
   }): string {
-    let [field, ...values] = this.values;
+    //let fields = this.values.filter(v => typeof v === 'object' && v !== null && v.isField !== undefined && v.isField()); 
 
-    field = render(field, { aliases, escape, prefix, normalize: this.normalize === 'all' || this.normalize === 'left' });
+    let [left, ...values] = this.values;
+
+    left = render(left, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'left' });
     const params = [
-      field,
+      left,
       ...values.map((v) =>
-        render(v, { aliases, escape, prefix, normalize: this.normalize === 'all' || this.normalize === 'right' })
+        render(v, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'right' })
       ),
     ];
     return `${this.name}(${params.join(', ')})`;
@@ -306,7 +309,7 @@ export class Operator<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       op: this.op,
-      values: this.values,
+      values: this.values.map((v) => Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v),
       normalize: this.normalize,
     };
   }
@@ -315,14 +318,16 @@ export class Operator<T> implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<T>
   }): string {
     let [left, right] = this.values;
 
-    left = render(left, { aliases, escape, prefix, normalize: this.normalize === 'all' || this.normalize === 'left' });
+    left = render(left, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'left' });
     if (right !== undefined) {
       right = Array.isArray(right)
         ? `(${right
@@ -331,6 +336,7 @@ export class Operator<T> implements Renderable {
               aliases,
               escape,
               prefix,
+              parser,
               normalize: this.normalize === 'all' || this.normalize === 'right',
             })
           )
@@ -339,6 +345,7 @@ export class Operator<T> implements Renderable {
           aliases,
           escape,
           prefix,
+          parser,
           normalize: this.normalize === 'all' || this.normalize === 'right',
         });
       return `${left} ${this.op} ${right}`;
@@ -432,12 +439,14 @@ export class Grouping<T> implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<T>;
   }): string {
-    return `(${render(this.group, { aliases, escape, prefix })})`;
+    return `(${render(this.group, { aliases, escape, prefix, parser })})`;
   }
 
   clone() {
@@ -460,7 +469,7 @@ export class Lambda<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       op: this.op,
-      values: this.values,
+      values: this.values.map((v) => Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v),
       alias: this.alias,
     };
   }
@@ -469,20 +478,23 @@ export class Lambda<T> implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<T>
   }): string {
     let [left, right] = this.values;
 
-    left = render(left, { aliases, escape, prefix });
+    left = render(left, { aliases, escape, prefix, parser });
     if (right) {
       let alias = this.alias || left.split('/').pop().toLowerCase()[0];
       return `${left}/${this.op}(${alias}:${render(right, {
         aliases,
         escape,
         prefix: alias,
+        parser,
       })})`;
     } else {
       return `${left}/${this.op}()`;

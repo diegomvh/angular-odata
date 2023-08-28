@@ -1,8 +1,9 @@
+import { Parser } from '../../../types';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { CountExpression, CountField } from './count';
 import {
-  Field,
+  FieldFactory,
   functions,
   Grouping,
   Normalize,
@@ -38,7 +39,7 @@ export class FilterExpression<F> extends Expression<F> {
     this._negated = negated || false;
   }
 
-  static filter<T extends object>(
+  static filter<T>(
     opts: (
       builder: FilterExpressionBuilder<T>,
       current?: FilterExpression<T>
@@ -47,9 +48,9 @@ export class FilterExpression<F> extends Expression<F> {
   ): FilterExpression<T> {
     return opts(
       {
-        t: Field.factory<Readonly<Required<T>>>(),
         e: (connector: FilterConnector = 'and') =>
           new FilterExpression<T>({ connector }),
+        t: FieldFactory<Readonly<Required<T>>>(),
         o: operators as ODataOperators<T>,
         f: functions as ODataFunctions<T>,
       },
@@ -77,13 +78,15 @@ export class FilterExpression<F> extends Expression<F> {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser<any>
   } = {}): string {
     let content = this._children
-      .map((n) => n.render({ aliases, escape, prefix }))
+      .map((n) => n.render({ aliases, escape, prefix, parser }))
       .join(` ${this._connector} `);
     if (this._negated) {
       content = `not (${content})`;
@@ -209,7 +212,7 @@ export class FilterExpression<F> extends Expression<F> {
     return this._add(functions.endsWith(left, right, normalize));
   }
 
-  any<N extends object>(
+  any<N>(
     left: N[],
     opts?: (e: {
       e: (connector?: FilterConnector) => FilterExpression<N>;
@@ -220,7 +223,7 @@ export class FilterExpression<F> extends Expression<F> {
     let exp = undefined;
     if (opts !== undefined) {
       exp = opts({
-        t: Field.factory<Readonly<Required<N>>>(),
+        t: FieldFactory<Readonly<Required<N>>>(),
         e: (connector: FilterConnector = 'and') =>
           new FilterExpression<N>({ connector }),
       }) as FilterExpression<N>;
@@ -228,7 +231,7 @@ export class FilterExpression<F> extends Expression<F> {
     return this._add(syntax.any(left, exp, alias));
   }
 
-  all<N extends object>(
+  all<N>(
     left: N[],
     opts: (e: {
       t: N;
@@ -237,14 +240,14 @@ export class FilterExpression<F> extends Expression<F> {
     alias?: string
   ): FilterExpression<F> {
     const exp = opts({
-      t: Field.factory<Readonly<Required<N>>>(),
+      t: FieldFactory<Readonly<Required<N>>>(),
       e: (connector: FilterConnector = 'and') =>
         new FilterExpression<N>({ connector }),
     }) as FilterExpression<N>;
     return this._add(syntax.all(left, exp, alias));
   }
 
-  count<N extends object>(
+  count<N>(
     left: N[],
     opts?: (e: { t: N; f: CountField<N> }) => CountExpression<N>
   ): FilterExpression<F> {

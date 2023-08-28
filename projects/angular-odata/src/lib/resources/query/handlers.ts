@@ -1,3 +1,4 @@
+import { ODataStructuredType } from '../../schema';
 import { QueryOption } from '../../types';
 import { Objects, Types } from '../../utils';
 import {

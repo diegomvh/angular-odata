@@ -14,6 +14,10 @@ export const Types = {
     return Object.prototype.toString.call(value).slice(8, -1);
   },
 
+  isObject(value: any) {
+    return typeof value === 'object' && value !== null; 
+  },
+
   isPlainObject(value: any) {
     if (this.rawType(value) !== 'Object') {
       return false;
