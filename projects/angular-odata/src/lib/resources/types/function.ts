@@ -4,7 +4,7 @@ import { ODataApi } from '../../api';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
 import { ODataCallable } from '../../schema/callable';
-import { PathSegment } from '../../types';
+import { Parser, PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -79,9 +79,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       : undefined;
   }
 
-  override pathAndParams(
-    escape: boolean = false
-  ): [string, { [name: string]: any }] {
+  override pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
     let [path, params] = super.pathAndParams(escape);
 
     if (

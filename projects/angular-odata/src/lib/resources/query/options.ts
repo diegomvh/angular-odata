@@ -48,7 +48,7 @@ export class ODataQueryOptions<T> {
   }
 
   // Params
-  pathAndParams(escape: boolean = false, parser?: Parser<T>): [string, { [name: string]: any }] {
+  pathAndParams({escape, parser}: {escape?: boolean, parser?: Parser<T>} = {}): [string, { [name: string]: any }] {
     let aliases: QueryCustomType[] = [];
     let options = [
       QueryOption.select,
@@ -76,18 +76,18 @@ export class ODataQueryOptions<T> {
           value = Types.isArray(value)
             ? value.map((v: Expression<T>) =>
                 Types.rawType(v).endsWith('Expression')
-                  ? raw(v.render({ aliases, parser }))
+                  ? raw(v.render({ aliases, escape, parser }))
                   : v
               )
-            : raw((value as Expression<T>).render({ aliases, parser }));
+            : raw((value as Expression<T>).render({ aliases, escape, parser }));
         }
         return Object.assign(acc, { [key]: value });
       }, {});
     return buildPathAndQuery<any>({ ...options, aliases, escape });
   }
 
-  toString(): string {
-    const [path, params] = this.pathAndParams();
+  toString({escape, parser}: {escape?: boolean, parser?: Parser<T>} = {}): string {
+    const [path, params] = this.pathAndParams({escape, parser});
     return (
       path +
       Object.entries(params)

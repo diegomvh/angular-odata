@@ -38,13 +38,15 @@ export const FieldFactory = <T extends object>(names: string[] = []): any =>
           $type: 'Field',
           names: names,
         });
+      } else if (key === 'resolve') {
+        return (parser: any) => names.reduce((acc: any, name: string) => acc.field(name), parser);
       } else {
         return FieldFactory([...names, key]);
       }
     },
 
     has(target: T, key: string): any {
-      return ['toJSON', 'isField', 'clone', 'render'].includes(key) || key in target;
+      return ['toJSON', 'isField', 'clone', 'render', 'resolve'].includes(key) || key in target;
     }
   })
 
@@ -95,6 +97,23 @@ export function render(
   return normalize ? normalizeValue(value, { aliases, escape }) : value;
 }
 
+export function resolve(values: any, parser?: Parser<any>) {
+  if (parser !== undefined) {
+    let fields = values.filter((v: any) => Types.isObject(v) && 'isField' in v && v.isField()); 
+    if (fields.length === 1 && Types.isObject(parser) && 'field' in parser) {
+      return fields[0].resolve(parser);
+    }
+  }
+  return parser;
+}
+
+export function encode(values: any, parser?: Parser<any>) {
+  if (parser !== undefined) {
+    return values.map((v: any) => !Types.isObject(v) ? parser?.encode(v) : v); 
+  }
+  return values;
+}
+
 export class Function<T> implements Renderable {
   constructor(
     protected name: string,
@@ -127,14 +146,13 @@ export class Function<T> implements Renderable {
     prefix?: string;
     parser?: Parser<T>
   }): string {
-    //let fields = this.values.filter(v => typeof v === 'object' && v !== null && v.isField !== undefined && v.isField()); 
-
-    let [left, ...values] = this.values;
+    parser = resolve(this.values, parser);
+    let [left, ...values] = encode(this.values, parser);
 
     left = render(left, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'left' });
     const params = [
       left,
-      ...values.map((v) =>
+      ...values.map((v: any) =>
         render(v, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'right' })
       ),
     ];
@@ -325,7 +343,8 @@ export class Operator<T> implements Renderable {
     prefix?: string;
     parser?: Parser<T>
   }): string {
-    let [left, right] = this.values;
+    parser = resolve(this.values, parser);
+    let [left, right] = encode(this.values, parser);
 
     left = render(left, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'left' });
     if (right !== undefined) {
@@ -485,7 +504,8 @@ export class Lambda<T> implements Renderable {
     prefix?: string;
     parser?: Parser<T>
   }): string {
-    let [left, right] = this.values;
+    parser = resolve(this.values, parser);
+    let [left, right] = encode(this.values, parser);
 
     left = render(left, { aliases, escape, prefix, parser });
     if (right) {

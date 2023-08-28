@@ -1,5 +1,5 @@
 import { PATH_SEPARATOR } from '../../constants';
-import { PathSegment } from '../../types';
+import { Parser, PathSegment } from '../../types';
 import { Objects } from '../../utils';
 import { buildPathAndQuery, raw } from '../query';
 import { EntityKey } from '../resource';
@@ -15,7 +15,8 @@ export type ODataSegment = {
 
 function pathSegmentsBuilder(
   segment: ODataSegment,
-  escape: boolean = false
+  escape: boolean = false,
+  parser?: Parser<any>
 ): [string, { [name: string]: any }] {
   if (segment.name === PathSegment.function) {
     let [path, params] = segment.parameters
@@ -51,10 +52,10 @@ export class ODataPathSegments {
     this._segments = segments || [];
   }
 
-  pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
+  pathAndParams({escape, parser}: {escape?: boolean, parser?: Parser<any>} = {}): [string, { [name: string]: any }] {
     const result = this._segments.reduce(
       (acc, segment) => {
-        const [path, params] = pathSegmentsBuilder(segment, escape);
+        const [path, params] = pathSegmentsBuilder(segment, escape, parser);
         acc.paths.push(path);
         acc.params = Object.assign(acc.params, params);
         return acc;
@@ -85,8 +86,8 @@ export class ODataPathSegments {
     return segments.map((s) => s.key() as EntityKey<any> | undefined);
   }
 
-  toString(): string {
-    const [path, params] = this.pathAndParams();
+  toString({escape, parser}: {escape?: boolean, parser?: Parser<any>} = {}): string {
+    const [path, params] = this.pathAndParams({escape, parser});
     return (
       path +
       Object.entries(params)
