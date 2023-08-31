@@ -6,7 +6,7 @@ import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
 import { SearchExpression, SearchExpressionBuilder } from './search';
 import { SelectExpression, SelectExpressionBuilder } from './select';
-import { FieldFactory, render, Renderable } from './syntax';
+import { FieldFactory, render, Renderable, resolve } from './syntax';
 
 export class ExpandField<T> implements Renderable {
   constructor(
@@ -35,6 +35,7 @@ export class ExpandField<T> implements Renderable {
     prefix?: string;
     parser?: Parser<T>
   }): string {
+    parser = resolve([this.field], parser);
     const params: { [key: string]: string } = [
       QueryOption.select,
       QueryOption.expand,
