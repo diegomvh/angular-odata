@@ -119,13 +119,13 @@ export class ODataModelEvent<T> {
 
   get path() {
     return this.chain
-      .map(([, field], index) =>
-        typeof field === 'number'
-          ? `[${field}]`
-          : field instanceof ODataModelField
+      .map(([, attr], index) =>
+        typeof attr === 'number'
+          ? `[${attr}]`
+          : attr instanceof ODataModelAttribute
             ? index === 0
-              ? field.name
-              : `.${field.name}`
+              ? attr.name
+              : `.${attr.name}`
             : ''
       )
       .join('');
