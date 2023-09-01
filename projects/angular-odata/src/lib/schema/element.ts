@@ -9,7 +9,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
 
   constructor(
     config: { annotations?: AnnotationConfig[]; name: string },
-    schema: ODataSchema
+    schema: ODataSchema,
   ) {
     super(config);
     this.schema = schema;

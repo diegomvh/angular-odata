@@ -29,7 +29,7 @@ export function createSyncLoader(passedConfig: PassedInitialConfig) {
 })
 export class ODataModule {
   static forRoot(
-    passedConfig: PassedInitialConfig
+    passedConfig: PassedInitialConfig,
   ): ModuleWithProviders<ODataModule> {
     return {
       ngModule: ODataModule,

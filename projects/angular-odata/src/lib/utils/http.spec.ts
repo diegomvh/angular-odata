@@ -10,7 +10,7 @@ describe('Http', () => {
       {
         Authorization: 'Bearer token',
         'Content-Type': '*/*',
-      }
+      },
     );
     expect(headers.get('Authorization')).toEqual('Bearer token');
     expect(headers.getAll('Content-Type')).toEqual(['application/json', '*/*']);
@@ -30,10 +30,10 @@ describe('Http', () => {
       {
         params: ['value5', 'value6'],
         param4: 'value4',
-      }
+      },
     );
     expect(params.toString()).toEqual(
-      'param1=value1&param2=value2&params=value1&params=value2&params=value3&params=value4&params=value5&params=value6&param3=value3&param4=value4'
+      'param1=value1&param2=value2&params=value1&params=value2&params=value3&params=value4&params=value5&params=value6&param3=value3&param4=value4',
     );
   });
 
@@ -51,11 +51,11 @@ describe('Http', () => {
       {
         params: ['value5', 'value6'],
         param4: 'value4',
-      }
+      },
     );
     let [param1, param2] = Http.splitHttpParams(params, ['param1', 'param2']);
     expect(param1.toString()).toEqual(
-      'params=value1&params=value2&params=value3&params=value4&params=value5&params=value6&param3=value3&param4=value4'
+      'params=value1&params=value2&params=value3&params=value4&params=value5&params=value6&param3=value3&param4=value4',
     );
     expect(param2.toString()).toEqual('param1=value1&param2=value2');
   });

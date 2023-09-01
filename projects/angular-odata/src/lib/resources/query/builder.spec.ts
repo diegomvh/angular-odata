@@ -1422,7 +1422,7 @@ describe('function', () => {
   it('should support a function on a collection with an array/collection parameter of a complex type', () => {
     const someCollection = alias(
       raw(JSON.stringify([{ Name: 'Sean' }, { Name: 'Jason' }])),
-      'SomeCollection'
+      'SomeCollection',
     );
     const func = {
       Test: { SomeCollection: someCollection },

@@ -44,7 +44,10 @@ enum FieldType {
 }
 
 class Field {
-  constructor(public name: string, public fieldType: FieldType) {}
+  constructor(
+    public name: string,
+    public fieldType: FieldType,
+  ) {}
 }
 
 export class ODataMetadata {
@@ -138,7 +141,7 @@ export class ODataMetadata {
 
       this.version = this.getFieldValueByAttribute(
         new Field(ODataMetadata.ATTRIBUTE_VERSION, FieldType.ATTRIBUTE),
-        document.documentElement.attributes
+        document.documentElement.attributes,
       );
 
       this.references = this.getObjects(
@@ -149,12 +152,12 @@ export class ODataMetadata {
           new Field(ODataMetadata.TAG_INCLUDE, FieldType.TAG),
           new Field(ODataMetadata.TAG_INCLUDE_ANNOTATIONS, FieldType.TAG),
           new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
-        ]
+        ],
       );
 
       const dataServices: Element =
         document.documentElement.getElementsByTagName(
-          ODataMetadata.TAG_DATA_SERVICES
+          ODataMetadata.TAG_DATA_SERVICES,
         )[0];
       this.schemas = this.getObjects(dataServices, ODataMetadata.TAG_SCHEMA, [
         new Field(ODataMetadata.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
@@ -194,7 +197,7 @@ export class ODataMetadata {
   protected getObjects(
     parentElement: Element,
     tag: string,
-    fieldNames: Field[]
+    fieldNames: Field[],
   ): any[] {
     let objects: any[] = [];
 
@@ -210,7 +213,7 @@ export class ODataMetadata {
       const fieldValues: any[] = this.getFieldValues(
         fieldNames,
         attributes,
-        element
+        element,
       );
       switch (tag) {
         case ODataMetadata.TAG_REFERENCE:
@@ -219,8 +222,8 @@ export class ODataMetadata {
               fieldValues[0],
               fieldValues[1],
               fieldValues[2],
-              fieldValues[3]
-            )
+              fieldValues[3],
+            ),
           );
           break;
         case ODataMetadata.TAG_INCLUDE:
@@ -231,8 +234,8 @@ export class ODataMetadata {
             new CsdlIncludeAnnotations(
               fieldValues[0],
               fieldValues[1],
-              fieldValues[2]
-            )
+              fieldValues[2],
+            ),
           );
           break;
         case ODataMetadata.TAG_TERM:
@@ -247,13 +250,13 @@ export class ODataMetadata {
               fieldValues[6],
               fieldValues[7],
               fieldValues[8],
-              fieldValues[9]
-            )
+              fieldValues[9],
+            ),
           );
           break;
         case ODataMetadata.TAG_ANNOTATIONS:
           objects.push(
-            new CsdlAnnotations(fieldValues[0], fieldValues[1], fieldValues[2])
+            new CsdlAnnotations(fieldValues[0], fieldValues[1], fieldValues[2]),
           );
           break;
         case ODataMetadata.TAG_ANNOTATION:
@@ -273,8 +276,8 @@ export class ODataMetadata {
               fieldValues[8],
               fieldValues[9],
               fieldValues[10],
-              fieldValues[11]
-            )
+              fieldValues[11],
+            ),
           );
           break;
         case ODataMetadata.TAG_ENUM_TYPE:
@@ -283,8 +286,8 @@ export class ODataMetadata {
               fieldValues[0],
               fieldValues[1],
               fieldValues[2],
-              fieldValues[3]
-            )
+              fieldValues[3],
+            ),
           );
           break;
         case ODataMetadata.TAG_COMPLEX_TYPE:
@@ -295,8 +298,8 @@ export class ODataMetadata {
               fieldValues[2],
               fieldValues[3],
               fieldValues[4],
-              fieldValues[5]
-            )
+              fieldValues[5],
+            ),
           );
           break;
         case ODataMetadata.TAG_ENTITY_TYPE:
@@ -309,8 +312,8 @@ export class ODataMetadata {
               fieldValues[4],
               fieldValues[5],
               fieldValues[6],
-              fieldValues[7]
-            )
+              fieldValues[7],
+            ),
           );
           break;
         case ODataMetadata.TAG_FUNCTION:
@@ -321,8 +324,8 @@ export class ODataMetadata {
               fieldValues[2],
               fieldValues[3],
               fieldValues[4],
-              fieldValues[5]
-            )
+              fieldValues[5],
+            ),
           );
           break;
         case ODataMetadata.TAG_MEMBER:
@@ -339,8 +342,8 @@ export class ODataMetadata {
               fieldValues[5],
               fieldValues[6],
               fieldValues[7],
-              fieldValues[8]
-            )
+              fieldValues[8],
+            ),
           );
           break;
         case ODataMetadata.TAG_PROPERTY_REF:
@@ -355,13 +358,13 @@ export class ODataMetadata {
               fieldValues[3],
               fieldValues[4],
               fieldValues[5],
-              fieldValues[6]
-            )
+              fieldValues[6],
+            ),
           );
           break;
         case ODataMetadata.TAG_REFERENTIAL_CONSTRAINT:
           objects.push(
-            new CsdlReferentialConstraint(fieldValues[0], fieldValues[1])
+            new CsdlReferentialConstraint(fieldValues[0], fieldValues[1]),
           );
           break;
         case ODataMetadata.TAG_PARAMETER:
@@ -373,8 +376,8 @@ export class ODataMetadata {
               fieldValues[3],
               fieldValues[4],
               fieldValues[5],
-              fieldValues[6]
-            )
+              fieldValues[6],
+            ),
           );
           break;
         case ODataMetadata.TAG_ACTION:
@@ -384,8 +387,8 @@ export class ODataMetadata {
               fieldValues[1],
               fieldValues[2],
               fieldValues[3],
-              fieldValues[4]
-            )
+              fieldValues[4],
+            ),
           );
           break;
         case ODataMetadata.TAG_ENTITY_SET:
@@ -394,13 +397,13 @@ export class ODataMetadata {
               fieldValues[0],
               fieldValues[1],
               fieldValues[2],
-              fieldValues[3]
-            )
+              fieldValues[3],
+            ),
           );
           break;
         case ODataMetadata.TAG_SINGLETON:
           objects.push(
-            new CsdlSingleton(fieldValues[0], fieldValues[1], fieldValues[2])
+            new CsdlSingleton(fieldValues[0], fieldValues[1], fieldValues[2]),
           );
           break;
         case ODataMetadata.TAG_FUNCTION_IMPORT:
@@ -409,18 +412,22 @@ export class ODataMetadata {
               fieldValues[0],
               fieldValues[1],
               fieldValues[2],
-              fieldValues[3]
-            )
+              fieldValues[3],
+            ),
           );
           break;
         case ODataMetadata.TAG_ACTION_IMPORT:
           objects.push(
-            new CsdlActionImport(fieldValues[0], fieldValues[1], fieldValues[2])
+            new CsdlActionImport(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+            ),
           );
           break;
         case ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING:
           objects.push(
-            new CsdlNavigationPropertyBinding(fieldValues[0], fieldValues[1])
+            new CsdlNavigationPropertyBinding(fieldValues[0], fieldValues[1]),
           );
           break;
         case ODataMetadata.TAG_TYPE_DEFINITION:
@@ -433,8 +440,8 @@ export class ODataMetadata {
               fieldValues[4],
               fieldValues[5],
               fieldValues[6],
-              fieldValues[7]
-            )
+              fieldValues[7],
+            ),
           );
           break;
         default:
@@ -448,7 +455,7 @@ export class ODataMetadata {
   protected getObject(
     parentElement: Element,
     tag: string,
-    fieldNames: Field[]
+    fieldNames: Field[],
   ): any {
     let object: any;
 
@@ -468,7 +475,7 @@ export class ODataMetadata {
       const fieldValues: any[] = this.getFieldValues(
         fieldNames,
         attributes,
-        element
+        element,
       );
       switch (tag) {
         case ODataMetadata.TAG_KEY:
@@ -481,7 +488,7 @@ export class ODataMetadata {
             fieldValues[2],
             fieldValues[3],
             fieldValues[4],
-            fieldValues[5]
+            fieldValues[5],
           );
           break;
         case ODataMetadata.TAG_ENTITY_CONTAINER:
@@ -491,7 +498,7 @@ export class ODataMetadata {
             fieldValues[2],
             fieldValues[3],
             fieldValues[4],
-            fieldValues[5]
+            fieldValues[5],
           );
           break;
         case ODataMetadata.TAG_ON_DELETE:
@@ -508,7 +515,7 @@ export class ODataMetadata {
   protected getFieldValues(
     fields: Field[],
     attributes: NamedNodeMap,
-    element: Element
+    element: Element,
   ): any[] {
     const fieldValues: any[] = [];
 
@@ -527,7 +534,7 @@ export class ODataMetadata {
 
   protected getFieldValueByAttribute(
     field: Field,
-    attributes: NamedNodeMap
+    attributes: NamedNodeMap,
   ): any {
     switch (field.name) {
       case ODataMetadata.ATTRIBUTE_VERSION:
@@ -569,14 +576,14 @@ export class ODataMetadata {
       case ODataMetadata.ATTRIBUTE_ABSTRACT:
       case ODataMetadata.ATTRIBUTE_IS_FLAGS:
         return this.propertyValueToBoolean(
-          this.getAttributeValue(attributes, field.name)
+          this.getAttributeValue(attributes, field.name),
         );
       case ODataMetadata.ATTRIBUTE_VALUE:
       case ODataMetadata.ATTRIBUTE_MAX_LENGTH:
       case ODataMetadata.ATTRIBUTE_PRECISION:
       case ODataMetadata.ATTRIBUTE_SCALE:
         return this.propertyValueToNumber(
-          this.getAttributeValue(attributes, field.name)
+          this.getAttributeValue(attributes, field.name),
         );
       default:
         throw new Error('Unknwon attribute:' + field.name);
@@ -594,12 +601,12 @@ export class ODataMetadata {
         return this.getObjects(element, field.name, [
           new Field(
             ODataMetadata.ATTRIBUTE_TERM_NAMESPACE,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
           new Field(ODataMetadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.ATTRIBUTE_TARGET_NAMESPACE,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
         ]);
       case ODataMetadata.TAG_TERM:
@@ -632,7 +639,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.TAG_MEMBER, FieldType.TAG),
           new Field(
             ODataMetadata.ATTRIBUTE_UNDERLYING_TYPE,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
           new Field(ODataMetadata.ATTRIBUTE_IS_FLAGS, FieldType.ATTRIBUTE),
         ]);
@@ -663,7 +670,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.ATTRIBUTE_ENTITY_SET_PATH,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
           new Field(ODataMetadata.ATTRIBUTE_IS_COMPOSABLE, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.TAG_PARAMETER, FieldType.TAG),
@@ -702,7 +709,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_PARTNER, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.ATTRIBUTE_CONTAINS_TARGET,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
           new Field(ODataMetadata.TAG_REFERENTIAL_CONSTRAINT, FieldType.TAG),
           new Field(ODataMetadata.TAG_ON_DELETE, FieldType.TAG),
@@ -712,7 +719,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_PROPERTY, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.ATTRIBUTE_REFERENCED_PROPERTY,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
         ]);
       case ODataMetadata.TAG_ON_DELETE:
@@ -745,7 +752,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.ATTRIBUTE_ENTITY_SET_PATH,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
           new Field(ODataMetadata.TAG_PARAMETER, FieldType.TAG),
         ]);
@@ -764,11 +771,11 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_ENTITY_TYPE, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING,
-            FieldType.TAG
+            FieldType.TAG,
           ),
           new Field(
             ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
         ]);
       case ODataMetadata.TAG_SINGLETON:
@@ -777,7 +784,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING,
-            FieldType.TAG
+            FieldType.TAG,
           ),
         ]);
       case ODataMetadata.TAG_FUNCTION_IMPORT:
@@ -787,7 +794,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
         ]);
       case ODataMetadata.TAG_ACTION_IMPORT:
@@ -806,7 +813,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(
             ODataMetadata.ATTRIBUTE_UNDERLYING_TYPE,
-            FieldType.ATTRIBUTE
+            FieldType.ATTRIBUTE,
           ),
           new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),

@@ -18,7 +18,7 @@ export class ODataMediaResource extends ODataResource<any> {
     }: {
       segments: ODataPathSegments;
       query?: ODataQueryOptions<V>;
-    }
+    },
   ) {
     segments.add(PathSegment.value, $VALUE);
     return new ODataMediaResource(api, { segments, query });
@@ -31,14 +31,14 @@ export class ODataMediaResource extends ODataResource<any> {
 
   //#region Requests
   protected override get(
-    options: { responseType: 'arraybuffer' | 'blob' } & ODataOptions
+    options: { responseType: 'arraybuffer' | 'blob' } & ODataOptions,
   ): Observable<any> {
     return super.get(options);
   }
 
   protected override put(
     data: ArrayBuffer | Blob,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     return super.put(data, options);
   }
@@ -46,7 +46,7 @@ export class ODataMediaResource extends ODataResource<any> {
 
   //#region Shortcuts
   fetch(
-    options: { responseType: 'arraybuffer' } & ODataOptions
+    options: { responseType: 'arraybuffer' } & ODataOptions,
   ): Observable<ArrayBuffer>;
   fetch(options: { responseType: 'blob' } & ODataOptions): Observable<Blob>;
   fetch(options: { responseType: any } & ODataOptions): Observable<any> {
@@ -63,7 +63,7 @@ export class ODataMediaResource extends ODataResource<any> {
 
   upload(
     data: ArrayBuffer | Blob,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     return this.put(data, options);
   }
@@ -71,7 +71,7 @@ export class ODataMediaResource extends ODataResource<any> {
   uploadArrayBuffer(
     data: ArrayBuffer,
     contentType: string,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     options.headers = Http.mergeHttpHeaders(options.headers || {}, {
       'Content-Type': contentType,

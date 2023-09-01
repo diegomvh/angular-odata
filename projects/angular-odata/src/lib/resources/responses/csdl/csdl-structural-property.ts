@@ -2,7 +2,7 @@ export abstract class CsdlStructuralProperty {
   constructor(
     public name: string,
     public type: string,
-    public nullable?: boolean
+    public nullable?: boolean,
   ) {}
 }
 
@@ -16,7 +16,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
     public scale?: number,
     public unicode?: boolean,
     public srid?: string,
-    public defaultValue?: string
+    public defaultValue?: string,
   ) {
     super(name, type, nullable);
   }
@@ -30,14 +30,17 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     public partner?: string,
     public containsTarget?: boolean,
     public referentialConstraints?: CsdlReferentialConstraint[],
-    public onDelete?: CsdlOnDelete
+    public onDelete?: CsdlOnDelete,
   ) {
     super(name, type, nullable);
   }
 }
 
 export class CsdlReferentialConstraint {
-  constructor(public property: string, public referencedProperty: string) {}
+  constructor(
+    public property: string,
+    public referencedProperty: string,
+  ) {}
 }
 
 export class CsdlOnDelete {

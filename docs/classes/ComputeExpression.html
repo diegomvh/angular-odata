@@ -162,7 +162,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:18</a></div>
                             </td>
                         </tr>
 
@@ -223,7 +223,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:18</a></div>
                         </td>
                     </tr>
 
@@ -256,7 +256,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:5</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:6</a></code>
 </div>
                         </td>
                     </tr>
@@ -293,8 +293,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="69"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:69</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:72</a></div>
                 </td>
             </tr>
 
@@ -344,7 +344,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>ComputeExpression&lt;T&gt;</code>
+                        <b>Returns : </b>    <code>ComputeExpression&lt;any&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -380,7 +380,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:62</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:65</a></code>
 </div>
                 </td>
             </tr>
@@ -419,8 +419,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="29"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:29</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="30"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:30</a></div>
                 </td>
             </tr>
 
@@ -508,8 +508,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="75"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:75</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:78</a></div>
                 </td>
             </tr>
 
@@ -603,7 +603,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:45</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:46</a></code>
 </div>
                 </td>
             </tr>
@@ -681,7 +681,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:30</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:33</a></code>
 </div>
                 </td>
             </tr>
@@ -724,7 +724,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:34</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:37</a></code>
 </div>
                 </td>
             </tr>
@@ -767,7 +767,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:38</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:41</a></code>
 </div>
                 </td>
             </tr>
@@ -794,10 +794,11 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser } from &#x27;../../../types&#x27;;
+import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import {
-  Field,
+  FieldFactory,
   functions,
   ODataFunctions,
   ODataOperators,
@@ -822,19 +823,19 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
     this.names &#x3D; names || [];
   }
 
-  static compute&lt;T extends object&gt;(
+  static compute&lt;T&gt;(
     opts: (
       builder: ComputeExpressionBuilder&lt;T&gt;,
-      current?: ComputeExpression&lt;T&gt;
+      current?: ComputeExpression&lt;T&gt;,
     ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
-    current?: ComputeExpression&lt;T&gt;
+    current?: ComputeExpression&lt;T&gt;,
   ): ComputeExpression&lt;T&gt; {
     return opts(
       {
-        t: Field.factory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
         e: () &#x3D;&gt; new ComputeExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as ComputeExpression&lt;T&gt;;
   }
 
@@ -842,13 +843,15 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
   } &#x3D; {}): string {
     let children &#x3D; this._children.map((n) &#x3D;&gt;
-      n.render({ aliases, escape, prefix })
+      n.render({ aliases, escape, prefix, parser }),
     );
     return this.names
       .map((name, index) &#x3D;&gt; &#x60;${children[index]} as ${name}&#x60;)
@@ -862,15 +865,15 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
     });
   }
 
-  private _add(name: string, node: Renderable): ComputeExpression&lt;T&gt; {
+  private _add(name: string, node: Renderable): ComputeExpression&lt;any&gt; {
     this.names.push(name);
     this._children.push(node);
     return this;
   }
 
-  field&lt;T extends object&gt;(
+  field&lt;T&gt;(
     name: string,
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ComputeExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,

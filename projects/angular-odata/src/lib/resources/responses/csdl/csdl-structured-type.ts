@@ -10,7 +10,7 @@ export class CsdlStructuredType {
     public navigationProperties?: CsdlNavigationProperty[],
     public baseType?: string,
     public openType?: boolean,
-    public abstract?: boolean
+    public abstract?: boolean,
   ) {}
 }
 
@@ -21,7 +21,7 @@ export class CsdlComplexType extends CsdlStructuredType {
     navigationProperties?: CsdlNavigationProperty[],
     baseType?: string,
     openType?: boolean,
-    abstract?: boolean
+    abstract?: boolean,
   ) {
     super(name, properties, navigationProperties, baseType, openType, abstract);
   }
@@ -36,7 +36,7 @@ export class CsdlEntityType extends CsdlStructuredType {
     baseType?: string,
     openType?: boolean,
     abstract?: boolean,
-    public hasStream?: boolean
+    public hasStream?: boolean,
   ) {
     super(name, properties, navigationProperties, baseType, openType, abstract);
   }
@@ -47,5 +47,8 @@ export class CsdlKey {
 }
 
 export class CsdlPropertyRef {
-  constructor(public name: string, public alias?: string) {}
+  constructor(
+    public name: string,
+    public alias?: string,
+  ) {}
 }

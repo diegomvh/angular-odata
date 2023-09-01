@@ -30,7 +30,10 @@ import {
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
 
 export class ODataQueryOptionHandler<T> {
-  constructor(private o: Map<QueryOption, any>, private n: QueryOption) {}
+  constructor(
+    private o: Map<QueryOption, any>,
+    private n: QueryOption,
+  ) {}
 
   /**
    * The name of the managed odata query option.
@@ -89,7 +92,7 @@ export class ODataQueryOptionHandler<T> {
   remove(value: any) {
     this.o.set(
       this.n,
-      this.assertArray().filter((v) => v !== value)
+      this.assertArray().filter((v) => v !== value),
     );
     // If only one and not is array... down to value
     if (
@@ -170,7 +173,7 @@ export class ODataQueryOptionHandler<T> {
     if (Types.isArray(this.o.get(this.n))) {
       this.o.set(
         this.n,
-        this.o.get(this.n).filter((v: any) => !Types.isEmpty(v))
+        this.o.get(this.n).filter((v: any) => !Types.isEmpty(v)),
       );
       if (this.o.get(this.n).length === 1)
         this.o.set(this.n, this.o.get(this.n)[0]);
@@ -264,8 +267,8 @@ export class ODataQueryOptionsHandler<T> {
   select(
     opts: (
       builder: SelectExpressionBuilder<T>,
-      current?: SelectExpression<T>
-    ) => SelectExpression<T>
+      current?: SelectExpression<T>,
+    ) => SelectExpression<T>,
   ): SelectExpression<T>;
   select(opts: Select<T>): ODataQueryOptionHandler<T>;
   select(): ODataQueryOptionHandler<T>;
@@ -275,8 +278,8 @@ export class ODataQueryOptionsHandler<T> {
         QueryOption.select,
         SelectExpression.select(
           opts,
-          this.options.expression(QueryOption.select)
-        )
+          this.options.expression(QueryOption.select),
+        ),
       );
     }
     return this.options.option<Select<T>>(QueryOption.select, opts);
@@ -290,8 +293,8 @@ export class ODataQueryOptionsHandler<T> {
   expand(
     opts: (
       builder: ExpandExpressionBuilder<T>,
-      current?: ExpandExpression<T>
-    ) => ExpandExpression<T>
+      current?: ExpandExpression<T>,
+    ) => ExpandExpression<T>,
   ): ExpandExpression<T>;
   expand(opts: Expand<T>): ODataQueryOptionHandler<T>;
   expand(): ODataQueryOptionHandler<T>;
@@ -301,8 +304,8 @@ export class ODataQueryOptionsHandler<T> {
         QueryOption.expand,
         ExpandExpression.expand(
           opts,
-          this.options.expression(QueryOption.expand)
-        )
+          this.options.expression(QueryOption.expand),
+        ),
       );
     }
     return this.options.option<Expand<T>>(QueryOption.expand, opts);
@@ -317,8 +320,8 @@ export class ODataQueryOptionsHandler<T> {
   compute(
     opts: (
       builder: ComputeExpressionBuilder<T>,
-      current?: ComputeExpression<T>
-    ) => ComputeExpression<T>
+      current?: ComputeExpression<T>,
+    ) => ComputeExpression<T>,
   ): ComputeExpression<T>;
   compute(opts: string): ODataQueryOptionHandler<T>;
   compute(): ODataQueryOptionHandler<T>;
@@ -328,8 +331,8 @@ export class ODataQueryOptionsHandler<T> {
         QueryOption.compute,
         ComputeExpression.compute(
           opts,
-          this.options.expression(QueryOption.compute)
-        )
+          this.options.expression(QueryOption.compute),
+        ),
       );
     }
     return this.options.option<string>(QueryOption.compute, opts);
@@ -366,8 +369,8 @@ export class ODataQueryOptionsHandler<T> {
   search(
     opts: (
       builder: SearchExpressionBuilder<T>,
-      current?: SearchExpression<T>
-    ) => SearchExpression<T>
+      current?: SearchExpression<T>,
+    ) => SearchExpression<T>,
   ): SearchExpression<T>;
   search(opts: string): ODataQueryOptionHandler<T>;
   search(): ODataQueryOptionHandler<T>;
@@ -377,8 +380,8 @@ export class ODataQueryOptionsHandler<T> {
         QueryOption.search,
         SearchExpression.search(
           opts,
-          this.options.expression(QueryOption.search)
-        )
+          this.options.expression(QueryOption.search),
+        ),
       );
     }
     return this.options.option<string>(QueryOption.search, opts);
@@ -392,8 +395,8 @@ export class ODataQueryOptionsHandler<T> {
   filter(
     opts: (
       builder: FilterExpressionBuilder<T>,
-      current?: FilterExpression<T>
-    ) => FilterExpression<T>
+      current?: FilterExpression<T>,
+    ) => FilterExpression<T>,
   ): FilterExpression<T>;
   filter(opts: Filter<T>): ODataQueryOptionHandler<T>;
   filter(): ODataQueryOptionHandler<T>;
@@ -403,8 +406,8 @@ export class ODataQueryOptionsHandler<T> {
         QueryOption.filter,
         FilterExpression.filter(
           opts,
-          this.options.expression(QueryOption.filter)
-        )
+          this.options.expression(QueryOption.filter),
+        ),
       );
     }
     return this.options.option<Filter<T>>(QueryOption.filter, opts);
@@ -418,8 +421,8 @@ export class ODataQueryOptionsHandler<T> {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder<T>,
-      current?: OrderByExpression<T>
-    ) => OrderByExpression<T>
+      current?: OrderByExpression<T>,
+    ) => OrderByExpression<T>,
   ): OrderByExpression<T>;
   orderBy(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
   orderBy(): ODataQueryOptionHandler<T>;
@@ -429,8 +432,8 @@ export class ODataQueryOptionsHandler<T> {
         QueryOption.orderBy,
         OrderByExpression.orderBy(
           opts,
-          this.options.expression(QueryOption.orderBy)
-        )
+          this.options.expression(QueryOption.orderBy),
+        ),
       );
     }
     return this.options.option<OrderBy<T>>(QueryOption.orderBy, opts);
@@ -537,7 +540,7 @@ export class ODataQueryOptionsHandler<T> {
       if (query.select instanceof SelectExpression) {
         this.options.expression(
           QueryOption.select,
-          query.select as SelectExpression<T>
+          query.select as SelectExpression<T>,
         );
       } else if (query.select !== null) {
         this.options.option(QueryOption.select, query.select);
@@ -549,7 +552,7 @@ export class ODataQueryOptionsHandler<T> {
       if (query.expand instanceof ExpandExpression) {
         this.options.expression(
           QueryOption.expand,
-          query.expand as ExpandExpression<T>
+          query.expand as ExpandExpression<T>,
         );
       } else if (query.expand !== null) {
         this.options.option(QueryOption.expand, query.expand);
@@ -561,7 +564,7 @@ export class ODataQueryOptionsHandler<T> {
       if (query.compute instanceof ComputeExpression) {
         this.options.expression(
           QueryOption.compute,
-          query.compute as ComputeExpression<T>
+          query.compute as ComputeExpression<T>,
         );
       } else if (query.compute !== null) {
         this.options.option(QueryOption.compute, query.compute);
@@ -580,7 +583,7 @@ export class ODataQueryOptionsHandler<T> {
       if (query.search instanceof SearchExpression) {
         this.options.expression(
           QueryOption.search,
-          query.search as SearchExpression<T>
+          query.search as SearchExpression<T>,
         );
       } else if (query.search !== null) {
         this.options.option(QueryOption.search, query.search);
@@ -592,7 +595,7 @@ export class ODataQueryOptionsHandler<T> {
       if (query.filter instanceof FilterExpression) {
         this.options.expression(
           QueryOption.filter,
-          query.filter as FilterExpression<T>
+          query.filter as FilterExpression<T>,
         );
       } else if (query.filter !== null) {
         this.options.option(QueryOption.filter, query.filter);
@@ -604,7 +607,7 @@ export class ODataQueryOptionsHandler<T> {
       if (query.orderBy instanceof OrderByExpression) {
         this.options.expression(
           QueryOption.orderBy,
-          query.orderBy as OrderByExpression<T>
+          query.orderBy as OrderByExpression<T>,
         );
       } else if (query.orderBy !== null) {
         this.options.option(QueryOption.orderBy, query.orderBy);

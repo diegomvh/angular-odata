@@ -43,7 +43,7 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
    */
   public update(
     attrs: Partial<T>,
-    options?: ODataOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string },
   ): Observable<ODataEntity<T>> {
     const res = this.entity();
     return res.update(attrs, options);
@@ -57,7 +57,7 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
    */
   public patch(
     attrs: Partial<T>,
-    options?: ODataOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string },
   ): Observable<ODataEntity<T>> {
     const res = this.entity();
     return res.modify(attrs, options);

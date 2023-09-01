@@ -49,7 +49,7 @@ export class ODataResource<T> {
       segments?: ODataPathSegments;
       query?: ODataQueryOptions<T>;
       schema?: ODataSchemaElement;
-    } = {}
+    } = {},
   ) {
     this.api = api;
     this.pathSegments = segments || new ODataPathSegments();
@@ -96,7 +96,7 @@ export class ODataResource<T> {
   //#region Models
   asModel<M extends ODataModel<T>>(
     entity?: Partial<T> | { [name: string]: any },
-    { annots }: { annots?: ODataEntityAnnotations<T> } = {}
+    { annots }: { annots?: ODataEntityAnnotations<T> } = {},
   ): M {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
@@ -113,7 +113,7 @@ export class ODataResource<T> {
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities?: Partial<T>[] | { [name: string]: any }[],
-    { annots }: { annots?: ODataEntitiesAnnotations<T> } = {}
+    { annots }: { annots?: ODataEntitiesAnnotations<T> } = {},
   ): C {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
@@ -156,9 +156,15 @@ export class ODataResource<T> {
   }
 
   pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
-    const parser = (this.schema !== undefined && 'parser' in this.schema) ? (<any>this.schema).parser as Parser<T> : undefined;
-    const [spath, sparams] = this.pathSegments.pathAndParams({escape, parser});
-    const [, qparams] = this.queryOptions.pathAndParams({escape, parser});
+    const parser =
+      this.schema !== undefined && 'parser' in this.schema
+        ? ((<any>this.schema).parser as Parser<T>)
+        : undefined;
+    const [spath, sparams] = this.pathSegments.pathAndParams({
+      escape,
+      parser,
+    });
+    const [, qparams] = this.queryOptions.pathAndParams({ escape, parser });
 
     return [spath, { ...sparams, ...qparams }];
   }
@@ -192,7 +198,7 @@ export class ODataResource<T> {
   private __parser(
     value: any,
     options?: ParserOptions,
-    type?: string
+    type?: string,
   ): Parser<T> | undefined {
     const dataType =
       options !== undefined && Types.isPlainObject(value)
@@ -277,7 +283,7 @@ export class ODataResource<T> {
    * @returns ODataActionResource
    */
   segment(
-    f: (q: ODataPathSegmentsHandler<T>, s?: ODataStructuredType<T>) => void
+    f: (q: ODataPathSegmentsHandler<T>, s?: ODataStructuredType<T>) => void,
   ) {
     /*
     const type = this.type();
@@ -285,7 +291,7 @@ export class ODataResource<T> {
     */
     f(
       new ODataPathSegmentsHandler<T>(this.pathSegments),
-      this.schema instanceof ODataStructuredType ? this.schema : undefined
+      this.schema instanceof ODataStructuredType ? this.schema : undefined,
     );
     return this;
   }
@@ -296,7 +302,7 @@ export class ODataResource<T> {
    * @param f Function context for handle the query options
    */
   query(
-    f: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
+    f: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void,
   ) {
     /*
     const type = this.returnType();
@@ -304,14 +310,14 @@ export class ODataResource<T> {
     */
     f(
       new ODataQueryOptionsHandler<T>(this.queryOptions),
-      this.schema instanceof ODataStructuredType ? this.schema : undefined
+      this.schema instanceof ODataStructuredType ? this.schema : undefined,
     );
     return this;
   }
 
   static resolveKey<T>(
     value: any,
-    schema?: ODataStructuredType<T>
+    schema?: ODataStructuredType<T>,
   ): EntityKey<T> | undefined {
     if (isQueryCustomType(value)) {
       return value;
@@ -326,7 +332,7 @@ export class ODataResource<T> {
   protected resolveKey(value: any): EntityKey<T> | undefined {
     return ODataResource.resolveKey<T>(
       value,
-      this.schema as ODataStructuredType<T>
+      this.schema as ODataStructuredType<T>,
     );
   }
   //#endregion
@@ -345,7 +351,7 @@ export class ODataResource<T> {
         | 'entities';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.api.request<T>('GET', this, options);
   }
@@ -363,7 +369,7 @@ export class ODataResource<T> {
         | 'entity'
         | 'entities';
       withCount?: boolean;
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.api.request<T>('POST', this, { body, ...options });
   }
@@ -382,7 +388,7 @@ export class ODataResource<T> {
         | 'entity'
         | 'entities';
       withCount?: boolean;
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.api.request<T>('PUT', this, { body, ...options });
   }
@@ -401,7 +407,7 @@ export class ODataResource<T> {
         | 'entity'
         | 'entities';
       withCount?: boolean;
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.api.request<T>('PATCH', this, { body, ...options });
   }
@@ -419,7 +425,7 @@ export class ODataResource<T> {
         | 'entity'
         | 'entities';
       withCount?: boolean;
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.api.request<T>('DELETE', this, options);
   }

@@ -948,7 +948,7 @@ export class ODataEntityContainer extends ODataSchemaElement {
   constructor(config: EntityContainerConfig, schema: ODataSchema) {
     super(config, schema);
     this.entitySets &#x3D; (config.entitySets || []).map(
-      (config) &#x3D;&gt; new ODataEntitySet(config, schema)
+      (config) &#x3D;&gt; new ODataEntitySet(config, schema),
     );
   }
 }

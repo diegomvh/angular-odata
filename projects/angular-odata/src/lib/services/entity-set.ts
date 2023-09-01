@@ -64,7 +64,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    */
   public fetchMany(
     top: number,
-    options?: ODataOptions & { withCount?: boolean }
+    options?: ODataOptions & { withCount?: boolean },
   ) {
     return this.entities().fetchMany(top, options);
   }
@@ -86,7 +86,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    */
   public create(
     attrs: Partial<T>,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<ODataEntity<T>> {
     return this.entities().create(attrs, options);
   }
@@ -101,7 +101,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   public update(
     key: EntityKey<T>,
     attrs: Partial<T>,
-    options?: ODataOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string },
   ): Observable<ODataEntity<T>> {
     const res = this.entity(key);
     if (!res.hasKey())
@@ -119,7 +119,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   public modify(
     key: EntityKey<T>,
     attrs: Partial<T>,
-    options?: ODataOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string },
   ): Observable<ODataEntity<T>> {
     const res = this.entity(key);
     if (!res.hasKey())
@@ -135,7 +135,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    */
   public destroy(
     key: EntityKey<T>,
-    options?: ODataOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string },
   ) {
     const res = this.entity(key);
     if (!res.hasKey())
@@ -154,7 +154,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   public fetchOrCreate(
     key: EntityKey<T>,
     attrs: Partial<T>,
-    { etag, ...options }: { etag?: string } & ODataOptions = {}
+    { etag, ...options }: { etag?: string } & ODataOptions = {},
   ): Observable<ODataEntity<T>> {
     return this.entity(key)
       .fetch({ etag, ...options })
@@ -162,7 +162,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
         catchError((error: HttpErrorResponse) => {
           if (error.status === 404) return this.create(attrs, options);
           else return throwError(() => error);
-        })
+        }),
       );
   }
 
@@ -182,21 +182,21 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     }: {
       etag?: string;
       method?: 'create' | 'update' | 'modify';
-    } & ODataOptions = {}
+    } & ODataOptions = {},
   ) {
     let schema = this.structuredTypeSchema;
     if (method === undefined && schema !== undefined && schema.isCompoundKey())
       return throwError(
         () =>
           new Error(
-            'save: Composite key require a specific method, use create/update/patch'
-          )
+            'save: Composite key require a specific method, use create/update/patch',
+          ),
       );
     let key = schema && schema.resolveKey(attrs);
     if (method === undefined) method = key !== undefined ? 'update' : 'create';
     if ((method === 'update' || method === 'modify') && key === undefined)
       return throwError(
-        () => new Error("save: Can't update/patch entity without key")
+        () => new Error("save: Can't update/patch entity without key"),
       );
     return method === 'create'
       ? this.create(attrs, options)

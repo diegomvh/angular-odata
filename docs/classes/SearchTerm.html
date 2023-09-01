@@ -141,7 +141,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:9</a></div>
                             </td>
                         </tr>
 
@@ -205,8 +205,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:37</a></div>
                 </td>
             </tr>
 
@@ -242,8 +242,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="22"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:22</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="23"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:23</a></div>
                 </td>
             </tr>
 
@@ -310,8 +310,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="15"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:15</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="16"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:16</a></div>
                 </td>
             </tr>
 
@@ -353,7 +353,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:11</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:12</a></div>
                                 </td>
                             </tr>
 
@@ -364,7 +364,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Types } from &#x27;../../../utils&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser } from &#x27;../../../types&#x27;;
+import { Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { render, Grouping, Renderable } from &#x27;./syntax&#x27;;
@@ -389,12 +390,14 @@ export class SearchTerm implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser&lt;any&gt;;
   }): string {
-    return &#x60;${render(this.value, { aliases, escape, prefix })}&#x60;;
+    return &#x60;${render(this.value, { aliases, escape, prefix, parser })}&#x60;;
   }
 
   clone() {
@@ -422,25 +425,25 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
     this._negated &#x3D; negated || false;
   }
 
-  static search&lt;T extends object&gt;(
+  static search&lt;T&gt;(
     opts: (
       builder: SearchExpressionBuilder&lt;T&gt;,
-      current?: SearchExpression&lt;T&gt;
+      current?: SearchExpression&lt;T&gt;,
     ) &#x3D;&gt; SearchExpression&lt;T&gt;,
-    current?: SearchExpression&lt;T&gt;
+    current?: SearchExpression&lt;T&gt;,
   ): SearchExpression&lt;T&gt; {
     return opts(
       {
         e: (connector: SearchConnector &#x3D; &#x27;AND&#x27;) &#x3D;&gt;
           new SearchExpression&lt;T&gt;({ connector }),
       },
-      current
+      current,
     ) as SearchExpression&lt;T&gt;;
   }
 
   private _add(
     node: Renderable,
-    connector?: SearchConnector
+    connector?: SearchConnector,
   ): SearchExpression&lt;T&gt; {
     if (connector !&#x3D;&#x3D; undefined &amp;&amp; this._connector !&#x3D;&#x3D; connector) {
       let children: Renderable[] &#x3D; [];
@@ -480,7 +483,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
       this._children.push(
         node instanceof SearchExpression &amp;&amp; !node.negated()
           ? new Grouping(node)
-          : node
+          : node,
       );
     }
     return this;
@@ -490,13 +493,15 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
   } &#x3D; {}): string {
     let content &#x3D; this._children
-      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser }))
       .join(&#x60; ${this._connector} &#x60;);
     return content;
   }

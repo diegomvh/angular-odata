@@ -17,7 +17,7 @@ export class ODataCallable<R> extends ODataSchemaElement {
     this.parser = new ODataCallableParser(
       config,
       schema.namespace,
-      schema.alias
+      schema.alias,
     );
   }
 

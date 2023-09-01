@@ -40,9 +40,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
   static model: typeof ODataModel | null = null;
   _parent:
     | [
-      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-      ODataModelField<any> | null
-    ]
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null,
+      ]
     | null = null;
   _resource:
     | ODataEntitySetResource<T>
@@ -51,16 +51,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     | null = null;
   _resources: {
     parent:
-    | [
-      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-      ODataModelField<any> | null
-    ]
-    | null;
+      | [
+          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+          ODataModelField<any> | null,
+        ]
+      | null;
     resource:
-    | ODataEntitySetResource<T>
-    | ODataNavigationPropertyResource<T>
-    | ODataPropertyResource<T>
-    | null;
+      | ODataEntitySetResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | null;
   }[] = [];
   _annotations!: ODataEntitiesAnnotations<T>;
   _entries: ODataModelEntry<T, M>[] = [];
@@ -92,7 +92,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
       reset?: boolean;
-    } = {}
+    } = {},
   ) {
     const Klass = this.constructor as typeof ODataCollection;
     if (model === undefined && Klass.model !== null) model = Klass.model;
@@ -115,9 +115,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (resource !== undefined) {
       this.attach(
         resource as
-        | ODataEntitySetResource<T>
-        | ODataPropertyResource<T>
-        | ODataNavigationPropertyResource<T>
+          | ODataEntitySetResource<T>
+          | ODataPropertyResource<T>
+          | ODataNavigationPropertyResource<T>,
       );
     }
 
@@ -125,7 +125,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this._annotations =
       annots ||
       new ODataEntitiesAnnotations(
-        ODataHelper[resource?.api?.options.version || DEFAULT_VERSION]
+        ODataHelper[resource?.api?.options.version || DEFAULT_VERSION],
       );
 
     entities = entities || [];
@@ -133,7 +133,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   isParentOf(
-    child: ODataModel<any> | ODataCollection<any, ODataModel<any>>
+    child: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
   ): boolean {
     return (
       child !== this &&
@@ -155,7 +155,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     resource:
       | ODataEntitySetResource<T>
       | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>
+      | ODataPropertyResource<T>,
   ) {
     // Push current parent and resource
     this._resources.push({ parent: this._parent, resource: this._resource });
@@ -180,7 +180,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     resource:
       | ODataEntitySetResource<T>
       | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>
+      | ODataPropertyResource<T>,
   ) {
     if (
       this._resource !== null &&
@@ -188,12 +188,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
       !this._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        `attach: Can't reattach ${this._resource.type()} to ${resource.type()}`
+        `attach: Can't reattach ${this._resource.type()} to ${resource.type()}`,
       );
 
     this._entries.forEach(({ model }) => {
       const modelResource = this._model.meta.modelResourceFactory(
-        resource.cloneQuery<T>()
+        resource.cloneQuery<T>(),
       ) as ODataEntityResource<T>;
       if (modelResource !== undefined) model.attach(modelResource);
     });
@@ -206,7 +206,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           collection: this,
           previous: current,
           value: resource,
-        })
+        }),
       );
     }
   }
@@ -215,7 +215,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       | ODataEntitySetResource<T>
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>,
-    ctx: (collection: this) => R
+    ctx: (collection: this) => R,
   ): R {
     // Push
     this.pushResource(resource);
@@ -236,7 +236,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let resource = this._model.meta.collectionResourceFactory(query);
     if (resource === undefined)
       throw new Error(
-        'asEntitySet: Collection does not have associated EntitySet endpoint'
+        'asEntitySet: Collection does not have associated EntitySet endpoint',
       );
     return this.withResource(resource, ctx);
   }
@@ -247,7 +247,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private modelFactory(
     data: Partial<T> | { [name: string]: any },
-    { reset = false }: { reset?: boolean } = {}
+    { reset = false }: { reset?: boolean } = {},
   ): M {
     let Model = this._model;
     const annots = new ODataEntityAnnotations(this._annotations.helper);
@@ -255,7 +255,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     if (annots?.type !== undefined && Model.meta !== null) {
       let schema = Model.meta.findChildOptions((o) =>
-        o.isTypeOf(annots.type as string)
+        o.isTypeOf(annots.type as string),
       )?.schema;
       if (schema !== undefined && schema.model !== undefined)
         // Change to child model
@@ -293,7 +293,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this._entries
       .filter(
         ({ model, state }) =>
-          state !== ODataModelState.Removed && chain.every((c) => c !== model)
+          state !== ODataModelState.Removed && chain.every((c) => c !== model),
       )
       .map(({ model, state }) => {
         var changesOnly = changes_only && state !== ODataModelState.Added;
@@ -332,30 +332,30 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private _request(
     obs$: Observable<ODataEntities<any>>,
-    { remove }: { remove?: boolean } = {}
+    { remove }: { remove?: boolean } = {},
   ): Observable<M[]> {
     this.events$.emit(
       new ODataModelEvent(ODataModelEventType.Request, {
         collection: this,
         options: { observable: obs$ },
-      })
+      }),
     );
 
     return obs$.pipe(
       map(({ entities, annots }) => {
         this._annotations = annots;
         const models = (entities || []).map(
-          (entity) => this.modelFactory(entity, { reset: true }) as M
+          (entity) => this.modelFactory(entity, { reset: true }) as M,
         ) as M[];
         this.assign(models, { reset: true, remove });
         this.events$.emit(
           new ODataModelEvent(ODataModelEventType.Sync, {
             collection: this,
             options: { models, entities, annots },
-          })
+          }),
         );
         return models;
-      })
+      }),
     );
   }
 
@@ -373,10 +373,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource instanceof ODataEntitySetResource
         ? resource.fetch({ withCount, ...options })
         : resource.fetch({
-          responseType: 'entities',
-          withCount,
-          ...options,
-        });
+            responseType: 'entities',
+            withCount,
+            ...options,
+          });
 
     return this._request(obs$, { remove });
   }
@@ -405,11 +405,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }: ODataOptions & {
       remove?: boolean;
       withCount?: boolean;
-    } = {}
+    } = {},
   ): Observable<M[]> {
     const resource = this.resource();
     resource.query((q) =>
-      remove || this.length == 0 ? q.skip().clear() : q.skip(this.length)
+      remove || this.length == 0 ? q.skip().clear() : q.skip(this.length),
     );
 
     const obs$ = resource.fetchMany(top, { withCount, ...options });
@@ -426,7 +426,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     withCount?: boolean;
   } = {}) {
     return this.fetchMany(1, { withCount, remove, ...options }).pipe(
-      map((models) => models[0])
+      map((models) => models[0]),
     );
   }
 
@@ -447,7 +447,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const resource = this.resource();
     if (resource instanceof ODataPropertyResource)
       return throwError(
-        () => new Error('save: Resource is ODataPropertyResource')
+        () => new Error('save: Resource is ODataPropertyResource'),
       );
 
     let toDestroyEntity: M[] = [];
@@ -495,14 +495,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
         ...toRemoveReference.map((m) => this.removeReference(m, options)),
         ...toDestroyContained.map((m) => m.destroy(options)),
         ...toCreateEntity.map((m) =>
-          m.asEntity((e) => e.save({ method: 'create', ...options }))
+          m.asEntity((e) => e.save({ method: 'create', ...options })),
         ),
         ...toAddReference.map((m) => this.addReference(m, options)),
         ...toCreateContained.map((m) =>
-          m.save({ method: 'create', ...options })
+          m.save({ method: 'create', ...options }),
         ),
         ...toUpdateEntity.map((m) =>
-          m.asEntity((e) => e.save({ method, ...options }))
+          m.asEntity((e) => e.save({ method, ...options })),
         ),
         ...toUpdateContained.map((m) => m.save({ method, ...options })),
       ]);
@@ -510,7 +510,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         new ODataModelEvent(ODataModelEventType.Request, {
           collection: this,
           options: { observable: obs$ },
-        })
+        }),
       );
       return obs$.pipe(
         map(() => {
@@ -518,10 +518,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
             .filter((entry) => entry.state !== ODataModelState.Removed)
             .map((entry) => ({ ...entry, state: ODataModelState.Unchanged }));
           this.events$.emit(
-            new ODataModelEvent(ODataModelEventType.Sync, { collection: this })
+            new ODataModelEvent(ODataModelEventType.Sync, { collection: this }),
           );
           return this;
-        })
+        }),
       );
     }
     return of(this);
@@ -534,7 +534,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         .reference()
         .add(
           model._meta.entityResource(model) as ODataEntityResource<T>,
-          options
+          options,
         )
         .pipe(map(() => model));
     }
@@ -555,7 +555,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reparent?: boolean;
       merge?: boolean;
       position?: number;
-    } = {}
+    } = {},
   ): M {
     const key = model.key();
     let entry = this._findEntry({
@@ -594,7 +594,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         new ODataModelEvent(ODataModelEventType.Add, {
           model,
           collection: this,
-        })
+        }),
       );
     }
     return entry.model;
@@ -614,7 +614,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reparent?: boolean;
       merge?: boolean;
       position?: number;
-    } = {}
+    } = {},
   ): M {
     if (position < 0) position = this._bisect(model);
     const added = this._addModel(model, {
@@ -629,7 +629,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         new ODataModelEvent(ODataModelEventType.Update, {
           collection: this,
           options: { added: [added], removed: [], merged: [] },
-        })
+        }),
       );
     }
     return added;
@@ -649,7 +649,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       server?: boolean;
       merge?: boolean;
       position?: number;
-    } = {}
+    } = {},
   ): Observable<M> {
     if (server) {
       return this.addReference(model).pipe(
@@ -661,7 +661,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             merge,
             reset: true,
           });
-        })
+        }),
       );
     } else {
       return of(this.addModel(model, { silent, position, merge, reparent }));
@@ -691,7 +691,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       reset = false,
-    }: { silent?: boolean; reset?: boolean } = {}
+    }: { silent?: boolean; reset?: boolean } = {},
   ): M {
     const key = model.key();
     let entry = this._findEntry({
@@ -709,7 +709,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         new ODataModelEvent(ODataModelEventType.Remove, {
           model,
           collection: this,
-        })
+        }),
       );
 
     // Now remove
@@ -729,7 +729,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       reset = false,
-    }: { silent?: boolean; reset?: boolean } = {}
+    }: { silent?: boolean; reset?: boolean } = {},
   ): M {
     const removed = this._removeModel(model, { silent, reset });
     if (!silent && removed !== undefined) {
@@ -737,7 +737,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         new ODataModelEvent(ODataModelEventType.Update, {
           collection: this,
           options: { added: [], removed: [removed], merged: [] },
-        })
+        }),
       );
     }
     return removed;
@@ -748,11 +748,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       server = true,
-    }: { silent?: boolean; server?: boolean } = {}
+    }: { silent?: boolean; server?: boolean } = {},
   ): Observable<M> {
     if (server) {
       return this.removeReference(model).pipe(
-        map((model) => this.removeModel(model, { silent, reset: true }))
+        map((model) => this.removeModel(model, { silent, reset: true })),
       );
     } else {
       return of(this.removeModel(model, { silent }));
@@ -783,16 +783,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       server = true,
-    }: { silent?: boolean; server?: boolean } = {}
+    }: { silent?: boolean; server?: boolean } = {},
   ) {
     const model = this.modelFactory(attrs);
     return (model.isValid() && server ? model.save() : of(model)).pipe(
       switchMap((model) => this.add(model, { silent, server })),
-      map(() => model)
+      map(() => model),
     );
   }
 
-  set(path: string | string[], value: any, { }: {} & ModelFieldOptions) {
+  set(path: string | string[], value: any, {}: {} & ModelFieldOptions) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -812,7 +812,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         //TODO: Remove/Add or Merge?
         // Merge
         entry.model.assign(
-          value.toEntity({ client_id: true, ...INCLUDE_DEEP })
+          value.toEntity({ client_id: true, ...INCLUDE_DEEP }),
         );
         if (entry.model.hasChanged()) toChange.push(model);
       } else {
@@ -824,7 +824,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         new ODataModelEvent(ODataModelEventType.Update, {
           collection: this,
           options: { added: toAdd, removed: toRemove, changed: toChange },
-        })
+        }),
       );
       return value;
     }
@@ -887,7 +887,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       // Reset all
       toAdd = this._entries.filter((e) => e.state === ODataModelState.Removed);
       toChange = this._entries.filter(
-        (e) => e.state === ODataModelState.Unchanged && e.model.hasChanged()
+        (e) => e.state === ODataModelState.Unchanged && e.model.hasChanged(),
       );
       toRemove = this._entries.filter((e) => e.state === ODataModelState.Added);
     }
@@ -914,7 +914,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             removed: toRemove.map((e) => e.model),
             changed: toChange.map((e) => e.model),
           },
-        })
+        }),
       );
     }
   }
@@ -930,7 +930,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         new ODataModelEvent(ODataModelEventType.Update, {
           collection: this,
           options: { removed: toRemove },
-        })
+        }),
       );
     }
   }
@@ -947,7 +947,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset?: boolean;
       reparent?: boolean;
       silent?: boolean;
-    } = {}
+    } = {},
   ) {
     const Model = this._model;
     const offset = remove ? 0 : this.length;
@@ -985,7 +985,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             const helper = this._annotations.helper;
             const annots = new ODataEntityAnnotations<T>(
               helper,
-              helper.annotations(obj)
+              helper.annotations(obj),
             );
             const entity = annots.attributes(obj, 'full');
             model._annotations = annots;
@@ -994,8 +994,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           // Model Change?
           if (model.hasChanged()) toChange.push([model, position]);
         }
-        if (reset)
-          entry.state = ODataModelState.Unchanged;
+        if (reset) entry.state = ODataModelState.Unchanged;
         // Has Sort or Index Change?
         if (toSort.length > 0 || position !== this.models().indexOf(model)) {
           toSort.push([model, position]);
@@ -1004,7 +1003,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
         // Add
         model = isModel
           ? (obj as M)
-          : this.modelFactory(obj as Partial<T> | { [name: string]: any }, { reset });
+          : this.modelFactory(obj as Partial<T> | { [name: string]: any }, {
+              reset,
+            });
         toAdd.push([model, position]);
       }
       modelMap.push((<any>model)[Model.meta.cid]);
@@ -1048,14 +1049,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
               changed: toChange,
               sorted: toSort,
             },
-          }
-        )
+          },
+        ),
       );
     }
   }
 
   query(
-    ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
+    ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void,
   ) {
     const resource = this.resource();
     resource.query(ctx);
@@ -1067,7 +1068,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & ODataFunctionOptions<R> = {}
+    { ...options }: {} & ODataFunctionOptions<R> = {},
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {
@@ -1086,7 +1087,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     return throwError(
       () =>
-        new Error(`callFunction: Can't function without ODataEntitySetResource`)
+        new Error(
+          `callFunction: Can't function without ODataEntitySetResource`,
+        ),
     );
   }
 
@@ -1094,13 +1097,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & ODataActionOptions<R> = {}
+    { ...options }: {} & ODataActionOptions<R> = {},
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntitySetResource)) {
       return throwError(
         () =>
-          new Error(`callAction: Can't action without ODataEntitySetResource`)
+          new Error(`callAction: Can't action without ODataEntitySetResource`),
       );
     }
     const action = resource.action<P, R>(name);
@@ -1146,7 +1149,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           const index = this.models().indexOf(entry.model);
           this.events$.emit(event.push(this, index));
         }
-      }
+      },
     );
   }
 
@@ -1195,21 +1198,21 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   filter(
     predicate: (value: M, index: number, array: M[]) => unknown,
-    thisArg?: any
+    thisArg?: any,
   ): M[] {
     return this.models().filter(predicate);
   }
 
   map<U>(
     callbackfn: (value: M, index: number, array: M[]) => U,
-    thisArg?: any
+    thisArg?: any,
   ): U[] {
     return this.models().map(callbackfn, thisArg);
   }
 
   find(
     predicate: (value: M, index: number, obj: M[]) => unknown,
-    thisArg?: any
+    thisArg?: any,
   ): M | undefined {
     return this.models().find(predicate);
   }
@@ -1219,9 +1222,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
       previousValue: U,
       currentValue: M,
       currentIndex: number,
-      array: M[]
+      array: M[],
     ) => U,
-    initialValue: U
+    initialValue: U,
   ): U {
     return this.models().reduce(callbackfn, initialValue);
   }
@@ -1295,7 +1298,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     e1: ODataModelEntry<T, M> | M,
     e2: ODataModelEntry<T, M> | M,
     by: { field: string | keyof T; order?: 1 | -1 }[],
-    index: number
+    index: number,
   ): number {
     let m1 = ODataModelOptions.isModel(e1)
       ? (e1 as M)
@@ -1332,18 +1335,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   sort(
     by: { field: string | keyof T; order?: 1 | -1 }[],
-    { silent }: { silent?: boolean } = {}
+    { silent }: { silent?: boolean } = {},
   ) {
     this._sortBy = by;
     this._entries = this._entries.sort(
       (e1: ODataModelEntry<T, M>, e2: ODataModelEntry<T, M>) =>
-        this._compare(e1, e2, by, 0)
+        this._compare(e1, e2, by, 0),
     );
     if (!silent) {
       this.events$.emit(
         new ODataModelEvent(ODataModelEventType.Update, {
           collection: this,
-        })
+        }),
       );
     }
   }

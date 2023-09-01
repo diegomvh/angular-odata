@@ -990,7 +990,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
       status: number;
       statusText: string;
       url: string | null;
-    }
+    },
   ) {
     return new ODataResponse&lt;T&gt;({
       api: req.api,
@@ -1029,12 +1029,12 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
       }
       const headerKey &#x3D; Http.resolveHeaderKey(
         this.headers,
-        ODATA_VERSION_HEADERS
+        ODATA_VERSION_HEADERS,
       );
       if (headerKey) {
         const version &#x3D; (this.headers.get(headerKey) || &#x27;&#x27;).replace(
           /\;/g,
-          &#x27;&#x27;
+          &#x27;&#x27;,
         ) as &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
         this._options.setVersion(version);
       }
@@ -1072,7 +1072,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   get context(): ODataContext {
     if (this._context &#x3D;&#x3D;&#x3D; undefined) {
       this._context &#x3D; this.options.helper.context(
-        Types.isPlainObject(this.payload) ? this.payload : {}
+        Types.isPlainObject(this.payload) ? this.payload : {},
       );
     }
     return this._context;
@@ -1107,7 +1107,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     const annots &#x3D; new ODataEntityAnnotations&lt;T&gt;(
       options.helper,
       this.annotations,
-      this.context
+      this.context,
     );
     const data &#x3D; payload ? annots.data(payload) : null;
     let entity &#x3D; (
@@ -1131,7 +1131,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     const annots &#x3D; new ODataEntitiesAnnotations&lt;T&gt;(
       options.helper,
       this.annotations,
-      this.context
+      this.context,
     );
     let entities &#x3D; payload ? annots.data(payload) : null;
     if (entities !&#x3D;&#x3D; null)
@@ -1149,14 +1149,14 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     const annots &#x3D; new ODataPropertyAnnotations&lt;T&gt;(
       options.helper,
       this.annotations,
-      this.context
+      this.context,
     );
     const data &#x3D; payload ? (annots.data(payload) as T) : null;
     let property &#x3D; (
       data !&#x3D;&#x3D; null &amp;&amp; Types.isPlainObject(data)
         ? options.helper.attributes(
             data as { [key: string]: any },
-            this.api.options.stripMetadata
+            this.api.options.stripMetadata,
           )
         : data
     ) as T | null;

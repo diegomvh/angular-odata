@@ -878,12 +878,12 @@ export abstract class ODataAnnotations&lt;T&gt; {
   constructor(
     public helper: ODataVersionHelper,
     protected annotations: Map&lt;string, any&gt; &#x3D; new Map&lt;string, any&gt;(),
-    protected context?: ODataContext
+    protected context?: ODataContext,
   ) {}
 
   attributes(
     data: { [key: string]: any },
-    metadata: ODataMetadataType
+    metadata: ODataMetadataType,
   ): Partial&lt;T&gt; {
     return this.helper.attributes(data, metadata) as Partial&lt;T&gt;;
   }
@@ -914,7 +914,7 @@ export class ODataPropertyAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
     return new ODataPropertyAnnotations&lt;any&gt;(
       this.helper,
       new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
-      Object.assign({}, this.context, other.context)
+      Object.assign({}, this.context, other.context),
     );
   }
 
@@ -922,7 +922,7 @@ export class ODataPropertyAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
     return new ODataPropertyAnnotations&lt;any&gt;(
       this.helper,
       new Map(this.annotations),
-      this.context
+      this.context,
     );
   }
 
@@ -936,7 +936,7 @@ export class ODataEntityAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
     return new ODataEntityAnnotations&lt;any&gt;(
       this.helper,
       new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
-      Object.assign({}, this.context, other.context)
+      Object.assign({}, this.context, other.context),
     );
   }
 
@@ -944,7 +944,7 @@ export class ODataEntityAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
     return new ODataEntityAnnotations&lt;any&gt;(
       this.helper,
       new Map(this.annotations),
-      this.context
+      this.context,
     );
   }
 
@@ -1000,7 +1000,7 @@ export class ODataEntityAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
   property&lt;F&gt;(name: keyof T, type: &#x27;single&#x27;): ODataEntityAnnotations&lt;F&gt;;
   property&lt;F&gt;(
     name: keyof T,
-    type: &#x27;single&#x27; | &#x27;collection&#x27;
+    type: &#x27;single&#x27; | &#x27;collection&#x27;,
   ): ODataEntityAnnotations&lt;F&gt; | ODataEntitiesAnnotations&lt;F&gt; {
     const props &#x3D; this.properties.get(name);
     return type &#x3D;&#x3D;&#x3D; &#x27;collection&#x27;
@@ -1026,7 +1026,7 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
     return new ODataEntitiesAnnotations&lt;any&gt;(
       this.helper,
       new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
-      Object.assign({}, this.context, other.context)
+      Object.assign({}, this.context, other.context),
     );
   }
 
@@ -1034,7 +1034,7 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
     return new ODataEntitiesAnnotations&lt;any&gt;(
       this.helper,
       new Map(this.annotations),
-      this.context
+      this.context,
     );
   }
 
@@ -1070,7 +1070,7 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
 
   get skiptoken() {
     let match &#x3D; (this.nextLink || &#x27;&#x27;).match(
-      /[&amp;?]{1}\$skiptoken&#x3D;([\d\w\s&#x27;\-]+)/
+      /[&amp;?]{1}\$skiptoken&#x3D;([\d\w\s&#x27;\-]+)/,
     );
     return match !&#x3D;&#x3D; null ? match[1] : undefined;
   }

@@ -1592,7 +1592,7 @@ export class ODataEnumTypeParser&lt;E&gt;
     this.flags &#x3D; config.flags;
     this.members &#x3D; config.members;
     this._fields &#x3D; Object.entries(config.fields).map(
-      ([name, f]) &#x3D;&gt; new ODataEnumTypeFieldParser(name, f)
+      ([name, f]) &#x3D;&gt; new ODataEnumTypeFieldParser(name, f),
     );
   }
 
@@ -1617,14 +1617,14 @@ export class ODataEnumTypeParser&lt;E&gt;
   fields(value?: E): ODataEnumTypeFieldParser&lt;E&gt;[] {
     return [
       ...this._fields.filter(
-        (f) &#x3D;&gt; value &#x3D;&#x3D;&#x3D; undefined || Boolean((&lt;any&gt;f.value) &amp; (&lt;any&gt;value))
+        (f) &#x3D;&gt; value &#x3D;&#x3D;&#x3D; undefined || Boolean((&lt;any&gt;f.value) &amp; (&lt;any&gt;value)),
       ),
     ];
   }
 
   field(nameValue: string | E) {
     let field &#x3D; this.fields().find(
-      (f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; nameValue || f.value &#x3D;&#x3D;&#x3D; nameValue
+      (f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; nameValue || f.value &#x3D;&#x3D;&#x3D; nameValue,
     );
     //Throw error if not found
     if (field &#x3D;&#x3D;&#x3D; undefined)
@@ -1648,7 +1648,7 @@ export class ODataEnumTypeParser&lt;E&gt;
     if (this.flags) {
       return Enums.toValues&lt;any&gt;(this.members, value).reduce(
         (acc, v) &#x3D;&gt; acc | v,
-        0
+        0,
       ) as any;
     } else {
       return Enums.toValue&lt;any&gt;(this.members, value) as any;
@@ -1703,7 +1703,7 @@ export class ODataEnumTypeParser&lt;E&gt;
     }: {
       method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {}
+    } &#x3D; {},
   ): string[] | undefined {
     if (this.flags) {
       let members &#x3D; Enums.toValues(this.members, member);
@@ -1722,7 +1722,7 @@ export class ODataEnumTypeParser&lt;E&gt;
   pack(value: number[]): E {
     return Enums.toValues(this.members, value).reduce(
       (acc, v) &#x3D;&gt; acc | v,
-      0
+      0,
     ) as any;
   }
 }

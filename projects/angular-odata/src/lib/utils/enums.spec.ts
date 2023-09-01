@@ -90,7 +90,7 @@ describe('Enums', () => {
   it('should return all values for flag enum', () => {
     expect(Enums.toValues(EnumFlags, EnumFlags[EnumFlags.Mask4])).toEqual([16]);
     expect(
-      Enums.toValues(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask6)
+      Enums.toValues(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask6),
     ).toEqual([8, 64]);
     expect(Enums.toValues(EnumFlags, 'Mask1, Mask2, Mask3')).toEqual([2, 4, 8]);
     expect(Enums.toValues(EnumFlags, ['Mask1', 'Mask2', 'Mask3'])).toEqual([
@@ -99,8 +99,8 @@ describe('Enums', () => {
     expect(
       Enums.toValues(
         EnumFlags,
-        EnumFlags.Mask3 | EnumFlags.Mask7 | EnumFlags.Mask9
-      )
+        EnumFlags.Mask3 | EnumFlags.Mask7 | EnumFlags.Mask9,
+      ),
     ).toEqual([8, 128, 512]);
   });
 
@@ -109,7 +109,7 @@ describe('Enums', () => {
       'Mask4',
     ]);
     expect(Enums.toNames(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask6)).toEqual(
-      ['Mask3', 'Mask6']
+      ['Mask3', 'Mask6'],
     );
     expect(Enums.toNames(EnumFlags, 'Mask1, Mask2, Mask3')).toEqual([
       'Mask1',
@@ -124,8 +124,8 @@ describe('Enums', () => {
     expect(
       Enums.toNames(
         EnumFlags,
-        EnumFlags.Mask3 | EnumFlags.Mask7 | EnumFlags.Mask9
-      )
+        EnumFlags.Mask3 | EnumFlags.Mask7 | EnumFlags.Mask9,
+      ),
     ).toEqual(['Mask3', 'Mask7', 'Mask9']);
   });
 

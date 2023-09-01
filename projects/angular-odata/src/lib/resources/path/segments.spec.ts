@@ -39,7 +39,7 @@ describe('ODataPathSegments', () => {
     const pathSegments: ODataPathSegments = new ODataPathSegments();
     pathSegments.add(PathSegment.type, TYPE);
     expect(pathSegments.toString()).toEqual(
-      'Microsoft.OData.SampleService.Models.TripPin.Person'
+      'Microsoft.OData.SampleService.Models.TripPin.Person',
     );
   });
 
@@ -100,7 +100,7 @@ describe('ODataPathSegments', () => {
     pathSegments.add(PathSegment.navigationProperty, NAVIGATION_PROPERTY);
     pathSegments.keys(['foo', 'bar']);
     expect(pathSegments.toString()).toEqual(
-      "People('foo')/Friends('bar')/Friends"
+      "People('foo')/Friends('bar')/Friends",
     );
   });
 

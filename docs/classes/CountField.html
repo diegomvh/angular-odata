@@ -224,8 +224,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="66"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:66</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:78</a></div>
                 </td>
             </tr>
 
@@ -261,8 +261,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="54"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:54</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:66</a></div>
                 </td>
             </tr>
 
@@ -332,8 +332,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="76"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:76</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="88"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:88</a></div>
                 </td>
             </tr>
 
@@ -543,17 +543,17 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOption } from &#x27;../../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, QueryOption } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
-import { render, Field, Renderable } from &#x27;./syntax&#x27;;
+import { render, FieldFactory, Renderable } from &#x27;./syntax&#x27;;
 
-export class CountField&lt;T extends object&gt; implements Renderable {
+export class CountField&lt;T&gt; implements Renderable {
   constructor(
     protected field: any,
-    private values: { [name: string]: any } &#x3D; {}
+    private values: { [name: string]: any } &#x3D; {},
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -570,10 +570,12 @@ export class CountField&lt;T extends object&gt; implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser&lt;T&gt;;
   }): string {
     const params: { [key: string]: string } &#x3D; [
       QueryOption.filter,
@@ -583,11 +585,21 @@ export class CountField&lt;T extends object&gt; implements Renderable {
       .reduce((acc, key) &#x3D;&gt; {
         let value: any &#x3D; this.values[key];
         if (Types.rawType(value).endsWith(&#x27;Expression&#x27;)) {
-          value &#x3D; (value as Expression&lt;T&gt;).render({ aliases, prefix, escape });
+          value &#x3D; (value as Expression&lt;T&gt;).render({
+            aliases,
+            prefix,
+            escape,
+            parser,
+          });
         }
         return Object.assign(acc, { [key]: value });
       }, {});
-    let count &#x3D; &#x60;${render(this.field, { aliases, escape, prefix })}/$count&#x60;;
+    let count &#x3D; &#x60;${render(this.field, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+    })}/$count&#x60;;
     if (!Types.isEmpty(params)) {
       count &#x3D; &#x60;${count}(${Object.keys(params)
         .map((key) &#x3D;&gt; &#x60;$${key}&#x3D;${params[key]}&#x60;)
@@ -599,12 +611,12 @@ export class CountField&lt;T extends object&gt; implements Renderable {
   filter(
     opts: (
       builder: FilterExpressionBuilder&lt;T&gt;,
-      current?: FilterExpression&lt;T&gt;
-    ) &#x3D;&gt; FilterExpression&lt;T&gt;
+      current?: FilterExpression&lt;T&gt;,
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOption.filter])
+      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOption.filter]),
     );
   }
 
@@ -612,7 +624,7 @@ export class CountField&lt;T extends object&gt; implements Renderable {
     const values &#x3D; Object.keys(this.values).reduce(
       (acc, key) &#x3D;&gt;
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
-      {}
+      {},
     );
     return new CountField&lt;T&gt;(this.field.clone(), values);
   }
@@ -637,23 +649,23 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
     super({ children });
   }
 
-  static count&lt;T extends object&gt;(
+  static count&lt;T&gt;(
     opts: (
       builder: CountExpressionBuilder&lt;T&gt;,
-      current?: CountExpression&lt;T&gt;
+      current?: CountExpression&lt;T&gt;,
     ) &#x3D;&gt; CountExpression&lt;T&gt;,
-    current?: CountExpression&lt;T&gt;
+    current?: CountExpression&lt;T&gt;,
   ): CountExpression&lt;T&gt; {
     return opts(
       {
-        t: Field.factory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
         e: () &#x3D;&gt; new CountExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as CountExpression&lt;T&gt;;
   }
 
-  private _add(node: Renderable): CountExpression&lt;T&gt; {
+  private _add(node: Renderable): CountExpression&lt;any&gt; {
     this._children.push(node);
     return this;
   }
@@ -662,13 +674,15 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
   } &#x3D; {}): string {
     let content &#x3D; this._children
-      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser }))
       .join(&#x60;,&#x60;);
     return content;
   }
@@ -679,14 +693,14 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
     });
   }
 
-  field&lt;F extends Object&gt;(
+  field&lt;F&gt;(
     field: F[],
-    opts?: (e: { t: F; f: CountField&lt;F&gt; }) &#x3D;&gt; CountExpression&lt;F&gt;
+    opts?: (e: { t: F; f: CountField&lt;F&gt; }) &#x3D;&gt; CountExpression&lt;F&gt;,
   ): CountExpression&lt;F&gt; {
     let countField &#x3D; new CountField&lt;F&gt;(field);
     if (opts !&#x3D;&#x3D; undefined)
       opts({
-        t: Field.factory&lt;Readonly&lt;Required&lt;F&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Readonly&lt;Required&lt;F&gt;&gt;&gt;(),
         f: countField,
       });
     return this._add(countField);

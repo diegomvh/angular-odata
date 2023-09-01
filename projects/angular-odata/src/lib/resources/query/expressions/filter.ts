@@ -42,9 +42,9 @@ export class FilterExpression<F> extends Expression<F> {
   static filter<T>(
     opts: (
       builder: FilterExpressionBuilder<T>,
-      current?: FilterExpression<T>
+      current?: FilterExpression<T>,
     ) => FilterExpression<T>,
-    current?: FilterExpression<T>
+    current?: FilterExpression<T>,
   ): FilterExpression<T> {
     return opts(
       {
@@ -54,7 +54,7 @@ export class FilterExpression<F> extends Expression<F> {
         o: operators as ODataOperators<T>,
         f: functions as ODataFunctions<T>,
       },
-      current
+      current,
     ) as FilterExpression<T>;
   }
 
@@ -83,7 +83,7 @@ export class FilterExpression<F> extends Expression<F> {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<any>
+    parser?: Parser<any>;
   } = {}): string {
     let content = this._children
       .map((n) => n.render({ aliases, escape, prefix, parser }))
@@ -104,7 +104,7 @@ export class FilterExpression<F> extends Expression<F> {
 
   private _add(
     node: Renderable,
-    connector?: FilterConnector
+    connector?: FilterConnector,
   ): FilterExpression<F> {
     if (connector !== undefined && this._connector !== connector) {
       let children: Renderable[] = [];
@@ -144,7 +144,7 @@ export class FilterExpression<F> extends Expression<F> {
       this._children.push(
         node instanceof FilterExpression && !node.negated()
           ? new Grouping(node)
-          : node
+          : node,
       );
     }
     return this;
@@ -218,7 +218,7 @@ export class FilterExpression<F> extends Expression<F> {
       e: (connector?: FilterConnector) => FilterExpression<N>;
       t: N;
     }) => FilterExpression<N>,
-    alias?: string
+    alias?: string,
   ): FilterExpression<F> {
     let exp = undefined;
     if (opts !== undefined) {
@@ -237,7 +237,7 @@ export class FilterExpression<F> extends Expression<F> {
       t: N;
       e: (connector?: FilterConnector) => FilterExpression<N>;
     }) => FilterExpression<N>,
-    alias?: string
+    alias?: string,
   ): FilterExpression<F> {
     const exp = opts({
       t: FieldFactory<Readonly<Required<N>>>(),
@@ -249,7 +249,7 @@ export class FilterExpression<F> extends Expression<F> {
 
   count<N>(
     left: N[],
-    opts?: (e: { t: N; f: CountField<N> }) => CountExpression<N>
+    opts?: (e: { t: N; f: CountField<N> }) => CountExpression<N>,
   ): FilterExpression<F> {
     return this._add(new CountExpression<N>().field(left, opts));
   }

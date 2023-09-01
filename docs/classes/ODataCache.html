@@ -302,8 +302,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="74"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:74</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="76"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:76</a></div>
                 </td>
             </tr>
 
@@ -400,8 +400,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="91"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:91</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:93</a></div>
                 </td>
             </tr>
 
@@ -477,8 +477,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="157"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:157</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="159"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:159</a></div>
                 </td>
             </tr>
 
@@ -516,8 +516,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="136"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:136</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="138"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:138</a></div>
                 </td>
             </tr>
 
@@ -590,8 +590,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="124"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:124</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="126"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:126</a></div>
                 </td>
             </tr>
 
@@ -767,8 +767,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="187"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:187</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="189"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:189</a></div>
                 </td>
             </tr>
 
@@ -850,8 +850,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="222"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:222</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="224"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:224</a></div>
                 </td>
             </tr>
 
@@ -931,8 +931,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="176"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:176</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="178"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:178</a></div>
                 </td>
             </tr>
 
@@ -1023,8 +1023,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="166"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:166</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="168"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:168</a></div>
                 </td>
             </tr>
 
@@ -1100,8 +1100,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="103"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:103</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="105"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:105</a></div>
                 </td>
             </tr>
 
@@ -1493,7 +1493,7 @@ export abstract class ODataCache implements Cache {
           acc &#x3D; [...acc, s.path() as string];
         return acc;
       },
-      [&#x27;request&#x27;]
+      [&#x27;request&#x27;],
     );
   }
 
@@ -1507,7 +1507,9 @@ export abstract class ODataCache implements Cache {
     const context &#x3D; res.context;
     if (context.entitySet) {
       tags.push(
-        context.key ? &#x60;${context.entitySet}(${context.key})&#x60; : context.entitySet
+        context.key
+          ? &#x60;${context.entitySet}(${context.key})&#x60;
+          : context.entitySet,
       );
     }
     if (context.type) tags.push(context.type);
@@ -1523,7 +1525,7 @@ export abstract class ODataCache implements Cache {
    */
   buildEntry&lt;T&gt;(
     payload: T,
-    { timeout, tags }: { timeout?: number; tags?: string[] }
+    { timeout, tags }: { timeout?: number; tags?: string[] },
   ): ODataCacheEntry&lt;T&gt; {
     return {
       payload,
@@ -1557,7 +1559,7 @@ export abstract class ODataCache implements Cache {
       timeout,
       scope,
       tags,
-    }: { timeout?: number; scope?: string[]; tags?: string[] } &#x3D; {}
+    }: { timeout?: number; scope?: string[]; tags?: string[] } &#x3D; {},
   ) {
     const entry &#x3D; this.buildEntry&lt;T&gt;(payload, { timeout, tags });
     const key &#x3D; this.buildKey([...(scope || []), name]);
@@ -1625,7 +1627,7 @@ export abstract class ODataCache implements Cache {
    */
   handleRequest(
     req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
+    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;,
   ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
     return req.isFetch()
       ? this.handleFetch(req, res$)
@@ -1636,7 +1638,7 @@ export abstract class ODataCache implements Cache {
 
   private handleFetch(
     req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
+    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;,
   ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
     const policy &#x3D; req.fetchPolicy;
     const cached &#x3D; this.getResponse(req);
@@ -1659,7 +1661,7 @@ export abstract class ODataCache implements Cache {
         tap((res: ODataResponse&lt;any&gt;) &#x3D;&gt; {
           if (res.options.cacheability !&#x3D;&#x3D; &#x27;no-store&#x27;)
             this.putResponse(req, res);
-        })
+        }),
       );
     }
     return cached !&#x3D;&#x3D; undefined &amp;&amp; policy !&#x3D;&#x3D; &#x27;network-only&#x27;
@@ -1671,7 +1673,7 @@ export abstract class ODataCache implements Cache {
 
   private handleMutate(
     req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
+    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;,
   ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
     const requests &#x3D; req.isBatch()
       ? (req.resource as ODataBatchResource)

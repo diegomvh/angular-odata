@@ -67,7 +67,7 @@ export class ODataApi {
     this.serviceRootUrl = config.serviceRootUrl;
     if (this.serviceRootUrl.indexOf('?') != -1)
       throw new Error(
-        "The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters"
+        "The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters",
       );
     if (!this.serviceRootUrl.endsWith('/')) this.serviceRootUrl += '/';
     this.metadataUrl = `${this.serviceRootUrl}$metadata`;
@@ -76,7 +76,10 @@ export class ODataApi {
     this.default = config.default || false;
     this.creation = config.creation || new Date();
     this.options = new ODataApiOptions(
-      Object.assign(<ApiOptions>{ version: this.version }, config.options || {})
+      Object.assign(
+        <ApiOptions>{ version: this.version },
+        config.options || {},
+      ),
     );
 
     this.cache = (config.cache as ODataCache) || new ODataInMemoryCache();
@@ -85,14 +88,14 @@ export class ODataApi {
     this.parsers = new Map(Object.entries(config.parsers || EDM_PARSERS));
 
     this.schemas = (config.schemas || []).map(
-      (schema) => new ODataSchema(schema, this)
+      (schema) => new ODataSchema(schema, this),
     );
   }
 
   configure(
     settings: {
       requester?: (request: ODataRequest<any>) => Observable<any>;
-    } = {}
+    } = {},
   ) {
     this.requester = settings.requester;
     this.schemas.forEach((schema) => {
@@ -224,7 +227,7 @@ export class ODataApi {
       observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ): Observable<any> {
     let req = ODataRequest.factory(this, method, resource, {
       body: options.body,
@@ -249,8 +252,8 @@ export class ODataApi {
       map((res: HttpEvent<any>) =>
         res.type === HttpEventType.Response
           ? ODataResponse.fromHttpResponse<any>(req, res)
-          : res
-      )
+          : res,
+      ),
     );
 
     if (this.errorHandler !== undefined)
@@ -283,7 +286,7 @@ export class ODataApi {
       default:
         // Guard against new future observe types being added.
         throw new Error(
-          `Unreachable: unhandled observe type ${options.observe}}`
+          `Unreachable: unhandled observe type ${options.observe}}`,
         );
     }
   }
@@ -361,7 +364,7 @@ export class ODataApi {
     }
     const callable = this.findSchemaForType(type)?.findCallableForType<T>(
       type,
-      bindingType
+      bindingType,
     );
     this.memo.forType.callable.set(key, callable);
     return callable;
@@ -438,7 +441,7 @@ export class ODataApi {
     const entitySet = this.schemas
       .reduce(
         (acc, schema) => [...acc, ...schema.entitySets],
-        <ODataEntitySet[]>[]
+        <ODataEntitySet[]>[],
       )
       .find((e) => e.entityType === entityType);
     this.memo.forType.entitySet.set(entityType, entitySet);
@@ -458,7 +461,7 @@ export class ODataApi {
     const enumType = this.schemas
       .reduce(
         (acc, schema) => [...acc, ...schema.enums],
-        <ODataEnumType<T>[]>[]
+        <ODataEnumType<T>[]>[],
       )
       .find((e) => e.name === name);
     this.memo.byName.enum.set(name, enumType);
@@ -474,7 +477,7 @@ export class ODataApi {
     const structuredType = this.schemas
       .reduce(
         (acc, schema) => [...acc, ...schema.entities],
-        <ODataStructuredType<T>[]>[]
+        <ODataStructuredType<T>[]>[],
       )
       .find((e) => e.name === name);
     this.memo.byName.structured.set(name, structuredType);
@@ -489,12 +492,12 @@ export class ODataApi {
     const callable = this.schemas
       .reduce(
         (acc, schema) => [...acc, ...schema.callables],
-        <ODataCallable<T>[]>[]
+        <ODataCallable<T>[]>[],
       )
       .find(
         (c) =>
           c.name === name &&
-          (bindingType === undefined || c.binding()?.type === bindingType)
+          (bindingType === undefined || c.binding()?.type === bindingType),
       );
     this.memo.byName.callable.set(key, callable);
     return callable;
@@ -507,7 +510,7 @@ export class ODataApi {
     const schema = this.schemas
       .reduce(
         (acc, schema) => [...acc, ...schema.entitySets],
-        <ODataEntitySet[]>[]
+        <ODataEntitySet[]>[],
       )
       .find((e) => e.name === name);
     this.memo.byName.entitySet.set(name, schema);

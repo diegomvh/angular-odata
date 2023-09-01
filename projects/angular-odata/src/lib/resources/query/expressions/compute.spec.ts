@@ -33,7 +33,7 @@ describe('OData compute builder', () => {
   describe('base condition', () => {
     it('field', () => {
       const compare1 = ComputeExpression.compute<Person>(({ e, t }) =>
-        e().field('Class', ({ f }) => f.year(t.BornOn))
+        e().field('Class', ({ f }) => f.year(t.BornOn)),
       );
 
       expect(compare1.render()).toBe('year(BornOn) as Class');

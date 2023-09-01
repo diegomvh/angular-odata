@@ -10,12 +10,12 @@ export interface Renderable {
     aliases,
     escape,
     prefix,
-    parser
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<any>
+    parser?: Parser<any>;
   }): string;
   toString(): string;
   toJSON(): any;
@@ -39,16 +39,20 @@ export const FieldFactory = <T extends object>(names: string[] = []): any =>
           names: names,
         });
       } else if (key === 'resolve') {
-        return (parser: any) => names.reduce((acc: any, name: string) => acc.field(name), parser);
+        return (parser: any) =>
+          names.reduce((acc: any, name: string) => acc.field(name), parser);
       } else {
         return FieldFactory([...names, key]);
       }
     },
 
     has(target: T, key: string): any {
-      return ['toJSON', 'isField', 'clone', 'render', 'resolve'].includes(key) || key in target;
-    }
-  })
+      return (
+        ['toJSON', 'isField', 'clone', 'render', 'resolve'].includes(key) ||
+        key in target
+      );
+    },
+  });
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
@@ -57,7 +61,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
         derivedCtor.prototype,
         name,
         Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-        Object.create(null)
+          Object.create(null),
       );
     });
   });
@@ -77,21 +81,18 @@ export function render(
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
-  } = {}
+  } = {},
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
     return render(value(syntax), { aliases, normalize, prefix, parser });
   }
-  if (
-    Types.isObject(value) &&
-    'render' in value
-  ) {
+  if (Types.isObject(value) && 'render' in value) {
     return render(value.render({ aliases, escape, prefix, parser }), {
       aliases,
       normalize,
       escape,
       prefix,
-      parser
+      parser,
     });
   }
   return normalize ? normalizeValue(value, { aliases, escape }) : value;
@@ -99,7 +100,9 @@ export function render(
 
 export function resolve(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
-    let fields = values.filter((v: any) => Types.isObject(v) && 'isField' in v && v.isField()); 
+    let fields = values.filter(
+      (v: any) => Types.isObject(v) && 'isField' in v && v.isField(),
+    );
     if (fields.length === 1 && Types.isObject(parser) && 'field' in parser) {
       return fields[0].resolve(parser);
     }
@@ -109,7 +112,9 @@ export function resolve(values: any, parser?: Parser<any>) {
 
 export function encode(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
-    return values.map((v: any) => (Types.isObject(v) || v === null) ? v: parser?.encode(v)); 
+    return values.map((v: any) =>
+      Types.isObject(v) || v === null ? v : parser?.encode(v),
+    );
   }
   return values;
 }
@@ -119,8 +124,8 @@ export class Function<T> implements Renderable {
     protected name: string,
     protected values: any[],
     protected normalize: Normalize,
-    protected escape: boolean = false
-  ) { }
+    protected escape: boolean = false,
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'Function';
@@ -130,7 +135,9 @@ export class Function<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       name: this.name,
-      values: this.values.map((v) => Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v),
+      values: this.values.map((v) =>
+        Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v,
+      ),
       normalize: this.normalize,
     };
   }
@@ -144,16 +151,28 @@ export class Function<T> implements Renderable {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<T>
+    parser?: Parser<T>;
   }): string {
     parser = resolve(this.values, parser);
     let [left, ...values] = encode(this.values, parser);
 
-    left = render(left, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'left' });
+    left = render(left, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      normalize: this.normalize === 'all' || this.normalize === 'left',
+    });
     const params = [
       left,
       ...values.map((v: any) =>
-        render(v, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'right' })
+        render(v, {
+          aliases,
+          escape,
+          prefix,
+          parser,
+          normalize: this.normalize === 'all' || this.normalize === 'right',
+        }),
       ),
     ];
     return `${this.name}(${params.join(', ')})`;
@@ -164,7 +183,7 @@ export class Function<T> implements Renderable {
       this.name,
       this.values.map((v) => Objects.clone(v)),
       this.normalize,
-      this.escape
+      this.escape,
     );
   }
 }
@@ -194,7 +213,12 @@ export class StringAndCollectionFunctions<T> {
     return new Function<T>('startswith', [left, right], normalize);
   }
 
-  subString(left: any, right: number, length?: number, normalize: Normalize = 'none') {
+  subString(
+    left: any,
+    right: number,
+    length?: number,
+    normalize: Normalize = 'none',
+  ) {
     let values = [left, right];
     if (length !== undefined) {
       values.push(length);
@@ -213,7 +237,11 @@ export class CollectionFunctions<T> {
 }
 
 export class StringFunctions<T> {
-  matchesPattern(left: any | string, pattern: string, normalize: Normalize = 'none') {
+  matchesPattern(
+    left: any | string,
+    pattern: string,
+    normalize: Normalize = 'none',
+  ) {
     return new Function<T>('matchesPattern', [left, pattern], normalize);
   }
   toLower(left: any, normalize: Normalize = 'none') {
@@ -316,8 +344,8 @@ export class Operator<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: Normalize
-  ) { }
+    protected normalize: Normalize,
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'Operator';
@@ -327,7 +355,9 @@ export class Operator<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       op: this.op,
-      values: this.values.map((v) => Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v),
+      values: this.values.map((v) =>
+        Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v,
+      ),
       normalize: this.normalize,
     };
   }
@@ -341,32 +371,39 @@ export class Operator<T> implements Renderable {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<T>
+    parser?: Parser<T>;
   }): string {
     parser = resolve(this.values, parser);
     let [left, right] = encode(this.values, parser);
 
-    left = render(left, { aliases, escape, prefix, parser, normalize: this.normalize === 'all' || this.normalize === 'left' });
+    left = render(left, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      normalize: this.normalize === 'all' || this.normalize === 'left',
+    });
     if (right !== undefined) {
       right = Array.isArray(right)
         ? `(${right
-          .map((v) =>
-            render(v, {
-              aliases,
-              escape,
-              prefix,
-              parser,
-              normalize: this.normalize === 'all' || this.normalize === 'right',
-            })
-          )
-          .join(',')})`
+            .map((v) =>
+              render(v, {
+                aliases,
+                escape,
+                prefix,
+                parser,
+                normalize:
+                  this.normalize === 'all' || this.normalize === 'right',
+              }),
+            )
+            .join(',')})`
         : render(right, {
-          aliases,
-          escape,
-          prefix,
-          parser,
-          normalize: this.normalize === 'all' || this.normalize === 'right',
-        });
+            aliases,
+            escape,
+            prefix,
+            parser,
+            normalize: this.normalize === 'all' || this.normalize === 'right',
+          });
       return `${left} ${this.op} ${right}`;
     }
     return `${this.op}(${left})`;
@@ -376,7 +413,7 @@ export class Operator<T> implements Renderable {
     return new Operator(
       this.op,
       this.values.map((v) => Objects.clone(v)),
-      this.normalize
+      this.normalize,
     );
   }
 }
@@ -441,7 +478,7 @@ export class ArithmeticOperators<T> {
 }
 
 export class Grouping<T> implements Renderable {
-  constructor(protected group: Renderable) { }
+  constructor(protected group: Renderable) {}
 
   get [Symbol.toStringTag]() {
     return 'Grouping';
@@ -477,8 +514,8 @@ export class Lambda<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected alias?: string
-  ) { }
+    protected alias?: string,
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'Lambda';
@@ -488,7 +525,9 @@ export class Lambda<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       op: this.op,
-      values: this.values.map((v) => Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v),
+      values: this.values.map((v) =>
+        Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v,
+      ),
       alias: this.alias,
     };
   }
@@ -502,7 +541,7 @@ export class Lambda<T> implements Renderable {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<T>
+    parser?: Parser<T>;
   }): string {
     parser = resolve(this.values, parser);
     let [left, right] = encode(this.values, parser);
@@ -525,7 +564,7 @@ export class Lambda<T> implements Renderable {
     return new Lambda(
       this.op,
       this.values.map((v) => Objects.clone(v)),
-      this.alias
+      this.alias,
     );
   }
 }
@@ -540,11 +579,11 @@ export class LambdaOperators<T> {
   }
 }
 
-export class ODataOperators<T> { }
+export class ODataOperators<T> {}
 export interface ODataOperators<T>
   extends LogicalOperators<T>,
-  ArithmeticOperators<T>,
-  LambdaOperators<T> { }
+    ArithmeticOperators<T>,
+    LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
@@ -553,16 +592,16 @@ applyMixins(ODataOperators, [
 ]);
 export const operators: ODataOperators<any> = new ODataOperators<any>();
 
-export class ODataFunctions<T> { }
+export class ODataFunctions<T> {}
 export interface ODataFunctions<T>
   extends StringAndCollectionFunctions<T>,
-  CollectionFunctions<T>,
-  StringFunctions<T>,
-  DateAndTimeFunctions<T>,
-  ArithmeticFunctions<T>,
-  TypeFunctions<T>,
-  GeoFunctions<T>,
-  ConditionalFunctions<T> { }
+    CollectionFunctions<T>,
+    StringFunctions<T>,
+    DateAndTimeFunctions<T>,
+    ArithmeticFunctions<T>,
+    TypeFunctions<T>,
+    GeoFunctions<T>,
+    ConditionalFunctions<T> {}
 
 applyMixins(ODataFunctions, [
   StringAndCollectionFunctions,
@@ -576,8 +615,8 @@ applyMixins(ODataFunctions, [
 ]);
 export const functions: ODataFunctions<any> = new ODataFunctions<any>();
 
-export class ODataSyntax<T> { }
-export interface ODataSyntax<T> extends ODataOperators<T>, ODataFunctions<T> { }
+export class ODataSyntax<T> {}
+export interface ODataSyntax<T> extends ODataOperators<T>, ODataFunctions<T> {}
 applyMixins(ODataSyntax, [ODataOperators, ODataFunctions]);
 
 export const syntax: ODataSyntax<any> = new ODataSyntax<any>();

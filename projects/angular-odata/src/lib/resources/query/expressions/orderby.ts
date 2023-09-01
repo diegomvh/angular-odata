@@ -4,7 +4,10 @@ import { Expression } from './base';
 import { render, FieldFactory, Renderable } from './syntax';
 
 export class OrderByField implements Renderable {
-  constructor(protected field: Renderable, protected order: 'asc' | 'desc') {}
+  constructor(
+    protected field: Renderable,
+    protected order: 'asc' | 'desc',
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'OrderByField';
@@ -26,9 +29,11 @@ export class OrderByField implements Renderable {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<any>
+    parser?: Parser<any>;
   }): string {
-    return `${render(this.field, { aliases, escape, prefix, parser })} ${this.order}`;
+    return `${render(this.field, { aliases, escape, prefix, parser })} ${
+      this.order
+    }`;
   }
 
   clone() {
@@ -52,16 +57,16 @@ export class OrderByExpression<T> extends Expression<T> {
   static orderBy<T>(
     opts: (
       builder: OrderByExpressionBuilder<T>,
-      current?: OrderByExpression<T>
+      current?: OrderByExpression<T>,
     ) => OrderByExpression<T>,
-    current?: OrderByExpression<T>
+    current?: OrderByExpression<T>,
   ): OrderByExpression<T> {
     return opts(
       {
         t: FieldFactory<Readonly<Required<T>>>(),
         e: () => new OrderByExpression<T>(),
       },
-      current
+      current,
     ) as OrderByExpression<T>;
   }
 
@@ -79,7 +84,7 @@ export class OrderByExpression<T> extends Expression<T> {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<T>
+    parser?: Parser<T>;
   } = {}): string {
     let content = this._children
       .map((n) => n.render({ aliases, escape, prefix, parser }))

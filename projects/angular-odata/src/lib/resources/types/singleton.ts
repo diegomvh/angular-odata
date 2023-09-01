@@ -26,7 +26,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path: string;
       schema?: ODataStructuredType<S>;
       query?: ODataQueryOptions<S>;
-    }
+    },
   ) {
     const segments = new ODataPathSegments();
     const segment = segments.add(PathSegment.singleton, path);
@@ -51,8 +51,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
         value,
-        this.api.findStructuredTypeForType<T>(types[index])
-      )
+        this.api.findStructuredTypeForType<T>(types[index]),
+      ),
     );
     singleton.segment((s) => s.keys(keys));
     return singleton;
@@ -77,21 +77,21 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     attrs: Partial<T>,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   protected override put(
     attrs: Partial<T>,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
   protected override patch(
     attrs: Partial<T>,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
@@ -103,7 +103,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   protected override get(
     options: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    } = {}
+    } = {},
   ): Observable<any> {
     return super.get({ responseType: 'entity', ...options });
   }
@@ -118,7 +118,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    */
   create(
     attrs: Partial<T>,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<ODataEntity<T>> {
     return this.post(attrs, options);
   }
@@ -131,7 +131,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    */
   update(
     attrs: Partial<T>,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<ODataEntity<T>> {
     return this.put(attrs, options);
   }
@@ -144,7 +144,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    */
   modify(
     attrs: Partial<T>,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<ODataEntity<T>> {
     return this.patch(attrs, options);
   }
@@ -166,7 +166,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   fetch(
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ): Observable<ODataEntity<T>> {
     return this.get(options);
   }
@@ -179,7 +179,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   fetchEntity(
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ): Observable<T | null> {
     return this.fetch(options).pipe(map(({ entity }) => entity));
   }
@@ -192,12 +192,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   fetchModel<M extends ODataModel<T>>(
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ): Observable<M | null> {
     return this.fetch(options).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel<M>(entity, { annots }) : null
-      )
+        entity ? this.asModel<M>(entity, { annots }) : null,
+      ),
     );
   }
   //#endregion

@@ -15,7 +15,7 @@ export const Types = {
   },
 
   isObject(value: any) {
-    return typeof value === 'object' && value !== null; 
+    return typeof value === 'object' && value !== null;
   },
 
   isPlainObject(value: any) {

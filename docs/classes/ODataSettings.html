@@ -2028,7 +2028,7 @@ export class ODataSettings {
   }
   public findApiForTypes(types: string[]) {
     return this.apis.find((c) &#x3D;&gt;
-      c.schemas.some((s) &#x3D;&gt; types.some((type) &#x3D;&gt; s.isNamespaceOf(type)))
+      c.schemas.some((s) &#x3D;&gt; types.some((type) &#x3D;&gt; s.isNamespaceOf(type))),
     );
   }
   public findApiForType(type: string) {

@@ -19,16 +19,16 @@ export class SelectExpression<T> extends Expression<T> {
   static select<T>(
     opts: (
       builder: SelectExpressionBuilder<T>,
-      current?: SelectExpression<T>
+      current?: SelectExpression<T>,
     ) => SelectExpression<T>,
-    current?: SelectExpression<T>
+    current?: SelectExpression<T>,
   ): SelectExpression<T> {
     return opts(
       {
         t: FieldFactory<Readonly<Required<T>>>(),
         e: () => new SelectExpression<T>(),
       },
-      current
+      current,
     ) as SelectExpression<T>;
   }
 
@@ -36,7 +36,7 @@ export class SelectExpression<T> extends Expression<T> {
     aliases,
     escape,
     prefix,
-    parser
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;

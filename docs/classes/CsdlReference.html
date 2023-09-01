@@ -353,21 +353,24 @@ export class CsdlReference extends CsdlAnnotable {
     public uri: string,
     public includes?: CsdlInclude[],
     public includeAnnotations?: CsdlIncludeAnnotations[],
-    annotationList?: CsdlAnnotation[]
+    annotationList?: CsdlAnnotation[],
   ) {
     super(annotationList);
   }
 }
 
 export class CsdlInclude {
-  constructor(public namespace: string, public alias?: string) {}
+  constructor(
+    public namespace: string,
+    public alias?: string,
+  ) {}
 }
 
 export class CsdlIncludeAnnotations {
   constructor(
     public termNamespace: string,
     public qualifier?: string,
-    public targetNamespace?: string
+    public targetNamespace?: string,
   ) {}
 }
 </code></pre>

@@ -132,7 +132,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: ParserOptions | StructuredTypeFieldOptions)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">ParserOptions | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -175,7 +175,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                            <code>ParserOptions | StructuredTypeFieldOptions</code>
+                                                <code><a href="../classes/Field.html" target="_self" >ParserOptions | StructuredTypeFieldOptions</a></code>
                                     </td>
 
                                     <td>
@@ -213,7 +213,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: ParserOptions | StructuredTypeFieldOptions)</code>
+<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">ParserOptions | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -256,7 +256,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                            <code>ParserOptions | StructuredTypeFieldOptions</code>
+                                                <code><a href="../classes/Field.html" target="_self" >ParserOptions | StructuredTypeFieldOptions</a></code>
                                     </td>
 
                                     <td>
@@ -294,7 +294,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: ParserOptions | StructuredTypeFieldOptions)</code>
+<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">ParserOptions | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -337,7 +337,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                            <code>ParserOptions | StructuredTypeFieldOptions</code>
+                                                <code><a href="../classes/Field.html" target="_self" >ParserOptions | StructuredTypeFieldOptions</a></code>
                                     </td>
 
                                     <td>
@@ -537,12 +537,12 @@ export interface Parser&lt;T&gt; {
   // Deserialize value/s from request body.
   deserialize(
     value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions,
   ): T;
   // Serialize value/s for request body.
   serialize(
     value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions,
   ): any;
   //Encode value/s for URL parameter or query-string.
   encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;

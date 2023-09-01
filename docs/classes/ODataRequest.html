@@ -1306,7 +1306,7 @@ export class ODataRequest&lt;T&gt; {
     // IEEE754
     if (this.api.options.accept?.ieee754Compatible !&#x3D;&#x3D; undefined)
       accept.push(
-        &#x60;IEEE754Compatible&#x3D;${this.api.options.accept?.ieee754Compatible}&#x60;
+        &#x60;IEEE754Compatible&#x3D;${this.api.options.accept?.ieee754Compatible}&#x60;,
       );
     // streaming
     if (this.api.options.accept?.streaming !&#x3D;&#x3D; undefined)
@@ -1314,7 +1314,7 @@ export class ODataRequest&lt;T&gt; {
     // ExponentialDecimals
     if (this.api.options.accept?.exponentialDecimals !&#x3D;&#x3D; undefined)
       accept.push(
-        &#x60;ExponentialDecimals&#x3D;${this.api.options.accept?.exponentialDecimals}&#x60;
+        &#x60;ExponentialDecimals&#x3D;${this.api.options.accept?.exponentialDecimals}&#x60;,
       );
     if (accept.length &gt; 0)
       customHeaders[ACCEPT] &#x3D; [
@@ -1342,7 +1342,7 @@ export class ODataRequest&lt;T&gt; {
       [&#x27;GET&#x27;].indexOf(this._method) !&#x3D;&#x3D; -1
     )
       prefer.push(
-        &#x60;odata.include-annotations&#x3D;${this.api.options.prefer?.includeAnnotations}&#x60;
+        &#x60;odata.include-annotations&#x3D;${this.api.options.prefer?.includeAnnotations}&#x60;,
       );
     // Omit Null Values
     if (
@@ -1360,7 +1360,7 @@ export class ODataRequest&lt;T&gt; {
     this._headers &#x3D; Http.mergeHttpHeaders(
       this.api.options.headers,
       customHeaders,
-      init.headers || {}
+      init.headers || {},
     );
     //#endregion
 
@@ -1382,7 +1382,7 @@ export class ODataRequest&lt;T&gt; {
     const params &#x3D; Http.mergeHttpParams(
       this.api.options.params,
       customParams,
-      init.params || {}
+      init.params || {},
     );
 
     this._params &#x3D;
@@ -1417,7 +1417,7 @@ export class ODataRequest&lt;T&gt; {
       observe: &#x27;events&#x27; | &#x27;response&#x27;;
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ) {
     const apiOptions &#x3D; api.options;
     let params &#x3D; options.params || {};
@@ -1469,7 +1469,7 @@ export class ODataRequest&lt;T&gt; {
     return this.isQueryBody()
       ? Http.splitHttpParams(
           this._params,
-          this.bodyQueryOptions.map((name) &#x3D;&gt; &#x60;$${name}&#x60;)
+          this.bodyQueryOptions.map((name) &#x3D;&gt; &#x60;$${name}&#x60;),
         )[1].toString()
       : this._body;
   }
@@ -1478,7 +1478,7 @@ export class ODataRequest&lt;T&gt; {
     return this.isQueryBody()
       ? Http.splitHttpParams(
           this._params,
-          this.bodyQueryOptions.map((name) &#x3D;&gt; &#x60;$${name}&#x60;)
+          this.bodyQueryOptions.map((name) &#x3D;&gt; &#x60;$${name}&#x60;),
         )[0]
       : this._params;
   }

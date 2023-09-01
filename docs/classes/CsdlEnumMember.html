@@ -196,7 +196,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:12</a></div>
                         </td>
                     </tr>
 
@@ -224,7 +224,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:13</a></div>
                         </td>
                     </tr>
 
@@ -248,12 +248,15 @@
     public name: string,
     public members: CsdlEnumMember[],
     public underlyingType?: string,
-    public isFlags?: boolean
+    public isFlags?: boolean,
   ) {}
 }
 
 export class CsdlEnumMember {
-  constructor(public name: string, public value?: number) {}
+  constructor(
+    public name: string,
+    public value?: number,
+  ) {}
 }
 </code></pre>
     </div>

@@ -131,7 +131,7 @@ export class ODataRequest<T> {
     // IEEE754
     if (this.api.options.accept?.ieee754Compatible !== undefined)
       accept.push(
-        `IEEE754Compatible=${this.api.options.accept?.ieee754Compatible}`
+        `IEEE754Compatible=${this.api.options.accept?.ieee754Compatible}`,
       );
     // streaming
     if (this.api.options.accept?.streaming !== undefined)
@@ -139,7 +139,7 @@ export class ODataRequest<T> {
     // ExponentialDecimals
     if (this.api.options.accept?.exponentialDecimals !== undefined)
       accept.push(
-        `ExponentialDecimals=${this.api.options.accept?.exponentialDecimals}`
+        `ExponentialDecimals=${this.api.options.accept?.exponentialDecimals}`,
       );
     if (accept.length > 0)
       customHeaders[ACCEPT] = [
@@ -167,7 +167,7 @@ export class ODataRequest<T> {
       ['GET'].indexOf(this._method) !== -1
     )
       prefer.push(
-        `odata.include-annotations=${this.api.options.prefer?.includeAnnotations}`
+        `odata.include-annotations=${this.api.options.prefer?.includeAnnotations}`,
       );
     // Omit Null Values
     if (
@@ -185,7 +185,7 @@ export class ODataRequest<T> {
     this._headers = Http.mergeHttpHeaders(
       this.api.options.headers,
       customHeaders,
-      init.headers || {}
+      init.headers || {},
     );
     //#endregion
 
@@ -207,7 +207,7 @@ export class ODataRequest<T> {
     const params = Http.mergeHttpParams(
       this.api.options.params,
       customParams,
-      init.params || {}
+      init.params || {},
     );
 
     this._params =
@@ -242,7 +242,7 @@ export class ODataRequest<T> {
       observe: 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ) {
     const apiOptions = api.options;
     let params = options.params || {};
@@ -294,7 +294,7 @@ export class ODataRequest<T> {
     return this.isQueryBody()
       ? Http.splitHttpParams(
           this._params,
-          this.bodyQueryOptions.map((name) => `$${name}`)
+          this.bodyQueryOptions.map((name) => `$${name}`),
         )[1].toString()
       : this._body;
   }
@@ -303,7 +303,7 @@ export class ODataRequest<T> {
     return this.isQueryBody()
       ? Http.splitHttpParams(
           this._params,
-          this.bodyQueryOptions.map((name) => `$${name}`)
+          this.bodyQueryOptions.map((name) => `$${name}`),
         )[0]
       : this._params;
   }

@@ -23,7 +23,7 @@ export class CsdlSchema extends CsdlAnnotable {
     public typeDefinitions?: CsdlTypeDefinition[],
     public terms?: CsdlTerm[],
     public annotationsList?: CsdlAnnotations[],
-    annotationList?: CsdlAnnotation[]
+    annotationList?: CsdlAnnotation[],
   ) {
     super(annotationList);
   }

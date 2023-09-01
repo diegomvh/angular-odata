@@ -9,7 +9,7 @@ export const Enums = {
 
   toValue<E extends { [key: string]: any }>(
     enums: E,
-    value: any
+    value: any,
   ): number | undefined {
     if (value in enums) return typeof value === 'string' ? enums[value] : value;
     return undefined;
@@ -30,7 +30,7 @@ export const Enums = {
 
   toName<E extends { [key: string]: any }>(
     enums: E,
-    value: any
+    value: any,
   ): string | undefined {
     if (value in enums) return typeof value === 'number' ? enums[value] : value;
     return undefined;

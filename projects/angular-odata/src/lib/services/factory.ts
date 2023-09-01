@@ -14,12 +14,12 @@ export class ODataServiceFactory {
    */
   entitySet<T>(
     entitySetName: string,
-    apiNameOrEntityType?: string
+    apiNameOrEntityType?: string,
   ): ODataEntitySetService<T> {
     return new (class extends ODataEntitySetService<T> {})(
       this.client,
       entitySetName,
-      apiNameOrEntityType
+      apiNameOrEntityType,
     );
   }
 
@@ -29,12 +29,12 @@ export class ODataServiceFactory {
    */
   singleton<T>(
     singletonName: string,
-    apiNameOrEntityType?: string
+    apiNameOrEntityType?: string,
   ): ODataSingletonService<T> {
     return new (class extends ODataSingletonService<T> {})(
       this.client,
       singletonName,
-      apiNameOrEntityType
+      apiNameOrEntityType,
     );
   }
 }

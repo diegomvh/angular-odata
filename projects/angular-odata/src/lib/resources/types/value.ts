@@ -22,7 +22,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
       schema?: ODataStructuredType<V>;
       segments: ODataPathSegments;
       query?: ODataQueryOptions<V>;
-    }
+    },
   ) {
     const baseType = type;
     const bindingType = schema?.type();

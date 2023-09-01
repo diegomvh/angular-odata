@@ -5,7 +5,7 @@ export const Arrays = {
   //   => [[1, 'a'], [2, 'b'], [3, 'c'], [4, 'd'], [5, 'e'], [6, 'f']]
   zip: (...arrays: any[][]) => {
     return arrays[0].map((_: any, i: number) =>
-      arrays.map((array: any[]) => array[i])
+      arrays.map((array: any[]) => array[i]),
     );
   },
 };

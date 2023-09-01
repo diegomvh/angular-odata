@@ -719,7 +719,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
   }
 
   private restoreRequester(
-    handler: ((req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;) | undefined
+    handler: ((req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;) | undefined,
   ) {
     this.api.requester &#x3D; handler;
   }
@@ -774,12 +774,12 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
             if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
           });
           return response;
-        })
+        }),
       );
   }
 
   private sendLegacy(
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable&lt;ODataResponse&lt;string&gt;&gt; {
     const bound &#x3D; Strings.uniqueId({ prefix: BATCH_PREFIX });
     const headers &#x3D; Http.mergeHttpHeaders((options &amp;&amp; options.headers) || {}, {
@@ -809,7 +809,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
             if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
           });
           return response;
-        })
+        }),
       );
   }
 
@@ -821,7 +821,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
    */
   exec&lt;R&gt;(
     ctx: (batch: this) &#x3D;&gt; R,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable&lt;[R, ODataResponse&lt;string&gt;]&gt; {
     let result &#x3D; this.add(ctx);
     return this.send(options).pipe(map((response) &#x3D;&gt; [result, response]));
@@ -830,7 +830,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
   body() {
     return ODataBatchResource.buildLegacyBody(
       Strings.uniqueId({ prefix: BATCH_PREFIX }),
-      this._requests
+      this._requests,
     );
   }
 
@@ -840,7 +840,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
 
   static buildLegacyBody(
     batchBoundary: string,
-    requests: ODataBatchRequest&lt;any&gt;[]
+    requests: ODataBatchRequest&lt;any&gt;[],
   ): string {
     let res &#x3D; [];
     let changesetBoundary: string | null &#x3D; null;
@@ -850,7 +850,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       // if method is GET and there is a changeset boundary open then close it
       if (request.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; &amp;&amp; changesetBoundary !&#x3D;&#x3D; null) {
         res.push(
-          &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
+          &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;,
         );
         changesetBoundary &#x3D; null;
       }
@@ -865,7 +865,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
         if (changesetBoundary &#x3D;&#x3D;&#x3D; null) {
           changesetBoundary &#x3D; Strings.uniqueId({ prefix: CHANGESET_PREFIX });
           res.push(
-            &#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;
+            &#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;,
           );
           res.push(NEWLINE);
         }
@@ -886,12 +886,12 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     if (res.length) {
       if (changesetBoundary !&#x3D;&#x3D; null) {
         res.push(
-          &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
+          &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;,
         );
         changesetBoundary &#x3D; null;
       }
       res.push(
-        &#x60;${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
+        &#x60;${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;,
       );
     }
     return res.join(NEWLINE);
@@ -905,7 +905,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
 
   static parseLegacyResponse(
     requests: ODataBatchRequest&lt;any&gt;[],
-    response: ODataResponse&lt;string&gt;
+    response: ODataResponse&lt;string&gt;,
   ): HttpResponseBase[] {
     let chunks: string[][] &#x3D; [];
     const contentType: string &#x3D; response.headers.get(CONTENT_TYPE) || &#x27;&#x27;;
@@ -986,7 +986,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
         const batchBodyLineParts: string[] &#x3D; batchBodyLine.split(&#x27;: &#x27;);
         headers &#x3D; headers.append(
           batchBodyLineParts[0].trim(),
-          batchBodyLineParts[1].trim()
+          batchBodyLineParts[1].trim(),
         );
       }
 
@@ -1036,7 +1036,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
 
   static parseJsonResponse(
     requests: ODataBatchRequest&lt;any&gt;[],
-    response: ODataResponse&lt;any&gt;
+    response: ODataResponse&lt;any&gt;,
   ): HttpResponseBase[] {
     const responses: Object[] &#x3D;
       (response.body ? response.body : {})[&#x27;responses&#x27;] ?? [];

@@ -164,7 +164,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:6</a></div>
                             </td>
                         </tr>
 
@@ -226,7 +226,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:6</a></div>
                         </td>
                     </tr>
 
@@ -260,8 +260,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:30</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:33</a></div>
                 </td>
             </tr>
 
@@ -299,8 +299,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:28</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="31"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:31</a></div>
                 </td>
             </tr>
 
@@ -336,8 +336,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:37</a></div>
                 </td>
             </tr>
 
@@ -375,8 +375,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:19</a></div>
                 </td>
             </tr>
 
@@ -443,8 +443,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="38"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:38</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="41"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:41</a></div>
                 </td>
             </tr>
 
@@ -486,7 +486,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:14</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:15</a></div>
                                 </td>
                             </tr>
 
@@ -497,7 +497,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser } from &#x27;../../../types&#x27;;
+import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Renderable } from &#x27;./syntax&#x27;;
 
 export abstract class Expression&lt;T&gt; implements Renderable {
@@ -518,10 +519,12 @@ export abstract class Expression&lt;T&gt; implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser&lt;T&gt;;
   }): string;
 
   abstract clone(): Expression&lt;T&gt;;

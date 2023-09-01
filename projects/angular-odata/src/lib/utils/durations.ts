@@ -18,7 +18,7 @@ export const Durations = {
     const matches = DURATION_REGEX.exec(v);
     if (!matches || v.length < 3) {
       throw new TypeError(
-        `duration invalid: "${v}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`
+        `duration invalid: "${v}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`,
       );
     }
     let duration: Duration = {};

@@ -141,7 +141,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:6</a></div>
                             </td>
                         </tr>
 
@@ -217,8 +217,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="31"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:31</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="39"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:39</a></div>
                 </td>
             </tr>
 
@@ -254,8 +254,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="19"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:19</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="23"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:23</a></div>
                 </td>
             </tr>
 
@@ -322,8 +322,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="12"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:12</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="16"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:16</a></div>
                 </td>
             </tr>
 
@@ -365,7 +365,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:8</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:12</a></div>
                                 </td>
                             </tr>
 
@@ -376,12 +376,16 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser } from &#x27;../../../types&#x27;;
+import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import { render, Field, Renderable } from &#x27;./syntax&#x27;;
+import { render, FieldFactory, Renderable } from &#x27;./syntax&#x27;;
 
 export class OrderByField implements Renderable {
-  constructor(protected field: Renderable, protected order: &#x27;asc&#x27; | &#x27;desc&#x27;) {}
+  constructor(
+    protected field: Renderable,
+    protected order: &#x27;asc&#x27; | &#x27;desc&#x27;,
+  ) {}
 
   get [Symbol.toStringTag]() {
     return &#x27;OrderByField&#x27;;
@@ -398,12 +402,16 @@ export class OrderByField implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser&lt;any&gt;;
   }): string {
-    return &#x60;${render(this.field, { aliases, escape, prefix })} ${this.order}&#x60;;
+    return &#x60;${render(this.field, { aliases, escape, prefix, parser })} ${
+      this.order
+    }&#x60;;
   }
 
   clone() {
@@ -424,19 +432,19 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
     super({ children });
   }
 
-  static orderBy&lt;T extends object&gt;(
+  static orderBy&lt;T&gt;(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;
+      current?: OrderByExpression&lt;T&gt;,
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
-    current?: OrderByExpression&lt;T&gt;
+    current?: OrderByExpression&lt;T&gt;,
   ): OrderByExpression&lt;T&gt; {
     return opts(
       {
-        t: Field.factory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
         e: () &#x3D;&gt; new OrderByExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as OrderByExpression&lt;T&gt;;
   }
 
@@ -449,13 +457,15 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
   } &#x3D; {}): string {
     let content &#x3D; this._children
-      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser }))
       .join(&#x60;,&#x60;);
     return content;
   }

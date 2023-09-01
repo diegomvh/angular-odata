@@ -1167,16 +1167,16 @@ export class ODataSchema extends ODataAnnotatable {
     this.namespace &#x3D; config.namespace;
     this.alias &#x3D; config.alias;
     this.enums &#x3D; (config.enums || []).map(
-      (config) &#x3D;&gt; new ODataEnumType(config, this)
+      (config) &#x3D;&gt; new ODataEnumType(config, this),
     );
     this.entities &#x3D; (config.entities || []).map(
-      (config) &#x3D;&gt; new ODataStructuredType(config, this)
+      (config) &#x3D;&gt; new ODataStructuredType(config, this),
     );
     this.callables &#x3D; OData.mergeCallableParameters(config.callables || []).map(
-      (config) &#x3D;&gt; new ODataCallable(config, this)
+      (config) &#x3D;&gt; new ODataCallable(config, this),
     );
     this.containers &#x3D; (config.containers || []).map(
-      (config) &#x3D;&gt; new ODataEntityContainer(config, this)
+      (config) &#x3D;&gt; new ODataEntityContainer(config, this),
     );
   }
 
@@ -1190,7 +1190,7 @@ export class ODataSchema extends ODataAnnotatable {
   get entitySets() {
     return this.containers.reduce(
       (acc, container) &#x3D;&gt; [...acc, ...container.entitySets],
-      [] as ODataEntitySet[]
+      [] as ODataEntitySet[],
     );
   }
 
@@ -1244,15 +1244,15 @@ export class ODataSchema extends ODataAnnotatable {
   }) {
     // Configure Enums
     this.enums.forEach((enu) &#x3D;&gt;
-      enu.configure({ options, parserForType, findOptionsForType })
+      enu.configure({ options, parserForType, findOptionsForType }),
     );
     // Configure Entities
     this.entities.forEach((config) &#x3D;&gt;
-      config.configure({ options, parserForType, findOptionsForType })
+      config.configure({ options, parserForType, findOptionsForType }),
     );
     // Configure callables
     this.callables.forEach((callable) &#x3D;&gt;
-      callable.configure({ options, parserForType, findOptionsForType })
+      callable.configure({ options, parserForType, findOptionsForType }),
     );
   }
 }

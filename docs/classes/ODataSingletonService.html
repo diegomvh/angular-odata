@@ -928,7 +928,7 @@ export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public update(
     attrs: Partial&lt;T&gt;,
-    options?: ODataOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string },
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity();
     return res.update(attrs, options);
@@ -942,7 +942,7 @@ export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public patch(
     attrs: Partial&lt;T&gt;,
-    options?: ODataOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string },
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity();
     return res.modify(attrs, options);

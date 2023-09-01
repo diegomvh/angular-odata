@@ -938,10 +938,10 @@ export class ODataParameterParser&lt;T&gt; {
   field&lt;F&gt;(name: string) {
     if (this.isStructuredType())
       return (this.parser as ODataStructuredTypeParser&lt;T&gt;).field&lt;F&gt;(
-        name as keyof T
+        name as keyof T,
       );
     throw new Error(
-      &#x60;The field ${this.name} is not related to a StructuredType&#x60;
+      &#x60;The field ${this.name} is not related to a StructuredType&#x60;,
     );
   }
 }
@@ -962,7 +962,7 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
     this.return &#x3D; config.return;
     this.parser &#x3D; NONE_PARSER;
     this.parameters &#x3D; Object.entries(config.parameters || []).map(
-      ([name, p]) &#x3D;&gt; new ODataParameterParser(name, p as Parameter)
+      ([name, p]) &#x3D;&gt; new ODataParameterParser(name, p as Parameter),
     );
   }
 
@@ -989,7 +989,7 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
         ...acc,
         [p.name]: p.serialize(params[p.name], parserOptions),
       }),
-      {}
+      {},
     );
   }
 
@@ -1004,7 +1004,7 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
         ...acc,
         [p.name]: p.encode(params[p.name], parserOptions),
       }),
-      {}
+      {},
     );
   }
 
@@ -1021,7 +1021,7 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
     if (this.return)
       this.parser &#x3D; parserForType(this.return.type) || NONE_PARSER;
     this.parameters.forEach((p) &#x3D;&gt;
-      p.configure({ options, parserForType, findOptionsForType })
+      p.configure({ options, parserForType, findOptionsForType }),
     );
   }
 

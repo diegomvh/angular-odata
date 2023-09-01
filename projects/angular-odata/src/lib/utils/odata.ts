@@ -9,7 +9,7 @@ export const OData = {
       a.name === b.name &&
       Objects.equal(
         (a.parameters || {})[CALLABLE_BINDING_PARAMETER] || {},
-        (b.parameters || {})[CALLABLE_BINDING_PARAMETER] || {}
+        (b.parameters || {})[CALLABLE_BINDING_PARAMETER] || {},
       );
     return callables.reduce((acc: CallableConfig[], config) => {
       if (acc.every((c) => !areEqual(c, config))) {
@@ -18,7 +18,7 @@ export const OData = {
           .reduce((acc, c) => {
             acc.parameters = Object.assign(
               acc.parameters || {},
-              c.parameters || {}
+              c.parameters || {},
             );
             return acc;
           }, config);

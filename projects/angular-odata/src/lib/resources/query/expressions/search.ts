@@ -29,7 +29,7 @@ export class SearchTerm implements Renderable {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<any>
+    parser?: Parser<any>;
   }): string {
     return `${render(this.value, { aliases, escape, prefix, parser })}`;
   }
@@ -62,22 +62,22 @@ export class SearchExpression<T> extends Expression<T> {
   static search<T>(
     opts: (
       builder: SearchExpressionBuilder<T>,
-      current?: SearchExpression<T>
+      current?: SearchExpression<T>,
     ) => SearchExpression<T>,
-    current?: SearchExpression<T>
+    current?: SearchExpression<T>,
   ): SearchExpression<T> {
     return opts(
       {
         e: (connector: SearchConnector = 'AND') =>
           new SearchExpression<T>({ connector }),
       },
-      current
+      current,
     ) as SearchExpression<T>;
   }
 
   private _add(
     node: Renderable,
-    connector?: SearchConnector
+    connector?: SearchConnector,
   ): SearchExpression<T> {
     if (connector !== undefined && this._connector !== connector) {
       let children: Renderable[] = [];
@@ -117,7 +117,7 @@ export class SearchExpression<T> extends Expression<T> {
       this._children.push(
         node instanceof SearchExpression && !node.negated()
           ? new Grouping(node)
-          : node
+          : node,
       );
     }
     return this;
@@ -132,7 +132,7 @@ export class SearchExpression<T> extends Expression<T> {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
-    parser?: Parser<T>
+    parser?: Parser<T>;
   } = {}): string {
     let content = this._children
       .map((n) => n.render({ aliases, escape, prefix, parser }))

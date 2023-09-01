@@ -159,7 +159,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:10</a></div>
                             </td>
                         </tr>
 
@@ -227,7 +227,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:5</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:6</a></code>
 </div>
                         </td>
                     </tr>
@@ -264,8 +264,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="54"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:54</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:57</a></div>
                 </td>
             </tr>
 
@@ -339,7 +339,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:48</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:51</a></code>
 </div>
                 </td>
             </tr>
@@ -376,8 +376,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="59"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:59</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="62"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:62</a></div>
                 </td>
             </tr>
 
@@ -451,7 +451,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:34</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:35</a></code>
 </div>
                 </td>
             </tr>
@@ -525,8 +525,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:19</a></div>
                 </td>
             </tr>
 
@@ -620,7 +620,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:30</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:33</a></code>
 </div>
                 </td>
             </tr>
@@ -663,7 +663,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:34</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:37</a></code>
 </div>
                 </td>
             </tr>
@@ -706,7 +706,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:38</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:41</a></code>
 </div>
                 </td>
             </tr>
@@ -733,9 +733,10 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser } from &#x27;../../../types&#x27;;
+import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import { Field, Renderable } from &#x27;./syntax&#x27;;
+import { FieldFactory, Renderable } from &#x27;./syntax&#x27;;
 
 export type SelectExpressionBuilder&lt;T&gt; &#x3D; {
   t: Readonly&lt;Required&lt;T&gt;&gt;;
@@ -750,19 +751,19 @@ export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
     super({ children });
   }
 
-  static select&lt;T extends object&gt;(
+  static select&lt;T&gt;(
     opts: (
       builder: SelectExpressionBuilder&lt;T&gt;,
-      current?: SelectExpression&lt;T&gt;
+      current?: SelectExpression&lt;T&gt;,
     ) &#x3D;&gt; SelectExpression&lt;T&gt;,
-    current?: SelectExpression&lt;T&gt;
+    current?: SelectExpression&lt;T&gt;,
   ): SelectExpression&lt;T&gt; {
     return opts(
       {
-        t: Field.factory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
         e: () &#x3D;&gt; new SelectExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as SelectExpression&lt;T&gt;;
   }
 
@@ -770,13 +771,15 @@ export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
   } &#x3D; {}): string {
     return this._children
-      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser }))
       .join(&#x27;,&#x27;);
   }
 

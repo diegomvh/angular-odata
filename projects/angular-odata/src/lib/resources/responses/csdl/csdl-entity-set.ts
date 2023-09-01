@@ -5,6 +5,6 @@ export class CsdlEntitySet {
     public name: string,
     public entityType: string,
     public navigationPropertyBinding?: CsdlNavigationPropertyBinding[],
-    public includeInServiceDocument?: boolean
+    public includeInServiceDocument?: boolean,
   ) {}
 }

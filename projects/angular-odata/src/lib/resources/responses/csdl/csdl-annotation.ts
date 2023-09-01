@@ -6,14 +6,17 @@ export class CsdlAnnotations extends CsdlAnnotable {
   constructor(
     public target: string,
     annotationList: CsdlAnnotation[],
-    public qualifier?: string
+    public qualifier?: string,
   ) {
     super(annotationList);
   }
 }
 
 export class CsdlAnnotation {
-  constructor(public term: string, public qualifier?: string) {}
+  constructor(
+    public term: string,
+    public qualifier?: string,
+  ) {}
 }
 
 export class CsdlTerm {
@@ -27,6 +30,6 @@ export class CsdlTerm {
     public maxLength?: number,
     public precision?: number,
     public scale?: number,
-    public srid?: string
+    public srid?: string,
   ) {}
 }

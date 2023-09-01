@@ -18,7 +18,7 @@ export class ODataAnnotatable {
   annotations: ODataAnnotation[];
   constructor(config: { annotations?: AnnotationConfig[] }) {
     this.annotations = (config.annotations || []).map(
-      (annot) => new ODataAnnotation(annot)
+      (annot) => new ODataAnnotation(annot),
     );
   }
 

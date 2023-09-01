@@ -55,7 +55,7 @@ describe('ODataClient', () => {
   it('should create entity navigation to collection', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`
+      `${NAMESPACE}.Person`,
     );
     const entity = set.entity('russellwhyte');
     const friends = entity.navigationProperty<Person>('Friends');
@@ -65,7 +65,7 @@ describe('ODataClient', () => {
   it('should create entity navigation to single', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`
+      `${NAMESPACE}.Person`,
     );
     const entity = set.entity('russellwhyte');
     const photo = entity.navigationProperty<Photo>('Photo');
@@ -76,7 +76,7 @@ describe('ODataClient', () => {
     const set: ODataResource<Person> = client.entitySet<Person>('People');
     const api = client.apiFor(set);
     const parser = api.parserForType<Person>(
-      'Foo'
+      'Foo',
     ) as ODataStructuredTypeParser<Person>;
     expect(parser).toBeUndefined();
   });
@@ -84,11 +84,11 @@ describe('ODataClient', () => {
   it('should return person parser for resource', () => {
     const set: ODataResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`
+      `${NAMESPACE}.Person`,
     );
     const api = client.apiFor(set);
     const parser = api.parserForType<Person>(
-      set.type() as string
+      set.type() as string,
     ) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
@@ -145,14 +145,14 @@ describe('ODataClient', () => {
 
   it('should create unbound function resource', () => {
     const fun: ODataFunctionResource<any, any> = client.function<any, any>(
-      'NS.MyFunction'
+      'NS.MyFunction',
     );
     expect(fun.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyFunction()');
   });
 
   it('should create unbound action resource', () => {
     const act: ODataActionResource<any, any> = client.action<any, any>(
-      'NS.MyAction'
+      'NS.MyAction',
     );
     expect(act.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyAction');
   });
@@ -160,43 +160,46 @@ describe('ODataClient', () => {
   it('should return parser for People', () => {
     const api = client.apiFor(CONFIG_NAME);
     const parser = api.parserForType<Person>(
-      `${NAMESPACE}.Person`
+      `${NAMESPACE}.Person`,
     ) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
     expect(
-      parser.fields({ include_navigation: true, include_parents: false }).length
+      parser.fields({ include_navigation: true, include_parents: false })
+        .length,
     ).toEqual(9);
     expect(
       parser.fields({ include_navigation: false, include_parents: false })
-        .length
+        .length,
     ).toEqual(6);
   });
 
   it('should return parser for Flight', () => {
     const api = client.apiFor(CONFIG_NAME);
     const parser = api.parserForType<Flight>(
-      `${NAMESPACE}.Flight`
+      `${NAMESPACE}.Flight`,
     ) as ODataStructuredTypeParser<Flight>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
     expect(
       parser.fields({ include_navigation: false, include_parents: false })
-        .length
+        .length,
     ).toEqual(1);
     expect(
-      parser.fields({ include_navigation: true, include_parents: false }).length
+      parser.fields({ include_navigation: true, include_parents: false })
+        .length,
     ).toEqual(4);
     expect(
-      parser.fields({ include_navigation: false, include_parents: true }).length
+      parser.fields({ include_navigation: false, include_parents: true })
+        .length,
     ).toEqual(7);
     expect(
-      parser.fields({ include_navigation: true, include_parents: true }).length
+      parser.fields({ include_navigation: true, include_parents: true }).length,
     ).toEqual(10);
   });
 
   it('should convert resource to json', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`
+      `${NAMESPACE}.Person`,
     );
     const func = set.function<any, any>('NS.MyFunction');
     const json = func.toJSON();
@@ -212,7 +215,7 @@ describe('ODataClient', () => {
   it('should convert resource with expression to json', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`
+      `${NAMESPACE}.Person`,
     );
     const func = set.function<any, any>('NS.MyFunction');
     func.query((q) => {
@@ -360,7 +363,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Trips`
+      `${SERVICE_ROOT}People('russellwhyte')/Trips`,
     );
     expect(req.request.method).toBe('POST');
     req.flush(data);
@@ -407,7 +410,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Trips(1003)/PlanItems`
+      `${SERVICE_ROOT}People('russellwhyte')/Trips(1003)/PlanItems`,
     );
     expect(req.request.method).toBe('POST');
     req.flush(data);
@@ -425,7 +428,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Trips(1001)`
+      `${SERVICE_ROOT}People('russellwhyte')/Trips(1001)`,
     );
     expect(req.request.method).toBe('DELETE');
     req.flush('');
@@ -443,7 +446,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`
+      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`,
     );
     expect(req.request.method).toBe('GET');
     req.flush('');
@@ -464,7 +467,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`
+      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`,
     );
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual({
@@ -485,7 +488,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`
+      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`,
     );
     expect(req.request.method).toBe('DELETE');
     req.flush('');
@@ -506,7 +509,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Friends/$ref`
+      `${SERVICE_ROOT}People('russellwhyte')/Friends/$ref`,
     );
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
@@ -530,7 +533,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Friends/$ref?$id=${SERVICE_ROOT}People('mirsking')`
+      `${SERVICE_ROOT}People('russellwhyte')/Friends/$ref?$id=${SERVICE_ROOT}People('mirsking')`,
     );
     expect(req.request.method).toBe('DELETE');
     req.flush('');
@@ -549,7 +552,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Friends('mirsking')/$ref`
+      `${SERVICE_ROOT}People('russellwhyte')/Friends('mirsking')/$ref`,
     );
     expect(req.request.method).toBe('DELETE');
     req.flush('');
@@ -558,7 +561,7 @@ describe('ODataClient', () => {
   it('should get by passing query options in the request body using api options', () => {
     const people: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`
+      `${NAMESPACE}.Person`,
     );
     const api = client.apiFor(people);
     api.options.bodyQueryOptions = [QueryOption.select, QueryOption.expand];
@@ -601,7 +604,7 @@ describe('ODataClient', () => {
   it('should get by passing query options in the request body using mixed options', () => {
     const people: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`
+      `${NAMESPACE}.Person`,
     );
     const api = client.apiFor(people);
     api.options.bodyQueryOptions = [QueryOption.select];
@@ -619,11 +622,11 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People/$query?$expand=Friends`
+      `${SERVICE_ROOT}People/$query?$expand=Friends`,
     );
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toBe(
-      "$select=FistName,LastName&$filter=Gender%20eq%20'Male'"
+      "$select=FistName,LastName&$filter=Gender%20eq%20'Male'",
     );
     req.flush('');
   });
@@ -715,9 +718,9 @@ ${JSON.stringify(payload)}
         combineLatest({
           one: entity.fetch(),
           two: entity.fetch(),
-        })
+        }),
       )
-      .subscribe((resp) => { });
+      .subscribe((resp) => {});
 
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),
@@ -823,9 +826,9 @@ ${JSON.stringify(payload)}
         combineLatest({
           one: entity.fetch(),
           two: entity.fetch(),
-        })
+        }),
       )
-      .subscribe((resp) => { });
+      .subscribe((resp) => {});
 
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),

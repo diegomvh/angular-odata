@@ -7,7 +7,7 @@ import { Duration, Durations } from '../../utils/durations';
 const EdmParser = <T>(
   _d: (v: any, o: StructuredTypeFieldOptions) => T,
   _s: (v: any, o: StructuredTypeFieldOptions) => any,
-  _e: (v: any, o: StructuredTypeFieldOptions) => any
+  _e: (v: any, o: StructuredTypeFieldOptions) => any,
 ): FieldParser<T | T[]> => ({
   deserialize(value: any, options: StructuredTypeFieldOptions): T | T[] {
     return Array.isArray(value)
@@ -53,28 +53,29 @@ export const EDM_PARSERS: { [type: string]: FieldParser<any> } = {
   [EdmType.Date]: EdmParser<Date>(
     (v: any) => new Date(`${v}T00:00:00.000Z`),
     (v: any) => toDate(v).toISOString().substring(0, 10),
-    (v: any) => raw(toDate(v).toISOString().substring(0, 10))
+    (v: any) => raw(toDate(v).toISOString().substring(0, 10)),
   ),
   //Edm.TimeOfDay Clock time 00:00-23:59:59.999999999999
   [EdmType.TimeOfDay]: EdmParser<Date>(
     (v: any) => new Date(`1970-01-01T${v}Z`),
     (v: any) => toDate(v).toISOString().substring(11, 23),
-    (v: any) => raw(toDate(v).toISOString().substring(11, 23))
+    (v: any) => raw(toDate(v).toISOString().substring(11, 23)),
   ),
   //Edm.DateTimeOffset Date and time with a time-zone offset, no leap seconds
   [EdmType.DateTimeOffset]: EdmParser<Date>(
     toDate,
     (v: any) => toDate(v).toISOString(),
-    (v: any) => raw(toDate(v).toISOString())
+    (v: any) => raw(toDate(v).toISOString()),
   ),
   //Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
   [EdmType.Duration]: EdmParser<Duration>(
     (v: any) => Durations.toDuration(v),
     (v: Duration) => Durations.toString(v),
-    (v: Duration) => raw(Durations.toString(v))
+    (v: Duration) => raw(Durations.toString(v)),
   ),
   //Edm.Decimal Numeric values with fixed precision and scale
-  [EdmType.Decimal]: EdmParser<number>(toNumber,
+  [EdmType.Decimal]: EdmParser<number>(
+    toNumber,
     (v: number, o: StructuredTypeFieldOptions) => {
       if (o.ieee754Compatible) {
         let vstr = v.toPrecision(o.field.precision);
@@ -94,25 +95,25 @@ export const EDM_PARSERS: { [type: string]: FieldParser<any> } = {
         return raw(vstr);
       }
       return v;
-    }
+    },
   ),
   //Edm.Double IEEE 754 binary64 floating-point number (15-17 decimal digits)
   [EdmType.Double]: EdmParser<number>(
     (v: any) => (v === 'INF' ? Infinity : (v as number)),
     (v: number) => (v === Infinity ? 'INF' : v),
-    (v: number) => raw(v === Infinity ? 'INF' : v.toString())
+    (v: number) => raw(v === Infinity ? 'INF' : v.toString()),
   ),
   //Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
   [EdmType.Single]: EdmParser<number>(
     (v: any) => (v === 'INF' ? Infinity : (v as number)),
     (v: number) => (v === Infinity ? 'INF' : v),
-    (v: number) => raw(v === Infinity ? 'INF' : v.toString())
+    (v: number) => raw(v === Infinity ? 'INF' : v.toString()),
   ),
   //Edm.Binary Binary data
   [EdmType.Binary]: EdmParser<ArrayBuffer>(
     (v: string) => ArrayBuffers.toArrayBuffer(v),
     (v: ArrayBuffer) => ArrayBuffers.toString(v),
-    (v: ArrayBuffer) => raw(ArrayBuffers.toString(v))
+    (v: ArrayBuffer) => raw(ArrayBuffers.toString(v)),
   ),
 };
 

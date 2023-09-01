@@ -44,7 +44,7 @@ export class ODataEnumTypeParser<E>
     this.flags = config.flags;
     this.members = config.members;
     this._fields = Object.entries(config.fields).map(
-      ([name, f]) => new ODataEnumTypeFieldParser(name, f)
+      ([name, f]) => new ODataEnumTypeFieldParser(name, f),
     );
   }
 
@@ -69,14 +69,14 @@ export class ODataEnumTypeParser<E>
   fields(value?: E): ODataEnumTypeFieldParser<E>[] {
     return [
       ...this._fields.filter(
-        (f) => value === undefined || Boolean((<any>f.value) & (<any>value))
+        (f) => value === undefined || Boolean((<any>f.value) & (<any>value)),
       ),
     ];
   }
 
   field(nameValue: string | E) {
     let field = this.fields().find(
-      (f) => f.name === nameValue || f.value === nameValue
+      (f) => f.name === nameValue || f.value === nameValue,
     );
     //Throw error if not found
     if (field === undefined)
@@ -100,7 +100,7 @@ export class ODataEnumTypeParser<E>
     if (this.flags) {
       return Enums.toValues<any>(this.members, value).reduce(
         (acc, v) => acc | v,
-        0
+        0,
       ) as any;
     } else {
       return Enums.toValue<any>(this.members, value) as any;
@@ -155,7 +155,7 @@ export class ODataEnumTypeParser<E>
     }: {
       method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {}
+    } = {},
   ): string[] | undefined {
     if (this.flags) {
       let members = Enums.toValues(this.members, member);
@@ -174,7 +174,7 @@ export class ODataEnumTypeParser<E>
   pack(value: number[]): E {
     return Enums.toValues(this.members, value).reduce(
       (acc, v) => acc | v,
-      0
+      0,
     ) as any;
   }
 }

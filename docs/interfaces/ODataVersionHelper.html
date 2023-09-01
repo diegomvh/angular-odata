@@ -2307,8 +2307,8 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
       .forEach((key) &#x3D;&gt;
         funcs.set(
           key.substring(this.ODATA_FUNCTION_PREFIX.length),
-          annots.get(key)
-        )
+          annots.get(key),
+        ),
       );
     return funcs;
   },
@@ -2321,7 +2321,7 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
         let prop &#x3D; props.has(name) ? props.get(name)! : new Map&lt;string, any&gt;();
         prop.set(
           key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)),
-          annots.get(key)
+          annots.get(key),
         );
         props.set(name, prop);
       });
@@ -2370,7 +2370,7 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
       .filter(
         ([key]) &#x3D;&gt;
           key.indexOf(this.ODATA_ANNOTATION_PREFIX) !&#x3D;&#x3D; -1 ||
-          key.startsWith(this.ODATA_FUNCTION_PREFIX)
+          key.startsWith(this.ODATA_FUNCTION_PREFIX),
       )
       .forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
     return annots;
@@ -2386,7 +2386,7 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
             !k.startsWith(this.ODATA_FUNCTION_PREFIX)) ||
           (metadata &#x3D;&#x3D;&#x3D; &#x27;full&#x27; &amp;&amp;
             k.indexOf(this.ODATA_ANNOTATION_PREFIX) &#x3D;&#x3D;&#x3D; -1 &amp;&amp;
-            !k.startsWith(this.ODATA_FUNCTION_PREFIX))
+            !k.startsWith(this.ODATA_FUNCTION_PREFIX)),
       )
       .reduce((acc, e) &#x3D;&gt; ({ ...acc, [e[0]]: e[1] }), {});
   },
@@ -2562,7 +2562,7 @@ export const ODataHelper &#x3D; {
       const annots &#x3D; new Map&lt;string, any&gt;();
       if (this.ODATA_ANNOTATION in value) {
         Object.entries(value[this.ODATA_ANNOTATION]).forEach(([key, value]) &#x3D;&gt;
-          annots.set(key, value)
+          annots.set(key, value),
         );
       }
       return annots;

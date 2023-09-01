@@ -337,7 +337,7 @@ export class ODataInStorageCache extends ODataCache {
   store() {
     this.storage.setItem(
       this.name,
-      JSON.stringify(Array.from(this.entries.entries()))
+      JSON.stringify(Array.from(this.entries.entries())),
     );
   }
 
@@ -346,7 +346,7 @@ export class ODataInStorageCache extends ODataCache {
    */
   restore() {
     this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;(
-      JSON.parse(this.storage.getItem(this.name) || &#x27;[]&#x27;)
+      JSON.parse(this.storage.getItem(this.name) || &#x27;[]&#x27;),
     );
   }
 

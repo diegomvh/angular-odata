@@ -5,7 +5,7 @@ export class CsdlFunction {
     public isBound?: boolean,
     public entitySetPath?: string,
     public isComposable?: boolean,
-    public parameters?: CsdlParameter[]
+    public parameters?: CsdlParameter[],
   ) {}
 }
 
@@ -15,7 +15,7 @@ export class CsdlAction {
     public returnType?: CsdlReturnType,
     public isBound?: boolean,
     public entitySetPath?: string,
-    public parameters?: CsdlParameter[]
+    public parameters?: CsdlParameter[],
   ) {}
 }
 
@@ -24,7 +24,7 @@ export class CsdlFunctionImport {
     public name: string,
     public functionName: string,
     public entitySet?: string,
-    public IncludeInServiceDocument?: boolean
+    public IncludeInServiceDocument?: boolean,
   ) {}
 }
 
@@ -32,7 +32,7 @@ export class CsdlActionImport {
   constructor(
     public name: string,
     public action: string,
-    public entitySet?: string
+    public entitySet?: string,
   ) {}
 }
 
@@ -44,7 +44,7 @@ export class CsdlParameter {
     public maxLength?: number,
     public precision?: number,
     public scale?: number,
-    public srid?: string
+    public srid?: string,
   ) {}
 }
 
@@ -55,6 +55,6 @@ export class CsdlReturnType {
     public maxLength?: number,
     public precision?: number,
     public scale?: number,
-    public srid?: string
+    public srid?: string,
   ) {}
 }

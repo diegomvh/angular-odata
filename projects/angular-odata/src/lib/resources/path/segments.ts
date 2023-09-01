@@ -16,7 +16,7 @@ export type ODataSegment = {
 function pathSegmentsBuilder(
   segment: ODataSegment,
   escape: boolean = false,
-  parser?: Parser<any>
+  parser?: Parser<any>,
 ): [string, { [name: string]: any }] {
   if (segment.name === PathSegment.function) {
     let [path, params] = segment.parameters
@@ -35,7 +35,7 @@ function pathSegmentsBuilder(
     if (
       typeof key === 'string' &&
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
-        key
+        key,
       )
     ) {
       key = raw(key);
@@ -52,7 +52,13 @@ export class ODataPathSegments {
     this._segments = segments || [];
   }
 
-  pathAndParams({escape, parser}: {escape?: boolean, parser?: Parser<any>} = {}): [string, { [name: string]: any }] {
+  pathAndParams({
+    escape,
+    parser,
+  }: { escape?: boolean; parser?: Parser<any> } = {}): [
+    string,
+    { [name: string]: any },
+  ] {
     const result = this._segments.reduce(
       (acc, segment) => {
         const [path, params] = pathSegmentsBuilder(segment, escape, parser);
@@ -60,7 +66,7 @@ export class ODataPathSegments {
         acc.params = Object.assign(acc.params, params);
         return acc;
       },
-      { paths: [] as string[], params: {} as { [name: string]: any } }
+      { paths: [] as string[], params: {} as { [name: string]: any } },
     );
     return [result.paths.join(PATH_SEPARATOR), result.params];
   }
@@ -86,8 +92,11 @@ export class ODataPathSegments {
     return segments.map((s) => s.key() as EntityKey<any> | undefined);
   }
 
-  toString({escape, parser}: {escape?: boolean, parser?: Parser<any>} = {}): string {
-    const [path, params] = this.pathAndParams({escape, parser});
+  toString({
+    escape,
+    parser,
+  }: { escape?: boolean; parser?: Parser<any> } = {}): string {
+    const [path, params] = this.pathAndParams({ escape, parser });
     return (
       path +
       Object.entries(params)
@@ -129,7 +138,7 @@ export class ODataPathSegments {
             PathSegment.entitySet,
             PathSegment.navigationProperty,
             PathSegment.property,
-          ].indexOf(s.name) !== -1
+          ].indexOf(s.name) !== -1,
       );
     return segments.map((s) => new SegmentHandler(s));
   }

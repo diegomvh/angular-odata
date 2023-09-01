@@ -27,7 +27,7 @@ function addBody<T>(
     observe?: 'body' | 'events' | 'response';
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   },
-  body: T | null
+  body: T | null,
 ): any {
   return {
     body,
@@ -45,7 +45,10 @@ function addBody<T>(
 @Injectable()
 export class ODataClient {
   settings?: ODataSettings;
-  constructor(private http: HttpClient, private loader: ODataConfigLoader) {
+  constructor(
+    private http: HttpClient,
+    private loader: ODataConfigLoader,
+  ) {
     this.loader.loadConfigs().subscribe((config) => {
       this.settings = new ODataSettings(config);
       this.settings.configure({
@@ -196,7 +199,7 @@ export class ODataClient {
   //#region API Resource Proxy Methods
   fromJSON<E>(
     json: { segments: ODataSegment[]; options: { [name: string]: any } },
-    apiNameOrType?: string
+    apiNameOrType?: string,
   ):
     | ODataEntityResource<E>
     | ODataEntitySetResource<E>
@@ -204,7 +207,7 @@ export class ODataClient {
     | ODataSingletonResource<E>;
   fromJSON(
     json: { segments: ODataSegment[]; options: { [name: string]: any } },
-    apiNameOrType?: string
+    apiNameOrType?: string,
   ) {
     return this.apiFor(apiNameOrType).fromJSON<any>(json);
   }
@@ -246,7 +249,7 @@ export class ODataClient {
    */
   entitySet<T>(
     path: string,
-    apiNameOrType?: string
+    apiNameOrType?: string,
   ): ODataEntitySetResource<T> {
     return this.apiFor(apiNameOrType).entitySet<T>(path);
   }
@@ -259,7 +262,7 @@ export class ODataClient {
    */
   action<P, R>(
     path: string,
-    apiNameOrType?: string
+    apiNameOrType?: string,
   ): ODataActionResource<P, R> {
     return this.apiFor(apiNameOrType).action<P, R>(path);
   }
@@ -272,7 +275,7 @@ export class ODataClient {
    */
   function<P, R>(
     path: string,
-    apiNameOrType?: string
+    apiNameOrType?: string,
   ): ODataFunctionResource<P, R> {
     return this.apiFor(apiNameOrType).function<P, R>(path);
   }
@@ -286,7 +289,7 @@ export class ODataClient {
       body: any | null;
       observe?: 'body';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ArrayBuffer>;
 
   request(
@@ -296,7 +299,7 @@ export class ODataClient {
       body: any | null;
       observe?: 'body';
       responseType: 'blob';
-    }
+    },
   ): Observable<Blob>;
 
   request(
@@ -306,7 +309,7 @@ export class ODataClient {
       body: any | null;
       observe?: 'body';
       responseType: 'text';
-    }
+    },
   ): Observable<string>;
 
   request(
@@ -316,7 +319,7 @@ export class ODataClient {
       body: any | null;
       observe: 'events';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<HttpEvent<ArrayBuffer>>;
 
   request(
@@ -326,7 +329,7 @@ export class ODataClient {
       body: any | null;
       observe: 'events';
       responseType: 'blob';
-    }
+    },
   ): Observable<HttpEvent<Blob>>;
 
   request(
@@ -336,7 +339,7 @@ export class ODataClient {
       body: any | null;
       observe: 'events';
       responseType: 'text';
-    }
+    },
   ): Observable<HttpEvent<string>>;
 
   request(
@@ -346,7 +349,7 @@ export class ODataClient {
       body: any | null;
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<any>>;
 
   request<R>(
@@ -356,7 +359,7 @@ export class ODataClient {
       body: any | null;
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<R>>;
 
   request(
@@ -366,7 +369,7 @@ export class ODataClient {
       body: any | null;
       observe: 'response';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ODataResponse<ArrayBuffer>>;
 
   request(
@@ -376,7 +379,7 @@ export class ODataClient {
       body: any | null;
       observe: 'response';
       responseType: 'blob';
-    }
+    },
   ): Observable<ODataResponse<Blob>>;
 
   request(
@@ -386,7 +389,7 @@ export class ODataClient {
       body: any | null;
       observe: 'response';
       responseType: 'text';
-    }
+    },
   ): Observable<ODataResponse<string>>;
 
   request(
@@ -396,7 +399,7 @@ export class ODataClient {
       body: any | null;
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<Object>>;
 
   request<R>(
@@ -406,7 +409,7 @@ export class ODataClient {
       body: any | null;
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<R>>;
 
   request(
@@ -416,7 +419,7 @@ export class ODataClient {
       body: any | null;
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<Object>;
 
   request<R>(
@@ -426,7 +429,7 @@ export class ODataClient {
       body: any | null;
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<R>;
 
   request(
@@ -436,7 +439,7 @@ export class ODataClient {
       body: any | null;
       observe?: 'body' | 'events' | 'response';
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-    }
+    },
   ): Observable<any> {
     let api = this.apiFor(resource);
 
@@ -448,7 +451,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ArrayBuffer>;
 
   delete(
@@ -456,7 +459,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'blob';
-    }
+    },
   ): Observable<Blob>;
 
   delete(
@@ -464,7 +467,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'text';
-    }
+    },
   ): Observable<string>;
 
   delete(
@@ -472,7 +475,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<HttpEvent<ArrayBuffer>>;
 
   delete(
@@ -480,7 +483,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'blob';
-    }
+    },
   ): Observable<HttpEvent<Blob>>;
 
   delete(
@@ -488,7 +491,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'text';
-    }
+    },
   ): Observable<HttpEvent<string>>;
 
   delete(
@@ -496,7 +499,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<Object>>;
 
   delete<T>(
@@ -504,7 +507,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<T>>;
 
   delete(
@@ -512,7 +515,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ODataResponse<ArrayBuffer>>;
 
   delete(
@@ -520,7 +523,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'blob';
-    }
+    },
   ): Observable<ODataResponse<Blob>>;
 
   delete(
@@ -528,7 +531,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'text';
-    }
+    },
   ): Observable<ODataResponse<string>>;
 
   delete(
@@ -536,7 +539,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<Object>>;
 
   delete<T>(
@@ -544,7 +547,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<T>>;
 
   delete(
@@ -552,7 +555,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<Object>;
 
   delete<T>(
@@ -560,7 +563,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<T>;
 
   delete(
@@ -568,7 +571,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body' | 'events' | 'response';
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.request<any>('DELETE', resource, addBody<any>(options, null));
   }
@@ -578,7 +581,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ArrayBuffer>;
 
   get(
@@ -586,7 +589,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'blob';
-    }
+    },
   ): Observable<Blob>;
 
   get(
@@ -594,7 +597,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'text';
-    }
+    },
   ): Observable<string>;
 
   get(
@@ -602,7 +605,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<HttpEvent<ArrayBuffer>>;
 
   get(
@@ -610,7 +613,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'blob';
-    }
+    },
   ): Observable<HttpEvent<Blob>>;
 
   get(
@@ -618,7 +621,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'text';
-    }
+    },
   ): Observable<HttpEvent<string>>;
 
   get(
@@ -626,7 +629,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<Object>>;
 
   get<T>(
@@ -634,7 +637,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<T>>;
 
   get(
@@ -642,7 +645,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ODataResponse<ArrayBuffer>>;
 
   get(
@@ -650,7 +653,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'blob';
-    }
+    },
   ): Observable<ODataResponse<Blob>>;
 
   get(
@@ -658,7 +661,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'text';
-    }
+    },
   ): Observable<ODataResponse<string>>;
 
   get(
@@ -666,7 +669,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<Object>>;
 
   get<T>(
@@ -674,7 +677,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<T>>;
 
   get(
@@ -682,7 +685,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<Object>;
 
   get<T>(
@@ -690,7 +693,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<T>;
 
   get(
@@ -698,7 +701,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body' | 'events' | 'response';
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.request<any>('GET', resource, options as any);
   }
@@ -708,7 +711,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ArrayBuffer>;
 
   head(
@@ -716,7 +719,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'blob';
-    }
+    },
   ): Observable<Blob>;
 
   head(
@@ -724,7 +727,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'text';
-    }
+    },
   ): Observable<string>;
 
   head(
@@ -732,7 +735,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<HttpEvent<ArrayBuffer>>;
 
   head(
@@ -740,7 +743,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'blob';
-    }
+    },
   ): Observable<HttpEvent<Blob>>;
 
   head(
@@ -748,7 +751,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'text';
-    }
+    },
   ): Observable<HttpEvent<string>>;
 
   head(
@@ -756,7 +759,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<Object>>;
 
   head<T>(
@@ -764,7 +767,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<T>>;
 
   head(
@@ -772,7 +775,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ODataResponse<ArrayBuffer>>;
 
   head(
@@ -780,7 +783,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'blob';
-    }
+    },
   ): Observable<ODataResponse<Blob>>;
 
   head(
@@ -788,7 +791,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'text';
-    }
+    },
   ): Observable<ODataResponse<string>>;
 
   head(
@@ -796,7 +799,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<Object>>;
 
   head<T>(
@@ -804,7 +807,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<T>>;
 
   head(
@@ -812,7 +815,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<Object>;
 
   head<T>(
@@ -820,7 +823,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<T>;
 
   head(
@@ -828,14 +831,14 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body' | 'events' | 'response';
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.request<any>('HEAD', resource, options as any);
   }
 
   jsonp(
     resource: ODataResource<any>,
-    callbackParam: string
+    callbackParam: string,
   ): Observable<Object>;
 
   jsonp<T>(resource: ODataResource<any>, callbackParam: string): Observable<T>;
@@ -854,7 +857,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ArrayBuffer>;
 
   options(
@@ -862,7 +865,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'blob';
-    }
+    },
   ): Observable<Blob>;
 
   options(
@@ -870,7 +873,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'text';
-    }
+    },
   ): Observable<string>;
 
   options(
@@ -878,7 +881,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<HttpEvent<ArrayBuffer>>;
 
   options(
@@ -886,7 +889,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'blob';
-    }
+    },
   ): Observable<HttpEvent<Blob>>;
 
   options(
@@ -894,7 +897,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'text';
-    }
+    },
   ): Observable<HttpEvent<string>>;
 
   options(
@@ -902,7 +905,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<Object>>;
 
   options(
@@ -910,7 +913,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<Object>>;
 
   options<T>(
@@ -918,7 +921,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<T>>;
 
   options(
@@ -926,7 +929,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ODataResponse<ArrayBuffer>>;
 
   options(
@@ -934,7 +937,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'blob';
-    }
+    },
   ): Observable<ODataResponse<Blob>>;
 
   options(
@@ -942,7 +945,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'text';
-    }
+    },
   ): Observable<ODataResponse<string>>;
 
   options(
@@ -950,7 +953,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<Object>>;
 
   options<T>(
@@ -958,7 +961,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<T>>;
 
   options(
@@ -966,7 +969,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<Object>;
 
   options<T>(
@@ -974,7 +977,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<T>;
 
   options(
@@ -982,7 +985,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body' | 'events' | 'response';
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.request<any>('OPTIONS', resource, options as any);
   }
@@ -993,7 +996,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ArrayBuffer>;
 
   patch(
@@ -1002,7 +1005,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'blob';
-    }
+    },
   ): Observable<Blob>;
 
   patch(
@@ -1011,7 +1014,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'text';
-    }
+    },
   ): Observable<string>;
 
   patch(
@@ -1020,7 +1023,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<HttpEvent<ArrayBuffer>>;
 
   patch(
@@ -1029,7 +1032,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'blob';
-    }
+    },
   ): Observable<HttpEvent<Blob>>;
 
   patch(
@@ -1038,7 +1041,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'text';
-    }
+    },
   ): Observable<HttpEvent<string>>;
 
   patch(
@@ -1047,7 +1050,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<Object>>;
 
   patch<T>(
@@ -1056,7 +1059,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<T>>;
 
   patch(
@@ -1065,7 +1068,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ODataResponse<ArrayBuffer>>;
 
   patch(
@@ -1074,7 +1077,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'blob';
-    }
+    },
   ): Observable<ODataResponse<Blob>>;
 
   patch(
@@ -1083,7 +1086,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'text';
-    }
+    },
   ): Observable<ODataResponse<string>>;
 
   patch(
@@ -1092,7 +1095,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<Object>>;
 
   patch<T>(
@@ -1101,7 +1104,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<T>>;
 
   patch(
@@ -1110,7 +1113,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<Object>;
 
   patch<T>(
@@ -1119,7 +1122,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<T>;
 
   patch(
@@ -1128,7 +1131,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body' | 'events' | 'response';
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.request<any>('PATCH', resource, addBody(options, body));
   }
@@ -1139,7 +1142,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ArrayBuffer>;
 
   post(
@@ -1148,7 +1151,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'blob';
-    }
+    },
   ): Observable<Blob>;
 
   post(
@@ -1157,7 +1160,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'text';
-    }
+    },
   ): Observable<string>;
 
   post(
@@ -1166,7 +1169,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<HttpEvent<ArrayBuffer>>;
 
   post(
@@ -1175,7 +1178,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'blob';
-    }
+    },
   ): Observable<HttpEvent<Blob>>;
 
   post(
@@ -1184,7 +1187,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'text';
-    }
+    },
   ): Observable<HttpEvent<string>>;
 
   post(
@@ -1193,7 +1196,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<Object>>;
 
   post<T>(
@@ -1202,7 +1205,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<T>>;
 
   post(
@@ -1211,7 +1214,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ODataResponse<ArrayBuffer>>;
 
   post(
@@ -1220,7 +1223,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'blob';
-    }
+    },
   ): Observable<ODataResponse<Blob>>;
 
   post(
@@ -1229,7 +1232,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'text';
-    }
+    },
   ): Observable<ODataResponse<string>>;
 
   post(
@@ -1238,7 +1241,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<Object>>;
 
   post<T>(
@@ -1247,7 +1250,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<T>>;
 
   post(
@@ -1256,7 +1259,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<Object>;
 
   post<T>(
@@ -1265,7 +1268,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<T>;
 
   post(
@@ -1274,7 +1277,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body' | 'events' | 'response';
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.request<any>('POST', resource, addBody(options, body));
   }
@@ -1285,7 +1288,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ArrayBuffer>;
 
   put(
@@ -1294,7 +1297,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'blob';
-    }
+    },
   ): Observable<Blob>;
 
   put(
@@ -1303,7 +1306,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType: 'text';
-    }
+    },
   ): Observable<string>;
 
   put(
@@ -1312,7 +1315,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<HttpEvent<ArrayBuffer>>;
 
   put(
@@ -1321,7 +1324,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'blob';
-    }
+    },
   ): Observable<HttpEvent<Blob>>;
 
   put(
@@ -1330,7 +1333,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType: 'text';
-    }
+    },
   ): Observable<HttpEvent<string>>;
 
   put(
@@ -1339,7 +1342,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<Object>>;
 
   put<T>(
@@ -1348,7 +1351,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'events';
       responseType?: 'json';
-    }
+    },
   ): Observable<HttpEvent<T>>;
 
   put(
@@ -1357,7 +1360,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'arraybuffer';
-    }
+    },
   ): Observable<ODataResponse<ArrayBuffer>>;
 
   put(
@@ -1366,7 +1369,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'blob';
-    }
+    },
   ): Observable<ODataResponse<Blob>>;
 
   put(
@@ -1375,7 +1378,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType: 'text';
-    }
+    },
   ): Observable<ODataResponse<string>>;
 
   put(
@@ -1384,7 +1387,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<Object>>;
 
   put<T>(
@@ -1393,7 +1396,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe: 'response';
       responseType?: 'json';
-    }
+    },
   ): Observable<ODataResponse<T>>;
 
   put(
@@ -1402,7 +1405,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<Object>;
 
   put<T>(
@@ -1411,7 +1414,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body';
       responseType?: 'json';
-    }
+    },
   ): Observable<T>;
 
   put(
@@ -1420,7 +1423,7 @@ export class ODataClient {
     options: ODataOptions & {
       observe?: 'body' | 'events' | 'response';
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-    } = {}
+    } = {},
   ): Observable<any> {
     return this.request<any>('PUT', resource, addBody(options, body));
   }

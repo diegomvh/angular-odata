@@ -78,8 +78,8 @@ const ODataVersionBaseHelper = <any>{
       .forEach((key) =>
         funcs.set(
           key.substring(this.ODATA_FUNCTION_PREFIX.length),
-          annots.get(key)
-        )
+          annots.get(key),
+        ),
       );
     return funcs;
   },
@@ -92,7 +92,7 @@ const ODataVersionBaseHelper = <any>{
         let prop = props.has(name) ? props.get(name)! : new Map<string, any>();
         prop.set(
           key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)),
-          annots.get(key)
+          annots.get(key),
         );
         props.set(name, prop);
       });
@@ -141,7 +141,7 @@ const ODataVersionBaseHelper = <any>{
       .filter(
         ([key]) =>
           key.indexOf(this.ODATA_ANNOTATION_PREFIX) !== -1 ||
-          key.startsWith(this.ODATA_FUNCTION_PREFIX)
+          key.startsWith(this.ODATA_FUNCTION_PREFIX),
       )
       .forEach(([key, value]) => annots.set(key, value));
     return annots;
@@ -157,7 +157,7 @@ const ODataVersionBaseHelper = <any>{
             !k.startsWith(this.ODATA_FUNCTION_PREFIX)) ||
           (metadata === 'full' &&
             k.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 &&
-            !k.startsWith(this.ODATA_FUNCTION_PREFIX))
+            !k.startsWith(this.ODATA_FUNCTION_PREFIX)),
       )
       .reduce((acc, e) => ({ ...acc, [e[0]]: e[1] }), {});
   },
@@ -333,7 +333,7 @@ export const ODataHelper = {
       const annots = new Map<string, any>();
       if (this.ODATA_ANNOTATION in value) {
         Object.entries(value[this.ODATA_ANNOTATION]).forEach(([key, value]) =>
-          annots.set(key, value)
+          annots.set(key, value),
         );
       }
       return annots;

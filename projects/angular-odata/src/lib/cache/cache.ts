@@ -43,7 +43,7 @@ export abstract class ODataCache implements Cache {
           acc = [...acc, s.path() as string];
         return acc;
       },
-      ['request']
+      ['request'],
     );
   }
 
@@ -57,7 +57,9 @@ export abstract class ODataCache implements Cache {
     const context = res.context;
     if (context.entitySet) {
       tags.push(
-        context.key ? `${context.entitySet}(${context.key})` : context.entitySet
+        context.key
+          ? `${context.entitySet}(${context.key})`
+          : context.entitySet,
       );
     }
     if (context.type) tags.push(context.type);
@@ -73,7 +75,7 @@ export abstract class ODataCache implements Cache {
    */
   buildEntry<T>(
     payload: T,
-    { timeout, tags }: { timeout?: number; tags?: string[] }
+    { timeout, tags }: { timeout?: number; tags?: string[] },
   ): ODataCacheEntry<T> {
     return {
       payload,
@@ -107,7 +109,7 @@ export abstract class ODataCache implements Cache {
       timeout,
       scope,
       tags,
-    }: { timeout?: number; scope?: string[]; tags?: string[] } = {}
+    }: { timeout?: number; scope?: string[]; tags?: string[] } = {},
   ) {
     const entry = this.buildEntry<T>(payload, { timeout, tags });
     const key = this.buildKey([...(scope || []), name]);
@@ -175,7 +177,7 @@ export abstract class ODataCache implements Cache {
    */
   handleRequest(
     req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>
+    res$: Observable<ODataResponse<any>>,
   ): Observable<ODataResponse<any>> {
     return req.isFetch()
       ? this.handleFetch(req, res$)
@@ -186,7 +188,7 @@ export abstract class ODataCache implements Cache {
 
   private handleFetch(
     req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>
+    res$: Observable<ODataResponse<any>>,
   ): Observable<ODataResponse<any>> {
     const policy = req.fetchPolicy;
     const cached = this.getResponse(req);
@@ -209,7 +211,7 @@ export abstract class ODataCache implements Cache {
         tap((res: ODataResponse<any>) => {
           if (res.options.cacheability !== 'no-store')
             this.putResponse(req, res);
-        })
+        }),
       );
     }
     return cached !== undefined && policy !== 'network-only'
@@ -221,7 +223,7 @@ export abstract class ODataCache implements Cache {
 
   private handleMutate(
     req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>
+    res$: Observable<ODataResponse<any>>,
   ): Observable<ODataResponse<any>> {
     const requests = req.isBatch()
       ? (req.resource as ODataBatchResource)

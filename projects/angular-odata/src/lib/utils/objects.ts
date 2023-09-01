@@ -94,7 +94,7 @@ export const Objects = {
 
   difference(
     object1: { [attr: string]: any },
-    object2: { [attr: string]: any }
+    object2: { [attr: string]: any },
   ) {
     if (!object2 || !Types.isPlainObject(object2)) {
       return object1;

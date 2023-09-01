@@ -378,12 +378,12 @@ export class ODataServiceFactory {
    */
   entitySet&lt;T&gt;(
     entitySetName: string,
-    apiNameOrEntityType?: string
+    apiNameOrEntityType?: string,
   ): ODataEntitySetService&lt;T&gt; {
     return new (class extends ODataEntitySetService&lt;T&gt; {})(
       this.client,
       entitySetName,
-      apiNameOrEntityType
+      apiNameOrEntityType,
     );
   }
 
@@ -393,12 +393,12 @@ export class ODataServiceFactory {
    */
   singleton&lt;T&gt;(
     singletonName: string,
-    apiNameOrEntityType?: string
+    apiNameOrEntityType?: string,
   ): ODataSingletonService&lt;T&gt; {
     return new (class extends ODataSingletonService&lt;T&gt; {})(
       this.client,
       singletonName,
-      apiNameOrEntityType
+      apiNameOrEntityType,
     );
   }
 }

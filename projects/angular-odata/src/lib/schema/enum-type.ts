@@ -12,7 +12,7 @@ export class ODataEnumType<E> extends ODataSchemaElement {
     this.parser = new ODataEnumTypeParser<E>(
       config,
       schema.namespace,
-      schema.alias
+      schema.alias,
     );
   }
 

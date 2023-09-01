@@ -64,7 +64,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
       status: number;
       statusText: string;
       url: string | null;
-    }
+    },
   ) {
     return new ODataResponse<T>({
       api: req.api,
@@ -103,12 +103,12 @@ export class ODataResponse<T> extends HttpResponse<T> {
       }
       const headerKey = Http.resolveHeaderKey(
         this.headers,
-        ODATA_VERSION_HEADERS
+        ODATA_VERSION_HEADERS,
       );
       if (headerKey) {
         const version = (this.headers.get(headerKey) || '').replace(
           /\;/g,
-          ''
+          '',
         ) as '2.0' | '3.0' | '4.0';
         this._options.setVersion(version);
       }
@@ -146,7 +146,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
   get context(): ODataContext {
     if (this._context === undefined) {
       this._context = this.options.helper.context(
-        Types.isPlainObject(this.payload) ? this.payload : {}
+        Types.isPlainObject(this.payload) ? this.payload : {},
       );
     }
     return this._context;
@@ -181,7 +181,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const annots = new ODataEntityAnnotations<T>(
       options.helper,
       this.annotations,
-      this.context
+      this.context,
     );
     const data = payload ? annots.data(payload) : null;
     let entity = (
@@ -205,7 +205,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const annots = new ODataEntitiesAnnotations<T>(
       options.helper,
       this.annotations,
-      this.context
+      this.context,
     );
     let entities = payload ? annots.data(payload) : null;
     if (entities !== null)
@@ -223,14 +223,14 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const annots = new ODataPropertyAnnotations<T>(
       options.helper,
       this.annotations,
-      this.context
+      this.context,
     );
     const data = payload ? (annots.data(payload) as T) : null;
     let property = (
       data !== null && Types.isPlainObject(data)
         ? options.helper.attributes(
             data as { [key: string]: any },
-            this.api.options.stripMetadata
+            this.api.options.stripMetadata,
           )
         : data
     ) as T | null;

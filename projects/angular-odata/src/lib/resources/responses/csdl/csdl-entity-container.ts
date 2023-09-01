@@ -9,6 +9,6 @@ export class CsdlEntityContainer {
     public entitySets?: CsdlEntitySet[],
     public singletons?: CsdlSingleton[],
     public functionImports?: CsdlFunctionImport[],
-    public actionImports?: CsdlActionImport[]
+    public actionImports?: CsdlActionImport[],
   ) {}
 }

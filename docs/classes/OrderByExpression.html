@@ -162,7 +162,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:48</a></div>
                             </td>
                         </tr>
 
@@ -230,7 +230,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:5</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:6</a></code>
 </div>
                         </td>
                     </tr>
@@ -267,8 +267,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="65"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:65</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:73</a></div>
                 </td>
             </tr>
 
@@ -336,8 +336,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="91"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:91</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="101"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:101</a></div>
                 </td>
             </tr>
 
@@ -411,7 +411,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:85</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:95</a></code>
 </div>
                 </td>
             </tr>
@@ -448,8 +448,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="95"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:95</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="105"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:105</a></div>
                 </td>
             </tr>
 
@@ -519,8 +519,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="49"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:49</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:57</a></div>
                 </td>
             </tr>
 
@@ -614,7 +614,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:70</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:78</a></code>
 </div>
                 </td>
             </tr>
@@ -692,7 +692,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:30</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:33</a></code>
 </div>
                 </td>
             </tr>
@@ -735,7 +735,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:34</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:37</a></code>
 </div>
                 </td>
             </tr>
@@ -778,7 +778,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:38</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:41</a></code>
 </div>
                 </td>
             </tr>
@@ -805,12 +805,16 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser } from &#x27;../../../types&#x27;;
+import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import { render, Field, Renderable } from &#x27;./syntax&#x27;;
+import { render, FieldFactory, Renderable } from &#x27;./syntax&#x27;;
 
 export class OrderByField implements Renderable {
-  constructor(protected field: Renderable, protected order: &#x27;asc&#x27; | &#x27;desc&#x27;) {}
+  constructor(
+    protected field: Renderable,
+    protected order: &#x27;asc&#x27; | &#x27;desc&#x27;,
+  ) {}
 
   get [Symbol.toStringTag]() {
     return &#x27;OrderByField&#x27;;
@@ -827,12 +831,16 @@ export class OrderByField implements Renderable {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
+    parser?: Parser&lt;any&gt;;
   }): string {
-    return &#x60;${render(this.field, { aliases, escape, prefix })} ${this.order}&#x60;;
+    return &#x60;${render(this.field, { aliases, escape, prefix, parser })} ${
+      this.order
+    }&#x60;;
   }
 
   clone() {
@@ -853,19 +861,19 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
     super({ children });
   }
 
-  static orderBy&lt;T extends object&gt;(
+  static orderBy&lt;T&gt;(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;
+      current?: OrderByExpression&lt;T&gt;,
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
-    current?: OrderByExpression&lt;T&gt;
+    current?: OrderByExpression&lt;T&gt;,
   ): OrderByExpression&lt;T&gt; {
     return opts(
       {
-        t: Field.factory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
         e: () &#x3D;&gt; new OrderByExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as OrderByExpression&lt;T&gt;;
   }
 
@@ -878,13 +886,15 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
     aliases,
     escape,
     prefix,
+    parser,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
   } &#x3D; {}): string {
     let content &#x3D; this._children
-      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser }))
       .join(&#x60;,&#x60;);
     return content;
   }

@@ -211,6 +211,9 @@
                             <a href="#EXPAND" title="projects/angular-odata/src/lib/helper.ts" ><b>EXPAND</b>&nbsp;&nbsp;&nbsp;(projects/.../helper.ts)</a>
                         </li>
                         <li>
+                            <a href="#FieldFactory" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>FieldFactory</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
                             <a href="#FUNCTION_REGEX" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>FUNCTION_REGEX</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -2331,7 +2334,9 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>(value: any) &#x3D;&gt; isQueryCustomType(value) &amp;&amp; (value as QueryCustomType).type &#x3D;&#x3D;&#x3D; QueryCustomTypes.Raw</code>
+                        <i>Default value : </i><code>(value: any) &#x3D;&gt;
+  isQueryCustomType(value) &amp;&amp;
+  (value as QueryCustomType).type &#x3D;&#x3D;&#x3D; QueryCustomTypes.Raw</code>
                     </td>
                 </tr>
 
@@ -2605,7 +2610,7 @@
   //   &#x3D;&gt; [[1, &#x27;a&#x27;], [2, &#x27;b&#x27;], [3, &#x27;c&#x27;], [4, &#x27;d&#x27;], [5, &#x27;e&#x27;], [6, &#x27;f&#x27;]]
   zip: (...arrays: any[][]) &#x3D;&gt; {
     return arrays[0].map((_: any, i: number) &#x3D;&gt;
-      arrays.map((array: any[]) &#x3D;&gt; array[i])
+      arrays.map((array: any[]) &#x3D;&gt; array[i]),
     );
   },
 }</code>
@@ -2908,7 +2913,7 @@
       const annots &#x3D; new Map&lt;string, any&gt;();
       if (this.ODATA_ANNOTATION in value) {
         Object.entries(value[this.ODATA_ANNOTATION]).forEach(([key, value]) &#x3D;&gt;
-          annots.set(key, value)
+          annots.set(key, value),
         );
       }
       return annots;
@@ -2962,8 +2967,8 @@
       .forEach((key) &#x3D;&gt;
         funcs.set(
           key.substring(this.ODATA_FUNCTION_PREFIX.length),
-          annots.get(key)
-        )
+          annots.get(key),
+        ),
       );
     return funcs;
   },
@@ -2976,7 +2981,7 @@
         let prop &#x3D; props.has(name) ? props.get(name)! : new Map&lt;string, any&gt;();
         prop.set(
           key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)),
-          annots.get(key)
+          annots.get(key),
         );
         props.set(name, prop);
       });
@@ -3025,7 +3030,7 @@
       .filter(
         ([key]) &#x3D;&gt;
           key.indexOf(this.ODATA_ANNOTATION_PREFIX) !&#x3D;&#x3D; -1 ||
-          key.startsWith(this.ODATA_FUNCTION_PREFIX)
+          key.startsWith(this.ODATA_FUNCTION_PREFIX),
       )
       .forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
     return annots;
@@ -3041,7 +3046,7 @@
             !k.startsWith(this.ODATA_FUNCTION_PREFIX)) ||
           (metadata &#x3D;&#x3D;&#x3D; &#x27;full&#x27; &amp;&amp;
             k.indexOf(this.ODATA_ANNOTATION_PREFIX) &#x3D;&#x3D;&#x3D; -1 &amp;&amp;
-            !k.startsWith(this.ODATA_FUNCTION_PREFIX))
+            !k.startsWith(this.ODATA_FUNCTION_PREFIX)),
       )
       .reduce((acc, e) &#x3D;&gt; ({ ...acc, [e[0]]: e[1] }), {});
   },
@@ -3216,7 +3221,7 @@
     const matches &#x3D; DURATION_REGEX.exec(v);
     if (!matches || v.length &lt; 3) {
       throw new TypeError(
-        &#x60;duration invalid: &quot;${v}&quot;. Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations&#x60;
+        &#x60;duration invalid: &quot;${v}&quot;. Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations&#x60;,
       );
     }
     let duration: Duration &#x3D; {};
@@ -3299,28 +3304,29 @@
   [EdmType.Date]: EdmParser&lt;Date&gt;(
     (v: any) &#x3D;&gt; new Date(&#x60;${v}T00:00:00.000Z&#x60;),
     (v: any) &#x3D;&gt; toDate(v).toISOString().substring(0, 10),
-    (v: any) &#x3D;&gt; raw(toDate(v).toISOString().substring(0, 10))
+    (v: any) &#x3D;&gt; raw(toDate(v).toISOString().substring(0, 10)),
   ),
   //Edm.TimeOfDay Clock time 00:00-23:59:59.999999999999
   [EdmType.TimeOfDay]: EdmParser&lt;Date&gt;(
     (v: any) &#x3D;&gt; new Date(&#x60;1970-01-01T${v}Z&#x60;),
     (v: any) &#x3D;&gt; toDate(v).toISOString().substring(11, 23),
-    (v: any) &#x3D;&gt; raw(toDate(v).toISOString().substring(11, 23))
+    (v: any) &#x3D;&gt; raw(toDate(v).toISOString().substring(11, 23)),
   ),
   //Edm.DateTimeOffset Date and time with a time-zone offset, no leap seconds
   [EdmType.DateTimeOffset]: EdmParser&lt;Date&gt;(
     toDate,
     (v: any) &#x3D;&gt; toDate(v).toISOString(),
-    (v: any) &#x3D;&gt; raw(toDate(v).toISOString())
+    (v: any) &#x3D;&gt; raw(toDate(v).toISOString()),
   ),
   //Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
   [EdmType.Duration]: EdmParser&lt;Duration&gt;(
     (v: any) &#x3D;&gt; Durations.toDuration(v),
     (v: Duration) &#x3D;&gt; Durations.toString(v),
-    (v: Duration) &#x3D;&gt; raw(Durations.toString(v))
+    (v: Duration) &#x3D;&gt; raw(Durations.toString(v)),
   ),
   //Edm.Decimal Numeric values with fixed precision and scale
-  [EdmType.Decimal]: EdmParser&lt;number&gt;(toNumber,
+  [EdmType.Decimal]: EdmParser&lt;number&gt;(
+    toNumber,
     (v: number, o: StructuredTypeFieldOptions) &#x3D;&gt; {
       if (o.ieee754Compatible) {
         let vstr &#x3D; v.toPrecision(o.field.precision);
@@ -3340,25 +3346,25 @@
         return raw(vstr);
       }
       return v;
-    }
+    },
   ),
   //Edm.Double IEEE 754 binary64 floating-point number (15-17 decimal digits)
   [EdmType.Double]: EdmParser&lt;number&gt;(
     (v: any) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27; ? Infinity : (v as number)),
     (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v),
-    (v: number) &#x3D;&gt; raw(v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v.toString())
+    (v: number) &#x3D;&gt; raw(v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v.toString()),
   ),
   //Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
   [EdmType.Single]: EdmParser&lt;number&gt;(
     (v: any) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27; ? Infinity : (v as number)),
     (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v),
-    (v: number) &#x3D;&gt; raw(v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v.toString())
+    (v: number) &#x3D;&gt; raw(v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v.toString()),
   ),
   //Edm.Binary Binary data
   [EdmType.Binary]: EdmParser&lt;ArrayBuffer&gt;(
     (v: string) &#x3D;&gt; ArrayBuffers.toArrayBuffer(v),
     (v: ArrayBuffer) &#x3D;&gt; ArrayBuffers.toString(v),
-    (v: ArrayBuffer) &#x3D;&gt; raw(ArrayBuffers.toString(v))
+    (v: ArrayBuffer) &#x3D;&gt; raw(ArrayBuffers.toString(v)),
   ),
 }</code>
                     </td>
@@ -3383,7 +3389,7 @@
                         <i>Default value : </i><code>&lt;T&gt;(
   _d: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; T,
   _s: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; any,
-  _e: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; any
+  _e: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; any,
 ): FieldParser&lt;T | T[]&gt; &#x3D;&gt; ({
   deserialize(value: any, options: StructuredTypeFieldOptions): T | T[] {
     return Array.isArray(value)
@@ -3540,7 +3546,7 @@
 
   toValue&lt;E extends { [key: string]: any }&gt;(
     enums: E,
-    value: any
+    value: any,
   ): number | undefined {
     if (value in enums) return typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? enums[value] : value;
     return undefined;
@@ -3561,7 +3567,7 @@
 
   toName&lt;E extends { [key: string]: any }&gt;(
     enums: E,
-    value: any
+    value: any,
   ): string | undefined {
     if (value in enums) return typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? enums[value] : value;
     return undefined;
@@ -3609,6 +3615,56 @@
     <h3>projects/angular-odata/src/lib/resources/query/expressions/syntax.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FieldFactory"></a>
+                    <span class="name">
+                        <span ><b>FieldFactory</b></span>
+                        <a href="#FieldFactory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&lt;T extends object&gt;(names: string[] &#x3D; []): any &#x3D;&gt;
+  new Proxy({ _names: names } as T, {
+    get(target: T, key: string | symbol) {
+      let names &#x3D; (target as any)[&#x27;_names&#x27;];
+      if (key &#x3D;&#x3D;&#x3D; &#x27;render&#x27;) {
+        return ({ prefix }: { prefix?: string }) &#x3D;&gt;
+          prefix ? &#x60;${prefix}/${names.join(&#x27;/&#x27;)}&#x60; : names.join(&#x27;/&#x27;);
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;clone&#x27;) {
+        return () &#x3D;&gt; FieldFactory([...names]);
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;isField&#x27;) {
+        return () &#x3D;&gt; true;
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;toJSON&#x27;) {
+        return () &#x3D;&gt; ({
+          $type: &#x27;Field&#x27;,
+          names: names,
+        });
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;resolve&#x27;) {
+        return (parser: any) &#x3D;&gt;
+          names.reduce((acc: any, name: string) &#x3D;&gt; acc.field(name), parser);
+      } else {
+        return FieldFactory([...names, key]);
+      }
+    },
+
+    has(target: T, key: string): any {
+      return (
+        [&#x27;toJSON&#x27;, &#x27;isField&#x27;, &#x27;clone&#x27;, &#x27;render&#x27;, &#x27;resolve&#x27;].includes(key) ||
+        key in target
+      );
+    },
+  })</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
@@ -3784,14 +3840,14 @@
         value.keys().forEach((key) &#x3D;&gt; {
           headers &#x3D; ((value as HttpHeaders).getAll(key) || []).reduce(
             (acc, v) &#x3D;&gt; acc.append(key, v),
-            headers
+            headers,
           );
         });
       } else if (Types.isPlainObject(value)) {
         Object.entries(value).forEach(([key, value]) &#x3D;&gt; {
           headers &#x3D; (Array.isArray(value) ? value : [value]).reduce(
             (acc, v) &#x3D;&gt; acc.append(key, v),
-            headers
+            headers,
           );
         });
       }
@@ -3818,14 +3874,14 @@
         value.keys().forEach((key) &#x3D;&gt; {
           params &#x3D; ((value as HttpParams).getAll(key) || []).reduce(
             (acc, v) &#x3D;&gt; acc.append(key, v),
-            params
+            params,
           );
         });
       } else if (Types.isPlainObject(value)) {
         Object.entries(value).forEach(([key, value]) &#x3D;&gt; {
           params &#x3D; (Array.isArray(value) ? value : [value]).reduce(
             (acc, v) &#x3D;&gt; acc.append(key, v),
-            params
+            params,
           );
         });
       }
@@ -3836,14 +3892,14 @@
   // Split Params
   splitHttpParams(
     params: HttpParams,
-    keys: string[]
+    keys: string[],
   ): [HttpParams, HttpParams] {
     let other &#x3D; new HttpParams();
     params.keys().forEach((key) &#x3D;&gt; {
       if (keys.includes(key)) {
         other &#x3D; (params.getAll(key) || []).reduce(
           (acc, v) &#x3D;&gt; acc.append(key, v),
-          other
+          other,
         );
         params &#x3D; params.delete(key);
       }
@@ -3858,7 +3914,7 @@
 
   resolveHeaderKey(
     headers: HttpHeaders | { [param: string]: string | string[] },
-    options: string[]
+    options: string[],
   ): string | undefined {
     if (headers instanceof HttpHeaders) {
       return headers.keys().find((k) &#x3D;&gt; options.indexOf(k) !&#x3D;&#x3D; -1);
@@ -4045,7 +4101,7 @@
 
   difference(
     object1: { [attr: string]: any },
-    object2: { [attr: string]: any }
+    object2: { [attr: string]: any },
   ) {
     if (!object2 || !Types.isPlainObject(object2)) {
       return object1;
@@ -4226,7 +4282,7 @@
       a.name &#x3D;&#x3D;&#x3D; b.name &amp;&amp;
       Objects.equal(
         (a.parameters || {})[CALLABLE_BINDING_PARAMETER] || {},
-        (b.parameters || {})[CALLABLE_BINDING_PARAMETER] || {}
+        (b.parameters || {})[CALLABLE_BINDING_PARAMETER] || {},
       );
     return callables.reduce((acc: CallableConfig[], config) &#x3D;&gt; {
       if (acc.every((c) &#x3D;&gt; !areEqual(c, config))) {
@@ -4235,7 +4291,7 @@
           .reduce((acc, c) &#x3D;&gt; {
             acc.parameters &#x3D; Object.assign(
               acc.parameters || {},
-              c.parameters || {}
+              c.parameters || {},
             );
             return acc;
           }, config);
@@ -4291,7 +4347,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>Object.getOwnPropertyNames(
-  ODataModel.prototype
+  ODataModel.prototype,
 )</code>
                     </td>
                 </tr>
@@ -4324,6 +4380,10 @@
                         <i>Default value : </i><code>{
   rawType(value: any) {
     return Object.prototype.toString.call(value).slice(8, -1);
+  },
+
+  isObject(value: any) {
+    return typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; value !&#x3D;&#x3D; null;
   },
 
   isPlainObject(value: any) {

@@ -1881,7 +1881,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public fetchMany(
     top: number,
-    options?: ODataOptions &amp; { withCount?: boolean }
+    options?: ODataOptions &amp; { withCount?: boolean },
   ) {
     return this.entities().fetchMany(top, options);
   }
@@ -1903,7 +1903,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public create(
     attrs: Partial&lt;T&gt;,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return this.entities().create(attrs, options);
   }
@@ -1918,7 +1918,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   public update(
     key: EntityKey&lt;T&gt;,
     attrs: Partial&lt;T&gt;,
-    options?: ODataOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string },
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity(key);
     if (!res.hasKey())
@@ -1936,7 +1936,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   public modify(
     key: EntityKey&lt;T&gt;,
     attrs: Partial&lt;T&gt;,
-    options?: ODataOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string },
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity(key);
     if (!res.hasKey())
@@ -1952,7 +1952,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public destroy(
     key: EntityKey&lt;T&gt;,
-    options?: ODataOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string },
   ) {
     const res &#x3D; this.entity(key);
     if (!res.hasKey())
@@ -1971,7 +1971,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   public fetchOrCreate(
     key: EntityKey&lt;T&gt;,
     attrs: Partial&lt;T&gt;,
-    { etag, ...options }: { etag?: string } &amp; ODataOptions &#x3D; {}
+    { etag, ...options }: { etag?: string } &amp; ODataOptions &#x3D; {},
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return this.entity(key)
       .fetch({ etag, ...options })
@@ -1979,7 +1979,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
         catchError((error: HttpErrorResponse) &#x3D;&gt; {
           if (error.status &#x3D;&#x3D;&#x3D; 404) return this.create(attrs, options);
           else return throwError(() &#x3D;&gt; error);
-        })
+        }),
       );
   }
 
@@ -1999,21 +1999,21 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     }: {
       etag?: string;
       method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
-    } &amp; ODataOptions &#x3D; {}
+    } &amp; ODataOptions &#x3D; {},
   ) {
     let schema &#x3D; this.structuredTypeSchema;
     if (method &#x3D;&#x3D;&#x3D; undefined &amp;&amp; schema !&#x3D;&#x3D; undefined &amp;&amp; schema.isCompoundKey())
       return throwError(
         () &#x3D;&gt;
           new Error(
-            &#x27;save: Composite key require a specific method, use create/update/patch&#x27;
-          )
+            &#x27;save: Composite key require a specific method, use create/update/patch&#x27;,
+          ),
       );
     let key &#x3D; schema &amp;&amp; schema.resolveKey(attrs);
     if (method &#x3D;&#x3D;&#x3D; undefined) method &#x3D; key !&#x3D;&#x3D; undefined ? &#x27;update&#x27; : &#x27;create&#x27;;
     if ((method &#x3D;&#x3D;&#x3D; &#x27;update&#x27; || method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;) &amp;&amp; key &#x3D;&#x3D;&#x3D; undefined)
       return throwError(
-        () &#x3D;&gt; new Error(&quot;save: Can&#x27;t update/patch entity without key&quot;)
+        () &#x3D;&gt; new Error(&quot;save: Can&#x27;t update/patch entity without key&quot;),
       );
     return method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;
       ? this.create(attrs, options)

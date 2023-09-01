@@ -39,14 +39,14 @@ describe('ODataResource', () => {
 
   it('should create batch resource', () => {
     const metadata: ODataBatchResource = ODataBatchResource.factory(
-      client.defaultApi()
+      client.defaultApi(),
     );
     expect(metadata.toString()).toEqual('$batch');
   });
 
   it('should create metadata resource', () => {
     const metadata: ODataMetadataResource = ODataMetadataResource.factory(
-      client.defaultApi()
+      client.defaultApi(),
     );
     expect(metadata.toString()).toEqual('$metadata');
   });
@@ -84,7 +84,7 @@ describe('ODataResource', () => {
       });
     const entity = set.entity(raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'));
     expect(entity.toString()).toEqual(
-      'People(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)'
+      'People(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)',
     );
   });
 
@@ -98,7 +98,7 @@ describe('ODataResource', () => {
       id2: 1,
     });
     expect(entity.toString()).toEqual(
-      'People(id1=cd5977c2-4a64-42de-b2fc-7fe4707c65cd,id2=1)'
+      'People(id1=cd5977c2-4a64-42de-b2fc-7fe4707c65cd,id2=1)',
     );
   });
 
@@ -126,7 +126,7 @@ describe('ODataResource', () => {
         path: ENTITY_SET,
       });
     const fun: ODataFunctionResource<any, any> = set.function<any, any>(
-      'NS.MyFunction'
+      'NS.MyFunction',
     );
     expect(fun.toString()).toEqual('People/NS.MyFunction()');
   });
@@ -138,7 +138,7 @@ describe('ODataResource', () => {
       });
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>(
-      'NS.MyFunction'
+      'NS.MyFunction',
     );
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction()");
   });
@@ -153,15 +153,15 @@ describe('ODataResource', () => {
       .function<any, any>('NS.MyFunction')
       .parameters({ arg1: 1, arg2: 2 });
     expect(fun.toString()).toEqual(
-      "People('russellwhyte')/NS.MyFunction(arg1=1,arg2=2)"
+      "People('russellwhyte')/NS.MyFunction(arg1=1,arg2=2)",
     );
     fun = fun.parameters({ arg1: 10, arg2: 20 });
     expect(fun.toString()).toEqual(
-      "People('russellwhyte')/NS.MyFunction(arg1=10,arg2=20)"
+      "People('russellwhyte')/NS.MyFunction(arg1=10,arg2=20)",
     );
     fun = fun.parameters({ arg1: 10, arg2: 20 }, { alias: true });
     expect(fun.toString()).toEqual(
-      "People('russellwhyte')/NS.MyFunction(arg1=@arg1,arg2=@arg2)?@arg1=10&@arg2=20"
+      "People('russellwhyte')/NS.MyFunction(arg1=@arg1,arg2=@arg2)?@arg1=10&@arg2=20",
     );
     fun = fun.parameters(null);
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction()");
@@ -177,7 +177,7 @@ describe('ODataResource', () => {
       .function<any, any>('NS.MyFunction')
       .parameters({ arg1: 1, arg2: 2 });
     expect(fun.toString()).toEqual(
-      "People('russellwhyte')/NS.MyFunction(arg1=1,arg2=2)"
+      "People('russellwhyte')/NS.MyFunction(arg1=1,arg2=2)",
     );
   });
 
@@ -191,7 +191,7 @@ describe('ODataResource', () => {
       .function<any, any>('NS.MyFunction')
       .parameters({ arg1: 1, arg2: undefined });
     expect(fun.toString()).toEqual(
-      "People('russellwhyte')/NS.MyFunction(arg1=1)"
+      "People('russellwhyte')/NS.MyFunction(arg1=1)",
     );
   });
 
@@ -205,7 +205,7 @@ describe('ODataResource', () => {
       .function<any, any>('NS.MyFunction')
       .parameters({ arg1: 1, arg2: null });
     expect(fun.toString()).toEqual(
-      "People('russellwhyte')/NS.MyFunction(arg1=1,arg2=null)"
+      "People('russellwhyte')/NS.MyFunction(arg1=1,arg2=null)",
     );
   });
 
@@ -219,7 +219,7 @@ describe('ODataResource', () => {
       .function<any, any>('NS.MyFunction')
       .parameters({ arg1: 1, arg2: 2 }, { alias: true });
     expect(fun.toString()).toEqual(
-      "People('russellwhyte')/NS.MyFunction(arg1=@arg1,arg2=@arg2)?@arg1=1&@arg2=2"
+      "People('russellwhyte')/NS.MyFunction(arg1=@arg1,arg2=@arg2)?@arg1=1&@arg2=2",
     );
   });
 
@@ -229,7 +229,7 @@ describe('ODataResource', () => {
         path: ENTITY_SET,
       });
     const act: ODataActionResource<any, any> = set.action<any, any>(
-      'NS.MyAction'
+      'NS.MyAction',
     );
     expect(act.toString()).toEqual('People/NS.MyAction');
   });
@@ -241,7 +241,7 @@ describe('ODataResource', () => {
       });
     const entity = set.entity('russellwhyte');
     const act: ODataActionResource<any, any> = entity.action<any, any>(
-      'NS.MyAction'
+      'NS.MyAction',
     );
     expect(act.toString()).toEqual("People('russellwhyte')/NS.MyAction");
   });
@@ -276,7 +276,7 @@ describe('ODataResource', () => {
       entity.navigationProperty<Person>('Friends');
     const friend = friends.key('mirsking');
     expect(friend.toString()).toEqual(
-      "People('russellwhyte')/Friends('mirsking')"
+      "People('russellwhyte')/Friends('mirsking')",
     );
   });
 
@@ -327,7 +327,7 @@ describe('ODataResource', () => {
       entity.navigationProperty<Person>('Friends');
     const friend = friends.key(raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'));
     expect(friend.toString()).toEqual(
-      "People('russellwhyte')/Friends(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)"
+      "People('russellwhyte')/Friends(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)",
     );
   });
 
@@ -353,7 +353,7 @@ describe('ODataResource', () => {
       entity.navigationProperty<Person>('Friends');
     const friend = friends.key({ id1: 1, id2: 2 });
     expect(friend.toString()).toEqual(
-      "People('russellwhyte')/Friends(id1=1,id2=2)"
+      "People('russellwhyte')/Friends(id1=1,id2=2)",
     );
   });
 
@@ -367,11 +367,11 @@ describe('ODataResource', () => {
       .navigationProperty<Person>('Friends')
       .key('mirsking');
     expect(mirsking.toString()).toEqual(
-      "People('russellwhyte')/Friends('mirsking')"
+      "People('russellwhyte')/Friends('mirsking')",
     );
     const photo = mirsking.navigationProperty<Photo>('Photo');
     expect(photo.toString()).toEqual(
-      "People('russellwhyte')/Friends('mirsking')/Photo"
+      "People('russellwhyte')/Friends('mirsking')/Photo",
     );
   });
 
@@ -397,13 +397,13 @@ describe('ODataResource', () => {
       .navigationProperty<Person>('Friends')
       .key('mirsking');
     expect(mirsking.toString()).toEqual(
-      "People('russellwhyte')/Friends('mirsking')"
+      "People('russellwhyte')/Friends('mirsking')",
     );
     const keithpinckney = mirsking
       .navigationProperty<Person>('Friends')
       .key('keithpinckney');
     expect(keithpinckney.toString()).toEqual(
-      "People('russellwhyte')/Friends('mirsking')/Friends('keithpinckney')"
+      "People('russellwhyte')/Friends('mirsking')/Friends('keithpinckney')",
     );
   });
 
@@ -418,7 +418,7 @@ describe('ODataResource', () => {
       .key('mirsking')
       .reference();
     expect(mirsking.toString()).toEqual(
-      "People('russellwhyte')/Friends('mirsking')/$ref"
+      "People('russellwhyte')/Friends('mirsking')/$ref",
     );
   });
 
@@ -535,31 +535,34 @@ describe('ODataResource', () => {
                 .field(t.Trips, (f) => {
                   f.filter<Trip>(({ e, t, f }) =>
                     e()
-                      .any(t.PlanItems, ({e, t}) => e().startsWith(t.ConfirmationCode, 'CO'))
+                      .any(t.PlanItems, ({ e, t }) =>
+                        e().startsWith(t.ConfirmationCode, 'CO'),
+                      )
                       .eq(f.year(t.EndsAt), 1980)
                       .or(
                         e()
                           .eq(f.year(t.StartsAt), 1980)
-                          .eq(f.year(t.EndsAt), 1981)
-                      )
+                          .eq(f.year(t.EndsAt), 1981),
+                      ),
                   );
                   f.expand<Trip>(({ e, t }) =>
                     e()
                       .field(t.Photos)
                       .field(t.PlanItems, (f) =>
-                        f.filter<PlanItem>(({ e, t }) => e().startsWith(t.Description, 'My'))
-                      )
+                        f.filter<PlanItem>(({ e, t }) =>
+                          e().startsWith(t.Description, 'My'),
+                        ),
+                      ),
                   );
-                })
-            )
+                }),
+            ),
           )
           .field(t.Photo)
-          .field(t.Trips)
+          .field(t.Trips),
       );
     });
     expect(russellwhyte.toString()).toEqual(
-      "People('russellwhyte')?$expand=Friends($expand=Friends($orderBy=FirstName asc;$skip=1;$top=1;$count=true;$levels=1),Photo,Trips($expand=Photos,PlanItems($filter=startswith(Description, 'My'));$filter=(PlanItems/any(p:startswith(p/ConfirmationCode, 'CO')) and year(EndsAt) eq 1980) or (year(StartsAt) eq 1980 and year(EndsAt) eq 1981))),Photo,Trips"
+      "People('russellwhyte')?$expand=Friends($expand=Friends($orderBy=FirstName asc;$skip=1;$top=1;$count=true;$levels=1),Photo,Trips($expand=Photos,PlanItems($filter=startswith(Description, 'My'));$filter=(PlanItems/any(p:startswith(p/ConfirmationCode, 'CO')) and year(EndsAt) eq 1980) or (year(StartsAt) eq 1980 and year(EndsAt) eq 1981))),Photo,Trips",
     );
   });
-
 });
