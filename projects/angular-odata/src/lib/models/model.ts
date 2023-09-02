@@ -31,6 +31,7 @@ import {
   ODataModelAttribute,
   ODataModelEventType,
   ModelFieldOptions,
+  ODataModelEventEmitter,
 } from './options';
 import { ParserOptions } from '../types';
 
@@ -72,18 +73,18 @@ export class ODataModel<T> {
   // Parent
   _parent:
     | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null,
-      ]
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null,
+    ]
     | null = null;
   _resource: ODataResource<T> | null = null;
   _resources: {
     parent:
-      | [
-          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-          ODataModelField<any> | null,
-        ]
-      | null;
+    | [
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null,
+    ]
+    | null;
     resource: ODataResource<T> | null;
   }[] = [];
   _attributes: Map<string, ODataModelAttribute<any>> = new Map<
@@ -96,7 +97,7 @@ export class ODataModel<T> {
   _silent: boolean = false;
   _meta: ODataModelOptions<any>;
   // Events
-  events$ = new EventEmitter<ODataModelEvent<T>>();
+  events$ = new ODataModelEventEmitter<T>();
 
   constructor(
     data: Partial<T> | { [name: string]: any } = {},
@@ -400,8 +401,8 @@ export class ODataModel<T> {
       path === undefined
         ? []
         : Types.isArray(path)
-        ? path
-        : (path as string).match(/([^[.\]])+/g)
+          ? path
+          : (path as string).match(/([^[.\]])+/g)
     ) as any[];
     const name = pathArray[0];
     const value = name !== undefined ? (<any>this)[name] : undefined;
@@ -561,8 +562,8 @@ export class ODataModel<T> {
       (method === 'create'
         ? resource.create(_entity, options)
         : method === 'modify'
-        ? resource.modify(_entity, { etag: this.annots().etag, ...options })
-        : resource.update(_entity, { etag: this.annots().etag, ...options })
+          ? resource.modify(_entity, { etag: this.annots().etag, ...options })
+          : resource.update(_entity, { etag: this.annots().etag, ...options })
       ).pipe(
         map(({ entity, annots }) => ({ entity: entity || _entity, annots })),
       ),
@@ -798,13 +799,13 @@ export class ODataModel<T> {
       ) as ODataPropertyResource<P>;
       return field.collection
         ? prop
-            .fetchCollection(options)
-            .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
+          .fetchCollection(options)
+          .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
         : field.isStructuredType()
-        ? prop
+          ? prop
             .fetchModel(options)
             .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
-        : prop
+          : prop
             .fetchProperty(options)
             .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })));
     }

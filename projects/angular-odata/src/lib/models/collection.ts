@@ -28,6 +28,7 @@ import {
   ModelFieldOptions,
   ODataModelEntry,
   ODataModelEvent,
+  ODataModelEventEmitter,
   ODataModelEventType,
   ODataModelField,
   ODataModelOptions,
@@ -40,9 +41,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
   static model: typeof ODataModel | null = null;
   _parent:
     | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null,
-      ]
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null,
+    ]
     | null = null;
   _resource:
     | ODataEntitySetResource<T>
@@ -51,16 +52,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     | null = null;
   _resources: {
     parent:
-      | [
-          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-          ODataModelField<any> | null,
-        ]
-      | null;
+    | [
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null,
+    ]
+    | null;
     resource:
-      | ODataEntitySetResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>
-      | null;
+    | ODataEntitySetResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | null;
   }[] = [];
   _annotations!: ODataEntitiesAnnotations<T>;
   _entries: ODataModelEntry<T, M>[] = [];
@@ -77,7 +78,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   //Events
-  events$ = new EventEmitter<ODataModelEvent<T>>();
+  events$ = new ODataModelEventEmitter<T>();
   constructor(
     entities: Partial<T>[] | { [name: string]: any }[] = [],
     {
@@ -115,9 +116,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (resource !== undefined) {
       this.attach(
         resource as
-          | ODataEntitySetResource<T>
-          | ODataPropertyResource<T>
-          | ODataNavigationPropertyResource<T>,
+        | ODataEntitySetResource<T>
+        | ODataPropertyResource<T>
+        | ODataNavigationPropertyResource<T>,
       );
     }
 
@@ -373,10 +374,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource instanceof ODataEntitySetResource
         ? resource.fetch({ withCount, ...options })
         : resource.fetch({
-            responseType: 'entities',
-            withCount,
-            ...options,
-          });
+          responseType: 'entities',
+          withCount,
+          ...options,
+        });
 
     return this._request(obs$, { remove });
   }
@@ -792,7 +793,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  set(path: string | string[], value: any, {}: {} & ModelFieldOptions) {
+  set(path: string | string[], value: any, { }: {} & ModelFieldOptions) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -1004,8 +1005,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
         model = isModel
           ? (obj as M)
           : this.modelFactory(obj as Partial<T> | { [name: string]: any }, {
-              reset,
-            });
+            reset,
+          });
         toAdd.push([model, position]);
       }
       modelMap.push((<any>model)[Model.meta.cid]);
