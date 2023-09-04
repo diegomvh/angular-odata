@@ -61,7 +61,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
         derivedCtor.prototype,
         name,
         Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null),
+        Object.create(null),
       );
     });
   });
@@ -113,7 +113,7 @@ export function resolve(values: any, parser?: Parser<any>) {
 export function encode(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
     return values.map((v: any) =>
-      Types.isObject(v) || v === null ? v : parser?.encode(v),
+      Types.isObject(v) || v === null || v === undefined ? v : parser?.encode(v),
     );
   }
   return values;
@@ -125,7 +125,7 @@ export class Function<T> implements Renderable {
     protected values: any[],
     protected normalize: Normalize,
     protected escape: boolean = false,
-  ) {}
+  ) { }
 
   get [Symbol.toStringTag]() {
     return 'Function';
@@ -345,7 +345,7 @@ export class Operator<T> implements Renderable {
     protected op: string,
     protected values: any[],
     protected normalize: Normalize,
-  ) {}
+  ) { }
 
   get [Symbol.toStringTag]() {
     return 'Operator';
@@ -386,24 +386,24 @@ export class Operator<T> implements Renderable {
     if (right !== undefined) {
       right = Array.isArray(right)
         ? `(${right
-            .map((v) =>
-              render(v, {
-                aliases,
-                escape,
-                prefix,
-                parser,
-                normalize:
-                  this.normalize === 'all' || this.normalize === 'right',
-              }),
-            )
-            .join(',')})`
+          .map((v) =>
+            render(v, {
+              aliases,
+              escape,
+              prefix,
+              parser,
+              normalize:
+                this.normalize === 'all' || this.normalize === 'right',
+            }),
+          )
+          .join(',')})`
         : render(right, {
-            aliases,
-            escape,
-            prefix,
-            parser,
-            normalize: this.normalize === 'all' || this.normalize === 'right',
-          });
+          aliases,
+          escape,
+          prefix,
+          parser,
+          normalize: this.normalize === 'all' || this.normalize === 'right',
+        });
       return `${left} ${this.op} ${right}`;
     }
     return `${this.op}(${left})`;
@@ -478,7 +478,7 @@ export class ArithmeticOperators<T> {
 }
 
 export class Grouping<T> implements Renderable {
-  constructor(protected group: Renderable) {}
+  constructor(protected group: Renderable) { }
 
   get [Symbol.toStringTag]() {
     return 'Grouping';
@@ -515,7 +515,7 @@ export class Lambda<T> implements Renderable {
     protected op: string,
     protected values: any[],
     protected alias?: string,
-  ) {}
+  ) { }
 
   get [Symbol.toStringTag]() {
     return 'Lambda';
@@ -579,11 +579,11 @@ export class LambdaOperators<T> {
   }
 }
 
-export class ODataOperators<T> {}
+export class ODataOperators<T> { }
 export interface ODataOperators<T>
   extends LogicalOperators<T>,
-    ArithmeticOperators<T>,
-    LambdaOperators<T> {}
+  ArithmeticOperators<T>,
+  LambdaOperators<T> { }
 
 applyMixins(ODataOperators, [
   LogicalOperators,
@@ -592,16 +592,16 @@ applyMixins(ODataOperators, [
 ]);
 export const operators: ODataOperators<any> = new ODataOperators<any>();
 
-export class ODataFunctions<T> {}
+export class ODataFunctions<T> { }
 export interface ODataFunctions<T>
   extends StringAndCollectionFunctions<T>,
-    CollectionFunctions<T>,
-    StringFunctions<T>,
-    DateAndTimeFunctions<T>,
-    ArithmeticFunctions<T>,
-    TypeFunctions<T>,
-    GeoFunctions<T>,
-    ConditionalFunctions<T> {}
+  CollectionFunctions<T>,
+  StringFunctions<T>,
+  DateAndTimeFunctions<T>,
+  ArithmeticFunctions<T>,
+  TypeFunctions<T>,
+  GeoFunctions<T>,
+  ConditionalFunctions<T> { }
 
 applyMixins(ODataFunctions, [
   StringAndCollectionFunctions,
@@ -615,8 +615,8 @@ applyMixins(ODataFunctions, [
 ]);
 export const functions: ODataFunctions<any> = new ODataFunctions<any>();
 
-export class ODataSyntax<T> {}
-export interface ODataSyntax<T> extends ODataOperators<T>, ODataFunctions<T> {}
+export class ODataSyntax<T> { }
+export interface ODataSyntax<T> extends ODataOperators<T>, ODataFunctions<T> { }
 applyMixins(ODataSyntax, [ODataOperators, ODataFunctions]);
 
 export const syntax: ODataSyntax<any> = new ODataSyntax<any>();

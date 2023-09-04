@@ -874,6 +874,7 @@ export class ODataModel<T> {
       | ODataCollection<P, ODataModel<P>>
       | null;
     if (model === null) return null;
+    // TODO: Fix this model.<Referenced> != model.get<Referenced>()
     if (model === undefined) {
       if (field.collection) {
         model = field.collectionFactory({ parent: this });
