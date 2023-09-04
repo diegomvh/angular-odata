@@ -5,6 +5,7 @@ import {
   COMPUTED,
   DEFAULT_VERSION,
   OPTIMISTIC_CONCURRENCY,
+  EVENT_SPLITTER
 } from '../constants';
 import { ODataHelper } from '../helper';
 import {
@@ -59,6 +60,7 @@ export class ODataModelEvent<T> {
       value,
       attr,
       options,
+      bubbly,
     }: {
       model?: ODataModel<T>;
       collection?: ODataCollection<T, ODataModel<T>>;
@@ -66,6 +68,7 @@ export class ODataModelEvent<T> {
       previous?: any;
       value?: any;
       options?: any;
+      bubbly?: boolean;
     } = {},
   ) {
     this.name = name;
@@ -76,17 +79,18 @@ export class ODataModelEvent<T> {
     this.options = options;
     this.chain = [
       [
-        (this.collection || this.model) as
+        (this.model || this.collection) as
         | ODataModel<any>
         | ODataCollection<any, ODataModel<any>>,
         attr || null,
       ],
     ];
+    this.bubbly = bubbly ?? BUBBLERS.indexOf(this.name) !== -1;
   }
 
-  bubbling: boolean = true;
+  bubbly: boolean;
   stopPropagation() {
-    this.bubbling = false;
+    this.bubbly = false;
   }
 
   chain: [
@@ -104,6 +108,7 @@ export class ODataModelEvent<T> {
       previous: this.previous,
       value: this.value,
       options: this.options,
+      bubbly: this.bubbly
     });
     event.chain = [...this.chain];
     event.chain.splice(0, 0, [model, attr]);
@@ -150,7 +155,7 @@ export class ODataModelEvent<T> {
   }
 }
 
-export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> { 
+export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> {
   model?: ODataModel<T>;
   collection?: ODataCollection<T, ODataModel<T>>;
 
@@ -160,25 +165,51 @@ export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> 
     this.collection = collection;
   }
 
-  trigger(name: ODataModelEventType | string,
+  /*
+  override emit(event: ODataModelEvent<T>): void {
+    if (event.bubbly && ((this.collection || this.model) === undefined || !event.visited((this.collection || this.model)!))) {
+      super.emit(event);
+    }  
+  }
+  */
+
+  trigger(type: ODataModelEventType | string,
     {
-      model, 
+      collection,
       previous,
       value,
       attr,
       options,
+      bubbly
     }: {
-      model?: ODataModel<T>; 
+      collection?: ODataCollection<T, ODataModel<T>>;
       attr?: ODataModelAttribute<any> | number;
       previous?: any;
       value?: any;
       options?: any;
+      bubbly?: boolean;
     } = {}) {
-    this.emit(new ODataModelEvent(name, { model: model ?? this.model, collection: this.collection, previous, value, attr, options }));
+    const _trigger = (name: string) =>
+      this.emit(new ODataModelEvent(name, {
+        model: this.model,
+        collection: collection ?? this.collection,
+        previous,
+        value,
+        attr,
+        options,
+        bubbly
+      }));
+    if (type && EVENT_SPLITTER.test(type)) {
+      for (let name of type.split(EVENT_SPLITTER)) {
+        _trigger(name);
+      }
+    } else {
+      _trigger(type);
+    }
   }
 }
 
-export const BUBBLING: (ODataModelEventType | string)[] = [
+export const BUBBLERS: (ODataModelEventType | string)[] = [
   ODataModelEventType.Change,
   ODataModelEventType.Reset,
   ODataModelEventType.Update,
@@ -548,7 +579,7 @@ export class ODataModelAttribute<T> {
   private value?: T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null;
   private change?: T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null;
   private subscription?: Subscription;
-  events$ = new EventEmitter<ODataModelEvent<T>>();
+  events$ = new ODataModelEventEmitter<T>();
 
   constructor(
     private _model: ODataModel<any>,
@@ -717,6 +748,7 @@ export class ODataModelOptions<T> {
   // Hierarchy
   parent?: ODataModelOptions<any>;
   children: ODataModelOptions<any>[] = [];
+  events$ = new ODataModelEventEmitter<T>();
 
   constructor({
     options,
@@ -918,7 +950,7 @@ export class ODataModelOptions<T> {
     const current = self._resource;
     if (current === null || !current.isEqualTo(resource)) {
       self._resource = resource;
-      self.events$.trigger(ODataModelEventType.Attach, { previous: current, value: resource }); 
+      self.events$.trigger(ODataModelEventType.Attach, { previous: current, value: resource });
     }
   }
 
@@ -1044,6 +1076,9 @@ export class ODataModelOptions<T> {
       annots?: ODataEntityAnnotations<T>;
     } = {},
   ) {
+    // Events
+    self.events$.subscribe(e => this.events$.emit(e));
+
     // Parent
     if (parent !== undefined) {
       self._parent = parent;
@@ -1067,18 +1102,18 @@ export class ODataModelOptions<T> {
     self._annotations =
       annots || new ODataEntityAnnotations(ODataHelper[DEFAULT_VERSION]);
 
-    const fields = this.fields({
+    // Fields
+    this.fields({
       include_navigation: true,
       include_parents: true,
-    });
-    for (let field of fields) {
+    }).forEach((field) => {
       Object.defineProperty(self, field.name, {
         configurable: true,
         get: () => this.get(self, field as ODataModelField<any>),
         set: (value: any) =>
           this.set(self, field as ODataModelField<any>, value),
       });
-    }
+    })
   }
 
   query(
@@ -1440,7 +1475,7 @@ export class ODataModelOptions<T> {
       });
     }
     if (!silent && changes.length > 0) {
-      self.events$.trigger( ODataModelEventType.Reset, { options: { changes }, });
+      self.events$.trigger(ODataModelEventType.Reset, { options: { changes }, });
     }
   }
 
@@ -1692,11 +1727,11 @@ export class ODataModelOptions<T> {
 
     if (!self._silent && changed) {
       self.events$.trigger(ODataModelEventType.Change, {
-          attr,
-          value,
-          previous: current,
-          options: { key: modelField.isKey() },
-        });
+        attr,
+        value,
+        previous: current,
+        options: { key: modelField.isKey() },
+      });
     }
 
     return changed;
@@ -1705,13 +1740,12 @@ export class ODataModelOptions<T> {
   private _link<F>(self: ODataModel<T>, attr: ODataModelAttribute<F>) {
     attr.events$.subscribe((event: ODataModelEvent<any>) => {
       if (
-        BUBBLING.indexOf(event.name) !== -1 &&
-        event.bubbling &&
+        event.bubbly &&
         !event.visited(self)
       ) {
         if (event.model === attr.get()) {
           if (
-            event.name === 'change' &&
+            event.name === ODataModelEventType.Change &&
             attr.navigation &&
             event.options?.key
           ) {

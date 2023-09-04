@@ -90,6 +90,7 @@ export const CACHE_KEY_SEPARATOR = ':';
 
 // Models
 export const CID_FIELD_NAME = '_cid';
+export const EVENT_SPLITTER = /\s+/;
 
 // Standard vocabularies for annotating OData services
 // https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md

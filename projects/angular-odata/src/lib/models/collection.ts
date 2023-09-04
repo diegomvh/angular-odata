@@ -21,7 +21,6 @@ import { ODataStructuredType } from '../schema/structured-type';
 import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
-  BUBBLING,
   INCLUDE_DEEP,
   INCLUDE_SHALLOW,
   ModelFieldOptions,
@@ -99,7 +98,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (model === undefined)
       throw new Error('Collection: Collection need model');
     this._model = model;
-    this.events$ = new ODataModelEventEmitter<T>({collection: this});
+
+    // Events
+    this.events$ = new ODataModelEventEmitter<T>({ collection: this });
+    this.events$.subscribe(e => model!.meta.events$.emit(e));
 
     // Parent
     if (parent !== undefined) {
@@ -203,9 +205,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (current === null || !current.isEqualTo(resource)) {
       this._resource = resource;
       this.events$.trigger(ODataModelEventType.Attach, {
-          previous: current,
-          value: resource,
-        });
+        previous: current,
+        value: resource,
+      });
     }
   }
   withResource<R>(
@@ -573,7 +575,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     else this._entries.push(entry);
 
     if (!silent) {
-      model.events$.trigger(ODataModelEventType.Add, { model });
+      model.events$.trigger(ODataModelEventType.Add, { collection: this });
     }
     return entry.model;
   }
@@ -680,7 +682,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     // Trigger Event
     if (!silent)
-      model.events$.trigger(ODataModelEventType.Remove, { model });
+      model.events$.trigger(ODataModelEventType.Remove, { collection: this });
 
     // Now remove
     const index = this._entries.indexOf(entry);
@@ -997,16 +999,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     ) {
       this._sortBy = null;
       this.events$.trigger(
-          reset ? ODataModelEventType.Reset : ODataModelEventType.Update,
-          {
-            options: {
-              added: toAdd,
-              removed: toRemove,
-              changed: toChange,
-              sorted: toSort,
-            },
+        reset ? ODataModelEventType.Reset : ODataModelEventType.Update,
+        {
+          options: {
+            added: toAdd,
+            removed: toRemove,
+            changed: toChange,
+            sorted: toSort,
           },
-        );
+        },
+      );
     }
   }
 
@@ -1089,14 +1091,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
         if (
-          BUBBLING.indexOf(event.name) !== -1 &&
-          event.bubbling &&
+          event.bubbly &&
           !event.visited(this)
         ) {
           if (event.model === entry.model) {
-            if (event.name === 'destroy') {
+            if (event.name === ODataModelEventType.Destroy) {
               this.removeModel(entry.model, { reset: true });
-            } else if (event.name === 'change' && event.options?.key) {
+            } else if (event.name === ODataModelEventType.Change && event.options?.key) {
               entry.key = entry.model.key();
             }
           }
