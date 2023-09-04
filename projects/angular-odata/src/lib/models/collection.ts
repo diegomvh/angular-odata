@@ -1,4 +1,3 @@
-import { EventEmitter } from '@angular/core';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { finalize, map, switchMap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from '../constants';
@@ -78,7 +77,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   //Events
-  events$ = new ODataModelEventEmitter<T>();
+  events$: ODataModelEventEmitter<T>;
   constructor(
     entities: Partial<T>[] | { [name: string]: any }[] = [],
     {
@@ -100,6 +99,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (model === undefined)
       throw new Error('Collection: Collection need model');
     this._model = model;
+    this.events$ = new ODataModelEventEmitter<T>({collection: this});
 
     // Parent
     if (parent !== undefined) {
@@ -202,13 +202,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const current = this._resource;
     if (current === null || !current.isEqualTo(resource)) {
       this._resource = resource;
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Attach, {
-          collection: this,
+      this.events$.trigger(ODataModelEventType.Attach, {
           previous: current,
           value: resource,
-        }),
-      );
+        });
     }
   }
   withResource<R>(
@@ -335,12 +332,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     obs$: Observable<ODataEntities<any>>,
     { remove }: { remove?: boolean } = {},
   ): Observable<M[]> {
-    this.events$.emit(
-      new ODataModelEvent(ODataModelEventType.Request, {
-        collection: this,
-        options: { observable: obs$ },
-      }),
-    );
+    this.events$.trigger(ODataModelEventType.Request, { options: { observable: obs$ } });
 
     return obs$.pipe(
       map(({ entities, annots }) => {
@@ -349,12 +341,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           (entity) => this.modelFactory(entity, { reset: true }) as M,
         ) as M[];
         this.assign(models, { reset: true, remove });
-        this.events$.emit(
-          new ODataModelEvent(ODataModelEventType.Sync, {
-            collection: this,
-            options: { models, entities, annots },
-          }),
-        );
+        this.events$.trigger(ODataModelEventType.Sync, { options: { models, entities, annots } });
         return models;
       }),
     );
@@ -507,20 +494,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
         ),
         ...toUpdateContained.map((m) => m.save({ method, ...options })),
       ]);
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Request, {
-          collection: this,
-          options: { observable: obs$ },
-        }),
-      );
+      this.events$.trigger(ODataModelEventType.Request, {
+        options: { observable: obs$ },
+      });
       return obs$.pipe(
         map(() => {
           this._entries = this._entries
             .filter((entry) => entry.state !== ODataModelState.Removed)
             .map((entry) => ({ ...entry, state: ODataModelState.Unchanged }));
-          this.events$.emit(
-            new ODataModelEvent(ODataModelEventType.Sync, { collection: this }),
-          );
+          this.events$.trigger(ODataModelEventType.Sync);
           return this;
         }),
       );
@@ -591,12 +573,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     else this._entries.push(entry);
 
     if (!silent) {
-      model.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Add, {
-          model,
-          collection: this,
-        }),
-      );
+      model.events$.trigger(ODataModelEventType.Add, { model });
     }
     return entry.model;
   }
@@ -626,12 +603,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reparent,
     });
     if (!silent && added !== undefined) {
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Update, {
-          collection: this,
-          options: { added: [added], removed: [], merged: [] },
-        }),
-      );
+      this.events$.trigger(ODataModelEventType.Update, {
+        options: { added: [added], removed: [], merged: [] },
+      });
     }
     return added;
   }
@@ -704,14 +678,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
       return model;
     }
 
-    // Emit Event
+    // Trigger Event
     if (!silent)
-      model.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Remove, {
-          model,
-          collection: this,
-        }),
-      );
+      model.events$.trigger(ODataModelEventType.Remove, { model });
 
     // Now remove
     const index = this._entries.indexOf(entry);
@@ -734,12 +703,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
   ): M {
     const removed = this._removeModel(model, { silent, reset });
     if (!silent && removed !== undefined) {
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Update, {
-          collection: this,
-          options: { added: [], removed: [removed], merged: [] },
-        }),
-      );
+      this.events$.trigger(ODataModelEventType.Update, {
+        options: { added: [], removed: [removed], merged: [] },
+      });
     }
     return removed;
   }
@@ -821,12 +787,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
         this._addModel(value, { reparent: true });
         toAdd.push(model);
       }
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Update, {
-          collection: this,
-          options: { added: toAdd, removed: toRemove, changed: toChange },
-        }),
-      );
+      this.events$.trigger(ODataModelEventType.Update, {
+        options: { added: toAdd, removed: toRemove, changed: toChange },
+      });
       return value;
     }
   }
@@ -907,16 +870,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
       !silent &&
       (toAdd.length > 0 || toRemove.length > 0 || toChange.length > 0)
     ) {
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Reset, {
-          collection: this,
-          options: {
-            added: toAdd.map((e) => e.model),
-            removed: toRemove.map((e) => e.model),
-            changed: toChange.map((e) => e.model),
-          },
-        }),
-      );
+      this.events$.trigger(ODataModelEventType.Reset, {
+        options: {
+          added: toAdd.map((e) => e.model),
+          removed: toRemove.map((e) => e.model),
+          changed: toChange.map((e) => e.model),
+        },
+      });
     }
   }
 
@@ -927,12 +887,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
     this._entries = [];
     if (!silent) {
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Update, {
-          collection: this,
-          options: { removed: toRemove },
-        }),
-      );
+      this.events$.trigger(ODataModelEventType.Update, {
+        options: { removed: toRemove },
+      });
     }
   }
 
@@ -1039,11 +996,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset
     ) {
       this._sortBy = null;
-      this.events$.emit(
-        new ODataModelEvent(
+      this.events$.trigger(
           reset ? ODataModelEventType.Reset : ODataModelEventType.Update,
           {
-            collection: this,
             options: {
               added: toAdd,
               removed: toRemove,
@@ -1051,8 +1006,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
               sorted: toSort,
             },
           },
-        ),
-      );
+        );
     }
   }
 
@@ -1344,11 +1298,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         this._compare(e1, e2, by, 0),
     );
     if (!silent) {
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Update, {
-          collection: this,
-        }),
-      );
+      this.events$.trigger(ODataModelEventType.Update);
     }
   }
   //#endregion

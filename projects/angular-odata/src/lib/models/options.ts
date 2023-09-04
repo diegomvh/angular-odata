@@ -150,7 +150,33 @@ export class ODataModelEvent<T> {
   }
 }
 
-export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> { }
+export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> { 
+  model?: ODataModel<T>;
+  collection?: ODataCollection<T, ODataModel<T>>;
+
+  constructor({ model, collection }: { model?: ODataModel<T>; collection?: ODataCollection<T, ODataModel<T>>; } = {}) {
+    super();
+    this.model = model;
+    this.collection = collection;
+  }
+
+  trigger(name: ODataModelEventType | string,
+    {
+      model, 
+      previous,
+      value,
+      attr,
+      options,
+    }: {
+      model?: ODataModel<T>; 
+      attr?: ODataModelAttribute<any> | number;
+      previous?: any;
+      value?: any;
+      options?: any;
+    } = {}) {
+    this.emit(new ODataModelEvent(name, { model: model ?? this.model, collection: this.collection, previous, value, attr, options }));
+  }
+}
 
 export const BUBBLING: (ODataModelEventType | string)[] = [
   ODataModelEventType.Change,
@@ -892,13 +918,7 @@ export class ODataModelOptions<T> {
     const current = self._resource;
     if (current === null || !current.isEqualTo(resource)) {
       self._resource = resource;
-      self.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Attach, {
-          model: self,
-          previous: current,
-          value: resource,
-        }),
-      );
+      self.events$.trigger(ODataModelEventType.Attach, { previous: current, value: resource }); 
     }
   }
 
@@ -1420,12 +1440,7 @@ export class ODataModelOptions<T> {
       });
     }
     if (!silent && changes.length > 0) {
-      self.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Reset, {
-          model: self,
-          options: { changes },
-        }),
-      );
+      self.events$.trigger( ODataModelEventType.Reset, { options: { changes }, });
     }
   }
 
@@ -1475,15 +1490,7 @@ export class ODataModelOptions<T> {
       });
 
     if ((!self._silent && changes.length > 0) || self._reset) {
-      self.events$.emit(
-        new ODataModelEvent(
-          self._reset ? ODataModelEventType.Reset : ODataModelEventType.Update,
-          {
-            model: self,
-            options: { changes },
-          },
-        ),
-      );
+      self.events$.trigger(self._reset ? ODataModelEventType.Reset : ODataModelEventType.Update, { options: { changes } });
     }
     self._reset = false;
     self._reparent = false;
@@ -1684,15 +1691,12 @@ export class ODataModelOptions<T> {
     }
 
     if (!self._silent && changed) {
-      self.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Change, {
+      self.events$.trigger(ODataModelEventType.Change, {
           attr,
-          model: self,
           value,
           previous: current,
           options: { key: modelField.isKey() },
-        }),
-      );
+        });
     }
 
     return changed;

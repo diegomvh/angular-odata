@@ -1,8 +1,5 @@
-import { EventEmitter } from '@angular/core';
 import { forkJoin, NEVER, Observable, of, throwError } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
-import { DEFAULT_VERSION } from '../constants';
-import { ODataHelper } from '../helper';
+import { map, tap } from 'rxjs/operators';
 import {
   EntityKey,
   ODataActionOptions,
@@ -25,7 +22,6 @@ import {
   INCLUDE_DEEP,
   INCLUDE_SHALLOW,
   ModelOptions,
-  ODataModelEvent,
   ODataModelField,
   ODataModelOptions,
   ODataModelAttribute,
@@ -97,7 +93,7 @@ export class ODataModel<T> {
   _silent: boolean = false;
   _meta: ODataModelOptions<any>;
   // Events
-  events$ = new ODataModelEventEmitter<T>();
+  events$: ODataModelEventEmitter<T>;
 
   constructor(
     data: Partial<T> | { [name: string]: any } = {},
@@ -120,6 +116,7 @@ export class ODataModel<T> {
     if (Klass.meta === undefined)
       throw new Error(`ODataModel: Can't create model without metadata`);
     this._meta = Klass.meta;
+    this.events$ = new ODataModelEventEmitter<T>({model: this});
     this._meta.bind(this, { parent, resource, annots });
 
     // Client Id
@@ -297,13 +294,11 @@ export class ODataModel<T> {
   } = {}): boolean {
     this._errors = this.validate({ method, navigation });
     if (this._errors !== undefined)
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Invalid, {
-          model: this,
+      this.events$.trigger(
+        ODataModelEventType.Invalid, {
           value: this._errors,
           options: { method },
-        }),
-      );
+        });
     return this._errors === undefined;
   }
 
@@ -421,11 +416,7 @@ export class ODataModel<T> {
     //this._changes.clear();
     //this._relations.clear();
     if (!silent) {
-      this.events$.emit(
-        new ODataModelEvent(ODataModelEventType.Update, {
-          model: this,
-        }),
-      );
+      this.events$.trigger(ODataModelEventType.Update);
     }
   }
 
@@ -453,24 +444,20 @@ export class ODataModel<T> {
   }
 
   private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
-    this.events$.emit(
-      new ODataModelEvent(ODataModelEventType.Request, {
-        model: this,
+    this.events$.trigger(
+      ODataModelEventType.Request, {
         options: { observable: obs$ },
-      }),
-    );
+      });
     return obs$.pipe(
       map(({ entity, annots }) => {
         this._annotations = annots;
         this.assign(annots.attributes(entity || {}, 'full'), {
           reset: true,
         });
-        this.events$.emit(
-          new ODataModelEvent(ODataModelEventType.Sync, {
-            model: this,
+        this.events$.trigger(
+          ODataModelEventType.Sync, {
             options: { entity, annots },
-          }),
-        );
+          });
         return this;
       }),
     );
@@ -602,11 +589,7 @@ export class ODataModel<T> {
         map(({ entity, annots }) => ({ entity: entity || _entity, annots })),
       );
     return this._request(obs$).pipe(
-      tap(() =>
-        this.events$.emit(
-          new ODataModelEvent(ODataModelEventType.Destroy, { model: this }),
-        ),
-      ),
+      tap(() => this.events$.trigger(ODataModelEventType.Destroy)),
     );
   }
 
@@ -843,18 +826,14 @@ export class ODataModel<T> {
     } else if (model === null) {
       obs$ = reference.unset({ etag, ...options });
     }
-    this.events$.emit(
-      new ODataModelEvent(ODataModelEventType.Request, {
-        model: this,
+    this.events$.trigger(
+      ODataModelEventType.Request, {
         options: { observable: obs$ },
-      }),
-    );
+      });
     return obs$.pipe(
       map((model) => {
         this.assign({ [name]: model });
-        this.events$.emit(
-          new ODataModelEvent(ODataModelEventType.Sync, { model: this }),
-        );
+        this.events$.trigger(ODataModelEventType.Sync);
         return this;
       }),
     );
