@@ -61,6 +61,7 @@ export class ODataModelEvent<T> {
       attr,
       options,
       bubbly,
+      chain
     }: {
       model?: ODataModel<T>;
       collection?: ODataCollection<T, ODataModel<T>>;
@@ -69,6 +70,10 @@ export class ODataModelEvent<T> {
       value?: any;
       options?: any;
       bubbly?: boolean;
+      chain?: [
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelAttribute<any> | number | null,
+      ][];
     } = {},
   ) {
     this.name = name;
@@ -77,7 +82,7 @@ export class ODataModelEvent<T> {
     this.previous = previous;
     this.value = value;
     this.options = options;
-    this.chain = [
+    this.chain = chain ?? [
       [
         (this.model || this.collection) as
         | ODataModel<any>
@@ -86,11 +91,6 @@ export class ODataModelEvent<T> {
       ],
     ];
     this.bubbly = bubbly ?? BUBBLERS.indexOf(this.name) !== -1;
-  }
-
-  bubbly: boolean;
-  stopPropagation() {
-    this.bubbly = false;
   }
 
   chain: [
@@ -102,17 +102,20 @@ export class ODataModelEvent<T> {
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
     attr: ODataModelAttribute<any> | number,
   ) {
-    let event = new ODataModelEvent(this.name, {
+    return new ODataModelEvent(this.name, {
       model: this.model,
       collection: this.collection,
       previous: this.previous,
       value: this.value,
       options: this.options,
-      bubbly: this.bubbly
+      bubbly: this.bubbly,
+      chain: [[model, attr], ...this.chain]
     });
-    event.chain = [...this.chain];
-    event.chain.splice(0, 0, [model, attr]);
-    return event;
+  }
+
+  bubbly: boolean;
+  stopPropagation() {
+    this.bubbly = false;
   }
 
   visited(model: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
@@ -120,6 +123,10 @@ export class ODataModelEvent<T> {
       this.chain.some((c) => c[0] === model) &&
       this.chain[this.chain.length - 1][0] !== model
     );
+  }
+
+  continueWith(self: ODataModel<T> | ODataCollection<T, ODataModel<T>>) {
+    return this.bubbly && !this.visited(self);
   }
 
   get path() {
@@ -1739,10 +1746,7 @@ export class ODataModelOptions<T> {
 
   private _link<F>(self: ODataModel<T>, attr: ODataModelAttribute<F>) {
     attr.events$.subscribe((event: ODataModelEvent<any>) => {
-      if (
-        event.bubbly &&
-        !event.visited(self)
-      ) {
+      if (event.continueWith(self)) {
         if (event.model === attr.get()) {
           if (
             event.name === ODataModelEventType.Change &&

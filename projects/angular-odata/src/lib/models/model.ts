@@ -413,8 +413,6 @@ export class ODataModel<T> {
 
   clear({ silent = false }: { silent?: boolean } = {}) {
     this._attributes.clear();
-    //this._changes.clear();
-    //this._relations.clear();
     if (!silent) {
       this.events$.trigger(ODataModelEventType.Update);
     }

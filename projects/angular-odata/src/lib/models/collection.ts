@@ -1090,10 +1090,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
-        if (
-          event.bubbly &&
-          !event.visited(this)
-        ) {
+        if (event.continueWith(this))
+        {
           if (event.model === entry.model) {
             if (event.name === ODataModelEventType.Destroy) {
               this.removeModel(entry.model, { reset: true });
