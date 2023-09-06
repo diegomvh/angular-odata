@@ -32,7 +32,7 @@ export class CountField<T> implements Renderable {
     prefix?: string;
     parser?: Parser<T>;
   }): string {
-    const params: { [key: string]: string } = [
+    const params: { [name: string]: string } = [
       QueryOption.filter,
       QueryOption.search,
     ]

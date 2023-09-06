@@ -125,7 +125,7 @@ export class ODataModelEvent<T> {
     );
   }
 
-  continueWith(self: ODataModel<T> | ODataCollection<T, ODataModel<T>>) {
+  canContinueWith(self: ODataModel<T> | ODataCollection<T, ODataModel<T>>) {
     return this.bubbly && !this.visited(self);
   }
 
@@ -1746,7 +1746,7 @@ export class ODataModelOptions<T> {
 
   private _link<F>(self: ODataModel<T>, attr: ODataModelAttribute<F>) {
     attr.events$.subscribe((event: ODataModelEvent<any>) => {
-      if (event.continueWith(self)) {
+      if (event.canContinueWith(self)) {
         if (event.model === attr.get()) {
           if (
             event.name === ODataModelEventType.Change &&

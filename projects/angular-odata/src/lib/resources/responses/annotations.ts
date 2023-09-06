@@ -10,13 +10,13 @@ export abstract class ODataAnnotations<T> {
   ) {}
 
   attributes(
-    data: { [key: string]: any },
+    data: { [name: string]: any },
     metadata: ODataMetadataType,
   ): Partial<T> {
     return this.helper.attributes(data, metadata) as Partial<T>;
   }
 
-  update(data: { [key: string]: any }) {
+  update(data: { [name: string]: any }) {
     this.annotations = new Map<string, any>([
       ...this.annotations,
       ...this.helper.annotations(data),
@@ -34,7 +34,7 @@ export abstract class ODataAnnotations<T> {
   // Method
   abstract union(other: ODataAnnotations<any>): ODataAnnotations<any>;
   abstract clone(): ODataAnnotations<any>;
-  abstract data(data: { [key: string]: any }): { [key: string]: any };
+  abstract data(data: { [name: string]: any }): { [name: string]: any };
 }
 
 export class ODataPropertyAnnotations<T> extends ODataAnnotations<T> {
@@ -54,7 +54,7 @@ export class ODataPropertyAnnotations<T> extends ODataAnnotations<T> {
     );
   }
 
-  data(data: { [key: string]: any }) {
+  data(data: { [name: string]: any }) {
     return this.helper.property(data);
   }
 }
@@ -76,7 +76,7 @@ export class ODataEntityAnnotations<T> extends ODataAnnotations<T> {
     );
   }
 
-  data(data: { [key: string]: any }) {
+  data(data: { [name: string]: any }) {
     return this.helper.entity(data);
   }
 
@@ -136,7 +136,7 @@ export class ODataEntityAnnotations<T> extends ODataAnnotations<T> {
       : new ODataEntityAnnotations<F>(this.helper, props);
   }
 
-  private _functions?: { [key: string]: any };
+  private _functions?: { [name: string]: any };
   get functions() {
     if (this._functions === undefined) {
       this._functions = this.helper.functions(this.annotations);
@@ -166,7 +166,7 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
     );
   }
 
-  data(data: { [key: string]: any }) {
+  data(data: { [name: string]: any }) {
     return this.helper.entities(data);
   }
 
@@ -203,7 +203,7 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
     return match !== null ? match[1] : undefined;
   }
 
-  private _functions?: { [key: string]: any };
+  private _functions?: { [name: string]: any };
   get functions() {
     if (this._functions === undefined) {
       this._functions = this.helper.functions(this.annotations);

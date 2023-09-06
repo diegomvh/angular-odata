@@ -174,7 +174,7 @@ export class ODataModel<T> {
   navigationProperty<N>(
     name: keyof T | string,
   ): ODataNavigationPropertyResource<N> {
-    const field = this._meta.field(name);
+    const field = this._meta.field<N>(name);
     if (field === undefined || !field.navigation)
       throw Error(
         `navigationProperty: Can't find navigation property ${name as string}`,
@@ -192,7 +192,7 @@ export class ODataModel<T> {
   }
 
   property<N>(name: string): ODataPropertyResource<N> {
-    const field = this._meta.field(name);
+    const field = this._meta.field<N>(name);
     if (field === undefined || field.navigation)
       throw Error(`property: Can't find property ${name}`);
 
@@ -274,7 +274,7 @@ export class ODataModel<T> {
   }
 
   // Validation
-  _errors?: { [key: string]: any };
+  _errors?: { [name: string]: any };
   validate({
     method,
     navigation = false,
@@ -441,24 +441,18 @@ export class ODataModel<T> {
     }) as M;
   }
 
-  private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
+  private _request<T, R>(obs$: Observable<T>, mapCallback: (response: T) => R): Observable<R> {
     this.events$.trigger(
       ODataModelEventType.Request, {
         options: { observable: obs$ },
       });
-    return obs$.pipe(
-      map(({ entity, annots }) => {
-        this._annotations = annots;
-        this.assign(annots.attributes(entity || {}, 'full'), {
-          reset: true,
-        });
-        this.events$.trigger(
-          ODataModelEventType.Sync, {
-            options: { entity, annots },
-          });
-        return this;
-      }),
-    );
+    return obs$.pipe(map(response => {
+      let parse = mapCallback(response);
+      this.events$.trigger(ODataModelEventType.Sync, {
+        options: response,
+      });
+      return parse;
+    }));
   }
 
   fetch({
@@ -481,7 +475,11 @@ export class ODataModel<T> {
         ...options,
       });
     }
-    return this._request(obs$);
+    return this._request(obs$, ({ entity, annots }) => {
+      this._annotations = annots;
+      this.assign(annots.attributes(entity || {}, 'full'), { reset: true });
+      return this;
+    });
   }
 
   save({
@@ -542,17 +540,17 @@ export class ODataModel<T> {
       field_mapping: true,
       include_concurrency: true,
       include_navigation: navigation,
-    }) as T;
-    return this._request(
-      (method === 'create'
-        ? resource.create(_entity, options)
-        : method === 'modify'
-          ? resource.modify(_entity, { etag: this.annots().etag, ...options })
-          : resource.update(_entity, { etag: this.annots().etag, ...options })
-      ).pipe(
-        map(({ entity, annots }) => ({ entity: entity || _entity, annots })),
-      ),
-    );
+    });
+    let obs$ = method === 'create'
+      ? resource.create(_entity as T, options)
+      : method === 'modify'
+        ? resource.modify(_entity as T, { etag: this.annots().etag, ...options })
+        : resource.update(_entity as T, { etag: this.annots().etag, ...options });
+    return this._request(obs$, ({ entity, annots }) => {
+      this._annotations = annots;
+      this.assign(annots.attributes(entity || _entity as {[name: string]: any}, 'full'), { reset: true });
+      return this;
+    });
   }
 
   destroy({
@@ -581,14 +579,11 @@ export class ODataModel<T> {
       );
 
     const _entity = this.toEntity({ field_mapping: true }) as T;
-    const obs$ = resource
-      .destroy({ etag: this.annots().etag, ...options })
-      .pipe(
-        map(({ entity, annots }) => ({ entity: entity || _entity, annots })),
-      );
-    return this._request(obs$).pipe(
-      tap(() => this.events$.trigger(ODataModelEventType.Destroy)),
-    );
+    const obs$ = resource.destroy({ etag: this.annots().etag, ...options });
+    return this._request(obs$, (resp) => {
+      this.events$.trigger(ODataModelEventType.Destroy);
+      return resp;
+    });
   }
 
   /**
@@ -668,17 +663,17 @@ export class ODataModel<T> {
     const func = resource.function<P, R>(name).query((q) => q.apply(options));
     switch (responseType) {
       case 'property':
-        return func.callProperty(params, options);
+        return this._request(func.callProperty(params, options), (resp) => resp);
       case 'model':
-        return func.callModel(params, options);
+        return this._request(func.callModel(params, options), (resp) => resp);
       case 'collection':
-        return func.callCollection(params, options);
+        return this._request(func.callCollection(params, options), (resp) => resp);
       case 'blob':
-        return func.callBlob(params, options);
+        return this._request(func.callBlob(params, options), (resp) => resp);
       case 'arraybuffer':
-        return func.callArraybuffer(params, options);
+        return this._request(func.callArraybuffer(params, options), (resp) => resp);
       default:
-        return func.call(params, { responseType, ...options });
+        return this._request(func.call(params, { responseType, ...options }), (resp) => resp);
     }
   }
 
@@ -713,17 +708,17 @@ export class ODataModel<T> {
     const action = resource.action<P, R>(name).query((q) => q.apply(options));
     switch (responseType) {
       case 'property':
-        return action.callProperty(params, options);
+        return this._request(action.callProperty(params, options), (resp) => resp);
       case 'model':
-        return action.callModel(params, options);
+        return this._request(action.callModel(params, options), (resp) => resp);
       case 'collection':
-        return action.callCollection(params, options);
+        return this._request(action.callCollection(params, options), (resp) => resp);
       case 'blob':
-        return action.callBlob(params, options);
+        return this._request(action.callBlob(params, options), (resp) => resp);
       case 'arraybuffer':
-        return action.callArraybuffer(params, options);
+        return this._request(action.callArraybuffer(params, options), (resp) => resp);
       default:
-        return action.call(params, { responseType, ...options });
+        return this._request(action.call(params, { responseType, ...options }), (resp) => resp);
     }
   }
   //#endregion
@@ -755,9 +750,9 @@ export class ODataModel<T> {
     nav.query((q) => q.apply(options));
     switch (responseType) {
       case 'model':
-        return nav.fetchModel(options);
+        return this._request(nav.fetchModel(options), (resp) => resp);
       case 'collection':
-        return nav.fetchCollection(options);
+        return this._request(nav.fetchCollection(options), (resp) => resp);
     }
   }
 
@@ -775,20 +770,18 @@ export class ODataModel<T> {
       | ODataModel<P>
       | ODataCollection<P, ODataModel<P>>;
     if (value === undefined) {
-      const prop = field.resourceFactory(
-        this.resource(),
-      ) as ODataPropertyResource<P>;
-      return field.collection
-        ? prop
-          .fetchCollection(options)
-          .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
-        : field.isStructuredType()
-          ? prop
-            .fetchModel(options)
-            .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
-          : prop
-            .fetchProperty(options)
-            .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })));
+      if (field.isStructuredType() && field.collection) {
+        let collection = field.collectionFactory<P>({ parent: this });
+        return this._request(collection.fetch(), () => { this.assign({ [name]: collection }, { silent: true }); return collection; });
+      } else if (field.isStructuredType()) {
+        let model = field.modelFactory<P>({ parent: this });
+        return this._request(model.fetch(), () => { this.assign({ [name]: model }, { silent: true }); return model; });
+      } else {
+        const prop = field.resourceFactory<T, P>(
+          this.resource(),
+        ) as ODataPropertyResource<P>;
+        return this._request(prop.fetchProperty(options), (resp) => { this.assign({ [name]: resp }, { silent: true }); return resp; });
+      }
     }
     return of(value as P);
   }
@@ -824,17 +817,10 @@ export class ODataModel<T> {
     } else if (model === null) {
       obs$ = reference.unset({ etag, ...options });
     }
-    this.events$.trigger(
-      ODataModelEventType.Request, {
-        options: { observable: obs$ },
-      });
-    return obs$.pipe(
-      map((model) => {
-        this.assign({ [name]: model });
-        this.events$.trigger(ODataModelEventType.Sync);
-        return this;
-      }),
-    );
+    return this._request(obs$, (model) => {
+      this.assign({ [name]: model });
+      return this;
+    });
   }
 
   getReference<P>(
@@ -851,7 +837,7 @@ export class ODataModel<T> {
       | ODataCollection<P, ODataModel<P>>
       | null;
     if (model === null) return null;
-    // TODO: Fix this model.<Referenced> != model.get<Referenced>()
+    // TODO: Request!!! Fix this model.<Referenced> != model.get<Referenced>()
     if (model === undefined) {
       if (field.collection) {
         model = field.collectionFactory({ parent: this });

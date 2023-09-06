@@ -1,13 +1,13 @@
 export const Enums = {
-  names<E extends { [key: string]: any }>(enums: E): string[] {
+  names<E extends { [name: string]: any }>(enums: E): string[] {
     return Object.values<string>(enums).filter((v) => typeof v === 'string');
   },
 
-  values<E extends { [key: string]: any }>(enums: E): number[] {
+  values<E extends { [name: string]: any }>(enums: E): number[] {
     return Object.values<number>(enums).filter((v) => typeof v === 'number');
   },
 
-  toValue<E extends { [key: string]: any }>(
+  toValue<E extends { [name: string]: any }>(
     enums: E,
     value: any,
   ): number | undefined {
@@ -15,7 +15,7 @@ export const Enums = {
     return undefined;
   },
 
-  toValues<E extends { [key: string]: any }>(enums: E, value: any): number[] {
+  toValues<E extends { [name: string]: any }>(enums: E, value: any): number[] {
     if (typeof value === 'number') {
       return this.values(enums).filter((v) => (value & v) === v);
     }
@@ -28,7 +28,7 @@ export const Enums = {
     return [];
   },
 
-  toName<E extends { [key: string]: any }>(
+  toName<E extends { [name: string]: any }>(
     enums: E,
     value: any,
   ): string | undefined {
@@ -36,7 +36,7 @@ export const Enums = {
     return undefined;
   },
 
-  toNames<E extends { [key: string]: any }>(enums: E, value: any): string[] {
+  toNames<E extends { [name: string]: any }>(enums: E, value: any): string[] {
     if (typeof value === 'number') {
       return this.values(enums)
         .filter((v) => (value & v) === v)
@@ -51,7 +51,7 @@ export const Enums = {
     return [];
   },
 
-  toFlags<E extends { [key: string]: any }>(enums: E, value: any): string[] {
+  toFlags<E extends { [name: string]: any }>(enums: E, value: any): string[] {
     if (typeof value === 'number') {
       return this.values(enums)
         .filter((v) => v !== 0 && (value & v) === v)

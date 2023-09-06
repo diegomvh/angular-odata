@@ -330,6 +330,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }) as C;
   }
 
+  /*
   private _request(
     obs$: Observable<ODataEntities<any>>,
     { remove }: { remove?: boolean } = {},
@@ -347,6 +348,19 @@ export class ODataCollection<T, M extends ODataModel<T>>
         return models;
       }),
     );
+  }
+  */
+
+  private _request<T, R>(obs$: Observable<T>, mapCallback: (response: T) => R): Observable<R> {
+    this.events$.trigger(
+      ODataModelEventType.Request, {
+        options: { observable: obs$ },
+      });
+    return obs$.pipe(map(response => {
+      let parse = mapCallback(response);
+      this.events$.trigger(ODataModelEventType.Sync, { options: response });
+      return parse;
+    }));
   }
 
   fetch({
@@ -368,7 +382,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
           ...options,
         });
 
-    return this._request(obs$, { remove });
+    return this._request(obs$, ({ entities, annots }) => {
+      this._annotations = annots;
+      const models = (entities || []).map(
+        (entity) => this.modelFactory(entity, { reset: true }) as M,
+      ) as M[];
+      this.assign(models, { reset: true, remove });
+      return models;
+    });
   }
 
   fetchAll({
@@ -383,7 +404,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     const obs$ = resource.fetchAll({ withCount, ...options });
 
-    return this._request(obs$, { remove });
+    return this._request(obs$, ({ entities, annots }) => {
+      this._annotations = annots;
+      const models = (entities || []).map(
+        (entity) => this.modelFactory(entity, { reset: true }) as M,
+      ) as M[];
+      this.assign(models, { reset: true, remove });
+      return models;
+    });
   }
 
   fetchMany(
@@ -404,7 +432,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     const obs$ = resource.fetchMany(top, { withCount, ...options });
 
-    return this._request(obs$, { remove: remove ?? false });
+    return this._request(obs$, ({ entities, annots }) => {
+      this._annotations = annots;
+      const models = (entities || []).map(
+        (entity) => this.modelFactory(entity, { reset: true }) as M,
+      ) as M[];
+      this.assign(models, { reset: true, remove: remove ?? false });
+      return models;
+    });
   }
 
   fetchOne({
@@ -1090,7 +1125,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
-        if (event.continueWith(this))
+        if (event.canContinueWith(this))
         {
           if (event.model === entry.model) {
             if (event.name === ODataModelEventType.Destroy) {

@@ -36,7 +36,7 @@ export class ExpandField<T> implements Renderable {
     parser?: Parser<T>;
   }): string {
     parser = resolve([this.field], parser);
-    const params: { [key: string]: string } = [
+    const params: { [name: string]: string } = [
       QueryOption.select,
       QueryOption.expand,
       QueryOption.filter,
