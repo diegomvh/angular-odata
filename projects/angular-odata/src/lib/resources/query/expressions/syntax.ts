@@ -112,9 +112,12 @@ export function resolve(values: any, parser?: Parser<any>) {
 
 export function encode(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
-    return values.map((v: any) =>
-      Types.isObject(v) || v === null || v === undefined ? v : parser?.encode(v),
-    );
+    return values.map((v: any) => {
+      if (Types.isObject(v) || v == null) return v
+      try {
+        return parser.encode(v);
+      } catch (e) { }
+    });
   }
   return values;
 }
