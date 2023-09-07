@@ -116,7 +116,9 @@ export function encode(values: any, parser?: Parser<any>) {
       if (Types.isObject(v) || v == null) return v
       try {
         return parser.encode(v);
-      } catch (e) { }
+      } catch {
+        return v;
+      }
     });
   }
   return values;
