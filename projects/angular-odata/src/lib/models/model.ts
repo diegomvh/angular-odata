@@ -10,6 +10,7 @@ import {
   ODataNavigationPropertyResource,
   ODataOptions,
   ODataPropertyResource,
+  ODataQueryArguments,
   ODataQueryArgumentsOptions,
   ODataQueryOptionsHandler,
   ODataResource,
@@ -739,20 +740,48 @@ export class ODataModel<T> {
       });
   }
 
-  fetchNavigationProperty<S>(
+  fetchNavigationProperty<N>(
     name: keyof T | string,
-    responseType: 'model' | 'collection',
-    { ...options }: {} & ODataQueryArgumentsOptions<S> = {},
-  ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
-    const nav = this.navigationProperty<S>(
-      name,
-    ) as ODataNavigationPropertyResource<S>;
-    nav.query((q) => q.apply(options));
-    switch (responseType) {
-      case 'model':
-        return this._request(nav.fetchModel(options), (resp) => resp);
-      case 'collection':
-        return this._request(nav.fetchCollection(options), (resp) => resp);
+    options?: ODataQueryArgumentsOptions<N>,
+  ): Observable<ODataModel<N> | ODataCollection<N, ODataModel<N>> | null> {
+    const field = this._meta.field<N>(name);
+    if (field === undefined || !field.navigation)
+      throw Error(
+        `fetchNavigationProperty: Can't find navigation property ${name as string}`,
+      );
+    if (field.isStructuredType() && field.collection) {
+      let collection = field.collectionFactory<N>({ parent: this });
+      collection.query(q => q.apply(options as ODataQueryArguments<N>));
+      return this._request(collection.fetch(options), () => { this.assign({ [name]: collection }, { silent: true }); return collection; });
+    } else {
+      let model = field.modelFactory<N>({ parent: this });
+      model.query(q => q.apply(options as ODataQueryArguments<N>));
+      return this._request(model.fetch(options), () => { this.assign({ [name]: model }, { silent: true }); return model; });
+    }
+  }
+
+  fetchProperty<P>(
+    name: keyof T | string,
+    options?: ODataQueryArgumentsOptions<P>,
+  ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
+    const field = this._meta.field(name);
+    if (field === undefined || field.navigation)
+      throw Error(`fetchProperty: Can't find property ${name as string}`);
+
+    if (field.isStructuredType() && field.collection) {
+      let collection = field.collectionFactory<P>({ parent: this });
+      collection.query(q => q.apply(options as ODataQueryArguments<P>));
+      return this._request(collection.fetch(options), () => { this.assign({ [name]: collection }, { silent: true }); return collection; });
+    } else if (field.isStructuredType()) {
+      let model = field.modelFactory<P>({ parent: this });
+      model.query(q => q.apply(options as ODataQueryArguments<P>));
+      return this._request(model.fetch(options), () => { this.assign({ [name]: model }, { silent: true }); return model; });
+    } else {
+      const prop = field.resourceFactory<T, P>(
+        this.resource(),
+      ) as ODataPropertyResource<P>;
+      prop.query(q => q.apply(options as ODataQueryArguments<P>));
+      return this._request(prop.fetchProperty(options), (resp) => { this.assign({ [name]: resp }, { silent: true }); return resp; });
     }
   }
 
@@ -843,8 +872,7 @@ export class ODataModel<T> {
         model = field.collectionFactory({ parent: this });
       } else {
         const value = this.referenced(field) as P;
-        model =
-          value === null ? null : field.modelFactory({ parent: this, value });
+        model = value === null ? null : field.modelFactory({ parent: this, value });
       }
       (this as any)[name] = model;
     }
