@@ -117,7 +117,7 @@ export class ODataModel<T> {
     if (Klass.meta === undefined)
       throw new Error(`ODataModel: Can't create model without metadata`);
     this._meta = Klass.meta;
-    this.events$ = new ODataModelEventEmitter<T>({model: this});
+    this.events$ = new ODataModelEventEmitter<T>({ model: this });
     this._meta.bind(this, { parent, resource, annots });
 
     // Client Id
@@ -297,9 +297,9 @@ export class ODataModel<T> {
     if (this._errors !== undefined)
       this.events$.trigger(
         ODataModelEventType.Invalid, {
-          value: this._errors,
-          options: { method },
-        });
+        value: this._errors,
+        options: { method },
+      });
     return this._errors === undefined;
   }
 
@@ -445,8 +445,8 @@ export class ODataModel<T> {
   private _request<T, R>(obs$: Observable<T>, mapCallback: (response: T) => R): Observable<R> {
     this.events$.trigger(
       ODataModelEventType.Request, {
-        options: { observable: obs$ },
-      });
+      options: { observable: obs$ },
+    });
     return obs$.pipe(map(response => {
       let parse = mapCallback(response);
       this.events$.trigger(ODataModelEventType.Sync, {
@@ -549,7 +549,7 @@ export class ODataModel<T> {
         : resource.update(_entity as T, { etag: this.annots().etag, ...options });
     return this._request(obs$, ({ entity, annots }) => {
       this._annotations = annots;
-      this.assign(annots.attributes(entity || _entity as {[name: string]: any}, 'full'), { reset: true });
+      this.assign(annots.attributes(entity || _entity as { [name: string]: any }, 'full'), { reset: true });
       return this;
     });
   }
@@ -740,26 +740,6 @@ export class ODataModel<T> {
       });
   }
 
-  fetchNavigationProperty<N>(
-    name: keyof T | string,
-    options?: ODataQueryArgumentsOptions<N>,
-  ): Observable<ODataModel<N> | ODataCollection<N, ODataModel<N>> | null> {
-    const field = this._meta.field<N>(name);
-    if (field === undefined || !field.navigation)
-      throw Error(
-        `fetchNavigationProperty: Can't find navigation property ${name as string}`,
-      );
-    if (field.isStructuredType() && field.collection) {
-      let collection = field.collectionFactory<N>({ parent: this });
-      collection.query(q => q.apply(options as ODataQueryArguments<N>));
-      return this._request(collection.fetch(options), () => { this.assign({ [name]: collection }, { silent: true }); return collection; });
-    } else {
-      let model = field.modelFactory<N>({ parent: this });
-      model.query(q => q.apply(options as ODataQueryArguments<N>));
-      return this._request(model.fetch(options), () => { this.assign({ [name]: model }, { silent: true }); return model; });
-    }
-  }
-
   fetchAttribute<P>(
     name: keyof T | string,
     options?: ODataQueryArgumentsOptions<P>,
@@ -811,37 +791,7 @@ export class ODataModel<T> {
     return model;
   }
 
-  getValue<P>(
-    name: keyof T | string,
-    options?: ODataOptions,
-  ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
-    const field = this._meta.field(name);
-    if (field === undefined || field.navigation)
-      throw Error(`getValue: Can't find property ${name as string}`);
-
-    let value = (this as any)[name] as
-      | P
-      | ODataModel<P>
-      | ODataCollection<P, ODataModel<P>>;
-    if (value === undefined) {
-      if (field.isStructuredType() && field.collection) {
-        let collection = field.collectionFactory<P>({ parent: this });
-        return this._request(collection.fetch(), () => { this.assign({ [name]: collection }, { silent: true }); return collection; });
-      } else if (field.isStructuredType()) {
-        let model = field.modelFactory<P>({ parent: this });
-        return this._request(model.fetch(), () => { this.assign({ [name]: model }, { silent: true }); return model; });
-      } else {
-        const prop = field.resourceFactory<T, P>(
-          this.resource(),
-        ) as ODataPropertyResource<P>;
-        return this._request(prop.fetchProperty(options), (resp) => { this.assign({ [name]: resp }, { silent: true }); return resp; });
-      }
-    }
-    return of(value as P);
-  }
-
-  //#region References
-  setReference<N>(
+  setAttribute<N>(
     name: keyof T | string,
     model: ODataModel<N> | ODataCollection<N, ODataModel<N>> | null,
     options?: ODataOptions,
@@ -877,33 +827,41 @@ export class ODataModel<T> {
     });
   }
 
-  getReference<P>(
+  setReference<N>(
     name: keyof T | string,
-  ): ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
-    const field = this._meta.field<P>(name);
-    if (field === undefined || !field.navigation)
-      throw Error(
-        `getReference: Can't find navigation property ${name as string}`,
-      );
+    model: ODataModel<N> | ODataCollection<N, ODataModel<N>> | null,
+    options?: ODataOptions,
+  ): Observable<this> {
+    const reference = (
+      this.navigationProperty<N>(name) as ODataNavigationPropertyResource<N>
+    ).reference();
 
-    let model = (this as any)[name] as
-      | ODataModel<P>
-      | ODataCollection<P, ODataModel<P>>
-      | null;
-    if (model === null) return null;
-    // TODO: Request!!! Fix this model.<Referenced> != model.get<Referenced>()
-    if (model === undefined) {
-      if (field.collection) {
-        model = field.collectionFactory({ parent: this });
-      } else {
-        const value = this.referenced(field) as P;
-        model = value === null ? null : field.modelFactory({ parent: this, value });
-      }
-      (this as any)[name] = model;
+    const etag = this.annots().etag;
+    let obs$ = NEVER as Observable<any>;
+    if (model instanceof ODataModel) {
+      obs$ = reference.set(
+        model._meta.entityResource(model) as ODataEntityResource<N>,
+        { etag, ...options },
+      );
+    } else if (model instanceof ODataCollection) {
+      obs$ = forkJoin(
+        model
+          .models()
+          .map((m) =>
+            reference.add(
+              m._meta.entityResource(m) as ODataEntityResource<N>,
+              options,
+            ),
+          ),
+      );
+    } else if (model === null) {
+      obs$ = reference.unset({ etag, ...options });
     }
-    return model;
+    return this._request(obs$, (model) => {
+      this.assign({ [name]: model });
+      return this;
+    });
   }
-  //#endregion
 
   //#region Model Identity
   get [Symbol.toStringTag]() {
