@@ -1184,9 +1184,34 @@ export class ODataModelOptions<T> {
       single = false,
     }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {},
   ): { [name: string]: any } | null | undefined {
+    return ODataModelOptions.resolveModelReferential(value, attr, this, {field_mapping, resolve, single});
+  }
+
+  resolveReferenced(
+    value: ODataModel<T> | T | { [name: string]: any } | null,
+    attr: ODataModelAttribute<any> | ODataModelField<any>,
+    {
+      field_mapping = false,
+      resolve = true,
+      single = false,
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {},
+  ): { [name: string]: any } | null | undefined {
+    return ODataModelOptions.resolveModelReferenced(value, attr, this, {field_mapping, resolve, single});
+  }
+
+  static resolveModelReferential<T>(
+    value: ODataModel<T> | T | { [name: string]: any } | null,
+    attr: ODataModelAttribute<any> | ODataModelField<any>,
+    options: ODataModelOptions<T>,
+    {
+      field_mapping = false,
+      resolve = true,
+      single = false,
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {},
+  ): { [name: string]: any } | null | undefined {
     const referential = new Map<string, any>();
     for (let ref of attr.referentials) {
-      let from = this.fields({
+      let from = options.fields({
         include_navigation: false,
         include_parents: true,
       }).find((p: any) => p.field === ref.referencedProperty);
@@ -1206,9 +1231,10 @@ export class ODataModelOptions<T> {
       : Object.fromEntries(referential);
   }
 
-  resolveReferenced(
+  static resolveModelReferenced<T>(
     value: ODataModel<T> | T | { [name: string]: any } | null,
     attr: ODataModelAttribute<any> | ODataModelField<any>,
+    options: ODataModelOptions<T>,
     {
       field_mapping = false,
       resolve = true,
@@ -1217,7 +1243,7 @@ export class ODataModelOptions<T> {
   ): { [name: string]: any } | null | undefined {
     const referenced = new Map<string, any>();
     for (let ref of attr.referentials) {
-      let from = this.fields({
+      let from = options.fields({
         include_navigation: false,
         include_parents: true,
       }).find((field: ODataModelField<any>) => field.field === ref.property);

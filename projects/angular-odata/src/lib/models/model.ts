@@ -760,13 +760,13 @@ export class ODataModel<T> {
     }
   }
 
-  fetchProperty<P>(
+  fetchAttribute<P>(
     name: keyof T | string,
     options?: ODataQueryArgumentsOptions<P>,
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
     const field = this._meta.field(name);
-    if (field === undefined || field.navigation)
-      throw Error(`fetchProperty: Can't find property ${name as string}`);
+    if (field === undefined)
+      throw Error(`fetchAttribute: Can't find attribute ${name as string}`);
 
     if (field.isStructuredType() && field.collection) {
       let collection = field.collectionFactory<P>({ parent: this });
@@ -785,7 +785,32 @@ export class ODataModel<T> {
     }
   }
 
-  // Get Value
+  getAttribute<P>(
+    name: keyof T | string,
+  ): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null | undefined {
+    const field = this._meta.field(name);
+    if (field === undefined || !field.navigation)
+      throw Error(
+        `getAttribute: Can't find attribute ${name as string}`,
+      );
+
+    let model = (this as any)[name] as
+      | P
+      | ODataModel<P>
+      | ODataCollection<P, ODataModel<P>>
+      | null;
+    if (field.isStructuredType() && model === undefined) {
+      if (field.collection) {
+        model = field.collectionFactory({ parent: this });
+      } else {
+        const ref = field.navigation ? this.referenced(field) as P : undefined;
+        model = ref === null ? null : field.modelFactory({ parent: this, value: ref });
+      }
+      (this as any)[name] = model;
+    }
+    return model;
+  }
+
   getValue<P>(
     name: keyof T | string,
     options?: ODataOptions,
