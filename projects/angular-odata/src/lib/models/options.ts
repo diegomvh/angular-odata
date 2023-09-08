@@ -216,15 +216,6 @@ export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> 
   }
 }
 
-export const BUBBLERS: (ODataModelEventType | string)[] = [
-  ODataModelEventType.Change,
-  ODataModelEventType.Reset,
-  ODataModelEventType.Update,
-  ODataModelEventType.Destroy,
-  ODataModelEventType.Add,
-  ODataModelEventType.Remove,
-];
-
 export const INCLUDE_SHALLOW = {
   include_concurrency: true,
   include_computed: true,
@@ -1019,7 +1010,7 @@ export class ODataModelOptions<T> {
       resource = field.resourceFactory<any, any>(resource);
     }
     if (resource === null)
-      throw new Error(`resource: Can't build resource for ${child}`);
+      throw new Error(`Can't build resource for ${child}`);
     return resource;
   }
 
@@ -1061,7 +1052,7 @@ export class ODataModelOptions<T> {
       self._resource !== null ? self._resource.cloneQuery() : undefined,
     );
     if (resource === undefined)
-      throw new Error(`entityResource: Can't build resource for ${self}`);
+      throw new Error(`Can't build resource for ${self}`);
     const key = self.key({ field_mapping: true }) as EntityKey<T>;
     if (key !== undefined) return resource.key(key);
     return resource as ODataResource<T>;

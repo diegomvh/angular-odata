@@ -115,7 +115,7 @@ export class ODataModel<T> {
   ) {
     const Klass = this.constructor as typeof ODataModel;
     if (Klass.meta === undefined)
-      throw new Error(`ODataModel: Can't create model without metadata`);
+      throw new Error(`Model: Can't create model without metadata`);
     this._meta = Klass.meta;
     this.events$ = new ODataModelEventEmitter<T>({ model: this });
     this._meta.bind(this, { parent, resource, annots });
