@@ -738,6 +738,23 @@ export class ODataModel<T> {
       });
   }
 
+  fetchNavigationProperty<S>(
+    name: keyof T | string,
+    responseType: 'model' | 'collection',
+    options: ODataQueryArgumentsOptions<S> = {},
+  ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
+    const nav = this.navigationProperty<S>(
+      name,
+    ) as ODataNavigationPropertyResource<S>;
+    nav.query((q) => q.apply(options));
+    switch (responseType) {
+      case 'model':
+        return nav.fetchModel(options);
+      case 'collection':
+        return nav.fetchCollection(options);
+    }
+  }
+
   fetchAttribute<P>(
     name: keyof T | string,
     options: ODataQueryArgumentsOptions<P> = {}
