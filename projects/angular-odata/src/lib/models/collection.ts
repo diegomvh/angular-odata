@@ -333,8 +333,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
   private _request<T, R>(obs$: Observable<T>, mapCallback: (response: T) => R): Observable<R> {
     this.events$.trigger(
       ODataModelEventType.Request, {
-        options: { observable: obs$ },
-      });
+      options: { observable: obs$ },
+    });
     return obs$.pipe(map(response => {
       let parse = mapCallback(response);
       this.events$.trigger(ODataModelEventType.Sync, { options: response });
@@ -366,7 +366,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       const models = (entities || []).map(
         (entity) => this.modelFactory(entity, { reset: true }) as M,
       ) as M[];
-      this.assign(models, { reset: true, remove });
+      this.assign(models, { reset: true, remove: remove ?? true });
       return models;
     });
   }
@@ -388,7 +388,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       const models = (entities || []).map(
         (entity) => this.modelFactory(entity, { reset: true }) as M,
       ) as M[];
-      this.assign(models, { reset: true, remove });
+      this.assign(models, { reset: true, remove: remove ?? true });
       return models;
     });
   }
@@ -983,7 +983,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       modelMap.push((<any>model)[Model.meta.cid]);
     });
 
-    if (remove || reset) {
+    if (remove) {
       this._entries.forEach((entry, position) => {
         if (modelMap.indexOf((<any>entry.model)[Model.meta.cid]) === -1)
           toRemove.push([entry.model, position]);
@@ -1100,8 +1100,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
-        if (event.canContinueWith(this))
-        {
+        if (event.canContinueWith(this)) {
           if (event.model === entry.model) {
             if (event.name === ODataModelEventType.Destroy) {
               this.removeModel(entry.model, { reset: true });
