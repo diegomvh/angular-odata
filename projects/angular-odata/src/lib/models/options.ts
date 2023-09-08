@@ -90,7 +90,7 @@ export class ODataModelEvent<T> {
         attr || null,
       ],
     ];
-    this.bubbly = bubbly ?? BUBBLERS.indexOf(this.name) !== -1;
+    this.bubbly = bubbly ?? true; 
   }
 
   chain: [

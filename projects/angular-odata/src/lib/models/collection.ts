@@ -330,27 +330,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }) as C;
   }
 
-  /*
-  private _request(
-    obs$: Observable<ODataEntities<any>>,
-    { remove }: { remove?: boolean } = {},
-  ): Observable<M[]> {
-    this.events$.trigger(ODataModelEventType.Request, { options: { observable: obs$ } });
-
-    return obs$.pipe(
-      map(({ entities, annots }) => {
-        this._annotations = annots;
-        const models = (entities || []).map(
-          (entity) => this.modelFactory(entity, { reset: true }) as M,
-        ) as M[];
-        this.assign(models, { reset: true, remove });
-        this.events$.trigger(ODataModelEventType.Sync, { options: { models, entities, annots } });
-        return models;
-      }),
-    );
-  }
-  */
-
   private _request<T, R>(obs$: Observable<T>, mapCallback: (response: T) => R): Observable<R> {
     this.events$.trigger(
       ODataModelEventType.Request, {
@@ -434,9 +413,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     return this._request(obs$, ({ entities, annots }) => {
       this._annotations = annots;
-      const models = (entities || []).map(
-        (entity) => this.modelFactory(entity, { reset: true }) as M,
-      ) as M[];
+      const models = (entities || []).map((entity) => this.modelFactory(entity, { reset: true }) as M) as M[];
       this.assign(models, { reset: true, remove: remove ?? false });
       return models;
     });
@@ -1060,55 +1037,53 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & ODataFunctionOptions<R> = {},
+    options: ODataFunctionOptions<R> = {},
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
-    if (resource instanceof ODataEntitySetResource) {
-      const func = resource.function<P, R>(name);
-      func.query((q) => q.apply(options));
-      switch (responseType) {
-        case 'property':
-          return func.callProperty(params, options);
-        case 'model':
-          return func.callModel(params, options);
-        case 'collection':
-          return func.callCollection(params, options);
-        default:
-          return func.call(params, { responseType, ...options });
-      }
+    if (!(resource instanceof ODataEntityResource))
+      return throwError(
+        () =>
+          new Error(
+            "callFunction: Can't call function without ODataEntitySetResource",
+          ),
+      );
+
+    const func = resource.function<P, R>(name).query((q) => q.apply(options));
+    switch (responseType) {
+      case 'property':
+        return this._request(func.callProperty(params, options), (resp) => resp);
+      case 'model':
+        return this._request(func.callModel(params, options), (resp) => resp);
+      case 'collection':
+        return this._request(func.callCollection(params, options), (resp) => resp);
+      default:
+        return this._request(func.call(params, { responseType, ...options }), (resp) => resp);
     }
-    return throwError(
-      () =>
-        new Error(
-          `callFunction: Can't function without ODataEntitySetResource`,
-        ),
-    );
   }
 
   callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & ODataActionOptions<R> = {},
+    options: ODataActionOptions<R> = {},
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntitySetResource)) {
       return throwError(
         () =>
-          new Error(`callAction: Can't action without ODataEntitySetResource`),
+          new Error(`callAction: Can't call action without ODataEntitySetResource`),
       );
     }
-    const action = resource.action<P, R>(name);
-    action.query((q) => q.apply(options));
+    const action = resource.action<P, R>(name).query((q) => q.apply(options));
     switch (responseType) {
       case 'property':
-        return action.callProperty(params, options);
+        return this._request(action.callProperty(params, options), (resp) => resp);
       case 'model':
-        return action.callModel(params, options);
+        return this._request(action.callModel(params, options), (resp) => resp);
       case 'collection':
-        return action.callCollection(params, options);
+        return this._request(action.callCollection(params, options), (resp) => resp);
       default:
-        return action.call(params, { responseType, ...options });
+        return this._request(action.call(params, { responseType, ...options }), (resp) => resp);
     }
   }
 

@@ -187,9 +187,7 @@ export class ODataModel<T> {
         "navigationProperty: Can't get navigation without ODataEntityResource with key",
       );
 
-    return field.resourceFactory<T, N>(
-      resource,
-    ) as ODataNavigationPropertyResource<N>;
+    return field.resourceFactory<T, N>(resource) as ODataNavigationPropertyResource<N>;
   }
 
   property<N>(name: string): ODataPropertyResource<N> {
@@ -643,7 +641,7 @@ export class ODataModel<T> {
       | 'none'
       | 'blob'
       | 'arraybuffer',
-    { ...options }: {} & ODataFunctionOptions<R> = {},
+    options: ODataFunctionOptions<R> = {},
   ): Observable<
     | R
     | ODataModel<R>
@@ -742,7 +740,7 @@ export class ODataModel<T> {
 
   fetchAttribute<P>(
     name: keyof T | string,
-    options?: ODataQueryArgumentsOptions<P>,
+    options: ODataQueryArgumentsOptions<P> = {}
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
     const field = this._meta.field(name);
     if (field === undefined)
@@ -751,17 +749,15 @@ export class ODataModel<T> {
     if (field.isStructuredType() && field.collection) {
       let collection = field.collectionFactory<P>({ parent: this });
       collection.query(q => q.apply(options as ODataQueryArguments<P>));
-      return this._request(collection.fetch(options), () => { this.assign({ [name]: collection }, { silent: true }); return collection; });
+      return this._request(collection.fetch(options), () => { this.assign({ [name]: collection }); return collection; });
     } else if (field.isStructuredType()) {
       let model = field.modelFactory<P>({ parent: this });
       model.query(q => q.apply(options as ODataQueryArguments<P>));
-      return this._request(model.fetch(options), () => { this.assign({ [name]: model }, { silent: true }); return model; });
+      return this._request(model.fetch(options), () => { this.assign({ [name]: model }); return model; });
     } else {
-      const prop = field.resourceFactory<T, P>(
-        this.resource(),
-      ) as ODataPropertyResource<P>;
+      const prop = field.resourceFactory<T, P>(this.resource()) as ODataPropertyResource<P>;
       prop.query(q => q.apply(options as ODataQueryArguments<P>));
-      return this._request(prop.fetchProperty(options), (resp) => { this.assign({ [name]: resp }, { silent: true }); return resp; });
+      return this._request(prop.fetchProperty(options), (resp) => { this.assign({ [name]: resp }); return resp; });
     }
   }
 
@@ -769,10 +765,8 @@ export class ODataModel<T> {
     name: keyof T | string,
   ): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null | undefined {
     const field = this._meta.field(name);
-    if (field === undefined || !field.navigation)
-      throw Error(
-        `getAttribute: Can't find attribute ${name as string}`,
-      );
+    if (field === undefined)
+      throw Error(`getAttribute: Can't find attribute ${name as string}`);
 
     let model = (this as any)[name] as
       | P
@@ -796,9 +790,7 @@ export class ODataModel<T> {
     model: ODataModel<N> | ODataCollection<N, ODataModel<N>> | null,
     options?: ODataOptions,
   ): Observable<this> {
-    const reference = (
-      this.navigationProperty<N>(name) as ODataNavigationPropertyResource<N>
-    ).reference();
+    const reference = (this.navigationProperty<N>(name) as ODataNavigationPropertyResource<N>).reference();
 
     const etag = this.annots().etag;
     let obs$ = NEVER as Observable<any>;
