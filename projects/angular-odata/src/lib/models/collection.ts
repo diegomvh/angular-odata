@@ -39,9 +39,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
   static model: typeof ODataModel | null = null;
   _parent:
     | [
-      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-      ODataModelField<any> | null,
-    ]
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null,
+      ]
     | null = null;
   _resource:
     | ODataEntitySetResource<T>
@@ -50,16 +50,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     | null = null;
   _resources: {
     parent:
-    | [
-      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-      ODataModelField<any> | null,
-    ]
-    | null;
+      | [
+          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+          ODataModelField<any> | null,
+        ]
+      | null;
     resource:
-    | ODataEntitySetResource<T>
-    | ODataNavigationPropertyResource<T>
-    | ODataPropertyResource<T>
-    | null;
+      | ODataEntitySetResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | null;
   }[] = [];
   _annotations!: ODataEntitiesAnnotations<T>;
   _entries: ODataModelEntry<T, M>[] = [];
@@ -101,7 +101,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     // Events
     this.events$ = new ODataModelEventEmitter<T>({ collection: this });
-    this.events$.subscribe(e => model!.meta.events$.emit(e));
+    this.events$.subscribe((e) => model!.meta.events$.emit(e));
 
     // Parent
     if (parent !== undefined) {
@@ -118,9 +118,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (resource !== undefined) {
       this.attach(
         resource as
-        | ODataEntitySetResource<T>
-        | ODataPropertyResource<T>
-        | ODataNavigationPropertyResource<T>,
+          | ODataEntitySetResource<T>
+          | ODataPropertyResource<T>
+          | ODataNavigationPropertyResource<T>,
       );
     }
 
@@ -330,16 +330,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }) as C;
   }
 
-  private _request<T, R>(obs$: Observable<T>, mapCallback: (response: T) => R): Observable<R> {
-    this.events$.trigger(
-      ODataModelEventType.Request, {
+  private _request<T, R>(
+    obs$: Observable<T>,
+    mapCallback: (response: T) => R,
+  ): Observable<R> {
+    this.events$.trigger(ODataModelEventType.Request, {
       options: { observable: obs$ },
     });
-    return obs$.pipe(map(response => {
-      let parse = mapCallback(response);
-      this.events$.trigger(ODataModelEventType.Sync, { options: response });
-      return parse;
-    }));
+    return obs$.pipe(
+      map((response) => {
+        let parse = mapCallback(response);
+        this.events$.trigger(ODataModelEventType.Sync, { options: response });
+        return parse;
+      }),
+    );
   }
 
   fetch({
@@ -356,10 +360,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource instanceof ODataEntitySetResource
         ? resource.fetch({ withCount, ...options })
         : resource.fetch({
-          responseType: 'entities',
-          withCount,
-          ...options,
-        });
+            responseType: 'entities',
+            withCount,
+            ...options,
+          });
 
     return this._request(obs$, ({ entities, annots }) => {
       this._annotations = annots;
@@ -413,7 +417,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     return this._request(obs$, ({ entities, annots }) => {
       this._annotations = annots;
-      const models = (entities || []).map((entity) => this.modelFactory(entity, { reset: true }) as M) as M[];
+      const models = (entities || []).map(
+        (entity) => this.modelFactory(entity, { reset: true }) as M,
+      ) as M[];
       this.assign(models, { reset: true, remove: remove ?? false });
       return models;
     });
@@ -773,7 +779,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  set(path: string | string[], value: any, { }: {} & ModelFieldOptions) {
+  set(path: string | string[], value: any, {}: {} & ModelFieldOptions) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -976,8 +982,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
         model = isModel
           ? (obj as M)
           : this.modelFactory(obj as Partial<T> | { [name: string]: any }, {
-            reset,
-          });
+              reset,
+            });
         toAdd.push([model, position]);
       }
       modelMap.push((<any>model)[Model.meta.cid]);
@@ -1051,13 +1057,22 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const func = resource.function<P, R>(name).query((q) => q.apply(options));
     switch (responseType) {
       case 'property':
-        return this._request(func.callProperty(params, options), (resp) => resp);
+        return this._request(
+          func.callProperty(params, options),
+          (resp) => resp,
+        );
       case 'model':
         return this._request(func.callModel(params, options), (resp) => resp);
       case 'collection':
-        return this._request(func.callCollection(params, options), (resp) => resp);
+        return this._request(
+          func.callCollection(params, options),
+          (resp) => resp,
+        );
       default:
-        return this._request(func.call(params, { responseType, ...options }), (resp) => resp);
+        return this._request(
+          func.call(params, { responseType, ...options }),
+          (resp) => resp,
+        );
     }
   }
 
@@ -1071,19 +1086,30 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (!(resource instanceof ODataEntitySetResource)) {
       return throwError(
         () =>
-          new Error(`callAction: Can't call action without ODataEntitySetResource`),
+          new Error(
+            `callAction: Can't call action without ODataEntitySetResource`,
+          ),
       );
     }
     const action = resource.action<P, R>(name).query((q) => q.apply(options));
     switch (responseType) {
       case 'property':
-        return this._request(action.callProperty(params, options), (resp) => resp);
+        return this._request(
+          action.callProperty(params, options),
+          (resp) => resp,
+        );
       case 'model':
         return this._request(action.callModel(params, options), (resp) => resp);
       case 'collection':
-        return this._request(action.callCollection(params, options), (resp) => resp);
+        return this._request(
+          action.callCollection(params, options),
+          (resp) => resp,
+        );
       default:
-        return this._request(action.call(params, { responseType, ...options }), (resp) => resp);
+        return this._request(
+          action.call(params, { responseType, ...options }),
+          (resp) => resp,
+        );
     }
   }
 
@@ -1104,7 +1130,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
           if (event.model === entry.model) {
             if (event.name === ODataModelEventType.Destroy) {
               this.removeModel(entry.model, { reset: true });
-            } else if (event.name === ODataModelEventType.Change && event.options?.key) {
+            } else if (
+              event.name === ODataModelEventType.Change &&
+              event.options?.key
+            ) {
               entry.key = entry.model.key();
             }
           }

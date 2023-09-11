@@ -5,7 +5,7 @@ import {
   COMPUTED,
   DEFAULT_VERSION,
   OPTIMISTIC_CONCURRENCY,
-  EVENT_SPLITTER
+  EVENT_SPLITTER,
 } from '../constants';
 import { ODataHelper } from '../helper';
 import {
@@ -61,7 +61,7 @@ export class ODataModelEvent<T> {
       attr,
       options,
       bubbly,
-      chain
+      chain,
     }: {
       model?: ODataModel<T>;
       collection?: ODataCollection<T, ODataModel<T>>;
@@ -85,12 +85,12 @@ export class ODataModelEvent<T> {
     this.chain = chain ?? [
       [
         (this.model || this.collection) as
-        | ODataModel<any>
-        | ODataCollection<any, ODataModel<any>>,
+          | ODataModel<any>
+          | ODataCollection<any, ODataModel<any>>,
         attr || null,
       ],
     ];
-    this.bubbly = bubbly ?? true; 
+    this.bubbly = bubbly ?? true;
   }
 
   chain: [
@@ -109,7 +109,7 @@ export class ODataModelEvent<T> {
       value: this.value,
       options: this.options,
       bubbly: this.bubbly,
-      chain: [[model, attr], ...this.chain]
+      chain: [[model, attr], ...this.chain],
     });
   }
 
@@ -135,10 +135,10 @@ export class ODataModelEvent<T> {
         typeof attr === 'number'
           ? `[${attr}]`
           : attr instanceof ODataModelAttribute
-            ? index === 0
-              ? attr.name
-              : `.${attr.name}`
-            : '',
+          ? index === 0
+            ? attr.name
+            : `.${attr.name}`
+          : '',
       )
       .join('');
   }
@@ -162,11 +162,19 @@ export class ODataModelEvent<T> {
   }
 }
 
-export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> {
+export class ODataModelEventEmitter<T> extends EventEmitter<
+  ODataModelEvent<T>
+> {
   model?: ODataModel<T>;
   collection?: ODataCollection<T, ODataModel<T>>;
 
-  constructor({ model, collection }: { model?: ODataModel<T>; collection?: ODataCollection<T, ODataModel<T>>; } = {}) {
+  constructor({
+    model,
+    collection,
+  }: {
+    model?: ODataModel<T>;
+    collection?: ODataCollection<T, ODataModel<T>>;
+  } = {}) {
     super();
     this.model = model;
     this.collection = collection;
@@ -180,14 +188,15 @@ export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> 
   }
   */
 
-  trigger(type: ODataModelEventType | string,
+  trigger(
+    type: ODataModelEventType | string,
     {
       collection,
       previous,
       value,
       attr,
       options,
-      bubbly
+      bubbly,
     }: {
       collection?: ODataCollection<T, ODataModel<T>>;
       attr?: ODataModelAttribute<any> | number;
@@ -195,17 +204,20 @@ export class ODataModelEventEmitter<T> extends EventEmitter<ODataModelEvent<T>> 
       value?: any;
       options?: any;
       bubbly?: boolean;
-    } = {}) {
+    } = {},
+  ) {
     const _trigger = (name: string) =>
-      this.emit(new ODataModelEvent(name, {
-        model: this.model,
-        collection: collection ?? this.collection,
-        previous,
-        value,
-        attr,
-        options,
-        bubbly
-      }));
+      this.emit(
+        new ODataModelEvent(name, {
+          model: this.model,
+          collection: collection ?? this.collection,
+          previous,
+          value,
+          attr,
+          options,
+          bubbly,
+        }),
+      );
     if (type && EVENT_SPLITTER.test(type)) {
       for (let name of type.split(EVENT_SPLITTER)) {
         _trigger(name);
@@ -253,7 +265,7 @@ export type ModelFieldOptions = {
 };
 
 export function Model({ cid = CID_FIELD_NAME }: { cid?: string } = {}) {
-  return <T extends { new(...args: any[]): {} }>(constructor: T) => {
+  return <T extends { new (...args: any[]): {} }>(constructor: T) => {
     const Klass = <any>constructor;
     if (!Klass.hasOwnProperty('options'))
       Klass.options = {
@@ -582,7 +594,7 @@ export class ODataModelAttribute<T> {
   constructor(
     private _model: ODataModel<any>,
     private _field: ODataModelField<T>,
-  ) { }
+  ) {}
 
   get navigation() {
     return Boolean(this._field.navigation);
@@ -651,10 +663,10 @@ export class ODataModelAttribute<T> {
         ? !(current as ODataModel<T>).equals(value as ODataModel<T>)
         : ODataModelOptions.isCollection(current) &&
           ODataModelOptions.isCollection(value)
-          ? !(current as ODataCollection<T, ODataModel<T>>).equals(
+        ? !(current as ODataCollection<T, ODataModel<T>>).equals(
             value as ODataCollection<T, ODataModel<T>>,
           )
-          : !Types.isEqual(current, value);
+        : !Types.isEqual(current, value);
     if (reset) {
       this.value = value;
       this.change = undefined;
@@ -948,7 +960,10 @@ export class ODataModelOptions<T> {
     const current = self._resource;
     if (current === null || !current.isEqualTo(resource)) {
       self._resource = resource;
-      self.events$.trigger(ODataModelEventType.Attach, { previous: current, value: resource });
+      self.events$.trigger(ODataModelEventType.Attach, {
+        previous: current,
+        value: resource,
+      });
     }
   }
 
@@ -962,9 +977,9 @@ export class ODataModelOptions<T> {
     const chain = [] as any[];
     let tuple:
       | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null,
-      ]
+          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+          ODataModelField<any> | null,
+        ]
       | null = [child, null];
     while (tuple !== null) {
       const parent = tuple as [
@@ -1009,8 +1024,7 @@ export class ODataModelOptions<T> {
       }
       resource = field.resourceFactory<any, any>(resource);
     }
-    if (resource === null)
-      throw new Error(`Can't build resource for ${child}`);
+    if (resource === null) throw new Error(`Can't build resource for ${child}`);
     return resource;
   }
 
@@ -1075,7 +1089,7 @@ export class ODataModelOptions<T> {
     } = {},
   ) {
     // Events
-    self.events$.subscribe(e => this.events$.emit(e));
+    self.events$.subscribe((e) => this.events$.emit(e));
 
     // Parent
     if (parent !== undefined) {
@@ -1089,10 +1103,10 @@ export class ODataModelOptions<T> {
       this.attach(
         self,
         resource as
-        | ODataEntityResource<T>
-        | ODataPropertyResource<T>
-        | ODataNavigationPropertyResource<T>
-        | ODataSingletonResource<T>,
+          | ODataEntityResource<T>
+          | ODataPropertyResource<T>
+          | ODataNavigationPropertyResource<T>
+          | ODataSingletonResource<T>,
       );
     }
 
@@ -1111,7 +1125,7 @@ export class ODataModelOptions<T> {
         set: (value: any) =>
           this.set(self, field as ODataModelField<any>, value),
       });
-    })
+    });
   }
 
   query(
@@ -1473,7 +1487,7 @@ export class ODataModelOptions<T> {
       });
     }
     if (!silent && changes.length > 0) {
-      self.events$.trigger(ODataModelEventType.Reset, { options: { changes }, });
+      self.events$.trigger(ODataModelEventType.Reset, { options: { changes } });
     }
   }
 
@@ -1523,7 +1537,10 @@ export class ODataModelOptions<T> {
       });
 
     if ((!self._silent && changes.length > 0) || self._reset) {
-      self.events$.trigger(self._reset ? ODataModelEventType.Reset : ODataModelEventType.Update, { options: { changes } });
+      self.events$.trigger(
+        self._reset ? ODataModelEventType.Reset : ODataModelEventType.Update,
+        { options: { changes } },
+      );
     }
     self._reset = false;
     self._reparent = false;
@@ -1697,12 +1714,12 @@ export class ODataModelOptions<T> {
             ODataModelOptions.isModel(value)
             ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
             : modelField.collection
-              ? modelField.collectionFactory<F>({
+            ? modelField.collectionFactory<F>({
                 parent: self,
                 value: value as F[] | { [name: string]: any }[],
                 reset: self._reset,
               })
-              : modelField.modelFactory<F>({
+            : modelField.modelFactory<F>({
                 parent: self,
                 value: value,
                 reset: self._reset,
