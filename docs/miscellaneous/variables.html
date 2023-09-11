@@ -118,9 +118,6 @@
                             <a href="#BOUNDARY_PREFIX_SUFFIX" title="projects/angular-odata/src/lib/constants.ts" ><b>BOUNDARY_PREFIX_SUFFIX</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
-                            <a href="#BUBBLING" title="projects/angular-odata/src/lib/models/options.ts" ><b>BUBBLING</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
-                        </li>
-                        <li>
                             <a href="#CACHE_CONTROL" title="projects/angular-odata/src/lib/constants.ts" ><b>CACHE_CONTROL</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
@@ -206,6 +203,9 @@
                         </li>
                         <li>
                             <a href="#ETAG_HEADERS" title="projects/angular-odata/src/lib/constants.ts" ><b>ETAG_HEADERS</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EVENT_SPLITTER" title="projects/angular-odata/src/lib/constants.ts" ><b>EVENT_SPLITTER</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
                             <a href="#EXPAND" title="projects/angular-odata/src/lib/helper.ts" ><b>EXPAND</b>&nbsp;&nbsp;&nbsp;(projects/.../helper.ts)</a>
@@ -1234,6 +1234,26 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>[ETAG_HEADER, ETAG_HEADER.toLowerCase()]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EVENT_SPLITTER"></a>
+                    <span class="name">
+                        <span ><b>EVENT_SPLITTER</b></span>
+                        <a href="#EVENT_SPLITTER"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>/\s+/</code>
                     </td>
                 </tr>
 
@@ -2621,102 +2641,6 @@
         </tbody>
     </table>
 </section>
-    <h3>projects/angular-odata/src/lib/models/options.ts</h3>
-    <section data-compodoc="block-properties">
-    <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="BUBBLING"></a>
-                    <span class="name">
-                        <span ><b>BUBBLING</b></span>
-                        <a href="#BUBBLING"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>    <code>[]</code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>[
-  ODataModelEventType.Change,
-  ODataModelEventType.Reset,
-  ODataModelEventType.Update,
-  ODataModelEventType.Destroy,
-  ODataModelEventType.Add,
-  ODataModelEventType.Remove,
-]</code>
-                    </td>
-                </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="INCLUDE_DEEP"></a>
-                    <span class="name">
-                        <span ><b>INCLUDE_DEEP</b></span>
-                        <a href="#INCLUDE_DEEP"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>{
-  include_navigation: true,
-  include_non_field: true,
-  ...INCLUDE_SHALLOW,
-}</code>
-                    </td>
-                </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="INCLUDE_SHALLOW"></a>
-                    <span class="name">
-                        <span ><b>INCLUDE_SHALLOW</b></span>
-                        <a href="#INCLUDE_SHALLOW"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>{
-  include_concurrency: true,
-  include_computed: true,
-  include_key: true,
-}</code>
-                    </td>
-                </tr>
-
-
-        </tbody>
-    </table>
-</section>
     <h3>projects/angular-odata/src/lib/helper.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -2794,7 +2718,7 @@
     //odata.etag: the ETag of the entity
     ODATA_ETAG: &#x27;@odata.etag&#x27;,
     ODATA_METADATA_ETAG: &#x27;@odata.metadataEtag&#x27;,
-    //odata.type: the type of the containing {[key: string]: any} or targeted property if the type of the {[key: string]: any} or targeted property cannot be heuristically determined
+    //odata.type: the type of the containing {[name: string]: any} or targeted property if the type of the {[name: string]: any} or targeted property cannot be heuristically determined
     ODATA_TYPE: &#x27;@odata.type&#x27;,
     //odata.nextLink: the next link of a collection with partial results
     ODATA_NEXTLINK: &#x27;@odata.nextLink&#x27;,
@@ -2825,7 +2749,7 @@
     //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
     //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
     //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
-    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       const str &#x3D;
         annots instanceof Map
@@ -2877,7 +2801,7 @@
     ODATA_TYPE: &#x27;odata.type&#x27;,
     ODATA_COUNT: &#x27;odata.count&#x27;,
     VALUE: &#x27;value&#x27;,
-    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       const str &#x3D;
         annots instanceof Map
@@ -2909,7 +2833,7 @@
     ODATA_DEFERRED: &#x27;__deferred&#x27;,
     ODATA_TYPE: &#x27;type&#x27;,
     VALUE: &#x27;results&#x27;,
-    annotations(value: { [key: string]: any }) {
+    annotations(value: { [name: string]: any }) {
       const annots &#x3D; new Map&lt;string, any&gt;();
       if (this.ODATA_ANNOTATION in value) {
         Object.entries(value[this.ODATA_ANNOTATION]).forEach(([key, value]) &#x3D;&gt;
@@ -2918,11 +2842,11 @@
       }
       return annots;
     },
-    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       return ctx;
     },
-    attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
+    attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
       return value;
     },
     countParam() {
@@ -2951,13 +2875,13 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>&lt;any&gt;{
-  entity(data: { [key: string]: any }) {
+  entity(data: { [name: string]: any }) {
     return data;
   },
-  entities(data: { [key: string]: any }) {
+  entities(data: { [name: string]: any }) {
     return data[this.VALUE];
   },
-  property(data: { [key: string]: any }) {
+  property(data: { [name: string]: any }) {
     return this.VALUE in data ? data[this.VALUE] : data;
   },
   functions(annots: Map&lt;string, any&gt;) {
@@ -2987,17 +2911,17 @@
       });
     return props;
   },
-  id(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+  id(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
     return annots instanceof Map
       ? annots.get(this.ODATA_ID)
       : annots[this.ODATA_ID];
   },
-  etag(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+  etag(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
     return annots instanceof Map
       ? annots.get(this.ODATA_ETAG)
       : annots[this.ODATA_ETAG];
   },
-  type(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+  type(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
     let type &#x3D;
       annots instanceof Map
         ? annots.get(this.ODATA_TYPE)
@@ -3024,7 +2948,7 @@
       ? Number(annots.get(this.ODATA_COUNT))
       : undefined;
   },
-  annotations(value: { [key: string]: any }) {
+  annotations(value: { [name: string]: any }) {
     const annots &#x3D; new Map&lt;string, any&gt;();
     Object.entries(value)
       .filter(
@@ -3035,7 +2959,7 @@
       .forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
     return annots;
   },
-  attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
+  attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
     return Object.entries(value)
       .filter(
         ([k]) &#x3D;&gt;
@@ -3536,15 +3460,15 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
-  names&lt;E extends { [key: string]: any }&gt;(enums: E): string[] {
+  names&lt;E extends { [name: string]: any }&gt;(enums: E): string[] {
     return Object.values&lt;string&gt;(enums).filter((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;);
   },
 
-  values&lt;E extends { [key: string]: any }&gt;(enums: E): number[] {
+  values&lt;E extends { [name: string]: any }&gt;(enums: E): number[] {
     return Object.values&lt;number&gt;(enums).filter((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
   },
 
-  toValue&lt;E extends { [key: string]: any }&gt;(
+  toValue&lt;E extends { [name: string]: any }&gt;(
     enums: E,
     value: any,
   ): number | undefined {
@@ -3552,7 +3476,7 @@
     return undefined;
   },
 
-  toValues&lt;E extends { [key: string]: any }&gt;(enums: E, value: any): number[] {
+  toValues&lt;E extends { [name: string]: any }&gt;(enums: E, value: any): number[] {
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
       return this.values(enums).filter((v) &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v);
     }
@@ -3565,7 +3489,7 @@
     return [];
   },
 
-  toName&lt;E extends { [key: string]: any }&gt;(
+  toName&lt;E extends { [name: string]: any }&gt;(
     enums: E,
     value: any,
   ): string | undefined {
@@ -3573,7 +3497,7 @@
     return undefined;
   },
 
-  toNames&lt;E extends { [key: string]: any }&gt;(enums: E, value: any): string[] {
+  toNames&lt;E extends { [name: string]: any }&gt;(enums: E, value: any): string[] {
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
       return this.values(enums)
         .filter((v) &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v)
@@ -3588,7 +3512,7 @@
     return [];
   },
 
-  toFlags&lt;E extends { [key: string]: any }&gt;(enums: E, value: any): string[] {
+  toFlags&lt;E extends { [name: string]: any }&gt;(enums: E, value: any): string[] {
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
       return this.values(enums)
         .filter((v) &#x3D;&gt; v !&#x3D;&#x3D; 0 &amp;&amp; (value &amp; v) &#x3D;&#x3D;&#x3D; v)
@@ -3960,6 +3884,69 @@
     const boundaryEnd: string &#x3D; boundaryDelimiter + BOUNDARY_PREFIX_SUFFIX;
     return boundaryEnd;
   },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/angular-odata/src/lib/models/options.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="INCLUDE_DEEP"></a>
+                    <span class="name">
+                        <span ><b>INCLUDE_DEEP</b></span>
+                        <a href="#INCLUDE_DEEP"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  include_navigation: true,
+  include_non_field: true,
+  ...INCLUDE_SHALLOW,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="INCLUDE_SHALLOW"></a>
+                    <span class="name">
+                        <span ><b>INCLUDE_SHALLOW</b></span>
+                        <a href="#INCLUDE_SHALLOW"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  include_concurrency: true,
+  include_computed: true,
+  include_key: true,
 }</code>
                     </td>
                 </tr>

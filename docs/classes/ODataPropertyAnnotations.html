@@ -561,13 +561,13 @@ export abstract class ODataAnnotations&lt;T&gt; {
   ) {}
 
   attributes(
-    data: { [key: string]: any },
+    data: { [name: string]: any },
     metadata: ODataMetadataType,
   ): Partial&lt;T&gt; {
     return this.helper.attributes(data, metadata) as Partial&lt;T&gt;;
   }
 
-  update(data: { [key: string]: any }) {
+  update(data: { [name: string]: any }) {
     this.annotations &#x3D; new Map&lt;string, any&gt;([
       ...this.annotations,
       ...this.helper.annotations(data),
@@ -585,7 +585,7 @@ export abstract class ODataAnnotations&lt;T&gt; {
   // Method
   abstract union(other: ODataAnnotations&lt;any&gt;): ODataAnnotations&lt;any&gt;;
   abstract clone(): ODataAnnotations&lt;any&gt;;
-  abstract data(data: { [key: string]: any }): { [key: string]: any };
+  abstract data(data: { [name: string]: any }): { [name: string]: any };
 }
 
 export class ODataPropertyAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
@@ -605,7 +605,7 @@ export class ODataPropertyAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
     );
   }
 
-  data(data: { [key: string]: any }) {
+  data(data: { [name: string]: any }) {
     return this.helper.property(data);
   }
 }
@@ -627,7 +627,7 @@ export class ODataEntityAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
     );
   }
 
-  data(data: { [key: string]: any }) {
+  data(data: { [name: string]: any }) {
     return this.helper.entity(data);
   }
 
@@ -687,7 +687,7 @@ export class ODataEntityAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
       : new ODataEntityAnnotations&lt;F&gt;(this.helper, props);
   }
 
-  private _functions?: { [key: string]: any };
+  private _functions?: { [name: string]: any };
   get functions() {
     if (this._functions &#x3D;&#x3D;&#x3D; undefined) {
       this._functions &#x3D; this.helper.functions(this.annotations);
@@ -717,7 +717,7 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
     );
   }
 
-  data(data: { [key: string]: any }) {
+  data(data: { [name: string]: any }) {
     return this.helper.entities(data);
   }
 
@@ -754,7 +754,7 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
     return match !&#x3D;&#x3D; null ? match[1] : undefined;
   }
 
-  private _functions?: { [key: string]: any };
+  private _functions?: { [name: string]: any };
   get functions() {
     if (this._functions &#x3D;&#x3D;&#x3D; undefined) {
       this._functions &#x3D; this.helper.functions(this.annotations);

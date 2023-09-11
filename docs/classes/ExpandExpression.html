@@ -791,7 +791,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
     parser?: Parser&lt;T&gt;;
   }): string {
     parser &#x3D; resolve([this.field], parser);
-    const params: { [key: string]: string } &#x3D; [
+    const params: { [name: string]: string } &#x3D; [
       QueryOption.select,
       QueryOption.expand,
       QueryOption.filter,

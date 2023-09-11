@@ -424,9 +424,14 @@ export function resolve(values: any, parser?: Parser&lt;any&gt;) {
 
 export function encode(values: any, parser?: Parser&lt;any&gt;) {
   if (parser !&#x3D;&#x3D; undefined) {
-    return values.map((v: any) &#x3D;&gt;
-      Types.isObject(v) || v &#x3D;&#x3D;&#x3D; null ? v : parser?.encode(v),
-    );
+    return values.map((v: any) &#x3D;&gt; {
+      if (Types.isObject(v) || v &#x3D;&#x3D; null) return v;
+      try {
+        return parser.encode(v);
+      } catch {
+        return v;
+      }
+    });
   }
   return values;
 }

@@ -141,7 +141,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:122</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="127" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:127</a></div>
                             </td>
                         </tr>
 
@@ -241,8 +241,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="181"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:181</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="186"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:186</a></div>
                 </td>
             </tr>
 
@@ -278,8 +278,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="145"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:145</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="150"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:150</a></div>
                 </td>
             </tr>
 
@@ -346,8 +346,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="134"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:134</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="139"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:139</a></div>
                 </td>
             </tr>
 
@@ -389,7 +389,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:130</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="135" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:135</a></div>
                                 </td>
                             </tr>
 
@@ -514,9 +514,14 @@ export function resolve(values: any, parser?: Parser&lt;any&gt;) {
 
 export function encode(values: any, parser?: Parser&lt;any&gt;) {
   if (parser !&#x3D;&#x3D; undefined) {
-    return values.map((v: any) &#x3D;&gt;
-      Types.isObject(v) || v &#x3D;&#x3D;&#x3D; null ? v : parser?.encode(v),
-    );
+    return values.map((v: any) &#x3D;&gt; {
+      if (Types.isObject(v) || v &#x3D;&#x3D; null) return v;
+      try {
+        return parser.encode(v);
+      } catch {
+        return v;
+      }
+    });
   }
   return values;
 }

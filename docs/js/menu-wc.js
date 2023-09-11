@@ -355,6 +355,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataModelEvent.html" data-type="entity-link" >ODataModelEvent</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataModelEventEmitter.html" data-type="entity-link" >ODataModelEventEmitter</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataModelField.html" data-type="entity-link" >ODataModelField</a>
                             </li>
                             <li class="link">

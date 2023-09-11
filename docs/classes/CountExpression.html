@@ -787,7 +787,7 @@ export class CountField&lt;T&gt; implements Renderable {
     prefix?: string;
     parser?: Parser&lt;T&gt;;
   }): string {
-    const params: { [key: string]: string } &#x3D; [
+    const params: { [name: string]: string } &#x3D; [
       QueryOption.filter,
       QueryOption.search,
     ]

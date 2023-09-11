@@ -2265,16 +2265,16 @@ export interface ODataVersionHelper {
   ODATA_DEFERRED: string;
   ODATA_ANNOTATION: string;
 
-  entity(value: { [key: string]: any }): any;
-  entities(value: { [key: string]: any }): any;
-  property(value: { [key: string]: any }): any;
-  annotations(value: { [key: string]: any }): Map&lt;string, any&gt;;
-  attributes(value: { [key: string]: any }, metadata: ODataMetadataType): any;
+  entity(value: { [name: string]: any }): any;
+  entities(value: { [name: string]: any }): any;
+  property(value: { [name: string]: any }): any;
+  annotations(value: { [name: string]: any }): Map&lt;string, any&gt;;
+  attributes(value: { [name: string]: any }, metadata: ODataMetadataType): any;
 
-  context(annots: Map&lt;string, any&gt; | { [key: string]: any }): ODataContext;
-  id(annots: Map&lt;string, any&gt; | { [key: string]: any }): string | undefined;
-  etag(annots: Map&lt;string, any&gt; | { [key: string]: any }): string | undefined;
-  type(annots: Map&lt;string, any&gt; | { [key: string]: any }): string | undefined;
+  context(annots: Map&lt;string, any&gt; | { [name: string]: any }): ODataContext;
+  id(annots: Map&lt;string, any&gt; | { [name: string]: any }): string | undefined;
+  etag(annots: Map&lt;string, any&gt; | { [name: string]: any }): string | undefined;
+  type(annots: Map&lt;string, any&gt; | { [name: string]: any }): string | undefined;
   count(annots: Map&lt;string, any&gt;): number | undefined;
   functions(annots: Map&lt;string, any&gt;): Map&lt;string, any&gt;;
   properties&lt;T&gt;(annots: Map&lt;string, any&gt;): Map&lt;keyof T, Map&lt;string, any&gt;&gt;;
@@ -2287,17 +2287,17 @@ export interface ODataVersionHelper {
   mediaEditLink(annots: Map&lt;string, any&gt;): string | undefined;
   mediaContentType(annots: Map&lt;string, any&gt;): string | undefined;
   deltaLink(annots: Map&lt;string, any&gt;): string | undefined;
-  countParam(): { [key: string]: string };
+  countParam(): { [name: string]: string };
 }
 
 const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
-  entity(data: { [key: string]: any }) {
+  entity(data: { [name: string]: any }) {
     return data;
   },
-  entities(data: { [key: string]: any }) {
+  entities(data: { [name: string]: any }) {
     return data[this.VALUE];
   },
-  property(data: { [key: string]: any }) {
+  property(data: { [name: string]: any }) {
     return this.VALUE in data ? data[this.VALUE] : data;
   },
   functions(annots: Map&lt;string, any&gt;) {
@@ -2327,17 +2327,17 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
       });
     return props;
   },
-  id(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+  id(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
     return annots instanceof Map
       ? annots.get(this.ODATA_ID)
       : annots[this.ODATA_ID];
   },
-  etag(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+  etag(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
     return annots instanceof Map
       ? annots.get(this.ODATA_ETAG)
       : annots[this.ODATA_ETAG];
   },
-  type(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+  type(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
     let type &#x3D;
       annots instanceof Map
         ? annots.get(this.ODATA_TYPE)
@@ -2364,7 +2364,7 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
       ? Number(annots.get(this.ODATA_COUNT))
       : undefined;
   },
-  annotations(value: { [key: string]: any }) {
+  annotations(value: { [name: string]: any }) {
     const annots &#x3D; new Map&lt;string, any&gt;();
     Object.entries(value)
       .filter(
@@ -2375,7 +2375,7 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
       .forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
     return annots;
   },
-  attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
+  attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
     return Object.entries(value)
       .filter(
         ([k]) &#x3D;&gt;
@@ -2443,7 +2443,7 @@ export const ODataHelper &#x3D; {
     //odata.etag: the ETag of the entity
     ODATA_ETAG: &#x27;@odata.etag&#x27;,
     ODATA_METADATA_ETAG: &#x27;@odata.metadataEtag&#x27;,
-    //odata.type: the type of the containing {[key: string]: any} or targeted property if the type of the {[key: string]: any} or targeted property cannot be heuristically determined
+    //odata.type: the type of the containing {[name: string]: any} or targeted property if the type of the {[name: string]: any} or targeted property cannot be heuristically determined
     ODATA_TYPE: &#x27;@odata.type&#x27;,
     //odata.nextLink: the next link of a collection with partial results
     ODATA_NEXTLINK: &#x27;@odata.nextLink&#x27;,
@@ -2474,7 +2474,7 @@ export const ODataHelper &#x3D; {
     //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
     //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
     //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
-    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       const str &#x3D;
         annots instanceof Map
@@ -2526,7 +2526,7 @@ export const ODataHelper &#x3D; {
     ODATA_TYPE: &#x27;odata.type&#x27;,
     ODATA_COUNT: &#x27;odata.count&#x27;,
     VALUE: &#x27;value&#x27;,
-    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       const str &#x3D;
         annots instanceof Map
@@ -2558,7 +2558,7 @@ export const ODataHelper &#x3D; {
     ODATA_DEFERRED: &#x27;__deferred&#x27;,
     ODATA_TYPE: &#x27;type&#x27;,
     VALUE: &#x27;results&#x27;,
-    annotations(value: { [key: string]: any }) {
+    annotations(value: { [name: string]: any }) {
       const annots &#x3D; new Map&lt;string, any&gt;();
       if (this.ODATA_ANNOTATION in value) {
         Object.entries(value[this.ODATA_ANNOTATION]).forEach(([key, value]) &#x3D;&gt;
@@ -2567,11 +2567,11 @@ export const ODataHelper &#x3D; {
       }
       return annots;
     },
-    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       return ctx;
     },
-    attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
+    attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
       return value;
     },
     countParam() {

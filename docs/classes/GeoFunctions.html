@@ -137,8 +137,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="326"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:326</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="331"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:331</a></div>
                 </td>
             </tr>
 
@@ -238,8 +238,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="329"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:329</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="334"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:334</a></div>
                 </td>
             </tr>
 
@@ -339,8 +339,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="332"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:332</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="337"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:337</a></div>
                 </td>
             </tr>
 
@@ -530,9 +530,14 @@ export function resolve(values: any, parser?: Parser&lt;any&gt;) {
 
 export function encode(values: any, parser?: Parser&lt;any&gt;) {
   if (parser !&#x3D;&#x3D; undefined) {
-    return values.map((v: any) &#x3D;&gt;
-      Types.isObject(v) || v &#x3D;&#x3D;&#x3D; null ? v : parser?.encode(v),
-    );
+    return values.map((v: any) &#x3D;&gt; {
+      if (Types.isObject(v) || v &#x3D;&#x3D; null) return v;
+      try {
+        return parser.encode(v);
+      } catch {
+        return v;
+      }
+    });
   }
   return values;
 }

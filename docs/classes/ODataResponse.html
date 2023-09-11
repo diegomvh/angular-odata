@@ -1155,7 +1155,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     let property &#x3D; (
       data !&#x3D;&#x3D; null &amp;&amp; Types.isPlainObject(data)
         ? options.helper.attributes(
-            data as { [key: string]: any },
+            data as { [name: string]: any },
             this.api.options.stripMetadata,
           )
         : data

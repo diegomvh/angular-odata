@@ -134,8 +134,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="316"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:316</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="321"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:321</a></div>
                 </td>
             </tr>
 
@@ -235,8 +235,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="320"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:320</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="325"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:325</a></div>
                 </td>
             </tr>
 
@@ -440,9 +440,14 @@ export function resolve(values: any, parser?: Parser&lt;any&gt;) {
 
 export function encode(values: any, parser?: Parser&lt;any&gt;) {
   if (parser !&#x3D;&#x3D; undefined) {
-    return values.map((v: any) &#x3D;&gt;
-      Types.isObject(v) || v &#x3D;&#x3D;&#x3D; null ? v : parser?.encode(v),
-    );
+    return values.map((v: any) &#x3D;&gt; {
+      if (Types.isObject(v) || v &#x3D;&#x3D; null) return v;
+      try {
+        return parser.encode(v);
+      } catch {
+        return v;
+      }
+    });
   }
   return values;
 }

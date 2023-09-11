@@ -149,8 +149,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="192"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:192</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="197"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:197</a></div>
                 </td>
             </tr>
 
@@ -250,8 +250,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="196"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:196</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="201"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:201</a></div>
                 </td>
             </tr>
 
@@ -351,8 +351,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="200"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:200</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="205"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:205</a></div>
                 </td>
             </tr>
 
@@ -452,8 +452,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="204"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:204</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="209"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:209</a></div>
                 </td>
             </tr>
 
@@ -553,8 +553,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="208"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:208</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="213"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:213</a></div>
                 </td>
             </tr>
 
@@ -640,8 +640,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="212"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:212</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="217"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:217</a></div>
                 </td>
             </tr>
 
@@ -741,8 +741,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="216"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:216</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="221"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:221</a></div>
                 </td>
             </tr>
 
@@ -960,9 +960,14 @@ export function resolve(values: any, parser?: Parser&lt;any&gt;) {
 
 export function encode(values: any, parser?: Parser&lt;any&gt;) {
   if (parser !&#x3D;&#x3D; undefined) {
-    return values.map((v: any) &#x3D;&gt;
-      Types.isObject(v) || v &#x3D;&#x3D;&#x3D; null ? v : parser?.encode(v),
-    );
+    return values.map((v: any) &#x3D;&gt; {
+      if (Types.isObject(v) || v &#x3D;&#x3D; null) return v;
+      try {
+        return parser.encode(v);
+      } catch {
+        return v;
+      }
+    });
   }
   return values;
 }
