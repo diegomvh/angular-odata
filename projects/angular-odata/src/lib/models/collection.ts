@@ -338,11 +338,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       options: { observable: obs$ },
     });
     return obs$.pipe(
-      map((response) => {
-        let parse = mapCallback(response);
-        this.events$.trigger(ODataModelEventType.Sync, { options: response });
-        return parse;
-      }),
+      map((response) => mapCallback(response)),
+      finalize(() => this.events$.trigger(ODataModelEventType.Sync))
     );
   }
 
@@ -514,18 +511,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
         ),
         ...toUpdateContained.map((m) => m.save({ method, ...options })),
       ]);
-      this.events$.trigger(ODataModelEventType.Request, {
-        options: { observable: obs$ },
-      });
-      return obs$.pipe(
-        map(() => {
-          this._entries = this._entries
-            .filter((entry) => entry.state !== ODataModelState.Removed)
-            .map((entry) => ({ ...entry, state: ODataModelState.Unchanged }));
-          this.events$.trigger(ODataModelEventType.Sync);
+      return this._request(obs$, () => {
+        this._entries = this._entries
+          .filter((entry) => entry.state !== ODataModelState.Removed)
+          .map((entry) => ({ ...entry, state: ODataModelState.Unchanged }));
           return this;
-        }),
-      );
+      });
     }
     return of(this);
   }
@@ -551,7 +542,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset = false,
       reparent = false,
       merge = false,
-      position = -1,
+      position,
     }: {
       silent?: boolean;
       reset?: boolean;
@@ -588,46 +579,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (reparent) model._parent = [this, null];
     // Subscribe
     this._link(entry);
+
+    // If position is undefined and the collection is sorted, find the right position
+    if (position === undefined && this._sortBy !== null) {
+      for (let index = 0; index < this._entries.length; index++) {
+        if (this._compare(model, this._entries[index], this._sortBy, 0) < 0) {
+          position = index;
+          break;
+        }
+      }
+    }
+    
     // Now add
-    if (position >= 0) this._entries.splice(position, 0, entry);
+    if (position !== undefined) this._entries.splice(position, 0, entry);
     else this._entries.push(entry);
 
     if (!silent) {
       model.events$.trigger(ODataModelEventType.Add, { collection: this });
     }
     return entry.model;
-  }
-
-  private addModel(
-    model: M,
-    {
-      silent = false,
-      reset = false,
-      reparent = false,
-      merge = false,
-      position = -1,
-    }: {
-      silent?: boolean;
-      reset?: boolean;
-      reparent?: boolean;
-      merge?: boolean;
-      position?: number;
-    } = {},
-  ): M {
-    if (position < 0) position = this._bisect(model);
-    const added = this._addModel(model, {
-      silent,
-      reset,
-      merge,
-      position,
-      reparent,
-    });
-    if (!silent && added !== undefined) {
-      this.events$.trigger(ODataModelEventType.Update, {
-        options: { added: [added], removed: [], merged: [] },
-      });
-    }
-    return added;
   }
 
   add(
@@ -637,30 +607,21 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reparent = false,
       server = true,
       merge = false,
-      position = -1,
+      position,
+      reset
     }: {
       silent?: boolean;
       reparent?: boolean;
       server?: boolean;
       merge?: boolean;
       position?: number;
+      reset?: boolean;
     } = {},
   ): Observable<M> {
-    if (server) {
-      return this.addReference(model).pipe(
-        map((model) => {
-          return this.addModel(model, {
-            silent,
-            position,
-            reparent,
-            merge,
-            reset: true,
-          });
-        }),
-      );
-    } else {
-      return of(this.addModel(model, { silent, position, merge, reparent }));
-    }
+    const _addModel = (m: M, reset: boolean) => this._addModel(m, { silent, position, merge, reparent, reset });
+    return (server) ? 
+      this._request(this.addReference(model), (model) => _addModel(model, reset ?? true)) : 
+      of(_addModel(model, reset ?? false));
   }
 
   private removeReference(model: M, options?: ODataOptions): Observable<M> {
@@ -735,15 +696,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       server = true,
-    }: { silent?: boolean; server?: boolean } = {},
+      reset,
+    }: { silent?: boolean; server?: boolean, reset?: boolean } = {},
   ): Observable<M> {
-    if (server) {
-      return this.removeReference(model).pipe(
-        map((model) => this.removeModel(model, { silent, reset: true })),
-      );
-    } else {
-      return of(this.removeModel(model, { silent }));
-    }
+    const _removeModel = (m: M, reset: boolean) => this._removeModel(m, { silent, reset });
+    return (server) ?
+      this._request(this.removeReference(model), model => _removeModel(model, reset ?? true)) : 
+      of(_removeModel(model, reset ?? false));
   }
 
   private _moveModel(model: M, position: number): M {
@@ -1128,10 +1087,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       (event: ODataModelEvent<T>) => {
         if (event.canContinueWith(this)) {
           if (event.model === entry.model) {
-            if (event.name === ODataModelEventType.Destroy) {
+            if (event.type === ODataModelEventType.Destroy) {
               this.removeModel(entry.model, { reset: true });
             } else if (
-              event.name === ODataModelEventType.Change &&
+              event.type === ODataModelEventType.Change &&
               event.options?.key
             ) {
               entry.key = entry.model.key();
@@ -1202,10 +1161,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this.models().map(callbackfn, thisArg);
   }
 
-  find(
-    predicate: (value: M, index: number, obj: M[]) => unknown,
-    thisArg?: any,
-  ): M | undefined {
+  find(predicate: (value: M, index: number, obj: M[]) => unknown): M | undefined {
     return this.models().find(predicate);
   }
 
@@ -1254,8 +1210,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this.models().some(predicate);
   }
 
-  contains(model: M) {
-    return this.some((m) => m.equals(model));
+  includes(model: M, start: number = 0) {
+    return this.some((m, i) => i >= start && m.equals(model));
   }
 
   indexOf(model: M): number {
@@ -1270,18 +1226,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   //#region Sort
-  private _bisect(model: M) {
-    let index = -1;
-    if (this._sortBy !== null) {
-      for (index = 0; index < this._entries.length; index++) {
-        if (this._compare(model, this._entries[index], this._sortBy, 0) < 0) {
-          return index;
-        }
-      }
-    }
-    return index;
-  }
-
   private _compare(
     e1: ODataModelEntry<T, M> | M,
     e2: ODataModelEntry<T, M> | M,

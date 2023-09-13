@@ -1,5 +1,5 @@
 import { forkJoin, NEVER, Observable, of, throwError } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 import {
   EntityKey,
   ODataActionOptions,
@@ -449,13 +449,8 @@ export class ODataModel<T> {
       options: { observable: obs$ },
     });
     return obs$.pipe(
-      map((response) => {
-        let parse = mapCallback(response);
-        this.events$.trigger(ODataModelEventType.Sync, {
-          options: response,
-        });
-        return parse;
-      }),
+      map((response) => mapCallback(response)),
+      finalize(() => this.events$.trigger(ODataModelEventType.Sync)),
     );
   }
 

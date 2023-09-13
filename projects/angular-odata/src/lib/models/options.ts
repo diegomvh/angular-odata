@@ -46,13 +46,13 @@ export enum ODataModelEventType {
 }
 
 export class ODataModelEvent<T> {
-  name: ODataModelEventType | string;
+  type: ODataModelEventType | string;
   value?: any;
   previous?: any;
   options?: any;
 
   constructor(
-    name: ODataModelEventType | string,
+    type: ODataModelEventType | string,
     {
       model,
       collection,
@@ -60,7 +60,7 @@ export class ODataModelEvent<T> {
       value,
       attr,
       options,
-      bubbly,
+      bubbles,
       chain,
     }: {
       model?: ODataModel<T>;
@@ -69,14 +69,14 @@ export class ODataModelEvent<T> {
       previous?: any;
       value?: any;
       options?: any;
-      bubbly?: boolean;
+      bubbles?: boolean;
       chain?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelAttribute<any> | number | null,
       ][];
     } = {},
   ) {
-    this.name = name;
+    this.type = type;
     this.model = model;
     this.collection = collection;
     this.previous = previous;
@@ -90,7 +90,7 @@ export class ODataModelEvent<T> {
         attr || null,
       ],
     ];
-    this.bubbly = bubbly ?? true;
+    this.bubbles = bubbles ?? BUBBLES.indexOf(this.type) !== -1;
   }
 
   chain: [
@@ -102,20 +102,20 @@ export class ODataModelEvent<T> {
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
     attr: ODataModelAttribute<any> | number,
   ) {
-    return new ODataModelEvent(this.name, {
+    return new ODataModelEvent(this.type, {
       model: this.model,
       collection: this.collection,
       previous: this.previous,
       value: this.value,
       options: this.options,
-      bubbly: this.bubbly,
+      bubbles: this.bubbles,
       chain: [[model, attr], ...this.chain],
     });
   }
 
-  bubbly: boolean;
+  bubbles: boolean;
   stopPropagation() {
-    this.bubbly = false;
+    this.bubbles = false;
   }
 
   visited(model: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
@@ -126,7 +126,7 @@ export class ODataModelEvent<T> {
   }
 
   canContinueWith(self: ODataModel<T> | ODataCollection<T, ODataModel<T>>) {
-    return this.bubbly && !this.visited(self);
+    return this.bubbles && !this.visited(self);
   }
 
   get path() {
@@ -182,7 +182,7 @@ export class ODataModelEventEmitter<T> extends EventEmitter<
 
   /*
   override emit(event: ODataModelEvent<T>): void {
-    if (event.bubbly && ((this.collection || this.model) === undefined || !event.visited((this.collection || this.model)!))) {
+    if (event.bubbles && ((this.collection || this.model) === undefined || !event.visited((this.collection || this.model)!))) {
       super.emit(event);
     }  
   }
@@ -196,14 +196,14 @@ export class ODataModelEventEmitter<T> extends EventEmitter<
       value,
       attr,
       options,
-      bubbly,
+      bubbles,
     }: {
       collection?: ODataCollection<T, ODataModel<T>>;
       attr?: ODataModelAttribute<any> | number;
       previous?: any;
       value?: any;
       options?: any;
-      bubbly?: boolean;
+      bubbles?: boolean;
     } = {},
   ) {
     const _trigger = (name: string) =>
@@ -215,7 +215,7 @@ export class ODataModelEventEmitter<T> extends EventEmitter<
           value,
           attr,
           options,
-          bubbly,
+          bubbles,
         }),
       );
     if (type && EVENT_SPLITTER.test(type)) {
@@ -227,6 +227,15 @@ export class ODataModelEventEmitter<T> extends EventEmitter<
     }
   }
 }
+
+export const BUBBLES: (ODataModelEventType | string)[] = [
+  ODataModelEventType.Change,
+  ODataModelEventType.Reset,
+  ODataModelEventType.Update,
+  ODataModelEventType.Destroy,
+  ODataModelEventType.Add,
+  ODataModelEventType.Remove,
+];
 
 export const INCLUDE_SHALLOW = {
   include_concurrency: true,
@@ -1757,7 +1766,7 @@ export class ODataModelOptions<T> {
       if (event.canContinueWith(self)) {
         if (event.model === attr.get()) {
           if (
-            event.name === ODataModelEventType.Change &&
+            event.type === ODataModelEventType.Change &&
             attr.navigation &&
             event.options?.key
           ) {
