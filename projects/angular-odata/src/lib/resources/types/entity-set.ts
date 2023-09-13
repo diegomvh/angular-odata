@@ -64,6 +64,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   count() {
     return ODataCountResource.factory<T>(this.api, {
+      schema: this.schema as ODataStructuredType<T>,
       segments: this.cloneSegments(),
       query: this.cloneQuery<T>(),
     });

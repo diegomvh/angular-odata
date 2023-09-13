@@ -4,7 +4,7 @@ import { ODataApi } from '../../api';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
 import { ODataCallable } from '../../schema/callable';
-import { Parser, PathSegment } from '../../types';
+import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';

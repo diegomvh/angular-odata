@@ -5,13 +5,9 @@ import {
   HttpResponseBase,
 } from '@angular/common/http';
 import {
-  concatMap,
-  firstValueFrom,
   map,
   Observable,
-  of,
   Subject,
-  switchMap,
 } from 'rxjs';
 import { ODataApi } from '../../api';
 import {
