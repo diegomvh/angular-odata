@@ -1,4 +1,5 @@
 import { Parser } from '../../../types';
+import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FieldFactory, Renderable } from './syntax';
@@ -14,6 +15,10 @@ export class SelectExpression<T> extends Expression<T> {
     children?: Renderable[];
   } = {}) {
     super({ children });
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'SelectExpression';
   }
 
   static select<T>(
@@ -32,6 +37,17 @@ export class SelectExpression<T> extends Expression<T> {
     ) as SelectExpression<T>;
   }
 
+  override toJson() {
+    const json = super.toJson();
+    return Object.assign(json, { });
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): SelectExpression<T> {
+    console.log("select", json);
+    return new SelectExpression<T>({
+      children: json['children'],
+    });
+  }
   render({
     aliases,
     escape,

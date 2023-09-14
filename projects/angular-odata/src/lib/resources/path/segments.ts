@@ -106,7 +106,7 @@ export class ODataPathSegments {
     );
   }
 
-  toJSON() {
+  toJson() {
     return this._segments.map((s) => {
       let json = {
         name: s.name as string,

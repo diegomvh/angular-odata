@@ -56,7 +56,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
   }
 
-  static fromJSON<T>(
+  static fromJson<T>(
     req: ODataRequest<T>,
     json: {
       body: T | null;
@@ -77,7 +77,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
   }
 
-  toJSON() {
+  toJson() {
     return {
       body: this.body,
       headers: this.headers

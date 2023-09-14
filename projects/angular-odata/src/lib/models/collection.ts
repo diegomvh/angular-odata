@@ -311,7 +311,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
   }
 
-  toJSON() {
+  toJson() {
     return this.toEntities();
   }
 

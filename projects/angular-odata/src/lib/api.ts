@@ -107,11 +107,11 @@ export class ODataApi {
     });
   }
 
-  fromJSON<P, R>(json: {
+  fromJson<P, R>(json: {
     segments: ODataSegment[];
     options: { [name: string]: any };
   }): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
-  fromJSON<E>(json: {
+  fromJson<E>(json: {
     segments: ODataSegment[];
     options: { [name: string]: any };
   }):
@@ -119,7 +119,7 @@ export class ODataApi {
     | ODataEntitySetResource<E>
     | ODataNavigationPropertyResource<E>
     | ODataSingletonResource<E>;
-  fromJSON(json: {
+  fromJson(json: {
     segments: ODataSegment[];
     options: { [name: string]: any };
   }) {

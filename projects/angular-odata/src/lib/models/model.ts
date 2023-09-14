@@ -340,7 +340,7 @@ export class ODataModel<T> {
     });
   }
 
-  toJSON() {
+  toJson() {
     return this.toEntity();
   }
 
@@ -953,8 +953,8 @@ export class ODataModel<T> {
       )
         return true;
     } else if (meta.isComplexType()) {
-      const thisJson = this.toJSON();
-      const otherJson = other.toJSON();
+      const thisJson = this.toJson();
+      const otherJson = other.toJson();
       if (Types.isEqual(thisJson, otherJson)) return true;
     }
     return false;

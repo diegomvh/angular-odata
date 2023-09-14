@@ -1,4 +1,5 @@
 import { Parser } from '../../../types';
+import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import {
@@ -27,6 +28,10 @@ export class ComputeExpression<T> extends Expression<T> {
     this.names = names || [];
   }
 
+  get [Symbol.toStringTag]() {
+    return 'ComputeExpression';
+  }
+
   static compute<T>(
     opts: (
       builder: ComputeExpressionBuilder<T>,
@@ -41,6 +46,21 @@ export class ComputeExpression<T> extends Expression<T> {
       },
       current,
     ) as ComputeExpression<T>;
+  }
+
+  override toJson() {
+    const json = super.toJson();
+    return Object.assign(json, { 
+      names: this.names
+    });
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): ComputeExpression<T> {
+    console.log("compute", json);
+    return new ComputeExpression<T>({
+      children: json['children'],
+      names: json['names']
+    });
   }
 
   render({

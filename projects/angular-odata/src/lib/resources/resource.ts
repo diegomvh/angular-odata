@@ -253,10 +253,10 @@ export class ODataResource<T> {
       : _e(value, options);
   }
 
-  toJSON() {
+  toJson() {
     return {
-      segments: this.pathSegments.toJSON(),
-      options: this.queryOptions.toJSON(),
+      segments: this.pathSegments.toJson(),
+      options: this.queryOptions.toJson(),
     };
   }
 

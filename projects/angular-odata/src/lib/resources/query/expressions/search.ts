@@ -13,7 +13,7 @@ export class SearchTerm implements Renderable {
     return 'SearchTerm';
   }
 
-  toJSON() {
+  toJson() {
     return {
       $type: Types.rawType(this),
       value: this.value,
@@ -57,6 +57,10 @@ export class SearchExpression<T> extends Expression<T> {
     super({ children });
     this._connector = connector || 'AND';
     this._negated = negated || false;
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'SearchExpression';
   }
 
   static search<T>(
@@ -148,14 +152,22 @@ export class SearchExpression<T> extends Expression<T> {
     });
   }
 
-  override toJSON() {
-    return {
-      children: this._children.map((c) => c.toJSON()),
+  override toJson() {
+    const json = super.toJson();
+    return Object.assign(json, { 
       connector: this._connector,
       negated: this._negated,
-    };
+    });
   }
 
+  static fromJson<T>(json: { [name: string]: any }): SearchExpression<T> {
+    console.log("search", json);
+    return new SearchExpression<T>({
+      children: json['children'],
+      connector: json['connector'],
+      negated: json['negated'],
+    });
+  }
   connector() {
     return this._connector;
   }

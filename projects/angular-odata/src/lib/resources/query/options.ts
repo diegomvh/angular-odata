@@ -17,6 +17,7 @@ import {
   OrderByExpression,
   SearchExpression,
 } from './expressions';
+import { CountExpression } from './expressions/count';
 import { ExpandExpression } from './expressions/expand';
 import { SelectExpression } from './expressions/select';
 import { ODataQueryOptionHandler } from './handlers';
@@ -41,10 +42,41 @@ export class ODataQueryOptions<T> {
   values: Map<QueryOption, any>;
 
   constructor(values?: Map<QueryOption, any> | { [name: string]: any }) {
-    this.values =
-      values instanceof Map
-        ? values
-        : new Map(Object.entries(values || {}) as Array<[QueryOption, any]>);
+    if (!(values instanceof Map)) {
+      const entries = Object.entries(values || {})
+        .map(([key, value]) => {
+          if (Types.isPlainObject(value) && "$type" in value) {
+            switch (value.$type) {
+              case 'SelectExpression':
+                value = SelectExpression.fromJson(value);
+                break;
+              case 'ExpandExpression':
+                value = ExpandExpression.fromJson(value);
+                break;
+              case 'ComputeExpression':
+                value = ComputeExpression.fromJson(value);
+                break;
+              case 'FilterExpression':
+                value = FilterExpression.fromJson(value);
+                break;
+              case 'OrderByExpression':
+                value = OrderByExpression.fromJson(value);
+                break;
+              case 'SearchExpression':
+                value = SearchExpression.fromJson(value);
+                break;
+              case 'CountExpression':
+                value = CountExpression.fromJson(value);
+                break;
+              default:
+                value = value;
+            }
+          }
+        return [key, value];
+      }) as [QueryOption, any][];
+      values = new Map(entries);
+    }
+    this.values = values as Map<QueryOption, any>;
   }
 
   // Params
@@ -106,10 +138,10 @@ export class ODataQueryOptions<T> {
     );
   }
 
-  toJSON() {
+  toJson() {
     return [...this.values.keys()].reduce((acc, key) => {
       let value = this.values.get(key);
-      value = 'toJSON' in value ? value.toJSON() : value;
+      value = 'toJson' in value ? value.toJson() : value;
       return Object.assign(acc, { [key]: value });
     }, {});
   }

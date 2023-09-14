@@ -168,9 +168,9 @@ export class AppComponent {
       );
 
     // Store airports resource
-    var json = airports.toJSON();
+    var json = airports.toJson();
     // Load airports resource
-    airports = this.odata.fromJSON(json) as ODataEntitySetResource<Airport>;
+    airports = this.odata.fromJson(json) as ODataEntitySetResource<Airport>;
 
     // Change query definition of airports resource and fetch again
     airports.query((q) => q.filter().clear());

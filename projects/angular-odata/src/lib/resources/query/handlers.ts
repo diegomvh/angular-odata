@@ -46,7 +46,7 @@ export class ODataQueryOptionHandler<T> {
    * Converts the managed odata query option to a json object.
    * @returns {any}
    */
-  toJSON() {
+  toJson() {
     return this.o.get(this.n);
   }
 

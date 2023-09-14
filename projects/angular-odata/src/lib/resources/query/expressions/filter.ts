@@ -1,4 +1,5 @@
 import { Parser } from '../../../types';
+import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { CountExpression, CountField } from './count';
@@ -39,6 +40,10 @@ export class FilterExpression<F> extends Expression<F> {
     this._negated = negated || false;
   }
 
+  get [Symbol.toStringTag]() {
+    return 'FilterExpression';
+  }
+
   static filter<T>(
     opts: (
       builder: FilterExpressionBuilder<T>,
@@ -58,12 +63,20 @@ export class FilterExpression<F> extends Expression<F> {
     ) as FilterExpression<T>;
   }
 
-  override toJSON() {
-    return {
-      children: this._children.map((c) => c.toJSON()),
+  override toJson() {
+    const json = super.toJson();
+    return Object.assign(json, { 
       connector: this._connector,
       negated: this._negated,
-    };
+    });
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): FilterExpression<T> {
+    return new FilterExpression<T>({
+      children: json['children'],
+      connector: json['connector'],
+      negated: json['negated'],
+    });
   }
 
   connector() {

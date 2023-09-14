@@ -1,4 +1,5 @@
 import { Parser } from '../../../types';
+import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { render, FieldFactory, Renderable } from './syntax';
@@ -13,9 +14,10 @@ export class OrderByField implements Renderable {
     return 'OrderByField';
   }
 
-  toJSON() {
+  toJson() {
     return {
-      field: this.field.toJSON(),
+      $type: Types.rawType(this),
+      field: this.field.toJson(),
       order: this.order,
     };
   }
@@ -54,6 +56,10 @@ export class OrderByExpression<T> extends Expression<T> {
     super({ children });
   }
 
+  get [Symbol.toStringTag]() {
+    return 'OrderByExpression';
+  }
+
   static orderBy<T>(
     opts: (
       builder: OrderByExpressionBuilder<T>,
@@ -73,6 +79,18 @@ export class OrderByExpression<T> extends Expression<T> {
   private _add(node: Renderable): OrderByExpression<T> {
     this._children.push(node);
     return this;
+  }
+
+  override toJson() {
+    const json = super.toJson();
+    return Object.assign(json, { });
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): OrderByExpression<T> {
+    console.log("orderby", json);
+    return new OrderByExpression<T>({
+      children: json['children'],
+    });
   }
 
   render({

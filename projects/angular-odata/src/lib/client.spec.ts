@@ -202,7 +202,7 @@ describe('ODataClient', () => {
       `${NAMESPACE}.Person`,
     );
     const func = set.function<any, any>('NS.MyFunction');
-    const json = func.toJSON();
+    const json = func.toJson();
     expect(json).toEqual({
       segments: [
         { name: 'entitySet', path: 'People', type: 'TripPin.Person' },
@@ -221,7 +221,7 @@ describe('ODataClient', () => {
     func.query((q) => {
       q.filter(({ e }) => e().eq('Name', 'John'));
     });
-    const json = func.toJSON();
+    const json = func.toJson();
     expect(json).toEqual({
       segments: [
         { name: 'entitySet', path: 'People', type: 'TripPin.Person' },

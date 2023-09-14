@@ -18,7 +18,7 @@ export interface Renderable {
     parser?: Parser<any>;
   }): string;
   toString(): string;
-  toJSON(): any;
+  toJson(): any;
   clone(): any;
 }
 
@@ -33,7 +33,7 @@ export const FieldFactory = <T extends object>(names: string[] = []): any =>
         return () => FieldFactory([...names]);
       } else if (key === 'isField') {
         return () => true;
-      } else if (key === 'toJSON') {
+      } else if (key === 'toJson') {
         return () => ({
           $type: 'Field',
           names: names,
@@ -48,7 +48,7 @@ export const FieldFactory = <T extends object>(names: string[] = []): any =>
 
     has(target: T, key: string): any {
       return (
-        ['toJSON', 'isField', 'clone', 'render', 'resolve'].includes(key) ||
+        ['toJson', 'isField', 'clone', 'render', 'resolve'].includes(key) ||
         key in target
       );
     },
@@ -136,12 +136,12 @@ export class Function<T> implements Renderable {
     return 'Function';
   }
 
-  toJSON() {
+  toJson() {
     return {
       $type: Types.rawType(this),
       name: this.name,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v,
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
       ),
       normalize: this.normalize,
     };
@@ -356,12 +356,12 @@ export class Operator<T> implements Renderable {
     return 'Operator';
   }
 
-  toJSON() {
+  toJson() {
     return {
       $type: Types.rawType(this),
       op: this.op,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v,
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
       ),
       normalize: this.normalize,
     };
@@ -489,10 +489,10 @@ export class Grouping<T> implements Renderable {
     return 'Grouping';
   }
 
-  toJSON() {
+  toJson() {
     return {
       $type: Types.rawType(this),
-      group: this.group.toJSON(),
+      group: this.group.toJson(),
     };
   }
 
@@ -526,12 +526,12 @@ export class Lambda<T> implements Renderable {
     return 'Lambda';
   }
 
-  toJSON() {
+  toJson() {
     return {
       $type: Types.rawType(this),
       op: this.op,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJSON' in v ? v.toJSON() : v,
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
       ),
       alias: this.alias,
     };

@@ -15,9 +15,9 @@ export class CountField<T> implements Renderable {
     return 'CountField';
   }
 
-  toJSON() {
+  toJson() {
     return {
-      field: this.field.toJSON(),
+      field: this.field.toJson(),
     };
   }
 
@@ -104,6 +104,10 @@ export class CountExpression<T> extends Expression<T> {
     super({ children });
   }
 
+  get [Symbol.toStringTag]() {
+    return 'CountExpression';
+  }
+
   static count<T>(
     opts: (
       builder: CountExpressionBuilder<T>,
@@ -125,6 +129,17 @@ export class CountExpression<T> extends Expression<T> {
     return this;
   }
 
+  override toJson() {
+    const json = super.toJson();
+    return Object.assign(json, { });
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): CountExpression<T> {
+    console.log("count", json);
+    return new CountExpression<T>({
+      children: json['children'],
+    });
+  }
   render({
     aliases,
     escape,

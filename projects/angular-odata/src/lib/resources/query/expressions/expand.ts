@@ -18,9 +18,9 @@ export class ExpandField<T> implements Renderable {
     return 'ExpandField';
   }
 
-  toJSON() {
+  toJson() {
     return {
-      field: this.field.toJSON(),
+      field: this.field.toJson(),
     };
   }
 
@@ -174,6 +174,10 @@ export class ExpandExpression<T> extends Expression<T> {
     super({ children });
   }
 
+  get [Symbol.toStringTag]() {
+    return 'ExpandExpression';
+  }
+
   static expand<T>(
     opts: (
       builder: ExpandExpressionBuilder<T>,
@@ -188,6 +192,18 @@ export class ExpandExpression<T> extends Expression<T> {
       },
       current,
     ) as ExpandExpression<T>;
+  }
+
+  override toJson() {
+    const json = super.toJson();
+    return Object.assign(json, { });
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): ExpandExpression<T> {
+    console.log("count", json);
+    return new ExpandExpression<T>({
+      children: json['children'],
+    });
   }
 
   render({
