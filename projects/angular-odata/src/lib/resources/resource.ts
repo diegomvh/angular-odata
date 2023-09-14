@@ -27,8 +27,8 @@ import { ODataOptions } from './types';
 
 export type EntityKey<T> =
   | {
-      readonly [P in keyof T]?: T[P];
-    }
+    readonly [P in keyof T]?: T[P];
+  }
   | QueryCustomType
   | string
   | number;
@@ -151,8 +151,8 @@ export class ODataResource<T> {
     return test === 'path'
       ? otherPath === selfPath
       : test === 'params'
-      ? Types.isEqual(selfParams, otherParams)
-      : otherPath === selfPath && Types.isEqual(selfParams, otherParams);
+        ? Types.isEqual(selfParams, otherParams)
+        : otherPath === selfPath && Types.isEqual(selfParams, otherParams);
   }
 
   pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
@@ -203,16 +203,13 @@ export class ODataResource<T> {
     const dataType =
       options !== undefined && Types.isPlainObject(value)
         ? ODataHelper[options.version || DEFAULT_VERSION].type(value)
-        : undefined;
+        : type;
     if (dataType !== undefined) {
-      // Parser from data type
+      // Parser from type
       return this.api.parserForType<T>(dataType);
     } else if (this.schema !== undefined && 'parser' in this.schema) {
       // Parser from resource schema
       return (<any>this.schema).parser as Parser<T> | undefined;
-    } else if (type !== undefined) {
-      // Parser from resource type
-      return this.api.parserForType<T>(type);
     }
     return undefined;
   }
@@ -341,14 +338,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     } = {},
@@ -360,14 +357,14 @@ export class ODataResource<T> {
     body: any,
     options: ODataOptions & {
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
     } = {},
   ): Observable<any> {
@@ -379,14 +376,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
     } = {},
   ): Observable<any> {
@@ -398,14 +395,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
     } = {},
   ): Observable<any> {
@@ -416,14 +413,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
     } = {},
   ): Observable<any> {

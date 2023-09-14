@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ODataApi } from '../../api';
 import { $COUNT } from '../../constants';
-import { PathSegment, QueryOption } from '../../types';
+import { EdmType, PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -34,6 +34,10 @@ export class ODataCountResource<T> extends ODataResource<T> {
   //#region Requests
   protected override get(options?: ODataOptions): Observable<any> {
     return super.get({ responseType: 'value', ...options });
+  }
+
+  override returnType() {
+    return EdmType.Int32;
   }
   //#endregion
 
