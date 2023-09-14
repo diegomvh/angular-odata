@@ -229,6 +229,7 @@ describe('ODataClient', () => {
       ],
       options: {
         filter: {
+          $type: 'FilterExpression',
           children: [
             {
               $type: 'Operator',
