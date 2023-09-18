@@ -195,18 +195,40 @@ export class ODataResource<T> {
     });
   }
 
-  private __parser(
+  private __serializeParser(
     value: any,
     options?: ParserOptions,
-    type?: string,
+    resourceType?: string,
   ): Parser<T> | undefined {
     const dataType =
       options !== undefined && Types.isPlainObject(value)
         ? ODataHelper[options.version || DEFAULT_VERSION].type(value)
-        : type;
+        : undefined;
     if (dataType !== undefined) {
-      // Parser from type
+      // Parser from data type
       return this.api.parserForType<T>(dataType);
+    } else if (this.schema !== undefined && 'parser' in this.schema) {
+      // Parser from resource schema
+      return (<any>this.schema).parser as Parser<T> | undefined;
+    } else if (resourceType !== undefined) {
+      // Parser from resource type
+      return this.api.parserForType<T>(resourceType);
+    }
+    return undefined;
+  }
+
+  private __deserializeParser(
+    value: any,
+    options?: ParserOptions,
+    resourceType?: string,
+  ): Parser<T> | undefined {
+    const type =
+      options !== undefined && Types.isPlainObject(value)
+        ? ODataHelper[options.version || DEFAULT_VERSION].type(value)
+        : resourceType;
+    if (type !== undefined) {
+      // Parser from type
+      return this.api.parserForType<T>(type);
     } else if (this.schema !== undefined && 'parser' in this.schema) {
       // Parser from resource schema
       return (<any>this.schema).parser as Parser<T> | undefined;
@@ -217,7 +239,7 @@ export class ODataResource<T> {
   deserialize(value: any, options?: ParserOptions): any {
     const resourceType = this.returnType();
     const _d = (value: any, options?: ParserOptions) => {
-      const parser = this.__parser(value, options, resourceType);
+      const parser = this.__deserializeParser(value, options, resourceType);
       return parser !== undefined && 'deserialize' in parser
         ? parser.deserialize(value, options)
         : value;
@@ -230,7 +252,7 @@ export class ODataResource<T> {
   serialize(value: any, options?: ParserOptions): any {
     const resourceType = this.type();
     const _s = (value: any, options?: ParserOptions) => {
-      const parser = this.__parser(value, options, resourceType);
+      const parser = this.__serializeParser(value, options, resourceType);
       return parser !== undefined && 'serialize' in parser
         ? parser.serialize(value, options)
         : value;
@@ -243,7 +265,7 @@ export class ODataResource<T> {
   encode(value: any, options?: ParserOptions): any {
     const resourceType = this.type();
     const _e = (value: any, options?: ParserOptions) => {
-      const parser = this.__parser(value, options, resourceType);
+      const parser = this.__serializeParser(value, options, resourceType);
       return parser !== undefined && 'encode' in parser
         ? parser.encode(value, options)
         : value;
