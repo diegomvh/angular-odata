@@ -9,6 +9,7 @@ import {
   ODataOperators,
   operators,
   Renderable,
+  RenderableFactory,
 } from './syntax';
 
 export type ComputeExpressionBuilder<T> = {
@@ -56,9 +57,8 @@ export class ComputeExpression<T> extends Expression<T> {
   }
 
   static fromJson<T>(json: { [name: string]: any }): ComputeExpression<T> {
-    console.log("compute", json);
     return new ComputeExpression<T>({
-      children: json['children'],
+      children: json['children'].map((c: any) => RenderableFactory(c)),
       names: json['names']
     });
   }

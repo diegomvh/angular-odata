@@ -2,7 +2,7 @@ import { Parser } from '../../../types';
 import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { FieldFactory, Renderable } from './syntax';
+import { FieldFactory, Renderable, RenderableFactory } from './syntax';
 
 export type SelectExpressionBuilder<T> = {
   t: Readonly<Required<T>>;
@@ -43,9 +43,8 @@ export class SelectExpression<T> extends Expression<T> {
   }
 
   static fromJson<T>(json: { [name: string]: any }): SelectExpression<T> {
-    console.log("select", json);
     return new SelectExpression<T>({
-      children: json['children'],
+      children: json['children'].map((c: any) => RenderableFactory(c)),
     });
   }
   render({

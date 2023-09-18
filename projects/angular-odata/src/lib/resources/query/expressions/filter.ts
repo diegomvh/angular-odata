@@ -1,5 +1,4 @@
 import { Parser } from '../../../types';
-import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { CountExpression, CountField } from './count';
@@ -12,6 +11,7 @@ import {
   ODataOperators,
   operators,
   Renderable,
+  RenderableFactory,
   syntax,
 } from './syntax';
 
@@ -73,7 +73,7 @@ export class FilterExpression<F> extends Expression<F> {
 
   static fromJson<T>(json: { [name: string]: any }): FilterExpression<T> {
     return new FilterExpression<T>({
-      children: json['children'],
+      children: json['children'].map((c: any) => RenderableFactory(c)),
       connector: json['connector'],
       negated: json['negated'],
     });

@@ -2,7 +2,7 @@ import { Parser } from '../../../types';
 import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { render, Grouping, Renderable } from './syntax';
+import { render, Grouping, Renderable, RenderableFactory } from './syntax';
 
 export type SearchConnector = 'AND' | 'OR';
 
@@ -161,9 +161,8 @@ export class SearchExpression<T> extends Expression<T> {
   }
 
   static fromJson<T>(json: { [name: string]: any }): SearchExpression<T> {
-    console.log("search", json);
     return new SearchExpression<T>({
-      children: json['children'],
+      children: json['children'].map((c: any) => RenderableFactory(c)),
       connector: json['connector'],
       negated: json['negated'],
     });

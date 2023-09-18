@@ -15,6 +15,7 @@ import {
   Expression,
   FilterExpression,
   OrderByExpression,
+  RenderableFactory,
   SearchExpression,
 } from './expressions';
 import { CountExpression } from './expressions/count';
@@ -44,36 +45,7 @@ export class ODataQueryOptions<T> {
   constructor(values?: Map<QueryOption, any> | { [name: string]: any }) {
     if (!(values instanceof Map)) {
       const entries = Object.entries(values || {})
-        .map(([key, value]) => {
-          if (Types.isPlainObject(value) && "$type" in value) {
-            switch (value.$type) {
-              case 'SelectExpression':
-                value = SelectExpression.fromJson(value);
-                break;
-              case 'ExpandExpression':
-                value = ExpandExpression.fromJson(value);
-                break;
-              case 'ComputeExpression':
-                value = ComputeExpression.fromJson(value);
-                break;
-              case 'FilterExpression':
-                value = FilterExpression.fromJson(value);
-                break;
-              case 'OrderByExpression':
-                value = OrderByExpression.fromJson(value);
-                break;
-              case 'SearchExpression':
-                value = SearchExpression.fromJson(value);
-                break;
-              case 'CountExpression':
-                value = CountExpression.fromJson(value);
-                break;
-              default:
-                value = value;
-            }
-          }
-        return [key, value];
-      }) as [QueryOption, any][];
+        .map(([key, value]) => [key, RenderableFactory(value)]) as [QueryOption, any][];
       values = new Map(entries);
     }
     this.values = values as Map<QueryOption, any>;

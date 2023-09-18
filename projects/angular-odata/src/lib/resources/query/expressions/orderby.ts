@@ -2,7 +2,7 @@ import { Parser } from '../../../types';
 import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { render, FieldFactory, Renderable } from './syntax';
+import { render, FieldFactory, Renderable, RenderableFactory } from './syntax';
 
 export class OrderByField implements Renderable {
   constructor(
@@ -87,9 +87,8 @@ export class OrderByExpression<T> extends Expression<T> {
   }
 
   static fromJson<T>(json: { [name: string]: any }): OrderByExpression<T> {
-    console.log("orderby", json);
     return new OrderByExpression<T>({
-      children: json['children'],
+      children: json['children'].map((c: any) => RenderableFactory(c)),
     });
   }
 

@@ -3,7 +3,7 @@ import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FilterExpression, FilterExpressionBuilder } from './filter';
-import { render, FieldFactory, Renderable } from './syntax';
+import { render, FieldFactory, Renderable, RenderableFactory } from './syntax';
 
 export class CountField<T> implements Renderable {
   constructor(
@@ -135,9 +135,8 @@ export class CountExpression<T> extends Expression<T> {
   }
 
   static fromJson<T>(json: { [name: string]: any }): CountExpression<T> {
-    console.log("count", json);
     return new CountExpression<T>({
-      children: json['children'],
+      children: json['children'].map((c: any) => RenderableFactory(c)),
     });
   }
   render({
