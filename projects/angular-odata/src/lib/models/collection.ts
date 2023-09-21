@@ -577,6 +577,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     };
     // Set Parent
     if (reparent) model._parent = [this, null];
+
     // Subscribe
     this._link(entry);
 
@@ -597,6 +598,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (!silent) {
       model.events$.trigger(ODataModelEventType.Add, { collection: this });
     }
+
     return entry.model;
   }
 
@@ -659,10 +661,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
       return model;
     }
 
-    // Trigger Event
-    if (!silent)
-      model.events$.trigger(ODataModelEventType.Remove, { collection: this });
-
     // Now remove
     const index = this._entries.indexOf(entry);
     this._entries.splice(index, 1);
@@ -671,6 +669,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       entry.state = ODataModelState.Removed;
       this._entries.push(entry);
     }
+
+    // Trigger Event
+    if (!silent)
+      model.events$.trigger(ODataModelEventType.Remove, { collection: this });
+
     this._unlink(entry);
     return entry.model;
   }
