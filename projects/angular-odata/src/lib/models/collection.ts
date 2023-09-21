@@ -5,7 +5,6 @@ import { ODataHelper } from '../helper';
 import {
   EntityKey,
   ODataActionOptions,
-  ODataEntities,
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
   ODataEntityResource,
@@ -1147,7 +1146,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           value: models[pointer++],
         };
       },
-    };
+    } as Iterator<M>;
   }
 
   filter(
