@@ -1,4 +1,4 @@
-import { Parser, QueryOption } from '../../types';
+import { Parser, ParserOptions, QueryOption } from '../../types';
 import { Objects, Types } from '../../utils';
 import {
   buildPathAndQuery,
@@ -55,12 +55,13 @@ export class ODataQueryOptions<T> {
   pathAndParams({
     escape,
     parser,
-  }: { escape?: boolean; parser?: Parser<T> } = {}): [
-    string,
-    { [name: string]: any },
-  ] {
+    options,
+  }: { escape?: boolean; parser?: Parser<T>; options?: ParserOptions } = {}): [
+      string,
+      { [name: string]: any },
+    ] {
     let aliases: QueryCustomType[] = [];
-    let options = [
+    let queryOptions = [
       QueryOption.select,
       QueryOption.filter,
       QueryOption.search,
@@ -85,15 +86,15 @@ export class ODataQueryOptions<T> {
         ) {
           value = Types.isArray(value)
             ? value.map((v: Expression<T>) =>
-                Types.rawType(v).endsWith('Expression')
-                  ? raw(v.render({ aliases, escape, parser }))
-                  : v,
-              )
-            : raw((value as Expression<T>).render({ aliases, escape, parser }));
+              Types.rawType(v).endsWith('Expression')
+                ? raw(v.render({ aliases, escape, parser, options }))
+                : v,
+            )
+            : raw((value as Expression<T>).render({ aliases, escape, parser, options }));
         }
         return Object.assign(acc, { [key]: value });
       }, {});
-    return buildPathAndQuery<any>({ ...options, aliases, escape });
+    return buildPathAndQuery<any>({ ...queryOptions, aliases, escape });
   }
 
   toString({

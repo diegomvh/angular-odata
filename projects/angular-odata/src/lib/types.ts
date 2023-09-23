@@ -267,8 +267,8 @@ export type StructuredTypeConfig<T> = {
   name: string;
   base?: string;
   open?: boolean;
-  model?: { new (...params: any[]): any };
-  collection?: { new (...params: any[]): any };
+  model?: { new(...params: any[]): any };
+  collection?: { new(...params: any[]): any };
   annotations?: AnnotationConfig[];
   keys?: { name: string; alias?: string }[];
   fields: { [P in keyof T]?: StructuredTypeFieldConfig };
@@ -291,7 +291,7 @@ export type CallableConfig = {
 export type EntitySetConfig = {
   name: string;
   entityType: string;
-  service: { new (...params: any[]): any };
+  service: { new(...params: any[]): any };
   annotations?: AnnotationConfig[];
 };
 //#endregion

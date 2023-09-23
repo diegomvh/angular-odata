@@ -216,14 +216,14 @@ export class ODataApi {
       body?: any;
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
@@ -243,6 +243,7 @@ export class ODataApi {
       bodyQueryOptions: options.bodyQueryOptions,
       reportProgress: options.reportProgress,
       fetchPolicy: options.fetchPolicy,
+      parserOptions: options.parserOptions,
       withCredentials: options.withCredentials,
     });
 
@@ -309,21 +310,21 @@ export class ODataApi {
       entitySet: Map<string, ODataEntitySet | undefined>;
     };
   } = {
-    forType: {
-      enum: new Map<string, ODataEnumType<any> | undefined>(),
-      structured: new Map<string, ODataStructuredType<any> | undefined>(),
-      callable: new Map<string, ODataCallable<any> | undefined>(),
-      entitySet: new Map<string, ODataEntitySet | undefined>(),
-      parser: new Map<string, Parser<any>>(),
-      options: new Map<string, ODataModelOptions<any> | undefined>(),
-    },
-    byName: {
-      enum: new Map<string, ODataEnumType<any> | undefined>(),
-      structured: new Map<string, ODataStructuredType<any> | undefined>(),
-      callable: new Map<string, ODataCallable<any> | undefined>(),
-      entitySet: new Map<string, ODataEntitySet | undefined>(),
-    },
-  };
+      forType: {
+        enum: new Map<string, ODataEnumType<any> | undefined>(),
+        structured: new Map<string, ODataStructuredType<any> | undefined>(),
+        callable: new Map<string, ODataCallable<any> | undefined>(),
+        entitySet: new Map<string, ODataEntitySet | undefined>(),
+        parser: new Map<string, Parser<any>>(),
+        options: new Map<string, ODataModelOptions<any> | undefined>(),
+      },
+      byName: {
+        enum: new Map<string, ODataEnumType<any> | undefined>(),
+        structured: new Map<string, ODataStructuredType<any> | undefined>(),
+        callable: new Map<string, ODataCallable<any> | undefined>(),
+        entitySet: new Map<string, ODataEntitySet | undefined>(),
+      },
+    };
 
   private findSchemaForType(type: string) {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
@@ -391,7 +392,7 @@ export class ODataApi {
       // Build Ad-hoc model
       let schema = this.findStructuredTypeForType<any>(type);
       if (schema === undefined) throw Error(`No schema for ${type}`);
-      Model = class extends ODataModel<any> {} as typeof ODataModel;
+      Model = class extends ODataModel<any> { } as typeof ODataModel;
       // Build Meta
       Model.buildMeta({ schema });
       // Configure
@@ -418,7 +419,7 @@ export class ODataApi {
       Collection = class extends ODataCollection<
         any,
         ODataModel<any>
-      > {} as typeof ODataCollection;
+      > { } as typeof ODataCollection;
       Collection.model = this.modelForType(type);
       // Store New Collection for next time
       schema.collection = Collection;

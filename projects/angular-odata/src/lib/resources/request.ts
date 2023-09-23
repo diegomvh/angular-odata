@@ -9,7 +9,7 @@ import {
   PREFER,
   TEXT_PLAIN,
 } from '../constants';
-import { QueryOption } from '../types';
+import { FetchPolicy, ParserOptions, QueryOption } from '../types';
 import { Http, Types } from '../utils';
 import { ODataResource } from './resource';
 import { ODataOptions } from './types';
@@ -54,29 +54,25 @@ export class ODataRequest<T> {
     headers?: HttpHeaders | { [header: string]: string | string[] };
     reportProgress?: boolean;
     params?:
-      | HttpParams
-      | {
-          [param: string]:
-            | string
-            | number
-            | boolean
-            | ReadonlyArray<string | number | boolean>;
-        };
+    | HttpParams
+    | {
+      [param: string]:
+      | string
+      | number
+      | boolean
+      | ReadonlyArray<string | number | boolean>;
+    };
     responseType?:
-      | 'arraybuffer'
-      | 'blob'
-      | 'json'
-      | 'text'
-      | 'value'
-      | 'property'
-      | 'entity'
-      | 'entities';
-    fetchPolicy?:
-      | 'cache-first'
-      | 'cache-and-network'
-      | 'network-only'
-      | 'no-cache'
-      | 'cache-only';
+    | 'arraybuffer'
+    | 'blob'
+    | 'json'
+    | 'text'
+    | 'value'
+    | 'property'
+    | 'entity'
+    | 'entities';
+    fetchPolicy?: FetchPolicy;
+    parserOptions?: ParserOptions;
     withCredentials?: boolean;
     bodyQueryOptions?: QueryOption[];
   }) {
@@ -93,7 +89,7 @@ export class ODataRequest<T> {
 
     // The Body
     this._body = init.body !== undefined ? init.body : null;
-    if (this._body !== null) this._body = this.resource.serialize(this._body);
+    if (this._body !== null) this._body = this.resource.serialize(this._body, init.parserOptions);
 
     this.withCredentials =
       init.withCredentials === undefined
@@ -106,7 +102,7 @@ export class ODataRequest<T> {
     ];
 
     // The Path and Params from resource
-    const [resourcePath, resourceParams] = this.resource.pathAndParams();
+    const [resourcePath, resourceParams] = this.resource.pathAndParams(init.parserOptions);
     this._path = resourcePath;
 
     //#region Headers
@@ -213,12 +209,12 @@ export class ODataRequest<T> {
     this._params =
       this._responseType === 'entity'
         ? Http.withoutHttpParams(params, [
-            '$filter',
-            '$orderby',
-            '$count',
-            '$skip',
-            '$top',
-          ])
+          '$filter',
+          '$orderby',
+          '$count',
+          '$skip',
+          '$top',
+        ])
         : params;
     //#endregion
   }
@@ -231,14 +227,14 @@ export class ODataRequest<T> {
       body?: any;
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       observe: 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
@@ -268,6 +264,7 @@ export class ODataRequest<T> {
       reportProgress: options.reportProgress,
       responseType: options.responseType,
       fetchPolicy: options.fetchPolicy,
+      parserOptions: options.parserOptions,
       withCredentials: options.withCredentials,
       bodyQueryOptions: options.bodyQueryOptions,
     });
@@ -278,8 +275,8 @@ export class ODataRequest<T> {
       ['property', 'entity', 'entities'].indexOf(this._responseType) !== -1
       ? 'json'
       : this._responseType === 'value'
-      ? 'text'
-      : <'arraybuffer' | 'blob' | 'json' | 'text'>this._responseType;
+        ? 'text'
+        : <'arraybuffer' | 'blob' | 'json' | 'text'>this._responseType;
   }
 
   get path() {
@@ -293,18 +290,18 @@ export class ODataRequest<T> {
   get body() {
     return this.isQueryBody()
       ? Http.splitHttpParams(
-          this._params,
-          this.bodyQueryOptions.map((name) => `$${name}`),
-        )[1].toString()
+        this._params,
+        this.bodyQueryOptions.map((name) => `$${name}`),
+      )[1].toString()
       : this._body;
   }
 
   get params() {
     return this.isQueryBody()
       ? Http.splitHttpParams(
-          this._params,
-          this.bodyQueryOptions.map((name) => `$${name}`),
-        )[0]
+        this._params,
+        this.bodyQueryOptions.map((name) => `$${name}`),
+      )[0]
       : this._params;
   }
 

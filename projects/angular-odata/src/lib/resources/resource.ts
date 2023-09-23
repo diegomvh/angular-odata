@@ -155,16 +155,13 @@ export class ODataResource<T> {
         : otherPath === selfPath && Types.isEqual(selfParams, otherParams);
   }
 
-  pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
+  pathAndParams({ escape, ...options }: ParserOptions & { escape?: boolean } = { escape: false }): [string, { [name: string]: any }] {
     const parser =
       this.schema !== undefined && 'parser' in this.schema
         ? ((<any>this.schema).parser as Parser<T>)
         : undefined;
-    const [spath, sparams] = this.pathSegments.pathAndParams({
-      escape,
-      parser,
-    });
-    const [, qparams] = this.queryOptions.pathAndParams({ escape, parser });
+    const [spath, sparams] = this.pathSegments.pathAndParams({ escape });
+    const [, qparams] = this.queryOptions.pathAndParams({ escape, parser, options });
 
     return [spath, { ...sparams, ...qparams }];
   }
@@ -179,7 +176,7 @@ export class ODataResource<T> {
   }
 
   toString(escape: boolean = false): string {
-    let [path, params] = this.pathAndParams(escape);
+    let [path, params] = this.pathAndParams({ escape });
     let queryString = Object.entries(params)
       .map((e) => `${e[0]}${VALUE_SEPARATOR}${e[1]}`)
       .join(PARAM_SEPARATOR);

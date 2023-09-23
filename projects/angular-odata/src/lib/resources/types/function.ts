@@ -4,7 +4,7 @@ import { ODataApi } from '../../api';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
 import { ODataCallable } from '../../schema/callable';
-import { PathSegment } from '../../types';
+import { ParserOptions, PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -79,14 +79,12 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       : undefined;
   }
 
-  override pathAndParams(
-    escape: boolean = false,
-  ): [string, { [name: string]: any }] {
-    let [path, params] = super.pathAndParams(escape);
+  override pathAndParams({ escape, ...options }: ParserOptions & { escape?: boolean } = { escape: false }): [string, { [name: string]: any }] {
+    let [path, params] = super.pathAndParams({ escape, ...options });
 
     if (
       path.endsWith('()') &&
-      this.api.options.nonParenthesisForEmptyParameterFunction
+      (options.nonParenthesisForEmptyParameterFunction ?? this.api.options.nonParenthesisForEmptyParameterFunction)
     ) {
       path = path.substring(0, path.length - 2);
     }

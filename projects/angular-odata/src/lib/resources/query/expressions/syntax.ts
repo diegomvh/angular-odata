@@ -154,6 +154,7 @@ export function resolve(values: any, parser?: Parser<any>) {
 export function encode(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
     return values.map((v: any) => {
+      if (Types.isArray(v)) return encode(v, parser);
       if (Types.isObject(v) || v == null) return v;
       try {
         return parser.encode(v);
@@ -190,9 +191,9 @@ export class Function<T> implements Renderable {
 
   static fromJson<T>(json: { [name: string]: any }): Function<T> {
     return new Function<T>(
-      json['name'], 
-      json['values'].map((v:any) => RenderableFactory(v)),
-      json['normalize'], 
+      json['name'],
+      json['values'].map((v: any) => RenderableFactory(v)),
+      json['normalize'],
       json['escape']
     );
   }
@@ -416,11 +417,11 @@ export class Operator<T> implements Renderable {
       normalize: this.normalize,
     };
   }
-  
+
   static fromJson<T>(json: { [name: string]: any }): Operator<T> {
     return new Operator<T>(
-      json['op'], 
-      json['values'].map((v:any) => RenderableFactory(v)), 
+      json['op'],
+      json['values'].map((v: any) => RenderableFactory(v)),
       json['normalize']);
   }
 
@@ -555,7 +556,7 @@ export class Grouping<T> implements Renderable {
 
   static fromJson<T>(json: { [name: string]: any }): Grouping<T> {
     return new Grouping<T>(
-      json['group'].map((v:any) => RenderableFactory(v))
+      json['group'].map((v: any) => RenderableFactory(v))
     );
   }
 
@@ -603,8 +604,8 @@ export class Lambda<T> implements Renderable {
 
   static fromJson<T>(json: { [name: string]: any }): Lambda<T> {
     return new Lambda<T>(
-      json['op'], 
-      json['values'].map((v:any) => RenderableFactory(v)),
+      json['op'],
+      json['values'].map((v: any) => RenderableFactory(v)),
       json['alias']);
   }
 
