@@ -1,4 +1,4 @@
-import { Parser, QueryOption } from '../../../types';
+import { Parser, ParserOptions, QueryOption } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType, Unpacked } from '../builder';
 import { Expression } from './base';
@@ -12,7 +12,7 @@ export class ExpandField<T> implements Renderable {
   constructor(
     protected field: any,
     private values: { [name: string]: any } = {},
-  ) {}
+  ) { }
 
   get [Symbol.toStringTag]() {
     return 'ExpandField';
@@ -29,11 +29,13 @@ export class ExpandField<T> implements Renderable {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   }): string {
     parser = resolve([this.field], parser);
     const params: { [name: string]: string } = [
@@ -56,11 +58,12 @@ export class ExpandField<T> implements Renderable {
             prefix,
             escape,
             parser,
+            options
           });
         }
         return Object.assign(acc, { [key]: value });
       }, {});
-    let expand = `${render(this.field, { aliases, escape, prefix, parser })}`;
+    let expand = `${render(this.field, { aliases, escape, prefix, parser, options })}`;
     if (!Types.isEmpty(params)) {
       expand = `${expand}(${Object.keys(params)
         .map((key) => `$${key}=${params[key]}`)
@@ -196,7 +199,7 @@ export class ExpandExpression<T> extends Expression<T> {
 
   override toJson() {
     const json = super.toJson();
-    return Object.assign(json, { });
+    return Object.assign(json, {});
   }
 
   static fromJson<T>(json: { [name: string]: any }): ExpandExpression<T> {
@@ -210,14 +213,16 @@ export class ExpandExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   } = {}): string {
     return this._children
-      .map((n) => n.render({ aliases, escape, prefix, parser }))
+      .map((n) => n.render({ aliases, escape, prefix, parser, options }))
       .join(',');
   }
 

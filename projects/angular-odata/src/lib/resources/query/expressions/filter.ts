@@ -1,4 +1,4 @@
-import { Parser } from '../../../types';
+import { Parser, ParserOptions } from '../../../types';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { CountExpression, CountField } from './count';
@@ -65,7 +65,7 @@ export class FilterExpression<F> extends Expression<F> {
 
   override toJson() {
     const json = super.toJson();
-    return Object.assign(json, { 
+    return Object.assign(json, {
       connector: this._connector,
       negated: this._negated,
     });
@@ -92,14 +92,16 @@ export class FilterExpression<F> extends Expression<F> {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
+    options?: ParserOptions
   } = {}): string {
     let content = this._children
-      .map((n) => n.render({ aliases, escape, prefix, parser }))
+      .map((n) => n.render({ aliases, escape, prefix, parser, options }))
       .join(` ${this._connector} `);
     if (this._negated) {
       content = `not (${content})`;

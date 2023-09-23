@@ -1,4 +1,4 @@
-import { Parser } from '../../../types';
+import { Parser, ParserOptions } from '../../../types';
 import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
@@ -7,7 +7,7 @@ import { render, Grouping, Renderable, RenderableFactory } from './syntax';
 export type SearchConnector = 'AND' | 'OR';
 
 export class SearchTerm implements Renderable {
-  constructor(protected value: string) {}
+  constructor(protected value: string) { }
 
   get [Symbol.toStringTag]() {
     return 'SearchTerm';
@@ -25,13 +25,15 @@ export class SearchTerm implements Renderable {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
+    options?: ParserOptions
   }): string {
-    return `${render(this.value, { aliases, escape, prefix, parser })}`;
+    return `${render(this.value, { aliases, escape, prefix, parser, options })}`;
   }
 
   clone() {
@@ -132,14 +134,16 @@ export class SearchExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   } = {}): string {
     let content = this._children
-      .map((n) => n.render({ aliases, escape, prefix, parser }))
+      .map((n) => n.render({ aliases, escape, prefix, parser, options }))
       .join(` ${this._connector} `);
     return content;
   }
@@ -154,7 +158,7 @@ export class SearchExpression<T> extends Expression<T> {
 
   override toJson() {
     const json = super.toJson();
-    return Object.assign(json, { 
+    return Object.assign(json, {
       connector: this._connector,
       negated: this._negated,
     });

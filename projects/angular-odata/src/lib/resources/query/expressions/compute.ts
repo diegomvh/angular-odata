@@ -1,4 +1,4 @@
-import { Parser } from '../../../types';
+import { Parser, ParserOptions } from '../../../types';
 import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
@@ -51,7 +51,7 @@ export class ComputeExpression<T> extends Expression<T> {
 
   override toJson() {
     const json = super.toJson();
-    return Object.assign(json, { 
+    return Object.assign(json, {
       names: this.names
     });
   }
@@ -68,14 +68,16 @@ export class ComputeExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   } = {}): string {
     let children = this._children.map((n) =>
-      n.render({ aliases, escape, prefix, parser }),
+      n.render({ aliases, escape, prefix, parser, options }),
     );
     return this.names
       .map((name, index) => `${children[index]} as ${name}`)

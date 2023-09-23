@@ -1,4 +1,4 @@
-import { Parser } from '../../../types';
+import { Parser, ParserOptions } from '../../../types';
 import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
@@ -8,7 +8,7 @@ export class OrderByField implements Renderable {
   constructor(
     protected field: Renderable,
     protected order: 'asc' | 'desc',
-  ) {}
+  ) { }
 
   get [Symbol.toStringTag]() {
     return 'OrderByField';
@@ -27,15 +27,16 @@ export class OrderByField implements Renderable {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
+    options?: ParserOptions
   }): string {
-    return `${render(this.field, { aliases, escape, prefix, parser })} ${
-      this.order
-    }`;
+    return `${render(this.field, { aliases, escape, prefix, parser, options })} ${this.order
+      }`;
   }
 
   clone() {
@@ -83,7 +84,7 @@ export class OrderByExpression<T> extends Expression<T> {
 
   override toJson() {
     const json = super.toJson();
-    return Object.assign(json, { });
+    return Object.assign(json, {});
   }
 
   static fromJson<T>(json: { [name: string]: any }): OrderByExpression<T> {
@@ -97,14 +98,16 @@ export class OrderByExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   } = {}): string {
     let content = this._children
-      .map((n) => n.render({ aliases, escape, prefix, parser }))
+      .map((n) => n.render({ aliases, escape, prefix, parser, options }))
       .join(`,`);
     return content;
   }

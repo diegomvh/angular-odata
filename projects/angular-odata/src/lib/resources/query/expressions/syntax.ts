@@ -1,4 +1,4 @@
-import { Parser } from '../../../types';
+import { Parser, ParserOptions } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { normalizeValue } from '../builder';
@@ -18,11 +18,13 @@ export interface Renderable {
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
+    options?: ParserOptions
   }): string;
   toString(): string;
   toJson(): any;
@@ -116,12 +118,14 @@ export function render(
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     normalize?: boolean;
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
+    options?: ParserOptions
   } = {},
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
@@ -151,13 +155,13 @@ export function resolve(values: any, parser?: Parser<any>) {
   return parser;
 }
 
-export function encode(values: any, parser?: Parser<any>) {
+export function encode(values: any, parser?: Parser<any>, options?: ParserOptions) {
   if (parser !== undefined) {
     return values.map((v: any) => {
-      if (Types.isArray(v)) return encode(v, parser);
+      if (Types.isArray(v)) return encode(v, parser, options);
       if (Types.isObject(v) || v == null) return v;
       try {
-        return parser.encode(v);
+        return parser.encode(v, options);
       } catch {
         return v;
       }
@@ -203,14 +207,16 @@ export class Function<T> implements Renderable {
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   }): string {
     parser = resolve(this.values, parser);
-    let [left, ...values] = encode(this.values, parser);
+    let [left, ...values] = encode(this.values, parser, options);
 
     left = render(left, {
       aliases,
@@ -430,11 +436,13 @@ export class Operator<T> implements Renderable {
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   }): string {
     parser = resolve(this.values, parser);
     let [left, right] = encode(this.values, parser);
@@ -566,11 +574,13 @@ export class Grouping<T> implements Renderable {
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   }): string {
     return `(${render(this.group, { aliases, escape, prefix, parser })})`;
   }
@@ -614,11 +624,13 @@ export class Lambda<T> implements Renderable {
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   }): string {
     parser = resolve(this.values, parser);
     let [left, right] = encode(this.values, parser);

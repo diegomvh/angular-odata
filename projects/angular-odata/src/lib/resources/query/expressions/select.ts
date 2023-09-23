@@ -1,5 +1,4 @@
-import { Parser } from '../../../types';
-import { Types } from '../../../utils';
+import { Parser, ParserOptions } from '../../../types';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FieldFactory, Renderable, RenderableFactory } from './syntax';
@@ -39,7 +38,7 @@ export class SelectExpression<T> extends Expression<T> {
 
   override toJson() {
     const json = super.toJson();
-    return Object.assign(json, { });
+    return Object.assign(json, {});
   }
 
   static fromJson<T>(json: { [name: string]: any }): SelectExpression<T> {
@@ -52,14 +51,16 @@ export class SelectExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
+    options
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
+    options?: ParserOptions
   } = {}): string {
     return this._children
-      .map((n) => n.render({ aliases, escape, prefix, parser }))
+      .map((n) => n.render({ aliases, escape, prefix, parser, options }))
       .join(',');
   }
 
