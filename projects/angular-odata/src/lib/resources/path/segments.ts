@@ -16,6 +16,8 @@ export type ODataSegment = {
 function pathSegmentsBuilder(
   segment: ODataSegment,
   escape: boolean = false,
+  parser?: Parser<any>,
+  options?: ParserOptions 
 ): [string, { [name: string]: any }] {
   if (segment.name === PathSegment.function) {
     let [path, params] = segment.parameters
@@ -27,8 +29,15 @@ function pathSegmentsBuilder(
     if (path.startsWith(PATH_SEPARATOR)) {
       path = path.slice(1);
     }
+    // HACK: Remove parenthesis
+    if (path.endsWith('()') && options?.nonParenthesisForEmptyParameterFunction)
+    {
+      path = path.substring(0, path.length - 2);
+    }
+
     return [path, params];
   } else {
+    //TODO: Parser key
     let key = segment.key;
     // HACK: Check guid string
     if (
@@ -51,13 +60,17 @@ export class ODataPathSegments {
     this._segments = segments || [];
   }
 
-  pathAndParams({ escape }: { escape?: boolean; } = {}): [
+  pathAndParams({
+    escape,
+    parser,
+    options,
+  }: { escape?: boolean; parser?: Parser<any>; options?: ParserOptions } = {}): [
     string,
     { [name: string]: any },
   ] {
     const result = this._segments.reduce(
       (acc, segment) => {
-        const [path, params] = pathSegmentsBuilder(segment, escape);
+        const [path, params] = pathSegmentsBuilder(segment, escape, parser, options);
         acc.paths.push(path);
         acc.params = Object.assign(acc.params, params);
         return acc;

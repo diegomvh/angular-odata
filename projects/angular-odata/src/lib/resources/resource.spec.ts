@@ -131,6 +131,17 @@ describe('ODataResource', () => {
     expect(fun.toString()).toEqual('People/NS.MyFunction()');
   });
 
+  it('should create collection function with nos parenthesis', () => {
+    const set: ODataEntitySetResource<Person> =
+      ODataEntitySetResource.factory<Person>(client.defaultApi(), {
+        path: ENTITY_SET,
+      });
+    const fun: ODataFunctionResource<any, any> = set.function<any, any>(
+      'NS.MyFunction',
+    );
+    expect(fun.toString({nonParenthesisForEmptyParameterFunction: true})).toEqual('People/NS.MyFunction');
+  });
+
   it('should create entity function', () => {
     const set: ODataEntitySetResource<Person> =
       ODataEntitySetResource.factory<Person>(client.defaultApi(), {
@@ -141,6 +152,18 @@ describe('ODataResource', () => {
       'NS.MyFunction',
     );
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction()");
+  });
+
+  it('should create entity function non parenthesis', () => {
+    const set: ODataEntitySetResource<Person> =
+      ODataEntitySetResource.factory<Person>(client.defaultApi(), {
+        path: ENTITY_SET,
+      });
+    const entity = set.entity('russellwhyte');
+    const fun: ODataFunctionResource<any, any> = entity.function<any, any>(
+      'NS.MyFunction',
+    );
+    expect(fun.toString({nonParenthesisForEmptyParameterFunction: true})).toEqual("People('russellwhyte')/NS.MyFunction");
   });
 
   it('should create entity function and change parameters', () => {
