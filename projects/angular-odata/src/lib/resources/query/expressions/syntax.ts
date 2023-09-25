@@ -129,15 +129,16 @@ export function render(
   } = {},
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
-    return render(value(syntax), { aliases, normalize, prefix, parser });
+    return render(value(syntax), { aliases, normalize, prefix, parser, options });
   }
   if (Types.isObject(value) && 'render' in value) {
-    return render(value.render({ aliases, escape, prefix, parser }), {
+    return render(value.render({ aliases, escape, prefix, parser, options }), {
       aliases,
       normalize,
       escape,
       prefix,
       parser,
+      options
     });
   }
   return normalize ? normalizeValue(value, { aliases, escape }) : value;
@@ -445,7 +446,7 @@ export class Operator<T> implements Renderable {
     options?: ParserOptions
   }): string {
     parser = resolve(this.values, parser);
-    let [left, right] = encode(this.values, parser);
+    let [left, right] = encode(this.values, parser, options);
 
     left = render(left, {
       aliases,
@@ -633,7 +634,7 @@ export class Lambda<T> implements Renderable {
     options?: ParserOptions
   }): string {
     parser = resolve(this.values, parser);
-    let [left, right] = encode(this.values, parser);
+    let [left, right] = encode(this.values, parser, options);
 
     left = render(left, { aliases, escape, prefix, parser });
     if (right) {
