@@ -108,7 +108,7 @@ export class ODataModel<T> {
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null
       ];
-      resource?: ODataResource<T>;
+      resource?: ODataResource<T> | null;
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
     } = {}
@@ -138,12 +138,14 @@ export class ODataModel<T> {
     | ODataEntityResource<T>
     | ODataNavigationPropertyResource<T>
     | ODataPropertyResource<T>
-    | ODataSingletonResource<T> {
+    | ODataSingletonResource<T>
+    | null {
     return ODataModelOptions.resource<T>(this) as
       | ODataEntityResource<T>
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>
-      | ODataSingletonResource<T>;
+      | ODataSingletonResource<T>
+      | null;
   }
 
   pushResource(
@@ -152,6 +154,7 @@ export class ODataModel<T> {
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>
       | ODataSingletonResource<T>
+      | null
   ) {
     // Push current parent and resource
     this._resources.push({ parent: this._parent, resource: this._resource });
@@ -175,8 +178,8 @@ export class ODataModel<T> {
   navigationProperty<N>(
     name: keyof T | string
   ): ODataNavigationPropertyResource<N> {
-    const field = this._meta.field<N>(name);
-    if (field === undefined || !field.navigation)
+    const field = this._meta.findField<N>(name);
+    if (!field || !field.navigation)
       throw Error(
         `navigationProperty: Can't find navigation property ${name as string}`
       );
@@ -193,8 +196,8 @@ export class ODataModel<T> {
   }
 
   property<N>(name: string): ODataPropertyResource<N> {
-    const field = this._meta.field<N>(name);
-    if (field === undefined || field.navigation)
+    const field = this._meta.findField<N>(name);
+    if (!field || field.navigation)
       throw Error(`property: Can't find property ${name}`);
 
     const resource = this.resource();
@@ -463,8 +466,8 @@ export class ODataModel<T> {
     options?: ODataOptions;
   } = {}): Observable<this> {
     let resource = this.resource();
-    if (resource === undefined)
-      return throwError(() => new Error('fetch: Resource is undefined'));
+    if (!resource)
+      return throwError(() => new Error('fetch: Resource is null'));
 
     let obs$: Observable<ODataEntity<T>>;
     if (resource instanceof ODataEntityResource) {
@@ -496,8 +499,7 @@ export class ODataModel<T> {
     options?: ODataOptions;
   } = {}): Observable<this> {
     let resource = this.resource();
-    if (resource === undefined)
-      return throwError(() => new Error('save: Resource is undefined'));
+    if (!resource) return throwError(() => new Error('save: Resource is null'));
     if (
       !(
         resource instanceof ODataEntityResource ||
@@ -574,8 +576,9 @@ export class ODataModel<T> {
     options?: ODataOptions;
   } = {}): Observable<this> {
     let resource = this.resource();
-    if (resource === undefined)
-      return throwError(() => new Error('destroy: Resource is undefined'));
+    if (!resource)
+      return throwError(() => new Error('destroy: Resource is null'));
+
     if (
       !(
         resource instanceof ODataEntityResource ||
@@ -608,7 +611,8 @@ export class ODataModel<T> {
   query(
     ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
-    return this._meta.query(this, this.resource(), ctx) as this;
+    const resource = this.resource();
+    return (resource ? this._meta.query(this, resource, ctx) : this) as this;
   }
 
   /**
@@ -625,8 +629,8 @@ export class ODataModel<T> {
   encode<E>(name: keyof T, options?: ParserOptions) {
     let value = (<any>this)[name];
     if (value === undefined) return undefined;
-    let field = this._meta.field<E>(name);
-    return field !== undefined ? field.encode(value, options) : value;
+    let field = this._meta.findField<E>(name);
+    return field ? field.encode(value, options) : value;
   }
 
   isNew() {
@@ -799,8 +803,8 @@ export class ODataModel<T> {
     name: keyof T | string,
     options: ODataQueryArgumentsOptions<P> = {}
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
-    const field = this._meta.field(name);
-    if (field === undefined)
+    const field = this._meta.findField<P>(name);
+    if (!field)
       throw Error(`fetchAttribute: Can't find attribute ${name as string}`);
 
     if (field.isStructuredType() && field.collection) {
@@ -819,7 +823,7 @@ export class ODataModel<T> {
       });
     } else {
       const prop = field.resourceFactory<T, P>(
-        this.resource()
+        this.resource()!
       ) as ODataPropertyResource<P>;
       prop.query((q) => q.apply(options as ODataQueryArguments<P>));
       return this._request(prop.fetchProperty(options), (resp) => {
@@ -832,8 +836,8 @@ export class ODataModel<T> {
   getAttribute<P>(
     name: keyof T | string
   ): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null | undefined {
-    const field = this._meta.field(name);
-    if (field === undefined)
+    const field = this._meta.findField<P>(name);
+    if (!field)
       throw Error(`getAttribute: Can't find attribute ${name as string}`);
 
     let model = (this as any)[name] as
