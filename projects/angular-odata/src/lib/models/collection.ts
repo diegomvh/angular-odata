@@ -1244,8 +1244,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   isEmpty() {
-    // Local length and if exists remote length
-    return this.length === 0;
+    // Local length == 0 and if exist remote count is 0 or undefined
+    return this.length === 0 && !this.annots().count;
   }
 
   //#region Sort
