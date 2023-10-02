@@ -134,14 +134,12 @@ export class ODataModel<T> {
   }
 
   //#region Resources
-  resource(
-    query: boolean = true
-  ):
+  resource():
     | ODataEntityResource<T>
     | ODataNavigationPropertyResource<T>
     | ODataPropertyResource<T>
     | ODataSingletonResource<T> {
-    return ODataModelOptions.resource<T>(this, query) as
+    return ODataModelOptions.resource<T>(this) as
       | ODataEntityResource<T>
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>

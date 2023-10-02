@@ -143,13 +143,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  resource(
-    query: boolean = true
-  ):
+  resource():
     | ODataEntitySetResource<T>
     | ODataNavigationPropertyResource<T>
     | ODataPropertyResource<T> {
-    return ODataModelOptions.resource<T>(this, query) as
+    return ODataModelOptions.resource<T>(this) as
       | ODataEntitySetResource<T>
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>;

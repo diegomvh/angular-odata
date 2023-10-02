@@ -1004,8 +1004,7 @@ export class ODataModelOptions<T> {
   }
 
   static resource<T>(
-    child: ODataModel<T> | ODataCollection<T, ODataModel<T>>,
-    query: boolean = true
+    child: ODataModel<T> | ODataCollection<T, ODataModel<T>>
   ): ODataResource<T> {
     let resource: ODataResource<any> | null = null;
     let prevField: ODataModelField<any> | null = null;
@@ -1027,11 +1026,11 @@ export class ODataModelOptions<T> {
               : (resource as ODataEntityResource<T>).key(modelKey);
       }
       prevField = field;
-      if (field === null && query) {
+      if (field === null) {
         // Apply the query from model to new resource
         const query = model._resource?.cloneQuery<T>().toQueryArguments();
         if (query !== undefined) resource.query((q) => q.apply(query));
-      } else if (field !== null) {
+      } else {
         resource = field.resourceFactory<any, any>(resource);
       }
     }
@@ -1448,7 +1447,7 @@ export class ODataModelOptions<T> {
     // Add id
     if (include_id) {
       entity[this.api.options.helper.ODATA_ID] = `${self.asEntity((e) =>
-        e.resource(false)
+        e.resource().clearQuery()
       )}`;
     }
 

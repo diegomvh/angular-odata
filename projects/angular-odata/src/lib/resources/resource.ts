@@ -302,6 +302,7 @@ export class ODataResource<T> {
   //#region Query Options
   clearQuery() {
     this.queryOptions.clear();
+    return this;
   }
 
   cloneQuery<P>() {
