@@ -52,14 +52,14 @@ export class ComputeExpression<T> extends Expression<T> {
   override toJson() {
     const json = super.toJson();
     return Object.assign(json, {
-      names: this.names
+      names: this.names,
     });
   }
 
   static fromJson<T>(json: { [name: string]: any }): ComputeExpression<T> {
     return new ComputeExpression<T>({
       children: json['children'].map((c: any) => RenderableFactory(c)),
-      names: json['names']
+      names: json['names'],
     });
   }
 
@@ -68,13 +68,13 @@ export class ComputeExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   } = {}): string {
     let children = this._children.map((n) =>
       n.render({ aliases, escape, prefix, parser, options }),

@@ -17,21 +17,23 @@ function pathSegmentsBuilder(
   segment: ODataSegment,
   escape: boolean = false,
   parser?: Parser<any>,
-  options?: ParserOptions 
+  options?: ParserOptions,
 ): [string, { [name: string]: any }] {
   if (segment.name === PathSegment.function) {
     let [path, params] = segment.parameters
       ? buildPathAndQuery({
-        func: { [segment.path]: segment.parameters },
-        escape,
-      })
+          func: { [segment.path]: segment.parameters },
+          escape,
+        })
       : buildPathAndQuery({ func: segment.path, escape });
     if (path.startsWith(PATH_SEPARATOR)) {
       path = path.slice(1);
     }
     // HACK: Remove parenthesis
-    if (path.endsWith('()') && options?.nonParenthesisForEmptyParameterFunction)
-    {
+    if (
+      path.endsWith('()') &&
+      options?.nonParenthesisForEmptyParameterFunction
+    ) {
       path = path.substring(0, path.length - 2);
     }
 
@@ -64,13 +66,19 @@ export class ODataPathSegments {
     escape,
     parser,
     options,
-  }: { escape?: boolean; parser?: Parser<any>; options?: ParserOptions } = {}): [
-    string,
-    { [name: string]: any },
-  ] {
+  }: {
+    escape?: boolean;
+    parser?: Parser<any>;
+    options?: ParserOptions;
+  } = {}): [string, { [name: string]: any }] {
     const result = this._segments.reduce(
       (acc, segment) => {
-        const [path, params] = pathSegmentsBuilder(segment, escape, parser, options);
+        const [path, params] = pathSegmentsBuilder(
+          segment,
+          escape,
+          parser,
+          options,
+        );
         acc.paths.push(path);
         acc.params = Object.assign(acc.params, params);
         return acc;
@@ -101,9 +109,7 @@ export class ODataPathSegments {
     return segments.map((s) => s.key() as EntityKey<any> | undefined);
   }
 
-  toString({
-    escape,
-  }: { escape?: boolean; } = {}): string {
+  toString({ escape }: { escape?: boolean } = {}): string {
     const [path, params] = this.pathAndParams({ escape });
     return (
       path +

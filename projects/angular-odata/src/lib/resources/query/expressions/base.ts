@@ -22,7 +22,7 @@ export abstract class Expression<T> implements Renderable {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;

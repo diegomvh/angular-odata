@@ -4,11 +4,7 @@ import {
   HttpResponse,
   HttpResponseBase,
 } from '@angular/common/http';
-import {
-  map,
-  Observable,
-  Subject,
-} from 'rxjs';
+import { map, Observable, Subject } from 'rxjs';
 import { ODataApi } from '../../api';
 import {
   $BATCH,

@@ -139,7 +139,9 @@ describe('ODataResource', () => {
     const fun: ODataFunctionResource<any, any> = set.function<any, any>(
       'NS.MyFunction',
     );
-    expect(fun.toString({nonParenthesisForEmptyParameterFunction: true})).toEqual('People/NS.MyFunction');
+    expect(
+      fun.toString({ nonParenthesisForEmptyParameterFunction: true }),
+    ).toEqual('People/NS.MyFunction');
   });
 
   it('should create entity function', () => {
@@ -163,7 +165,9 @@ describe('ODataResource', () => {
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>(
       'NS.MyFunction',
     );
-    expect(fun.toString({nonParenthesisForEmptyParameterFunction: true})).toEqual("People('russellwhyte')/NS.MyFunction");
+    expect(
+      fun.toString({ nonParenthesisForEmptyParameterFunction: true }),
+    ).toEqual("People('russellwhyte')/NS.MyFunction");
   });
 
   it('should create entity function and change parameters', () => {

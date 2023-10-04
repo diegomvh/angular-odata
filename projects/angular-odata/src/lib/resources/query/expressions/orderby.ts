@@ -8,7 +8,7 @@ export class OrderByField implements Renderable {
   constructor(
     protected field: Renderable,
     protected order: 'asc' | 'desc',
-  ) { }
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'OrderByField';
@@ -27,16 +27,21 @@ export class OrderByField implements Renderable {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
-    options?: ParserOptions
+    options?: ParserOptions;
   }): string {
-    return `${render(this.field, { aliases, escape, prefix, parser, options })} ${this.order
-      }`;
+    return `${render(this.field, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      options,
+    })} ${this.order}`;
   }
 
   clone() {
@@ -98,13 +103,13 @@ export class OrderByExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   } = {}): string {
     let content = this._children
       .map((n) => n.render({ aliases, escape, prefix, parser, options }))

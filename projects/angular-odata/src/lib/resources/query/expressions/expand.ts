@@ -6,13 +6,19 @@ import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
 import { SearchExpression, SearchExpressionBuilder } from './search';
 import { SelectExpression, SelectExpressionBuilder } from './select';
-import { FieldFactory, render, Renderable, RenderableFactory, resolve } from './syntax';
+import {
+  FieldFactory,
+  render,
+  Renderable,
+  RenderableFactory,
+  resolve,
+} from './syntax';
 
 export class ExpandField<T> implements Renderable {
   constructor(
     protected field: any,
     private values: { [name: string]: any } = {},
-  ) { }
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'ExpandField';
@@ -29,13 +35,13 @@ export class ExpandField<T> implements Renderable {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   }): string {
     parser = resolve([this.field], parser);
     const params: { [name: string]: string } = [
@@ -58,12 +64,18 @@ export class ExpandField<T> implements Renderable {
             prefix,
             escape,
             parser,
-            options
+            options,
           });
         }
         return Object.assign(acc, { [key]: value });
       }, {});
-    let expand = `${render(this.field, { aliases, escape, prefix, parser, options })}`;
+    let expand = `${render(this.field, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      options,
+    })}`;
     if (!Types.isEmpty(params)) {
       expand = `${expand}(${Object.keys(params)
         .map((key) => `$${key}=${params[key]}`)
@@ -213,13 +225,13 @@ export class ExpandExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   } = {}): string {
     return this._children
       .map((n) => n.render({ aliases, escape, prefix, parser, options }))

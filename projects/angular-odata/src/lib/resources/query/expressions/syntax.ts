@@ -24,7 +24,7 @@ export interface Renderable {
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
-    options?: ParserOptions
+    options?: ParserOptions;
   }): string;
   toString(): string;
   toJson(): any;
@@ -64,7 +64,7 @@ export const FieldFactory = <T extends object>(names: string[] = []): any =>
   });
 
 export const RenderableFactory = (value: any): Renderable => {
-  if (Types.isPlainObject(value) && "$type" in value) {
+  if (Types.isPlainObject(value) && '$type' in value) {
     switch (value.$type) {
       case 'SelectExpression':
         return SelectExpression.fromJson(value);
@@ -95,7 +95,7 @@ export const RenderableFactory = (value: any): Renderable => {
     }
   }
   return value;
-}
+};
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
@@ -104,7 +104,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
         derivedCtor.prototype,
         name,
         Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-        Object.create(null),
+          Object.create(null),
       );
     });
   });
@@ -118,18 +118,24 @@ export function render(
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     normalize?: boolean;
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
-    options?: ParserOptions
+    options?: ParserOptions;
   } = {},
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
-    return render(value(syntax), { aliases, normalize, prefix, parser, options });
+    return render(value(syntax), {
+      aliases,
+      normalize,
+      prefix,
+      parser,
+      options,
+    });
   }
   if (Types.isObject(value) && 'render' in value) {
     return render(value.render({ aliases, escape, prefix, parser, options }), {
@@ -138,7 +144,7 @@ export function render(
       escape,
       prefix,
       parser,
-      options
+      options,
     });
   }
   return normalize ? normalizeValue(value, { aliases, escape }) : value;
@@ -156,7 +162,11 @@ export function resolve(values: any, parser?: Parser<any>) {
   return parser;
 }
 
-export function encode(values: any, parser?: Parser<any>, options?: ParserOptions) {
+export function encode(
+  values: any,
+  parser?: Parser<any>,
+  options?: ParserOptions,
+) {
   if (parser !== undefined) {
     return values.map((v: any) => {
       if (Types.isArray(v)) return encode(v, parser, options);
@@ -177,7 +187,7 @@ export class Function<T> implements Renderable {
     protected values: any[],
     protected normalize: Normalize,
     protected escape: boolean = false,
-  ) { }
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'Function';
@@ -199,7 +209,7 @@ export class Function<T> implements Renderable {
       json['name'],
       json['values'].map((v: any) => RenderableFactory(v)),
       json['normalize'],
-      json['escape']
+      json['escape'],
     );
   }
 
@@ -214,7 +224,7 @@ export class Function<T> implements Renderable {
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   }): string {
     parser = resolve(this.values, parser);
     let [left, ...values] = encode(this.values, parser, options);
@@ -408,7 +418,7 @@ export class Operator<T> implements Renderable {
     protected op: string,
     protected values: any[],
     protected normalize: Normalize,
-  ) { }
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'Operator';
@@ -429,7 +439,8 @@ export class Operator<T> implements Renderable {
     return new Operator<T>(
       json['op'],
       json['values'].map((v: any) => RenderableFactory(v)),
-      json['normalize']);
+      json['normalize'],
+    );
   }
 
   render({
@@ -443,7 +454,7 @@ export class Operator<T> implements Renderable {
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   }): string {
     parser = resolve(this.values, parser);
     let [left, right] = encode(this.values, parser, options);
@@ -458,24 +469,24 @@ export class Operator<T> implements Renderable {
     if (right !== undefined) {
       right = Array.isArray(right)
         ? `(${right
-          .map((v) =>
-            render(v, {
-              aliases,
-              escape,
-              prefix,
-              parser,
-              normalize:
-                this.normalize === 'all' || this.normalize === 'right',
-            }),
-          )
-          .join(',')})`
+            .map((v) =>
+              render(v, {
+                aliases,
+                escape,
+                prefix,
+                parser,
+                normalize:
+                  this.normalize === 'all' || this.normalize === 'right',
+              }),
+            )
+            .join(',')})`
         : render(right, {
-          aliases,
-          escape,
-          prefix,
-          parser,
-          normalize: this.normalize === 'all' || this.normalize === 'right',
-        });
+            aliases,
+            escape,
+            prefix,
+            parser,
+            normalize: this.normalize === 'all' || this.normalize === 'right',
+          });
       return `${left} ${this.op} ${right}`;
     }
     return `${this.op}(${left})`;
@@ -550,7 +561,7 @@ export class ArithmeticOperators<T> {
 }
 
 export class Grouping<T> implements Renderable {
-  constructor(protected group: Renderable) { }
+  constructor(protected group: Renderable) {}
 
   get [Symbol.toStringTag]() {
     return 'Grouping';
@@ -564,11 +575,8 @@ export class Grouping<T> implements Renderable {
   }
 
   static fromJson<T>(json: { [name: string]: any }): Grouping<T> {
-    return new Grouping<T>(
-      json['group'].map((v: any) => RenderableFactory(v))
-    );
+    return new Grouping<T>(json['group'].map((v: any) => RenderableFactory(v)));
   }
-
 
   render({
     aliases,
@@ -581,7 +589,7 @@ export class Grouping<T> implements Renderable {
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   }): string {
     return `(${render(this.group, { aliases, escape, prefix, parser })})`;
   }
@@ -596,7 +604,7 @@ export class Lambda<T> implements Renderable {
     protected op: string,
     protected values: any[],
     protected alias?: string,
-  ) { }
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'Lambda';
@@ -617,7 +625,8 @@ export class Lambda<T> implements Renderable {
     return new Lambda<T>(
       json['op'],
       json['values'].map((v: any) => RenderableFactory(v)),
-      json['alias']);
+      json['alias'],
+    );
   }
 
   render({
@@ -631,7 +640,7 @@ export class Lambda<T> implements Renderable {
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   }): string {
     parser = resolve(this.values, parser);
     let [left, right] = encode(this.values, parser, options);
@@ -669,11 +678,11 @@ export class LambdaOperators<T> {
   }
 }
 
-export class ODataOperators<T> { }
+export class ODataOperators<T> {}
 export interface ODataOperators<T>
   extends LogicalOperators<T>,
-  ArithmeticOperators<T>,
-  LambdaOperators<T> { }
+    ArithmeticOperators<T>,
+    LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
@@ -682,16 +691,16 @@ applyMixins(ODataOperators, [
 ]);
 export const operators: ODataOperators<any> = new ODataOperators<any>();
 
-export class ODataFunctions<T> { }
+export class ODataFunctions<T> {}
 export interface ODataFunctions<T>
   extends StringAndCollectionFunctions<T>,
-  CollectionFunctions<T>,
-  StringFunctions<T>,
-  DateAndTimeFunctions<T>,
-  ArithmeticFunctions<T>,
-  TypeFunctions<T>,
-  GeoFunctions<T>,
-  ConditionalFunctions<T> { }
+    CollectionFunctions<T>,
+    StringFunctions<T>,
+    DateAndTimeFunctions<T>,
+    ArithmeticFunctions<T>,
+    TypeFunctions<T>,
+    GeoFunctions<T>,
+    ConditionalFunctions<T> {}
 
 applyMixins(ODataFunctions, [
   StringAndCollectionFunctions,
@@ -705,8 +714,8 @@ applyMixins(ODataFunctions, [
 ]);
 export const functions: ODataFunctions<any> = new ODataFunctions<any>();
 
-export class ODataSyntax<T> { }
-export interface ODataSyntax<T> extends ODataOperators<T>, ODataFunctions<T> { }
+export class ODataSyntax<T> {}
+export interface ODataSyntax<T> extends ODataOperators<T>, ODataFunctions<T> {}
 applyMixins(ODataSyntax, [ODataOperators, ODataFunctions]);
 
 export const syntax: ODataSyntax<any> = new ODataSyntax<any>();

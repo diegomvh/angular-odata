@@ -7,14 +7,14 @@ export type ODataOptions = {
   context?: HttpContext;
   headers?: HttpHeaders | { [header: string]: string | string[] };
   params?:
-  | HttpParams
-  | {
-    [param: string]:
-    | string
-    | number
-    | boolean
-    | ReadonlyArray<string | number | boolean>;
-  };
+    | HttpParams
+    | {
+        [param: string]:
+          | string
+          | number
+          | boolean
+          | ReadonlyArray<string | number | boolean>;
+      };
   reportProgress?: boolean;
   withCredentials?: boolean;
   fetchPolicy?: FetchPolicy;

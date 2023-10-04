@@ -51,13 +51,13 @@ export class SelectExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   } = {}): string {
     return this._children
       .map((n) => n.render({ aliases, escape, prefix, parser, options }))

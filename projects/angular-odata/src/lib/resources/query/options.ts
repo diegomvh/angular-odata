@@ -44,8 +44,10 @@ export class ODataQueryOptions<T> {
 
   constructor(values?: Map<QueryOption, any> | { [name: string]: any }) {
     if (!(values instanceof Map)) {
-      const entries = Object.entries(values || {})
-        .map(([key, value]) => [key, RenderableFactory(value)]) as [QueryOption, any][];
+      const entries = Object.entries(values || {}).map(([key, value]) => [
+        key,
+        RenderableFactory(value),
+      ]) as [QueryOption, any][];
       values = new Map(entries);
     }
     this.values = values as Map<QueryOption, any>;
@@ -57,9 +59,9 @@ export class ODataQueryOptions<T> {
     parser,
     options,
   }: { escape?: boolean; parser?: Parser<T>; options?: ParserOptions } = {}): [
-      string,
-      { [name: string]: any },
-    ] {
+    string,
+    { [name: string]: any },
+  ] {
     let aliases: QueryCustomType[] = [];
     let queryOptions = [
       QueryOption.select,
@@ -86,11 +88,18 @@ export class ODataQueryOptions<T> {
         ) {
           value = Types.isArray(value)
             ? value.map((v: Expression<T>) =>
-              Types.rawType(v).endsWith('Expression')
-                ? raw(v.render({ aliases, escape, parser, options }))
-                : v,
-            )
-            : raw((value as Expression<T>).render({ aliases, escape, parser, options }));
+                Types.rawType(v).endsWith('Expression')
+                  ? raw(v.render({ aliases, escape, parser, options }))
+                  : v,
+              )
+            : raw(
+                (value as Expression<T>).render({
+                  aliases,
+                  escape,
+                  parser,
+                  options,
+                }),
+              );
         }
         return Object.assign(acc, { [key]: value });
       }, {});

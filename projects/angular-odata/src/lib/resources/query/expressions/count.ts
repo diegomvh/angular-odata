@@ -9,7 +9,7 @@ export class CountField<T> implements Renderable {
   constructor(
     protected field: any,
     private values: { [name: string]: any } = {},
-  ) { }
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'CountField';
@@ -26,13 +26,13 @@ export class CountField<T> implements Renderable {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   }): string {
     const params: { [name: string]: string } = [
       QueryOption.filter,
@@ -47,7 +47,7 @@ export class CountField<T> implements Renderable {
             prefix,
             escape,
             parser,
-            options
+            options,
           });
         }
         return Object.assign(acc, { [key]: value });
@@ -57,7 +57,7 @@ export class CountField<T> implements Renderable {
       escape,
       prefix,
       parser,
-      options
+      options,
     })}/$count`;
     if (!Types.isEmpty(params)) {
       count = `${count}(${Object.keys(params)
@@ -148,13 +148,13 @@ export class CountExpression<T> extends Expression<T> {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<T>;
-    options?: ParserOptions
+    options?: ParserOptions;
   } = {}): string {
     let content = this._children
       .map((n) => n.render({ aliases, escape, prefix, parser, options }))

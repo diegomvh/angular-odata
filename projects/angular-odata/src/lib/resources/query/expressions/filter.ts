@@ -92,13 +92,13 @@ export class FilterExpression<F> extends Expression<F> {
     escape,
     prefix,
     parser,
-    options
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser<any>;
-    options?: ParserOptions
+    options?: ParserOptions;
   } = {}): string {
     let content = this._children
       .map((n) => n.render({ aliases, escape, prefix, parser, options }))
