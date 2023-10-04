@@ -1327,9 +1327,7 @@ export class ODataModelOptions<T> {
   }
   asEntity<R, M extends ODataModel<T>>(self: M, ctx: (model: M) => R): R {
     // Build new resource
-    const resource = this.modelResourceFactory(
-      self.resource()?.cloneQuery<T>()
-    );
+    const resource = this.modelResourceFactory(self._resource?.cloneQuery<T>());
     return this.withResource(self, resource, ctx);
   }
 

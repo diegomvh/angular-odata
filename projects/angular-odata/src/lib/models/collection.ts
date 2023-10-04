@@ -236,7 +236,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   asEntitySet<R>(ctx: (collection: this) => R): R {
     // Build new resource
     const resource = this._model.meta.collectionResourceFactory(
-      this.resource()?.cloneQuery<T>()
+      this._resource?.cloneQuery<T>()
     );
     return this.withResource(resource, ctx);
   }
