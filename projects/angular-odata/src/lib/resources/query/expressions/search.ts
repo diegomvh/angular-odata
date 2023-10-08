@@ -45,6 +45,9 @@ export class SearchTerm implements Renderable {
   clone() {
     return new SearchTerm(this.value);
   }
+  resolve(parser: any) {
+    return parser;
+  }
 }
 
 export type SearchExpressionBuilder<T> = {
@@ -74,22 +77,22 @@ export class SearchExpression<T> extends Expression<T> {
   static search<T>(
     opts: (
       builder: SearchExpressionBuilder<T>,
-      current?: SearchExpression<T>,
+      current?: SearchExpression<T>
     ) => SearchExpression<T>,
-    current?: SearchExpression<T>,
+    current?: SearchExpression<T>
   ): SearchExpression<T> {
     return opts(
       {
         e: (connector: SearchConnector = 'AND') =>
           new SearchExpression<T>({ connector }),
       },
-      current,
+      current
     ) as SearchExpression<T>;
   }
 
   private _add(
     node: Renderable,
-    connector?: SearchConnector,
+    connector?: SearchConnector
   ): SearchExpression<T> {
     if (connector !== undefined && this._connector !== connector) {
       let children: Renderable[] = [];
@@ -129,7 +132,7 @@ export class SearchExpression<T> extends Expression<T> {
       this._children.push(
         node instanceof SearchExpression && !node.negated()
           ? new Grouping(node)
-          : node,
+          : node
       );
     }
     return this;

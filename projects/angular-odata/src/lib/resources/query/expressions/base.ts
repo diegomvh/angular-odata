@@ -47,4 +47,8 @@ export abstract class Expression<T> implements Renderable {
       children: this._children.map((c) => c.toJson()),
     };
   }
+
+  resolve(parser: any) {
+    return parser;
+  }
 }

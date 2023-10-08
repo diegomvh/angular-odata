@@ -25,7 +25,7 @@ type JsonSchemaSelect<T> = Array<keyof T>;
 type JsonSchemaCustom<T> = {
   [P in keyof T]?: (
     schema: any,
-    field: ODataStructuredTypeFieldParser<T[P]>,
+    field: ODataStructuredTypeFieldParser<T[P]>
   ) => any;
 };
 type JsonSchemaExpand<T> = { [P in keyof T]?: JsonSchemaOptions<T[P]> };
@@ -82,7 +82,7 @@ export class ODataStructuredTypeFieldParser<T>
   constructor(
     name: string,
     structuredType: ODataStructuredTypeParser<any>,
-    field: StructuredTypeFieldConfig,
+    field: StructuredTypeFieldConfig
   ) {
     super(field);
     this.name = name;
@@ -90,7 +90,7 @@ export class ODataStructuredTypeFieldParser<T>
     this.type = field.type;
     this.parser = NONE_PARSER;
     this.referentials = (field.referentials || []).map(
-      (referential) => new ODataReferential(referential),
+      (referential) => new ODataReferential(referential)
     );
     this.default = field.default;
     this.maxLength = field.maxLength;
@@ -109,7 +109,7 @@ export class ODataStructuredTypeFieldParser<T>
     }: {
       method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {},
+    } = {}
   ):
     | { [name: string]: any }
     | { [name: string]: any }[]
@@ -160,7 +160,7 @@ export class ODataStructuredTypeFieldParser<T>
   private parse(
     parser: ODataStructuredTypeParser<T>,
     value: any,
-    options?: ParserOptions,
+    options?: ParserOptions
   ): any {
     const type =
       options !== undefined && Types.isPlainObject(value)
@@ -193,7 +193,7 @@ export class ODataStructuredTypeFieldParser<T>
   private toJson(
     parser: ODataStructuredTypeParser<T>,
     value: any,
-    options?: ParserOptions,
+    options?: ParserOptions
   ): any {
     const type =
       options !== undefined && Types.isPlainObject(value)
@@ -347,10 +347,10 @@ export class ODataStructuredTypeFieldParser<T>
   field<F>(name: string) {
     if (this.isStructuredType())
       return (this.parser as ODataStructuredTypeParser<T>).field<F>(
-        name as keyof T,
+        name as keyof T
       );
     throw new Error(
-      `The field ${this.name} is not related to a StructuredType`,
+      `The field ${this.name} is not related to a StructuredType`
     );
   }
 }
@@ -373,7 +373,7 @@ export class ODataStructuredTypeParser<T>
   constructor(
     config: StructuredTypeConfig<T>,
     namespace: string,
-    alias?: string,
+    alias?: string
   ) {
     super(config);
     this.name = config.name;
@@ -384,13 +384,13 @@ export class ODataStructuredTypeParser<T>
     if (Array.isArray(config.keys))
       this._keys = config.keys.map((key) => new ODataEntityTypeKey(key));
     Object.entries<StructuredTypeFieldConfig>(
-      config.fields as { [P in keyof T]: StructuredTypeFieldConfig },
+      config.fields as { [P in keyof T]: StructuredTypeFieldConfig }
     ).forEach(([name, config]) => this.addField(name, config));
   }
 
   addField<F>(
     name: string,
-    config: StructuredTypeFieldConfig,
+    config: StructuredTypeFieldConfig
   ): ODataStructuredTypeFieldParser<F> {
     const field = new ODataStructuredTypeFieldParser<F>(name, this, config);
     this._fields.push(field);
@@ -419,12 +419,18 @@ export class ODataStructuredTypeParser<T>
     return false;
   }
 
+  isSupertypeOf(type: string): boolean {
+    return (
+      this.isTypeOf(type) || this.children.some((c) => c.isSupertypeOf(type))
+    );
+  }
+
   isOpenType() {
     return this.open;
   }
 
   findChildParser(
-    predicate: (p: ODataStructuredTypeParser<any>) => boolean,
+    predicate: (p: ODataStructuredTypeParser<any>) => boolean
   ): ODataStructuredTypeParser<any> | undefined {
     if (predicate(this)) return this;
     let match: ODataStructuredTypeParser<any> | undefined;
@@ -436,7 +442,7 @@ export class ODataStructuredTypeParser<T>
   }
 
   childParser(
-    predicate: (p: ODataStructuredTypeParser<any>) => boolean,
+    predicate: (p: ODataStructuredTypeParser<any>) => boolean
   ): Parser<any> {
     return this.findChildParser(predicate) || NONE_PARSER;
   }
@@ -449,9 +455,7 @@ export class ODataStructuredTypeParser<T>
       include_parents: true,
     }).filter(
       (f) =>
-        f.name in value &&
-        value[f.name] !== undefined &&
-        value[f.name] !== null,
+        f.name in value && value[f.name] !== undefined && value[f.name] !== null
     );
     return {
       ...value,
@@ -460,7 +464,7 @@ export class ODataStructuredTypeParser<T>
           ...acc,
           [f.name]: f.deserialize(value[f.name], parserOptions),
         }),
-        {},
+        {}
       ),
     };
   }
@@ -475,7 +479,7 @@ export class ODataStructuredTypeParser<T>
       (f) =>
         f.name in value &&
         (value as any)[f.name] !== undefined &&
-        (value as any)[f.name] !== null,
+        (value as any)[f.name] !== null
     );
     return {
       ...value,
@@ -484,7 +488,7 @@ export class ODataStructuredTypeParser<T>
           ...acc,
           [f.name]: f.serialize((value as any)[f.name], parserOptions),
         }),
-        {},
+        {}
       ),
     };
   }
@@ -511,7 +515,7 @@ export class ODataStructuredTypeParser<T>
       this.parent = parent;
     }
     this._fields.forEach((f) =>
-      f.configure({ options, parserForType, findOptionsForType }),
+      f.configure({ options, parserForType, findOptionsForType })
     );
   }
 
@@ -533,7 +537,7 @@ export class ODataStructuredTypeParser<T>
         ? this.parent.fields({ include_parents, include_navigation })
         : []),
       ...this._fields.filter(
-        (field) => include_navigation || !field.navigation,
+        (field) => include_navigation || !field.navigation
       ),
     ];
   }
@@ -603,11 +607,11 @@ export class ODataStructuredTypeParser<T>
       include_navigation?: boolean;
       include_etag?: boolean;
       options?: ParserOptions;
-    } = {},
+    } = {}
   ): Partial<T> {
     const parserOptions = options || this.parserOptions;
     const names = this.fields({ include_parents, include_navigation }).map(
-      (f) => f.name,
+      (f) => f.name
     );
     return Object.keys(attrs)
       .filter(
@@ -615,7 +619,7 @@ export class ODataStructuredTypeParser<T>
           names.indexOf(key) !== -1 ||
           (key ==
             ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG &&
-            include_etag),
+            include_etag)
       )
       .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
   }
@@ -625,7 +629,7 @@ export class ODataStructuredTypeParser<T>
     {
       resolve = true,
       single = true,
-    }: { resolve?: boolean; single?: boolean } = {},
+    }: { resolve?: boolean; single?: boolean } = {}
   ): any {
     const keyTypes = this.keys({ include_parents: true });
     const key = new Map<string, any>();
@@ -687,7 +691,7 @@ export class ODataStructuredTypeParser<T>
     }).filter(
       (f) =>
         (!f.navigation || (options.expand && f.name in options.expand)) &&
-        (!options.select || (<string[]>options.select).indexOf(f.name) !== -1),
+        (!options.select || (<string[]>options.select).indexOf(f.name) !== -1)
     );
     schema.properties = Object.assign(
       {},
@@ -703,12 +707,12 @@ export class ODataStructuredTypeParser<T>
             schema = (
               options.custom[f.name as keyof T] as (
                 schema: any,
-                field: ODataStructuredTypeFieldParser<any>,
+                field: ODataStructuredTypeFieldParser<any>
               ) => any
             )(schema, f);
           return { [f.name]: schema };
         })
-        .reduce((acc, v) => Object.assign(acc, v), {}),
+        .reduce((acc, v) => Object.assign(acc, v), {})
     );
     schema.required = [
       ...schema.required,
@@ -716,7 +720,7 @@ export class ODataStructuredTypeParser<T>
         .filter((f) =>
           options.required && f.name in options.required
             ? options.required[f.name as keyof T]
-            : !f.nullable,
+            : !f.nullable
         )
         .map((f) => f.name),
     ];
@@ -732,7 +736,7 @@ export class ODataStructuredTypeParser<T>
       create?: boolean;
       method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {},
+    } = {}
   ): { [name: string]: any } | undefined {
     const errors = {} as { [name: string]: any };
     const fields = this.fields({

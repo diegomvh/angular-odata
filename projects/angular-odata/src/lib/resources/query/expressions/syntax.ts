@@ -29,15 +29,20 @@ export interface Renderable {
   toString(): string;
   toJson(): any;
   clone(): any;
+  resolve(parser: any): any;
 }
 
-export const FieldFactory = <T extends object>(names: string[] = []): any =>
+export const FieldFactory = <T extends object>(
+  names: (string | Renderable)[] = []
+): any =>
   new Proxy({ _names: names } as T, {
     get(target: T, key: string | symbol) {
-      let names = (target as any)['_names'];
+      let names = (target as any)['_names'] as (string | Renderable)[];
       if (key === 'render') {
-        return ({ prefix }: { prefix?: string }) =>
-          prefix ? `${prefix}/${names.join('/')}` : names.join('/');
+        return ({ prefix }: { prefix?: string }) => {
+          const vls = names.map((n: any) => render(n));
+          return prefix ? `${prefix}/${vls.join('/')}` : vls.join('/');
+        };
       } else if (key === 'clone') {
         return () => FieldFactory([...names]);
       } else if (key === 'isField') {
@@ -49,9 +54,13 @@ export const FieldFactory = <T extends object>(names: string[] = []): any =>
         });
       } else if (key === 'resolve') {
         return (parser: any) =>
-          names.reduce((acc: any, name: string) => acc.field(name), parser);
+          names.reduce(
+            (acc: any, name: string | Renderable) =>
+              typeof name === 'string' ? acc.field(name) : name.resolve(parser),
+            parser
+          );
       } else {
-        return FieldFactory([...names, key]);
+        return FieldFactory([...names, key as string]);
       }
     },
 
@@ -104,7 +113,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
         derivedCtor.prototype,
         name,
         Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null),
+          Object.create(null)
       );
     });
   });
@@ -126,7 +135,7 @@ export function render(
     prefix?: string;
     parser?: Parser<any>;
     options?: ParserOptions;
-  } = {},
+  } = {}
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
     return render(value(syntax), {
@@ -153,7 +162,7 @@ export function render(
 export function resolve(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
     let fields = values.filter(
-      (v: any) => Types.isObject(v) && 'isField' in v && v.isField(),
+      (v: any) => Types.isObject(v) && 'isField' in v && v.isField()
     );
     if (fields.length === 1 && Types.isObject(parser) && 'field' in parser) {
       return fields[0].resolve(parser);
@@ -165,7 +174,7 @@ export function resolve(values: any, parser?: Parser<any>) {
 export function encode(
   values: any,
   parser?: Parser<any>,
-  options?: ParserOptions,
+  options?: ParserOptions
 ) {
   if (parser !== undefined) {
     return values.map((v: any) => {
@@ -186,7 +195,7 @@ export class Function<T> implements Renderable {
     protected name: string,
     protected values: any[],
     protected normalize: Normalize,
-    protected escape: boolean = false,
+    protected escape: boolean = false
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -198,7 +207,7 @@ export class Function<T> implements Renderable {
       $type: Types.rawType(this),
       name: this.name,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v
       ),
       normalize: this.normalize,
     };
@@ -209,7 +218,7 @@ export class Function<T> implements Renderable {
       json['name'],
       json['values'].map((v: any) => RenderableFactory(v)),
       json['normalize'],
-      json['escape'],
+      json['escape']
     );
   }
 
@@ -235,6 +244,7 @@ export class Function<T> implements Renderable {
       prefix,
       parser,
       normalize: this.normalize === 'all' || this.normalize === 'left',
+      options,
     });
     const params = [
       left,
@@ -245,7 +255,8 @@ export class Function<T> implements Renderable {
           prefix,
           parser,
           normalize: this.normalize === 'all' || this.normalize === 'right',
-        }),
+          options,
+        })
       ),
     ];
     return `${this.name}(${params.join(', ')})`;
@@ -256,8 +267,12 @@ export class Function<T> implements Renderable {
       this.name,
       this.values.map((v) => Objects.clone(v)),
       this.normalize,
-      this.escape,
+      this.escape
     );
+  }
+
+  resolve(parser: any) {
+    return parser;
   }
 }
 
@@ -290,7 +305,7 @@ export class StringAndCollectionFunctions<T> {
     left: any,
     right: number,
     length?: number,
-    normalize: Normalize = 'none',
+    normalize: Normalize = 'none'
   ) {
     let values = [left, right];
     if (length !== undefined) {
@@ -313,7 +328,7 @@ export class StringFunctions<T> {
   matchesPattern(
     left: any | string,
     pattern: string,
-    normalize: Normalize = 'none',
+    normalize: Normalize = 'none'
   ) {
     return new Function<T>('matchesPattern', [left, pattern], normalize);
   }
@@ -386,12 +401,18 @@ export class ArithmeticFunctions<T> {
 }
 
 export class TypeFunctions<T> {
-  cast(left: T | string, right?: string, normalize: Normalize = 'right') {
-    return new Function<T>('cast', [left, right], normalize);
+  cast<N>(left: T | string, type?: string): N {
+    return FieldFactory<Readonly<Required<N>>>([
+      type !== undefined
+        ? new Type<T>('cast', type, left)
+        : new Type<T>('cast', left as string),
+    ]);
   }
 
-  isof(left: T | string, right?: string, normalize: Normalize = 'right') {
-    return new Function<T>('isof', [left, right], normalize);
+  isof<N>(left: T | string, type?: string) {
+    return type !== undefined
+      ? new Type<T>('isof', type, left)
+      : new Type<T>('isof', left as string);
   }
 }
 
@@ -417,7 +438,7 @@ export class Operator<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: Normalize,
+    protected normalize: Normalize
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -429,7 +450,7 @@ export class Operator<T> implements Renderable {
       $type: Types.rawType(this),
       op: this.op,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v
       ),
       normalize: this.normalize,
     };
@@ -439,7 +460,7 @@ export class Operator<T> implements Renderable {
     return new Operator<T>(
       json['op'],
       json['values'].map((v: any) => RenderableFactory(v)),
-      json['normalize'],
+      json['normalize']
     );
   }
 
@@ -465,6 +486,7 @@ export class Operator<T> implements Renderable {
       prefix,
       parser,
       normalize: this.normalize === 'all' || this.normalize === 'left',
+      options,
     });
     if (right !== undefined) {
       right = Array.isArray(right)
@@ -477,7 +499,8 @@ export class Operator<T> implements Renderable {
                 parser,
                 normalize:
                   this.normalize === 'all' || this.normalize === 'right',
-              }),
+                options,
+              })
             )
             .join(',')})`
         : render(right, {
@@ -486,6 +509,7 @@ export class Operator<T> implements Renderable {
             prefix,
             parser,
             normalize: this.normalize === 'all' || this.normalize === 'right',
+            options,
           });
       return `${left} ${this.op} ${right}`;
     }
@@ -496,8 +520,11 @@ export class Operator<T> implements Renderable {
     return new Operator(
       this.op,
       this.values.map((v) => Objects.clone(v)),
-      this.normalize,
+      this.normalize
     );
+  }
+  resolve(parser: any) {
+    return parser;
   }
 }
 
@@ -591,11 +618,85 @@ export class Grouping<T> implements Renderable {
     parser?: Parser<T>;
     options?: ParserOptions;
   }): string {
-    return `(${render(this.group, { aliases, escape, prefix, parser })})`;
+    return `(${render(this.group, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      options,
+    })})`;
   }
 
   clone() {
     return new Grouping(Objects.clone(this.group));
+  }
+  resolve(parser: any) {
+    return parser;
+  }
+}
+
+export class Type<T> implements Renderable {
+  constructor(
+    protected name: string,
+    protected type: string,
+    protected value?: any
+  ) {}
+  get [Symbol.toStringTag]() {
+    return 'Type';
+  }
+
+  toJson() {
+    return {
+      $type: Types.rawType(this),
+      name: this.name,
+      type: this.type,
+      value: this.value,
+    };
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): Type<T> {
+    return new Type<T>(
+      json['name'],
+      json['type'],
+      RenderableFactory(json['value'])
+    );
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>;
+    options?: ParserOptions;
+  }): string {
+    if (this.value) {
+      parser = resolve([this.value], parser);
+      let [left, right] = encode([this.value], parser, options);
+
+      left = render(left, { aliases, escape, prefix, parser });
+      return `${this.name}('${this.type}', ${render(right, {
+        aliases,
+        escape,
+        parser,
+        options,
+      })})`;
+    } else {
+      return `${this.name}('${this.type}')`;
+    }
+  }
+
+  clone() {
+    return new Type(this.type, Objects.clone(this.value));
+  }
+
+  resolve(parser: any) {
+    return parser.findChildParser((p: any) => p.isTypeOf(this.type));
   }
 }
 
@@ -603,7 +704,7 @@ export class Lambda<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected alias?: string,
+    protected alias?: string
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -615,7 +716,7 @@ export class Lambda<T> implements Renderable {
       $type: Types.rawType(this),
       op: this.op,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v
       ),
       alias: this.alias,
     };
@@ -625,7 +726,7 @@ export class Lambda<T> implements Renderable {
     return new Lambda<T>(
       json['op'],
       json['values'].map((v: any) => RenderableFactory(v)),
-      json['alias'],
+      json['alias']
     );
   }
 
@@ -652,6 +753,7 @@ export class Lambda<T> implements Renderable {
         aliases,
         escape,
         prefix: alias,
+        options,
         parser,
       })})`;
     } else {
@@ -663,8 +765,11 @@ export class Lambda<T> implements Renderable {
     return new Lambda(
       this.op,
       this.values.map((v) => Objects.clone(v)),
-      this.alias,
+      this.alias
     );
+  }
+  resolve(parser: any) {
+    return parser;
   }
 }
 

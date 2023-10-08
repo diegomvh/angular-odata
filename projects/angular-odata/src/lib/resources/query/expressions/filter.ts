@@ -47,9 +47,9 @@ export class FilterExpression<F> extends Expression<F> {
   static filter<T>(
     opts: (
       builder: FilterExpressionBuilder<T>,
-      current?: FilterExpression<T>,
+      current?: FilterExpression<T>
     ) => FilterExpression<T>,
-    current?: FilterExpression<T>,
+    current?: FilterExpression<T>
   ): FilterExpression<T> {
     return opts(
       {
@@ -59,7 +59,7 @@ export class FilterExpression<F> extends Expression<F> {
         o: operators as ODataOperators<T>,
         f: functions as ODataFunctions<T>,
       },
-      current,
+      current
     ) as FilterExpression<T>;
   }
 
@@ -119,7 +119,7 @@ export class FilterExpression<F> extends Expression<F> {
 
   private _add(
     node: Renderable,
-    connector?: FilterConnector,
+    connector?: FilterConnector
   ): FilterExpression<F> {
     if (connector !== undefined && this._connector !== connector) {
       let children: Renderable[] = [];
@@ -159,7 +159,7 @@ export class FilterExpression<F> extends Expression<F> {
       this._children.push(
         node instanceof FilterExpression && !node.negated()
           ? new Grouping(node)
-          : node,
+          : node
       );
     }
     return this;
@@ -232,13 +232,17 @@ export class FilterExpression<F> extends Expression<F> {
     opts?: (e: {
       e: (connector?: FilterConnector) => FilterExpression<N>;
       t: N;
+      o: ODataOperators<N>;
+      f: ODataFunctions<N>;
     }) => FilterExpression<N>,
-    alias?: string,
+    alias?: string
   ): FilterExpression<F> {
     let exp = undefined;
     if (opts !== undefined) {
       exp = opts({
         t: FieldFactory<Readonly<Required<N>>>(),
+        o: operators as ODataOperators<N>,
+        f: functions as ODataFunctions<N>,
         e: (connector: FilterConnector = 'and') =>
           new FilterExpression<N>({ connector }),
       }) as FilterExpression<N>;
@@ -248,23 +252,30 @@ export class FilterExpression<F> extends Expression<F> {
 
   all<N>(
     left: N[],
-    opts: (e: {
+    opts?: (e: {
       t: N;
       e: (connector?: FilterConnector) => FilterExpression<N>;
+      o: ODataOperators<N>;
+      f: ODataFunctions<N>;
     }) => FilterExpression<N>,
-    alias?: string,
+    alias?: string
   ): FilterExpression<F> {
-    const exp = opts({
-      t: FieldFactory<Readonly<Required<N>>>(),
-      e: (connector: FilterConnector = 'and') =>
-        new FilterExpression<N>({ connector }),
-    }) as FilterExpression<N>;
+    let exp = undefined;
+    if (opts !== undefined) {
+      exp = opts({
+        t: FieldFactory<Readonly<Required<N>>>(),
+        o: operators as ODataOperators<N>,
+        f: functions as ODataFunctions<N>,
+        e: (connector: FilterConnector = 'and') =>
+          new FilterExpression<N>({ connector }),
+      }) as FilterExpression<N>;
+    }
     return this._add(syntax.all(left, exp, alias));
   }
 
   count<N>(
     left: N[],
-    opts?: (e: { t: N; f: CountField<N> }) => CountExpression<N>,
+    opts?: (e: { t: N; f: CountField<N> }) => CountExpression<N>
   ): FilterExpression<F> {
     return this._add(new CountExpression<N>().field(left, opts));
   }
