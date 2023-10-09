@@ -187,10 +187,10 @@
                                 <a href="#enumTypeForType" >enumTypeForType</a>
                             </li>
                             <li>
-                                <a href="#fromJSON" >fromJSON</a>
+                                <a href="#fromJson" >fromJson</a>
                             </li>
                             <li>
-                                <a href="#fromJSON" >fromJSON</a>
+                                <a href="#fromJson" >fromJson</a>
                             </li>
                             <li>
                                 <a href="#function" >function</a>
@@ -2961,16 +2961,16 @@ Where value is: string type or an string name or an instance of resource.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="fromJSON"></a>
+                    <a name="fromJson"></a>
                     <span class="name">
-                        <span ><b>fromJSON</b></span>
-                        <a href="#fromJSON"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>fromJson</b></span>
+                        <a href="#fromJson"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fromJSON(json: literal type, apiNameOrType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>fromJson(json: literal type, apiNameOrType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -3050,16 +3050,16 @@ Where value is: string type or an string name or an instance of resource.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="fromJSON"></a>
+                    <a name="fromJson"></a>
                     <span class="name">
-                        <span ><b>fromJSON</b></span>
-                        <a href="#fromJSON"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>fromJson</b></span>
+                        <a href="#fromJson"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fromJSON(json: literal type, apiNameOrType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>fromJson(json: literal type, apiNameOrType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -14523,7 +14523,7 @@ export class ODataClient {
   //#endregion
 
   //#region API Resource Proxy Methods
-  fromJSON&lt;E&gt;(
+  fromJson&lt;E&gt;(
     json: { segments: ODataSegment[]; options: { [name: string]: any } },
     apiNameOrType?: string,
   ):
@@ -14531,11 +14531,11 @@ export class ODataClient {
     | ODataEntitySetResource&lt;E&gt;
     | ODataNavigationPropertyResource&lt;E&gt;
     | ODataSingletonResource&lt;E&gt;;
-  fromJSON(
+  fromJson(
     json: { segments: ODataSegment[]; options: { [name: string]: any } },
     apiNameOrType?: string,
   ) {
-    return this.apiFor(apiNameOrType).fromJSON&lt;any&gt;(json);
+    return this.apiFor(apiNameOrType).fromJson&lt;any&gt;(json);
   }
 
   // Requests

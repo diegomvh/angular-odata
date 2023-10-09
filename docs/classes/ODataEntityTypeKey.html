@@ -253,7 +253,7 @@ type JsonSchemaSelect&lt;T&gt; &#x3D; Array&lt;keyof T&gt;;
 type JsonSchemaCustom&lt;T&gt; &#x3D; {
   [P in keyof T]?: (
     schema: any,
-    field: ODataStructuredTypeFieldParser&lt;T[P]&gt;,
+    field: ODataStructuredTypeFieldParser&lt;T[P]&gt;
   ) &#x3D;&gt; any;
 };
 type JsonSchemaExpand&lt;T&gt; &#x3D; { [P in keyof T]?: JsonSchemaOptions&lt;T[P]&gt; };
@@ -310,7 +310,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   constructor(
     name: string,
     structuredType: ODataStructuredTypeParser&lt;any&gt;,
-    field: StructuredTypeFieldConfig,
+    field: StructuredTypeFieldConfig
   ) {
     super(field);
     this.name &#x3D; name;
@@ -318,7 +318,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     this.type &#x3D; field.type;
     this.parser &#x3D; NONE_PARSER;
     this.referentials &#x3D; (field.referentials || []).map(
-      (referential) &#x3D;&gt; new ODataReferential(referential),
+      (referential) &#x3D;&gt; new ODataReferential(referential)
     );
     this.default &#x3D; field.default;
     this.maxLength &#x3D; field.maxLength;
@@ -337,7 +337,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     }: {
       method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {},
+    } &#x3D; {}
   ):
     | { [name: string]: any }
     | { [name: string]: any }[]
@@ -388,7 +388,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   private parse(
     parser: ODataStructuredTypeParser&lt;T&gt;,
     value: any,
-    options?: ParserOptions,
+    options?: ParserOptions
   ): any {
     const type &#x3D;
       options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
@@ -421,7 +421,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   private toJson(
     parser: ODataStructuredTypeParser&lt;T&gt;,
     value: any,
-    options?: ParserOptions,
+    options?: ParserOptions
   ): any {
     const type &#x3D;
       options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
@@ -575,10 +575,10 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   field&lt;F&gt;(name: string) {
     if (this.isStructuredType())
       return (this.parser as ODataStructuredTypeParser&lt;T&gt;).field&lt;F&gt;(
-        name as keyof T,
+        name as keyof T
       );
     throw new Error(
-      &#x60;The field ${this.name} is not related to a StructuredType&#x60;,
+      &#x60;The field ${this.name} is not related to a StructuredType&#x60;
     );
   }
 }
@@ -601,7 +601,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   constructor(
     config: StructuredTypeConfig&lt;T&gt;,
     namespace: string,
-    alias?: string,
+    alias?: string
   ) {
     super(config);
     this.name &#x3D; config.name;
@@ -612,13 +612,13 @@ export class ODataStructuredTypeParser&lt;T&gt;
     if (Array.isArray(config.keys))
       this._keys &#x3D; config.keys.map((key) &#x3D;&gt; new ODataEntityTypeKey(key));
     Object.entries&lt;StructuredTypeFieldConfig&gt;(
-      config.fields as { [P in keyof T]: StructuredTypeFieldConfig },
+      config.fields as { [P in keyof T]: StructuredTypeFieldConfig }
     ).forEach(([name, config]) &#x3D;&gt; this.addField(name, config));
   }
 
   addField&lt;F&gt;(
     name: string,
-    config: StructuredTypeFieldConfig,
+    config: StructuredTypeFieldConfig
   ): ODataStructuredTypeFieldParser&lt;F&gt; {
     const field &#x3D; new ODataStructuredTypeFieldParser&lt;F&gt;(name, this, config);
     this._fields.push(field);
@@ -647,12 +647,18 @@ export class ODataStructuredTypeParser&lt;T&gt;
     return false;
   }
 
+  isSupertypeOf(type: string): boolean {
+    return (
+      this.isTypeOf(type) || this.children.some((c) &#x3D;&gt; c.isSupertypeOf(type))
+    );
+  }
+
   isOpenType() {
     return this.open;
   }
 
   findChildParser(
-    predicate: (p: ODataStructuredTypeParser&lt;any&gt;) &#x3D;&gt; boolean,
+    predicate: (p: ODataStructuredTypeParser&lt;any&gt;) &#x3D;&gt; boolean
   ): ODataStructuredTypeParser&lt;any&gt; | undefined {
     if (predicate(this)) return this;
     let match: ODataStructuredTypeParser&lt;any&gt; | undefined;
@@ -664,7 +670,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   }
 
   childParser(
-    predicate: (p: ODataStructuredTypeParser&lt;any&gt;) &#x3D;&gt; boolean,
+    predicate: (p: ODataStructuredTypeParser&lt;any&gt;) &#x3D;&gt; boolean
   ): Parser&lt;any&gt; {
     return this.findChildParser(predicate) || NONE_PARSER;
   }
@@ -677,9 +683,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
       include_parents: true,
     }).filter(
       (f) &#x3D;&gt;
-        f.name in value &amp;&amp;
-        value[f.name] !&#x3D;&#x3D; undefined &amp;&amp;
-        value[f.name] !&#x3D;&#x3D; null,
+        f.name in value &amp;&amp; value[f.name] !&#x3D;&#x3D; undefined &amp;&amp; value[f.name] !&#x3D;&#x3D; null
     );
     return {
       ...value,
@@ -688,7 +692,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
           ...acc,
           [f.name]: f.deserialize(value[f.name], parserOptions),
         }),
-        {},
+        {}
       ),
     };
   }
@@ -703,7 +707,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
       (f) &#x3D;&gt;
         f.name in value &amp;&amp;
         (value as any)[f.name] !&#x3D;&#x3D; undefined &amp;&amp;
-        (value as any)[f.name] !&#x3D;&#x3D; null,
+        (value as any)[f.name] !&#x3D;&#x3D; null
     );
     return {
       ...value,
@@ -712,7 +716,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
           ...acc,
           [f.name]: f.serialize((value as any)[f.name], parserOptions),
         }),
-        {},
+        {}
       ),
     };
   }
@@ -739,7 +743,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
       this.parent &#x3D; parent;
     }
     this._fields.forEach((f) &#x3D;&gt;
-      f.configure({ options, parserForType, findOptionsForType }),
+      f.configure({ options, parserForType, findOptionsForType })
     );
   }
 
@@ -761,7 +765,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
         ? this.parent.fields({ include_parents, include_navigation })
         : []),
       ...this._fields.filter(
-        (field) &#x3D;&gt; include_navigation || !field.navigation,
+        (field) &#x3D;&gt; include_navigation || !field.navigation
       ),
     ];
   }
@@ -831,11 +835,11 @@ export class ODataStructuredTypeParser&lt;T&gt;
       include_navigation?: boolean;
       include_etag?: boolean;
       options?: ParserOptions;
-    } &#x3D; {},
+    } &#x3D; {}
   ): Partial&lt;T&gt; {
     const parserOptions &#x3D; options || this.parserOptions;
     const names &#x3D; this.fields({ include_parents, include_navigation }).map(
-      (f) &#x3D;&gt; f.name,
+      (f) &#x3D;&gt; f.name
     );
     return Object.keys(attrs)
       .filter(
@@ -843,7 +847,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
           names.indexOf(key) !&#x3D;&#x3D; -1 ||
           (key &#x3D;&#x3D;
             ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG &amp;&amp;
-            include_etag),
+            include_etag)
       )
       .reduce((acc, key) &#x3D;&gt; Object.assign(acc, { [key]: attrs[key] }), {});
   }
@@ -853,7 +857,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
     {
       resolve &#x3D; true,
       single &#x3D; true,
-    }: { resolve?: boolean; single?: boolean } &#x3D; {},
+    }: { resolve?: boolean; single?: boolean } &#x3D; {}
   ): any {
     const keyTypes &#x3D; this.keys({ include_parents: true });
     const key &#x3D; new Map&lt;string, any&gt;();
@@ -915,7 +919,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
     }).filter(
       (f) &#x3D;&gt;
         (!f.navigation || (options.expand &amp;&amp; f.name in options.expand)) &amp;&amp;
-        (!options.select || (&lt;string[]&gt;options.select).indexOf(f.name) !&#x3D;&#x3D; -1),
+        (!options.select || (&lt;string[]&gt;options.select).indexOf(f.name) !&#x3D;&#x3D; -1)
     );
     schema.properties &#x3D; Object.assign(
       {},
@@ -931,12 +935,12 @@ export class ODataStructuredTypeParser&lt;T&gt;
             schema &#x3D; (
               options.custom[f.name as keyof T] as (
                 schema: any,
-                field: ODataStructuredTypeFieldParser&lt;any&gt;,
+                field: ODataStructuredTypeFieldParser&lt;any&gt;
               ) &#x3D;&gt; any
             )(schema, f);
           return { [f.name]: schema };
         })
-        .reduce((acc, v) &#x3D;&gt; Object.assign(acc, v), {}),
+        .reduce((acc, v) &#x3D;&gt; Object.assign(acc, v), {})
     );
     schema.required &#x3D; [
       ...schema.required,
@@ -944,7 +948,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
         .filter((f) &#x3D;&gt;
           options.required &amp;&amp; f.name in options.required
             ? options.required[f.name as keyof T]
-            : !f.nullable,
+            : !f.nullable
         )
         .map((f) &#x3D;&gt; f.name),
     ];
@@ -960,7 +964,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
       create?: boolean;
       method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {},
+    } &#x3D; {}
   ): { [name: string]: any } | undefined {
     const errors &#x3D; {} as { [name: string]: any };
     const fields &#x3D; this.fields({

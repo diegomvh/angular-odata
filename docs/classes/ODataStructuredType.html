@@ -159,10 +159,13 @@
                                 <a href="#fields" >fields</a>
                             </li>
                             <li>
+                                <a href="#findChildSchema" >findChildSchema</a>
+                            </li>
+                            <li>
                                 <a href="#findParentSchema" >findParentSchema</a>
                             </li>
                             <li>
-                                <a href="#findSchemaForField" >findSchemaForField</a>
+                                <a href="#findParentSchemaForField" >findParentSchemaForField</a>
                             </li>
                             <li>
                                 <a href="#isComplexType" >isComplexType</a>
@@ -238,7 +241,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(config: <a href="../undefineds/StructuredTypeConfig.html" target="_self">StructuredTypeConfig&lt;T&gt;</a>, schema: <a href="../classes/ODataSchema.html" target="_self">ODataSchema</a>)</code>
+<code>constructor(config: <a href="../classes/Type.html" target="_self">StructuredTypeConfig&lt;T&gt;</a>, schema: <a href="../classes/ODataSchema.html" target="_self">ODataSchema</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -264,7 +267,7 @@
                                                         <td>config</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/typealiases.html#StructuredTypeConfig" target="_self" >StructuredTypeConfig&lt;T&gt;</a></code>
+                                                                        <code><a href="../classes/Type.html" target="_self" >StructuredTypeConfig&lt;T&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -338,7 +341,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType&lt;any&gt;[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;any&gt;[]</a></code>
 
                     </td>
                 </tr>
@@ -412,7 +415,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
 
                     </td>
                 </tr>
@@ -734,8 +737,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="272"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:272</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="284"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:284</a></div>
                 </td>
             </tr>
 
@@ -779,8 +782,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="206"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:206</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="218"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:218</a></div>
                 </td>
             </tr>
 
@@ -872,8 +875,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="226"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:226</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="238"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:238</a></div>
                 </td>
             </tr>
 
@@ -1046,8 +1049,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="236"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:236</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="248"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:248</a></div>
                 </td>
             </tr>
 
@@ -1101,6 +1104,75 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="findChildSchema"></a>
+                    <span class="name">
+                        <span ><b>findChildSchema</b></span>
+                        <a href="#findChildSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findChildSchema(predicate: (p: <a href="../objects/OData.html">ODataStructuredType<any></a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="158"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:158</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>predicate</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType | undefined</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="findParentSchema"></a>
                     <span class="name">
                         <span ><b>findParentSchema</b></span>
@@ -1110,7 +1182,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findParentSchema(predicate: (p: <a href="../classes/ODataStructuredType.html">ODataStructuredType<any></a>) => void)</code>
+<code>findParentSchema(predicate: (p: <a href="../objects/OData.html">ODataStructuredType<any></a>) => void)</code>
                 </td>
             </tr>
 
@@ -1163,7 +1235,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType | undefined</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType | undefined</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1178,24 +1250,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findSchemaForField"></a>
+                    <a name="findParentSchemaForField"></a>
                     <span class="name">
-                        <span ><b>findSchemaForField</b></span>
-                        <a href="#findSchemaForField"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>findParentSchemaForField</b></span>
+                        <a href="#findParentSchemaForField"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findSchemaForField(field: <a href="../objects/OData.html" target="_self">ODataStructuredTypeFieldParser&lt;any&gt;</a>)</code>
+<code>findParentSchemaForField(field: <a href="../objects/OData.html" target="_self">ODataStructuredTypeFieldParser&lt;any&gt;</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="163"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:163</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="175"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:175</a></div>
                 </td>
             </tr>
 
@@ -1248,7 +1320,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType&lt;E&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;E&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1475,7 +1547,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>isSubtypeOf(schema: <a href="../classes/ODataStructuredType.html" target="_self">ODataStructuredType&lt;any&gt;</a>)</code>
+                    <code>isSubtypeOf(schema: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;any&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1514,7 +1586,7 @@
                                 <tr>
                                     <td>schema</td>
                                     <td>
-                                                <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -1555,7 +1627,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>isSupertypeOf(schema: <a href="../classes/ODataStructuredType.html" target="_self">ODataStructuredType&lt;any&gt;</a>)</code>
+                    <code>isSupertypeOf(schema: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;any&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1594,7 +1666,7 @@
                                 <tr>
                                     <td>schema</td>
                                     <td>
-                                                <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -1640,8 +1712,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="251"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:251</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="263"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:263</a></div>
                 </td>
             </tr>
 
@@ -1684,7 +1756,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataEntityTypeKey.html" target="_self" >ODataEntityTypeKey[]</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntityTypeKey[]</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1715,8 +1787,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="180"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:180</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="192"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:192</a></div>
                 </td>
             </tr>
 
@@ -1804,8 +1876,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="264"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:264</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="276"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:276</a></div>
                 </td>
             </tr>
 
@@ -1881,8 +1953,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="216"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:216</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="228"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:228</a></div>
                 </td>
             </tr>
 
@@ -1974,8 +2046,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="281"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:281</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="293"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:293</a></div>
                 </td>
             </tr>
 
@@ -2055,8 +2127,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="291"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:291</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="303"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:303</a></div>
                 </td>
             </tr>
 
@@ -2594,7 +2666,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
     this.parser &#x3D; new ODataStructuredTypeParser(
       config,
       schema.namespace,
-      schema.alias,
+      schema.alias
     );
     this.model &#x3D; config.model as typeof ODataModel;
     this.collection &#x3D; config.collection as typeof ODataCollection;
@@ -2620,7 +2692,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
   }) {
     if (this.base) {
       const parent &#x3D; this.api.findStructuredTypeForType(
-        this.base,
+        this.base
       ) as ODataStructuredType&lt;any&gt;;
       parent.children.push(this);
       this.parent &#x3D; parent;
@@ -2702,7 +2774,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
 
   addField&lt;F&gt;(
     name: string,
-    config: StructuredTypeFieldConfig,
+    config: StructuredTypeFieldConfig
   ): ODataStructuredTypeFieldParser&lt;F&gt; {
     return this.parser.addField(name, config);
   }
@@ -2713,11 +2785,23 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
    * @returns The schema that matches the predicate.
    */
   findParentSchema(
-    predicate: (p: ODataStructuredType&lt;any&gt;) &#x3D;&gt; boolean,
+    predicate: (p: ODataStructuredType&lt;any&gt;) &#x3D;&gt; boolean
   ): ODataStructuredType&lt;any&gt; | undefined {
     if (predicate(this)) return this as ODataStructuredType&lt;any&gt;;
     if (this.parent &#x3D;&#x3D;&#x3D; undefined) return undefined;
     return this.parent.findParentSchema(predicate);
+  }
+
+  findChildSchema(
+    predicate: (p: ODataStructuredType&lt;any&gt;) &#x3D;&gt; boolean
+  ): ODataStructuredType&lt;any&gt; | undefined {
+    if (predicate(this)) return this;
+    let match: ODataStructuredType&lt;any&gt; | undefined;
+    for (let ch of this.children) {
+      match &#x3D; ch.findChildSchema(predicate);
+      if (match !&#x3D;&#x3D; undefined) break;
+    }
+    return match;
   }
 
   /**
@@ -2725,12 +2809,12 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
    * @param field Field that belongs to the structured type
    * @returns The schema of the field
    */
-  findSchemaForField&lt;E&gt;(field: ODataStructuredTypeFieldParser&lt;any&gt;) {
+  findParentSchemaForField&lt;E&gt;(field: ODataStructuredTypeFieldParser&lt;any&gt;) {
     return this.findParentSchema(
       (p) &#x3D;&gt;
         p
           .fields({ include_parents: false, include_navigation: true })
-          .find((f) &#x3D;&gt; f &#x3D;&#x3D;&#x3D; field) !&#x3D;&#x3D; undefined,
+          .find((f) &#x3D;&gt; f &#x3D;&#x3D;&#x3D; field) !&#x3D;&#x3D; undefined
     ) as ODataStructuredType&lt;E&gt;;
   }
 
@@ -2752,7 +2836,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
       include_parents?: boolean;
       include_navigation?: boolean;
       include_etag?: boolean;
-    } &#x3D; {},
+    } &#x3D; {}
   ): Partial&lt;T&gt; {
     return this.parser.pick(attrs, {
       include_etag,
@@ -2861,7 +2945,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
     }: {
       method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {},
+    } &#x3D; {}
   ) {
     return this.parser.validate(attrs, { method, navigation });
   }

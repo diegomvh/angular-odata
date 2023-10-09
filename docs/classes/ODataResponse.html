@@ -153,13 +153,13 @@
                             </li>
                             <li>
                                     <span class="modifier">Static</span>
-                                <a href="#fromJSON" >fromJSON</a>
+                                <a href="#fromJson" >fromJson</a>
                             </li>
                             <li>
                                 <a href="#property" >property</a>
                             </li>
                             <li>
-                                <a href="#toJSON" >toJSON</a>
+                                <a href="#toJson" >toJson</a>
                             </li>
                             <li>
                                 <a href="#value" >value</a>
@@ -609,18 +609,18 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="fromJSON"></a>
+                    <a name="fromJson"></a>
                     <span class="name">
                         <span class="modifier">Static</span>
-                        <span ><b>fromJSON</b></span>
-                        <a href="#fromJSON"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>fromJson</b></span>
+                        <a href="#fromJson"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fromJSON(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;T&gt;</a>, json: literal type)</code>
+                    <code>fromJson(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;T&gt;</a>, json: literal type)</code>
                 </td>
             </tr>
 
@@ -744,16 +744,16 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="toJSON"></a>
+                    <a name="toJson"></a>
                     <span class="name">
-                        <span ><b>toJSON</b></span>
-                        <a href="#toJSON"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>toJson</b></span>
+                        <a href="#toJson"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toJSON()</code>
+<code>toJson()</code>
                 </td>
             </tr>
 
@@ -982,7 +982,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     });
   }
 
-  static fromJSON&lt;T&gt;(
+  static fromJson&lt;T&gt;(
     req: ODataRequest&lt;T&gt;,
     json: {
       body: T | null;
@@ -1003,7 +1003,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     });
   }
 
-  toJSON() {
+  toJson() {
     return {
       body: this.body,
       headers: this.headers

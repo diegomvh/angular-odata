@@ -109,7 +109,10 @@
                                 <a href="#render" >render</a>
                             </li>
                             <li>
-                                <a href="#toJSON" >toJSON</a>
+                                <a href="#resolve" >resolve</a>
+                            </li>
+                            <li>
+                                <a href="#toJson" >toJson</a>
                             </li>
                         </ul>
                     </td>
@@ -224,8 +227,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="78"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:78</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="82"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:82</a></div>
                 </td>
             </tr>
 
@@ -261,8 +264,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="66"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:66</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="70"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:70</a></div>
                 </td>
             </tr>
 
@@ -332,8 +335,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="88"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:88</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="96"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:96</a></div>
                 </td>
             </tr>
 
@@ -473,16 +476,85 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="toJSON"></a>
+                    <a name="resolve"></a>
                     <span class="name">
-                        <span ><b>toJSON</b></span>
-                        <a href="#toJSON"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>resolve</b></span>
+                        <a href="#resolve"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toJSON()</code>
+<code>resolve(parser: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="91"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:91</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>parser</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toJson"></a>
+                    <span class="name">
+                        <span ><b>toJson</b></span>
+                        <a href="#toJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toJson()</code>
                 </td>
             </tr>
 
@@ -543,26 +615,26 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, QueryOption } from &#x27;../../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, ParserOptions, QueryOption } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
-import { render, FieldFactory, Renderable } from &#x27;./syntax&#x27;;
+import { render, FieldFactory, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
 
 export class CountField&lt;T&gt; implements Renderable {
   constructor(
     protected field: any,
-    private values: { [name: string]: any } &#x3D; {},
+    private values: { [name: string]: any } &#x3D; {}
   ) {}
 
   get [Symbol.toStringTag]() {
     return &#x27;CountField&#x27;;
   }
 
-  toJSON() {
+  toJson() {
     return {
-      field: this.field.toJSON(),
+      field: this.field.toJson(),
     };
   }
 
@@ -571,11 +643,13 @@ export class CountField&lt;T&gt; implements Renderable {
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser&lt;T&gt;;
+    options?: ParserOptions;
   }): string {
     const params: { [name: string]: string } &#x3D; [
       QueryOption.filter,
@@ -590,6 +664,7 @@ export class CountField&lt;T&gt; implements Renderable {
             prefix,
             escape,
             parser,
+            options,
           });
         }
         return Object.assign(acc, { [key]: value });
@@ -599,6 +674,7 @@ export class CountField&lt;T&gt; implements Renderable {
       escape,
       prefix,
       parser,
+      options,
     })}/$count&#x60;;
     if (!Types.isEmpty(params)) {
       count &#x3D; &#x60;${count}(${Object.keys(params)
@@ -611,12 +687,12 @@ export class CountField&lt;T&gt; implements Renderable {
   filter(
     opts: (
       builder: FilterExpressionBuilder&lt;T&gt;,
-      current?: FilterExpression&lt;T&gt;,
-    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
+      current?: FilterExpression&lt;T&gt;
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOption.filter]),
+      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOption.filter])
     );
   }
 
@@ -624,9 +700,13 @@ export class CountField&lt;T&gt; implements Renderable {
     const values &#x3D; Object.keys(this.values).reduce(
       (acc, key) &#x3D;&gt;
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
-      {},
+      {}
     );
     return new CountField&lt;T&gt;(this.field.clone(), values);
+  }
+
+  resolve(parser: any) {
+    return parser;
   }
 
   // Option Handler
@@ -649,19 +729,23 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
     super({ children });
   }
 
+  get [Symbol.toStringTag]() {
+    return &#x27;CountExpression&#x27;;
+  }
+
   static count&lt;T&gt;(
     opts: (
       builder: CountExpressionBuilder&lt;T&gt;,
-      current?: CountExpression&lt;T&gt;,
+      current?: CountExpression&lt;T&gt;
     ) &#x3D;&gt; CountExpression&lt;T&gt;,
-    current?: CountExpression&lt;T&gt;,
+    current?: CountExpression&lt;T&gt;
   ): CountExpression&lt;T&gt; {
     return opts(
       {
         t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
         e: () &#x3D;&gt; new CountExpression&lt;T&gt;(),
       },
-      current,
+      current
     ) as CountExpression&lt;T&gt;;
   }
 
@@ -670,19 +754,31 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return this;
   }
 
+  override toJson() {
+    const json &#x3D; super.toJson();
+    return Object.assign(json, {});
+  }
+
+  static fromJson&lt;T&gt;(json: { [name: string]: any }): CountExpression&lt;T&gt; {
+    return new CountExpression&lt;T&gt;({
+      children: json[&#x27;children&#x27;].map((c: any) &#x3D;&gt; RenderableFactory(c)),
+    });
+  }
   render({
     aliases,
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser&lt;T&gt;;
+    options?: ParserOptions;
   } &#x3D; {}): string {
     let content &#x3D; this._children
-      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser }))
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser, options }))
       .join(&#x60;,&#x60;);
     return content;
   }
@@ -695,7 +791,7 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   field&lt;F&gt;(
     field: F[],
-    opts?: (e: { t: F; f: CountField&lt;F&gt; }) &#x3D;&gt; CountExpression&lt;F&gt;,
+    opts?: (e: { t: F; f: CountField&lt;F&gt; }) &#x3D;&gt; CountExpression&lt;F&gt;
   ): CountExpression&lt;F&gt; {
     let countField &#x3D; new CountField&lt;F&gt;(field);
     if (opts !&#x3D;&#x3D; undefined)

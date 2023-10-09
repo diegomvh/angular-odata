@@ -1770,7 +1770,7 @@ export class ODataInStorageCache extends ODataCache {
   putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
     const scope &#x3D; this.scope(req);
     const tags &#x3D; this.tags(res);
-    this.put&lt;ResponseJson&gt;(req.cacheKey, res.toJSON(), {
+    this.put&lt;ResponseJson&gt;(req.cacheKey, res.toJson(), {
       timeout: res.options.maxAge,
       scope,
       tags,
@@ -1786,7 +1786,7 @@ export class ODataInStorageCache extends ODataCache {
     const scope &#x3D; this.scope(req);
     const data &#x3D; this.get&lt;ResponseJson&gt;(req.cacheKey, { scope });
 
-    return data !&#x3D;&#x3D; undefined ? ODataResponse.fromJSON(req, data) : undefined;
+    return data !&#x3D;&#x3D; undefined ? ODataResponse.fromJson(req, data) : undefined;
   }
 }
 </code></pre>

@@ -463,6 +463,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/StringFunctions.html" data-type="entity-link" >StringFunctions</a>
                             </li>
                             <li class="link">
+                                <a href="classes/Type.html" data-type="entity-link" >Type</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/TypeFunctions.html" data-type="entity-link" >TypeFunctions</a>
                             </li>
                         </ul>

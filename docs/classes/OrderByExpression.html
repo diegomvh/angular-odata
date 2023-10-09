@@ -125,10 +125,18 @@
                             </li>
                             <li>
                                     <span class="modifier">Static</span>
+                                <a href="#fromJson" >fromJson</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
                                 <a href="#orderBy" >orderBy</a>
                             </li>
                             <li>
                                 <a href="#render" >render</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#toJson" >toJson</a>
                             </li>
                             <li>
                                 <a href="#children" >children</a>
@@ -137,7 +145,7 @@
                                 <a href="#length" >length</a>
                             </li>
                             <li>
-                                <a href="#toJSON" >toJSON</a>
+                                <a href="#resolve" >resolve</a>
                             </li>
                         </ul>
                     </td>
@@ -147,6 +155,20 @@
 
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#undefined" >undefined</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
         </tbody>
     </table>
 </section>
@@ -162,7 +184,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:48</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:56</a></div>
                             </td>
                         </tr>
 
@@ -230,7 +252,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:6</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:7</a></code>
 </div>
                         </td>
                     </tr>
@@ -267,8 +289,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="73"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:73</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:85</a></div>
                 </td>
             </tr>
 
@@ -336,8 +358,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="101"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:101</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="126"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:126</a></div>
                 </td>
             </tr>
 
@@ -411,7 +433,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:95</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:120</a></code>
 </div>
                 </td>
             </tr>
@@ -448,8 +470,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="105"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:105</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="130"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:130</a></div>
                 </td>
             </tr>
 
@@ -501,6 +523,85 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="fromJson"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>fromJson</b></span>
+                        <a href="#fromJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fromJson(json: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="95"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:95</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>json</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#OrderBy" target="_self" >OrderByExpression&lt;T&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="orderBy"></a>
                     <span class="name">
                         <span class="modifier">Static</span>
@@ -519,8 +620,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="57"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:57</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="69"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:69</a></div>
                 </td>
             </tr>
 
@@ -614,7 +715,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:78</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:101</a></code>
 </div>
                 </td>
             </tr>
@@ -670,6 +771,51 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="toJson"></a>
+                    <span class="name">
+                        <span class="modifier"></span>
+                        <span ><b>toJson</b></span>
+                        <a href="#toJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>toJson()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:90</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="children"></a>
                     <span class="name">
                         <span ><b>children</b></span>
@@ -692,7 +838,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:33</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:36</a></code>
 </div>
                 </td>
             </tr>
@@ -735,7 +881,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:37</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:40</a></code>
 </div>
                 </td>
             </tr>
@@ -756,16 +902,16 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="toJSON"></a>
+                    <a name="resolve"></a>
                     <span class="name">
-                        <span ><b>toJSON</b></span>
-                        <a href="#toJSON"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>resolve</b></span>
+                        <a href="#resolve"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toJSON()</code>
+<code>resolve(parser: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
                 </td>
             </tr>
 
@@ -778,7 +924,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:41</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:51</a></code>
 </div>
                 </td>
             </tr>
@@ -788,8 +934,40 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>    <code>{ children: any; }</code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>parser</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -801,28 +979,54 @@
 
 
 
+            <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="undefined"></a>
+                        <span class="name"><b>undefined</b><a href="#undefined"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:65</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser } from &#x27;../../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, ParserOptions } from &#x27;../../../types&#x27;;
+import { Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import { render, FieldFactory, Renderable } from &#x27;./syntax&#x27;;
+import { render, FieldFactory, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
 
 export class OrderByField implements Renderable {
-  constructor(
-    protected field: Renderable,
-    protected order: &#x27;asc&#x27; | &#x27;desc&#x27;,
-  ) {}
+  constructor(protected field: Renderable, protected order: &#x27;asc&#x27; | &#x27;desc&#x27;) {}
 
   get [Symbol.toStringTag]() {
     return &#x27;OrderByField&#x27;;
   }
 
-  toJSON() {
+  toJson() {
     return {
-      field: this.field.toJSON(),
+      $type: Types.rawType(this),
+      field: this.field.toJson(),
       order: this.order,
     };
   }
@@ -832,19 +1036,28 @@ export class OrderByField implements Renderable {
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser&lt;any&gt;;
+    options?: ParserOptions;
   }): string {
-    return &#x60;${render(this.field, { aliases, escape, prefix, parser })} ${
-      this.order
-    }&#x60;;
+    return &#x60;${render(this.field, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      options,
+    })} ${this.order}&#x60;;
   }
 
   clone() {
     return new OrderByField(this.field.clone(), this.order);
+  }
+  resolve(parser: any) {
+    return parser;
   }
 }
 
@@ -861,19 +1074,23 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
     super({ children });
   }
 
+  get [Symbol.toStringTag]() {
+    return &#x27;OrderByExpression&#x27;;
+  }
+
   static orderBy&lt;T&gt;(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;,
+      current?: OrderByExpression&lt;T&gt;
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
-    current?: OrderByExpression&lt;T&gt;,
+    current?: OrderByExpression&lt;T&gt;
   ): OrderByExpression&lt;T&gt; {
     return opts(
       {
         t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
         e: () &#x3D;&gt; new OrderByExpression&lt;T&gt;(),
       },
-      current,
+      current
     ) as OrderByExpression&lt;T&gt;;
   }
 
@@ -882,19 +1099,32 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return this;
   }
 
+  override toJson() {
+    const json &#x3D; super.toJson();
+    return Object.assign(json, {});
+  }
+
+  static fromJson&lt;T&gt;(json: { [name: string]: any }): OrderByExpression&lt;T&gt; {
+    return new OrderByExpression&lt;T&gt;({
+      children: json[&#x27;children&#x27;].map((c: any) &#x3D;&gt; RenderableFactory(c)),
+    });
+  }
+
   render({
     aliases,
     escape,
     prefix,
     parser,
+    options,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
     prefix?: string;
     parser?: Parser&lt;T&gt;;
+    options?: ParserOptions;
   } &#x3D; {}): string {
     let content &#x3D; this._children
-      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser }))
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser, options }))
       .join(&#x60;,&#x60;);
     return content;
   }

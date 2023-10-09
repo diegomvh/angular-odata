@@ -119,7 +119,11 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#__parser" >__parser</a>
+                                <a href="#__deserializeParser" >__deserializeParser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#__serializeParser" >__serializeParser</a>
                             </li>
                             <li>
                                 <a href="#asCollection" >asCollection</a>
@@ -210,7 +214,7 @@
                                 <a href="#serialize" >serialize</a>
                             </li>
                             <li>
-                                <a href="#toJSON" >toJSON</a>
+                                <a href="#toJson" >toJson</a>
                             </li>
                             <li>
                                 <a href="#toString" >toString</a>
@@ -418,26 +422,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="__parser"></a>
+                    <a name="__deserializeParser"></a>
                     <span class="name">
                         <span class="modifier">Private</span>
-                        <span ><b>__parser</b></span>
-                        <a href="#__parser"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>__deserializeParser</b></span>
+                        <a href="#__deserializeParser"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>__parser(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>, type?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>__deserializeParser(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>, resourceType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="198"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:198</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="233"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:233</a></div>
                 </td>
             </tr>
 
@@ -482,7 +486,102 @@
 
                                 </tr>
                                 <tr>
-                                    <td>type</td>
+                                    <td>resourceType</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/Parser.html" target="_self" >Parser | undefined</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="__serializeParser"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>__serializeParser</b></span>
+                        <a href="#__serializeParser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>__serializeParser(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>, resourceType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="211"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:211</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/ParserOptions.html" target="_self" >ParserOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>resourceType</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -755,8 +854,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="271"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:271</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="303"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:303</a></div>
                 </td>
             </tr>
 
@@ -765,7 +864,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Returns : </b>    <code>this</code>
 
                     </div>
                 </td>
@@ -792,8 +891,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="189"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:189</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="202"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:202</a></div>
                 </td>
             </tr>
 
@@ -829,8 +928,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="275"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:275</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="308"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:308</a></div>
                 </td>
             </tr>
 
@@ -874,8 +973,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="266"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:266</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="298"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:298</a></div>
                 </td>
             </tr>
 
@@ -913,8 +1012,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="415"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:415</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="448"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:448</a></div>
                 </td>
             </tr>
 
@@ -982,8 +1081,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="220"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:220</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="252"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:252</a></div>
                 </td>
             </tr>
 
@@ -1063,8 +1162,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="246"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:246</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="278"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:278</a></div>
                 </td>
             </tr>
 
@@ -1144,8 +1243,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="172"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:172</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="181"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:181</a></div>
                 </td>
             </tr>
 
@@ -1219,8 +1318,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="340"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:340</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="373"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:373</a></div>
                 </td>
             </tr>
 
@@ -1589,8 +1688,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="396"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:396</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="429"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:429</a></div>
                 </td>
             </tr>
 
@@ -1668,7 +1767,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pathAndParams(escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>pathAndParams(undefined)</code>
                 </td>
             </tr>
 
@@ -1691,24 +1790,21 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Type</td>
                                     <td>Optional</td>
                                     <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>escape</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-                                    </td>
 
                                     <td>
                                         No
                                     </td>
 
                                     <td>
-                                        <code>false</code>
+                                        <code>{
+      escape: false,
+    }</code>
                                     </td>
 
                                 </tr>
@@ -1743,8 +1839,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="359"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:359</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="392"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:392</a></div>
                 </td>
             </tr>
 
@@ -1831,8 +1927,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="377"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:377</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="410"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:410</a></div>
                 </td>
             </tr>
 
@@ -1910,15 +2006,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>query(f: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>,s: <a href="../classes/ODataStructuredType.html">ODataStructuredType<T></a>) => void)</code>
+<code>query(f: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>,s: <a href="../objects/OData.html">ODataStructuredType<T></a>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="304"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:304</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="337"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:337</a></div>
                 </td>
             </tr>
 
@@ -1989,15 +2085,15 @@ Create an object handler for mutate the query options of the resource</p>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolveKey(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, schema?: <a href="../classes/ODataStructuredType.html" target="_self">ODataStructuredType&lt;T&gt;</a>)</code>
+                    <code>resolveKey(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, schema?: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="318"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:318</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="351"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:351</a></div>
                 </td>
             </tr>
 
@@ -2040,7 +2136,7 @@ Create an object handler for mutate the query options of the resource</p>
                                 <tr>
                                     <td>schema</td>
                                     <td>
-                                                <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType&lt;T&gt;</a></code>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;T&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -2087,8 +2183,8 @@ Create an object handler for mutate the query options of the resource</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="332"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:332</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="365"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:365</a></div>
                 </td>
             </tr>
 
@@ -2192,15 +2288,15 @@ Create an object handler for mutate the query options of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>segment(f: (q: <a href="../objects/OData.html">ODataPathSegmentsHandler<T></a>,s: <a href="../classes/ODataStructuredType.html">ODataStructuredType<T></a>) => void)</code>
+<code>segment(f: (q: <a href="../objects/OData.html">ODataPathSegmentsHandler<T></a>,s: <a href="../objects/OData.html">ODataStructuredType<T></a>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="285"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:285</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="318"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:318</a></div>
                 </td>
             </tr>
 
@@ -2277,8 +2373,8 @@ Create an object handler for mutate the path segments of the resource</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="233"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:233</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="265"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:265</a></div>
                 </td>
             </tr>
 
@@ -2342,24 +2438,24 @@ Create an object handler for mutate the path segments of the resource</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="toJSON"></a>
+                    <a name="toJson"></a>
                     <span class="name">
-                        <span ><b>toJSON</b></span>
-                        <a href="#toJSON"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>toJson</b></span>
+                        <a href="#toJson"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toJSON()</code>
+<code>toJson()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="259"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:259</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="291"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:291</a></div>
                 </td>
             </tr>
 
@@ -2388,15 +2484,15 @@ Create an object handler for mutate the path segments of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toString(escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>toString(undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="181"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:181</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="190"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:190</a></div>
                 </td>
             </tr>
 
@@ -2411,24 +2507,21 @@ Create an object handler for mutate the path segments of the resource</p>
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Type</td>
                                     <td>Optional</td>
                                     <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>escape</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-                                    </td>
 
                                     <td>
                                         No
                                     </td>
 
                                     <td>
-                                        <code>false</code>
+                                        <code>{
+      escape: false,
+    }</code>
                                     </td>
 
                                 </tr>
@@ -2598,8 +2691,8 @@ export class ODataResource&lt;T&gt; {
     } &#x3D; {},
   ) {
     this.api &#x3D; api;
-    this.pathSegments &#x3D; segments || new ODataPathSegments();
-    this.queryOptions &#x3D; query || new ODataQueryOptions();
+    this.pathSegments &#x3D; segments ?? new ODataPathSegments();
+    this.queryOptions &#x3D; query ?? new ODataQueryOptions();
     this.schema &#x3D; schema;
   }
 
@@ -2701,7 +2794,11 @@ export class ODataResource&lt;T&gt; {
       : otherPath &#x3D;&#x3D;&#x3D; selfPath &amp;&amp; Types.isEqual(selfParams, otherParams);
   }
 
-  pathAndParams(escape: boolean &#x3D; false): [string, { [name: string]: any }] {
+  pathAndParams(
+    { escape, ...options }: ParserOptions &amp; { escape?: boolean } &#x3D; {
+      escape: false,
+    },
+  ): [string, { [name: string]: any }] {
     const parser &#x3D;
       this.schema !&#x3D;&#x3D; undefined &amp;&amp; &#x27;parser&#x27; in this.schema
         ? ((&lt;any&gt;this.schema).parser as Parser&lt;T&gt;)
@@ -2709,8 +2806,13 @@ export class ODataResource&lt;T&gt; {
     const [spath, sparams] &#x3D; this.pathSegments.pathAndParams({
       escape,
       parser,
+      options,
     });
-    const [, qparams] &#x3D; this.queryOptions.pathAndParams({ escape, parser });
+    const [, qparams] &#x3D; this.queryOptions.pathAndParams({
+      escape,
+      parser,
+      options,
+    });
 
     return [spath, { ...sparams, ...qparams }];
   }
@@ -2724,8 +2826,12 @@ export class ODataResource&lt;T&gt; {
     }
   }
 
-  toString(escape: boolean &#x3D; false): string {
-    let [path, params] &#x3D; this.pathAndParams(escape);
+  toString(
+    { escape, ...options }: ParserOptions &amp; { escape?: boolean } &#x3D; {
+      escape: false,
+    },
+  ): string {
+    let [path, params] &#x3D; this.pathAndParams({ escape, ...options });
     let queryString &#x3D; Object.entries(params)
       .map((e) &#x3D;&gt; &#x60;${e[0]}${VALUE_SEPARATOR}${e[1]}&#x60;)
       .join(PARAM_SEPARATOR);
@@ -2741,10 +2847,10 @@ export class ODataResource&lt;T&gt; {
     });
   }
 
-  private __parser(
+  private __serializeParser(
     value: any,
     options?: ParserOptions,
-    type?: string,
+    resourceType?: string,
   ): Parser&lt;T&gt; | undefined {
     const dataType &#x3D;
       options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
@@ -2756,9 +2862,28 @@ export class ODataResource&lt;T&gt; {
     } else if (this.schema !&#x3D;&#x3D; undefined &amp;&amp; &#x27;parser&#x27; in this.schema) {
       // Parser from resource schema
       return (&lt;any&gt;this.schema).parser as Parser&lt;T&gt; | undefined;
-    } else if (type !&#x3D;&#x3D; undefined) {
+    } else if (resourceType !&#x3D;&#x3D; undefined) {
       // Parser from resource type
+      return this.api.parserForType&lt;T&gt;(resourceType);
+    }
+    return undefined;
+  }
+
+  private __deserializeParser(
+    value: any,
+    options?: ParserOptions,
+    resourceType?: string,
+  ): Parser&lt;T&gt; | undefined {
+    const type &#x3D;
+      options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
+        ? ODataHelper[options.version || DEFAULT_VERSION].type(value)
+        : resourceType;
+    if (type !&#x3D;&#x3D; undefined) {
+      // Parser from type
       return this.api.parserForType&lt;T&gt;(type);
+    } else if (this.schema !&#x3D;&#x3D; undefined &amp;&amp; &#x27;parser&#x27; in this.schema) {
+      // Parser from resource schema
+      return (&lt;any&gt;this.schema).parser as Parser&lt;T&gt; | undefined;
     }
     return undefined;
   }
@@ -2766,7 +2891,7 @@ export class ODataResource&lt;T&gt; {
   deserialize(value: any, options?: ParserOptions): any {
     const resourceType &#x3D; this.returnType();
     const _d &#x3D; (value: any, options?: ParserOptions) &#x3D;&gt; {
-      const parser &#x3D; this.__parser(value, options, resourceType);
+      const parser &#x3D; this.__deserializeParser(value, options, resourceType);
       return parser !&#x3D;&#x3D; undefined &amp;&amp; &#x27;deserialize&#x27; in parser
         ? parser.deserialize(value, options)
         : value;
@@ -2779,7 +2904,7 @@ export class ODataResource&lt;T&gt; {
   serialize(value: any, options?: ParserOptions): any {
     const resourceType &#x3D; this.type();
     const _s &#x3D; (value: any, options?: ParserOptions) &#x3D;&gt; {
-      const parser &#x3D; this.__parser(value, options, resourceType);
+      const parser &#x3D; this.__serializeParser(value, options, resourceType);
       return parser !&#x3D;&#x3D; undefined &amp;&amp; &#x27;serialize&#x27; in parser
         ? parser.serialize(value, options)
         : value;
@@ -2792,7 +2917,7 @@ export class ODataResource&lt;T&gt; {
   encode(value: any, options?: ParserOptions): any {
     const resourceType &#x3D; this.type();
     const _e &#x3D; (value: any, options?: ParserOptions) &#x3D;&gt; {
-      const parser &#x3D; this.__parser(value, options, resourceType);
+      const parser &#x3D; this.__serializeParser(value, options, resourceType);
       return parser !&#x3D;&#x3D; undefined &amp;&amp; &#x27;encode&#x27; in parser
         ? parser.encode(value, options)
         : value;
@@ -2802,10 +2927,10 @@ export class ODataResource&lt;T&gt; {
       : _e(value, options);
   }
 
-  toJSON() {
+  toJson() {
     return {
-      segments: this.pathSegments.toJSON(),
-      options: this.queryOptions.toJSON(),
+      segments: this.pathSegments.toJson(),
+      options: this.queryOptions.toJson(),
     };
   }
 
@@ -2816,6 +2941,7 @@ export class ODataResource&lt;T&gt; {
   //#region Query Options
   clearQuery() {
     this.queryOptions.clear();
+    return this;
   }
 
   cloneQuery&lt;P&gt;() {

@@ -706,8 +706,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="226"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:226</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="225"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:225</a></div>
                 </td>
             </tr>
 
@@ -1184,7 +1184,7 @@ import {
   PREFER,
   TEXT_PLAIN,
 } from &#x27;../constants&#x27;;
-import { QueryOption } from &#x27;../types&#x27;;
+import { FetchPolicy, ParserOptions, QueryOption } from &#x27;../types&#x27;;
 import { Http, Types } from &#x27;../utils&#x27;;
 import { ODataResource } from &#x27;./resource&#x27;;
 import { ODataOptions } from &#x27;./types&#x27;;
@@ -1246,12 +1246,8 @@ export class ODataRequest&lt;T&gt; {
       | &#x27;property&#x27;
       | &#x27;entity&#x27;
       | &#x27;entities&#x27;;
-    fetchPolicy?:
-      | &#x27;cache-first&#x27;
-      | &#x27;cache-and-network&#x27;
-      | &#x27;network-only&#x27;
-      | &#x27;no-cache&#x27;
-      | &#x27;cache-only&#x27;;
+    fetchPolicy?: FetchPolicy;
+    parserOptions?: ParserOptions;
     withCredentials?: boolean;
     bodyQueryOptions?: QueryOption[];
   }) {
@@ -1268,7 +1264,8 @@ export class ODataRequest&lt;T&gt; {
 
     // The Body
     this._body &#x3D; init.body !&#x3D;&#x3D; undefined ? init.body : null;
-    if (this._body !&#x3D;&#x3D; null) this._body &#x3D; this.resource.serialize(this._body);
+    if (this._body !&#x3D;&#x3D; null)
+      this._body &#x3D; this.resource.serialize(this._body, init.parserOptions);
 
     this.withCredentials &#x3D;
       init.withCredentials &#x3D;&#x3D;&#x3D; undefined
@@ -1281,7 +1278,9 @@ export class ODataRequest&lt;T&gt; {
     ];
 
     // The Path and Params from resource
-    const [resourcePath, resourceParams] &#x3D; this.resource.pathAndParams();
+    const [resourcePath, resourceParams] &#x3D; this.resource.pathAndParams(
+      init.parserOptions,
+    );
     this._path &#x3D; resourcePath;
 
     //#region Headers
@@ -1443,6 +1442,7 @@ export class ODataRequest&lt;T&gt; {
       reportProgress: options.reportProgress,
       responseType: options.responseType,
       fetchPolicy: options.fetchPolicy,
+      parserOptions: options.parserOptions,
       withCredentials: options.withCredentials,
       bodyQueryOptions: options.bodyQueryOptions,
     });
