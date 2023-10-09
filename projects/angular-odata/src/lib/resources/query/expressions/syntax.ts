@@ -1,3 +1,4 @@
+import { ODataStructuredTypeFieldParser } from '../../../schema';
 import { Parser, ParserOptions } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
@@ -39,9 +40,26 @@ export const FieldFactory = <T extends object>(
     get(target: T, key: string | symbol) {
       let names = (target as any)['_names'] as (string | Renderable)[];
       if (key === 'render') {
-        return ({ prefix }: { prefix?: string }) => {
-          const vls = names.map((n: any) => render(n));
-          return prefix ? `${prefix}/${vls.join('/')}` : vls.join('/');
+        return ({
+          aliases,
+          escape,
+          prefix,
+          parser,
+          options,
+        }: {
+          aliases?: QueryCustomType[];
+          escape?: boolean;
+          prefix?: string;
+          parser?: Parser<T>;
+          options?: ParserOptions;
+        }) => {
+          let values = names.map((n: any) =>
+            render(n, { aliases, escape, prefix, parser, options })
+          );
+          if (prefix && (names.length === 0 || typeof names[0] === 'string')) {
+            values = [prefix, ...values];
+          }
+          return values.join('/');
         };
       } else if (key === 'clone') {
         return () => FieldFactory([...names]);
@@ -56,7 +74,9 @@ export const FieldFactory = <T extends object>(
         return (parser: any) =>
           names.reduce(
             (acc: any, name: string | Renderable) =>
-              typeof name === 'string' ? acc.field(name) : name.resolve(parser),
+              typeof name === 'string'
+                ? acc?.field(name)
+                : name?.resolve(parser),
             parser
           );
       } else {
@@ -97,6 +117,8 @@ export const RenderableFactory = (value: any): Renderable => {
         return Grouping.fromJson(value);
       case 'Lambda':
         return Lambda.fromJson(value);
+      case 'Type':
+        return Type.fromJson(value);
       case 'Field':
         return FieldFactory(value['names']);
       default:
@@ -409,7 +431,7 @@ export class TypeFunctions<T> {
     ]);
   }
 
-  isof<N>(left: T | string, type?: string) {
+  isof(left: T | string, type?: string) {
     return type !== undefined
       ? new Type<T>('isof', type, left)
       : new Type<T>('isof', left as string);
@@ -679,24 +701,24 @@ export class Type<T> implements Renderable {
       parser = resolve([this.value], parser);
       let [left, right] = encode([this.value], parser, options);
 
-      left = render(left, { aliases, escape, prefix, parser });
-      return `${this.name}('${this.type}', ${render(right, {
-        aliases,
-        escape,
-        parser,
-        options,
-      })})`;
+      left = render(left, { aliases, escape, prefix, parser, options });
+      return `${this.name}(${left}, '${this.type}')`;
     } else {
       return `${this.name}('${this.type}')`;
     }
   }
 
   clone() {
-    return new Type(this.type, Objects.clone(this.value));
+    return new Type(this.name, this.type, Objects.clone(this.value));
   }
 
   resolve(parser: any) {
-    return parser.findChildParser((p: any) => p.isTypeOf(this.type));
+    parser =
+      parser instanceof ODataStructuredTypeFieldParser &&
+      parser.isStructuredType()
+        ? parser.structured()
+        : parser;
+    return parser?.findChildParser((p: any) => p.isTypeOf(this.type));
   }
 }
 

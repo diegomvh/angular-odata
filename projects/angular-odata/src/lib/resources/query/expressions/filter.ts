@@ -13,6 +13,7 @@ import {
   Renderable,
   RenderableFactory,
   syntax,
+  Type,
 } from './syntax';
 
 export type FilterConnector = 'and' | 'or';
