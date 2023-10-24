@@ -179,7 +179,7 @@ export class ExpandField<T> implements Renderable {
 }
 
 export type ExpandExpressionBuilder<T> = {
-  t: Readonly<Required<T>>;
+  t: Required<T>;
   e: () => ExpandExpression<T>;
 };
 export class ExpandExpression<T> extends Expression<T> {
@@ -204,7 +204,7 @@ export class ExpandExpression<T> extends Expression<T> {
   ): ExpandExpression<T> {
     return opts(
       {
-        t: FieldFactory<Readonly<Required<T>>>(),
+        t: FieldFactory<Required<T>>(),
         e: () => new ExpandExpression<T>(),
       },
       current

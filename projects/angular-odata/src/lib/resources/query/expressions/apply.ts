@@ -12,7 +12,7 @@ import {
 } from './syntax';
 
 export type ApplyExpressionBuilder<T> = {
-  t: Required<Readonly<T>>;
+  t: Required<T>;
   e: () => ApplyExpression<T>;
 };
 export class ApplyExpression<T> extends Expression<T> {
@@ -41,7 +41,7 @@ export class ApplyExpression<T> extends Expression<T> {
   ): ApplyExpression<T> {
     return opts(
       {
-        t: FieldFactory<Readonly<Required<T>>>(),
+        t: FieldFactory<Required<T>>(),
         e: () => new ApplyExpression<T>(),
       },
       current

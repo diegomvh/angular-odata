@@ -4,7 +4,7 @@ import { Expression } from './base';
 import { FieldFactory, Renderable, RenderableFactory } from './syntax';
 
 export type SelectExpressionBuilder<T> = {
-  t: Readonly<Required<T>>;
+  t: Required<T>;
   e: () => SelectExpression<T>;
 };
 export class SelectExpression<T> extends Expression<T> {
@@ -29,7 +29,7 @@ export class SelectExpression<T> extends Expression<T> {
   ): SelectExpression<T> {
     return opts(
       {
-        t: FieldFactory<Readonly<Required<T>>>(),
+        t: FieldFactory<Required<T>>(),
         e: () => new SelectExpression<T>(),
       },
       current

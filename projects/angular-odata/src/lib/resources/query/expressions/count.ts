@@ -100,7 +100,7 @@ export class CountField<T> implements Renderable {
 }
 
 export type CountExpressionBuilder<T> = {
-  t: Readonly<Required<T>>;
+  t: Required<T>;
   e: () => CountExpression<T>;
 };
 export class CountExpression<T> extends Expression<T> {
@@ -125,7 +125,7 @@ export class CountExpression<T> extends Expression<T> {
   ): CountExpression<T> {
     return opts(
       {
-        t: FieldFactory<Readonly<Required<T>>>(),
+        t: FieldFactory<Required<T>>(),
         e: () => new CountExpression<T>(),
       },
       current
@@ -179,7 +179,7 @@ export class CountExpression<T> extends Expression<T> {
     let countField = new CountField<F>(field);
     if (opts !== undefined)
       opts({
-        t: FieldFactory<Readonly<Required<F>>>(),
+        t: FieldFactory<Required<F>>(),
         f: countField,
       });
     return this._add(countField);

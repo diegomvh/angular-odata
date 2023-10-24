@@ -13,13 +13,12 @@ import {
   Renderable,
   RenderableFactory,
   syntax,
-  Type,
 } from './syntax';
 
 export type FilterConnector = 'and' | 'or';
 
 export type FilterExpressionBuilder<T> = {
-  t: Readonly<Required<T>>;
+  t: Required<T>;
   e: (connector?: FilterConnector) => FilterExpression<T>;
   o: ODataOperators<T>;
   f: ODataFunctions<T>;
@@ -56,7 +55,7 @@ export class FilterExpression<F> extends Expression<F> {
       {
         e: (connector: FilterConnector = 'and') =>
           new FilterExpression<T>({ connector }),
-        t: FieldFactory<Readonly<Required<T>>>(),
+        t: FieldFactory<Required<T>>(),
         o: operators as ODataOperators<T>,
         f: functions as ODataFunctions<T>,
       },
@@ -241,7 +240,7 @@ export class FilterExpression<F> extends Expression<F> {
     let exp = undefined;
     if (opts !== undefined) {
       exp = opts({
-        t: FieldFactory<Readonly<Required<N>>>(),
+        t: FieldFactory<Required<N>>(),
         o: operators as ODataOperators<N>,
         f: functions as ODataFunctions<N>,
         e: (connector: FilterConnector = 'and') =>
@@ -264,7 +263,7 @@ export class FilterExpression<F> extends Expression<F> {
     let exp = undefined;
     if (opts !== undefined) {
       exp = opts({
-        t: FieldFactory<Readonly<Required<N>>>(),
+        t: FieldFactory<Required<N>>(),
         o: operators as ODataOperators<N>,
         f: functions as ODataFunctions<N>,
         e: (connector: FilterConnector = 'and') =>

@@ -427,7 +427,7 @@ export class ArithmeticFunctions<T> {
 
 export class TypeFunctions<T> {
   cast<N>(left: T | string, type?: string): N {
-    return FieldFactory<Readonly<Required<N>>>([
+    return FieldFactory<Required<N>>([
       type !== undefined
         ? new Type<T>('cast', type, left)
         : new Type<T>('cast', left as string),

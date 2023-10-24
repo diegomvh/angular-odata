@@ -50,7 +50,7 @@ export class OrderByField implements Renderable {
 }
 
 export type OrderByExpressionBuilder<T> = {
-  t: Readonly<Required<T>>;
+  t: Required<T>;
   e: () => OrderByExpression<T>;
 };
 export class OrderByExpression<T> extends Expression<T> {
@@ -75,7 +75,7 @@ export class OrderByExpression<T> extends Expression<T> {
   ): OrderByExpression<T> {
     return opts(
       {
-        t: FieldFactory<Readonly<Required<T>>>(),
+        t: FieldFactory<Required<T>>(),
         e: () => new OrderByExpression<T>(),
       },
       current

@@ -1,5 +1,4 @@
 import { Parser, ParserOptions } from '../../../types';
-import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import {
@@ -13,7 +12,7 @@ import {
 } from './syntax';
 
 export type ComputeExpressionBuilder<T> = {
-  t: Required<Readonly<T>>;
+  t: Required<T>;
   e: () => ComputeExpression<T>;
 };
 export class ComputeExpression<T> extends Expression<T> {
@@ -42,7 +41,7 @@ export class ComputeExpression<T> extends Expression<T> {
   ): ComputeExpression<T> {
     return opts(
       {
-        t: FieldFactory<Readonly<Required<T>>>(),
+        t: FieldFactory<Required<T>>(),
         e: () => new ComputeExpression<T>(),
       },
       current
