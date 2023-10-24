@@ -75,7 +75,7 @@ export class CountField<T> implements Renderable {
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.filter<T>(opts, this.values[QueryOption.filter])
+      FilterExpression.factory<T>(opts, this.values[QueryOption.filter])
     );
   }
 
@@ -116,7 +116,7 @@ export class CountExpression<T> extends Expression<T> {
     return 'CountExpression';
   }
 
-  static count<T>(
+  static factory<T>(
     opts: (
       builder: CountExpressionBuilder<T>,
       current?: CountExpression<T>

@@ -29,6 +29,7 @@ export enum QueryOption {
   select = 'select',
   expand = 'expand',
   compute = 'compute',
+  apply = 'apply',
   filter = 'filter',
   search = 'search',
   transform = 'transform',
@@ -167,12 +168,12 @@ export interface Parser<T> {
   // Deserialize value/s from request body.
   deserialize(
     value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): T;
   // Serialize value/s for request body.
   serialize(
     value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): any;
   //Encode value/s for URL parameter or query-string.
   encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;

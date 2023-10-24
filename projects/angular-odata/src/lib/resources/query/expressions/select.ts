@@ -20,7 +20,7 @@ export class SelectExpression<T> extends Expression<T> {
     return 'SelectExpression';
   }
 
-  static select<T>(
+  static factory<T>(
     opts: (
       builder: SelectExpressionBuilder<T>,
       current?: SelectExpression<T>

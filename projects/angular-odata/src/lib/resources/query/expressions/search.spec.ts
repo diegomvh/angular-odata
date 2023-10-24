@@ -33,8 +33,8 @@ describe('OData search builder', () => {
   describe('base condition', () => {
     describe('as factory function', () => {
       it('term', () => {
-        const compare1 = SearchExpression.search<Person>(({ e }) =>
-          e().term('John'),
+        const compare1 = SearchExpression.factory<Person>(({ e }) =>
+          e().term('John')
         );
 
         expect(compare1.render()).toBe('John');
@@ -43,8 +43,8 @@ describe('OData search builder', () => {
 
     describe('combination e().and(...).or(...)', () => {
       it('and,or', () => {
-        const compare = SearchExpression.search<Person>(({ e }) =>
-          e().term('John').and(e().term('Lennon')).or(e().term('Beatles')),
+        const compare = SearchExpression.factory<Person>(({ e }) =>
+          e().term('John').and(e().term('Lennon')).or(e().term('Beatles'))
         );
 
         expect(compare.render()).toBe('(John AND Lennon) OR Beatles');

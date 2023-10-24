@@ -66,7 +66,7 @@ export class OrderByExpression<T> extends Expression<T> {
     return 'OrderByExpression';
   }
 
-  static orderBy<T>(
+  static factory<T>(
     opts: (
       builder: OrderByExpressionBuilder<T>,
       current?: OrderByExpression<T>

@@ -100,7 +100,7 @@ export class ExpandField<T> implements Renderable {
     return parser;
   }
 
-  select<T>(
+  select(
     opts: (
       builder: SelectExpressionBuilder<T>,
       current?: SelectExpression<T>
@@ -108,11 +108,11 @@ export class ExpandField<T> implements Renderable {
   ): SelectExpression<T> {
     return this.option(
       QueryOption.select,
-      SelectExpression.select<T>(opts, this.values[QueryOption.select])
+      SelectExpression.factory<T>(opts, this.values[QueryOption.select])
     );
   }
 
-  expand<T>(
+  expand(
     opts: (
       builder: ExpandExpressionBuilder<T>,
       current?: ExpandExpression<T>
@@ -120,11 +120,11 @@ export class ExpandField<T> implements Renderable {
   ) {
     return this.option(
       QueryOption.expand,
-      ExpandExpression.expand<T>(opts, this.values[QueryOption.expand])
+      ExpandExpression.factory<T>(opts, this.values[QueryOption.expand])
     );
   }
 
-  filter<T>(
+  filter(
     opts: (
       builder: FilterExpressionBuilder<T>,
       current?: FilterExpression<T>
@@ -132,20 +132,18 @@ export class ExpandField<T> implements Renderable {
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.filter<T>(opts, this.values[QueryOption.filter])
+      FilterExpression.factory<T>(opts, this.values[QueryOption.filter])
     );
   }
 
-  search<T>(
-    opts: (builder: SearchExpressionBuilder<T>) => SearchExpression<T>
-  ) {
+  search(opts: (builder: SearchExpressionBuilder<T>) => SearchExpression<T>) {
     return this.option(
       QueryOption.search,
-      SearchExpression.search<T>(opts, this.values[QueryOption.search])
+      SearchExpression.factory<T>(opts, this.values[QueryOption.search])
     );
   }
 
-  orderBy<T>(
+  orderBy(
     opts: (
       builder: OrderByExpressionBuilder<T>,
       current?: OrderByExpression<T>
@@ -153,7 +151,7 @@ export class ExpandField<T> implements Renderable {
   ) {
     return this.option(
       QueryOption.orderBy,
-      OrderByExpression.orderBy<T>(opts, this.values[QueryOption.orderBy])
+      OrderByExpression.factory<T>(opts, this.values[QueryOption.orderBy])
     );
   }
 
@@ -197,7 +195,7 @@ export class ExpandExpression<T> extends Expression<T> {
     return 'ExpandExpression';
   }
 
-  static expand<T>(
+  static factory<T>(
     opts: (
       builder: ExpandExpressionBuilder<T>,
       current?: ExpandExpression<T>

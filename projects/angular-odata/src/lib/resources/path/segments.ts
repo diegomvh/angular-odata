@@ -17,7 +17,7 @@ function pathSegmentsBuilder(
   segment: ODataSegment,
   escape: boolean = false,
   parser?: Parser<any>,
-  options?: ParserOptions,
+  options?: ParserOptions
 ): [string, { [name: string]: any }] {
   if (segment.name === PathSegment.function) {
     let [path, params] = segment.parameters
@@ -45,7 +45,7 @@ function pathSegmentsBuilder(
     if (
       typeof key === 'string' &&
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
-        key,
+        key
       )
     ) {
       key = raw(key);
@@ -77,13 +77,13 @@ export class ODataPathSegments {
           segment,
           escape,
           parser,
-          options,
+          options
         );
         acc.paths.push(path);
         acc.params = Object.assign(acc.params, params);
         return acc;
       },
-      { paths: [] as string[], params: {} as { [name: string]: any } },
+      { paths: [] as string[], params: {} as { [name: string]: any } }
     );
     return [result.paths.join(PATH_SEPARATOR), result.params];
   }
@@ -133,6 +133,18 @@ export class ODataPathSegments {
     });
   }
 
+  static fromJson(json: { [name: string]: any }[]): ODataPathSegments {
+    return new ODataPathSegments(
+      json.map((s: any) => ({
+        name: s.name,
+        path: s.path,
+        type: s.type,
+        key: s.key,
+        parameters: s.parameters,
+      }))
+    );
+  }
+
   clone() {
     const segments = Objects.clone(this._segments);
     return new ODataPathSegments(segments);
@@ -152,7 +164,7 @@ export class ODataPathSegments {
             PathSegment.entitySet,
             PathSegment.navigationProperty,
             PathSegment.property,
-          ].indexOf(s.name) !== -1,
+          ].indexOf(s.name) !== -1
       );
     return segments.map((s) => new SegmentHandler(s));
   }

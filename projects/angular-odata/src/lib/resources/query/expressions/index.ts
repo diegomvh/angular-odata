@@ -1,5 +1,6 @@
 export * from './base';
 export * from './compute';
+export * from './apply';
 export * from './filter';
 export * from './orderby';
 export * from './search';

@@ -3,6 +3,7 @@ import { Parser, ParserOptions } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { normalizeValue } from '../builder';
+import { ApplyExpression } from './apply';
 import { ComputeExpression } from './compute';
 import { CountExpression } from './count';
 import { ExpandExpression } from './expand';
@@ -101,6 +102,8 @@ export const RenderableFactory = (value: any): Renderable => {
         return ExpandExpression.fromJson(value);
       case 'ComputeExpression':
         return ComputeExpression.fromJson(value);
+      case 'ApplyExpression':
+        return ApplyExpression.fromJson(value);
       case 'FilterExpression':
         return FilterExpression.fromJson(value);
       case 'OrderByExpression':

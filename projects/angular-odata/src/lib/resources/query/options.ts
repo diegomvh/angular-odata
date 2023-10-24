@@ -18,7 +18,7 @@ import {
   RenderableFactory,
   SearchExpression,
 } from './expressions';
-import { CountExpression } from './expressions/count';
+import { ApplyExpression } from './expressions/apply';
 import { ExpandExpression } from './expressions/expand';
 import { SelectExpression } from './expressions/select';
 import { ODataQueryOptionHandler } from './handlers';
@@ -27,6 +27,7 @@ export type ODataQueryArguments<T> = {
   [QueryOption.select]?: Select<T> | SelectExpression<T> | null;
   [QueryOption.expand]?: Expand<T> | ExpandExpression<T> | null;
   [QueryOption.compute]?: string | ComputeExpression<T> | null;
+  [QueryOption.apply]?: string | ApplyExpression<T> | null;
   [QueryOption.filter]?: Filter<T> | FilterExpression<T> | null;
   [QueryOption.search]?: string | SearchExpression<T> | null;
   [QueryOption.transform]?: Transform<T> | null;
@@ -42,15 +43,8 @@ export type ODataQueryArguments<T> = {
 export class ODataQueryOptions<T> {
   values: Map<QueryOption, any>;
 
-  constructor(values?: Map<QueryOption, any> | { [name: string]: any }) {
-    if (!(values instanceof Map)) {
-      const entries = Object.entries(values || {}).map(([key, value]) => [
-        key,
-        RenderableFactory(value),
-      ]) as [QueryOption, any][];
-      values = new Map(entries);
-    }
-    this.values = values as Map<QueryOption, any>;
+  constructor(values?: Map<QueryOption, any>) {
+    this.values = values ?? new Map<QueryOption, any>();
   }
 
   // Params
@@ -60,7 +54,7 @@ export class ODataQueryOptions<T> {
     options,
   }: { escape?: boolean; parser?: Parser<T>; options?: ParserOptions } = {}): [
     string,
-    { [name: string]: any },
+    { [name: string]: any }
   ] {
     let aliases: QueryCustomType[] = [];
     let queryOptions = [
@@ -68,6 +62,7 @@ export class ODataQueryOptions<T> {
       QueryOption.filter,
       QueryOption.search,
       QueryOption.compute,
+      QueryOption.apply,
       QueryOption.transform,
       QueryOption.orderBy,
       QueryOption.top,
@@ -90,7 +85,7 @@ export class ODataQueryOptions<T> {
             ? value.map((v: Expression<T>) =>
                 Types.rawType(v).endsWith('Expression')
                   ? raw(v.render({ aliases, escape, parser, options }))
-                  : v,
+                  : v
               )
             : raw(
                 (value as Expression<T>).render({
@@ -98,7 +93,7 @@ export class ODataQueryOptions<T> {
                   escape,
                   parser,
                   options,
-                }),
+                })
               );
         }
         return Object.assign(acc, { [key]: value });
@@ -128,12 +123,29 @@ export class ODataQueryOptions<T> {
     }, {});
   }
 
+  fromJson<T>(json: { [name: string]: any }): this {
+    Object.entries(json || {}).forEach(([key, value]) => {
+      this.values.set(key as QueryOption, RenderableFactory(value));
+    });
+    return this;
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): ODataQueryOptions<T> {
+    const entries = Object.entries(json || {}).map(([key, value]) => [
+      key,
+      RenderableFactory(value),
+    ]) as [QueryOption, any][];
+    new Map(entries);
+    return new ODataQueryOptions<T>(new Map(entries));
+  }
+
   toQueryArguments(): ODataQueryArguments<T> {
     return {
       select: this.values.get(QueryOption.select) || null,
       expand: this.values.get(QueryOption.expand) || null,
       transform: this.values.get(QueryOption.transform) || null,
       compute: this.values.get(QueryOption.compute) || null,
+      apply: this.values.get(QueryOption.apply) || null,
       search: this.values.get(QueryOption.search) || null,
       filter: this.values.get(QueryOption.filter) || null,
       orderBy: this.values.get(QueryOption.orderBy) || null,

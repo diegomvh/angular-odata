@@ -45,7 +45,7 @@ export class FilterExpression<F> extends Expression<F> {
     return 'FilterExpression';
   }
 
-  static filter<T>(
+  static factory<T>(
     opts: (
       builder: FilterExpressionBuilder<T>,
       current?: FilterExpression<T>

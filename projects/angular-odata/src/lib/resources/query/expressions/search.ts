@@ -74,7 +74,7 @@ export class SearchExpression<T> extends Expression<T> {
     return 'SearchExpression';
   }
 
-  static search<T>(
+  static factory<T>(
     opts: (
       builder: SearchExpressionBuilder<T>,
       current?: SearchExpression<T>
