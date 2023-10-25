@@ -1017,10 +1017,13 @@ export class ODataModelOptions<T> {
         (prevField === null || prevField.collection)
       ) {
         const m = model as ODataModel<any>;
-        // Resolve subtype
-        const r = m._meta.modelResourceFactory(resource.cloneQuery<T>());
-        if (r !== null && r.isSubtypeOf(resource)) {
-          resource = r;
+        // Resolve subtype if collection not is from field
+        // FIXME
+        if (field === null) {
+          const r = m._meta.modelResourceFactory(resource.cloneQuery<T>());
+          if (r !== null && !r.isTypeOf(resource) && r.isSubtypeOf(resource)) {
+            resource = r;
+          }
         }
         // Resolve key
         const mKey = m.key({ field_mapping: true }) as EntityKey<any>;

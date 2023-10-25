@@ -129,6 +129,14 @@ export class ODataResource<T> {
   }
   //#endregion
 
+  isTypeOf(other: ODataResource<any>) {
+    return (
+      this.schema !== undefined &&
+      other.schema !== undefined &&
+      this.schema?.isTypeOf(other.schema.type())
+    );
+  }
+
   isSubtypeOf(other: ODataResource<any>) {
     return (
       this.schema !== undefined &&
