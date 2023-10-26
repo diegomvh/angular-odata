@@ -118,6 +118,8 @@ export const RenderableFactory = (value: any): Renderable => {
         return Operator.fromJson(value);
       case 'Grouping':
         return Grouping.fromJson(value);
+      case 'Aggregate':
+        return Aggregate.fromJson(value);
       case 'Lambda':
         return Lambda.fromJson(value);
       case 'Type':
@@ -660,6 +662,113 @@ export class Grouping<T> implements Renderable {
   }
 }
 
+export type AggregateMethod =
+  | 'sum'
+  | 'min'
+  | 'max'
+  | 'average'
+  | 'countdistinct'; //, or with custom aggregation methods;
+
+export class Aggregate<T> implements Renderable {
+  constructor(
+    protected value: Renderable,
+    protected method: AggregateMethod,
+    protected alias: string
+  ) {}
+
+  get [Symbol.toStringTag]() {
+    return 'Aggregate';
+  }
+
+  toJson() {
+    return {
+      $type: Types.rawType(this),
+      value: this.value.toJson(),
+      method: this.method,
+      alias: this.alias,
+    };
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): Aggregate<T> {
+    return new Aggregate<T>(
+      RenderableFactory(json['value']),
+      json['method'],
+      json['alias']
+    );
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>;
+    options?: ParserOptions;
+  }): string {
+    return `aggregate(${render(this.value, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      options,
+    })} with ${this.method} as ${this.alias})`;
+  }
+
+  clone() {
+    return new Aggregate(Objects.clone(this.value), this.method, this.alias);
+  }
+  resolve(parser: any) {
+    return parser;
+  }
+}
+
+export class Transformations<T> {
+  aggregate(value: Renderable, method: AggregateMethod, alias: string) {
+    return new Aggregate<T>(value, method, alias);
+  }
+  topCount(value: number, field: Renderable, normalize: Normalize = 'none') {
+    return new Function<T>('topcount', [value, field], normalize);
+  }
+
+  topSum(value: number, field: Renderable, normalize: Normalize = 'none') {
+    return new Function<T>('topsum', [value, field], normalize);
+  }
+  topPercent(value: number, field: Renderable, normalize: Normalize = 'none') {
+    return new Function<T>('toppercent', [value, field], normalize);
+  }
+
+  bottomCount(value: number, field: Renderable, normalize: Normalize = 'none') {
+    return new Function<T>('bottomcount', [value, field], normalize);
+  }
+
+  bottomSum(value: number, field: Renderable, normalize: Normalize = 'none') {
+    return new Function<T>('bottomsum', [value, field], normalize);
+  }
+
+  bottomPercent(
+    value: number,
+    field: Renderable,
+    normalize: Normalize = 'none'
+  ) {
+    return new Function<T>('bottompercent', [value, field], normalize);
+  }
+
+  identity() {
+    return new Function<T>('identity', [], 'none');
+  }
+  search(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('search', [left], normalize);
+  }
+  filter(left: any, normalize: Normalize = 'none') {
+    return new Function<T>('filter', [left], normalize);
+  }
+}
+
 export class Type<T> implements Renderable {
   constructor(
     protected name: string,
@@ -844,8 +953,22 @@ applyMixins(ODataFunctions, [
 ]);
 export const functions: ODataFunctions<any> = new ODataFunctions<any>();
 
+export class ODataTransformations<T> {}
+export interface ODataTransformations<T> extends Transformations<T> {}
+
+applyMixins(ODataTransformations, [Transformations]);
+export const transformations: ODataTransformations<any> =
+  new ODataTransformations<any>();
+
 export class ODataSyntax<T> {}
-export interface ODataSyntax<T> extends ODataOperators<T>, ODataFunctions<T> {}
-applyMixins(ODataSyntax, [ODataOperators, ODataFunctions]);
+export interface ODataSyntax<T>
+  extends ODataOperators<T>,
+    ODataFunctions<T>,
+    ODataTransformations<T> {}
+applyMixins(ODataSyntax, [
+  ODataOperators,
+  ODataFunctions,
+  ODataTransformations,
+]);
 
 export const syntax: ODataSyntax<any> = new ODataSyntax<any>();

@@ -56,8 +56,8 @@ export class ODataQueryOptions<T> {
     string,
     { [name: string]: any }
   ] {
-    let aliases: QueryCustomType[] = [];
-    let queryOptions = [
+    const aliases: QueryCustomType[] = [];
+    const queryOptions = [
       QueryOption.select,
       QueryOption.filter,
       QueryOption.search,

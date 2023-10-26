@@ -1,14 +1,19 @@
 import { Parser, ParserOptions } from '../../../types';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
+import { FilterConnector, FilterExpression } from './filter';
+import { SearchConnector, SearchExpression } from './search';
 import {
   FieldFactory,
   functions,
   ODataFunctions,
   ODataOperators,
   operators,
+  syntax,
+  transformations,
   Renderable,
   RenderableFactory,
+  AggregateMethod,
 } from './syntax';
 
 export type ApplyExpressionBuilder<T> = {
@@ -16,16 +21,12 @@ export type ApplyExpressionBuilder<T> = {
   e: () => ApplyExpression<T>;
 };
 export class ApplyExpression<T> extends Expression<T> {
-  names: string[];
   constructor({
     children,
-    names,
   }: {
     children?: Renderable[];
-    names?: string[];
   } = {}) {
     super({ children });
-    this.names = names || [];
   }
 
   get [Symbol.toStringTag]() {
@@ -50,15 +51,12 @@ export class ApplyExpression<T> extends Expression<T> {
 
   override toJson() {
     const json = super.toJson();
-    return Object.assign(json, {
-      names: this.names,
-    });
+    return Object.assign(json, {});
   }
 
   static fromJson<T>(json: { [name: string]: any }): ApplyExpression<T> {
     return new ApplyExpression<T>({
       children: json['children'].map((c: any) => RenderableFactory(c)),
-      names: json['names'],
     });
   }
 
@@ -75,18 +73,14 @@ export class ApplyExpression<T> extends Expression<T> {
     parser?: Parser<T>;
     options?: ParserOptions;
   } = {}): string {
-    let children = this._children.map((n) =>
-      n.render({ aliases, escape, prefix, parser, options })
-    );
-    return this.names
-      .map((name, index) => `${children[index]} as ${name}`)
-      .join(',');
+    return this._children
+      .map((n) => n.render({ aliases, escape, prefix, parser, options }))
+      .join('/');
   }
 
   clone() {
     return new ApplyExpression<T>({
       children: this._children.map((c) => c.clone()),
-      names: [...this.names],
     });
   }
 
@@ -96,13 +90,11 @@ export class ApplyExpression<T> extends Expression<T> {
   }
 
   aggregate(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    value: any,
+    method: AggregateMethod,
+    alias: string
   ): ApplyExpression<T> {
-    const node = opts({
-      o: operators as ODataOperators<T>,
-      f: functions as ODataFunctions<T>,
-    });
-    return this._add(node);
+    return this._add(syntax.aggregate(value, method, alias));
   }
 
   //topcount
@@ -204,13 +196,21 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //filter
   filter(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
-  ): ApplyExpression<T> {
-    const node = opts({
+    opts: (e: {
+      t: T;
+      e: (connector?: FilterConnector) => FilterExpression<T>;
+      o: ODataOperators<T>;
+      f: ODataFunctions<T>;
+    }) => FilterExpression<T>
+  ) {
+    const exp = opts({
+      t: FieldFactory<Required<T>>(),
       o: operators as ODataOperators<T>,
       f: functions as ODataFunctions<T>,
-    });
-    return this._add(node);
+      e: (connector: FilterConnector = 'and') =>
+        new FilterExpression<T>({ connector }),
+    }) as FilterExpression<T>;
+    return this._add(transformations.filter(exp));
   }
 
   //expand
@@ -226,13 +226,21 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //search
   search(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
-  ): ApplyExpression<T> {
-    const node = opts({
+    opts: (e: {
+      t: T;
+      e: (connector?: SearchConnector) => SearchExpression<T>;
+      o: ODataOperators<T>;
+      f: ODataFunctions<T>;
+    }) => SearchExpression<T>
+  ) {
+    const exp = opts({
+      t: FieldFactory<Required<T>>(),
       o: operators as ODataOperators<T>,
       f: functions as ODataFunctions<T>,
-    });
-    return this._add(node);
+      e: (connector: SearchConnector = 'AND') =>
+        new SearchExpression<T>({ connector }),
+    }) as SearchExpression<T>;
+    return this._add(transformations.search(exp));
   }
 
   //compute
