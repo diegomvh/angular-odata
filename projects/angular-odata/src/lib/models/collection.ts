@@ -507,12 +507,31 @@ export class ODataCollection<T, M extends ODataModel<T>>
     ) {
       const obs$ = forkJoin([
         ...toDestroyEntity.map((m) => m.asEntity((e) => e.destroy(options))),
-        ...toRemoveReference.map((m) => this.removeReference(m, options)),
+        ...toRemoveReference.map((m) =>
+          (this._model.meta.api.options.deleteRefBy === 'path'
+            ? (resource as ODataNavigationPropertyResource<T>).key(m.key())
+            : (resource as ODataNavigationPropertyResource<T>)
+          )
+            .reference()
+            .remove(
+              this._model.meta.api.options.deleteRefBy === 'id'
+                ? (m.asEntity((e) => e.resource()) as ODataEntityResource<T>)
+                : undefined,
+              options
+            )
+        ),
         ...toDestroyContained.map((m) => m.destroy(options)),
         ...toCreateEntity.map((m) =>
           m.asEntity((e) => e.save({ method: 'create', ...options }))
         ),
-        ...toAddReference.map((m) => this.addReference(m, options)),
+        ...toAddReference.map((m) =>
+          (resource as ODataNavigationPropertyResource<T>)
+            .reference()
+            .add(
+              m.asEntity((e) => e.resource()) as ODataEntityResource<T>,
+              options
+            )
+        ),
         ...toCreateContained.map((m) =>
           m.save({ method: 'create', ...options })
         ),
@@ -531,18 +550,34 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return of(this);
   }
 
-  private addReference(model: M, options?: ODataOptions): Observable<M> {
+  private _addServer(model: M, options?: ODataOptions): Observable<M> {
     const resource = this.resource();
-    if (!model.isNew() && resource instanceof ODataNavigationPropertyResource) {
-      return resource
-        .reference()
-        .add(
-          model.asEntity((e) => e.resource()) as ODataEntityResource<T>,
-          options
-        )
-        .pipe(map(() => model));
+    if (resource instanceof ODataNavigationPropertyResource) {
+      if (!model.isNew()) {
+        // Add Reference
+        return resource
+          .reference()
+          .add(
+            model.asEntity((e) => e.resource()) as ODataEntityResource<T>,
+            options
+          )
+          .pipe(map(() => model));
+      } else {
+        // Create Contained
+        return resource.create(model.toEntity() as Partial<T>, options).pipe(
+          map(({ entity }) => {
+            if (entity) {
+              model.assign(entity);
+            }
+            return model;
+          })
+        );
+      }
+    } else if (resource instanceof ODataEntitySetResource) {
+      return model.asEntity((e) => e.save({ method: 'create', ...options }));
+    } else {
+      return of(model);
     }
-    return of(model);
   }
 
   private _addModel(
@@ -606,7 +641,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     else this._entries.push(entry);
 
     if (!silent) {
-      model.events$.trigger(ODataModelEventType.Add, { collection: this });
+      model.events$.trigger(ODataModelEventType.Add, {
+        collection: this,
+        options: { index: position },
+      });
     }
 
     return entry.model;
@@ -633,28 +671,37 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const _addModel = (m: M, reset: boolean) =>
       this._addModel(m, { silent, position, merge, reparent, reset });
     return server
-      ? this._request(this.addReference(model), (model) =>
+      ? this._request(this._addServer(model), (model) =>
           _addModel(model, reset ?? true)
         )
       : of(_addModel(model, reset ?? false));
   }
 
-  private removeReference(model: M, options?: ODataOptions): Observable<M> {
+  private _removeServer(model: M, options?: ODataOptions): Observable<M> {
     let resource = this.resource();
-    if (!model.isNew() && resource instanceof ODataNavigationPropertyResource) {
-      const target =
-        this._model.meta.api.options.deleteRefBy === 'id'
-          ? (model.asEntity((e) => e.resource()) as ODataEntityResource<T>)
-          : undefined;
-      if (this._model.meta.api.options.deleteRefBy === 'path') {
-        resource = resource.key(model.key());
+    if (resource instanceof ODataNavigationPropertyResource) {
+      if (!model.isNew()) {
+        // Remove Reference
+        const target =
+          this._model.meta.api.options.deleteRefBy === 'id'
+            ? (model.asEntity((e) => e.resource()) as ODataEntityResource<T>)
+            : undefined;
+        if (this._model.meta.api.options.deleteRefBy === 'path') {
+          resource = resource.key(model.key());
+        }
+        return resource
+          .reference()
+          .remove(target, options)
+          .pipe(map(() => model));
+      } else {
+        // Remove Contained
+        return resource.destroy(options).pipe(map(() => model));
       }
-      return resource
-        .reference()
-        .remove(target, options)
-        .pipe(map(() => model));
+    } else if (resource instanceof ODataEntitySetResource) {
+      return model.asEntity((e) => e.destroy(options));
+    } else {
+      return of(model);
     }
-    return of(model);
   }
 
   private _removeModel(
@@ -684,27 +731,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
 
     // Trigger Event
-    if (!silent)
-      model.events$.trigger(ODataModelEventType.Remove, { collection: this });
+    if (!silent) {
+      model.events$.trigger(ODataModelEventType.Remove, {
+        collection: this,
+        options: { index: index },
+      });
+      this.events$.trigger(ODataModelEventType.Update, {
+        options: { added: [], removed: [model], merged: [] },
+      });
+    }
 
     this._unlink(entry);
     return entry.model;
-  }
-
-  private removeModel(
-    model: M,
-    {
-      silent = false,
-      reset = false,
-    }: { silent?: boolean; reset?: boolean } = {}
-  ): M {
-    const removed = this._removeModel(model, { silent, reset });
-    if (!silent && removed !== undefined) {
-      this.events$.trigger(ODataModelEventType.Update, {
-        options: { added: [], removed: [removed], merged: [] },
-      });
-    }
-    return removed;
   }
 
   remove(
@@ -718,7 +756,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const _removeModel = (m: M, reset: boolean) =>
       this._removeModel(m, { silent, reset });
     return server
-      ? this._request(this.removeReference(model), (model) =>
+      ? this._request(this._removeServer(model), (model) =>
           _removeModel(model, reset ?? true)
         )
       : of(_removeModel(model, reset ?? false));
@@ -1109,7 +1147,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         if (event.canContinueWith(this)) {
           if (event.model === entry.model) {
             if (event.type === ODataModelEventType.Destroy) {
-              this.removeModel(entry.model, { reset: true });
+              this._removeModel(entry.model, { reset: true });
             } else if (
               event.type === ODataModelEventType.Change &&
               event.options?.key
@@ -1118,7 +1156,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
             }
           }
 
-          const index = this.models().indexOf(entry.model);
+          const index =
+            event.options?.index ?? this.models().indexOf(entry.model);
           this.events$.emit(event.push(this, index));
         }
       }

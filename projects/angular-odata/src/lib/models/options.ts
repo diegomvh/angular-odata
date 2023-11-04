@@ -29,7 +29,7 @@ import {
 import { EdmType, Parser, ParserOptions } from '../types';
 import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
-import type { ODataModel } from './model';
+import { ODataModel } from './model';
 import { EventEmitter } from '@angular/core';
 
 export enum ODataModelEventType {
@@ -103,11 +103,20 @@ export class ODataModelEvent<T> {
     attr: ODataModelAttribute<any> | number
   ) {
     return new ODataModelEvent(this.type, {
-      model: this.model,
-      collection: this.collection,
+      model:
+        this.model ??
+        (model instanceof ODataModel ? (model as ODataModel<any>) : undefined),
+      collection:
+        this.collection ??
+        (model instanceof ODataCollection
+          ? (model as ODataCollection<any, ODataModel<any>>)
+          : undefined),
       previous: this.previous,
       value: this.value,
-      options: this.options,
+      options: {
+        ...this.options,
+        index: attr instanceof ODataModelAttribute ? attr.name : attr,
+      },
       bubbles: this.bubbles,
       chain: [[model, attr], ...this.chain],
     });
@@ -1019,12 +1028,14 @@ export class ODataModelOptions<T> {
         const m = model as ODataModel<any>;
         // Resolve subtype if collection not is from field
         // FIXME
+        /*
         if (field === null) {
           const r = m._meta.modelResourceFactory(resource.cloneQuery<T>());
           if (r !== null && !r.isTypeOf(resource) && r.isSubtypeOf(resource)) {
             resource = r;
           }
         }
+        */
         // Resolve key
         const mKey = m.key({ field_mapping: true }) as EntityKey<any>;
         if (mKey !== undefined) {
