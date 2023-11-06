@@ -120,6 +120,8 @@ export const RenderableFactory = (value: any): Renderable => {
         return Grouping.fromJson(value);
       case 'Aggregate':
         return Aggregate.fromJson(value);
+      case 'GroupBy':
+        return GroupBy.fromJson(value);
       case 'Lambda':
         return Lambda.fromJson(value);
       case 'Type':
@@ -662,6 +664,15 @@ export class Grouping<T> implements Renderable {
   }
 }
 
+export class GroupingOperators<T> {
+  group(value: any) {
+    return new Grouping<T>(value);
+  }
+  rollup(...values: any) {
+    return new Function<T>('rollup', values, 'none');
+  }
+}
+
 export type AggregateMethod =
   | 'sum'
   | 'min'
@@ -727,9 +738,85 @@ export class Aggregate<T> implements Renderable {
   }
 }
 
+export class GroupBy<T> implements Renderable {
+  constructor(
+    protected properties: Renderable[],
+    protected transformations?: Renderable
+  ) {}
+
+  get [Symbol.toStringTag]() {
+    return 'GroupBy';
+  }
+
+  toJson() {
+    return {
+      $type: Types.rawType(this),
+      properties: this.properties.map((p) => p.toJson()),
+      transformations: this.transformations?.toJson(),
+    };
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): GroupBy<T> {
+    return new GroupBy<T>(
+      json['properties'].map((p: any) => RenderableFactory(p)),
+      RenderableFactory(json['transformations'])
+    );
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>;
+    options?: ParserOptions;
+  }): string {
+    const properties = this.properties
+      .map((p) =>
+        render(p, {
+          aliases,
+          escape,
+          prefix,
+          parser,
+          options,
+        })
+      )
+      .join(',');
+    const transformations = this.transformations
+      ? ', ' +
+        render(this.transformations, {
+          aliases,
+          escape,
+          prefix,
+          parser,
+          options,
+        })
+      : '';
+    return `groupby((${properties})${transformations})`;
+  }
+
+  clone() {
+    return new GroupBy(
+      Objects.clone(this.properties),
+      Objects.clone(this.transformations)
+    );
+  }
+  resolve(parser: any) {
+    return parser;
+  }
+}
+
 export class Transformations<T> {
   aggregate(value: Renderable, method: AggregateMethod, alias: string) {
     return new Aggregate<T>(value, method, alias);
+  }
+  groupby(properties: Renderable[], options?: Renderable) {
+    return new GroupBy<T>(properties, options);
   }
   topCount(value: number, field: Renderable, normalize: Normalize = 'none') {
     return new Function<T>('topcount', [value, field], normalize);
@@ -921,11 +1008,13 @@ export class ODataOperators<T> {}
 export interface ODataOperators<T>
   extends LogicalOperators<T>,
     ArithmeticOperators<T>,
+    GroupingOperators<T>,
     LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
   ArithmeticOperators,
+  GroupingOperators,
   LambdaOperators,
 ]);
 export const operators: ODataOperators<any> = new ODataOperators<any>();

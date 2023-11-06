@@ -1,4 +1,5 @@
 import { Parser, ParserOptions } from '../../../types';
+import { Objects } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FilterConnector, FilterExpression } from './filter';
@@ -15,6 +16,36 @@ import {
   RenderableFactory,
   AggregateMethod,
 } from './syntax';
+
+class GroupByTransformations<T> implements Renderable {
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[] | undefined;
+    escape?: boolean | undefined;
+    prefix?: string | undefined;
+    parser?: Parser<any> | undefined;
+    options?: ParserOptions | undefined;
+  }): string {
+    throw new Error('Method not implemented.');
+  }
+  toString(): string {
+    throw new Error('Method not implemented.');
+  }
+  toJson() {
+    throw new Error('Method not implemented.');
+  }
+  clone() {
+    throw new Error('Method not implemented.');
+  }
+  resolve(parser: any) {
+    throw new Error('Method not implemented.');
+  }
+}
 
 export type ApplyExpressionBuilder<T> = {
   t: Required<T>;
@@ -185,13 +216,14 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //groupby
   groupBy(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    props: (e: { rollup: (f: any) => any }) => any | any[],
+    opts?: (e: GroupByTransformations<T>) => GroupByTransformations<T>
   ): ApplyExpression<T> {
-    const node = opts({
-      o: operators as ODataOperators<T>,
-      f: functions as ODataFunctions<T>,
-    });
-    return this._add(node);
+    let properties = props({ rollup: (e: any) => syntax.rollup(e) });
+    properties = Array.isArray(properties) ? properties : [properties];
+    let options = undefined;
+    if (opts !== undefined) options = opts(new GroupByTransformations());
+    return this._add(syntax.groupby(properties, options));
   }
 
   //filter

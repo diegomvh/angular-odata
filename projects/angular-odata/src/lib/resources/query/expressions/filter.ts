@@ -5,7 +5,6 @@ import { CountExpression, CountField } from './count';
 import {
   FieldFactory,
   functions,
-  Grouping,
   Normalize,
   ODataFunctions,
   ODataOperators,
@@ -133,7 +132,7 @@ export class FilterExpression<F> extends Expression<F> {
             negated: this._negated,
           });
           if (exp.length() > 1) {
-            children.push(new Grouping(exp));
+            children.push(syntax.group(exp));
           } else {
             children.push(exp);
           }
@@ -145,7 +144,7 @@ export class FilterExpression<F> extends Expression<F> {
       ) {
         children = [...children, ...node.children()];
       } else {
-        children.push(new Grouping(node));
+        children.push(syntax.group(node));
       }
       this._connector = connector;
       this._children = children;
@@ -158,7 +157,7 @@ export class FilterExpression<F> extends Expression<F> {
     } else {
       this._children.push(
         node instanceof FilterExpression && !node.negated()
-          ? new Grouping(node)
+          ? syntax.group(node)
           : node
       );
     }
