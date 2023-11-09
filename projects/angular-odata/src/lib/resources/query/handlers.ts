@@ -663,4 +663,8 @@ export class ODataQueryOptionsHandler<T> {
   fromJson(json: { [name: string]: any }) {
     this.options.fromJson(json);
   }
+
+  toString() {
+    return this.options.toString();
+  }
 }
