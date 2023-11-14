@@ -21,7 +21,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     {
       segments,
       query,
-    }: { segments: ODataPathSegments; query?: ODataQueryOptions<P> },
+    }: { segments: ODataPathSegments; query?: ODataQueryOptions<P> }
   ) {
     segments.add(PathSegment.reference, $REF);
     query?.clear();
@@ -35,16 +35,22 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     target: ODataEntityResource<any>,
-    options?: ODataOptions,
+    options?: ODataOptions
   ): Observable<any> {
-    return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
+    return super.post(
+      { [ODATA_ID]: target.endpointUrl({ params: false }) },
+      options
+    );
   }
 
   protected override put(
     target: ODataEntityResource<any>,
-    options?: ODataOptions,
+    options?: ODataOptions
   ): Observable<any> {
-    return super.put({ [ODATA_ID]: target.endpointUrl(false) }, options);
+    return super.put(
+      { [ODATA_ID]: target.endpointUrl({ params: false }) },
+      options
+    );
   }
 
   protected override delete({
@@ -56,7 +62,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     target?: ODataEntityResource<any>;
   } & ODataOptions = {}): Observable<any> {
     if (target) {
-      options.params = { [$ID]: target.endpointUrl(false) };
+      options.params = { [$ID]: target.endpointUrl({ params: false }) };
     }
     return super.delete({ etag, ...options });
   }
@@ -71,7 +77,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   add(
     target: ODataEntityResource<any>,
-    options?: ODataOptions,
+    options?: ODataOptions
   ): Observable<any> {
     return this.post(target, options);
   }
@@ -84,7 +90,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   remove(
     target?: ODataEntityResource<any>,
-    options?: ODataOptions,
+    options?: ODataOptions
   ): Observable<any> {
     return this.delete({ target, ...options });
   }
@@ -99,7 +105,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   set(
     target: ODataEntityResource<any>,
-    options?: ODataOptions,
+    options?: ODataOptions
   ): Observable<any> {
     return this.put(target, options);
   }
@@ -123,18 +129,18 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   fetch(
     options?: ODataEntityOptions & {
       bodyQueryOptions?: QueryOption[];
-    },
+    }
   ): Observable<ODataEntity<T>>;
   fetch(
     options?: ODataEntitiesOptions & {
       bodyQueryOptions?: QueryOption[];
-    },
+    }
   ): Observable<ODataEntities<T>>;
   fetch(
     options: ODataEntityOptions &
       ODataEntitiesOptions & {
         bodyQueryOptions?: QueryOption[];
-      } = {},
+      } = {}
   ): Observable<any> {
     return this.get(options);
   }
@@ -147,10 +153,10 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   fetchEntity(
     options: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    } = {},
+    } = {}
   ): Observable<T | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
-      map(({ entity }) => entity),
+      map(({ entity }) => entity)
     );
   }
 
@@ -162,10 +168,10 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   fetchEntities(
     options: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    } = {},
+    } = {}
   ): Observable<T[] | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
-      map(({ entities }) => entities),
+      map(({ entities }) => entities)
     );
   }
   //#endregion

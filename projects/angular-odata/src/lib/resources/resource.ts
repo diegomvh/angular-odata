@@ -186,13 +186,18 @@ export class ODataResource<T> {
     return [spath, { ...sparams, ...qparams }];
   }
 
-  endpointUrl(params: boolean = true) {
-    if (params) {
-      return `${this.api.serviceRootUrl}${this}`;
-    } else {
-      let [path] = this.pathAndParams();
-      return `${this.api.serviceRootUrl}${path}`;
+  endpointUrl({
+    escape = false,
+    params = true,
+    ...options
+  }: ParserOptions & { escape?: boolean; params?: boolean } = {}): string {
+    let [path, qparams] = this.pathAndParams({ escape, ...options });
+    if (params && !Types.isEmpty(qparams)) {
+      path = `${path}${QUERY_SEPARATOR}${Object.entries(qparams)
+        .map((e) => `${e[0]}${VALUE_SEPARATOR}${e[1]}`)
+        .join(PARAM_SEPARATOR)}`;
     }
+    return `${this.api.serviceRootUrl}${path}`;
   }
 
   toString(
