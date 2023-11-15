@@ -1211,7 +1211,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     predicate: (value: M, index: number, array: M[]) => unknown,
     thisArg?: any
   ): M[] {
-    return this.models().filter(predicate);
+    return this.models().filter(predicate, thisArg);
   }
 
   map<U>(
@@ -1280,6 +1280,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const models = this.models();
     const m = models.find((m) => m.equals(model));
     return !m ? -1 : models.indexOf(m);
+  }
+
+  forEach(
+    predicate: (value: M, index: number, array: M[]) => void,
+    thisArg?: any
+  ): void {
+    return this.models().forEach(predicate, thisArg);
   }
 
   isEmpty() {
