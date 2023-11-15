@@ -1046,11 +1046,12 @@ export class ODataModelOptions<T> {
         }
       }
       prevField = field;
-      if (field === null) {
+      if (field === null && model._resource !== null) {
         // Apply the query from model to new resource
-        const query = model._resource?.cloneQuery<T>().toQueryArguments();
-        if (query !== undefined) resource.query((q) => q.restore(query));
-      } else {
+        model._resource.query((qs) =>
+          resource?.query((qd) => qd.restore(qs.store()))
+        );
+      } else if (field !== null) {
         resource = field.resourceFactory<any, any>(resource);
       }
     }
