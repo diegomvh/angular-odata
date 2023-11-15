@@ -141,19 +141,19 @@ export class ODataQueryOptions<T> {
 
   toQueryArguments(): ODataQueryArguments<T> {
     return {
-      select: this.values.get(QueryOption.select) || null,
-      expand: this.values.get(QueryOption.expand) || null,
-      transform: this.values.get(QueryOption.transform) || null,
-      compute: this.values.get(QueryOption.compute) || null,
-      apply: this.values.get(QueryOption.apply) || null,
-      search: this.values.get(QueryOption.search) || null,
-      filter: this.values.get(QueryOption.filter) || null,
-      orderBy: this.values.get(QueryOption.orderBy) || null,
-      top: this.values.get(QueryOption.top) || null,
-      skip: this.values.get(QueryOption.skip) || null,
-      skiptoken: this.values.get(QueryOption.skiptoken) || null,
-      levels: this.values.get(QueryOption.levels) || null,
-      count: this.values.get(QueryOption.count) || null,
+      select: this.values.get(QueryOption.select) ?? null,
+      expand: this.values.get(QueryOption.expand) ?? null,
+      transform: this.values.get(QueryOption.transform) ?? null,
+      compute: this.values.get(QueryOption.compute) ?? null,
+      apply: this.values.get(QueryOption.apply) ?? null,
+      search: this.values.get(QueryOption.search) ?? null,
+      filter: this.values.get(QueryOption.filter) ?? null,
+      orderBy: this.values.get(QueryOption.orderBy) ?? null,
+      top: this.values.get(QueryOption.top) ?? null,
+      skip: this.values.get(QueryOption.skip) ?? null,
+      skiptoken: this.values.get(QueryOption.skiptoken) ?? null,
+      levels: this.values.get(QueryOption.levels) ?? null,
+      count: this.values.get(QueryOption.count) ?? null,
     } as ODataQueryArguments<T>;
   }
 
