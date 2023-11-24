@@ -896,15 +896,16 @@ export class Type<T> implements Renderable {
     parser?: Parser<T>;
     options?: ParserOptions;
   }): string {
+    let value;
     if (this.value) {
       parser = resolve([this.value], parser);
       let [left, right] = encode([this.value], parser, options);
 
-      left = render(left, { aliases, escape, prefix, parser, options });
-      return `${this.name}(${left}, '${this.type}')`;
-    } else {
-      return `${this.name}('${this.type}')`;
+      value = render(left, { aliases, escape, prefix, parser, options });
     }
+    return value
+      ? `${this.name}(${value}, '${this.type}')`
+      : `${this.name}('${this.type}')`;
   }
 
   clone() {

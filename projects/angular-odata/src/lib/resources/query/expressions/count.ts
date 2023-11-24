@@ -3,7 +3,13 @@ import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FilterExpression, FilterExpressionBuilder } from './filter';
-import { render, FieldFactory, Renderable, RenderableFactory } from './syntax';
+import {
+  render,
+  FieldFactory,
+  Renderable,
+  RenderableFactory,
+  resolve,
+} from './syntax';
 
 export class CountField<T> implements Renderable {
   constructor(
@@ -46,7 +52,7 @@ export class CountField<T> implements Renderable {
             aliases,
             prefix,
             escape,
-            parser,
+            parser: resolve([this.field], parser),
             options,
           });
         }
