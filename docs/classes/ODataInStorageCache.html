@@ -12,6 +12,64 @@
         <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
+          <script>
+               // Blocking script to avaoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+
+               if ($darkModeToggles.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
             <a href="../" class="navbar-brand">angular-odata documentation</a>
@@ -77,7 +135,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                        <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+                            <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
             </p>
 
 
@@ -365,7 +423,7 @@
                 <td class="col-md-4">
                     <a name="flush"></a>
                     <span class="name">
-                        <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>flush</b></span>
                         <a href="#flush"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -373,35 +431,35 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
+                        <span class="modifier-icon icon ion-ios-reset"></span>
                     <code>flush()</code>
                 </td>
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:54</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:54</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Flush the cache and clean the storage</p>
+                        <div class="io-description"><p>Flush the cache and clean the storage</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
-                    </div>
+                        </div>
                 </td>
             </tr>
         </tbody>
@@ -424,67 +482,65 @@
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:79</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:79</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Restore the response from the cache</p>
+                        <div class="io-description"><p>Restore the response from the cache</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                    <td>
-                                        <p>The request with the resource to get the response</p>
+                                            <td>
+                                                    <p>The request with the resource to get the response</p>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse | undefined</a></code>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse | undefined</a></code>
 
-                    </div>
-                    <div class="io-description">
-                        <p>The response from the cache</p>
+                        </div>
+                            <div class="io-description">
+                                <p>The response from the cache</p>
 
-                    </div>
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -507,82 +563,80 @@
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:64</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:64</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Store the response in the cache</p>
+                        <div class="io-description"><p>Store the response in the cache</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>The request with the resource to store the response</p>
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>res</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                    <td>
-                                        <p>The response to store in the cache</p>
+                                            <td>
+                                                    <p>The request with the resource to store the response</p>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
+                                            </td>
 
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The response to store in the cache</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -605,23 +659,23 @@
             </tr>
 
 
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="45"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:45</a></div>
-                </td>
-            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="45"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:45</a></div>
+                        </td>
+                    </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Restore the cache from the storage</p>
+                        <div class="io-description"><p>Restore the cache from the storage</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
-                    </div>
+                        </div>
                 </td>
             </tr>
         </tbody>
@@ -644,23 +698,23 @@
             </tr>
 
 
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="35"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:35</a></div>
-                </td>
-            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="35"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:35</a></div>
+                        </td>
+                    </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Store the cache in the storage</p>
+                        <div class="io-description"><p>Store the cache in the storage</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
-                    </div>
+                        </div>
                 </td>
             </tr>
         </tbody>
@@ -683,88 +737,86 @@
             </tr>
 
 
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
 </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:76</a></code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:76</a></code>
 </div>
-                </td>
-            </tr>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T</li>
+                            </ul>
+                        </td>
+                    </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>T</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Build an entry from a payload and some options</p>
+                        <div class="io-description"><p>Build an entry from a payload and some options</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>payload</td>
-                                    <td>
-                                            <code>T</code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                        <code>T</code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>The payload to store in the cache</p>
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                    <td>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataCache.html" target="_self" >ODataCacheEntry&lt;T&gt;</a></code>
+                                            <td>
+                                                    <p>The payload to store in the cache</p>
 
-                    </div>
-                    <div class="io-description">
-                        <p>The entry to store in the cache</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
 
-                    </div>
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataCache.html" target="_self" >ODataCacheEntry&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The entry to store in the cache</p>
+
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -787,67 +839,65 @@
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:93</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:93</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Build a key from store an entry in the cache</p>
+                        <div class="io-description"><p>Build a key from store an entry in the cache</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>names</td>
-                                    <td>
-                                            <code>string[]</code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>names</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                    <td>
-                                        <p>The names of the entry</p>
+                                            <td>
+                                                    <p>The names of the entry</p>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
-                    </div>
-                    <div class="io-description">
-                        <p>The key for the entry</p>
+                        </div>
+                            <div class="io-description">
+                                <p>The key for the entry</p>
 
-                    </div>
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -870,64 +920,62 @@
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:138</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:138</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Remove all cache entries that are matching with the given options</p>
+                        <div class="io-description"><p>Remove all cache entries that are matching with the given options</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
 
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -950,94 +998,92 @@
             </tr>
 
 
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
 </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:126</a></code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:126</a></code>
 </div>
-                </td>
-            </tr>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T</li>
+                            </ul>
+                        </td>
+                    </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>T</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Return the payload from the cache if it exists and is not expired</p>
+                        <div class="io-description"><p>Return the payload from the cache if it exists and is not expired</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>name</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
-                                    <td>
-                                    </td>
+                                            <td>
+                                            </td>
 
-                                    <td>
-                                        <p>The name of the entry</p>
+                                            <td>
+                                                    <p>The name of the entry</p>
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
 
-                                    <td>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>T</code>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>T</code>
 
-                    </div>
-                    <div class="io-description">
-                        <p>The payload of the entry</p>
+                        </div>
+                            <div class="io-description">
+                                <p>The payload of the entry</p>
 
-                    </div>
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1048,7 +1094,7 @@
                 <td class="col-md-4">
                     <a name="handleFetch"></a>
                     <span class="name">
-                        <span class="modifier">Private</span>
+                            <span class="modifier">Private</span>
                         <span ><b>handleFetch</b></span>
                         <a href="#handleFetch"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -1056,77 +1102,75 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
+                        <span class="modifier-icon icon ion-ios-reset"></span>
                     <code>handleFetch(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res$: <a href="../classes/ODataResponse.html" target="_self">Observable&lt;ODataResponse&lt;any&gt;&gt;</a>)</code>
                 </td>
             </tr>
 
 
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
 </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:189</a></code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:189</a></code>
 </div>
-                </td>
-            </tr>
+                        </td>
+                    </tr>
 
 
             <tr>
                 <td class="col-md-4">
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>res$</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+                                        </tr>
+                                        <tr>
+                                                <td>res$</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+                                            </td>
 
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1137,7 +1181,7 @@
                 <td class="col-md-4">
                     <a name="handleMutate"></a>
                     <span class="name">
-                        <span class="modifier">Private</span>
+                            <span class="modifier">Private</span>
                         <span ><b>handleMutate</b></span>
                         <a href="#handleMutate"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -1145,77 +1189,75 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
+                        <span class="modifier-icon icon ion-ios-reset"></span>
                     <code>handleMutate(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res$: <a href="../classes/ODataResponse.html" target="_self">Observable&lt;ODataResponse&lt;any&gt;&gt;</a>)</code>
                 </td>
             </tr>
 
 
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
 </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:224</a></code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:224</a></code>
 </div>
-                </td>
-            </tr>
+                        </td>
+                    </tr>
 
 
             <tr>
                 <td class="col-md-4">
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>res$</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+                                        </tr>
+                                        <tr>
+                                                <td>res$</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+                                            </td>
 
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1238,82 +1280,80 @@
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:178</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:178</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Using the request, handle the fetching of the response</p>
+                        <div class="io-description"><p>Using the request, handle the fetching of the response</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>The request to fetch</p>
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>res$</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                    <td>
-                                        <p>Observable of the response</p>
+                                            <td>
+                                                    <p>The request to fetch</p>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>res$</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+                                            </td>
 
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Observable of the response</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1336,67 +1376,65 @@
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:168</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:168</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Check if the entry is expired</p>
+                        <div class="io-description"><p>Check if the entry is expired</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>entry</td>
-                                    <td>
-                                                <code><a href="../classes/ODataCache.html" target="_self" >ODataCacheEntry&lt;any&gt;</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entry</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataCache.html" target="_self" >ODataCacheEntry&lt;any&gt;</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                    <td>
-                                        <p>The cache entry</p>
+                                            <td>
+                                                    <p>The cache entry</p>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
 
-                    </div>
-                    <div class="io-description">
-                        <p>Boolean indicating if the entry is expired</p>
+                        </div>
+                            <div class="io-description">
+                                <p>Boolean indicating if the entry is expired</p>
 
-                    </div>
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1419,111 +1457,109 @@
             </tr>
 
 
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
 </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:105</a></code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:105</a></code>
 </div>
-                </td>
-            </tr>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T</li>
+                            </ul>
+                        </td>
+                    </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>T</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Put some payload in the cache</p>
+                        <div class="io-description"><p>Put some payload in the cache</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>name</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
-                                    <td>
-                                    </td>
+                                            <td>
+                                            </td>
 
-                                    <td>
-                                        <p>The name for the entry</p>
+                                            <td>
+                                                    <p>The name for the entry</p>
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>payload</td>
-                                    <td>
-                                            <code>T</code>
-                                    </td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                        <code>T</code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
-                                    <td>
-                                    </td>
+                                            <td>
+                                            </td>
 
-                                    <td>
-                                        <p>The payload to store in the cache</p>
+                                            <td>
+                                                    <p>The payload to store in the cache</p>
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
 
-                                    <td>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1546,67 +1582,65 @@
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:38</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:38</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Using the resource on the request build an array of string to identify the scope of the request</p>
+                        <div class="io-description"><p>Using the resource on the request build an array of string to identify the scope of the request</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                    <td>
-                                        <p>The request with the resource to build the scope</p>
+                                            <td>
+                                                    <p>The request with the resource to build the scope</p>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>string[]</code>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
 
-                    </div>
-                    <div class="io-description">
-                        <p>Array of string to identify the scope of the request</p>
+                        </div>
+                            <div class="io-description">
+                                <p>Array of string to identify the scope of the request</p>
 
-                    </div>
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1629,67 +1663,65 @@
             </tr>
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:55</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataCache.html" target="_self" >ODataCache</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataCache.html#source" target="_self" >ODataCache:55</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Using the odata context on the response build an array of string to identify the tags of the response</p>
+                        <div class="io-description"><p>Using the odata context on the response build an array of string to identify the tags of the response</p>
 </div>
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>res</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
-                                    </td>
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
+                                            </td>
 
-                                    <td>
-                                        No
-                                    </td>
+                                            <td>
+                                                    No
+                                            </td>
 
 
-                                    <td>
-                                        <p>The response to build the tags</p>
+                                            <td>
+                                                    <p>The response to build the tags</p>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>string[]</code>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
 
-                    </div>
-                    <div class="io-description">
-                        <p>Array of string to identify the tags of the response</p>
+                        </div>
+                            <div class="io-description">
+                                <p>Array of string to identify the tags of the response</p>
 
-                    </div>
+                            </div>
                 </td>
             </tr>
         </tbody>
