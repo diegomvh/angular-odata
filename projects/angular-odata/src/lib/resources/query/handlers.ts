@@ -1,5 +1,5 @@
 import { ODataStructuredType } from '../../schema';
-import { QueryOption } from '../../types';
+import { Parser, QueryOption } from '../../types';
 import { Objects, Types } from '../../utils';
 import {
   alias,
@@ -29,7 +29,11 @@ import {
   ApplyExpression,
   ApplyExpressionBuilder,
 } from './expressions';
-import { ODataQueryArguments, ODataQueryOptions } from './options';
+import {
+  ODataQueryArguments,
+  ODataQueryOptions,
+  pathAndParamsFromQueryOptions,
+} from './options';
 
 export class ODataQueryOptionHandler<T> {
   constructor(private o: Map<QueryOption, any>, private n: QueryOption) {}
@@ -205,6 +209,16 @@ export class ODataQueryOptionHandler<T> {
    */
   clear() {
     this.o.delete(this.n);
+  }
+  toString({
+    escape,
+    parser,
+  }: { escape?: boolean; parser?: Parser<T> } = {}): string {
+    const [_, params] = pathAndParamsFromQueryOptions(
+      new Map<QueryOption, any>([[this.n, this.o.get(this.n)]]),
+      { escape, parser }
+    );
+    return params[`$${this.n}`];
   }
 }
 
@@ -664,7 +678,10 @@ export class ODataQueryOptionsHandler<T> {
     this.options.fromJson(json);
   }
 
-  toString() {
-    return this.options.toString();
+  toString({
+    escape,
+    parser,
+  }: { escape?: boolean; parser?: Parser<T> } = {}): string {
+    return this.options.toString({ escape, parser });
   }
 }

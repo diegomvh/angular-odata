@@ -28,7 +28,6 @@ export interface Renderable {
     parser?: Parser<any>;
     options?: ParserOptions;
   }): string;
-  toString(): string;
   toJson(): any;
   clone(): any;
   resolve(parser: any): any;

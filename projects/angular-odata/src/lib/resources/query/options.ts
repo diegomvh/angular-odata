@@ -40,65 +40,81 @@ export type ODataQueryArguments<T> = {
   [QueryOption.count]?: boolean | null;
 };
 
+// Create a path and params tuple from the query options
+export const pathAndParamsFromQueryOptions = <T>(
+  values: Map<QueryOption, any>,
+  {
+    escape,
+    parser,
+    options,
+  }: { escape?: boolean; parser?: Parser<T>; options?: ParserOptions } = {}
+): [string, { [name: string]: any }] => {
+  const aliases: QueryCustomType[] = [];
+  const queryOptions = [
+    QueryOption.select,
+    QueryOption.filter,
+    QueryOption.search,
+    QueryOption.compute,
+    QueryOption.apply,
+    QueryOption.transform,
+    QueryOption.orderBy,
+    QueryOption.top,
+    QueryOption.skip,
+    QueryOption.skiptoken,
+    QueryOption.expand,
+    QueryOption.format,
+    QueryOption.levels,
+    QueryOption.count,
+  ]
+    .filter((key) => values.has(key) && !Types.isEmpty(values.get(key)))
+    .reduce((acc, key) => {
+      let value = values.get(key);
+      if (
+        Types.rawType(value).endsWith('Expression') ||
+        (Types.isArray(value) &&
+          value.some((v: any) => Types.rawType(v).endsWith('Expression')))
+      ) {
+        value = Types.isArray(value)
+          ? value.map((v: Expression<T>) =>
+              Types.rawType(v).endsWith('Expression')
+                ? raw(v.render({ aliases, escape, parser, options }))
+                : v
+            )
+          : raw(
+              (value as Expression<T>).render({
+                aliases,
+                escape,
+                parser,
+                options,
+              })
+            );
+      }
+      return Object.assign(acc, { [key]: value });
+    }, {});
+  return buildPathAndQuery<any>({ ...queryOptions, aliases, escape });
+};
+
 export class ODataQueryOptions<T> {
-  values: Map<QueryOption, any>;
+  private _values: Map<QueryOption, any>;
 
   constructor(values?: Map<QueryOption, any>) {
-    this.values = values ?? new Map<QueryOption, any>();
+    this._values = values ?? new Map<QueryOption, any>();
   }
 
-  // Params
   pathAndParams({
     escape,
     parser,
     options,
-  }: { escape?: boolean; parser?: Parser<T>; options?: ParserOptions } = {}): [
-    string,
-    { [name: string]: any }
-  ] {
-    const aliases: QueryCustomType[] = [];
-    const queryOptions = [
-      QueryOption.select,
-      QueryOption.filter,
-      QueryOption.search,
-      QueryOption.compute,
-      QueryOption.apply,
-      QueryOption.transform,
-      QueryOption.orderBy,
-      QueryOption.top,
-      QueryOption.skip,
-      QueryOption.skiptoken,
-      QueryOption.expand,
-      QueryOption.format,
-      QueryOption.levels,
-      QueryOption.count,
-    ]
-      .filter((key) => !Types.isEmpty(this.values.get(key)))
-      .reduce((acc, key) => {
-        let value = this.values.get(key);
-        if (
-          Types.rawType(value).endsWith('Expression') ||
-          (Types.isArray(value) &&
-            value.some((v: any) => Types.rawType(v).endsWith('Expression')))
-        ) {
-          value = Types.isArray(value)
-            ? value.map((v: Expression<T>) =>
-                Types.rawType(v).endsWith('Expression')
-                  ? raw(v.render({ aliases, escape, parser, options }))
-                  : v
-              )
-            : raw(
-                (value as Expression<T>).render({
-                  aliases,
-                  escape,
-                  parser,
-                  options,
-                })
-              );
-        }
-        return Object.assign(acc, { [key]: value });
-      }, {});
-    return buildPathAndQuery<any>({ ...queryOptions, aliases, escape });
+  }: {
+    escape?: boolean;
+    parser?: Parser<T>;
+    options?: ParserOptions;
+  }) {
+    return pathAndParamsFromQueryOptions<T>(this._values, {
+      escape,
+      parser,
+      options,
+    });
   }
 
   toString({
@@ -116,8 +132,8 @@ export class ODataQueryOptions<T> {
   }
 
   toJson() {
-    return [...this.values.keys()].reduce((acc, key) => {
-      let value = this.values.get(key);
+    return [...this._values.keys()].reduce((acc, key) => {
+      let value = this._values.get(key);
       value = 'toJson' in value ? value.toJson() : value;
       return Object.assign(acc, { [key]: value });
     }, {});
@@ -125,7 +141,7 @@ export class ODataQueryOptions<T> {
 
   fromJson<T>(json: { [name: string]: any }): this {
     Object.entries(json || {}).forEach(([key, value]) => {
-      this.values.set(key as QueryOption, RenderableFactory(value));
+      this._values.set(key as QueryOption, RenderableFactory(value));
     });
     return this;
   }
@@ -141,61 +157,61 @@ export class ODataQueryOptions<T> {
 
   toQueryArguments(): ODataQueryArguments<T> {
     return {
-      select: this.values.get(QueryOption.select) ?? null,
-      expand: this.values.get(QueryOption.expand) ?? null,
-      transform: this.values.get(QueryOption.transform) ?? null,
-      compute: this.values.get(QueryOption.compute) ?? null,
-      apply: this.values.get(QueryOption.apply) ?? null,
-      search: this.values.get(QueryOption.search) ?? null,
-      filter: this.values.get(QueryOption.filter) ?? null,
-      orderBy: this.values.get(QueryOption.orderBy) ?? null,
-      top: this.values.get(QueryOption.top) ?? null,
-      skip: this.values.get(QueryOption.skip) ?? null,
-      skiptoken: this.values.get(QueryOption.skiptoken) ?? null,
-      levels: this.values.get(QueryOption.levels) ?? null,
-      count: this.values.get(QueryOption.count) ?? null,
+      select: this._values.get(QueryOption.select) ?? null,
+      expand: this._values.get(QueryOption.expand) ?? null,
+      transform: this._values.get(QueryOption.transform) ?? null,
+      compute: this._values.get(QueryOption.compute) ?? null,
+      apply: this._values.get(QueryOption.apply) ?? null,
+      search: this._values.get(QueryOption.search) ?? null,
+      filter: this._values.get(QueryOption.filter) ?? null,
+      orderBy: this._values.get(QueryOption.orderBy) ?? null,
+      top: this._values.get(QueryOption.top) ?? null,
+      skip: this._values.get(QueryOption.skip) ?? null,
+      skiptoken: this._values.get(QueryOption.skiptoken) ?? null,
+      levels: this._values.get(QueryOption.levels) ?? null,
+      count: this._values.get(QueryOption.count) ?? null,
     } as ODataQueryArguments<T>;
   }
 
   clone<O>() {
-    return new ODataQueryOptions<O>(Objects.clone(this.values));
+    return new ODataQueryOptions<O>(Objects.clone(this._values));
   }
 
   // Set Renderable
   expression(key: QueryOption, exp?: Expression<T>) {
-    if (exp !== undefined) this.values.set(key, exp);
-    return this.values.get(key);
+    if (exp !== undefined) this._values.set(key, exp);
+    return this._values.get(key);
   }
 
   // Option Handler
   option<O>(key: QueryOption, opts?: O) {
-    if (opts !== undefined) this.values.set(key, opts);
-    return new ODataQueryOptionHandler<O>(this.values, key);
+    if (opts !== undefined) this._values.set(key, opts);
+    return new ODataQueryOptionHandler<O>(this._values, key);
   }
 
   // Query Options tools
   has(key: QueryOption) {
-    return this.values.has(key);
+    return this._values.has(key);
   }
 
   remove(...keys: QueryOption[]) {
-    [...this.values.keys()]
+    [...this._values.keys()]
       .filter((k) => keys.indexOf(k) !== -1)
       .forEach((key) => {
-        this.values.delete(key);
+        this._values.delete(key);
       });
   }
 
   keep(...keys: QueryOption[]) {
-    [...this.values.keys()]
+    [...this._values.keys()]
       .filter((k) => keys.indexOf(k) === -1)
       .forEach((key) => {
-        this.values.delete(key);
+        this._values.delete(key);
       });
   }
 
   // Clear
   clear() {
-    this.values.clear();
+    this._values.clear();
   }
 }
