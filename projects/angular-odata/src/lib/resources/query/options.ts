@@ -109,7 +109,7 @@ export class ODataQueryOptions<T> {
     escape?: boolean;
     parser?: Parser<T>;
     options?: ParserOptions;
-  }) {
+  } = {}): [string, { [name: string]: any }] {
     return pathAndParamsFromQueryOptions<T>(this._values, {
       escape,
       parser,
