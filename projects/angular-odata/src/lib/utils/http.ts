@@ -14,14 +14,14 @@ export const Http = {
         value.keys().forEach((key) => {
           headers = ((value as HttpHeaders).getAll(key) || []).reduce(
             (acc, v) => acc.append(key, v),
-            headers,
+            headers
           );
         });
       } else if (Types.isPlainObject(value)) {
         Object.entries(value).forEach(([key, value]) => {
           headers = (Array.isArray(value) ? value : [value]).reduce(
             (acc, v) => acc.append(key, v),
-            headers,
+            headers
           );
         });
       }
@@ -48,14 +48,14 @@ export const Http = {
         value.keys().forEach((key) => {
           params = ((value as HttpParams).getAll(key) || []).reduce(
             (acc, v) => acc.append(key, v),
-            params,
+            params
           );
         });
       } else if (Types.isPlainObject(value)) {
         Object.entries(value).forEach(([key, value]) => {
           params = (Array.isArray(value) ? value : [value]).reduce(
             (acc, v) => acc.append(key, v),
-            params,
+            params
           );
         });
       }
@@ -66,14 +66,14 @@ export const Http = {
   // Split Params
   splitHttpParams(
     params: HttpParams,
-    keys: string[],
+    keys: string[]
   ): [HttpParams, HttpParams] {
     let other = new HttpParams();
     params.keys().forEach((key) => {
       if (keys.includes(key)) {
         other = (params.getAll(key) || []).reduce(
           (acc, v) => acc.append(key, v),
-          other,
+          other
         );
         params = params.delete(key);
       }
@@ -88,7 +88,7 @@ export const Http = {
 
   resolveHeaderKey(
     headers: HttpHeaders | { [param: string]: string | string[] },
-    options: string[],
+    options: string[]
   ): string | undefined {
     if (headers instanceof HttpHeaders) {
       return headers.keys().find((k) => options.indexOf(k) !== -1);
@@ -104,15 +104,17 @@ export const Http = {
     return res;
   },
 
-  parseResponseStatus(statusLine: string): {
+  parseResponseStatus(line: string): {
     status: string;
     code: number;
     message: string;
   } {
-    const status = statusLine.split(' ')[0];
-    const code = parseInt(statusLine.split(' ')[1], 10);
-    const message = statusLine.split(' ')[2];
-    return { status, code, message };
+    const chunks = line.split(' ');
+    return {
+      status: chunks[0],
+      code: parseInt(chunks[1], 10),
+      message: chunks.slice(2).join(' '),
+    };
   },
 
   boundaryDelimiter(contentType: string): string {
