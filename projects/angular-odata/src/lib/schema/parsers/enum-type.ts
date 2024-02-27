@@ -5,6 +5,7 @@ import {
   ParserOptions,
   Parser,
   FieldParser,
+  JsonType
 } from '../../types';
 import { Enums } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
@@ -139,12 +140,18 @@ export class ODataEnumTypeParser<E>
 
   // Json Schema
   toJsonSchema() {
-    let property = <any>{
-      title: this.name,
-      type: 'string',
-    };
-    property.enum = this._fields.map((f) => f.name);
-    return property;
+    return (this.flags) ?
+      ({
+        title: this.name,
+        type: JsonType.array,
+        items: {
+          type: JsonType.integer,
+        }
+      }) :
+      ({
+        type: JsonType.integer,
+        enum: this._fields.map((f) => f.value)
+      });
   }
 
   validate(
