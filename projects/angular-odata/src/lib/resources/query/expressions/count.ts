@@ -89,7 +89,7 @@ export class CountField<T> implements Renderable {
   }
 
   resolve(parser: any) {
-    return parser;
+    return this.field.resolve(parser);
   }
 
   // Option Handler
