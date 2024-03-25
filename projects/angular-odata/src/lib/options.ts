@@ -40,6 +40,11 @@ export class ODataApiOptions implements ApiOptions {
    */
   jsonBatchFormat: boolean;
   /**
+   * Relative urls
+   * http://docs.oasis-open.org/odata/odata-json-format/v4.0/cs01/odata-json-format-v4.0-cs01.html#_Toc365464682
+   */
+  relativeUrls: boolean;
+  /**
    * Cache fetch policy
    */
   fetchPolicy: FetchPolicy;
@@ -118,6 +123,7 @@ export class ODataApiOptions implements ApiOptions {
     this.nonParenthesisForEmptyParameterFunction =
       config.nonParenthesisForEmptyParameterFunction ?? false;
     this.jsonBatchFormat = config.jsonBatchFormat ?? false;
+    this.relativeUrls = config.relativeUrls ?? true;
   }
 
   get parserOptions(): ParserOptions {

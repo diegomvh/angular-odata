@@ -36,6 +36,7 @@ import { ODataRequest } from '../request';
 import { ODataResource } from '../resource';
 import { ODataResponse } from '../responses';
 import { ODataOptions } from './options';
+import { ODataApiOptions } from '../../options';
 
 export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
   id: string;
@@ -50,10 +51,12 @@ export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
     return this.toLegacy();
   }
 
-  toLegacy() {
+  toLegacy({ relativeUrls }: { relativeUrls?: boolean } = {}): string {
     //TODO: Relative or Absolute url ?
     let res = [
-      `${this.request.method} ${this.request.pathWithParams} ${HTTP11}`,
+      `${this.request.method} ${
+        relativeUrls ? this.request.pathWithParams : this.request.urlWithParams
+      } ${HTTP11}`,
     ];
     if (
       this.request.method === 'POST' ||
@@ -82,12 +85,13 @@ export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
     return res.join(NEWLINE);
   }
 
-  toJson() {
-    //TODO: Relative or Absolute url ?
+  toJson({ relativeUrls }: { relativeUrls?: boolean } = {}) {
     let res: { [name: string]: any } = {
       id: this.id,
       method: this.request.method,
-      url: this.request.pathWithParams,
+      url: relativeUrls
+        ? this.request.pathWithParams
+        : this.request.urlWithParams,
       //'atomicityGroup': this.group
       //"dependsOn": ["g1", "g2", "r2"]
     };
@@ -199,7 +203,10 @@ export class ODataBatchResource extends ODataResource<any> {
     });
     return this.api
       .request<object>('POST', this, {
-        body: ODataBatchResource.buildJsonBody(this._requests),
+        body: ODataBatchResource.buildJsonBody(
+          this._requests,
+          this.api.options
+        ),
         responseType: 'json',
         observe: 'response',
         headers: headers,
@@ -235,7 +242,11 @@ export class ODataBatchResource extends ODataResource<any> {
     });
     return this.api
       .request<ODataResponse<string>>('POST', this, {
-        body: ODataBatchResource.buildLegacyBody(bound, this._requests),
+        body: ODataBatchResource.buildLegacyBody(
+          bound,
+          this._requests,
+          this.api.options
+        ),
         responseType: 'text',
         observe: 'response',
         headers: headers,
@@ -276,17 +287,19 @@ export class ODataBatchResource extends ODataResource<any> {
   body() {
     return ODataBatchResource.buildLegacyBody(
       Strings.uniqueId({ prefix: BATCH_PREFIX }),
-      this._requests
+      this._requests,
+      this.api.options
     );
   }
 
   json() {
-    return ODataBatchResource.buildJsonBody(this._requests);
+    return ODataBatchResource.buildJsonBody(this._requests, this.api.options);
   }
 
   static buildLegacyBody(
     batchBoundary: string,
-    requests: ODataBatchRequest<any>[]
+    requests: ODataBatchRequest<any>[],
+    options: ODataApiOptions
   ): string {
     let res = [];
     let changesetBoundary: string | null = null;
@@ -326,7 +339,7 @@ export class ODataBatchResource extends ODataResource<any> {
       }
 
       res.push(NEWLINE);
-      res.push(`${request.toLegacy()}`);
+      res.push(`${request.toLegacy(options)}`);
     }
 
     if (res.length) {
@@ -343,9 +356,12 @@ export class ODataBatchResource extends ODataResource<any> {
     return res.join(NEWLINE);
   }
 
-  static buildJsonBody(requests: ODataBatchRequest<any>[]): Object {
+  static buildJsonBody(
+    requests: ODataBatchRequest<any>[],
+    options: ODataApiOptions
+  ): Object {
     return {
-      requests: requests.map((request) => request.toJson()),
+      requests: requests.map((request) => request.toJson(options)),
     };
   }
 

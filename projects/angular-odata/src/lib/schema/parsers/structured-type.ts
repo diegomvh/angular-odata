@@ -15,6 +15,7 @@ import {
   StructuredTypeFieldOptions,
   FieldParser,
   EdmType,
+  JsonType,
 } from '../../types';
 import { Objects, Strings, Types } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
@@ -256,7 +257,7 @@ export class ODataStructuredTypeFieldParser<T>
       this.parser instanceof ODataStructuredTypeParser ||
       this.parser instanceof ODataEnumTypeParser
         ? this.parser.toJsonSchema(options)
-        : ({ title: this.name, type: 'object' } as any);
+        : ({ title: this.name, type: JsonType.object } as any);
 
     if (
       [
@@ -268,7 +269,7 @@ export class ODataStructuredTypeFieldParser<T>
         EdmType.Binary,
       ].indexOf(this.type as EdmType) !== -1
     ) {
-      schema.type = 'string';
+      schema.type = JsonType.string;
       if (this.type === EdmType.Date) schema.format = 'date';
       else if (this.type === EdmType.TimeOfDay) schema.format = 'time';
       else if (this.type === EdmType.DateTimeOffset)
@@ -289,19 +290,19 @@ export class ODataStructuredTypeFieldParser<T>
       ].indexOf(this.type as EdmType) !== -1
     ) {
       //TODO: Range
-      schema.type = 'integer';
+      schema.type = JsonType.integer;
     } else if (
       [EdmType.Decimal, EdmType.Double].indexOf(this.type as EdmType) !== -1
     ) {
-      schema.type = 'number';
+      schema.type = JsonType.number;
     } else if ([EdmType.Boolean].indexOf(this.type as EdmType) !== -1) {
-      schema.type = 'boolean';
+      schema.type = JsonType.boolean;
     }
     if (this.default) schema.default = this.default;
-    if (this.nullable) schema.type = [schema.type, 'null'];
+    if (this.nullable) schema.type = [schema.type, JsonType.null];
     if (this.collection)
       schema = {
-        type: 'array',
+        type: JsonType.array,
         items: schema,
         additionalItems: false,
       };
@@ -681,7 +682,7 @@ export class ODataStructuredTypeParser<T>
       $id: `${this.namespace}.${this.name}`,
       title: this.titleize(DESCRIPTION),
       description: this.annotatedValue(LONG_DESCRIPTION),
-      type: 'object',
+      type: JsonType.object,
       properties: {},
       required: [],
     };

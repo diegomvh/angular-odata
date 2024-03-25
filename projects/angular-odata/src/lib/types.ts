@@ -110,6 +110,16 @@ export enum EdmType {
   GeometryCollection = 'Edm.GeometryCollection',
 }
 
+export enum JsonType {
+  string = 'string',
+  number = 'number',
+  integer = 'integer',
+  object = 'object',
+  array = 'array',
+  boolean = 'boolean',
+  null = 'null'
+}
+
 export interface ApiOptions {
   version?: ODataVersion;
   params?: { [param: string]: string | string[] };
@@ -142,6 +152,7 @@ export interface ApiOptions {
   //https://github.com/OData/AspNetCoreOData/issues/171
   nonParenthesisForEmptyParameterFunction?: boolean;
   jsonBatchFormat?: boolean;
+  relativeUrls?: boolean;
 }
 
 export interface ParserOptions {

@@ -65,9 +65,9 @@ export type ExpandOptions<T> = {
 export type Transform<T> = {
   aggregate?: AggregateType | Array<AggregateType>;
   filter?: Filter<T>;
-  groupBy?: GroupBy<T>;
+  groupBy?: GroupByType<T>;
 };
-export type GroupBy<T> = {
+export type GroupByType<T> = {
   properties: Array<keyof T>;
   transform?: Transform<T>;
 };
@@ -838,7 +838,7 @@ function buildAggregate(aggregate: AggregateType | AggregateType[]) {
 }
 
 function buildGroupBy<T>(
-  groupBy: GroupBy<T>,
+  groupBy: GroupByType<T>,
   { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean }
 ) {
   if (!groupBy.properties) {
