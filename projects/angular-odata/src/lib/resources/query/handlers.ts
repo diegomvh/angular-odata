@@ -512,6 +512,14 @@ export class ODataQueryOptionsHandler<T> {
     return this.options.option<string>(QueryOption.skiptoken, opts);
   }
 
+  remove(...keys: QueryOption[]) {
+    this.options.remove(...keys);
+  }
+
+  keep(...keys: QueryOption[]) {
+    this.options.keep(...keys);
+  }
+
   /**
    * Shortcut for set $top, $skip, $skiptoken.
    * @param param0 skip or top or skiptoken
@@ -529,21 +537,21 @@ export class ODataQueryOptionsHandler<T> {
       if (skiptoken !== null) {
         this.skiptoken(skiptoken);
       } else {
-        this.options.remove(QueryOption.skiptoken);
+        this.remove(QueryOption.skiptoken);
       }
     }
     if (skip !== undefined) {
       if (skip !== null) {
         this.skip(skip);
       } else {
-        this.options.remove(QueryOption.skip);
+        this.remove(QueryOption.skip);
       }
     }
     if (top !== undefined) {
       if (top !== null) {
         this.top(top);
       } else {
-        this.options.remove(QueryOption.top);
+        this.remove(QueryOption.top);
       }
     }
   }
@@ -551,10 +559,8 @@ export class ODataQueryOptionsHandler<T> {
   /**
    * Shortcut for clear pagination by unset $top, $skip, $skiptoken.
    */
-  clearPaging() {
-    this.options.remove(QueryOption.skip);
-    this.options.remove(QueryOption.top);
-    this.options.remove(QueryOption.skiptoken);
+  removePaging() {
+    this.remove(QueryOption.skip, QueryOption.top, QueryOption.skiptoken);
   }
 
   /**

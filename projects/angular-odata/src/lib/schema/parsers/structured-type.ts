@@ -15,7 +15,7 @@ import {
   StructuredTypeFieldOptions,
   FieldParser,
   EdmType,
-  JsonType,
+  JsonType as JsonSchemaType,
 } from '../../types';
 import { Objects, Strings, Types } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
@@ -257,52 +257,62 @@ export class ODataStructuredTypeFieldParser<T>
       this.parser instanceof ODataStructuredTypeParser ||
       this.parser instanceof ODataEnumTypeParser
         ? this.parser.toJsonSchema(options)
-        : ({ title: this.name, type: JsonType.object } as any);
+        : ({ title: this.name, type: JsonSchemaType.object } as any);
 
-    if (
-      [
-        EdmType.String,
-        EdmType.Date,
-        EdmType.TimeOfDay,
-        EdmType.DateTimeOffset,
-        EdmType.Guid,
-        EdmType.Binary,
-      ].indexOf(this.type as EdmType) !== -1
-    ) {
-      schema.type = JsonType.string;
-      if (this.type === EdmType.Date) schema.format = 'date';
-      else if (this.type === EdmType.TimeOfDay) schema.format = 'time';
-      else if (this.type === EdmType.DateTimeOffset)
+    switch (this.type) {
+      case EdmType.String:
+        schema.type = JsonSchemaType.string;
+        break;
+      case EdmType.Guid:
+        schema.type = JsonSchemaType.string;
+        schema.pattern = '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$';
+        break;
+      case EdmType.Binary:
+        schema.type = JsonSchemaType.string;
+        schema.contentEncoding = 'base64';
+      break;
+      case EdmType.Date:
+        schema.type = JsonSchemaType.string;
+        schema.format = 'date';
+        break;
+      case EdmType.TimeOfDay:
+        schema.type = JsonSchemaType.string;
+        schema.format = 'time';
+        break;
+      case EdmType.DateTimeOffset:
+        schema.type = JsonSchemaType.string;
         schema.format = 'date-time';
-      else if (this.type === EdmType.Guid)
-        schema.pattern =
-          '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$';
-      else if (this.type === EdmType.Binary) schema.contentEncoding = 'base64';
-      else if (this.type === EdmType.String && this.maxLength)
-        schema.maxLength = this.maxLength;
-    } else if (
-      [
-        EdmType.Int64,
-        EdmType.Int32,
-        EdmType.Int16,
-        EdmType.Byte,
-        EdmType.SByte,
-      ].indexOf(this.type as EdmType) !== -1
-    ) {
-      //TODO: Range
-      schema.type = JsonType.integer;
-    } else if (
-      [EdmType.Decimal, EdmType.Double].indexOf(this.type as EdmType) !== -1
-    ) {
-      schema.type = JsonType.number;
-    } else if ([EdmType.Boolean].indexOf(this.type as EdmType) !== -1) {
-      schema.type = JsonType.boolean;
+        break;
+      case EdmType.Duration:
+        schema.type = JsonSchemaType.string;
+        schema.format = 'duration';
+        break;
+      case EdmType.Boolean:
+        schema.type = JsonSchemaType.boolean;
+        break;
+      case EdmType.Byte:
+      case EdmType.SByte:
+      case EdmType.Int16:
+      case EdmType.Int32:
+      case EdmType.Int64:
+        //TODO: Range
+        schema.type = JsonSchemaType.integer;
+        break;
+      case EdmType.Single:
+      case EdmType.Double:
+      case EdmType.Decimal:
+        schema.type = JsonSchemaType.number;
+        break;
+      case EdmType.Boolean:
+        schema.type = JsonSchemaType.boolean;
+        break;
     }
+    if (this.maxLength) schema.maxLength = this.maxLength;
     if (this.default) schema.default = this.default;
-    if (this.nullable) schema.type = [schema.type, JsonType.null];
+    if (this.nullable) schema.type = [schema.type, JsonSchemaType.null];
     if (this.collection)
       schema = {
-        type: JsonType.array,
+        type: JsonSchemaType.array,
         items: schema,
         additionalItems: false,
       };
@@ -682,7 +692,7 @@ export class ODataStructuredTypeParser<T>
       $id: `${this.namespace}.${this.name}`,
       title: this.titleize(DESCRIPTION),
       description: this.annotatedValue(LONG_DESCRIPTION),
-      type: JsonType.object,
+      type: JsonSchemaType.object,
       properties: {},
       required: [],
     };

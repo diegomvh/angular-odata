@@ -195,19 +195,17 @@ export class ODataQueryOptions<T> {
   }
 
   remove(...keys: QueryOption[]) {
-    [...this._values.keys()]
-      .filter((k) => keys.indexOf(k) !== -1)
-      .forEach((key) => {
+    for (let key of this._values.keys()) {
+      if (keys.includes(key)) 
         this._values.delete(key);
-      });
+    }
   }
 
   keep(...keys: QueryOption[]) {
-    [...this._values.keys()]
-      .filter((k) => keys.indexOf(k) === -1)
-      .forEach((key) => {
+    for (let key of this._values.keys()) {
+      if (!keys.includes(key)) 
         this._values.delete(key);
-      });
+    }
   }
 
   // Clear
