@@ -318,7 +318,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
     // Clean Paging
-    res.query((q) => q.clearPaging());
+    res.query((q) => q.removePaging());
     let fetch = (opts?: {
       skip?: number;
       skiptoken?: string;
