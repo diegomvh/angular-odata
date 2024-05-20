@@ -347,10 +347,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   fetch({
-    withCount,
+    add,
+    merge,
     remove,
+    withCount,
     ...options
   }: ODataOptions & {
+    add?: boolean;
+    merge?: boolean;
     remove?: boolean;
     withCount?: boolean;
   } = {}): Observable<M[]> {
@@ -369,19 +373,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     return this._request(obs$, ({ entities, annots }) => {
       this._annotations = annots;
-      const models = (entities || []).map(
-        (entity) => this.modelFactory(entity, { reset: true }) as M
-      ) as M[];
-      this.assign(models, { reset: true, remove: remove ?? true });
-      return models;
+      return (entities !== null) ?
+        this.assign(entities, { 
+          reset: true, 
+          add: add ?? true, 
+          merge: merge ?? true, 
+          remove: remove ?? true 
+        }) : [];
     });
   }
 
   fetchAll({
-    withCount,
+    add,
+    merge,
     remove,
+    withCount,
     ...options
   }: ODataOptions & {
+    add?: boolean;
+    merge?: boolean;
     remove?: boolean;
     withCount?: boolean;
   } = {}): Observable<M[]> {
@@ -393,21 +403,27 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     return this._request(obs$, ({ entities, annots }) => {
       this._annotations = annots;
-      const models = (entities || []).map(
-        (entity) => this.modelFactory(entity, { reset: true }) as M
-      ) as M[];
-      this.assign(models, { reset: true, remove: remove ?? true });
-      return models;
+      return (entities !== null) ?
+        this.assign(entities, { 
+          reset: true, 
+          add: add ?? true, 
+          merge: merge ?? true, 
+          remove: remove ?? true 
+        }) : [];
     });
   }
 
   fetchMany(
     top: number,
     {
-      withCount,
+      add,
+      merge,
       remove,
+      withCount,
       ...options
     }: ODataOptions & {
+      add?: boolean;
+      merge?: boolean;
       remove?: boolean;
       withCount?: boolean;
     } = {}
@@ -424,23 +440,29 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     return this._request(obs$, ({ entities, annots }) => {
       this._annotations = annots;
-      const models = (entities || []).map(
-        (entity) => this.modelFactory(entity, { reset: true }) as M
-      ) as M[];
-      this.assign(models, { reset: true, remove: remove ?? false });
-      return models;
+      return (entities !== null) ?
+        this.assign(entities, { 
+          reset: true, 
+          add: add ?? true, 
+          merge: merge ?? true, 
+          remove: remove ?? true 
+        }) : [];
     });
   }
 
   fetchOne({
-    withCount,
+    add,
+    merge,
     remove,
+    withCount,
     ...options
   }: ODataOptions & {
+    add?: boolean;
+    merge?: boolean;
     remove?: boolean;
     withCount?: boolean;
   } = {}) {
-    return this.fetchMany(1, { withCount, remove, ...options }).pipe(
+    return this.fetchMany(1, { withCount, add, merge, remove, ...options }).pipe(
       map((models) => models[0])
     );
   }
@@ -737,7 +759,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         options: { index: index },
       });
       this.events$.trigger(ODataModelEventType.Update, {
-        options: { added: [], removed: [model], merged: [] },
+        options: { removed: [model] },
       });
     }
 
@@ -806,7 +828,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     if (pathArray.length === 1 && ODataModelOptions.isModel(value)) {
       const toAdd: M[] = [];
-      const toChange: M[] = [];
+      const toMerge: M[] = [];
       const toRemove: M[] = [];
       const index = Number(pathArray[0]);
       const model = this.models()[index];
@@ -817,14 +839,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
         entry.model.assign(
           value.toEntity({ client_id: true, ...INCLUDE_DEEP })
         );
-        if (entry.model.hasChanged()) toChange.push(model);
+        if (entry.model.hasChanged()) toMerge.push(model);
       } else {
         // Add
         this._addModel(value, { reparent: true });
         toAdd.push(model);
       }
       this.events$.trigger(ODataModelEventType.Update, {
-        options: { added: toAdd, removed: toRemove, changed: toChange },
+        options: { added: toAdd, removed: toRemove, merged: toMerge },
       });
       return value;
     }
@@ -932,11 +954,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
   assign(
     objects: Partial<T>[] | { [name: string]: any }[] | M[],
     {
+      add = true,
+      merge = true,
       remove = true,
       reset = false,
       reparent = false,
       silent = false,
     }: {
+      add?: boolean;
+      merge?: boolean;
       remove?: boolean;
       reset?: boolean;
       reparent?: boolean;
@@ -946,10 +972,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const Model = this._model;
     const offset = remove ? 0 : this.length;
 
-    const toAdd: [M, number][] = [];
-    const toChange: [M, number][] = [];
-    const toRemove: [M, number][] = [];
-    const toSort: [M, number][] = [];
+    const assign: M[] = [];
+    const toAdd: M[] = [];
+    const toMerge: M[] = [];
+    const toRemove: M[] = [];
+    //const toSort: [M, number][] = [];
     const modelMap: string[] = [];
     objects.forEach((obj, index) => {
       const isModel = ODataModelOptions.isModel(obj);
@@ -963,56 +990,62 @@ export class ODataCollection<T, M extends ODataModel<T>>
         ? this._findEntry({ model: obj as M }) // By Model
         : this._findEntry({ cid, key }); // By Cid or Key
 
-      let model: M;
-      if (entry !== undefined) {
+      if (merge && entry !== undefined) {
         // Merge
-        model = entry.model;
+        const model = entry.model;
         if (model !== obj) {
           // Get entity from model
           if (isModel) {
-            const entity = (obj as M).toEntity({
+            obj = (obj as M).toEntity({
               client_id: true,
               ...INCLUDE_DEEP,
-            });
-            model.assign(entity, { reset, silent });
+            }) as { [name: string]: any; };
           } else {
-            const helper = this._annotations.helper;
-            const annots = new ODataEntityAnnotations<T>(
-              helper,
-              helper.annotations(obj)
-            );
-            const entity = annots.attributes(obj, 'full');
-            model._annotations = annots;
-            model.assign(entity, { reset, silent });
+            model._annotations = new ODataEntityAnnotations(this._annotations.helper);
+            model._annotations.update(obj);
+            obj = model._annotations.attributes(obj, 'full');
           }
+          model.assign(obj, { add, merge, remove, reset, silent });
           // Model Change?
-          if (model.hasChanged()) toChange.push([model, position]);
+          if (model.hasChanged()) toMerge.push(model);
         }
         if (reset) entry.state = ODataModelState.Unchanged;
-        // Has Sort or Index Change?
-        if (toSort.length > 0 || position !== this.models().indexOf(model)) {
-          toSort.push([model, position]);
+        if (!modelMap.includes((<any>model)[Model.meta.cid])) {
+          modelMap.push((<any>model)[Model.meta.cid]);
+          assign.push(model);
         }
-      } else {
+      } else if (add) {
         // Add
-        model = isModel
+        const model = isModel
           ? (obj as M)
           : this.modelFactory(obj as Partial<T> | { [name: string]: any }, {
               reset,
             });
-        toAdd.push([model, position]);
+        toAdd.push(model);
+        this._addModel(model, { silent, reset, reparent, position });
+        modelMap.push((<any>model)[Model.meta.cid]);
+        assign.push(model);
       }
-      modelMap.push((<any>model)[Model.meta.cid]);
     });
 
     if (remove) {
-      this._entries.forEach((entry, position) => {
-        if (modelMap.indexOf((<any>entry.model)[Model.meta.cid]) === -1)
-          toRemove.push([entry.model, position]);
+      this._entries.forEach((entry) => {
+        const model = entry.model;
+        if (!modelMap.includes((<any>model)[Model.meta.cid])) {
+          this._removeModel(model, { silent, reset });
+          toRemove.push(model);
+        }
       });
     }
 
+    /*
+    // Has Sort or Index Change?
+    if (toSort.length > 0 || position !== this.models().indexOf(model)) {
+      toSort.push([model, position]);
+    }
+    */
     // Apply remove, add and sort
+    /*
     toRemove.forEach(([model, position]) => {
       this._removeModel(model, { silent, reset });
     });
@@ -1022,28 +1055,27 @@ export class ODataCollection<T, M extends ODataModel<T>>
     toSort.forEach(([model, position]) => {
       this._moveModel(model, position);
     });
+    */
+    if (this.models().some((m, i) => m !== assign[i])) {
+      assign.forEach((m, i) => this._moveModel(m, i));
+      this.events$.trigger(ODataModelEventType.Sort);
+    }
 
     if (
-      (!silent &&
-        (toAdd.length > 0 ||
-          toRemove.length > 0 ||
-          toChange.length > 0 ||
-          toSort.length > 0)) ||
-      reset
+      (!silent && (toAdd.length > 0 || toRemove.length > 0 || toMerge.length > 0 || reset))
     ) {
-      this._sortBy = null;
       this.events$.trigger(
         reset ? ODataModelEventType.Reset : ODataModelEventType.Update,
         {
           options: {
             added: toAdd,
             removed: toRemove,
-            changed: toChange,
-            sorted: toSort,
+            merged: toMerge,
           },
         }
       );
     }
+    return assign;
   }
 
   query(

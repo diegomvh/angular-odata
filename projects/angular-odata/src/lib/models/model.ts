@@ -89,10 +89,22 @@ export class ODataModel<T> {
     ODataModelAttribute<any>
   >();
   _annotations!: ODataEntityAnnotations<T>;
-  _reset: boolean = false;
-  _reparent: boolean = false;
-  _silent: boolean = false;
   _meta: ODataModelOptions<any>;
+  _assign: {
+    add: boolean
+    merge: boolean
+    remove: boolean
+    reset: boolean
+    reparent: boolean
+    silent: boolean
+  } = {
+    add: false,
+    merge: false,
+    remove: false,
+    reset: false,
+    reparent: false,
+    silent: false
+  }
   // Events
   events$: ODataModelEventEmitter<T>;
 
@@ -426,16 +438,22 @@ export class ODataModel<T> {
   assign(
     entity: Partial<T> | { [name: string]: any },
     {
+      add = true,
+      merge = true,
+      remove = true,
       reset = false,
       reparent = false,
       silent = false,
     }: {
+      add?: boolean;
+      merge?: boolean;
+      remove?: boolean;
       reset?: boolean;
       reparent?: boolean;
       silent?: boolean;
     } = {}
   ) {
-    return this._meta.assign(this, entity, { reset, silent, reparent });
+    return this._meta.assign(this, entity, { add, merge, remove, reset, silent, reparent });
   }
 
   clone<M extends ODataModel<T>>() {
