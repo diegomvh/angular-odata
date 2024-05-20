@@ -70,18 +70,18 @@ export class ODataModel<T> {
   // Parent
   _parent:
     | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null
-      ]
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null
+    ]
     | null = null;
   _resource: ODataResource<T> | null = null;
   _resources: {
     parent:
-      | [
-          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-          ODataModelField<any> | null
-        ]
-      | null;
+    | [
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null
+    ]
+    | null;
     resource: ODataResource<T> | null;
   }[] = [];
   _attributes: Map<string, ODataModelAttribute<any>> = new Map<
@@ -126,11 +126,10 @@ export class ODataModel<T> {
       Strings.uniqueId({ prefix: `${Klass.meta.schema.name.toLowerCase()}-` });
 
     let attrs = this.annots().attributes(data, 'full');
-    let defaults = this.defaults();
+    if (!reset)
+      attrs = Objects.merge(this.defaults(), attrs as { [name: string]: any }) as Partial<T>;
 
-    this.assign(Objects.merge(defaults, attrs as { [name: string]: any }), {
-      reset,
-    });
+    this.assign(attrs, { reset });
   }
 
   //#region Resources
@@ -402,8 +401,8 @@ export class ODataModel<T> {
       path === undefined
         ? []
         : Types.isArray(path)
-        ? path
-        : (path as string).match(/([^[.\]])+/g)
+          ? path
+          : (path as string).match(/([^[.\]])+/g)
     ) as any[];
     const name = pathArray[0];
     const value = name !== undefined ? (<any>this)[name] : undefined;
@@ -549,11 +548,11 @@ export class ODataModel<T> {
       method === 'create'
         ? resource.create(_entity as T, options)
         : method === 'modify'
-        ? resource.modify(_entity as T, {
+          ? resource.modify(_entity as T, {
             etag: this.annots().etag,
             ...options,
           })
-        : resource.update(_entity as T, {
+          : resource.update(_entity as T, {
             etag: this.annots().etag,
             ...options,
           });
