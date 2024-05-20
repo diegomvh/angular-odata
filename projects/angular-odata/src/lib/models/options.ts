@@ -86,8 +86,8 @@ export class ODataModelEvent<T> {
     this.chain = chain ?? [
       [
         (this.model || this.collection) as
-          | ODataModel<any>
-          | ODataCollection<any, ODataModel<any>>,
+        | ODataModel<any>
+        | ODataCollection<any, ODataModel<any>>,
         attr || null,
       ],
     ];
@@ -145,10 +145,10 @@ export class ODataModelEvent<T> {
         typeof attr === 'number'
           ? `[${attr}]`
           : attr instanceof ODataModelAttribute
-          ? index === 0
-            ? attr.name
-            : `.${attr.name}`
-          : ''
+            ? index === 0
+              ? attr.name
+              : `.${attr.name}`
+            : ''
       )
       .join('');
   }
@@ -285,7 +285,7 @@ export type ModelFieldOptions = {
 };
 
 export function Model({ cid = CID_FIELD_NAME }: { cid?: string } = {}) {
-  return <T extends { new (...args: any[]): {} }>(constructor: T) => {
+  return <T extends { new(...args: any[]): {} }>(constructor: T) => {
     const Klass = <any>constructor;
     if (!Klass.hasOwnProperty('options'))
       Klass.options = {
@@ -614,7 +614,7 @@ export class ODataModelAttribute<T> {
   constructor(
     private _model: ODataModel<any>,
     private _field: ODataModelField<T>
-  ) {}
+  ) { }
 
   get navigation() {
     return Boolean(this._field.navigation);
@@ -683,10 +683,10 @@ export class ODataModelAttribute<T> {
         ? !(current as ODataModel<T>).equals(value as ODataModel<T>)
         : ODataModelOptions.isCollection(current) &&
           ODataModelOptions.isCollection(value)
-        ? !(current as ODataCollection<T, ODataModel<T>>).equals(
+          ? !(current as ODataCollection<T, ODataModel<T>>).equals(
             value as ODataCollection<T, ODataModel<T>>
           )
-        : !Types.isEqual(current, value);
+          : !Types.isEqual(current, value);
     if (reset) {
       this.value = value;
       this.change = undefined;
@@ -998,9 +998,9 @@ export class ODataModelOptions<T> {
     const chain = [] as any[];
     let tuple:
       | [
-          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-          ODataModelField<any> | null
-        ]
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null
+      ]
       | null = [child, null];
     while (tuple !== null) {
       const parent = tuple as [
@@ -1123,10 +1123,10 @@ export class ODataModelOptions<T> {
       this.attach(
         self,
         resource as
-          | ODataEntityResource<T>
-          | ODataPropertyResource<T>
-          | ODataNavigationPropertyResource<T>
-          | ODataSingletonResource<T>
+        | ODataEntityResource<T>
+        | ODataPropertyResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataSingletonResource<T>
       );
     }
 
@@ -1586,7 +1586,7 @@ export class ODataModelOptions<T> {
         }
       });
 
-    if ((!self._assign.silent && changes.length > 0) || self._assign.reset) {
+    if (!self._assign.silent && changes.length > 0) {
       self.events$.trigger(
         self._assign.reset ? ODataModelEventType.Reset : ODataModelEventType.Update,
         { options: { changes } }
@@ -1761,12 +1761,12 @@ export class ODataModelOptions<T> {
             ODataModelOptions.isModel(value)
             ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
             : modelField.collection
-            ? modelField.collectionFactory<F>({
+              ? modelField.collectionFactory<F>({
                 parent: self,
                 value: value as F[] | { [name: string]: any }[],
                 reset: self._assign.reset,
               })
-            : modelField.modelFactory<F>({
+              : modelField.modelFactory<F>({
                 parent: self,
                 value: value,
                 reset: self._assign.reset,
