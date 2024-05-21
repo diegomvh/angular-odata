@@ -1132,7 +1132,7 @@ export class ODataModelOptions<T> {
 
     // Annotations
     self._annotations =
-      annots || new ODataEntityAnnotations(ODataHelper[DEFAULT_VERSION]);
+      annots ?? new ODataEntityAnnotations(ODataHelper[DEFAULT_VERSION]);
 
     // Fields
     this.fields({
@@ -1560,9 +1560,13 @@ export class ODataModelOptions<T> {
 
     const changes: string[] = [];
 
-    // Apply entity
+    // The model 
     const model = self as any;
-    Object.entries(entity)
+    // Update annotations
+    model.annots().update(entity);
+    // Update attributes
+    const attrs = model.annots().attributes(entity, 'full');
+    Object.entries(attrs)
       .filter(([, value]) => value !== undefined) // Filter undefined
       .forEach(([key, value]) => {
         const field = this.fields({
@@ -1608,32 +1612,6 @@ export class ODataModelOptions<T> {
 
   static isCollection(obj: any) {
     return Types.rawType(obj) === 'Collection';
-  }
-
-  private _updateCollection<F>(
-    self: ODataModel<T>,
-    field: ODataModelField<F>,
-    collection: ODataCollection<F, ODataModel<F>>,
-    value: Partial<T>[] | { [name: string]: any }[]
-  ) {
-    collection._annotations = field.annotationsFactory(
-      self.annots()
-    ) as ODataEntitiesAnnotations<F>;
-    collection.assign(value as Partial<T>[] | { [name: string]: any }[], self._assign);
-    return collection.hasChanged();
-  }
-
-  private _updateModel<F>(
-    self: ODataModel<T>,
-    field: ODataModelField<F>,
-    model: ODataModel<F>,
-    value: F | { [name: string]: any }
-  ) {
-    model._annotations = field.annotationsFactory(
-      self.annots()
-    ) as ODataEntityAnnotations<F>;
-    model.assign(value as F | { [name: string]: any }, self._assign);
-    return model.hasChanged();
   }
 
   get<F>(
@@ -1728,12 +1706,11 @@ export class ODataModelOptions<T> {
           );
         } else if (Types.isArray(value)) {
           // New value is array
-          changed = this._updateCollection<F>(
-            self,
-            modelField,
-            currentCollection,
-            value as T[] | { [name: string]: any }[]
-          );
+          currentCollection._annotations = modelField.annotationsFactory(
+            self.annots()
+          ) as ODataEntitiesAnnotations<F>;
+          currentCollection.assign(value as Partial<T>[] | { [name: string]: any }[], self._assign);
+          changed = currentCollection.hasChanged();
         }
       } else if (ODataModelOptions.isModel(current)) {
         // Current is model
@@ -1746,12 +1723,11 @@ export class ODataModelOptions<T> {
             self._assign.reparent
           );
         } else if (Types.isPlainObject(value)) {
-          changed = this._updateModel<F>(
-            self,
-            modelField,
-            currentModel,
-            value as F | { [name: string]: any }
-          );
+            currentModel._annotations = modelField.annotationsFactory(
+              self.annots()
+            ) as ODataEntityAnnotations<F>;
+            currentModel.assign(value as F | { [name: string]: any }, self._assign);
+            changed = currentModel.hasChanged();
         }
       } else {
         // Current is null or undefined
