@@ -214,4 +214,8 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
   function(name: string) {
     return this.functions[name];
   }
+
+  entity(): ODataEntityAnnotations<T> {
+    return new ODataEntityAnnotations<T>(this.helper, this.annotations);
+  }
 }

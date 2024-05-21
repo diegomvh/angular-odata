@@ -137,11 +137,10 @@ export class ODataModel<T> {
       (<any>data)[this._meta.cid] ||
       Strings.uniqueId({ prefix: `${Klass.meta.schema.name.toLowerCase()}-` });
 
-    let attrs = this.annots().attributes(data, 'full');
     if (!reset)
-      attrs = Objects.merge(this.defaults(), attrs as { [name: string]: any }) as Partial<T>;
+      data = Objects.merge(this.defaults(), data as { [name: string]: any }) as Partial<T>;
 
-    this.assign(attrs, { reset });
+    this.assign(data, { reset });
   }
 
   //#region Resources
