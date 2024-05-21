@@ -757,9 +757,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
         collection: this,
         options: { index: index },
       });
-      this.events$.trigger(ODataModelEventType.Update, {
-        options: { removed: [model] },
-      });
     }
 
     this._unlink(entry);
@@ -826,27 +823,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       return model.set(pathArray.slice(1), value, {});
     }
     if (pathArray.length === 1 && ODataModelOptions.isModel(value)) {
-      const toAdd: M[] = [];
-      const toMerge: M[] = [];
-      const toRemove: M[] = [];
+      const models = this.models();
       const index = Number(pathArray[0]);
-      const model = this.models()[index];
-      const entry = this._findEntry({ model });
-      if (entry !== undefined) {
-        //TODO: Remove/Add or Merge?
-        // Merge
-        entry.model.assign(
-          value.toEntity({ client_id: true, ...INCLUDE_DEEP })
-        );
-        if (entry.model.hasChanged()) toMerge.push(model);
-      } else {
-        // Add
-        this._addModel(value, { reparent: true });
-        toAdd.push(model);
-      }
-      this.events$.trigger(ODataModelEventType.Update, {
-        options: { added: toAdd, removed: toRemove, merged: toMerge },
-      });
+      models[index] = value;
+      this.assign(models, { reparent: true });
       return value;
     }
   }
@@ -971,12 +951,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const Model = this._model;
     const offset = remove ? 0 : this.length;
 
-    const assign: M[] = [];
+    const models: M[] = [];
     const toAdd: M[] = [];
     const toMerge: M[] = [];
     const toRemove: M[] = [];
-    //const toSort: [M, number][] = [];
-    const modelMap: string[] = [];
     objects.forEach((obj, index) => {
       const isModel = ODataModelOptions.isModel(obj);
       const position = index + offset;
@@ -1000,18 +978,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
               ...INCLUDE_DEEP,
             }) as { [name: string]: any; };
           } else {
-            model._annotations = new ODataEntityAnnotations(this._annotations.helper);
-            model._annotations.update(obj);
-            obj = model._annotations.attributes(obj, 'full');
+            model.annots().update(obj);
+            obj = model.annots().attributes(obj, 'full');
           }
           model.assign(obj, { add, merge, remove, reset, silent });
           // Model Change?
           if (model.hasChanged()) toMerge.push(model);
         }
         if (reset) entry.state = ODataModelState.Unchanged;
-        if (!modelMap.includes((<any>model)[Model.meta.cid])) {
-          modelMap.push((<any>model)[Model.meta.cid]);
-          assign.push(model);
+        if (!models.includes(model)) {
+          models.push(model);
         }
       } else if (add) {
         // Add
@@ -1022,15 +998,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
           });
         toAdd.push(model);
         this._addModel(model, { silent, reset, reparent, position });
-        modelMap.push((<any>model)[Model.meta.cid]);
-        assign.push(model);
+        models.push(model);
       }
     });
 
     if (remove) {
-      this._entries.forEach((entry) => {
+      [...this._entries].forEach((entry) => {
         const model = entry.model;
-        if (!modelMap.includes((<any>model)[Model.meta.cid])) {
+        if (!models.includes(model)) {
           this._removeModel(model, { silent, reset });
           toRemove.push(model);
         }
@@ -1055,8 +1030,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._moveModel(model, position);
     });
     */
-    if (this.models().some((m, i) => m !== assign[i])) {
-      assign.forEach((m, i) => this._moveModel(m, i));
+    if (this.models().some((m, i) => m !== models[i])) {
+      models.forEach((m, i) => this._moveModel(m, i));
       this.events$.trigger(ODataModelEventType.Sort);
     }
 
@@ -1074,7 +1049,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         }
       );
     }
-    return assign;
+    return models;
   }
 
   query(
@@ -1375,7 +1350,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         this._compare(e1, e2, by, 0)
     );
     if (!silent) {
-      this.events$.trigger(ODataModelEventType.Update);
+      this.events$.trigger(ODataModelEventType.Sort);
     }
   }
   //#endregion
