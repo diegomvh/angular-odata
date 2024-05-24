@@ -1,5 +1,5 @@
-import { concat, EMPTY, Observable } from 'rxjs';
-import { concatMap, expand, map, reduce, toArray } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema/structured-type';

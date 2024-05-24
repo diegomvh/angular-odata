@@ -99,10 +99,44 @@ export class GroupByTransformations<T> extends Expression<T> {
     return this._add(value, method, alias);
   }
 
+  sum(
+    value: any,
+    alias: string
+  ): GroupByTransformations<T> {
+    return this.aggregate(value, 'sum', alias);
+  }
+
+  min(
+    value: any,
+    alias: string
+  ): GroupByTransformations<T> {
+    return this.aggregate(value, 'min', alias);
+  }
+
+  max(
+    value: any,
+    alias: string
+  ): GroupByTransformations<T> {
+    return this.aggregate(value, 'max', alias);
+  }
+
+  average(
+    value: any,
+    alias: string
+  ): GroupByTransformations<T> {
+    return this.aggregate(value, 'average', alias);
+  }
+  countdistinct(
+    value: any,
+    alias: string
+  ): GroupByTransformations<T> {
+    return this.aggregate(value, 'countdistinct', alias);
+  }
+
   count(
     alias: string
   ): GroupByTransformations<T> {
-    return this._add('' as any, '$count', alias);
+    return this.aggregate('' as any, '$count', alias);
   }
 }
 

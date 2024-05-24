@@ -30,7 +30,7 @@ import {
   ModelFieldOptions,
   ODataModelEventEmitter,
 } from './options';
-import { ParserOptions } from '../types';
+import { EdmType, ParserOptions } from '../types';
 
 // @dynamic
 export class ODataModel<T> {
@@ -90,14 +90,6 @@ export class ODataModel<T> {
   >();
   _annotations!: ODataEntityAnnotations<T>;
   _meta: ODataModelOptions<any>;
-  _assign: {
-    add?: boolean
-    merge?: boolean
-    remove?: boolean
-    reset?: boolean
-    reparent?: boolean
-    silent?: boolean
-  } = {}
   // Events
   events$: ODataModelEventEmitter<T>;
 
@@ -353,7 +345,7 @@ export class ODataModel<T> {
     return this.toEntity();
   }
 
-  set(path: string | string[], value: any, { type }: { type?: string } = {}) {
+  set(path: string | string[], value: any, { type }: { type?: EdmType | string } = {}) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
