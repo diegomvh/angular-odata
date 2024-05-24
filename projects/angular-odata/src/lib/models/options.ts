@@ -1596,14 +1596,7 @@ export class ODataModelOptions<T> {
         { options: { changes } }
       );
     }
-    self._assign = {
-      add: false,
-      merge: false,
-      remove: false,
-      reset: false,
-      reparent: false,
-      silent: false
-    }
+    self._assign = {};
   }
 
   static isModel(obj: any) {
@@ -1723,11 +1716,11 @@ export class ODataModelOptions<T> {
             self._assign.reparent
           );
         } else if (Types.isPlainObject(value)) {
-            currentModel._annotations = modelField.annotationsFactory(
-              self.annots()
-            ) as ODataEntityAnnotations<F>;
-            currentModel.assign(value as F | { [name: string]: any }, self._assign);
-            changed = currentModel.hasChanged();
+          currentModel._annotations = modelField.annotationsFactory(
+            self.annots()
+          ) as ODataEntityAnnotations<F>;
+          currentModel.assign(value as F | { [name: string]: any }, self._assign);
+          changed = currentModel.hasChanged();
         }
       } else {
         // Current is null or undefined
