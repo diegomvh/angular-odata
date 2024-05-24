@@ -91,20 +91,13 @@ export class ODataModel<T> {
   _annotations!: ODataEntityAnnotations<T>;
   _meta: ODataModelOptions<any>;
   _assign: {
-    add: boolean
-    merge: boolean
-    remove: boolean
-    reset: boolean
-    reparent: boolean
-    silent: boolean
-  } = {
-    add: false,
-    merge: false,
-    remove: false,
-    reset: false,
-    reparent: false,
-    silent: false
-  }
+    add?: boolean
+    merge?: boolean
+    remove?: boolean
+    reset?: boolean
+    reparent?: boolean
+    silent?: boolean
+  } = {}
   // Events
   events$: ODataModelEventEmitter<T>;
 
