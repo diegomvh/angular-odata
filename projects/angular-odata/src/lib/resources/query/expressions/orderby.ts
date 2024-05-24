@@ -42,7 +42,7 @@ export class OrderByField implements Renderable {
   }
 
   clone() {
-    return new OrderByField(this.field.clone(), this.order);
+    return new OrderByField(typeof this.field !== 'string' ? this.field.clone() : this.field, this.order);
   }
   resolve(parser: any) {
     return parser;
@@ -53,6 +53,7 @@ export type OrderByExpressionBuilder<T> = {
   t: Required<T>;
   e: () => OrderByExpression<T>;
 };
+
 export class OrderByExpression<T> extends Expression<T> {
   constructor({
     children,

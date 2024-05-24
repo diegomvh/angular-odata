@@ -1,5 +1,4 @@
 import { Parser, ParserOptions } from '../../../types';
-import { Objects } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FilterConnector, FilterExpression } from './filter';
@@ -17,7 +16,43 @@ import {
   AggregateMethod,
 } from './syntax';
 
-class GroupByTransformations<T> implements Renderable {
+export class GroupByTransformations<T> extends Expression<T> {
+  protected methods: (AggregateMethod | string)[];
+  protected aliases: string[];
+  constructor({
+    children,
+    methods,
+    aliases,
+  }: {
+    children?: Renderable[];
+    methods?: (AggregateMethod | string)[];
+    aliases?: string[];
+  } = {}) {
+    super({ children });
+    this.methods = methods || [];
+    this.aliases = aliases || [];
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'GroupByTransformations';
+  }
+
+  override toJson() {
+    const json = super.toJson();
+    return Object.assign(json, {
+      methods: this.methods,
+      aliases: this.aliases,
+    });
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): GroupByTransformations<T> {
+    return new GroupByTransformations<T>({
+      children: json['children'].map((c: any) => typeof c !== 'string' ? RenderableFactory(c) : c),
+      methods: json['methods'],
+      aliases: json['aliases']
+    });
+  }
+
   render({
     aliases,
     escape,
@@ -25,25 +60,49 @@ class GroupByTransformations<T> implements Renderable {
     parser,
     options,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
-    parser?: Parser<any> | undefined;
-    options?: ParserOptions | undefined;
-  }): string {
-    throw new Error('Method not implemented.');
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>;
+    options?: ParserOptions;
+  } = {}): string {
+    const children = this._children.map((n) =>
+      typeof n !== 'string' ? n.render({ aliases, escape, prefix, parser, options }) : n
+    );
+    return `aggregate(${children
+      .map((child, index) =>  
+        (!child) ? `${this.methods[index]} as ${this.aliases[index]}` : `${child} with ${this.methods[index]} as ${this.aliases[index]}`
+      )
+      .join(',')})`;
   }
-  toString(): string {
-    throw new Error('Method not implemented.');
-  }
-  toJson() {
-    throw new Error('Method not implemented.');
-  }
+
   clone() {
-    throw new Error('Method not implemented.');
+    return new GroupByTransformations<T>({
+      children: this._children.map((c) => typeof c !== 'string' ? c.clone() : c),
+      methods: this.methods,
+      aliases: this.aliases
+    });
   }
-  resolve(parser: any) {
-    throw new Error('Method not implemented.');
+
+  private _add(node: Renderable, method: AggregateMethod | string, alias: string): GroupByTransformations<T> {
+    this._children.push(node);
+    this.methods.push(method);
+    this.aliases.push(alias);
+    return this;
+  }
+
+  aggregate(
+    value: any,
+    method: AggregateMethod | string,
+    alias: string
+  ): GroupByTransformations<T> {
+    return this._add(value, method, alias);
+  }
+
+  count(
+    alias: string
+  ): GroupByTransformations<T> {
+    return this._add('' as any, '$count', alias);
   }
 }
 
@@ -115,7 +174,7 @@ export class ApplyExpression<T> extends Expression<T> {
     });
   }
 
-  private _add(node: Renderable): ApplyExpression<any> {
+  private _add(node: Renderable): ApplyExpression<T> {
     this._children.push(node);
     return this;
   }
@@ -221,9 +280,8 @@ export class ApplyExpression<T> extends Expression<T> {
   ): ApplyExpression<T> {
     let properties = props({ rollup: (e: any) => syntax.rollup(e) });
     properties = Array.isArray(properties) ? properties : [properties];
-    let options = undefined;
-    if (opts !== undefined) options = opts(new GroupByTransformations());
-    return this._add(syntax.groupby(properties, options));
+    const transformations = (opts !== undefined) ? opts(new GroupByTransformations()) : undefined;
+    return this._add(syntax.groupby(properties, transformations));
   }
 
   //filter
@@ -244,6 +302,25 @@ export class ApplyExpression<T> extends Expression<T> {
     }) as FilterExpression<T>;
     return this._add(transformations.filter(exp));
   }
+
+  /*
+  orderBy(
+    opts: (
+      builder: OrderByExpressionBuilder<T>,
+      current?: OrderByExpression<T>
+    ) => OrderByExpression<T>,
+    current?: OrderByExpression<T>
+  ) {
+    const exp = opts(
+      {
+        t: FieldFactory<Required<T>>(),
+        e: () => new OrderByExpression<T>(),
+      },
+      current
+    ) as OrderByExpression<T>;
+    return this._add(transformations.orderby(exp));
+  }
+  */
 
   //expand
   expand(
@@ -285,4 +362,18 @@ export class ApplyExpression<T> extends Expression<T> {
     });
     return this._add(node);
   }
+
+  /*
+  skip(
+    total: number
+  ): ApplyExpression<T> {
+    return this._add(transformations.skip(total));
+  }
+
+  top(
+    total: number
+  ): ApplyExpression<T> {
+    return this._add(transformations.top(total));
+  }
+  */
 }
