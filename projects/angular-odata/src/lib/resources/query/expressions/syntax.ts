@@ -3,7 +3,7 @@ import { Parser, ParserOptions } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { normalizeValue } from '../builder';
-import { ApplyExpression } from './apply';
+import { ApplyExpression, GroupByTransformations } from './apply';
 import { ComputeExpression } from './compute';
 import { CountExpression } from './count';
 import { ExpandExpression } from './expand';
@@ -111,6 +111,8 @@ export const RenderableFactory = (value: any): Renderable => {
         return SearchExpression.fromJson(value);
       case 'CountExpression':
         return CountExpression.fromJson(value);
+      case 'GroupByTransformations':
+        return GroupByTransformations.fromJson(value);
       case 'Function':
         return Function.fromJson(value);
       case 'Operator':
@@ -847,11 +849,23 @@ export class Transformations<T> {
   identity() {
     return new Function<T>('identity', [], 'none');
   }
-  search(left: any, normalize: Normalize = 'none') {
-    return new Function<T>('search', [left], normalize);
+  search(value: any, normalize: Normalize = 'none') {
+    return new Function<T>('search', [value], normalize);
   }
-  filter(left: any, normalize: Normalize = 'none') {
-    return new Function<T>('filter', [left], normalize);
+  filter(value: any, normalize: Normalize = 'none') {
+    return new Function<T>('filter', [value], normalize);
+  }
+
+  skip(value: number, normalize: Normalize = 'none') {
+    return new Function<T>('top', [value], normalize);
+  }
+
+  top(value: number, normalize: Normalize = 'none') {
+    return new Function<T>('top', [value], normalize);
+  }
+
+  orderby(value: any, normalize: Normalize = 'none') {
+    return new Function<T>('filter', [value], normalize);
   }
 }
 

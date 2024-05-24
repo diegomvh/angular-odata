@@ -119,7 +119,19 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     },
-  ): Observable<ODataEntities<T>> {
+  ): Observable<ODataEntities<T>>;
+  fetch<R>(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+    },
+  ): Observable<ODataEntities<R>>;
+  fetch(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+    },
+  ): Observable<ODataEntities<any>> {
     return this.get(options);
   }
 
@@ -128,7 +140,20 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     },
-  ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
+  ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }>;
+
+  fetchAll<R>(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+    },
+  ): Observable<{ entities: R[]; annots: ODataEntitiesAnnotations<R> }>;
+  fetchAll(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+    },
+  ): Observable<{ entities: any[]; annots: ODataEntitiesAnnotations<any> }> {
     let res = this.clone();
     // Clean Paging
     res.query((q) => q.removePaging());
@@ -136,7 +161,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       skip?: number;
       skiptoken?: string;
       top?: number;
-    }): Observable<ODataEntities<T>> => {
+    }): Observable<ODataEntities<any>> => {
       if (opts) {
         res.query((q) => q.paging(opts));
       }
@@ -160,13 +185,27 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     },
-  ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
+  ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }>;
+  fetchMany<R>(
+    top: number,
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+    },
+  ): Observable<{ entities: R[]; annots: ODataEntitiesAnnotations<R> }>;
+  fetchMany(
+    top: number,
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+    },
+  ): Observable<{ entities: any[]; annots: ODataEntitiesAnnotations<any> }> {
     let res = this.clone();
     let fetch = (opts?: {
       skip?: number;
       skiptoken?: string;
       top?: number;
-    }): Observable<ODataEntities<T>> => {
+    }): Observable<ODataEntities<any>> => {
       if (opts) {
         res.query((q) => q.paging(opts));
       }
@@ -189,7 +228,19 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     },
-  ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }> {
+  ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }>;
+  fetchOne<R>(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+    },
+  ): Observable<{ entity: R | null; annots: ODataEntitiesAnnotations<R> }>;
+  fetchOne(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+    },
+  ): Observable<{ entity: any | null; annots: ODataEntitiesAnnotations<any> }> {
     return this.fetchMany(1, options).pipe(
       map(({ entities, annots }) => ({
         entity: entities.length === 1 ? entities[0] : null,

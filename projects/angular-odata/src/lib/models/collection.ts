@@ -1012,24 +1012,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
     }
 
-    /*
-    // Has Sort or Index Change?
-    if (toSort.length > 0 || position !== this.models().indexOf(model)) {
-      toSort.push([model, position]);
-    }
-    */
-    // Apply remove, add and sort
-    /*
-    toRemove.forEach(([model, position]) => {
-      this._removeModel(model, { silent, reset });
-    });
-    toAdd.forEach(([model, position]) => {
-      this._addModel(model, { silent, reset, reparent, position });
-    });
-    toSort.forEach(([model, position]) => {
-      this._moveModel(model, position);
-    });
-    */
     if (this.models().some((m, i) => m !== models[i])) {
       models.forEach((m, i) => this._moveModel(m, i));
       this.events$.trigger(ODataModelEventType.Sort);

@@ -16,7 +16,7 @@ export type ComputeExpressionBuilder<T> = {
   e: () => ComputeExpression<T>;
 };
 export class ComputeExpression<T> extends Expression<T> {
-  names: string[];
+  protected names: string[];
   constructor({
     children,
     names,
