@@ -295,7 +295,7 @@ export class ODataConfigAsyncLoader implements ODataConfigLoader {
     private readonly configs$:
       | Observable&lt;ApiConfig&gt;
       | Observable&lt;ApiConfig&gt;[]
-      | Observable&lt;ApiConfig[]&gt;,
+      | Observable&lt;ApiConfig[]&gt;
   ) {}
 
   loadConfigs(): Observable&lt;ApiConfig[]&gt; {
@@ -312,7 +312,7 @@ export class ODataConfigAsyncLoader implements ODataConfigLoader {
         }
 
         return [value] as ApiConfig[];
-      }),
+      })
     );
   }
 }

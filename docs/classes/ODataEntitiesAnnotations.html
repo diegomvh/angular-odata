@@ -180,6 +180,9 @@
                                 <a href="#data" >data</a>
                             </li>
                             <li>
+                                <a href="#entity" >entity</a>
+                            </li>
+                            <li>
                                 <a href="#function" >function</a>
                             </li>
                             <li>
@@ -425,6 +428,43 @@
                             <div class="io-description">
                                 
                             </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="entity"></a>
+                    <span class="name">
+                        <span ><b>entity</b></span>
+                        <a href="#entity"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>entity()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="218"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:218</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataEntityAnnotations.html" target="_self" >ODataEntityAnnotations&lt;T&gt;</a></code>
+
+                        </div>
                 </td>
             </tr>
         </tbody>
@@ -1133,6 +1173,10 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
 
   function(name: string) {
     return this.functions[name];
+  }
+
+  entity(): ODataEntityAnnotations&lt;T&gt; {
+    return new ODataEntityAnnotations&lt;T&gt;(this.helper, this.annotations);
   }
 }
 </code></pre>

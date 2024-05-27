@@ -197,8 +197,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="168"
-                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:168</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="180"
+                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:180</a></div>
                         </td>
                     </tr>
 
@@ -276,8 +276,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="178"
-                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:178</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="190"
+                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:190</a></div>
                         </td>
                     </tr>
 
@@ -355,8 +355,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="173"
-                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:173</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:185</a></div>
                         </td>
                     </tr>
 
@@ -451,6 +451,7 @@ export enum QueryOption {
   select &#x3D; &#x27;select&#x27;,
   expand &#x3D; &#x27;expand&#x27;,
   compute &#x3D; &#x27;compute&#x27;,
+  apply &#x3D; &#x27;apply&#x27;,
   filter &#x3D; &#x27;filter&#x27;,
   search &#x3D; &#x27;search&#x27;,
   transform &#x3D; &#x27;transform&#x27;,
@@ -531,6 +532,16 @@ export enum EdmType {
   GeometryCollection &#x3D; &#x27;Edm.GeometryCollection&#x27;,
 }
 
+export enum JsonType {
+  string &#x3D; &#x27;string&#x27;,
+  number &#x3D; &#x27;number&#x27;,
+  integer &#x3D; &#x27;integer&#x27;,
+  object &#x3D; &#x27;object&#x27;,
+  array &#x3D; &#x27;array&#x27;,
+  boolean &#x3D; &#x27;boolean&#x27;,
+  null &#x3D; &#x27;null&#x27;
+}
+
 export interface ApiOptions {
   version?: ODataVersion;
   params?: { [param: string]: string | string[] };
@@ -563,6 +574,7 @@ export interface ApiOptions {
   //https://github.com/OData/AspNetCoreOData/issues/171
   nonParenthesisForEmptyParameterFunction?: boolean;
   jsonBatchFormat?: boolean;
+  relativeUrls?: boolean;
 }
 
 export interface ParserOptions {
@@ -589,12 +601,12 @@ export interface Parser&lt;T&gt; {
   // Deserialize value/s from request body.
   deserialize(
     value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): T;
   // Serialize value/s for request body.
   serialize(
     value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): any;
   //Encode value/s for URL parameter or query-string.
   encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;

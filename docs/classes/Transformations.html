@@ -102,7 +102,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Classes</li>
-  <li class="breadcrumb-item" >ArithmeticFunctions</li>
+  <li class="breadcrumb-item" >Transformations</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -148,13 +148,37 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#ceiling" >ceiling</a>
+                                <a href="#aggregate" >aggregate</a>
                             </li>
                             <li>
-                                <a href="#floor" >floor</a>
+                                <a href="#bottomCount" >bottomCount</a>
                             </li>
                             <li>
-                                <a href="#round" >round</a>
+                                <a href="#bottomPercent" >bottomPercent</a>
+                            </li>
+                            <li>
+                                <a href="#bottomSum" >bottomSum</a>
+                            </li>
+                            <li>
+                                <a href="#filter" >filter</a>
+                            </li>
+                            <li>
+                                <a href="#groupby" >groupby</a>
+                            </li>
+                            <li>
+                                <a href="#identity" >identity</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                <a href="#topCount" >topCount</a>
+                            </li>
+                            <li>
+                                <a href="#topPercent" >topPercent</a>
+                            </li>
+                            <li>
+                                <a href="#topSum" >topSum</a>
                             </li>
                         </ul>
                     </td>
@@ -179,24 +203,115 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ceiling"></a>
+                    <a name="aggregate"></a>
                     <span class="name">
-                        <span ><b>ceiling</b></span>
-                        <a href="#ceiling"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>aggregate</b></span>
+                        <a href="#aggregate"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>ceiling(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>aggregate(value: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, method: <a href="../undefineds/AggregateMethod.html" target="_self">AggregateMethod</a>, alias: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="420"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:420</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="814"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:814</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>method</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#AggregateMethod" target="_self" >AggregateMethod</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>alias</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Aggregate.html" target="_self" >Aggregate&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bottomCount"></a>
+                    <span class="name">
+                        <span ><b>bottomCount</b></span>
+                        <a href="#bottomCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>bottomCount(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="831"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:831</a></div>
                         </td>
                     </tr>
 
@@ -218,9 +333,23 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>left</td>
+                                                <td>value</td>
                                             <td>
-                                                        <code>T | string</code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
                                             </td>
 
                                             <td>
@@ -264,24 +393,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="floor"></a>
+                    <a name="bottomPercent"></a>
                     <span class="name">
-                        <span ><b>floor</b></span>
-                        <a href="#floor"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>bottomPercent</b></span>
+                        <a href="#bottomPercent"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>floor(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>bottomPercent(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="423"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:423</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="839"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:839</a></div>
                         </td>
                     </tr>
 
@@ -303,9 +432,23 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>left</td>
+                                                <td>value</td>
                                             <td>
-                                                        <code>T | string</code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
                                             </td>
 
                                             <td>
@@ -349,24 +492,123 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="round"></a>
+                    <a name="bottomSum"></a>
                     <span class="name">
-                        <span ><b>round</b></span>
-                        <a href="#round"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>bottomSum</b></span>
+                        <a href="#bottomSum"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>round(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>bottomSum(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="426"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:426</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="835"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:835</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;none&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filter"></a>
+                    <span class="name">
+                        <span ><b>filter</b></span>
+                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>filter(left: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="853"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:853</a></div>
                         </td>
                     </tr>
 
@@ -390,7 +632,505 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                        <code>T | string</code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;none&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="groupby"></a>
+                    <span class="name">
+                        <span ><b>groupby</b></span>
+                        <a href="#groupby"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>groupby(properties: <a href="../interfaces/Renderable.html" target="_self">Renderable[]</a>, options?: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="817"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:817</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>properties</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GroupBy.html" target="_self" >GroupBy&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="identity"></a>
+                    <span class="name">
+                        <span ><b>identity</b></span>
+                        <a href="#identity"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>identity()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="847"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:847</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search(left: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="850"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:850</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>left</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;none&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="topCount"></a>
+                    <span class="name">
+                        <span ><b>topCount</b></span>
+                        <a href="#topCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>topCount(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="820"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:820</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;none&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="topPercent"></a>
+                    <span class="name">
+                        <span ><b>topPercent</b></span>
+                        <a href="#topPercent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>topPercent(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="827"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:827</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;none&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="topSum"></a>
+                    <span class="name">
+                        <span ><b>topSum</b></span>
+                        <a href="#topSum"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>topSum(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="824"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:824</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
                                             </td>
 
                                             <td>
@@ -1541,7 +2281,7 @@ export const syntax: ODataSyntax&lt;any&gt; &#x3D; new ODataSyntax&lt;any&gt;();
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'ArithmeticFunctions.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'Transformations.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

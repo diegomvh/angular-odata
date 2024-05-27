@@ -176,7 +176,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:51</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:52</a></div>
                             </td>
                         </tr>
 
@@ -237,7 +237,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:50</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -263,7 +263,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:51</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -299,6 +299,7 @@ import {
   StructuredTypeFieldOptions,
   FieldParser,
   EdmType,
+  JsonType as JsonSchemaType,
 } from &#x27;../../types&#x27;;
 import { Objects, Strings, Types } from &#x27;../../utils&#x27;;
 import { ODataAnnotatable } from &#x27;../annotation&#x27;;
@@ -540,52 +541,62 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
       this.parser instanceof ODataStructuredTypeParser ||
       this.parser instanceof ODataEnumTypeParser
         ? this.parser.toJsonSchema(options)
-        : ({ title: this.name, type: &#x27;object&#x27; } as any);
+        : ({ title: this.name, type: JsonSchemaType.object } as any);
 
-    if (
-      [
-        EdmType.String,
-        EdmType.Date,
-        EdmType.TimeOfDay,
-        EdmType.DateTimeOffset,
-        EdmType.Guid,
-        EdmType.Binary,
-      ].indexOf(this.type as EdmType) !&#x3D;&#x3D; -1
-    ) {
-      schema.type &#x3D; &#x27;string&#x27;;
-      if (this.type &#x3D;&#x3D;&#x3D; EdmType.Date) schema.format &#x3D; &#x27;date&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.TimeOfDay) schema.format &#x3D; &#x27;time&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.DateTimeOffset)
+    switch (this.type) {
+      case EdmType.String:
+        schema.type &#x3D; JsonSchemaType.string;
+        break;
+      case EdmType.Guid:
+        schema.type &#x3D; JsonSchemaType.string;
+        schema.pattern &#x3D; &#x27;^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$&#x27;;
+        break;
+      case EdmType.Binary:
+        schema.type &#x3D; JsonSchemaType.string;
+        schema.contentEncoding &#x3D; &#x27;base64&#x27;;
+      break;
+      case EdmType.Date:
+        schema.type &#x3D; JsonSchemaType.string;
+        schema.format &#x3D; &#x27;date&#x27;;
+        break;
+      case EdmType.TimeOfDay:
+        schema.type &#x3D; JsonSchemaType.string;
+        schema.format &#x3D; &#x27;time&#x27;;
+        break;
+      case EdmType.DateTimeOffset:
+        schema.type &#x3D; JsonSchemaType.string;
         schema.format &#x3D; &#x27;date-time&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.Guid)
-        schema.pattern &#x3D;
-          &#x27;^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.Binary) schema.contentEncoding &#x3D; &#x27;base64&#x27;;
-      else if (this.type &#x3D;&#x3D;&#x3D; EdmType.String &amp;&amp; this.maxLength)
-        schema.maxLength &#x3D; this.maxLength;
-    } else if (
-      [
-        EdmType.Int64,
-        EdmType.Int32,
-        EdmType.Int16,
-        EdmType.Byte,
-        EdmType.SByte,
-      ].indexOf(this.type as EdmType) !&#x3D;&#x3D; -1
-    ) {
-      //TODO: Range
-      schema.type &#x3D; &#x27;integer&#x27;;
-    } else if (
-      [EdmType.Decimal, EdmType.Double].indexOf(this.type as EdmType) !&#x3D;&#x3D; -1
-    ) {
-      schema.type &#x3D; &#x27;number&#x27;;
-    } else if ([EdmType.Boolean].indexOf(this.type as EdmType) !&#x3D;&#x3D; -1) {
-      schema.type &#x3D; &#x27;boolean&#x27;;
+        break;
+      case EdmType.Duration:
+        schema.type &#x3D; JsonSchemaType.string;
+        schema.format &#x3D; &#x27;duration&#x27;;
+        break;
+      case EdmType.Boolean:
+        schema.type &#x3D; JsonSchemaType.boolean;
+        break;
+      case EdmType.Byte:
+      case EdmType.SByte:
+      case EdmType.Int16:
+      case EdmType.Int32:
+      case EdmType.Int64:
+        //TODO: Range
+        schema.type &#x3D; JsonSchemaType.integer;
+        break;
+      case EdmType.Single:
+      case EdmType.Double:
+      case EdmType.Decimal:
+        schema.type &#x3D; JsonSchemaType.number;
+        break;
+      case EdmType.Boolean:
+        schema.type &#x3D; JsonSchemaType.boolean;
+        break;
     }
+    if (this.maxLength) schema.maxLength &#x3D; this.maxLength;
     if (this.default) schema.default &#x3D; this.default;
-    if (this.nullable) schema.type &#x3D; [schema.type, &#x27;null&#x27;];
+    if (this.nullable) schema.type &#x3D; [schema.type, JsonSchemaType.null];
     if (this.collection)
       schema &#x3D; {
-        type: &#x27;array&#x27;,
+        type: JsonSchemaType.array,
         items: schema,
         additionalItems: false,
       };
@@ -965,7 +976,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
       $id: &#x60;${this.namespace}.${this.name}&#x60;,
       title: this.titleize(DESCRIPTION),
       description: this.annotatedValue(LONG_DESCRIPTION),
-      type: &#x27;object&#x27;,
+      type: JsonSchemaType.object,
       properties: {},
       required: [],
     };

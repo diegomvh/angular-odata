@@ -102,7 +102,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Classes</li>
-  <li class="breadcrumb-item" >ArithmeticFunctions</li>
+  <li class="breadcrumb-item" >GroupingOperators</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -148,13 +148,10 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#ceiling" >ceiling</a>
+                                <a href="#group" >group</a>
                             </li>
                             <li>
-                                <a href="#floor" >floor</a>
-                            </li>
-                            <li>
-                                <a href="#round" >round</a>
+                                <a href="#rollup" >rollup</a>
                             </li>
                         </ul>
                     </td>
@@ -179,24 +176,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ceiling"></a>
+                    <a name="group"></a>
                     <span class="name">
-                        <span ><b>ceiling</b></span>
-                        <a href="#ceiling"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>group</b></span>
+                        <a href="#group"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>ceiling(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>group(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="420"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:420</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="667"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:667</a></div>
                         </td>
                     </tr>
 
@@ -213,44 +210,26 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>left</td>
+                                                <td>value</td>
                                             <td>
-                                                        <code>T | string</code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
                                                     No
                                             </td>
 
-                                            <td>
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                                <td>normalize</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-                                            <td>
-                                                    <code>&#x27;none&#x27;</code>
-                                            </td>
 
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Grouping.html" target="_self" >Grouping&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -264,24 +243,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="floor"></a>
+                    <a name="rollup"></a>
                     <span class="name">
-                        <span ><b>floor</b></span>
-                        <a href="#floor"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>rollup</b></span>
+                        <a href="#rollup"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>floor(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>rollup(...values: any)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="423"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:423</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="670"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:670</a></div>
                         </td>
                     </tr>
 
@@ -298,122 +277,19 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>left</td>
+                                                <td>values</td>
                                             <td>
-                                                        <code>T | string</code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
                                                     No
                                             </td>
 
-                                            <td>
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                                <td>normalize</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-                                            <td>
-                                                    <code>&#x27;none&#x27;</code>
-                                            </td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="round"></a>
-                    <span class="name">
-                        <span ><b>round</b></span>
-                        <a href="#round"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>round(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="426"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:426</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                                <td>Default value</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>left</td>
-                                            <td>
-                                                        <code>T | string</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-                                            <td>
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                                <td>normalize</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-                                            <td>
-                                                    <code>&#x27;none&#x27;</code>
-                                            </td>
 
                                         </tr>
                                     </tbody>
@@ -1541,7 +1417,7 @@ export const syntax: ODataSyntax&lt;any&gt; &#x3D; new ODataSyntax&lt;any&gt;();
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'ArithmeticFunctions.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'GroupingOperators.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

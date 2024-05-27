@@ -176,6 +176,10 @@
                                 <a href="#clone" >clone</a>
                             </li>
                             <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#factory" >factory</a>
+                            </li>
+                            <li>
                                 <a href="#field" >field</a>
                             </li>
                             <li>
@@ -184,10 +188,6 @@
                             </li>
                             <li>
                                 <a href="#render" >render</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Static</span>
-                                <a href="#select" >select</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
@@ -438,6 +438,95 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="factory"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>factory</b></span>
+                        <a href="#factory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>factory(opts: (builder: SelectExpressionBuilder<T>,current: <a href="../undefineds/Select.html">SelectExpression<T></a>) => void, current?: <a href="../undefineds/Select.html" target="_self">SelectExpression&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="23"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:23</a></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>current</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >SelectExpression&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >SelectExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="field"></a>
                     <span class="name">
                         <span ><b>field</b></span>
@@ -658,95 +747,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="select"></a>
-                    <span class="name">
-                            <span class="modifier">Static</span>
-                        <span ><b>select</b></span>
-                        <a href="#select"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>select(opts: (builder: SelectExpressionBuilder<T>,current: <a href="../undefineds/Select.html">SelectExpression<T></a>) => void, current?: <a href="../undefineds/Select.html" target="_self">SelectExpression&lt;T&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="23"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:23</a></div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>opts</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>current</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >SelectExpression&lt;T&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >SelectExpression&lt;T&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="toJson"></a>
                     <span class="name">
                             <span class="modifier"></span>
@@ -900,7 +900,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:51</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:50</a></code>
 </div>
                         </td>
                     </tr>
@@ -990,7 +990,7 @@ import { Expression } from &#x27;./base&#x27;;
 import { FieldFactory, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
 
 export type SelectExpressionBuilder&lt;T&gt; &#x3D; {
-  t: Readonly&lt;Required&lt;T&gt;&gt;;
+  t: Required&lt;T&gt;;
   e: () &#x3D;&gt; SelectExpression&lt;T&gt;;
 };
 export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
@@ -1006,7 +1006,7 @@ export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return &#x27;SelectExpression&#x27;;
   }
 
-  static select&lt;T&gt;(
+  static factory&lt;T&gt;(
     opts: (
       builder: SelectExpressionBuilder&lt;T&gt;,
       current?: SelectExpression&lt;T&gt;
@@ -1015,7 +1015,7 @@ export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
   ): SelectExpression&lt;T&gt; {
     return opts(
       {
-        t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new SelectExpression&lt;T&gt;(),
       },
       current

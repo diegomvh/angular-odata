@@ -209,7 +209,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:14</a></div>
                             </td>
                         </tr>
 
@@ -285,8 +285,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="82"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:82</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="88"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -322,8 +322,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="70"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:70</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -391,8 +391,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="96"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:96</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="102"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:102</a></div>
                         </td>
                     </tr>
 
@@ -478,8 +478,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="24"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:24</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="30"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -544,8 +544,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="91"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:91</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:97</a></div>
                         </td>
                     </tr>
 
@@ -611,8 +611,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="18"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:18</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="24"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:24</a></div>
                         </td>
                     </tr>
 
@@ -654,7 +654,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:14</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/count.ts:20</a></div>
                                 </td>
                             </tr>
 
@@ -670,7 +670,13 @@ import { Objects, Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
-import { render, FieldFactory, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
+import {
+  render,
+  FieldFactory,
+  Renderable,
+  RenderableFactory,
+  resolve,
+} from &#x27;./syntax&#x27;;
 
 export class CountField&lt;T&gt; implements Renderable {
   constructor(
@@ -713,7 +719,7 @@ export class CountField&lt;T&gt; implements Renderable {
             aliases,
             prefix,
             escape,
-            parser,
+            parser: resolve([this.field], parser),
             options,
           });
         }
@@ -742,7 +748,7 @@ export class CountField&lt;T&gt; implements Renderable {
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOption.filter])
+      FilterExpression.factory&lt;T&gt;(opts, this.values[QueryOption.filter])
     );
   }
 
@@ -756,7 +762,7 @@ export class CountField&lt;T&gt; implements Renderable {
   }
 
   resolve(parser: any) {
-    return parser;
+    return this.field.resolve(parser);
   }
 
   // Option Handler
@@ -767,7 +773,7 @@ export class CountField&lt;T&gt; implements Renderable {
 }
 
 export type CountExpressionBuilder&lt;T&gt; &#x3D; {
-  t: Readonly&lt;Required&lt;T&gt;&gt;;
+  t: Required&lt;T&gt;;
   e: () &#x3D;&gt; CountExpression&lt;T&gt;;
 };
 export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
@@ -783,7 +789,7 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return &#x27;CountExpression&#x27;;
   }
 
-  static count&lt;T&gt;(
+  static factory&lt;T&gt;(
     opts: (
       builder: CountExpressionBuilder&lt;T&gt;,
       current?: CountExpression&lt;T&gt;
@@ -792,7 +798,7 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
   ): CountExpression&lt;T&gt; {
     return opts(
       {
-        t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new CountExpression&lt;T&gt;(),
       },
       current
@@ -846,7 +852,7 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
     let countField &#x3D; new CountField&lt;F&gt;(field);
     if (opts !&#x3D;&#x3D; undefined)
       opts({
-        t: FieldFactory&lt;Readonly&lt;Required&lt;F&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Required&lt;F&gt;&gt;(),
         f: countField,
       });
     return this._add(countField);

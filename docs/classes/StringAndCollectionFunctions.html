@@ -207,8 +207,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="302"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:302</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="308"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:308</a></div>
                         </td>
                     </tr>
 
@@ -306,8 +306,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="306"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:306</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="312"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:312</a></div>
                         </td>
                     </tr>
 
@@ -405,8 +405,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="310"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:310</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="316"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:316</a></div>
                         </td>
                     </tr>
 
@@ -504,8 +504,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="314"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:314</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="320"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:320</a></div>
                         </td>
                     </tr>
 
@@ -603,8 +603,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="318"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:318</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="324"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:324</a></div>
                         </td>
                     </tr>
 
@@ -688,8 +688,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="322"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:322</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="328"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:328</a></div>
                         </td>
                     </tr>
 
@@ -787,8 +787,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="326"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:326</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="332"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:332</a></div>
                         </td>
                     </tr>
 
@@ -895,6 +895,7 @@ import { Parser, ParserOptions } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { normalizeValue } from &#x27;../builder&#x27;;
+import { ApplyExpression } from &#x27;./apply&#x27;;
 import { ComputeExpression } from &#x27;./compute&#x27;;
 import { CountExpression } from &#x27;./count&#x27;;
 import { ExpandExpression } from &#x27;./expand&#x27;;
@@ -919,7 +920,6 @@ export interface Renderable {
     parser?: Parser&lt;any&gt;;
     options?: ParserOptions;
   }): string;
-  toString(): string;
   toJson(): any;
   clone(): any;
   resolve(parser: any): any;
@@ -993,6 +993,8 @@ export const RenderableFactory &#x3D; (value: any): Renderable &#x3D;&gt; {
         return ExpandExpression.fromJson(value);
       case &#x27;ComputeExpression&#x27;:
         return ComputeExpression.fromJson(value);
+      case &#x27;ApplyExpression&#x27;:
+        return ApplyExpression.fromJson(value);
       case &#x27;FilterExpression&#x27;:
         return FilterExpression.fromJson(value);
       case &#x27;OrderByExpression&#x27;:
@@ -1007,6 +1009,10 @@ export const RenderableFactory &#x3D; (value: any): Renderable &#x3D;&gt; {
         return Operator.fromJson(value);
       case &#x27;Grouping&#x27;:
         return Grouping.fromJson(value);
+      case &#x27;Aggregate&#x27;:
+        return Aggregate.fromJson(value);
+      case &#x27;GroupBy&#x27;:
+        return GroupBy.fromJson(value);
       case &#x27;Lambda&#x27;:
         return Lambda.fromJson(value);
       case &#x27;Type&#x27;:
@@ -1316,7 +1322,7 @@ export class ArithmeticFunctions&lt;T&gt; {
 
 export class TypeFunctions&lt;T&gt; {
   cast&lt;N&gt;(left: T | string, type?: string): N {
-    return FieldFactory&lt;Readonly&lt;Required&lt;N&gt;&gt;&gt;([
+    return FieldFactory&lt;Required&lt;N&gt;&gt;([
       type !&#x3D;&#x3D; undefined
         ? new Type&lt;T&gt;(&#x27;cast&#x27;, type, left)
         : new Type&lt;T&gt;(&#x27;cast&#x27;, left as string),
@@ -1549,6 +1555,198 @@ export class Grouping&lt;T&gt; implements Renderable {
   }
 }
 
+export class GroupingOperators&lt;T&gt; {
+  group(value: any) {
+    return new Grouping&lt;T&gt;(value);
+  }
+  rollup(...values: any) {
+    return new Function&lt;T&gt;(&#x27;rollup&#x27;, values, &#x27;none&#x27;);
+  }
+}
+
+export type AggregateMethod &#x3D;
+  | &#x27;sum&#x27;
+  | &#x27;min&#x27;
+  | &#x27;max&#x27;
+  | &#x27;average&#x27;
+  | &#x27;countdistinct&#x27;; //, or with custom aggregation methods;
+
+export class Aggregate&lt;T&gt; implements Renderable {
+  constructor(
+    protected value: Renderable,
+    protected method: AggregateMethod,
+    protected alias: string
+  ) {}
+
+  get [Symbol.toStringTag]() {
+    return &#x27;Aggregate&#x27;;
+  }
+
+  toJson() {
+    return {
+      $type: Types.rawType(this),
+      value: this.value.toJson(),
+      method: this.method,
+      alias: this.alias,
+    };
+  }
+
+  static fromJson&lt;T&gt;(json: { [name: string]: any }): Aggregate&lt;T&gt; {
+    return new Aggregate&lt;T&gt;(
+      RenderableFactory(json[&#x27;value&#x27;]),
+      json[&#x27;method&#x27;],
+      json[&#x27;alias&#x27;]
+    );
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
+    options?: ParserOptions;
+  }): string {
+    return &#x60;aggregate(${render(this.value, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      options,
+    })} with ${this.method} as ${this.alias})&#x60;;
+  }
+
+  clone() {
+    return new Aggregate(Objects.clone(this.value), this.method, this.alias);
+  }
+  resolve(parser: any) {
+    return parser;
+  }
+}
+
+export class GroupBy&lt;T&gt; implements Renderable {
+  constructor(
+    protected properties: Renderable[],
+    protected transformations?: Renderable
+  ) {}
+
+  get [Symbol.toStringTag]() {
+    return &#x27;GroupBy&#x27;;
+  }
+
+  toJson() {
+    return {
+      $type: Types.rawType(this),
+      properties: this.properties.map((p) &#x3D;&gt; p.toJson()),
+      transformations: this.transformations?.toJson(),
+    };
+  }
+
+  static fromJson&lt;T&gt;(json: { [name: string]: any }): GroupBy&lt;T&gt; {
+    return new GroupBy&lt;T&gt;(
+      json[&#x27;properties&#x27;].map((p: any) &#x3D;&gt; RenderableFactory(p)),
+      RenderableFactory(json[&#x27;transformations&#x27;])
+    );
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
+    options?: ParserOptions;
+  }): string {
+    const properties &#x3D; this.properties
+      .map((p) &#x3D;&gt;
+        render(p, {
+          aliases,
+          escape,
+          prefix,
+          parser,
+          options,
+        })
+      )
+      .join(&#x27;,&#x27;);
+    const transformations &#x3D; this.transformations
+      ? &#x27;, &#x27; +
+        render(this.transformations, {
+          aliases,
+          escape,
+          prefix,
+          parser,
+          options,
+        })
+      : &#x27;&#x27;;
+    return &#x60;groupby((${properties})${transformations})&#x60;;
+  }
+
+  clone() {
+    return new GroupBy(
+      Objects.clone(this.properties),
+      Objects.clone(this.transformations)
+    );
+  }
+  resolve(parser: any) {
+    return parser;
+  }
+}
+
+export class Transformations&lt;T&gt; {
+  aggregate(value: Renderable, method: AggregateMethod, alias: string) {
+    return new Aggregate&lt;T&gt;(value, method, alias);
+  }
+  groupby(properties: Renderable[], options?: Renderable) {
+    return new GroupBy&lt;T&gt;(properties, options);
+  }
+  topCount(value: number, field: Renderable, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;topcount&#x27;, [value, field], normalize);
+  }
+
+  topSum(value: number, field: Renderable, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;topsum&#x27;, [value, field], normalize);
+  }
+  topPercent(value: number, field: Renderable, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;toppercent&#x27;, [value, field], normalize);
+  }
+
+  bottomCount(value: number, field: Renderable, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;bottomcount&#x27;, [value, field], normalize);
+  }
+
+  bottomSum(value: number, field: Renderable, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;bottomsum&#x27;, [value, field], normalize);
+  }
+
+  bottomPercent(
+    value: number,
+    field: Renderable,
+    normalize: Normalize &#x3D; &#x27;none&#x27;
+  ) {
+    return new Function&lt;T&gt;(&#x27;bottompercent&#x27;, [value, field], normalize);
+  }
+
+  identity() {
+    return new Function&lt;T&gt;(&#x27;identity&#x27;, [], &#x27;none&#x27;);
+  }
+  search(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;search&#x27;, [left], normalize);
+  }
+  filter(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;filter&#x27;, [left], normalize);
+  }
+}
+
 export class Type&lt;T&gt; implements Renderable {
   constructor(
     protected name: string,
@@ -1589,15 +1787,16 @@ export class Type&lt;T&gt; implements Renderable {
     parser?: Parser&lt;T&gt;;
     options?: ParserOptions;
   }): string {
+    let value;
     if (this.value) {
       parser &#x3D; resolve([this.value], parser);
       let [left, right] &#x3D; encode([this.value], parser, options);
 
-      left &#x3D; render(left, { aliases, escape, prefix, parser, options });
-      return &#x60;${this.name}(${left}, &#x27;${this.type}&#x27;)&#x60;;
-    } else {
-      return &#x60;${this.name}(&#x27;${this.type}&#x27;)&#x60;;
+      value &#x3D; render(left, { aliases, escape, prefix, parser, options });
     }
+    return value
+      ? &#x60;${this.name}(${value}, &#x27;${this.type}&#x27;)&#x60;
+      : &#x60;${this.name}(&#x27;${this.type}&#x27;)&#x60;;
   }
 
   clone() {
@@ -1701,11 +1900,13 @@ export class ODataOperators&lt;T&gt; {}
 export interface ODataOperators&lt;T&gt;
   extends LogicalOperators&lt;T&gt;,
     ArithmeticOperators&lt;T&gt;,
+    GroupingOperators&lt;T&gt;,
     LambdaOperators&lt;T&gt; {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
   ArithmeticOperators,
+  GroupingOperators,
   LambdaOperators,
 ]);
 export const operators: ODataOperators&lt;any&gt; &#x3D; new ODataOperators&lt;any&gt;();
@@ -1733,9 +1934,23 @@ applyMixins(ODataFunctions, [
 ]);
 export const functions: ODataFunctions&lt;any&gt; &#x3D; new ODataFunctions&lt;any&gt;();
 
+export class ODataTransformations&lt;T&gt; {}
+export interface ODataTransformations&lt;T&gt; extends Transformations&lt;T&gt; {}
+
+applyMixins(ODataTransformations, [Transformations]);
+export const transformations: ODataTransformations&lt;any&gt; &#x3D;
+  new ODataTransformations&lt;any&gt;();
+
 export class ODataSyntax&lt;T&gt; {}
-export interface ODataSyntax&lt;T&gt; extends ODataOperators&lt;T&gt;, ODataFunctions&lt;T&gt; {}
-applyMixins(ODataSyntax, [ODataOperators, ODataFunctions]);
+export interface ODataSyntax&lt;T&gt;
+  extends ODataOperators&lt;T&gt;,
+    ODataFunctions&lt;T&gt;,
+    ODataTransformations&lt;T&gt; {}
+applyMixins(ODataSyntax, [
+  ODataOperators,
+  ODataFunctions,
+  ODataTransformations,
+]);
 
 export const syntax: ODataSyntax&lt;any&gt; &#x3D; new ODataSyntax&lt;any&gt;();
 </code></pre>
