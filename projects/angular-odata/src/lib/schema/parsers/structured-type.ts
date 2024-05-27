@@ -287,9 +287,6 @@ export class ODataStructuredTypeFieldParser<T>
         schema.type = JsonSchemaType.string;
         schema.format = 'duration';
         break;
-      case EdmType.Boolean:
-        schema.type = JsonSchemaType.boolean;
-        break;
       case EdmType.Byte:
       case EdmType.SByte:
       case EdmType.Int16:
