@@ -392,7 +392,7 @@ export class ODataStructuredTypeParser<T>
     if (Array.isArray(config.keys))
       this._keys = config.keys.map((key) => new ODataEntityTypeKey(key));
     Object.entries<StructuredTypeFieldConfig>(
-      config.fields as { [P in keyof T]: StructuredTypeFieldConfig }
+      (config.fields ?? {}) as { [P in keyof T]: StructuredTypeFieldConfig }
     ).forEach(([name, config]) => this.addField(name, config));
   }
 

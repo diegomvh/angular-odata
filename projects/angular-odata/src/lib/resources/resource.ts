@@ -100,8 +100,8 @@ export class ODataResource<T> {
   ): M {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
-    const type = annots?.type || this.returnType();
-    if (type === undefined) throw Error('');
+    const type = annots?.type ?? this.returnType();
+    if (type === undefined) throw Error(`No type for model`);
     const ModelType = this.api.modelForType(type);
     let entitySet = annots?.entitySet;
     if (entitySet !== undefined) {
@@ -117,12 +117,12 @@ export class ODataResource<T> {
   ): C {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
-    const type = annots?.type || this.returnType();
-    if (type === undefined) throw Error('');
+    const type = annots?.type ?? this.returnType();
+    if (type === undefined) throw Error(`No type for collection`);
     const CollectionType = this.api.collectionForType(type);
-    let path = annots?.entitySet;
-    if (path !== undefined) {
-      resource = this.api.entitySet<T>(path);
+    let entitySet = annots?.entitySet;
+    if (entitySet !== undefined) {
+      resource = this.api.entitySet<T>(entitySet);
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
     return new CollectionType(entities, { resource, annots, reset }) as C;
@@ -168,10 +168,9 @@ export class ODataResource<T> {
       escape: false,
     }
   ): [string, { [name: string]: any }] {
-    const parser =
-      this.schema !== undefined && 'parser' in this.schema
-        ? ((<any>this.schema).parser as Parser<T>)
-        : undefined;
+    const type = this.type();
+    const schema = type ? this.api.findStructuredTypeForType(type) : this.schema;
+    const parser = schema !== undefined && 'parser' in schema ? (schema.parser as Parser<T>) : undefined;
     const [spath, sparams] = this.pathSegments.pathAndParams({
       escape,
       parser,

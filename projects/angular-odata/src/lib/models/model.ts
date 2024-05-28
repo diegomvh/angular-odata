@@ -342,7 +342,7 @@ export class ODataModel<T> {
   }
 
   toJson() {
-    return this.toEntity();
+    return this.toEntity(INCLUDE_DEEP);
   }
 
   set(path: string | string[], value: any, { type }: { type?: EdmType | string } = {}) {

@@ -47,7 +47,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
   isTypeOf(type: string): boolean {
     var names = [`${this.schema.namespace}.${this.name}`];
     if (this.schema.alias) names.push(`${this.schema.alias}.${this.name}`);
-    return names.indexOf(type) !== -1;
+    return names.includes(type);
   }
 
   /**
