@@ -3,108 +3,43 @@ import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema/structured-type';
-import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types';
+import { QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import {
   ODataEntities,
   ODataEntitiesAnnotations,
-  ODataEntity,
 } from '../responses';
-import { ODataActionResource } from './action';
-import { ODataCountResource } from './count';
-import { ODataEntityResource } from './entity';
-import { ODataFunctionResource } from './function';
 import { ODataOptions } from './options';
-import { ODataTransformationResource } from './transformation';
 
-export class ODataEntitySetResource<T> extends ODataResource<T> {
+export class ODataTransformationResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(
     api: ODataApi,
     {
-      path,
       schema,
+      segments,
       query,
     }: {
-      path: string;
-      schema?: ODataStructuredType<E>;
-      query?: ODataQueryOptions<E>;
-    },
+      schema: ODataStructuredType<E>;
+      segments: ODataPathSegments;
+      query: ODataQueryOptions<E>;
+    }
   ) {
-    const segments = new ODataPathSegments();
-    const segment = segments.add(PathSegment.entitySet, path);
-    if (schema !== undefined) segment.type(schema.type());
-    return new ODataEntitySetResource<E>(api, { segments, query, schema });
+    return new ODataTransformationResource<E>(api, { segments, query, schema });
   }
-  override clone(): ODataEntitySetResource<T> {
-    return super.clone() as ODataEntitySetResource<T>;
+
+  override clone(): ODataTransformationResource<T> {
+    return super.clone() as ODataTransformationResource<T>;
   }
   //#endregion
 
-  entity(key?: any) {
-    const entity = ODataEntityResource.factory<T>(this.api, {
-      schema: this.schema as ODataStructuredType<T>,
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
-    if (key !== undefined) {
-      return entity.key(key);
-    }
-    return entity;
-  }
-
-  action<P, R>(path: string) {
-    return ODataActionResource.fromResource<P, R>(this, path);
-  }
-
-  function<P, R>(path: string) {
-    return ODataFunctionResource.fromResource<P, R>(this, path);
-  }
-
-  count() {
-    return ODataCountResource.factory<T>(this.api, {
-      schema: this.schema as ODataStructuredType<T>,
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
-  }
-
-  cast<C>(type: string) {
-    const baseSchema = this.schema as ODataStructuredType<T>;
-    const castSchema = this.api.findStructuredTypeForType<C>(type);
-    if (
-      castSchema !== undefined &&
-      baseSchema !== undefined &&
-      !castSchema.isSubtypeOf(baseSchema)
-    )
-      throw new Error(`Cannot cast to ${type}`);
-    const segments = this.cloneSegments();
-    segments.add(PathSegment.type, type).type(type);
-    return new ODataEntitySetResource<C>(this.api, {
-      segments,
-      schema: castSchema,
-      query: this.cloneQuery<C>(),
-    });
-  }
-
-  transform<R>(type: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }) {
-    return ODataTransformationResource.factory<R>(this.api, {
-      schema: this.api.structuredTypeForType<R>(type, fields),
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<R>(),
-    });
+  override returnType() {
+    return this.schema?.type();
   }
 
   //#region Requests
-  protected override post(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<any> {
-    return super.post(attrs, { responseType: 'entity', ...options });
-  }
-
   protected override get(
     options: ODataOptions & {
       withCount?: boolean;
@@ -116,13 +51,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
-  create(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
-    return this.post(attrs, options);
-  }
-
   fetch(
     options?: ODataOptions & {
       withCount?: boolean;
@@ -175,7 +103,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       skip?: number;
       skiptoken?: string;
       top?: number;
-    }): Observable<ODataEntities<T>> => {
+    }): Observable<ODataEntities<any>> => {
       if (opts) {
         res.query((q) => q.paging(opts));
       }

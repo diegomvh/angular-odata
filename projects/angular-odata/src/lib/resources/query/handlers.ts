@@ -466,13 +466,6 @@ export class ODataQueryOptionsHandler<T> {
   ): OrderByExpression<T>;
   orderBy(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
   orderBy(): ODataQueryOptionHandler<T>;
-  orderBy<O>(
-    opts: (
-      builder: OrderByExpressionBuilder<O>,
-      current?: OrderByExpression<O>
-    ) => OrderByExpression<O>
-  ): OrderByExpression<T>;
-  orderBy<O>(opts: OrderBy<O>): ODataQueryOptionHandler<T>;
   orderBy(opts?: any): any {
     if (Types.isFunction(opts)) {
       return this.options.option(

@@ -283,7 +283,7 @@ export type StructuredTypeConfig<T> = {
   collection?: { new (...params: any[]): any };
   annotations?: AnnotationConfig[];
   keys?: { name: string; alias?: string }[];
-  fields: { [P in keyof T]?: StructuredTypeFieldConfig };
+  fields?: { [P in keyof T]?: StructuredTypeFieldConfig };
 };
 
 export type Parameter = {

@@ -314,7 +314,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   toJson() {
-    return this.toEntities();
+    return this.toEntities(INCLUDE_DEEP);
   }
 
   hasChanged({ include_navigation }: { include_navigation?: boolean } = {}) {

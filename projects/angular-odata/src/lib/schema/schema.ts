@@ -1,5 +1,5 @@
 import { ODataApi } from '../api';
-import { Parser, ParserOptions, SchemaConfig } from '../types';
+import { Parser, ParserOptions, SchemaConfig, StructuredTypeConfig } from '../types';
 import { OData } from '../utils/odata';
 import { ODataAnnotatable } from './annotation';
 import { ODataCallable } from './callable';
@@ -55,6 +55,22 @@ export class ODataSchema extends ODataAnnotatable {
     return this.enums.find((e) => e.isTypeOf(type)) as
       | ODataEnumType<T>
       | undefined;
+  }
+
+  public createStructuredType<T>(config: StructuredTypeConfig<T>,
+  {
+    options,
+    parserForType,
+    findOptionsForType,
+  }: {
+    options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => any;
+  }) {
+    const entity = new ODataStructuredType<T>(config, this);
+    entity.configure({ options, parserForType, findOptionsForType});
+    this.entities.push(entity);
+    return entity;
   }
 
   public findStructuredTypeForType<T>(type: string) {
