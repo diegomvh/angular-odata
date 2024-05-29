@@ -128,6 +128,9 @@
                             <a href="#buildAggregate" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildAggregate</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
+                            <a href="#buildApply" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildApply</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#buildExpand" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildExpand</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -186,6 +189,9 @@
                         </li>
                         <li>
                             <a href="#pathSegmentsBuilder" title="projects/angular-odata/src/lib/resources/path/segments.ts" ><b>pathSegmentsBuilder</b>&nbsp;&nbsp;&nbsp;(projects/.../segments.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#provideODataClient" title="projects/angular-odata/src/lib/module.ts" ><b>provideODataClient</b>&nbsp;&nbsp;&nbsp;(projects/.../module.ts)</a>
                         </li>
                         <li>
                             <a href="#render" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>render</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
@@ -674,6 +680,92 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="buildApply"></a>
+                    <span class="name">
+                        <span ><b>buildApply</b></span>
+                        <a href="#buildApply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildApply(apply: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>apply</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="buildExpand"></a>
                     <span class="name">
                         <span ><b>buildExpand</b></span>
@@ -883,7 +975,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildGroupBy(groupBy: <a href="../undefineds/GroupBy.html" target="_self">GroupBy</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
+<code>buildGroupBy(groupBy: <a href="../undefineds/GroupByType.html" target="_self">GroupByType</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
                 </td>
             </tr>
 
@@ -909,7 +1001,7 @@
                                         <tr>
                                                 <td>groupBy</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#GroupBy" target="_self" >GroupBy</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#GroupByType" target="_self" >GroupByType</a></code>
                                             </td>
 
                                             <td>
@@ -1048,7 +1140,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildPathAndQuery(__namedParameters: {select: <a href="../undefineds/QueryOptions.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search, skiptoken, format, top, skip, filter, transform, orderBy, key, count, expand, action, func, aliases, escape})</code>
+<code>buildPathAndQuery(__namedParameters: {select: <a href="../undefineds/QueryOptions.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search, skiptoken, format, top, skip, filter, apply, transform, orderBy, key, count, expand, action, func, aliases, escape})</code>
                 </td>
             </tr>
 
@@ -1139,6 +1231,17 @@
                                         </tr>
                                         <tr>
                                                 <td>filter</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>apply</td>
                                             <td>
                                             </td>
 
@@ -2175,6 +2278,67 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="provideODataClient"></a>
+                    <span class="name">
+                        <span ><b>provideODataClient</b></span>
+                        <a href="#provideODataClient"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>provideODataClient(passedConfig: <a href="../interfaces/PassedInitialConfig.html" target="_self">PassedInitialConfig</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>passedConfig</td>
+                                            <td>
+                                                            <code><a href="../interfaces/PassedInitialConfig.html" target="_self" >PassedInitialConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>EnvironmentProviders</code>
+
+                        </div>
+                            <div class="io-description">
+                                
                             </div>
                 </td>
             </tr>

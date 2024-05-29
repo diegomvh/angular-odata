@@ -494,7 +494,7 @@
 import { Types } from &#x27;../../../utils&#x27;;
 import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import { render, Grouping, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
+import { render, syntax, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
 
 export type SearchConnector &#x3D; &#x27;AND&#x27; | &#x27;OR&#x27;;
 
@@ -566,7 +566,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return &#x27;SearchExpression&#x27;;
   }
 
-  static search&lt;T&gt;(
+  static factory&lt;T&gt;(
     opts: (
       builder: SearchExpressionBuilder&lt;T&gt;,
       current?: SearchExpression&lt;T&gt;
@@ -598,7 +598,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
             negated: this._negated,
           });
           if (exp.length() &gt; 1) {
-            children.push(new Grouping(exp));
+            children.push(syntax.group(exp));
           } else {
             children.push(exp);
           }
@@ -610,7 +610,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
       ) {
         children &#x3D; [...children, ...node.children()];
       } else {
-        children.push(new Grouping(node));
+        children.push(syntax.group(node));
       }
       this._connector &#x3D; connector;
       this._children &#x3D; children;
@@ -623,7 +623,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
     } else {
       this._children.push(
         node instanceof SearchExpression &amp;&amp; !node.negated()
-          ? new Grouping(node)
+          ? syntax.group(node)
           : node
       );
     }

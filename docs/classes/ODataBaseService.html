@@ -1820,7 +1820,7 @@ export abstract class ODataBaseService {
   constructor(
     protected client: ODataClient,
     protected name: string,
-    protected apiNameOrEntityType?: string,
+    protected apiNameOrEntityType?: string
   ) {}
 
   get api() {
@@ -1831,33 +1831,33 @@ export abstract class ODataBaseService {
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;entity&#x27;,
-    options?: ODataFunctionOptions&lt;R&gt;,
+    options?: ODataFunctionOptions&lt;R&gt;
   ): Observable&lt;ODataEntity&lt;R&gt;&gt;;
   protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;entities&#x27;,
-    options?: ODataFunctionOptions&lt;R&gt;,
+    options?: ODataFunctionOptions&lt;R&gt;
   ): Observable&lt;ODataEntities&lt;R&gt;&gt;;
   protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27;,
-    options?: ODataFunctionOptions&lt;R&gt;,
+    options?: ODataFunctionOptions&lt;R&gt;
   ): Observable&lt;ODataProperty&lt;R&gt;&gt;;
   protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;none&#x27;,
-    options?: ODataFunctionOptions&lt;R&gt;,
+    options?: ODataFunctionOptions&lt;R&gt;
   ): Observable&lt;null&gt;;
   protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27;,
-    options: ODataFunctionOptions&lt;R&gt; &#x3D; {},
+    options: ODataFunctionOptions&lt;R&gt; &#x3D; {}
   ): Observable&lt;any&gt; {
-    resource.query((q) &#x3D;&gt; q.apply(options));
+    resource.query((q) &#x3D;&gt; q.restore(options));
     return resource.call(params, {
       responseType: responseType as any,
       ...options,
@@ -1868,33 +1868,33 @@ export abstract class ODataBaseService {
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;entity&#x27;,
-    options?: ODataActionOptions&lt;R&gt;,
+    options?: ODataActionOptions&lt;R&gt;
   ): Observable&lt;ODataEntity&lt;R&gt;&gt;;
   protected callAction&lt;P, R&gt;(
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;entities&#x27;,
-    options?: ODataActionOptions&lt;R&gt;,
+    options?: ODataActionOptions&lt;R&gt;
   ): Observable&lt;ODataEntities&lt;R&gt;&gt;;
   protected callAction&lt;P, R&gt;(
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27;,
-    options?: ODataActionOptions&lt;R&gt;,
+    options?: ODataActionOptions&lt;R&gt;
   ): Observable&lt;ODataProperty&lt;R&gt;&gt;;
   protected callAction&lt;P, R&gt;(
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;none&#x27;,
-    options?: ODataActionOptions&lt;R&gt;,
+    options?: ODataActionOptions&lt;R&gt;
   ): Observable&lt;null&gt;;
   protected callAction&lt;P, R&gt;(
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27;,
-    options: ODataActionOptions&lt;R&gt; &#x3D; {},
+    options: ODataActionOptions&lt;R&gt; &#x3D; {}
   ): Observable&lt;any&gt; {
-    resource.query((q) &#x3D;&gt; q.apply(options));
+    resource.query((q) &#x3D;&gt; q.restore(options));
     return resource.call(params, {
       responseType: responseType as any,
       ...options,
@@ -1904,19 +1904,19 @@ export abstract class ODataBaseService {
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entity&#x27;,
-    options?: ODataQueryArgumentsOptions&lt;S&gt;,
+    options?: ODataQueryArgumentsOptions&lt;S&gt;
   ): Observable&lt;ODataEntity&lt;S&gt;&gt;;
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entities&#x27;,
-    options?: ODataQueryArgumentsOptions&lt;S&gt;,
+    options?: ODataQueryArgumentsOptions&lt;S&gt;
   ): Observable&lt;ODataEntities&lt;S&gt;&gt;;
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entity&#x27; | &#x27;entities&#x27;,
-    options: ODataQueryArgumentsOptions&lt;S&gt; &#x3D; {},
+    options: ODataQueryArgumentsOptions&lt;S&gt; &#x3D; {}
   ): Observable&lt;any&gt; {
-    resource.query((q) &#x3D;&gt; q.apply(options));
+    resource.query((q) &#x3D;&gt; q.restore(options));
     return resource.fetch({ responseType: responseType as any, ...options });
   }
 }

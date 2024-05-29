@@ -815,6 +815,10 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
   function(name: string) {
     return this.functions[name];
   }
+
+  entity(): ODataEntityAnnotations&lt;T&gt; {
+    return new ODataEntityAnnotations&lt;T&gt;(this.helper, this.annotations);
+  }
 }
 </code></pre>
     </div>

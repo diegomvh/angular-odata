@@ -119,13 +119,19 @@
                 <td class="col-md-4">
                     <ul class="index-list">
                         <li>
-                            <a href="#Aggregate" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>Aggregate</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                            <a href="#AggregateMethod" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>AggregateMethod</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AggregateType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>AggregateType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
                             <a href="#AnnotationConfig" title="projects/angular-odata/src/lib/types.ts" ><b>AnnotationConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
                             <a href="#ApiConfig" title="projects/angular-odata/src/lib/types.ts" ><b>ApiConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ApplyExpressionBuilder" title="projects/angular-odata/src/lib/resources/query/expressions/apply.ts" ><b>ApplyExpressionBuilder</b>&nbsp;&nbsp;&nbsp;(projects/.../apply.ts)</a>
                         </li>
                         <li>
                             <a href="#CacheCacheability" title="projects/angular-odata/src/lib/types.ts" ><b>CacheCacheability</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -188,7 +194,7 @@
                             <a href="#FilterType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>FilterType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
-                            <a href="#GroupBy" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>GroupBy</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                            <a href="#GroupByType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>GroupByType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
                             <a href="#JsonSchemaCustom" title="projects/angular-odata/src/lib/schema/parsers/structured-type.ts" ><b>JsonSchemaCustom</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
@@ -332,14 +338,48 @@
     </table>
 </section>
 
-    <h3>projects/angular-odata/src/lib/resources/query/builder.ts</h3>
+    <h3>projects/angular-odata/src/lib/resources/query/expressions/syntax.ts</h3>
     <section data-compodoc="block-typealias">
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="Aggregate"></a>
-                    <span class="name "><b>Aggregate</b><a href="#Aggregate"><span class="icon ion-ios-link"></span></a></span>
+                    <a name="AggregateMethod"></a>
+                    <span class="name "><b>AggregateMethod</b><a href="#AggregateMethod"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;sum&quot; | &quot;min&quot; | &quot;max&quot; | &quot;average&quot; | &quot;countdistinct&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Normalize"></a>
+                    <span class="name "><b>Normalize</b><a href="#Normalize"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;all&quot; | &quot;right&quot; | &quot;left&quot; | &quot;none&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/resources/query/builder.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AggregateType"></a>
+                    <span class="name "><b>AggregateType</b><a href="#AggregateType"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>
@@ -450,8 +490,8 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="GroupBy"></a>
-                    <span class="name "><b>GroupBy</b><a href="#GroupBy"><span class="icon ion-ios-link"></span></a></span>
+                    <a name="GroupByType"></a>
+                    <span class="name "><b>GroupByType</b><a href="#GroupByType"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>
@@ -896,6 +936,24 @@
             </tr>
         </tbody>
     </table>
+</section>    <h3>projects/angular-odata/src/lib/resources/query/expressions/apply.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ApplyExpressionBuilder"></a>
+                    <span class="name "><b>ApplyExpressionBuilder</b><a href="#ApplyExpressionBuilder"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    <h3>projects/angular-odata/src/lib/resources/query/expressions/compute.ts</h3>
     <section data-compodoc="block-typealias">
     <table class="table table-sm table-bordered">
@@ -1163,24 +1221,6 @@
             <tr>
                 <td class="col-md-4">
                     <code>    <code></code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>    <h3>projects/angular-odata/src/lib/resources/query/expressions/syntax.ts</h3>
-    <section data-compodoc="block-typealias">
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="Normalize"></a>
-                    <span class="name "><b>Normalize</b><a href="#Normalize"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>&quot;all&quot; | &quot;right&quot; | &quot;left&quot; | &quot;none&quot;</code>
 </code>
                 </td>
             </tr>

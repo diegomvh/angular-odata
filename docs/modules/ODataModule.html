@@ -170,8 +170,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="31"
-                                    class="link-to-prism">projects/angular-odata/src/lib/module.ts:31</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">projects/angular-odata/src/lib/module.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -225,10 +225,12 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
 import { HttpClientModule } from &#x27;@angular/common/http&#x27;;
 import {
+  EnvironmentProviders,
   InjectionToken,
   ModuleWithProviders,
   NgModule,
   Provider,
+  makeEnvironmentProviders,
 } from &#x27;@angular/core&#x27;;
 import { ODataClient } from &#x27;./client&#x27;;
 import { ODataConfigLoader, ODataConfigSyncLoader } from &#x27;./loaders&#x27;;
@@ -242,18 +244,34 @@ export interface PassedInitialConfig {
 
 export const ODATA_CONFIG &#x3D; new InjectionToken&lt;ApiConfig&gt;(&#x27;odata.config&#x27;);
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createSyncLoader(passedConfig: PassedInitialConfig) {
   return new ODataConfigSyncLoader(passedConfig.config!);
 }
 
+// Standalone version
+export function provideODataClient(
+  passedConfig: PassedInitialConfig
+): EnvironmentProviders {
+  return makeEnvironmentProviders([
+    { provide: ODATA_CONFIG, useValue: passedConfig },
+    passedConfig?.loader || {
+      provide: ODataConfigLoader,
+      useFactory: createSyncLoader,
+      deps: [ODATA_CONFIG],
+    },
+    ODataClient,
+    ODataServiceFactory,
+  ]);
+}
+
+// Module version
 @NgModule({
   imports: [CommonModule, HttpClientModule],
   providers: [ODataClient, ODataServiceFactory],
 })
 export class ODataModule {
   static forRoot(
-    passedConfig: PassedInitialConfig,
+    passedConfig: PassedInitialConfig
   ): ModuleWithProviders&lt;ODataModule&gt; {
     return {
       ngModule: ODataModule,

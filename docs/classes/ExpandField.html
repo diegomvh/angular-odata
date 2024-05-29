@@ -346,8 +346,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="172"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:172</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:170</a></div>
                         </td>
                     </tr>
 
@@ -388,14 +388,6 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -463,14 +455,6 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -533,8 +517,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="168"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:168</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="166"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:166</a></div>
                         </td>
                     </tr>
 
@@ -602,8 +586,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="177"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:177</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="175"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:175</a></div>
                         </td>
                     </tr>
 
@@ -689,19 +673,11 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="148"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:148</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="146"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:146</a></div>
                         </td>
                     </tr>
 
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -902,14 +878,6 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -977,14 +945,6 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -1047,8 +1007,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="160"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:160</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="158"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:158</a></div>
                         </td>
                     </tr>
 
@@ -1151,8 +1111,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="164"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:164</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="162"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:162</a></div>
                         </td>
                     </tr>
 
@@ -1337,7 +1297,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
     return parser;
   }
 
-  select&lt;T&gt;(
+  select(
     opts: (
       builder: SelectExpressionBuilder&lt;T&gt;,
       current?: SelectExpression&lt;T&gt;
@@ -1345,11 +1305,11 @@ export class ExpandField&lt;T&gt; implements Renderable {
   ): SelectExpression&lt;T&gt; {
     return this.option(
       QueryOption.select,
-      SelectExpression.select&lt;T&gt;(opts, this.values[QueryOption.select])
+      SelectExpression.factory&lt;T&gt;(opts, this.values[QueryOption.select])
     );
   }
 
-  expand&lt;T&gt;(
+  expand(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
       current?: ExpandExpression&lt;T&gt;
@@ -1357,11 +1317,11 @@ export class ExpandField&lt;T&gt; implements Renderable {
   ) {
     return this.option(
       QueryOption.expand,
-      ExpandExpression.expand&lt;T&gt;(opts, this.values[QueryOption.expand])
+      ExpandExpression.factory&lt;T&gt;(opts, this.values[QueryOption.expand])
     );
   }
 
-  filter&lt;T&gt;(
+  filter(
     opts: (
       builder: FilterExpressionBuilder&lt;T&gt;,
       current?: FilterExpression&lt;T&gt;
@@ -1369,20 +1329,18 @@ export class ExpandField&lt;T&gt; implements Renderable {
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOption.filter])
+      FilterExpression.factory&lt;T&gt;(opts, this.values[QueryOption.filter])
     );
   }
 
-  search&lt;T&gt;(
-    opts: (builder: SearchExpressionBuilder&lt;T&gt;) &#x3D;&gt; SearchExpression&lt;T&gt;
-  ) {
+  search(opts: (builder: SearchExpressionBuilder&lt;T&gt;) &#x3D;&gt; SearchExpression&lt;T&gt;) {
     return this.option(
       QueryOption.search,
-      SearchExpression.search&lt;T&gt;(opts, this.values[QueryOption.search])
+      SearchExpression.factory&lt;T&gt;(opts, this.values[QueryOption.search])
     );
   }
 
-  orderBy&lt;T&gt;(
+  orderBy(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
       current?: OrderByExpression&lt;T&gt;
@@ -1390,7 +1348,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
   ) {
     return this.option(
       QueryOption.orderBy,
-      OrderByExpression.orderBy&lt;T&gt;(opts, this.values[QueryOption.orderBy])
+      OrderByExpression.factory&lt;T&gt;(opts, this.values[QueryOption.orderBy])
     );
   }
 
@@ -1418,7 +1376,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
 }
 
 export type ExpandExpressionBuilder&lt;T&gt; &#x3D; {
-  t: Readonly&lt;Required&lt;T&gt;&gt;;
+  t: Required&lt;T&gt;;
   e: () &#x3D;&gt; ExpandExpression&lt;T&gt;;
 };
 export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
@@ -1434,7 +1392,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return &#x27;ExpandExpression&#x27;;
   }
 
-  static expand&lt;T&gt;(
+  static factory&lt;T&gt;(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
       current?: ExpandExpression&lt;T&gt;
@@ -1443,7 +1401,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   ): ExpandExpression&lt;T&gt; {
     return opts(
       {
-        t: FieldFactory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new ExpandExpression&lt;T&gt;(),
       },
       current

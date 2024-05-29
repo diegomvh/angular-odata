@@ -154,13 +154,19 @@
                                 <a href="#apply" >apply</a>
                             </li>
                             <li>
+                                <a href="#apply" >apply</a>
+                            </li>
+                            <li>
+                                <a href="#apply" >apply</a>
+                            </li>
+                            <li>
+                                <a href="#apply" >apply</a>
+                            </li>
+                            <li>
                                 <a href="#binary" >binary</a>
                             </li>
                             <li>
                                 <a href="#clear" >clear</a>
-                            </li>
-                            <li>
-                                <a href="#clearPaging" >clearPaging</a>
                             </li>
                             <li>
                                 <a href="#compute" >compute</a>
@@ -211,6 +217,12 @@
                                 <a href="#format" >format</a>
                             </li>
                             <li>
+                                <a href="#fromJson" >fromJson</a>
+                            </li>
+                            <li>
+                                <a href="#keep" >keep</a>
+                            </li>
+                            <li>
                                 <a href="#normalize" >normalize</a>
                             </li>
                             <li>
@@ -229,12 +241,18 @@
                                 <a href="#paging" >paging</a>
                             </li>
                             <li>
-                                <a href="#query" >query</a>
-                            </li>
-                            <li>
                                 <a href="#raw" >raw</a>
                             </li>
                             <li>
+                                <a href="#remove" >remove</a>
+                            </li>
+                            <li>
+                                <a href="#removePaging" >removePaging</a>
+                            </li>
+                            <li>
+                                <a href="#restore" >restore</a>
+                            </li>
+                            <li>
                                 <a href="#search" >search</a>
                             </li>
                             <li>
@@ -277,13 +295,22 @@
                                 <a href="#skiptoken" >skiptoken</a>
                             </li>
                             <li>
-                                <a href="#top" >top</a>
+                                <a href="#store" >store</a>
+                            </li>
+                            <li>
+                                <a href="#toJson" >toJson</a>
                             </li>
                             <li>
                                 <a href="#top" >top</a>
                             </li>
                             <li>
                                 <a href="#top" >top</a>
+                            </li>
+                            <li>
+                                <a href="#top" >top</a>
+                            </li>
+                            <li>
+                                <a href="#toString" >toString</a>
                             </li>
                             <li>
                                 <a href="#transform" >transform</a>
@@ -317,7 +344,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="212" class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:212</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="225" class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:225</a></div>
                             </td>
                         </tr>
 
@@ -381,8 +408,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="231"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:231</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="244"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:244</a></div>
                         </td>
                     </tr>
 
@@ -465,22 +492,23 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>apply(query: <a href="../objects/OData.html" target="_self">ODataQueryArguments&lt;T&gt;</a>)</code>
+<code>apply(opts: (builder: <a href="../undefineds/ApplyExpressionBuilder.html">ApplyExpressionBuilder<T></a>,current: ApplyExpression<T>) => void)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="538"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:538</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="360"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:360</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Apply the given query options to the current query.</p>
+                        <div class="io-description"><p>Build and return a handler for modifying the $apply option.
+If opts is given then set te value as new value for $compute.</p>
 </div>
 
                             <div class="io-description">
@@ -497,9 +525,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>query</td>
+                                                <td>opts</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryArguments&lt;T&gt;</a></code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
                                             </td>
 
                                             <td>
@@ -508,7 +536,7 @@
 
 
                                             <td>
-                                                    <p>The query to be applied.</p>
+                                                    <p>string value or builder function for ApplyExpression<T></p>
 
                                             </td>
                                         </tr>
@@ -516,7 +544,178 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apply"></a>
+                    <span class="name">
+                        <span ><b>apply</b></span>
+                        <a href="#apply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>apply(opts: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="366"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:366</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apply"></a>
+                    <span class="name">
+                        <span ><b>apply</b></span>
+                        <a href="#apply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>apply()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="367"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:367</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apply"></a>
+                    <span class="name">
+                        <span ><b>apply</b></span>
+                        <a href="#apply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>apply(opts?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="368"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:368</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -546,8 +745,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="249"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:249</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="262"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:262</a></div>
                         </td>
                     </tr>
 
@@ -621,8 +820,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="523"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:523</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="569"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:569</a></div>
                         </td>
                     </tr>
 
@@ -630,45 +829,6 @@
             <tr>
                 <td class="col-md-4">
                         <div class="io-description"><p>Shortcut for clear query.</p>
-</div>
-
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                        </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="clearPaging"></a>
-                    <span class="name">
-                        <span ><b>clearPaging</b></span>
-                        <a href="#clearPaging"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>clearPaging()</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="514"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:514</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Shortcut for clear pagination by unset $top, $skip, $skiptoken.</p>
 </div>
 
                         <div class="io-description">
@@ -699,8 +859,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="320"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:320</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="333"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:333</a></div>
                         </td>
                     </tr>
 
@@ -774,8 +934,8 @@ If opts is given then set te value as new value for $compute.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="326"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:326</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="339"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:339</a></div>
                         </td>
                     </tr>
 
@@ -841,8 +1001,8 @@ If opts is given then set te value as new value for $compute.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="327"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:327</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="340"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:340</a></div>
                         </td>
                     </tr>
 
@@ -878,8 +1038,8 @@ If opts is given then set te value as new value for $compute.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="328"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:328</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="341"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:341</a></div>
                         </td>
                     </tr>
 
@@ -945,8 +1105,8 @@ If opts is given then set te value as new value for $compute.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="240"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:240</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="253"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:253</a></div>
                         </td>
                     </tr>
 
@@ -1020,8 +1180,8 @@ If opts is given then set te value as new value for $compute.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="293"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:293</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="306"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:306</a></div>
                         </td>
                     </tr>
 
@@ -1095,8 +1255,8 @@ If opts is given then set te value as new value for $expand.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="299"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:299</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="312"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:312</a></div>
                         </td>
                     </tr>
 
@@ -1162,8 +1322,8 @@ If opts is given then set te value as new value for $expand.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="300"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:300</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="313"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:313</a></div>
                         </td>
                     </tr>
 
@@ -1199,8 +1359,8 @@ If opts is given then set te value as new value for $expand.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="301"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:301</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="314"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:314</a></div>
                         </td>
                     </tr>
 
@@ -1266,8 +1426,8 @@ If opts is given then set te value as new value for $expand.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="395"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:395</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="435"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:435</a></div>
                         </td>
                     </tr>
 
@@ -1341,8 +1501,8 @@ If opts is given then set te value as new value for $filter.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="401"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:401</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="441"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:441</a></div>
                         </td>
                     </tr>
 
@@ -1408,8 +1568,8 @@ If opts is given then set te value as new value for $filter.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="402"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:402</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="442"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:442</a></div>
                         </td>
                     </tr>
 
@@ -1445,8 +1605,8 @@ If opts is given then set te value as new value for $filter.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="403"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:403</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="443"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:443</a></div>
                         </td>
                     </tr>
 
@@ -1512,8 +1672,8 @@ If opts is given then set te value as new value for $filter.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="347"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:347</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="387"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:387</a></div>
                         </td>
                     </tr>
 
@@ -1587,8 +1747,8 @@ If opts is given then set te value as new value for $format.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="348"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:348</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="388"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:388</a></div>
                         </td>
                     </tr>
 
@@ -1624,8 +1784,8 @@ If opts is given then set te value as new value for $format.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="349"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:349</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="389"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:389</a></div>
                         </td>
                     </tr>
 
@@ -1675,6 +1835,140 @@ If opts is given then set te value as new value for $format.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="fromJson"></a>
+                    <span class="name">
+                        <span ><b>fromJson</b></span>
+                        <a href="#fromJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fromJson(json: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="683"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:683</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>json</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="keep"></a>
+                    <span class="name">
+                        <span ><b>keep</b></span>
+                        <a href="#keep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>keep(keys: <a href="../undefineds/QueryOption.html" target="_self">QueryOption[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="519"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:519</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>keys</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >QueryOption[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="normalize"></a>
                     <span class="name">
                         <span ><b>normalize</b></span>
@@ -1691,8 +1985,8 @@ If opts is given then set te value as new value for $format.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="258"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:258</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="271"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:271</a></div>
                         </td>
                     </tr>
 
@@ -1766,8 +2060,8 @@ If opts is given then set te value as new value for $format.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="421"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:421</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="461"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:461</a></div>
                         </td>
                     </tr>
 
@@ -1841,8 +2135,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="427"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:427</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="467"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:467</a></div>
                         </td>
                     </tr>
 
@@ -1908,8 +2202,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="428"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:428</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="468"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:468</a></div>
                         </td>
                     </tr>
 
@@ -1945,8 +2239,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="429"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:429</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="469"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:469</a></div>
                         </td>
                     </tr>
 
@@ -2012,8 +2306,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="479"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:479</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="527"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:527</a></div>
                         </td>
                     </tr>
 
@@ -2068,45 +2362,6 @@ If opts is given then set te value as new value for $orderby.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="query"></a>
-                    <span class="name">
-                        <span ><b>query</b></span>
-                        <a href="#query"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>query()</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="530"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:530</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Retrun the query.</p>
-</div>
-
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="raw"></a>
                     <span class="name">
                         <span ><b>raw</b></span>
@@ -2123,8 +2378,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="220"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:220</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:233</a></div>
                         </td>
                     </tr>
 
@@ -2182,6 +2437,186 @@ If opts is given then set te value as new value for $orderby.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="remove"></a>
+                    <span class="name">
+                        <span ><b>remove</b></span>
+                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>remove(keys: <a href="../undefineds/QueryOption.html" target="_self">QueryOption[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="515"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:515</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>keys</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >QueryOption[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removePaging"></a>
+                    <span class="name">
+                        <span ><b>removePaging</b></span>
+                        <a href="#removePaging"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>removePaging()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="562"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:562</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Shortcut for clear pagination by unset $top, $skip, $skiptoken.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="restore"></a>
+                    <span class="name">
+                        <span ><b>restore</b></span>
+                        <a href="#restore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>restore(options: <a href="../objects/OData.html" target="_self">ODataQueryArguments&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="584"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:584</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Restore the given query options to the current query.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryArguments&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The query to be applied.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="search"></a>
                     <span class="name">
                         <span ><b>search</b></span>
@@ -2198,8 +2633,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="369"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:369</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="409"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:409</a></div>
                         </td>
                     </tr>
 
@@ -2273,8 +2708,8 @@ If opts is given then set te value as new value for $search.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="375"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:375</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="415"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:415</a></div>
                         </td>
                     </tr>
 
@@ -2340,8 +2775,8 @@ If opts is given then set te value as new value for $search.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="376"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:376</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="416"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:416</a></div>
                         </td>
                     </tr>
 
@@ -2377,8 +2812,8 @@ If opts is given then set te value as new value for $search.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="377"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:377</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="417"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:417</a></div>
                         </td>
                     </tr>
 
@@ -2444,8 +2879,8 @@ If opts is given then set te value as new value for $search.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="267"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:267</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="280"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:280</a></div>
                         </td>
                     </tr>
 
@@ -2519,8 +2954,8 @@ If opts is given then set te value as new value for $select.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="273"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:273</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="286"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:286</a></div>
                         </td>
                     </tr>
 
@@ -2586,8 +3021,8 @@ If opts is given then set te value as new value for $select.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="274"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:274</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="287"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:287</a></div>
                         </td>
                     </tr>
 
@@ -2623,8 +3058,8 @@ If opts is given then set te value as new value for $select.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="275"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:275</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="288"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:288</a></div>
                         </td>
                     </tr>
 
@@ -2690,8 +3125,8 @@ If opts is given then set te value as new value for $select.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="458"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:458</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="498"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:498</a></div>
                         </td>
                     </tr>
 
@@ -2765,8 +3200,8 @@ If opts is given then set te value as new value for $skip.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="459"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:459</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="499"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:499</a></div>
                         </td>
                     </tr>
 
@@ -2802,8 +3237,8 @@ If opts is given then set te value as new value for $skip.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="460"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:460</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="500"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:500</a></div>
                         </td>
                     </tr>
 
@@ -2869,8 +3304,8 @@ If opts is given then set te value as new value for $skip.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="469"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:469</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="509"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:509</a></div>
                         </td>
                     </tr>
 
@@ -2944,8 +3379,8 @@ If opts is given then set te value as new value for $skiptoken.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="470"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:470</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="510"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:510</a></div>
                         </td>
                     </tr>
 
@@ -2981,8 +3416,8 @@ If opts is given then set te value as new value for $skiptoken.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="471"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:471</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="511"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:511</a></div>
                         </td>
                     </tr>
 
@@ -3032,6 +3467,82 @@ If opts is given then set te value as new value for $skiptoken.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="store"></a>
+                    <span class="name">
+                        <span ><b>store</b></span>
+                        <a href="#store"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>store()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="576"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:576</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Store the query options from the current query.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toJson"></a>
+                    <span class="name">
+                        <span ><b>toJson</b></span>
+                        <a href="#toJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toJson()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="679"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:679</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="top"></a>
                     <span class="name">
                         <span ><b>top</b></span>
@@ -3048,8 +3559,8 @@ If opts is given then set te value as new value for $skiptoken.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="447"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:447</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="487"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:487</a></div>
                         </td>
                     </tr>
 
@@ -3123,8 +3634,8 @@ If opts is given then set te value as new value for $top.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="448"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:448</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="488"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:488</a></div>
                         </td>
                     </tr>
 
@@ -3160,8 +3671,8 @@ If opts is given then set te value as new value for $top.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="449"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:449</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="489"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:489</a></div>
                         </td>
                     </tr>
 
@@ -3211,6 +3722,76 @@ If opts is given then set te value as new value for $top.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="toString"></a>
+                    <span class="name">
+                        <span ><b>toString</b></span>
+                        <a href="#toString"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toString(undefined: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="687"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:687</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="transform"></a>
                     <span class="name">
                         <span ><b>transform</b></span>
@@ -3227,8 +3808,8 @@ If opts is given then set te value as new value for $top.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="358"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:358</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="398"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:398</a></div>
                         </td>
                     </tr>
 
@@ -3302,8 +3883,8 @@ If opts is given then set te value as new value for $transform.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="359"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:359</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="399"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:399</a></div>
                         </td>
                     </tr>
 
@@ -3339,8 +3920,8 @@ If opts is given then set te value as new value for $transform.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="360"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:360</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="400"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:400</a></div>
                         </td>
                     </tr>
 
@@ -3397,7 +3978,7 @@ If opts is given then set te value as new value for $transform.</p>
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataStructuredType } from &#x27;../../schema&#x27;;
-import { QueryOption } from &#x27;../../types&#x27;;
+import { Parser, QueryOption } from &#x27;../../types&#x27;;
 import { Objects, Types } from &#x27;../../utils&#x27;;
 import {
   alias,
@@ -3424,14 +4005,17 @@ import {
   ExpandExpressionBuilder,
   SelectExpression,
   SelectExpressionBuilder,
+  ApplyExpression,
+  ApplyExpressionBuilder,
 } from &#x27;./expressions&#x27;;
-import type { ODataQueryArguments, ODataQueryOptions } from &#x27;./options&#x27;;
+import {
+  ODataQueryArguments,
+  ODataQueryOptions,
+  pathAndParamsFromQueryOptions,
+} from &#x27;./options&#x27;;
 
 export class ODataQueryOptionHandler&lt;T&gt; {
-  constructor(
-    private o: Map&lt;QueryOption, any&gt;,
-    private n: QueryOption,
-  ) {}
+  constructor(private o: Map&lt;QueryOption, any&gt;, private n: QueryOption) {}
 
   /**
    * The name of the managed odata query option.
@@ -3490,7 +4074,7 @@ export class ODataQueryOptionHandler&lt;T&gt; {
   remove(value: any) {
     this.o.set(
       this.n,
-      this.assertArray().filter((v) &#x3D;&gt; v !&#x3D;&#x3D; value),
+      this.assertArray().filter((v) &#x3D;&gt; v !&#x3D;&#x3D; value)
     );
     // If only one and not is array... down to value
     if (
@@ -3571,7 +4155,7 @@ export class ODataQueryOptionHandler&lt;T&gt; {
     if (Types.isArray(this.o.get(this.n))) {
       this.o.set(
         this.n,
-        this.o.get(this.n).filter((v: any) &#x3D;&gt; !Types.isEmpty(v)),
+        this.o.get(this.n).filter((v: any) &#x3D;&gt; !Types.isEmpty(v))
       );
       if (this.o.get(this.n).length &#x3D;&#x3D;&#x3D; 1)
         this.o.set(this.n, this.o.get(this.n)[0]);
@@ -3604,6 +4188,16 @@ export class ODataQueryOptionHandler&lt;T&gt; {
    */
   clear() {
     this.o.delete(this.n);
+  }
+  toString({
+    escape,
+    parser,
+  }: { escape?: boolean; parser?: Parser&lt;T&gt; } &#x3D; {}): string {
+    const [_, params] &#x3D; pathAndParamsFromQueryOptions(
+      new Map&lt;QueryOption, any&gt;([[this.n, this.o.get(this.n)]]),
+      { escape, parser }
+    );
+    return params[&#x60;$${this.n}&#x60;];
   }
 }
 
@@ -3665,8 +4259,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   select(
     opts: (
       builder: SelectExpressionBuilder&lt;T&gt;,
-      current?: SelectExpression&lt;T&gt;,
-    ) &#x3D;&gt; SelectExpression&lt;T&gt;,
+      current?: SelectExpression&lt;T&gt;
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;
   ): SelectExpression&lt;T&gt;;
   select(opts: Select&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   select(): ODataQueryOptionHandler&lt;T&gt;;
@@ -3674,10 +4268,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOption.select,
-        SelectExpression.select(
+        SelectExpression.factory(
           opts,
-          this.options.expression(QueryOption.select),
-        ),
+          this.options.expression(QueryOption.select)
+        )
       );
     }
     return this.options.option&lt;Select&lt;T&gt;&gt;(QueryOption.select, opts);
@@ -3691,8 +4285,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   expand(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
-      current?: ExpandExpression&lt;T&gt;,
-    ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
+      current?: ExpandExpression&lt;T&gt;
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;
   ): ExpandExpression&lt;T&gt;;
   expand(opts: Expand&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   expand(): ODataQueryOptionHandler&lt;T&gt;;
@@ -3700,10 +4294,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOption.expand,
-        ExpandExpression.expand(
+        ExpandExpression.factory(
           opts,
-          this.options.expression(QueryOption.expand),
-        ),
+          this.options.expression(QueryOption.expand)
+        )
       );
     }
     return this.options.option&lt;Expand&lt;T&gt;&gt;(QueryOption.expand, opts);
@@ -3718,8 +4312,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   compute(
     opts: (
       builder: ComputeExpressionBuilder&lt;T&gt;,
-      current?: ComputeExpression&lt;T&gt;,
-    ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
+      current?: ComputeExpression&lt;T&gt;
+    ) &#x3D;&gt; ComputeExpression&lt;T&gt;
   ): ComputeExpression&lt;T&gt;;
   compute(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   compute(): ODataQueryOptionHandler&lt;T&gt;;
@@ -3727,13 +4321,40 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOption.compute,
-        ComputeExpression.compute(
+        ComputeExpression.factory(
           opts,
-          this.options.expression(QueryOption.compute),
-        ),
+          this.options.expression(QueryOption.compute)
+        )
       );
     }
     return this.options.option&lt;string&gt;(QueryOption.compute, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $apply option.
+   * If opts is given then set te value as new value for $compute.
+   * @link http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/odata-data-aggregation-ext-v4.0-cs02.html
+   * @param opts string value or builder function for ApplyExpression&lt;T&gt;
+   */
+  apply(
+    opts: (
+      builder: ApplyExpressionBuilder&lt;T&gt;,
+      current?: ApplyExpression&lt;T&gt;
+    ) &#x3D;&gt; ApplyExpression&lt;T&gt;
+  ): ApplyExpression&lt;T&gt;;
+  apply(opts: string): ODataQueryOptionHandler&lt;T&gt;;
+  apply(): ODataQueryOptionHandler&lt;T&gt;;
+  apply(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOption.apply,
+        ApplyExpression.factory(
+          opts,
+          this.options.expression(QueryOption.apply)
+        )
+      );
+    }
+    return this.options.option&lt;string&gt;(QueryOption.apply, opts);
   }
 
   /**
@@ -3767,8 +4388,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   search(
     opts: (
       builder: SearchExpressionBuilder&lt;T&gt;,
-      current?: SearchExpression&lt;T&gt;,
-    ) &#x3D;&gt; SearchExpression&lt;T&gt;,
+      current?: SearchExpression&lt;T&gt;
+    ) &#x3D;&gt; SearchExpression&lt;T&gt;
   ): SearchExpression&lt;T&gt;;
   search(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   search(): ODataQueryOptionHandler&lt;T&gt;;
@@ -3776,10 +4397,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOption.search,
-        SearchExpression.search(
+        SearchExpression.factory(
           opts,
-          this.options.expression(QueryOption.search),
-        ),
+          this.options.expression(QueryOption.search)
+        )
       );
     }
     return this.options.option&lt;string&gt;(QueryOption.search, opts);
@@ -3793,8 +4414,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   filter(
     opts: (
       builder: FilterExpressionBuilder&lt;T&gt;,
-      current?: FilterExpression&lt;T&gt;,
-    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
+      current?: FilterExpression&lt;T&gt;
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;
   ): FilterExpression&lt;T&gt;;
   filter(opts: Filter&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   filter(): ODataQueryOptionHandler&lt;T&gt;;
@@ -3802,10 +4423,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOption.filter,
-        FilterExpression.filter(
+        FilterExpression.factory(
           opts,
-          this.options.expression(QueryOption.filter),
-        ),
+          this.options.expression(QueryOption.filter)
+        )
       );
     }
     return this.options.option&lt;Filter&lt;T&gt;&gt;(QueryOption.filter, opts);
@@ -3819,8 +4440,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;,
-    ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
+      current?: OrderByExpression&lt;T&gt;
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;
   ): OrderByExpression&lt;T&gt;;
   orderBy(opts: OrderBy&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   orderBy(): ODataQueryOptionHandler&lt;T&gt;;
@@ -3828,10 +4449,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.option(
         QueryOption.orderBy,
-        OrderByExpression.orderBy(
+        OrderByExpression.factory(
           opts,
-          this.options.expression(QueryOption.orderBy),
-        ),
+          this.options.expression(QueryOption.orderBy)
+        )
       );
     }
     return this.options.option&lt;OrderBy&lt;T&gt;&gt;(QueryOption.orderBy, opts);
@@ -3870,6 +4491,14 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     return this.options.option&lt;string&gt;(QueryOption.skiptoken, opts);
   }
 
+  remove(...keys: QueryOption[]) {
+    this.options.remove(...keys);
+  }
+
+  keep(...keys: QueryOption[]) {
+    this.options.keep(...keys);
+  }
+
   /**
    * Shortcut for set $top, $skip, $skiptoken.
    * @param param0 skip or top or skiptoken
@@ -3887,21 +4516,21 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (skiptoken !&#x3D;&#x3D; null) {
         this.skiptoken(skiptoken);
       } else {
-        this.options.remove(QueryOption.skiptoken);
+        this.remove(QueryOption.skiptoken);
       }
     }
     if (skip !&#x3D;&#x3D; undefined) {
       if (skip !&#x3D;&#x3D; null) {
         this.skip(skip);
       } else {
-        this.options.remove(QueryOption.skip);
+        this.remove(QueryOption.skip);
       }
     }
     if (top !&#x3D;&#x3D; undefined) {
       if (top !&#x3D;&#x3D; null) {
         this.top(top);
       } else {
-        this.options.remove(QueryOption.top);
+        this.remove(QueryOption.top);
       }
     }
   }
@@ -3909,10 +4538,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   /**
    * Shortcut for clear pagination by unset $top, $skip, $skiptoken.
    */
-  clearPaging() {
-    this.options.remove(QueryOption.skip);
-    this.options.remove(QueryOption.top);
-    this.options.remove(QueryOption.skiptoken);
+  removePaging() {
+    this.remove(QueryOption.skip, QueryOption.top, QueryOption.skiptoken);
   }
 
   /**
@@ -3923,97 +4550,124 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   }
 
   /**
-   * Retrun the query.
+   * Store the query options from the current query.
    */
-  query() {
+  store() {
     return this.options.toQueryArguments();
   }
 
   /**
-   * Apply the given query options to the current query.
-   * @param query The query to be applied.
+   * Restore the given query options to the current query.
+   * @param options The query to be applied.
    */
-  apply(query: ODataQueryArguments&lt;T&gt;) {
-    if (query.select !&#x3D;&#x3D; undefined) {
-      if (query.select instanceof SelectExpression) {
+  restore(options: ODataQueryArguments&lt;T&gt;) {
+    if (options.select !&#x3D;&#x3D; undefined) {
+      if (options.select instanceof SelectExpression) {
         this.options.expression(
           QueryOption.select,
-          query.select as SelectExpression&lt;T&gt;,
+          options.select as SelectExpression&lt;T&gt;
         );
-      } else if (query.select !&#x3D;&#x3D; null) {
-        this.options.option(QueryOption.select, query.select);
+      } else if (options.select !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.select, options.select);
       } else {
         this.options.remove(QueryOption.select);
       }
     }
-    if (query.expand !&#x3D;&#x3D; undefined) {
-      if (query.expand instanceof ExpandExpression) {
+    if (options.expand !&#x3D;&#x3D; undefined) {
+      if (options.expand instanceof ExpandExpression) {
         this.options.expression(
           QueryOption.expand,
-          query.expand as ExpandExpression&lt;T&gt;,
+          options.expand as ExpandExpression&lt;T&gt;
         );
-      } else if (query.expand !&#x3D;&#x3D; null) {
-        this.options.option(QueryOption.expand, query.expand);
+      } else if (options.expand !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.expand, options.expand);
       } else {
         this.options.remove(QueryOption.expand);
       }
     }
-    if (query.compute !&#x3D;&#x3D; undefined) {
-      if (query.compute instanceof ComputeExpression) {
+    if (options.compute !&#x3D;&#x3D; undefined) {
+      if (options.compute instanceof ComputeExpression) {
         this.options.expression(
           QueryOption.compute,
-          query.compute as ComputeExpression&lt;T&gt;,
+          options.compute as ComputeExpression&lt;T&gt;
         );
-      } else if (query.compute !&#x3D;&#x3D; null) {
-        this.options.option(QueryOption.compute, query.compute);
+      } else if (options.compute !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.compute, options.compute);
       } else {
         this.options.remove(QueryOption.compute);
       }
     }
-    if (query.transform !&#x3D;&#x3D; undefined) {
-      if (query.transform !&#x3D;&#x3D; null) {
-        this.options.option(QueryOption.transform, query.transform);
+    if (options.apply !&#x3D;&#x3D; undefined) {
+      if (options.apply instanceof ApplyExpression) {
+        this.options.expression(
+          QueryOption.apply,
+          options.apply as ApplyExpression&lt;T&gt;
+        );
+      } else if (options.apply !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.apply, options.apply);
+      } else {
+        this.options.remove(QueryOption.apply);
+      }
+    }
+    if (options.transform !&#x3D;&#x3D; undefined) {
+      if (options.transform !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.transform, options.transform);
       } else {
         this.options.remove(QueryOption.transform);
       }
     }
-    if (query.search !&#x3D;&#x3D; undefined) {
-      if (query.search instanceof SearchExpression) {
+    if (options.search !&#x3D;&#x3D; undefined) {
+      if (options.search instanceof SearchExpression) {
         this.options.expression(
           QueryOption.search,
-          query.search as SearchExpression&lt;T&gt;,
+          options.search as SearchExpression&lt;T&gt;
         );
-      } else if (query.search !&#x3D;&#x3D; null) {
-        this.options.option(QueryOption.search, query.search);
+      } else if (options.search !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.search, options.search);
       } else {
         this.options.remove(QueryOption.search);
       }
     }
-    if (query.filter !&#x3D;&#x3D; undefined) {
-      if (query.filter instanceof FilterExpression) {
+    if (options.filter !&#x3D;&#x3D; undefined) {
+      if (options.filter instanceof FilterExpression) {
         this.options.expression(
           QueryOption.filter,
-          query.filter as FilterExpression&lt;T&gt;,
+          options.filter as FilterExpression&lt;T&gt;
         );
-      } else if (query.filter !&#x3D;&#x3D; null) {
-        this.options.option(QueryOption.filter, query.filter);
+      } else if (options.filter !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.filter, options.filter);
       } else {
         this.options.remove(QueryOption.filter);
       }
     }
-    if (query.orderBy !&#x3D;&#x3D; undefined) {
-      if (query.orderBy instanceof OrderByExpression) {
+    if (options.orderBy !&#x3D;&#x3D; undefined) {
+      if (options.orderBy instanceof OrderByExpression) {
         this.options.expression(
           QueryOption.orderBy,
-          query.orderBy as OrderByExpression&lt;T&gt;,
+          options.orderBy as OrderByExpression&lt;T&gt;
         );
-      } else if (query.orderBy !&#x3D;&#x3D; null) {
-        this.options.option(QueryOption.orderBy, query.orderBy);
+      } else if (options.orderBy !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.orderBy, options.orderBy);
       } else {
         this.options.remove(QueryOption.orderBy);
       }
     }
-    this.paging(query);
+    this.paging(options);
+  }
+
+  toJson() {
+    return this.options.toJson();
+  }
+
+  fromJson(json: { [name: string]: any }) {
+    this.options.fromJson(json);
+  }
+
+  toString({
+    escape,
+    parser,
+  }: { escape?: boolean; parser?: Parser&lt;T&gt; } &#x3D; {}): string {
+    return this.options.toString({ escape, parser });
   }
 }
 </code></pre>
