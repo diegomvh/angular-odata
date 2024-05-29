@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
-import { $METADATA } from '../../constants';
+import { $METADATA, ACCEPT, APPLICATION_XML } from '../../constants';
 import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
@@ -26,7 +26,7 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   //#region Requests
   protected override get(options?: ODataOptions): Observable<any> {
-    return super.get({ responseType: 'text', ...options });
+    return super.get({ responseType: 'text', ...options, headers: { [ACCEPT]: APPLICATION_XML } });
   }
   //#endregion
 

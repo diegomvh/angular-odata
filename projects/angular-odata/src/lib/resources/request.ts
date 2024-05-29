@@ -4,6 +4,9 @@ import {
   $BATCH,
   $QUERY,
   ACCEPT,
+  APPLICATION_JSON,
+  APPLICATION_XML,
+  CONTENT_TYPE_ANY,
   IF_MATCH_HEADER,
   IF_NONE_MATCH_HEADER,
   PREFER,
@@ -142,9 +145,9 @@ export class ODataRequest<T> {
       );
     if (accept.length > 0)
       customHeaders[ACCEPT] = [
-        `application/json;${accept.join(';')}`,
-        'text/plain',
-        '*/*',
+        `${APPLICATION_JSON};${accept.join(';')}`,
+        `${TEXT_PLAIN}`,
+        `${CONTENT_TYPE_ANY}`,
       ];
 
     const prefer = [];
