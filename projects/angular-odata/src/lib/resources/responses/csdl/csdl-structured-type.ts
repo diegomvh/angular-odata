@@ -1,9 +1,10 @@
+import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
 import {
   CsdlProperty,
   CsdlNavigationProperty,
 } from './csdl-structural-property';
 
-export class CsdlStructuredType {
+export class CsdlStructuredType extends CsdlAnnotable {
   constructor(
     public name: string,
     public properties?: CsdlProperty[],
@@ -11,7 +12,10 @@ export class CsdlStructuredType {
     public baseType?: string,
     public openType?: boolean,
     public abstract?: boolean,
-  ) {}
+    annotationList?: CsdlAnnotation[],
+  ) {
+    super(annotationList);
+  }
 }
 
 export class CsdlComplexType extends CsdlStructuredType {
@@ -22,8 +26,9 @@ export class CsdlComplexType extends CsdlStructuredType {
     baseType?: string,
     openType?: boolean,
     abstract?: boolean,
+    annotationList?: CsdlAnnotation[],
   ) {
-    super(name, properties, navigationProperties, baseType, openType, abstract);
+    super(name, properties, navigationProperties, baseType, openType, abstract, annotationList);
   }
 }
 
@@ -37,8 +42,9 @@ export class CsdlEntityType extends CsdlStructuredType {
     openType?: boolean,
     abstract?: boolean,
     public hasStream?: boolean,
+    annotationList?: CsdlAnnotation[],
   ) {
-    super(name, properties, navigationProperties, baseType, openType, abstract);
+    super(name, properties, navigationProperties, baseType, openType, abstract, annotationList);
   }
 }
 

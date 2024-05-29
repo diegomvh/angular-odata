@@ -52,7 +52,10 @@ export const RETRY_AFTER_HEADERS = [RETRY_AFTER, RETRY_AFTER.toLowerCase()];
 // HTTP HEADER VALUES
 export const APPLICATION_JSON = 'application/json';
 export const APPLICATION_HTTP = 'application/http';
+export const APPLICATION_XHTML = 'application/xhtml+xml';
+export const APPLICATION_XML = 'application/xml';
 export const TEXT_PLAIN = 'text/plain';
+export const CONTENT_TYPE_ANY = '*/*';
 export const MULTIPART_MIXED = 'multipart/mixed';
 export const MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
 export const CONTENT_TRANSFER_ENCODING = 'Content-Transfer-Encoding';

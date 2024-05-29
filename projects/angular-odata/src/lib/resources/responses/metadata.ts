@@ -215,6 +215,7 @@ export class ODataMetadata {
         attributes,
         element,
       );
+      console.log(tag, fieldValues);
       switch (tag) {
         case ODataMetadata.TAG_REFERENCE:
           objects.push(
@@ -287,6 +288,7 @@ export class ODataMetadata {
               fieldValues[1],
               fieldValues[2],
               fieldValues[3],
+              fieldValues[4],
             ),
           );
           break;
@@ -313,6 +315,7 @@ export class ODataMetadata {
               fieldValues[5],
               fieldValues[6],
               fieldValues[7],
+              fieldValues[8],
             ),
           );
           break;
@@ -329,7 +332,7 @@ export class ODataMetadata {
           );
           break;
         case ODataMetadata.TAG_MEMBER:
-          objects.push(new CsdlEnumMember(fieldValues[0], fieldValues[1]));
+          objects.push(new CsdlEnumMember(fieldValues[0], fieldValues[1], fieldValues[2]));
           break;
         case ODataMetadata.TAG_PROPERTY:
           objects.push(
@@ -343,6 +346,7 @@ export class ODataMetadata {
               fieldValues[6],
               fieldValues[7],
               fieldValues[8],
+              fieldValues[9],
             ),
           );
           break;
@@ -359,6 +363,7 @@ export class ODataMetadata {
               fieldValues[4],
               fieldValues[5],
               fieldValues[6],
+              fieldValues[7],
             ),
           );
           break;
@@ -642,6 +647,7 @@ export class ODataMetadata {
             FieldType.ATTRIBUTE,
           ),
           new Field(ODataMetadata.ATTRIBUTE_IS_FLAGS, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_COMPLEX_TYPE:
         return this.getObjects(element, field.name, [
@@ -660,8 +666,9 @@ export class ODataMetadata {
           new Field(ODataMetadata.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
           new Field(ODataMetadata.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
-          new Field(ODataMetadata.ATTRIBUTE_HAS_STREAM, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_HAS_STREAM, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_FUNCTION:
         return this.getObjects(element, field.name, [
@@ -679,6 +686,7 @@ export class ODataMetadata {
         return this.getObjects(element, field.name, [
           new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_VALUE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_PROPERTY:
         return this.getObjects(element, field.name, [
@@ -691,6 +699,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_KEY:
         return this.getObject(element, field.name, [
@@ -713,6 +722,7 @@ export class ODataMetadata {
           ),
           new Field(ODataMetadata.TAG_REFERENTIAL_CONSTRAINT, FieldType.TAG),
           new Field(ODataMetadata.TAG_ON_DELETE, FieldType.TAG),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_REFERENTIAL_CONSTRAINT:
         return this.getObjects(element, field.name, [

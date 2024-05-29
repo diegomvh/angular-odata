@@ -95,7 +95,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     if (this._options === undefined) {
       this._options = new ODataResponseOptions(this.api.options.parserOptions);
       const contentType = this.headers.get(CONTENT_TYPE);
-      if (contentType && contentType.indexOf(APPLICATION_JSON) !== -1) {
+      if (contentType && contentType.includes(APPLICATION_JSON)) {
         const features = contentType
           .split(',')
           .find((p) => p.startsWith(APPLICATION_JSON)) as string;
