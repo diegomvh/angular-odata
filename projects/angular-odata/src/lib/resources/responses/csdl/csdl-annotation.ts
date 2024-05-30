@@ -15,7 +15,9 @@ export class CsdlAnnotations extends CsdlAnnotable {
 export class CsdlAnnotation {
   constructor(
     public term: string,
-    public qualifier?: string,
+    public string?: string,
+    public bool?: boolean,
+    public int?: number,
   ) {}
 }
 
@@ -31,5 +33,8 @@ export class CsdlTerm {
     public precision?: number,
     public scale?: number,
     public srid?: string,
+    public string?: string,
+    public bool?: boolean,
+    public int?: number,
   ) {}
 }

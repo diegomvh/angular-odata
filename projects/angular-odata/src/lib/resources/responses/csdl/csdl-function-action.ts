@@ -1,3 +1,5 @@
+import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
+
 export class CsdlFunction {
   constructor(
     public name: string,
@@ -36,7 +38,7 @@ export class CsdlActionImport {
   ) {}
 }
 
-export class CsdlParameter {
+export class CsdlParameter extends CsdlAnnotable {
   constructor(
     public name: string,
     public type: string,
@@ -45,7 +47,10 @@ export class CsdlParameter {
     public precision?: number,
     public scale?: number,
     public srid?: string,
-  ) {}
+    annotationList?: CsdlAnnotation[],
+  ) {
+    super(annotationList);
+  }
 }
 
 export class CsdlReturnType {
