@@ -91,6 +91,9 @@ export class ODataMetadata {
   private static readonly ATTRIBUTE_NAMESPACE = 'Namespace';
   private static readonly ATTRIBUTE_TERM_NAMESPACE = 'TermNamespace';
   private static readonly ATTRIBUTE_QUALIFIER = 'Qualifier';
+  private static readonly ATTRIBUTE_STRING = 'String';
+  private static readonly ATTRIBUTE_BOOL = 'Bool';
+  private static readonly ATTRIBUTE_INT = 'Int';
   private static readonly ATTRIBUTE_TARGET_NAMESPACE = 'TargetNamespace';
   private static readonly ATTRIBUTE_TERM = 'Term';
   private static readonly ATTRIBUTE_NAME = 'Name';
@@ -252,6 +255,9 @@ export class ODataMetadata {
               fieldValues[7],
               fieldValues[8],
               fieldValues[9],
+              fieldValues[10],
+              fieldValues[11],
+              fieldValues[12],
             ),
           );
           break;
@@ -261,7 +267,7 @@ export class ODataMetadata {
           );
           break;
         case ODataMetadata.TAG_ANNOTATION:
-          objects.push(new CsdlAnnotation(fieldValues[0], fieldValues[1]));
+          objects.push(new CsdlAnnotation(fieldValues[0], fieldValues[1], fieldValues[2], fieldValues[3]));
           break;
         case ODataMetadata.TAG_SCHEMA:
           objects.push(
@@ -382,6 +388,7 @@ export class ODataMetadata {
               fieldValues[4],
               fieldValues[5],
               fieldValues[6],
+              fieldValues[7],
             ),
           );
           break;
@@ -403,12 +410,13 @@ export class ODataMetadata {
               fieldValues[1],
               fieldValues[2],
               fieldValues[3],
+              fieldValues[4],
             ),
           );
           break;
         case ODataMetadata.TAG_SINGLETON:
           objects.push(
-            new CsdlSingleton(fieldValues[0], fieldValues[1], fieldValues[2]),
+            new CsdlSingleton(fieldValues[0], fieldValues[1], fieldValues[2], fieldValues[3]),
           );
           break;
         case ODataMetadata.TAG_FUNCTION_IMPORT:
@@ -504,6 +512,7 @@ export class ODataMetadata {
             fieldValues[3],
             fieldValues[4],
             fieldValues[5],
+            fieldValues[6],
           );
           break;
         case ODataMetadata.TAG_ON_DELETE:
@@ -549,6 +558,9 @@ export class ODataMetadata {
       case ODataMetadata.ATTRIBUTE_TERM_NAMESPACE:
       case ODataMetadata.ATTRIBUTE_TERM:
       case ODataMetadata.ATTRIBUTE_QUALIFIER:
+      case ODataMetadata.ATTRIBUTE_STRING:
+      case ODataMetadata.ATTRIBUTE_BOOL:
+      case ODataMetadata.ATTRIBUTE_INT:
       case ODataMetadata.ATTRIBUTE_TARGET_NAMESPACE:
       case ODataMetadata.ATTRIBUTE_NAME:
       case ODataMetadata.ATTRIBUTE_TYPE:
@@ -626,6 +638,9 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_STRING, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_BOOL, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_INT, FieldType.ATTRIBUTE),
         ]);
       case ODataMetadata.TAG_ANNOTATIONS:
         return this.getObjects(element, field.name, [
@@ -636,7 +651,9 @@ export class ODataMetadata {
       case ODataMetadata.TAG_ANNOTATION:
         return this.getObjects(element, field.name, [
           new Field(ODataMetadata.ATTRIBUTE_TERM, FieldType.ATTRIBUTE),
-          new Field(ODataMetadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_STRING, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_BOOL, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_INT, FieldType.ATTRIBUTE),
         ]);
       case ODataMetadata.TAG_ENUM_TYPE:
         return this.getObjects(element, field.name, [
@@ -745,6 +762,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_RETURN_TYPE:
         return this.getObject(element, field.name, [
@@ -774,6 +792,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.TAG_SINGLETON, FieldType.TAG),
           new Field(ODataMetadata.TAG_FUNCTION_IMPORT, FieldType.TAG),
           new Field(ODataMetadata.TAG_ACTION_IMPORT, FieldType.TAG),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_ENTITY_SET:
         return this.getObjects(element, field.name, [
@@ -787,6 +806,7 @@ export class ODataMetadata {
             ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT,
             FieldType.ATTRIBUTE,
           ),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_SINGLETON:
         return this.getObjects(element, field.name, [
@@ -796,6 +816,7 @@ export class ODataMetadata {
             ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING,
             FieldType.TAG,
           ),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_FUNCTION_IMPORT:
         return this.getObjects(element, field.name, [
