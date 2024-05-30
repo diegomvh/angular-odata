@@ -1,4 +1,4 @@
-import { raw } from '../../resources/query';
+import { raw, isRawType } from '../../resources/query';
 import { EdmType, FieldParser, StructuredTypeFieldOptions } from '../../types';
 import { ArrayBuffers } from '../../utils/arraybuffers';
 import { Duration, Durations } from '../../utils/durations';
@@ -21,8 +21,8 @@ const EdmParser = <T>(
   },
   encode(value: any, options: StructuredTypeFieldOptions): any {
     return Array.isArray(value)
-      ? value.map((v) => _e(v, options))
-      : _e(value, options);
+      ? value.map((v) => !isRawType(v) ? _e(v, options) : v)
+      : !isRawType(value) ? _e(value, options) : value;
   },
 });
 
