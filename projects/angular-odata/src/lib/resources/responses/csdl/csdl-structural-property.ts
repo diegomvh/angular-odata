@@ -1,3 +1,4 @@
+import { StructuredTypeFieldConfig } from "../../../types";
 import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
@@ -5,9 +6,9 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
     public name: string,
     public type: string,
     public nullable?: boolean,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(annotationList);
+    super(annotations);
   }
 }
 
@@ -22,9 +23,24 @@ export class CsdlProperty extends CsdlStructuralProperty {
     public unicode?: boolean,
     public srid?: string,
     public defaultValue?: string,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(name, type, nullable, annotationList);
+    super(name, type, nullable, annotations);
+  }
+
+  toConfig() {
+    return {
+      name: this.name,
+      type: this.type,
+      default: this.defaultValue,
+      maxLength: this.maxLength,
+      collection: false,
+      nullable: this.nullable,
+      navigation: false,
+      precision: this.precision,
+      scale: this.scale,
+      annotations: this.annotations?.map(a => a.toConfig()),
+    } as StructuredTypeFieldConfig & {name: string};
   }
 }
 
@@ -37,9 +53,21 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     public containsTarget?: boolean,
     public referentialConstraints?: CsdlReferentialConstraint[],
     public onDelete?: CsdlOnDelete,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(name, type, nullable, annotationList);
+    super(name, type, nullable, annotations);
+  }
+
+  toConfig() {
+    return {
+      name: this.name,
+      type: this.type,
+      collection: false,
+      nullable: this.nullable,
+      navigation: true,
+      annotations: this.annotations?.map(a => a.toConfig()),
+      referentials: this.referentialConstraints?.map(r => ({ property: r.property, referencedProperty: r.referencedProperty })),
+    } as StructuredTypeFieldConfig & {name: string};
   }
 }
 

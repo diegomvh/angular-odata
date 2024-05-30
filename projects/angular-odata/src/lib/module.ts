@@ -9,7 +9,7 @@ import {
   makeEnvironmentProviders,
 } from '@angular/core';
 import { ODataClient } from './client';
-import { ODataConfigLoader, ODataConfigSyncLoader } from './loaders';
+import { ODataConfigLoader, ODataConfigDefaultLoader } from './loaders';
 import { ODataServiceFactory } from './services/index';
 import { ApiConfig } from './types';
 
@@ -20,8 +20,8 @@ export interface PassedInitialConfig {
 
 export const ODATA_CONFIG = new InjectionToken<ApiConfig>('odata.config');
 
-export function createSyncLoader(passedConfig: PassedInitialConfig) {
-  return new ODataConfigSyncLoader(passedConfig.config!);
+export function createLoader(passedConfig: PassedInitialConfig) {
+  return new ODataConfigDefaultLoader(passedConfig.config!);
 }
 
 // Standalone version
@@ -32,7 +32,7 @@ export function provideODataClient(
     { provide: ODATA_CONFIG, useValue: passedConfig },
     passedConfig?.loader || {
       provide: ODataConfigLoader,
-      useFactory: createSyncLoader,
+      useFactory: createLoader,
       deps: [ODATA_CONFIG],
     },
     ODataClient,
@@ -58,7 +58,7 @@ export class ODataModule {
         // Create the loader: Either the one getting passed or a sync one
         passedConfig?.loader || {
           provide: ODataConfigLoader,
-          useFactory: createSyncLoader,
+          useFactory: createLoader,
           deps: [ODATA_CONFIG],
         },
         ODataClient,

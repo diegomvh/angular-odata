@@ -2,6 +2,7 @@ import { CsdlEntitySet } from './csdl-entity-set';
 import { CsdlSingleton } from './csdl-singleton';
 import { CsdlFunctionImport, CsdlActionImport } from './csdl-function-action';
 import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
+import { EntityContainerConfig } from '../../../types';
 
 export class CsdlEntityContainer extends CsdlAnnotable {
   constructor(
@@ -11,8 +12,16 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     public singletons?: CsdlSingleton[],
     public functionImports?: CsdlFunctionImport[],
     public actionImports?: CsdlActionImport[],
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(annotationList);
+    super(annotations);
+  }
+
+  toConfig(): EntityContainerConfig {
+    return {
+      name: this.name,
+      annotations: this.annotations?.map(t => t.toConfig()),
+      entitySets: this.entitySets?.map(t => t.toConfig()),
+    }
   }
 }

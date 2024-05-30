@@ -37,6 +37,7 @@ import { CsdlSchema } from './csdl/csdl-schema';
 import { CsdlSingleton } from './csdl/csdl-singleton';
 import { CsdlTypeDefinition } from './csdl/csdl-type-definition';
 import { VERSION_4_0 } from '../../constants';
+import { ApiConfig, ODataVersion } from '../../types';
 
 enum FieldType {
   ATTRIBUTE,
@@ -78,6 +79,13 @@ export class ODataMetadata {
   private static readonly TAG_ENTITY_CONTAINER = 'EntityContainer';
   private static readonly TAG_ENTITY_SET = 'EntitySet';
   private static readonly TAG_SINGLETON = 'Singleton';
+  private static readonly TAG_COLLECTION = 'Collection';
+  private static readonly TAG_RECORD = 'Record';
+  private static readonly TAG_STRING = 'String';
+  private static readonly TAG_ENUM_MEMBER = 'EnumMember';
+  private static readonly TAG_PROPERTY_VALUE = 'PropertyValue';
+  private static readonly TAG_PROPERTY_PATH = 'PropertyPath';
+  private static readonly TAG_NAVIGATION_PROPERTY_PATH = 'NavigationPropertyPath';
   private static readonly TAG_FUNCTION_IMPORT = 'FunctionImport';
   private static readonly TAG_ACTION_IMPORT = 'ActionImport';
   private static readonly TAG_NAVIGATION_PROPERTY_BINDING =
@@ -174,11 +182,17 @@ export class ODataMetadata {
         new Field(ODataMetadata.TAG_TYPE_DEFINITION, FieldType.TAG),
         new Field(ODataMetadata.TAG_TERM, FieldType.TAG),
         new Field(ODataMetadata.TAG_ANNOTATIONS, FieldType.TAG),
-        new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
       ]);
     } catch (error) {
       throw new Error('Unable to parse metadata, ' + error);
     }
+  }
+
+  toConfig(): ApiConfig {
+    return {
+      version: this.version as ODataVersion,
+      schemas: this.schemas.map(s => s.toConfig())
+    } as ApiConfig;
   }
 
   protected checkVersion(document: Document) {
@@ -218,7 +232,6 @@ export class ODataMetadata {
         attributes,
         element,
       );
-      console.log(tag, fieldValues);
       switch (tag) {
         case ODataMetadata.TAG_REFERENCE:
           objects.push(
@@ -266,8 +279,39 @@ export class ODataMetadata {
             new CsdlAnnotations(fieldValues[0], fieldValues[1], fieldValues[2]),
           );
           break;
+        case ODataMetadata.TAG_COLLECTION:
+          objects.push(fieldValues);
+          break;
+        case ODataMetadata.TAG_RECORD:
+          objects.push(fieldValues);
+          break;
+        case ODataMetadata.TAG_STRING:
+          objects.push(fieldValues);
+          break;
+        case ODataMetadata.TAG_ENUM_MEMBER:
+          objects.push(
+            new CsdlEnumMember(fieldValues[0], fieldValues[1], fieldValues[2]),
+          );
+          break;
+        case ODataMetadata.TAG_PROPERTY_VALUE:
+          objects.push(fieldValues);
+          break;
+        case ODataMetadata.TAG_PROPERTY_PATH:
+          objects.push(fieldValues);
+          break;
+        case ODataMetadata.TAG_NAVIGATION_PROPERTY_PATH:
+          objects.push(fieldValues);
+          break;
         case ODataMetadata.TAG_ANNOTATION:
-          objects.push(new CsdlAnnotation(fieldValues[0], fieldValues[1], fieldValues[2], fieldValues[3]));
+          objects.push(new CsdlAnnotation(
+            fieldValues[0], 
+            fieldValues[1], 
+            fieldValues[2], 
+            fieldValues[3],
+            fieldValues[4],
+            fieldValues[5],
+            fieldValues[6],
+          ));
           break;
         case ODataMetadata.TAG_SCHEMA:
           objects.push(
@@ -283,7 +327,6 @@ export class ODataMetadata {
               fieldValues[8],
               fieldValues[9],
               fieldValues[10],
-              fieldValues[11],
             ),
           );
           break;
@@ -307,6 +350,7 @@ export class ODataMetadata {
               fieldValues[3],
               fieldValues[4],
               fieldValues[5],
+              fieldValues[6],
             ),
           );
           break;
@@ -457,6 +501,17 @@ export class ODataMetadata {
             ),
           );
           break;
+        case ODataMetadata.TAG_ENTITY_CONTAINER:
+          objects.push(new CsdlEntityContainer(
+            fieldValues[0],
+            fieldValues[1],
+            fieldValues[2],
+            fieldValues[3],
+            fieldValues[4],
+            fieldValues[5],
+            fieldValues[6],
+          ));
+          break;
         default:
           throw new Error('Unknwon tag:' + tag);
       }
@@ -502,17 +557,6 @@ export class ODataMetadata {
             fieldValues[3],
             fieldValues[4],
             fieldValues[5],
-          );
-          break;
-        case ODataMetadata.TAG_ENTITY_CONTAINER:
-          object = new CsdlEntityContainer(
-            fieldValues[0],
-            fieldValues[1],
-            fieldValues[2],
-            fieldValues[3],
-            fieldValues[4],
-            fieldValues[5],
-            fieldValues[6],
           );
           break;
         case ODataMetadata.TAG_ON_DELETE:
@@ -654,6 +698,40 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_STRING, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_BOOL, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_INT, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_COLLECTION, FieldType.TAG),
+          new Field(ODataMetadata.TAG_RECORD, FieldType.TAG),
+          new Field(ODataMetadata.TAG_ENUM_MEMBER, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_COLLECTION:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.TAG_STRING, FieldType.TAG),
+          new Field(ODataMetadata.TAG_RECORD, FieldType.TAG),
+          new Field(ODataMetadata.TAG_PROPERTY_PATH, FieldType.TAG),
+          new Field(ODataMetadata.TAG_NAVIGATION_PROPERTY_PATH, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_RECORD:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_STRING:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_ENUM_MEMBER:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_PROPERTY_VALUE:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_PROPERTY_PATH:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_NAVIGATION_PROPERTY_PATH:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_ENUM_TYPE:
         return this.getObjects(element, field.name, [
@@ -674,6 +752,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_ENTITY_TYPE:
         return this.getObjects(element, field.name, [
@@ -785,7 +864,7 @@ export class ODataMetadata {
           new Field(ODataMetadata.TAG_PARAMETER, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_ENTITY_CONTAINER:
-        return this.getObject(element, field.name, [
+        return this.getObjects(element, field.name, [
           new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.ATTRIBUTE_EXTENDS, FieldType.ATTRIBUTE),
           new Field(ODataMetadata.TAG_ENTITY_SET, FieldType.TAG),

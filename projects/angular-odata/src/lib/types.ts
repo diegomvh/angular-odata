@@ -215,6 +215,7 @@ export type ApiConfig = {
   name?: string;
   version?: ODataVersion;
   default?: boolean;
+  dynamic?: boolean;
   creation?: Date;
   cache?: Cache;
   errorHandler?: (error: any, caught: Observable<any>) => Observable<never>;

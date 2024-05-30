@@ -1,14 +1,20 @@
+import { AnnotationConfig } from "../../../types";
+
 export class CsdlAnnotable {
-  constructor(public annotationList?: CsdlAnnotation[]) {}
+  constructor(public annotations?: CsdlAnnotation[]) {}
 }
 
 export class CsdlAnnotations extends CsdlAnnotable {
   constructor(
     public target: string,
-    annotationList: CsdlAnnotation[],
+    annotations: CsdlAnnotation[],
     public qualifier?: string,
   ) {
-    super(annotationList);
+    super(annotations);
+  }
+
+  toConfig(): AnnotationConfig[] {
+    return (this.annotations?? []).map(a => a.toConfig());
   }
 }
 
@@ -18,7 +24,19 @@ export class CsdlAnnotation {
     public string?: string,
     public bool?: boolean,
     public int?: number,
+    public collection?: any,
+    public record?: any,
+    public members?: any,
   ) {}
+
+  toConfig(): AnnotationConfig {
+    return {
+      term: this.term,
+      string: this.string,
+      bool: this.bool,
+      int: this.int,
+    } as AnnotationConfig;
+  }
 }
 
 export class CsdlTerm {
