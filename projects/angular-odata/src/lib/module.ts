@@ -9,7 +9,7 @@ import {
   makeEnvironmentProviders,
 } from '@angular/core';
 import { ODataClient } from './client';
-import { ODataConfigLoader, ODataConfigDefaultLoader } from './loaders';
+import { ODataConfigLoader, ODataConfigSyncLoader } from './loaders';
 import { ODataServiceFactory } from './services/index';
 import { ApiConfig } from './types';
 
@@ -21,7 +21,7 @@ export interface PassedInitialConfig {
 export const ODATA_CONFIG = new InjectionToken<ApiConfig>('odata.config');
 
 export function createLoader(passedConfig: PassedInitialConfig) {
-  return new ODataConfigDefaultLoader(passedConfig.config!);
+  return new ODataConfigSyncLoader(passedConfig.config!);
 }
 
 // Standalone version
