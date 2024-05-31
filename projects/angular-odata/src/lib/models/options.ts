@@ -298,7 +298,7 @@ export function ModelField({
       Klass.options = {
         fields: new Map<string, ModelFieldOptions>(),
       } as ModelOptions;
-    options.field = name || key;
+    options.field = name ?? key;
     Klass.options.fields.set(key, options);
   };
 }

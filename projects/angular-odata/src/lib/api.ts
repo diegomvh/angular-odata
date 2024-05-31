@@ -223,6 +223,14 @@ export class ODataApi {
     return ODataFunctionResource.factory<P, R>(this, { path, schema: callable });
   }
 
+  enumType<T>(name_or_type: string) {
+    return this.findEnumTypeByName<T>(name_or_type) ?? this.findEnumTypeForType<T>(name_or_type);
+  }
+
+  structuredType<T>(name_or_type: string) {
+    return this.findStructuredTypeByName<T>(name_or_type) ?? this.findStructuredTypeForType<T>(name_or_type);
+  }
+
   //request(req: ODataRequest<any>): Observable<any> {
   request<T>(
     method: string,
