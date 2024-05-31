@@ -36,9 +36,11 @@ import {
   ApiOptions,
   EdmType,
   NONE_PARSER,
+  ODataVersion,
   Parser,
   PathSegment,
   QueryOption,
+  SchemaConfig,
   StructuredTypeFieldConfig,
 } from './types';
 
@@ -50,8 +52,9 @@ export class ODataApi {
   serviceRootUrl: string;
   metadataUrl: string;
   name?: string;
-  version: string;
+  version: ODataVersion;
   default: boolean;
+  dynamic: boolean;
   creation: Date;
   // Options
   options: ODataApiOptions;
@@ -73,9 +76,10 @@ export class ODataApi {
     if (!this.serviceRootUrl.endsWith('/')) this.serviceRootUrl += '/';
     this.metadataUrl = `${this.serviceRootUrl}$metadata`;
     this.name = config.name;
-    this.version = config.version || DEFAULT_VERSION;
-    this.default = config.default || false;
-    this.creation = config.creation || new Date();
+    this.version = config.version ?? DEFAULT_VERSION;
+    this.default = config.default ?? false;
+    this.dynamic = config.dynamic ?? false;
+    this.creation = config.creation ?? new Date();
     this.options = new ODataApiOptions(
       Object.assign(<ApiOptions>{ version: this.version }, config.options || {})
     );
@@ -85,7 +89,7 @@ export class ODataApi {
 
     this.parsers = new Map(Object.entries(config.parsers || EDM_PARSERS));
 
-    this.schemas = (config.schemas || []).map(
+    this.schemas = (config.schemas ?? []).map(
       (schema) => new ODataSchema(schema, this)
     );
   }
@@ -103,6 +107,14 @@ export class ODataApi {
         findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
     });
+
+    if (this.dynamic) {
+      this.metadata().fetch().subscribe(metadata => {
+        const config = metadata.toConfig(); 
+        this.version = config.version ?? DEFAULT_VERSION;
+        (config.schemas ?? []).forEach((schema) => this.createSchema(schema));
+      });
+    }
   }
 
   fromJson<P, R>(json: {
@@ -165,11 +177,11 @@ export class ODataApi {
    */
   singleton<T>(path: string) {
     const entitySet = this.findEntitySetByName(path);
-    const schema =
+    const structuredType =
       entitySet !== undefined
         ? this.findStructuredTypeForType<T>(entitySet.entityType)
         : undefined;
-    return ODataSingletonResource.factory<T>(this, { path, schema });
+    return ODataSingletonResource.factory<T>(this, { path, schema: structuredType });
   }
 
   /**
@@ -179,11 +191,11 @@ export class ODataApi {
    */
   entitySet<T>(path: string): ODataEntitySetResource<T> {
     const entitySet = this.findEntitySetByName(path);
-    const schema =
+    const structuredType =
       entitySet !== undefined
         ? this.findStructuredTypeForType<T>(entitySet.entityType)
         : undefined;
-    return ODataEntitySetResource.factory<T>(this, { path, schema });
+    return ODataEntitySetResource.factory<T>(this, { path, schema: structuredType });
   }
 
   /**
@@ -192,8 +204,8 @@ export class ODataApi {
    * @returns ODataActionResource
    */
   action<P, R>(path: string): ODataActionResource<P, R> {
-    const schema = this.findCallableForType<R>(path);
-    return ODataActionResource.factory<P, R>(this, { path, schema });
+    const callable = this.findCallableForType<R>(path);
+    return ODataActionResource.factory<P, R>(this, { path, schema: callable });
   }
 
   /**
@@ -202,8 +214,8 @@ export class ODataApi {
    * @returns ODataFunctionResource
    */
   function<P, R>(path: string): ODataFunctionResource<P, R> {
-    const schema = this.findCallableForType<R>(path);
-    return ODataFunctionResource.factory<P, R>(this, { path, schema });
+    const callable = this.findCallableForType<R>(path);
+    return ODataFunctionResource.factory<P, R>(this, { path, schema: callable });
   }
 
   //request(req: ODataRequest<any>): Observable<any> {
@@ -324,18 +336,22 @@ export class ODataApi {
     },
   };
 
+  private createSchema(config: SchemaConfig) {
+    const schema = new ODataSchema(config, this);
+    schema.configure({
+      options: this.options.parserOptions,
+      parserForType: (type: string | EdmType) => this.parserForType(type),
+      findOptionsForType: (type: string) => this.findOptionsForType(type),
+    });
+    this.schemas.push(schema);
+    return schema;
+  }
+
   private schemaForType(type: string) {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
     if (schemas.length === 0) {
       const namespace = type.substring(0, type.lastIndexOf(".")) || this.name!;
-      const schema = new ODataSchema({namespace}, this);
-      schema.configure({
-        options: this.options.parserOptions,
-        parserForType: (type: string | EdmType) => this.parserForType(type),
-        findOptionsForType: (type: string) => this.findOptionsForType(type),
-      });
-      this.schemas.push(schema);
-      return schema; 
+      return this.createSchema({namespace}); 
     };
     if (schemas.length === 1) return schemas[0];
     return schemas
@@ -363,18 +379,18 @@ export class ODataApi {
 
   public structuredTypeForType<T>(type: string, fields?: { [P in keyof T]?: StructuredTypeFieldConfig }) {
     const schema = this.schemaForType(type);
-    let entity = schema.findStructuredTypeForType<T>(type);
-    if (entity === undefined) {
+    let structuredType = schema.findStructuredTypeForType<T>(type);
+    if (structuredType === undefined) {
       const name = type.substring(type.lastIndexOf("."));
-      entity = schema.createStructuredType({name, fields}, {
+      structuredType = schema.createStructuredType({name, fields}, {
         options: this.options.parserOptions,
         parserForType: (t: string | EdmType) => this.parserForType(t),
         findOptionsForType: (t: string) => this.findOptionsForType(t),
       });
-      const Model = this.createModel(entity);
-      this.createCollection(entity, Model);
+      const Model = this.createModel(structuredType);
+      this.createCollection(structuredType, Model);
     }
-    return entity;
+    return structuredType;
   }
 
   public findStructuredTypeForType<T>(type: string) {
@@ -419,28 +435,29 @@ export class ODataApi {
     return this.findStructuredTypeForType<any>(type)?.model;
   }
   
-  public createModel(schema: ODataStructuredType<any>) {
-      // Build Ad-hoc model
-      const Model = class extends ODataModel<any> {} as typeof ODataModel;
-      // Build Meta
-      Model.buildMeta({ schema });
-      // Configure
-      Model.meta.configure({
-        options: this.options.parserOptions,
-        parserForType: (t: string | EdmType) => this.parserForType(t),
-        findOptionsForType: (t: string) => this.findOptionsForType(t),
-      });
-      // Store New Model for next time
-      schema.model = Model;
-      return Model;
+  public createModel(structured: ODataStructuredType<any>) {
+    if (structured.model !== undefined) return structured.model;
+    // Build Ad-hoc model
+    const Model = class extends ODataModel<any> {} as typeof ODataModel;
+    // Build Meta
+    Model.buildMeta({ schema: structured });
+    // Configure
+    Model.meta.configure({
+      options: this.options.parserOptions,
+      parserForType: (t: string | EdmType) => this.parserForType(t),
+      findOptionsForType: (t: string) => this.findOptionsForType(t),
+    });
+    // Store New Model for next time
+    structured.model = Model;
+    return Model;
   }
 
   public modelForType(type: string) {
     let Model = this.findModelForType(type);
     if (Model === undefined) {
-      const schema = this.findStructuredTypeForType<any>(type);
-      if (schema === undefined) throw Error(`No schema for ${type}`);
-      Model = this.createModel(schema);
+      const structured = this.findStructuredTypeForType<any>(type);
+      if (structured === undefined) throw Error(`No structured type for ${type}`);
+      Model = this.createModel(structured);
     }
     return Model;
   }
@@ -448,24 +465,26 @@ export class ODataApi {
   public findCollectionForType(type: string) {
     return this.findStructuredTypeForType<any>(type)?.collection;
   }
-  public createCollection(schema: ODataStructuredType<any>, model: typeof ODataModel<any>) {
+  public createCollection(structured: ODataStructuredType<any>, model?: typeof ODataModel<any>) {
+    if (structured.collection !== undefined) return structured.collection;
+    if (model === undefined) model = this.createModel(structured);
     const Collection = class extends ODataCollection<
       any,
       ODataModel<any>
     > {
-      static override model = model;
+      static override model = model!;
     } as typeof ODataCollection;
-    schema.collection = Collection;
+    structured.collection = Collection;
     return Collection;
   }
 
   public collectionForType(type: string) {
     let Collection = this.findCollectionForType(type);
     if (Collection === undefined) {
-      const schema = this.findStructuredTypeForType<any>(type);
-      if (schema === undefined) throw Error(`No schema for ${type}`);
+      const structured = this.findStructuredTypeForType<any>(type);
+      if (structured === undefined) throw Error(`No structured type for ${type}`);
       const Model = this.modelForType(type);
-      Collection = this.createCollection(schema, Model);
+      Collection = this.createCollection(structured, Model);
     }
     return Collection;
   }
