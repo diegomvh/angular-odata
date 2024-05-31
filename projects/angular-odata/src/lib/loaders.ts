@@ -1,12 +1,11 @@
-import { forkJoin, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { ApiConfig } from './types';
 
 export abstract class ODataConfigLoader {
   abstract loadConfigs(): Observable<ApiConfig[]>;
 }
 
-export class ODataConfigSyncLoader implements ODataConfigLoader {
+export class ODataConfigDefaultLoader implements ODataConfigLoader {
   constructor(private readonly passedConfigs: ApiConfig | ApiConfig[]) {}
 
   loadConfigs(): Observable<ApiConfig[]> {
@@ -15,32 +14,5 @@ export class ODataConfigSyncLoader implements ODataConfigLoader {
     }
 
     return of([this.passedConfigs]);
-  }
-}
-
-export class ODataConfigAsyncLoader implements ODataConfigLoader {
-  constructor(
-    private readonly configs$:
-      | Observable<ApiConfig>
-      | Observable<ApiConfig>[]
-      | Observable<ApiConfig[]>,
-  ) {}
-
-  loadConfigs(): Observable<ApiConfig[]> {
-    if (Array.isArray(this.configs$)) {
-      return forkJoin(this.configs$);
-    }
-
-    const singleConfigOrArray = this.configs$ as Observable<unknown>;
-
-    return singleConfigOrArray.pipe(
-      map((value: unknown) => {
-        if (Array.isArray(value)) {
-          return value as ApiConfig[];
-        }
-
-        return [value] as ApiConfig[];
-      }),
-    );
   }
 }

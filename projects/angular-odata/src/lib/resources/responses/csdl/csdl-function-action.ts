@@ -1,3 +1,4 @@
+import { CallableConfig, Parameter } from "../../../types";
 import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 
 export class CsdlFunction {
@@ -9,6 +10,17 @@ export class CsdlFunction {
     public isComposable?: boolean,
     public parameters?: CsdlParameter[],
   ) {}
+
+  toConfig(): CallableConfig {
+    return {
+      name: this.name,
+      entitySetPath: this.entitySetPath,
+      bound: this.isBound,
+      composable: this.isComposable,
+      parameters: this.parameters?.map(p => p.toConfig()),
+      return: this.returnType?.toConfig(),
+    } as CallableConfig;
+  }
 }
 
 export class CsdlAction {
@@ -19,6 +31,16 @@ export class CsdlAction {
     public entitySetPath?: string,
     public parameters?: CsdlParameter[],
   ) {}
+
+  toConfig(): CallableConfig {
+    return {
+      name: this.name,
+      entitySetPath: this.entitySetPath,
+      bound: this.isBound,
+      parameters: this.parameters?.map(p => p.toConfig()),
+      return: this.returnType?.toConfig(),
+    } as CallableConfig;
+  }
 }
 
 export class CsdlFunctionImport {
@@ -47,9 +69,17 @@ export class CsdlParameter extends CsdlAnnotable {
     public precision?: number,
     public scale?: number,
     public srid?: string,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(annotationList);
+    super(annotations);
+  }
+
+  toConfig(): Parameter {
+    return {
+      type: this.type,
+      nullable: this.nullable,
+      collection: false
+    }
   }
 }
 
@@ -62,4 +92,11 @@ export class CsdlReturnType {
     public scale?: number,
     public srid?: string,
   ) {}
+
+  toConfig(): { type: string; collection?: boolean | undefined; } | undefined {
+    return {
+      type: this.type,
+      collection: false
+    };
+  }
 }

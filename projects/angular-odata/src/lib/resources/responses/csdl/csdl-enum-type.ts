@@ -1,3 +1,4 @@
+import { EnumTypeConfig, EnumTypeFieldConfig } from "../../../types";
 import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 
 export class CsdlEnumType extends CsdlAnnotable {
@@ -6,9 +7,19 @@ export class CsdlEnumType extends CsdlAnnotable {
     public members: CsdlEnumMember[],
     public underlyingType?: string,
     public isFlags?: boolean,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(annotationList)
+    super(annotations)
+  }
+
+  toConfig(): EnumTypeConfig<any> {
+    return {
+      name: this.name,
+      annotations: this.annotations?.map(a => a.toConfig()),
+      members: this.members.map(m => m.toConfig()),
+      fields: {},
+      flags: this.isFlags,
+    } as EnumTypeConfig<any>;
   }
 }
 
@@ -16,8 +27,15 @@ export class CsdlEnumMember extends CsdlAnnotable {
   constructor(
     public name: string,
     public value?: number,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(annotationList)
+    super(annotations)
+  }
+
+  toConfig(): EnumTypeFieldConfig<any> {
+    return {
+      value: this.value,
+      annotations: this.annotations?.map(a => a.toConfig()),
+    } as EnumTypeFieldConfig<any>;
   }
 }

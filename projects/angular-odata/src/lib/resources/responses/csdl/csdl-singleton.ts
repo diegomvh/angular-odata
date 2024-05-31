@@ -6,8 +6,8 @@ export class CsdlSingleton extends CsdlAnnotable {
     public name: string,
     public type: string,
     public navigationPropertyBindings?: CsdlNavigationPropertyBinding[],
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(annotationList);
+    super(annotations);
   }
 }

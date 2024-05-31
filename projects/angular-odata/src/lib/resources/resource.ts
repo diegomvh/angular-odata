@@ -170,7 +170,7 @@ export class ODataResource<T> {
   ): [string, { [name: string]: any }] {
     const type = this.type();
     const schema = type ? this.api.findStructuredTypeForType(type) : this.schema;
-    const parser = schema !== undefined && 'parser' in schema ? (schema.parser as Parser<T>) : undefined;
+    const parser = schema !== undefined && 'parser' in schema ? ((<any>schema).parser as Parser<T>) : undefined;
     const [spath, sparams] = this.pathSegments.pathAndParams({
       escape,
       parser,

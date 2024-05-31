@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
 import { ODataApi } from './api';
 import { ODataConfigLoader } from './loaders';
 import { ODataCollection, ODataModel } from './models/index';
@@ -10,6 +10,7 @@ import {
   ODataEntityResource,
   ODataEntitySetResource,
   ODataFunctionResource,
+  ODataMetadata,
   ODataMetadataResource,
   ODataNavigationPropertyResource,
   ODataOptions,
@@ -49,22 +50,22 @@ export class ODataClient {
     private http: HttpClient,
     private loader: ODataConfigLoader,
   ) {
-    this.loader.loadConfigs().subscribe((config) => {
-      this.settings = new ODataSettings(config);
-      this.settings.configure({
-        requester: (req: ODataRequest<any>): Observable<any> =>
-          this.http.request(req.method, `${req.url}`, {
-            body: req.body,
-            context: req.context,
-            headers: req.headers,
-            observe: req.observe,
-            params: req.params,
-            reportProgress: req.reportProgress,
-            responseType: req.responseType,
-            withCredentials: req.withCredentials,
-          }),
+    this.loader.loadConfigs().subscribe((configs) => {
+        this.settings = new ODataSettings(configs);
+        this.settings.configure({
+          requester: (req: ODataRequest<any>): Observable<any> =>
+            this.http.request(req.method, `${req.url}`, {
+              body: req.body,
+              context: req.context,
+              headers: req.headers,
+              observe: req.observe,
+              params: req.params,
+              reportProgress: req.reportProgress,
+              responseType: req.responseType,
+              withCredentials: req.withCredentials,
+            }),
+        });
       });
-    });
   }
 
   //#region Resolve Building Blocks
@@ -82,7 +83,7 @@ export class ODataClient {
       api =
         this.settings!.findApiByName(value) ||
         this.settings!.findApiForType(value);
-    return api || this.settings!.defaultApi();
+    return api ?? this.settings!.defaultApi();
   }
 
   defaultApi() {

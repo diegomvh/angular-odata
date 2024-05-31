@@ -1,3 +1,4 @@
+import { StructuredTypeConfig } from '../../../types';
 import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
 import {
   CsdlProperty,
@@ -12,9 +13,9 @@ export class CsdlStructuredType extends CsdlAnnotable {
     public baseType?: string,
     public openType?: boolean,
     public abstract?: boolean,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(annotationList);
+    super(annotations);
   }
 }
 
@@ -26,9 +27,9 @@ export class CsdlComplexType extends CsdlStructuredType {
     baseType?: string,
     openType?: boolean,
     abstract?: boolean,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(name, properties, navigationProperties, baseType, openType, abstract, annotationList);
+    super(name, properties, navigationProperties, baseType, openType, abstract, annotations);
   }
 }
 
@@ -42,14 +43,30 @@ export class CsdlEntityType extends CsdlStructuredType {
     openType?: boolean,
     abstract?: boolean,
     public hasStream?: boolean,
-    annotationList?: CsdlAnnotation[],
+    annotations?: CsdlAnnotation[],
   ) {
-    super(name, properties, navigationProperties, baseType, openType, abstract, annotationList);
+    super(name, properties, navigationProperties, baseType, openType, abstract, annotations);
+  }
+
+  toConfig(): StructuredTypeConfig<any> {
+    const fields = {};
+    return {
+      name: this.name,
+      base: this.baseType,
+      open: this.openType,
+      annotations: this.annotations?.map(t => t.toConfig()),
+      keys: this.key?.toConfig(),
+      fields: [...(this.properties ?? []).map(t => t.toConfig()), ...(this.navigationProperties ?? []).map(t => t.toConfig())].reduce((acc, p) => Object.assign(acc, {[p.name]: p}), {}),
+    } as StructuredTypeConfig<any>;
   }
 }
 
 export class CsdlKey {
   constructor(public propertyRefs: CsdlPropertyRef[]) {}
+
+  toConfig() {
+    return this.propertyRefs.map(t => t.toConfig());
+  }
 }
 
 export class CsdlPropertyRef {
@@ -57,4 +74,11 @@ export class CsdlPropertyRef {
     public name: string,
     public alias?: string,
   ) {}
+
+  toConfig(): { name: string; alias?: string } {
+    return {
+      name: this.name,
+      alias: this.alias
+    }
+  }
 }
