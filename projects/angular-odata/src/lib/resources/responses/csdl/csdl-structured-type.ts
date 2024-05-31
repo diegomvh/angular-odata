@@ -31,6 +31,17 @@ export class CsdlComplexType extends CsdlStructuredType {
   ) {
     super(name, properties, navigationProperties, baseType, openType, abstract, annotations);
   }
+
+  toConfig(): StructuredTypeConfig<any> {
+    const fields = {};
+    return {
+      name: this.name,
+      base: this.baseType,
+      open: this.openType,
+      annotations: this.annotations?.map(t => t.toConfig()),
+      fields: [...(this.properties ?? []).map(t => t.toConfig()), ...(this.navigationProperties ?? []).map(t => t.toConfig())].reduce((acc, p) => Object.assign(acc, {[p.name]: p}), {}),
+    } as StructuredTypeConfig<any>;
+  }
 }
 
 export class CsdlEntityType extends CsdlStructuredType {
