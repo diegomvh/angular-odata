@@ -4,8 +4,9 @@ import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { render, FieldFactory, Renderable, RenderableFactory } from './syntax';
 
+export type OrderAttribute = 'asc' | 'desc';
 export class OrderByField implements Renderable {
-  constructor(protected field: Renderable, protected order: 'asc' | 'desc') {}
+  constructor(protected field: Renderable, protected order: OrderAttribute) {}
 
   get [Symbol.toStringTag]() {
     return 'OrderByField';

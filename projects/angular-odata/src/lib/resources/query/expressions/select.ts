@@ -78,4 +78,9 @@ export class SelectExpression<T> extends Expression<T> {
   field(field: any): SelectExpression<T> {
     return this._add(field);
   }
+
+  fields(...fields: any[]): SelectExpression<T> {
+    fields.forEach((f) => this._add(f));
+    return this;
+  }
 }

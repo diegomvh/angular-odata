@@ -1,12 +1,11 @@
-import { forkJoin, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { ApiConfig } from './types';
 
 export abstract class ODataConfigLoader {
   abstract loadConfigs(): Observable<ApiConfig[]>;
 }
 
-export class ODataConfigSyncLoader implements ODataConfigLoader {
+export class ODataConfigDefaultLoader implements ODataConfigLoader {
   constructor(private readonly passedConfigs: ApiConfig | ApiConfig[]) {}
 
   loadConfigs(): Observable<ApiConfig[]> {
