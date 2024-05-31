@@ -32,7 +32,7 @@ export class CsdlSchema {
       alias: this.alias,
       annotations: this.annotations?.map(t => t.toConfig()),
       enums: this.enumTypes?.map(t => t.toConfig()),
-      entities: this.entityTypes?.map(t => t.toConfig()),
+      entities: [...(this.complexTypes ?? []).map(t => t.toConfig()), ...(this.entityTypes ?? []).map(t => t.toConfig())],
       callables: [...(this.functions ?? []).map(t => t.toConfig()), ...(this.actions ?? []).map(t => t.toConfig())],
       containers: this.entityContainers?.map(t => t.toConfig())
     } as SchemaConfig;

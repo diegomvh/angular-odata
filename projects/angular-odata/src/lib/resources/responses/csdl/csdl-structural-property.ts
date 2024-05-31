@@ -2,13 +2,17 @@ import { StructuredTypeFieldConfig } from "../../../types";
 import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
+  type: string;
+  collection: boolean;
   constructor(
     public name: string,
-    public type: string,
+    type: string,
     public nullable?: boolean,
     annotations?: CsdlAnnotation[],
   ) {
     super(annotations);
+    this.collection = type.startsWith("Collection(");
+    this.type = this.collection ? type.substring(11, type.length - 1) : type;
   }
 }
 
@@ -34,7 +38,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
       type: this.type,
       default: this.defaultValue,
       maxLength: this.maxLength,
-      collection: false,
+      collection: this.collection,
       nullable: this.nullable,
       navigation: false,
       precision: this.precision,
@@ -62,7 +66,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     return {
       name: this.name,
       type: this.type,
-      collection: false,
+      collection: this.collection,
       nullable: this.nullable,
       navigation: true,
       annotations: this.annotations?.map(a => a.toConfig()),
