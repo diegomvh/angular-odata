@@ -1,5 +1,5 @@
-import { ODataCollection } from '../models';
-import { ODataModel } from '../models/model';
+import { ODataCollection, ODataModelOptions } from '../models';
+import { ODataModel, buildModelMetaOptions } from '../models/model';
 import {
   Parser,
   ParserOptions,
@@ -19,6 +19,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
   base?: string;
   parent?: ODataStructuredType<any>;
   children: ODataStructuredType<any>[] = [];
+  meta: ODataModelOptions<T>;
   model?: typeof ODataModel;
   collection?: typeof ODataCollection;
   parser: ODataStructuredTypeParser<T>;
@@ -31,14 +32,13 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
       schema.namespace,
       schema.alias
     );
+    const options = this.model?.hasOwnProperty('options') ? this.model.options : { fields: new Map<string, any>() };
+    this.meta = buildModelMetaOptions<T>({ options, schema: this });
     this.model = config.model as typeof ODataModel;
-    this.collection = config.collection as typeof ODataCollection;
     if (this.model !== undefined) {
-      const options = this.model.hasOwnProperty('options')
-        ? this.model.options
-        : { fields: new Map<string, any>() };
-      this.model.buildMeta<T>({ options, schema: this });
+      this.model.meta = this.meta;
     }
+    this.collection = config.collection as typeof ODataCollection;
     if (this.collection !== undefined) {
       this.collection.model = this.model;
     }

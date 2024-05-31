@@ -4,7 +4,7 @@ import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 export class CsdlEnumType extends CsdlAnnotable {
   constructor(
     public name: string,
-    public members: CsdlEnumMember[],
+    public members: CsdlMember[],
     public underlyingType?: string,
     public isFlags?: boolean,
     annotations?: CsdlAnnotation[],
@@ -23,7 +23,7 @@ export class CsdlEnumType extends CsdlAnnotable {
   }
 }
 
-export class CsdlEnumMember extends CsdlAnnotable {
+export class CsdlMember extends CsdlAnnotable {
   constructor(
     public name: string,
     public value?: number,

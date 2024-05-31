@@ -56,3 +56,59 @@ export class CsdlTerm {
     public int?: number,
   ) {}
 }
+
+export class CsdlCollection {
+  constructor(
+    public strings: CsdlString[],
+    public records: CsdlRecord[],
+    public propertyPaths: CsdlPropertyPath[],
+    public navigationPropertyPaths: CsdlNavigationPropertyPath[],
+  ) {}
+
+  toConfig() {
+    return {
+    }
+  }
+}
+
+export class CsdlRecord {
+  constructor(public properties: CsdlPropertyValue[]) {}
+
+  toConfig() {
+    return {
+    }
+  }
+}
+
+export class CsdlPropertyValue {
+  constructor(public name: string, public string?: string, public date?: Date, public members?: CsdlEnumMember[]) {}
+
+  toConfig() {
+    return {
+    }
+  }
+}
+
+export class CsdlEnumMember {
+  constructor(
+    public text: string,
+  ) {}
+}
+
+export class CsdlString {
+  constructor(
+    public text: string,
+  ) {}
+}
+
+export class CsdlPropertyPath {
+  constructor(
+    public text: string,
+  ) {}
+}
+
+export class CsdlNavigationPropertyPath {
+  constructor(
+    public text: string,
+  ) {}
+}

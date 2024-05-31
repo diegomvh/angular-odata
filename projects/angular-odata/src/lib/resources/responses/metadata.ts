@@ -9,6 +9,13 @@ import {
 import {
   CsdlAnnotation,
   CsdlAnnotations,
+  CsdlCollection,
+  CsdlEnumMember,
+  CsdlNavigationPropertyPath,
+  CsdlPropertyPath,
+  CsdlPropertyValue,
+  CsdlRecord,
+  CsdlString,
   CsdlTerm,
 } from './csdl/csdl-annotation';
 import {
@@ -17,7 +24,7 @@ import {
   CsdlKey,
   CsdlPropertyRef,
 } from './csdl/csdl-structured-type';
-import { CsdlEnumMember, CsdlEnumType } from './csdl/csdl-enum-type';
+import { CsdlMember, CsdlEnumType } from './csdl/csdl-enum-type';
 import {
   CsdlInclude,
   CsdlIncludeAnnotations,
@@ -100,6 +107,7 @@ export class ODataMetadata {
   private static readonly ATTRIBUTE_TERM_NAMESPACE = 'TermNamespace';
   private static readonly ATTRIBUTE_QUALIFIER = 'Qualifier';
   private static readonly ATTRIBUTE_STRING = 'String';
+  private static readonly ATTRIBUTE_DATE = 'Date';
   private static readonly ATTRIBUTE_BOOL = 'Bool';
   private static readonly ATTRIBUTE_INT = 'Int';
   private static readonly ATTRIBUTE_TARGET_NAMESPACE = 'TargetNamespace';
@@ -226,6 +234,7 @@ export class ODataMetadata {
         continue;
       }
 
+      const textContent = element.textContent;
       const attributes: NamedNodeMap = element.attributes;
       const fieldValues: any[] = this.getFieldValues(
         fieldNames,
@@ -280,27 +289,27 @@ export class ODataMetadata {
           );
           break;
         case ODataMetadata.TAG_COLLECTION:
-          objects.push(fieldValues);
+          objects.push(new CsdlCollection(fieldValues[0], fieldValues[1], fieldValues[2], fieldValues[3]));
           break;
         case ODataMetadata.TAG_RECORD:
-          objects.push(fieldValues);
+          objects.push(new CsdlRecord(fieldValues[0]));
           break;
         case ODataMetadata.TAG_STRING:
-          objects.push(fieldValues);
+          objects.push(new CsdlString(textContent!));
           break;
         case ODataMetadata.TAG_ENUM_MEMBER:
           objects.push(
-            new CsdlEnumMember(fieldValues[0], fieldValues[1], fieldValues[2]),
+            new CsdlEnumMember(textContent!),
           );
           break;
         case ODataMetadata.TAG_PROPERTY_VALUE:
-          objects.push(fieldValues);
+          objects.push(new CsdlPropertyValue(fieldValues[0], fieldValues[1], fieldValues[2], fieldValues[3]));
           break;
         case ODataMetadata.TAG_PROPERTY_PATH:
-          objects.push(fieldValues);
+          objects.push(new CsdlPropertyPath(fieldValues[0]));
           break;
         case ODataMetadata.TAG_NAVIGATION_PROPERTY_PATH:
-          objects.push(fieldValues);
+          objects.push(new CsdlNavigationPropertyPath(fieldValues[0]));
           break;
         case ODataMetadata.TAG_ANNOTATION:
           objects.push(new CsdlAnnotation(
@@ -382,7 +391,7 @@ export class ODataMetadata {
           );
           break;
         case ODataMetadata.TAG_MEMBER:
-          objects.push(new CsdlEnumMember(fieldValues[0], fieldValues[1], fieldValues[2]));
+          objects.push(new CsdlMember(fieldValues[0], fieldValues[1], fieldValues[2]));
           break;
         case ODataMetadata.TAG_PROPERTY:
           objects.push(
@@ -646,6 +655,10 @@ export class ODataMetadata {
         return this.propertyValueToNumber(
           this.getAttributeValue(attributes, field.name),
         );
+      case ODataMetadata.ATTRIBUTE_DATE:
+        return this.propertyValueToDate(
+          this.getAttributeValue(attributes, field.name),
+        );
       default:
         throw new Error('Unknwon attribute:' + field.name);
     }
@@ -714,16 +727,15 @@ export class ODataMetadata {
           new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_STRING:
-        return this.getObjects(element, field.name, [
-          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
-        ]);
+        return this.getObjects(element, field.name, [ ]);
       case ODataMetadata.TAG_ENUM_MEMBER:
-        return this.getObjects(element, field.name, [
-          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
-        ]);
+        return this.getObjects(element, field.name, [ ]);
       case ODataMetadata.TAG_PROPERTY_VALUE:
         return this.getObjects(element, field.name, [
-          new Field(ODataMetadata.TAG_PROPERTY_VALUE, FieldType.TAG),
+          new Field(ODataMetadata.ATTRIBUTE_PROPERTY, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_STRING, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_DATE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ENUM_MEMBER, FieldType.TAG),
         ]);
       case ODataMetadata.TAG_PROPERTY_PATH:
         return this.getObjects(element, field.name, [
@@ -950,5 +962,9 @@ export class ODataMetadata {
 
   protected propertyValueToBoolean(attributeValue?: string) {
     return attributeValue !== undefined ? attributeValue === 'true' : false;
+  }
+
+  protected propertyValueToDate(attributeValue?: string) {
+    return attributeValue !== undefined ? new Date(attributeValue) : undefined;
   }
 }
