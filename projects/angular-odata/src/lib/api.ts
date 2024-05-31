@@ -1,6 +1,6 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { ODataCache, ODataInMemoryCache } from './cache/index';
 import { DEFAULT_VERSION } from './constants';
 import { ODataCollection, ODataModel, ODataModelOptions } from './models/index';
@@ -11,6 +11,7 @@ import {
   ODataEntityResource,
   ODataEntitySetResource,
   ODataFunctionResource,
+  ODataMetadata,
   ODataMetadataResource,
   ODataNavigationPropertyResource,
   ODataOptions,
@@ -54,7 +55,6 @@ export class ODataApi {
   name?: string;
   version: ODataVersion;
   default: boolean;
-  dynamic: boolean;
   creation: Date;
   // Options
   options: ODataApiOptions;
@@ -78,7 +78,6 @@ export class ODataApi {
     this.name = config.name;
     this.version = config.version ?? DEFAULT_VERSION;
     this.default = config.default ?? false;
-    this.dynamic = config.dynamic ?? false;
     this.creation = config.creation ?? new Date();
     this.options = new ODataApiOptions(
       Object.assign(<ApiOptions>{ version: this.version }, config.options || {})
@@ -107,14 +106,20 @@ export class ODataApi {
         findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
     });
+  }
 
-    if (this.dynamic) {
-      this.metadata().fetch().subscribe(metadata => {
-        const config = metadata.toConfig(); 
-        this.version = config.version ?? DEFAULT_VERSION;
-        (config.schemas ?? []).forEach((schema) => this.createSchema(schema));
+  populate(metadata: ODataMetadata) {
+    const config = metadata.toConfig();
+    this.version = config.version ?? DEFAULT_VERSION;
+    const schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
+    this.schemas = [...this.schemas, ...schemas];
+    schemas.forEach((schema) => {
+      schema.configure({
+        options: this.options.parserOptions,
+        parserForType: (type: string | EdmType) => this.parserForType(type),
+        findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
-    }
+    });
   }
 
   fromJson<P, R>(json: {
@@ -226,14 +231,14 @@ export class ODataApi {
       body?: any;
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
@@ -320,21 +325,21 @@ export class ODataApi {
       entitySet: Map<string, ODataEntitySet | undefined>;
     };
   } = {
-    forType: {
-      enum: new Map<string, ODataEnumType<any> | undefined>(),
-      structured: new Map<string, ODataStructuredType<any> | undefined>(),
-      callable: new Map<string, ODataCallable<any> | undefined>(),
-      entitySet: new Map<string, ODataEntitySet | undefined>(),
-      parser: new Map<string, Parser<any>>(),
-      options: new Map<string, ODataModelOptions<any> | undefined>(),
-    },
-    byName: {
-      enum: new Map<string, ODataEnumType<any> | undefined>(),
-      structured: new Map<string, ODataStructuredType<any> | undefined>(),
-      callable: new Map<string, ODataCallable<any> | undefined>(),
-      entitySet: new Map<string, ODataEntitySet | undefined>(),
-    },
-  };
+      forType: {
+        enum: new Map<string, ODataEnumType<any> | undefined>(),
+        structured: new Map<string, ODataStructuredType<any> | undefined>(),
+        callable: new Map<string, ODataCallable<any> | undefined>(),
+        entitySet: new Map<string, ODataEntitySet | undefined>(),
+        parser: new Map<string, Parser<any>>(),
+        options: new Map<string, ODataModelOptions<any> | undefined>(),
+      },
+      byName: {
+        enum: new Map<string, ODataEnumType<any> | undefined>(),
+        structured: new Map<string, ODataStructuredType<any> | undefined>(),
+        callable: new Map<string, ODataCallable<any> | undefined>(),
+        entitySet: new Map<string, ODataEntitySet | undefined>(),
+      },
+    };
 
   private createSchema(config: SchemaConfig) {
     const schema = new ODataSchema(config, this);
@@ -351,7 +356,7 @@ export class ODataApi {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
     if (schemas.length === 0) {
       const namespace = type.substring(0, type.lastIndexOf(".")) || this.name!;
-      return this.createSchema({namespace}); 
+      return this.createSchema({ namespace });
     };
     if (schemas.length === 1) return schemas[0];
     return schemas
@@ -382,13 +387,11 @@ export class ODataApi {
     let structuredType = schema.findStructuredTypeForType<T>(type);
     if (structuredType === undefined) {
       const name = type.substring(type.lastIndexOf("."));
-      structuredType = schema.createStructuredType({name, fields}, {
+      structuredType = schema.createStructuredType({ name, fields }, {
         options: this.options.parserOptions,
         parserForType: (t: string | EdmType) => this.parserForType(t),
         findOptionsForType: (t: string) => this.findOptionsForType(t),
       });
-      const Model = this.createModel(structuredType);
-      this.createCollection(structuredType, Model);
     }
     return structuredType;
   }
@@ -434,13 +437,13 @@ export class ODataApi {
   public findModelForType(type: string) {
     return this.findStructuredTypeForType<any>(type)?.model;
   }
-  
+
   public createModel(structured: ODataStructuredType<any>) {
     if (structured.model !== undefined) return structured.model;
     // Build Ad-hoc model
-    const Model = class extends ODataModel<any> {} as typeof ODataModel;
+    const Model = class extends ODataModel<any> { } as typeof ODataModel;
     // Build Meta
-    Model.buildMeta({ schema: structured });
+    Model.meta = structured.meta;
     // Configure
     Model.meta.configure({
       options: this.options.parserOptions,
@@ -628,8 +631,8 @@ export class ODataApi {
         | ODataModelOptions<T>
         | undefined;
     }
-    const st = this.findStructuredTypeForType<T>(type);
-    const options = st?.model?.meta;
+    const structuredType = this.findStructuredTypeForType<T>(type);
+    const options = structuredType?.meta; 
     // Set Options for next time
     this.memo.forType.options.set(type, options);
     return options;

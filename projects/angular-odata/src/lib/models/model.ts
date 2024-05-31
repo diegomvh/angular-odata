@@ -32,41 +32,35 @@ import {
 } from './options';
 import { EdmType, ParserOptions } from '../types';
 
-// @dynamic
+export const buildModelMetaOptions = <T>({options, schema}: { options?: ModelOptions; schema: ODataStructuredType<T>; }) => {
+  if (options === undefined) {
+    let fields = schema
+      .fields({ include_navigation: true, include_parents: true })
+      .reduce((acc, field) => {
+        let name = field.name;
+        // Prevent collision with reserved keywords
+        while (RESERVED_FIELD_NAMES.includes(name)) {
+          name = name + '_';
+        }
+        return Object.assign(acc, {
+          [name]: {
+            field: field.name,
+            default: field.default,
+            required: !field.nullable,
+          },
+        });
+      }, {});
+    options = {
+      fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
+    };
+  }
+  return new ODataModelOptions<T>({ options, schema });
+}
+
 export class ODataModel<T> {
   // Properties
   static options: ModelOptions;
   static meta: ODataModelOptions<any>;
-  static buildMeta<T>({
-    options,
-    schema,
-  }: {
-    options?: ModelOptions;
-    schema: ODataStructuredType<T>;
-  }) {
-    if (options === undefined) {
-      let fields = schema
-        .fields({ include_navigation: true, include_parents: true })
-        .reduce((acc, field) => {
-          let name = field.name;
-          // Prevent collision with reserved keywords
-          while (RESERVED_FIELD_NAMES.includes(name)) {
-            name = name + '_';
-          }
-          return Object.assign(acc, {
-            [name]: {
-              field: field.name,
-              default: field.default,
-              required: !field.nullable,
-            },
-          });
-        }, {});
-      options = {
-        fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
-      };
-    }
-    this.meta = new ODataModelOptions<T>({ options, schema });
-  }
   // Parent
   _parent:
     | [
