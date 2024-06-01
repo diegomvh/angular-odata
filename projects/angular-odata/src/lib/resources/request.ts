@@ -1,11 +1,10 @@
 import { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
-import { ODataApi } from '../api';
+import type { ODataApi } from '../api';
 import {
   $BATCH,
   $QUERY,
   ACCEPT,
   APPLICATION_JSON,
-  APPLICATION_XML,
   CONTENT_TYPE_ANY,
   IF_MATCH_HEADER,
   IF_NONE_MATCH_HEADER,

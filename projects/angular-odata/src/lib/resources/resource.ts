@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ODataApi } from '../api';
+import type { ODataApi } from '../api';
 import {
   DEFAULT_VERSION,
   PARAM_SEPARATOR,
@@ -7,7 +7,7 @@ import {
   VALUE_SEPARATOR,
 } from '../constants';
 import { ODataHelper } from '../helper';
-import { ODataCollection, ODataModel } from '../models';
+import type { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
 import { ParserOptions, Parser, QueryOption, PathSegment } from '../types';
@@ -17,13 +17,15 @@ import {
   isQueryCustomType,
   ODataQueryOptions,
   ODataQueryOptionsHandler,
+} from './query';
+import type {
   QueryCustomType,
 } from './query';
-import {
+import type {
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
 } from './responses/index';
-import { ODataOptions } from './types';
+import type { ODataOptions } from './types';
 
 export type EntityKey<T> =
   | {

@@ -5,7 +5,7 @@ import {
   HttpResponseBase,
 } from '@angular/common/http';
 import { map, Observable, Subject } from 'rxjs';
-import { ODataApi } from '../../api';
+import type { ODataApi } from '../../api';
 import {
   $BATCH,
   ACCEPT,

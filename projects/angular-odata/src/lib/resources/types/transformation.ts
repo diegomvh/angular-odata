@@ -1,17 +1,18 @@
-import { EMPTY, Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { expand, map, reduce } from 'rxjs/operators';
-import { ODataApi } from '../../api';
-import { ODataCollection, ODataModel } from '../../models';
-import { ODataStructuredType } from '../../schema/structured-type';
-import { QueryOption } from '../../types';
-import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
+import type { ODataApi } from '../../api';
+import type { ODataCollection, ODataModel } from '../../models';
+import type { ODataStructuredType } from '../../schema/structured-type';
+import type { QueryOption } from '../../types';
+import type { ODataPathSegments } from '../path';
+import type { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import {
+import type {
   ODataEntities,
   ODataEntitiesAnnotations,
 } from '../responses';
-import { ODataOptions } from './options';
+import type { ODataOptions } from './options';
 
 export class ODataTransformationResource<T> extends ODataResource<T> {
   //#region Factory

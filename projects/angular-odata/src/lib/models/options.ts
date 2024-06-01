@@ -8,18 +8,20 @@ import {
   EVENT_SPLITTER,
 } from '../constants';
 import { ODataHelper } from '../helper';
-import {
+import type {
   EntityKey,
   ODataEntitiesAnnotations,
+  ODataQueryOptions,
+  ODataQueryOptionsHandler,
+  ODataResource,
+  ODataSingletonResource,
+} from '../resources';
+import {
   ODataEntityAnnotations,
   ODataEntityResource,
   ODataEntitySetResource,
   ODataNavigationPropertyResource,
   ODataPropertyResource,
-  ODataQueryOptions,
-  ODataQueryOptionsHandler,
-  ODataResource,
-  ODataSingletonResource,
 } from '../resources';
 import {
   ODataEntitySet,

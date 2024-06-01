@@ -1,13 +1,14 @@
-import { EMPTY, Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { expand, map, reduce } from 'rxjs/operators';
-import { ODataApi } from '../../api';
-import { ODataCollection, ODataModel } from '../../models';
-import { ODataStructuredType } from '../../schema/structured-type';
+import type { ODataApi } from '../../api';
+import type { ODataCollection, ODataModel } from '../../models';
+import type { ODataStructuredType } from '../../schema/structured-type';
 import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types';
 import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
+import type { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import {
+import type {
   ODataEntities,
   ODataEntitiesAnnotations,
   ODataEntity,
@@ -16,7 +17,7 @@ import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
-import { ODataOptions } from './options';
+import type { ODataOptions } from './options';
 import { ODataTransformationResource } from './transformation';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
