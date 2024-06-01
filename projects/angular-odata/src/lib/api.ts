@@ -1,28 +1,30 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { ODataCache, ODataInMemoryCache } from './cache/index';
+import { catchError, map } from 'rxjs/operators';
+import { ODataCache, ODataInMemoryCache } from './cache';
 import { DEFAULT_VERSION } from './constants';
-import { ODataCollection, ODataModel, ODataModelOptions } from './models/index';
+import { ODataCollection, ODataModel, ODataModelOptions } from './models';
 import { ODataApiOptions } from './options';
+import type {
+  ODataMetadata,
+  ODataOptions,
+  ODataResource,
+  ODataSegment,
+} from './resources';
 import {
-  ODataActionResource,
+  ODataQueryOptions,
+  ODataPathSegments,
+  ODataRequest,
+  ODataResponse,
   ODataBatchResource,
+  ODataMetadataResource,
+  ODataActionResource,
+  ODataFunctionResource,
   ODataEntityResource,
   ODataEntitySetResource,
-  ODataFunctionResource,
-  ODataMetadata,
-  ODataMetadataResource,
-  ODataNavigationPropertyResource,
-  ODataOptions,
-  ODataPathSegments,
-  ODataQueryOptions,
-  ODataRequest,
-  ODataResource,
-  ODataResponse,
-  ODataSegment,
   ODataSingletonResource,
-} from './resources/index';
+  ODataNavigationPropertyResource,
+} from './resources';
 import {
   EDM_PARSERS,
   ODataCallable,
@@ -31,7 +33,7 @@ import {
   ODataSchema,
   ODataStructuredType,
 } from './schema';
-import { ODataEntityService } from './services/entity';
+import type { ODataEntityService } from './services/entity';
 import {
   ApiConfig,
   ApiOptions,

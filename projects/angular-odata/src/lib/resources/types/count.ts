@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ODataApi } from '../../api';
+import type { ODataApi } from '../../api';
 import { $COUNT } from '../../constants';
 import { EdmType, PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';

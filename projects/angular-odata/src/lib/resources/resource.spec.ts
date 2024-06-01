@@ -3,8 +3,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
   ODataMetadataResource,
   ODataEntitySetResource,
-  ODataFunctionResource,
   ODataBatchResource,
+} from './types';
+import type {
+  ODataFunctionResource,
   ODataActionResource,
   ODataCountResource,
   ODataMediaResource,
@@ -14,7 +16,7 @@ import {
 import { raw } from './query';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
-import { Person, Photo, PlanItem, Trip } from '../trippin.spec';
+import { Person, Photo } from '../trippin.spec';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const ENTITY_SET = 'People';

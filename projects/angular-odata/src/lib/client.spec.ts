@@ -7,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { combineLatest } from 'rxjs';
 import { ODataClient } from './client';
 import { ODataModule } from './module';
-import {
+import type {
   ODataActionResource,
   ODataBatchResource,
   ODataEntityResource,

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ODataApi } from '../../api';
+import type { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataCallable } from '../../schema/callable';
 import { PathSegment } from '../../types';
