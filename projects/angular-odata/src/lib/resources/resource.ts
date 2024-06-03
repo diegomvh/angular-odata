@@ -11,7 +11,7 @@ import type { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
 import { ParserOptions, Parser, QueryOption, PathSegment, StructuredTypeFieldConfig } from '../types';
-import { Objects, Types } from '../utils/index';
+import { Objects, Strings, Types } from '../utils';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {
   isQueryCustomType,
@@ -334,10 +334,6 @@ export class ODataResource<T> {
   segment(
     f: (q: ODataPathSegmentsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
-    /*
-    const type = this.type();
-    const schema = type ? this.api.findStructuredTypeForType<T>(type) : undefined;
-    */
     f(
       new ODataPathSegmentsHandler<T>(this.pathSegments),
       this.schema instanceof ODataStructuredType ? this.schema : undefined
@@ -353,10 +349,6 @@ export class ODataResource<T> {
   query(
     f: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
-    /*
-    const type = this.returnType();
-    const schema = type ? this.api.findStructuredTypeForType<T>(type) : undefined;
-    */
     f(
       new ODataQueryOptionsHandler<T>(this.queryOptions),
       this.schema instanceof ODataStructuredType ? this.schema : undefined
@@ -369,10 +361,13 @@ export class ODataResource<T> {
       builder: ApplyExpressionBuilder<T>,
       current?: ApplyExpression<T>
     ) => ApplyExpression<T>,
-    {type, fields}: {type: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }}): R {
+    {type, fields}: {type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }} = {}): R {
     const query = this.cloneQuery<any>();
     const handler = new ODataQueryOptionsHandler<T>(query);
     handler.apply(opts);
+    if (type === undefined) {
+      type = Strings.uniqueId({ prefix: "Transformation", suffix: "Type" });
+    }
     const Ctor = this.constructor as typeof ODataResource;
     return new Ctor(this.api, {
       schema: this.api.structuredTypeForType<R>(type, fields),
