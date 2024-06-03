@@ -3,7 +3,7 @@ import { expand, map, reduce } from 'rxjs/operators';
 import type { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema';
-import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types';
+import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
@@ -21,7 +21,6 @@ import {
 } from './options';
 import { ODataPropertyResource } from './property';
 import { ODataReferenceResource } from './reference';
-import { ODataTransformationResource } from './transformation';
 
 /**
  * OData Navigation Property Resource
@@ -166,14 +165,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       segments,
       schema: castSchema,
       query: this.cloneQuery<C>(),
-    });
-  }
-
-  transform<R>(type: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }) {
-    return ODataTransformationResource.factory<R>(this.api, {
-      schema: this.api.structuredTypeForType<R>(type, fields),
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<R>(),
     });
   }
 

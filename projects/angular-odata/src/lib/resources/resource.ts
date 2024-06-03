@@ -10,7 +10,7 @@ import { ODataHelper } from '../helper';
 import type { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
-import { ParserOptions, Parser, QueryOption, PathSegment } from '../types';
+import { ParserOptions, Parser, QueryOption, PathSegment, StructuredTypeFieldConfig } from '../types';
 import { Objects, Types } from '../utils/index';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {
@@ -19,6 +19,8 @@ import {
   ODataQueryOptionsHandler,
 } from './query';
 import type {
+  ApplyExpression,
+  ApplyExpressionBuilder,
   QueryCustomType,
 } from './query';
 import type {
@@ -70,7 +72,7 @@ export class ODataResource<T> {
    * @returns string The type of the return
    */
   returnType() {
-    return this.pathSegments.last()?.type();
+    return this.schema?.type() ?? this.pathSegments.last()?.type();
   }
 
   /**
@@ -360,6 +362,23 @@ export class ODataResource<T> {
       this.schema instanceof ODataStructuredType ? this.schema : undefined
     );
     return this;
+  }
+
+  transform<R extends ODataResource<any>>(
+    opts: (
+      builder: ApplyExpressionBuilder<T>,
+      current?: ApplyExpression<T>
+    ) => ApplyExpression<T>,
+    {type, fields}: {type: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }}): R {
+    const query = this.cloneQuery<any>();
+    const handler = new ODataQueryOptionsHandler<T>(query);
+    handler.apply(opts);
+    const Ctor = this.constructor as typeof ODataResource;
+    return new Ctor(this.api, {
+      schema: this.api.structuredTypeForType<R>(type, fields),
+      segments: this.cloneSegments(),
+      query
+    }) as R;
   }
 
   static resolveKey<T>(
