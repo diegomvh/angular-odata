@@ -22,7 +22,7 @@ export class ODataCountResource<T> extends ODataResource<T> {
       query?: ODataQueryOptions<T>;
     },
   ) {
-    segments.add(PathSegment.count, $COUNT).type('Edm.Int32');
+    segments.add(PathSegment.count, $COUNT).type(EdmType.Int32);
     query?.keep(QueryOption.filter, QueryOption.search);
     return new ODataCountResource<T>(api, { schema, segments, query });
   }
