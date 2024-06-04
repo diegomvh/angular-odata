@@ -64,10 +64,9 @@ export class ODataReferential {
 
 export class ODataStructuredTypeFieldParser<T>
   extends ODataAnnotatable
-  implements FieldParser<T>
-{
+  implements FieldParser<T> {
   name: string;
-  private structuredType: ODataStructuredTypeParser<any>;
+  private structured: ODataStructuredTypeParser<any>;
   type: string | EdmType;
   private parser: Parser<T>;
   collection: boolean;
@@ -82,12 +81,12 @@ export class ODataStructuredTypeFieldParser<T>
 
   constructor(
     name: string,
-    structuredType: ODataStructuredTypeParser<any>,
+    structured: ODataStructuredTypeParser<any>,
     field: StructuredTypeFieldConfig
   ) {
     super(field);
     this.name = name;
-    this.structuredType = structuredType;
+    this.structured = structured;
     this.type = field.type;
     this.parser = NONE_PARSER;
     this.referentials = (field.referentials || []).map(
@@ -128,13 +127,13 @@ export class ODataStructuredTypeFieldParser<T>
       (this.navigation && value !== undefined)
     ) {
       errors =
-        this.structured().validate(value, { method, navigation }) ||
+        this.structuredType().validate(value, { method, navigation }) ||
         ({} as { [name: string]: any[] });
     } else if (
       this.isEnumType() &&
       (typeof value === 'string' || typeof value === 'number')
     ) {
-      errors = this.enum().validate(value, { method, navigation });
+      errors = this.enumType().validate(value, { method, navigation });
     } else {
       // IsEdmType
       const computed = this.annotatedValue<boolean>(COMPUTED);
@@ -252,8 +251,8 @@ export class ODataStructuredTypeFieldParser<T>
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     let schema: any =
       this.parser instanceof ODataStructuredTypeFieldParser ||
-      this.parser instanceof ODataStructuredTypeParser ||
-      this.parser instanceof ODataEnumTypeParser
+        this.parser instanceof ODataStructuredTypeParser ||
+        this.parser instanceof ODataEnumTypeParser
         ? this.parser.toJsonSchema(options)
         : ({ title: this.name, type: JsonSchemaType.object } as any);
 
@@ -268,7 +267,7 @@ export class ODataStructuredTypeFieldParser<T>
       case EdmType.Binary:
         schema.type = JsonSchemaType.string;
         schema.contentEncoding = 'base64';
-      break;
+        break;
       case EdmType.Date:
         schema.type = JsonSchemaType.string;
         schema.format = 'date';
@@ -317,7 +316,7 @@ export class ODataStructuredTypeFieldParser<T>
 
   isKey() {
     return (
-      this.structuredType
+      this.structured
         .keys({ include_parents: true })
         ?.find((k) => k.name === this.name) !== undefined
     );
@@ -335,7 +334,7 @@ export class ODataStructuredTypeFieldParser<T>
     return this.parser instanceof ODataEnumTypeParser;
   }
 
-  enum() {
+  enumType() {
     if (!this.isEnumType()) throw new Error('Field are not EnumType');
     return this.parser as ODataEnumTypeParser<T>;
   }
@@ -344,7 +343,7 @@ export class ODataStructuredTypeFieldParser<T>
     return this.parser instanceof ODataStructuredTypeParser;
   }
 
-  structured() {
+  structuredType() {
     if (!this.isStructuredType())
       throw new Error('Field are not StrucuturedType');
     return this.parser as ODataStructuredTypeParser<T>;
@@ -363,8 +362,7 @@ export class ODataStructuredTypeFieldParser<T>
 
 export class ODataStructuredTypeParser<T>
   extends ODataAnnotatable
-  implements Parser<T>
-{
+  implements Parser<T> {
   name: string;
   namespace: string;
   open: boolean;
@@ -649,7 +647,7 @@ export class ODataStructuredTypeParser<T>
         if (field !== undefined) {
           v = Types.isPlainObject(v) ? v[field.name] : v;
           structured = field.isStructuredType()
-            ? field.structured()
+            ? field.structuredType()
             : undefined;
         }
       }
@@ -671,7 +669,7 @@ export class ODataStructuredTypeParser<T>
     return {
       ...fields.reduce((acc, f) => {
         let value: any = f.isStructuredType()
-          ? f.structured().defaults()
+          ? f.structuredType().defaults()
           : f.default;
         return Types.isEmpty(value) ? acc : { ...acc, [f.name]: value };
       }, {}),

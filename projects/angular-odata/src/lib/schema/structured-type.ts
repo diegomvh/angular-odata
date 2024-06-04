@@ -54,6 +54,10 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
     });
     if (this.model !== undefined) {
       this.model.meta = this.api.optionsForType<T>(this.type(), {config: this.model.options, structuredType: this})!;
+      if (this.model.meta !== undefined) {
+        // Configure
+        this.model.meta.configure({ options });
+      }
       if (this.collection !== undefined) {
         this.collection.model = this.model;
       }

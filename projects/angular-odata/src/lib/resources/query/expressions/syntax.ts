@@ -929,7 +929,7 @@ export class Type<T> implements Renderable {
     parser =
       parser instanceof ODataStructuredTypeFieldParser &&
       parser.isStructuredType()
-        ? parser.structured()
+        ? parser.structuredType()
         : parser;
     return parser?.findChildParser((p: any) => p.isTypeOf(this.type));
   }
