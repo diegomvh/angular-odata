@@ -59,7 +59,7 @@ export class ODataParameterParser<T> {
     return this.parser instanceof ODataEnumTypeParser;
   }
 
-  enum() {
+  enumType() {
     if (!this.isEnumType()) throw new Error('Field are not EnumType');
     return this.parser as ODataEnumTypeParser<T>;
   }
@@ -68,7 +68,7 @@ export class ODataParameterParser<T> {
     return this.parser instanceof ODataStructuredTypeParser;
   }
 
-  structured() {
+  structuredType() {
     if (!this.isStructuredType())
       throw new Error('Field are not StrucuturedType');
     return this.parser as ODataStructuredTypeParser<T>;
