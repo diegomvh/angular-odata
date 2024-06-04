@@ -3,7 +3,7 @@ import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ODataCache, ODataInMemoryCache } from './cache';
 import { DEFAULT_VERSION } from './constants';
-import { ODataCollection, ODataModel, ODataModelOptions } from './models';
+import { ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
 import { ODataApiOptions } from './options';
 import type {
   ODataMetadata,
@@ -104,8 +104,6 @@ export class ODataApi {
     this.schemas.forEach((schema) => {
       schema.configure({
         options: this.options.parserOptions,
-        parserForType: (type: string | EdmType) => this.parserForType(type),
-        findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
     });
   }
@@ -118,8 +116,6 @@ export class ODataApi {
     schemas.forEach((schema) => {
       schema.configure({
         options: this.options.parserOptions,
-        parserForType: (type: string | EdmType) => this.parserForType(type),
-        findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
     });
   }
@@ -354,9 +350,7 @@ export class ODataApi {
   private createSchema(config: SchemaConfig) {
     const schema = new ODataSchema(config, this);
     schema.configure({
-      options: this.options.parserOptions,
-      parserForType: (type: string | EdmType) => this.parserForType(type),
-      findOptionsForType: (type: string) => this.findOptionsForType(type),
+      options: this.options.parserOptions
     });
     this.schemas.push(schema);
     return schema;
@@ -399,8 +393,6 @@ export class ODataApi {
       const name = type.substring(type.lastIndexOf("."));
       structuredType = schema.createStructuredType({ name, fields }, {
         options: this.options.parserOptions,
-        parserForType: (t: string | EdmType) => this.parserForType(t),
-        findOptionsForType: (t: string) => this.findOptionsForType(t),
       });
     }
     return structuredType;
@@ -449,17 +441,18 @@ export class ODataApi {
   }
 
   public createModel(structured: ODataStructuredType<any>) {
+
     if (structured.model !== undefined) return structured.model;
     // Build Ad-hoc model
     const Model = class extends ODataModel<any> { } as typeof ODataModel;
     // Build Meta
-    Model.meta = structured.meta;
-    // Configure
-    Model.meta.configure({
-      options: this.options.parserOptions,
-      parserForType: (t: string | EdmType) => this.parserForType(t),
-      findOptionsForType: (t: string) => this.findOptionsForType(t),
-    });
+    Model.meta = this.optionsForType(structured.type(), {structuredType: structured})!;
+    if (Model.meta !== undefined) {
+      // Configure
+      Model.meta.configure({
+        options: this.options.parserOptions,
+      });
+    }
     // Store New Model for next time
     structured.model = Model;
     return Model;
@@ -634,17 +627,21 @@ export class ODataApi {
     return parser;
   }
 
-  public findOptionsForType<T>(type: string) {
+  public optionsForType<T>(type: string, {structuredType, config}: {structuredType?: ODataStructuredType<T>, config?: ModelOptions} = {}) {
     // Strucutred Options
     if (this.memo.forType.options.has(type)) {
-      return this.memo.forType.options.get(type) as
-        | ODataModelOptions<T>
-        | undefined;
+      return this.memo.forType.options.get(type) as | ODataModelOptions<T> | undefined;
     }
-    const structuredType = this.findStructuredTypeForType<T>(type);
-    const options = structuredType?.meta; 
+
+    let meta: ODataModelOptions<T> | undefined = undefined;
+    if (!type.startsWith('Edm.')) {
+      structuredType = this.findStructuredTypeForType<T>(type) ?? structuredType;
+      if (structuredType !== undefined) {
+        meta = ODataModel.buildMetaOptions({config, schema: structuredType});
+      }
+    }
     // Set Options for next time
-    this.memo.forType.options.set(type, options);
-    return options;
+    this.memo.forType.options.set(type, meta);
+    return meta;
   }
 }

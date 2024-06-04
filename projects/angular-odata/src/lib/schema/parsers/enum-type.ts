@@ -3,7 +3,6 @@ import {
   EnumTypeConfig,
   EnumTypeFieldConfig,
   ParserOptions,
-  Parser,
   FieldParser,
   JsonType
 } from '../../types';
@@ -51,12 +50,8 @@ export class ODataEnumTypeParser<E>
 
   configure({
     options,
-    parserForType,
-    findOptionsForType,
   }: {
     options: ParserOptions;
-    parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => any;
   }) {
     this.parserOptions = options;
   }

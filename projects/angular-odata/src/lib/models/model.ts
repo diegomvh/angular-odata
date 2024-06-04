@@ -1,5 +1,5 @@
-import { forkJoin, NEVER, Observable, of, throwError } from 'rxjs';
-import { finalize, map, tap } from 'rxjs/operators';
+import { forkJoin, NEVER, Observable, throwError } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
 import {
   EntityKey,
   ODataActionOptions,
@@ -27,35 +27,10 @@ import {
   ODataModelOptions,
   ODataModelAttribute,
   ODataModelEventType,
-  ModelFieldOptions,
   ODataModelEventEmitter,
+  ModelFieldOptions,
 } from './options';
 import { EdmType, ParserOptions } from '../types';
-
-export const buildModelMetaOptions = <T>({options, schema}: { options?: ModelOptions; schema: ODataStructuredType<T>; }) => {
-  if (options === undefined) {
-    let fields = schema
-      .fields({ include_navigation: true, include_parents: true })
-      .reduce((acc, field) => {
-        let name = field.name;
-        // Prevent collision with reserved keywords
-        while (RESERVED_FIELD_NAMES.includes(name)) {
-          name = name + '_';
-        }
-        return Object.assign(acc, {
-          [name]: {
-            field: field.name,
-            default: field.default,
-            required: !field.nullable,
-          },
-        });
-      }, {});
-    options = {
-      fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
-    };
-  }
-  return new ODataModelOptions<T>({ options, schema });
-}
 
 export class ODataModel<T> {
   // Properties
@@ -86,6 +61,31 @@ export class ODataModel<T> {
   _meta: ODataModelOptions<any>;
   // Events
   events$: ODataModelEventEmitter<T>;
+
+  static buildMetaOptions<T>({config, schema}: { config?: ModelOptions; schema: ODataStructuredType<T>; }) {
+  if (config === undefined) {
+    let fields = schema
+      .fields({ include_navigation: true, include_parents: true })
+      .reduce((acc, field) => {
+        let name = field.name;
+        // Prevent collision with reserved keywords
+        while (RESERVED_FIELD_NAMES.includes(name)) {
+          name = name + '_';
+        }
+        return Object.assign(acc, {
+          [name]: {
+            field: field.name,
+            default: field.default,
+            required: !field.nullable,
+          },
+        });
+      }, {});
+    config = {
+      fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
+    };
+  }
+  return new ODataModelOptions<T>({ config, schema });
+}
 
   constructor(
     data: Partial<T> | { [name: string]: any } = {},
@@ -168,7 +168,7 @@ export class ODataModel<T> {
     name: keyof T | string
   ): ODataNavigationPropertyResource<N> {
     const field = this._meta.findField<N>(name);
-    if (!field || !field.navigation)
+    if (!field || !field.isNavigation)
       throw Error(
         `navigationProperty: Can't find navigation property ${name as string}`
       );
@@ -186,7 +186,7 @@ export class ODataModel<T> {
 
   property<N>(name: string): ODataPropertyResource<N> {
     const field = this._meta.findField<N>(name);
-    if (!field || field.navigation)
+    if (!field || field.isNavigation)
       throw Error(`property: Can't find property ${name}`);
 
     const resource = this.resource();
@@ -802,7 +802,7 @@ export class ODataModel<T> {
     if (!field)
       throw Error(`fetchAttribute: Can't find attribute ${name as string}`);
 
-    if (field.isStructuredType() && field.collection) {
+    if (field.isStructuredType() && field.isCollection) {
       let collection = field.collectionFactory<P>({ parent: this });
       collection.query((q) => q.restore(options as ODataQueryArguments<P>));
       return this._request(collection.fetch(options), () => {
@@ -841,10 +841,10 @@ export class ODataModel<T> {
       | ODataCollection<P, ODataModel<P>>
       | null;
     if (field.isStructuredType() && model === undefined) {
-      if (field.collection) {
+      if (field.isCollection) {
         model = field.collectionFactory({ parent: this });
       } else {
-        const ref = field.navigation
+        const ref = field.isNavigation
           ? (this.referenced(field) as P)
           : undefined;
         model =
@@ -981,6 +981,6 @@ export class ODataModel<T> {
   //#endregion
 }
 
-export const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(
+const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(
   ODataModel.prototype
 );

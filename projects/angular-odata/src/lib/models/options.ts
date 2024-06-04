@@ -28,7 +28,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';
-import { EdmType, Parser, ParserOptions } from '../types';
+import { EdmType, ParserOptions } from '../types';
 import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
@@ -317,6 +317,8 @@ export class ODataModelField<F> {
   parser: ODataStructuredTypeFieldParser<F>;
   options: ODataModelOptions<any>;
   meta?: ODataModelOptions<any>;
+  model?: typeof ODataModel<any>;
+  collection?: typeof ODataCollection<any, any>;
   default?: any;
   required: boolean;
   concurrency: boolean;
@@ -345,19 +347,15 @@ export class ODataModelField<F> {
     this.pattern = opts.pattern;
   }
 
-  get api() {
-    return this.options.api;
-  }
-
   get type() {
     return this.parser.type;
   }
 
-  get navigation() {
+  get isNavigation() {
     return Boolean(this.parser.navigation);
   }
 
-  get collection() {
+  get isCollection() {
     return Boolean(this.parser.collection);
   }
 
@@ -366,15 +364,21 @@ export class ODataModelField<F> {
   }
 
   configure({
-    findOptionsForType,
+    optionsForType,
+    modelForType,
+    collectionForType,
     concurrency,
     options,
   }: {
-    findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
+    optionsForType: (type: string) => ODataModelOptions<any> | undefined;
+    modelForType: (t: string) => typeof ODataModel<any> | undefined 
+    collectionForType: (t: string) => typeof ODataCollection<any, any> | undefined,
     concurrency: boolean;
     options: ParserOptions;
   }) {
-    this.meta = findOptionsForType(this.parser.type);
+    this.meta = optionsForType(this.parser.type);
+    this.model = modelForType(this.parser.type);
+    this.collection = collectionForType(this.parser.type);
     this.parserOptions = options;
     if (concurrency) this.concurrency = concurrency;
     if (this.default !== undefined)
@@ -396,7 +400,7 @@ export class ODataModelField<F> {
   isStructuredType() {
     return this.parser.isStructuredType();
   }
-
+/*
   structured() {
     const structuredType = this.api.findStructuredTypeForType<F>(
       this.parser.type
@@ -406,11 +410,13 @@ export class ODataModelField<F> {
       throw new Error(`Could not find structured type for ${this.parser.type}`);
     return structuredType;
   }
+  */
 
   isEnumType() {
     return this.parser.isEnumType();
   }
 
+  /*
   enum() {
     const enumType = this.api.findEnumTypeForType<F>(this.parser.type);
     //Throw error if not found
@@ -418,6 +424,7 @@ export class ODataModelField<F> {
       throw new Error(`Could not find enum type for ${this.parser.type}`);
     return enumType;
   }
+  */
 
   validate(
     value: any,
@@ -518,7 +525,7 @@ export class ODataModelField<F> {
       )
     )
       throw new Error("Can't build resource for non compatible base type");
-    return this.navigation
+    return this.isNavigation
       ? (base as ODataEntityResource<T>).navigationProperty<F>(this.parser.name)
       : (base as ODataEntityResource<T>).property<F>(this.parser.name);
   }
@@ -531,11 +538,13 @@ export class ODataModelField<F> {
       : base.property(this.parser.name as keyof T, 'single');
   }
 
+  /*
   schemaFactory<T, F>(
     base: ODataStructuredType<T>
   ): ODataStructuredType<F> | undefined {
     return this.api.findStructuredTypeForType(this.parser.type);
   }
+  */
 
   modelFactory<F>({
     parent,
@@ -550,7 +559,7 @@ export class ODataModelField<F> {
     const annots = this.annotationsFactory(
       parent.annots()
     ) as ODataEntityAnnotations<F>;
-    let Model = this.api.modelForType(this.parser.type);
+    let Model = this.model;
     if (Model === undefined) throw Error(`No Model type for ${this.name}`);
     if (value !== undefined) {
       annots.update(value);
@@ -585,7 +594,7 @@ export class ODataModelField<F> {
     const annots = this.annotationsFactory(
       parent.annots()
     ) as ODataEntitiesAnnotations<F>;
-    const Collection = this.api.collectionForType(this.parser.type);
+    const Collection = this.collection;
     if (Collection === undefined)
       throw Error(`No Collection type for ${this.name}`);
     return new Collection(
@@ -611,7 +620,7 @@ export class ODataModelAttribute<T> {
   ) { }
 
   get navigation() {
-    return Boolean(this._field.navigation);
+    return Boolean(this._field.isNavigation);
   }
 
   get computed() {
@@ -775,17 +784,17 @@ export class ODataModelOptions<T> {
   events$ = new ODataModelEventEmitter<T>();
 
   constructor({
-    options,
+    config,
     schema,
   }: {
-    options: ModelOptions;
+    config: ModelOptions;
     schema: ODataStructuredType<T>;
   }) {
     this.name = schema.name;
     this.base = schema.base;
     this.schema = schema;
-    this.cid = options?.cid || CID_FIELD_NAME;
-    options.fields.forEach((value, key) => this.addField<any>(key, value));
+    this.cid = config?.cid || CID_FIELD_NAME;
+    config.fields.forEach((value, key) => this.addField<any>(key, value));
   }
 
   get api() {
@@ -841,15 +850,11 @@ export class ODataModelOptions<T> {
 
   configure({
     options,
-    parserForType,
-    findOptionsForType,
   }: {
     options: ParserOptions;
-    parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
   }) {
     if (this.base) {
-      const parent = findOptionsForType(this.base) as ODataModelOptions<any>;
+      const parent = this.api.optionsForType(this.base) as ODataModelOptions<any>;
       parent.children.push(this);
       this.parent = parent;
     }
@@ -862,7 +867,9 @@ export class ODataModelOptions<T> {
     this._fields.forEach((field) => {
       const concurrency = concurrencyFields.indexOf(field.field) !== -1;
       field.configure({
-        findOptionsForType,
+        optionsForType: (t: string) => this.api.optionsForType(t),
+        modelForType: (t: string) => this.api.modelForType(t),
+        collectionForType: (t: string) => this.api.collectionForType(t),
         concurrency,
         options,
       });
@@ -881,7 +888,7 @@ export class ODataModelOptions<T> {
         ? this.parent.fields({ include_navigation, include_parents })
         : []),
       ...this._fields.filter(
-        (field) => include_navigation || !field.navigation
+        (field) => include_navigation || !field.isNavigation
       ),
     ];
   }
@@ -932,7 +939,6 @@ export class ODataModelOptions<T> {
   ) {
     const structuredFieldParser = this.schema.addField<F>(name, { type });
     structuredFieldParser.configure({
-      findOptionsForType: (type: string) => this.api.findOptionsForType(type),
       parserForType: (type: EdmType | string) => this.api.parserForType(type),
       options: this.api.options,
     });
@@ -941,7 +947,9 @@ export class ODataModelOptions<T> {
       parser: structuredFieldParser,
     });
     modelField.configure({
-      findOptionsForType: (type: string) => this.api.findOptionsForType(type),
+      optionsForType: (t: string) => this.api.optionsForType(t),
+      modelForType: (t: string) => this.api.modelForType(t),
+      collectionForType: (t: string) => this.api.collectionForType(t),
       options: this.api.options,
       concurrency: false,
     });
@@ -1017,7 +1025,7 @@ export class ODataModelOptions<T> {
       if (resource === null) break;
       if (
         ODataModelOptions.isModel(model) &&
-        (prevField === null || prevField.collection)
+        (prevField === null || prevField.isCollection)
       ) {
         const m = model as ODataModel<any>;
         // Resolve subtype if collection not is from field
@@ -1726,7 +1734,7 @@ export class ODataModelOptions<T> {
           ODataModelOptions.isCollection(value) ||
             ODataModelOptions.isModel(value)
             ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
-            : modelField.collection
+            : modelField.isCollection
               ? modelField.collectionFactory<F>({
                 parent: self,
                 value: value as F[] | { [name: string]: any }[],

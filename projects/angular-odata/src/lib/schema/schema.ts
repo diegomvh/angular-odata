@@ -1,4 +1,5 @@
 import type { ODataApi } from '../api';
+import { ModelOptions } from '../models/options';
 import { Parser, ParserOptions, SchemaConfig, StructuredTypeConfig } from '../types';
 import { OData } from '../utils/odata';
 import { ODataAnnotatable } from './annotation';
@@ -60,15 +61,11 @@ export class ODataSchema extends ODataAnnotatable {
   public createStructuredType<T>(config: StructuredTypeConfig<T>,
   {
     options,
-    parserForType,
-    findOptionsForType,
   }: {
     options: ParserOptions;
-    parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => any;
   }) {
     const entity = new ODataStructuredType<T>(config, this);
-    entity.configure({ options, parserForType, findOptionsForType});
+    entity.configure({ options});
     this.entities.push(entity);
     return entity;
   }
@@ -107,24 +104,20 @@ export class ODataSchema extends ODataAnnotatable {
 
   configure({
     options,
-    parserForType,
-    findOptionsForType,
   }: {
     options: ParserOptions;
-    parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => any;
   }) {
     // Configure Enums
     this.enums.forEach((enu) =>
-      enu.configure({ options, parserForType, findOptionsForType }),
+      enu.configure({ options }),
     );
     // Configure Entities
-    this.entities.forEach((config) =>
-      config.configure({ options, parserForType, findOptionsForType }),
+    this.entities.forEach((structured) =>
+      structured.configure({ options }),
     );
     // Configure callables
     this.callables.forEach((callable) =>
-      callable.configure({ options, parserForType, findOptionsForType }),
+      callable.configure({ options }),
     );
   }
 }

@@ -35,17 +35,12 @@ export class ODataCallable<R> extends ODataSchemaElement {
 
   configure({
     options,
-    parserForType,
-    findOptionsForType,
   }: {
     options: ParserOptions;
-    parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => any;
   }) {
     this.parser.configure({
       options,
-      parserForType,
-      findOptionsForType,
+      parserForType: (t: string) => this.api.parserForType(t)
     });
   }
 

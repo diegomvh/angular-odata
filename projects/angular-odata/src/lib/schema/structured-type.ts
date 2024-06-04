@@ -1,5 +1,6 @@
-import { ODataCollection, ODataModelOptions } from '../models';
-import { ODataModel, buildModelMetaOptions } from '../models/model';
+import { ModelOptions, ODataModelOptions } from '../models';
+import { ODataCollection } from '../models/collection';
+import { ODataModel } from '../models/model';
 import {
   Parser,
   ParserOptions,
@@ -19,7 +20,6 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
   base?: string;
   parent?: ODataStructuredType<any>;
   children: ODataStructuredType<any>[] = [];
-  meta: ODataModelOptions<T>;
   model?: typeof ODataModel;
   collection?: typeof ODataCollection;
   parser: ODataStructuredTypeParser<T>;
@@ -32,25 +32,14 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
       schema.namespace,
       schema.alias
     );
-    this.meta = buildModelMetaOptions<T>({ options: (<any>config.model)?.options, schema: this });
     this.model = config.model as typeof ODataModel;
-    if (this.model !== undefined) {
-      this.model.meta = this.meta;
-    }
     this.collection = config.collection as typeof ODataCollection;
-    if (this.collection !== undefined) {
-      this.collection.model = this.model;
-    }
   }
 
   configure({
     options,
-    parserForType,
-    findOptionsForType,
   }: {
     options: ParserOptions;
-    parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => any;
   }) {
     if (this.base) {
       const parent = this.api.findStructuredTypeForType(
@@ -61,15 +50,13 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
     }
     this.parser.configure({
       options,
-      parserForType,
-      findOptionsForType,
+      parserForType: (t: string) => this.api.parserForType(t),
     });
-    if (this.model !== undefined && this.model.options !== null) {
-      this.model.meta.configure({
-        options,
-        parserForType,
-        findOptionsForType,
-      });
+    if (this.model !== undefined) {
+      this.model.meta = this.api.optionsForType<T>(this.type(), {config: this.model.options, structuredType: this})!;
+      if (this.collection !== undefined) {
+        this.collection.model = this.model;
+      }
     }
   }
 
