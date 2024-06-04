@@ -235,12 +235,10 @@ export class ODataStructuredTypeFieldParser<T>
 
   configure({
     options,
-    parserForType,
-    findOptionsForType,
+    parserForType
   }: {
     options: ParserOptions;
     parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => any;
   }) {
     this.parserOptions = options;
     this.parser = parserForType(this.type);
@@ -510,11 +508,9 @@ export class ODataStructuredTypeParser<T>
   configure({
     options,
     parserForType,
-    findOptionsForType,
   }: {
     options: ParserOptions;
     parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => any;
   }) {
     this.parserOptions = options;
     if (this.base) {
@@ -523,7 +519,7 @@ export class ODataStructuredTypeParser<T>
       this.parent = parent;
     }
     this._fields.forEach((f) =>
-      f.configure({ options, parserForType, findOptionsForType })
+      f.configure({ options, parserForType })
     );
   }
 

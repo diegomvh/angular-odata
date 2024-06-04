@@ -18,14 +18,10 @@ export class ODataEnumType<E> extends ODataSchemaElement {
 
   configure({
     options,
-    parserForType,
-    findOptionsForType,
   }: {
     options: ParserOptions;
-    parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => any;
   }) {
-    this.parser.configure({ options, parserForType, findOptionsForType });
+    this.parser.configure({ options });
   }
 
   /**
