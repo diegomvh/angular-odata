@@ -956,46 +956,32 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const toMerge: M[] = [];
     const toRemove: M[] = [];
     objects.forEach((obj, index) => {
-      const isModel = ODataModelOptions.isModel(obj);
+      const model = ODataModelOptions.isModel(obj) ?
+        obj as M : this.modelFactory(obj as Partial<T> | { [name: string]: any }, { reset }) as M;
       const position = index + offset;
       const key =
         Model !== null && Model.meta ? Model.meta.resolveKey(obj) : undefined;
       const cid =
         Model.meta.cid in obj ? (<any>obj)[Model.meta.cid] : undefined;
       // Try find entry
-      const entry = isModel
-        ? this._findEntry({ model: obj as M }) // By Model
-        : this._findEntry({ cid, key }); // By Cid or Key
+      const entry = this._findEntry({ model, cid, key });
 
       if (merge && entry !== undefined) {
-        // Merge
-        const model = entry.model;
-        if (model !== obj) {
-          // Get entity from model
-          if (isModel) {
-            obj = (obj as M).toEntity({
-              client_id: true,
-              ...INCLUDE_DEEP,
-            }) as { [name: string]: any; };
-          } else {
-            model.annots().update(obj);
-            obj = model.annots().attributes(obj, 'full');
-          }
-          model.assign(obj, { add, merge, remove, reset, silent });
+        if (entry.model !== model) {
+          entry.model.assign(model.toEntity({
+            client_id: true,
+            ...INCLUDE_DEEP,
+          }) as { [name: string]: any; },
+            { add, merge, remove, reset, silent });
           // Model Change?
-          if (model.hasChanged()) toMerge.push(model);
+          if (entry.model.hasChanged()) toMerge.push(entry.model);
         }
         if (reset) entry.state = ODataModelState.Unchanged;
-        if (!models.includes(model)) {
-          models.push(model);
+        if (!models.includes(entry.model)) {
+          models.push(entry.model);
         }
       } else if (add) {
         // Add
-        const model = isModel
-          ? (obj as M)
-          : this.modelFactory(obj as Partial<T> | { [name: string]: any }, {
-            reset,
-          });
         toAdd.push(model);
         this._addModel(model, { silent, reset, reparent, position });
         models.push(model);
