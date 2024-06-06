@@ -106,10 +106,10 @@ export class ODataModelEvent<T> {
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
     attr: ODataModelAttribute<any> | number
   ) {
-    return new ODataModelEvent(this.type, {
+    return new ODataModelEvent<any>(this.type, {
       model:
         this.model ??
-        (model instanceof ODataModel ? (model as ODataModel<any>) : undefined),
+        (model instanceof ODataModel ? model : undefined),
       collection:
         this.collection ??
         (model instanceof ODataCollection
@@ -319,7 +319,7 @@ export class ODataModelField<F> {
   options: ODataModelOptions<any>;
   meta?: ODataModelOptions<any>;
   modelForType?: (t: string) => typeof ODataModel<any> | undefined;
-  collectionForType?: (t: string) => typeof ODataCollection<any, any> | undefined;
+  collectionForType?: (t: string) => typeof ODataCollection<any, ODataModel<any>> | undefined;
   enumForType?: (t: string) => ODataEnumType<F> | undefined;
   structuredForType?: (t: string) => ODataStructuredType<F> | undefined;
   default?: any;
@@ -608,7 +608,7 @@ export class ODataModelField<F> {
         reset,
         parent: [parent, this],
       }
-    );
+    ) as ODataCollection<F, ODataModel<F>>;
   }
 }
 

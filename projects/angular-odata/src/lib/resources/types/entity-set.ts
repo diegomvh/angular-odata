@@ -4,9 +4,9 @@ import { expand, map, reduce } from 'rxjs/operators';
 import type { ODataApi } from '../../api';
 import type { ODataCollection, ODataModel } from '../../models';
 import type { ODataStructuredType } from '../../schema/structured-type';
-import { PathSegment, QueryOption } from '../../types';
+import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types';
 import { ODataPathSegments } from '../path';
-import type { ODataQueryOptions } from '../query';
+import type { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import type {
   ODataEntities,
@@ -40,6 +40,15 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   override clone(): ODataEntitySetResource<T> {
     return super.clone() as ODataEntitySetResource<T>;
+  }
+
+  override transform<R>(
+    opts: (
+      builder: ApplyExpressionBuilder<T>,
+      current?: ApplyExpression<T>
+    ) => ApplyExpression<T>,
+    {type, fields}: {type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }} = {}): ODataEntitySetResource<R> {
+    return super.transform<R>(opts, {type, fields}) as ODataEntitySetResource<R>;
   }
   //#endregion
 

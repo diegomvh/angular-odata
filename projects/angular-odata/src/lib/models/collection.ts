@@ -236,7 +236,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     // Build new resource
     const resource = this._model.meta.collectionResourceFactory(
       this._resource?.cloneQuery<T>()
-    );
+    ) as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
     return this.withResource(resource, ctx);
   }
 
