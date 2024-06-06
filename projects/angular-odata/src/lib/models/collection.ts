@@ -617,12 +617,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       position?: number;
     } = {}
   ): M {
-    const key = model.key();
-    let entry = this._findEntry({
-      model,
-      key,
-      cid: (<any>model)[this._model.meta.cid],
-    });
+    let entry = this._findEntry(model);
     if (entry !== undefined && entry.state !== ODataModelState.Removed) {
       if (merge) {
         entry.model.assign(model.toEntity() as T);
@@ -732,12 +727,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset = false,
     }: { silent?: boolean; reset?: boolean } = {}
   ): M {
-    const key = model.key();
-    const entry = this._findEntry({
-      model,
-      key,
-      cid: (<any>model)[this._model.meta.cid],
-    });
+    const entry = this._findEntry(model);
     if (entry === undefined || entry.state === ODataModelState.Removed) {
       return model;
     }
@@ -781,12 +771,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   private _moveModel(model: M, position: number): M {
-    const key = model.key();
-    const entry = this._findEntry({
-      model,
-      key,
-      cid: (<any>model)[this._model.meta.cid],
-    });
+    const entry = this._findEntry(model);
     if (entry === undefined || entry.state === ODataModelState.Removed) {
       return model;
     }
@@ -874,7 +859,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       if (!Number.isNaN(index)) {
         const model = this.models()[index];
         if (ODataModelOptions.isModel(model)) {
-          const entry = this._findEntry({ model }) as ODataModelEntry<T, M>;
+          const entry = this._findEntry(model) as ODataModelEntry<T, M>;
           if (
             entry.state === ODataModelState.Unchanged &&
             entry.model.hasChanged()
@@ -959,12 +944,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       const model = ODataModelOptions.isModel(obj) ?
         obj as M : this.modelFactory(obj as Partial<T> | { [name: string]: any }, { reset }) as M;
       const position = index + offset;
-      const key =
-        Model !== null && Model.meta ? Model.meta.resolveKey(obj) : undefined;
-      const cid =
-        Model.meta.cid in obj ? (<any>obj)[Model.meta.cid] : undefined;
       // Try find entry
-      const entry = this._findEntry({ model, cid, key });
+      const entry = this._findEntry(model);
 
       if (merge && entry !== undefined) {
         if (entry.model !== model) {
@@ -1138,25 +1119,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  private _findEntry({
-    model,
-    cid,
-    key,
-  }: {
-    model?: ODataModel<T>;
-    cid?: string;
-    key?: EntityKey<T> | { [name: string]: any };
-  } = {}) {
-    return this._entries.find((entry) => {
-      const byModel = model !== undefined && entry.model.equals(model);
-      const byCid =
-        cid !== undefined && (<any>entry.model)[this._model.meta.cid] === cid;
-      const byKey =
-        key !== undefined &&
-        entry.key !== undefined &&
-        Types.isEqual(entry.key, key);
-      return byModel || byCid || byKey;
-    });
+  private _findEntry(model: ODataModel<T>) {
+    return this._entries.find((entry) => (
+      entry.key !== undefined &&
+      model.key() !== undefined &&
+      Types.isEqual(entry.key, model.key())
+    ) || entry.model.equals(model));
   }
 
   // Collection functions
