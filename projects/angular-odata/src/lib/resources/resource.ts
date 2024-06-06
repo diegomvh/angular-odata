@@ -356,12 +356,12 @@ export class ODataResource<T> {
     return this;
   }
 
-  transform<R extends ODataResource<any>>(
+  transform<R>(
     opts: (
       builder: ApplyExpressionBuilder<T>,
       current?: ApplyExpression<T>
     ) => ApplyExpression<T>,
-    {type, fields}: {type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }} = {}): R {
+    {type, fields}: {type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }} = {}): ODataResource<R> {
     const query = this.cloneQuery<any>();
     const handler = new ODataQueryOptionsHandler<T>(query);
     handler.apply(opts);
@@ -373,7 +373,7 @@ export class ODataResource<T> {
       schema: this.api.structuredTypeForType<R>(type, fields),
       segments: this.cloneSegments(),
       query
-    }) as R;
+    });
   }
 
   static resolveKey<T>(

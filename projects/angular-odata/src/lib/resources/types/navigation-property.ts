@@ -3,9 +3,9 @@ import { expand, map, reduce } from 'rxjs/operators';
 import type { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema';
-import { PathSegment, QueryOption } from '../../types';
+import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types';
 import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
+import { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import {
   ODataEntities,
@@ -98,6 +98,15 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   override clone(): ODataNavigationPropertyResource<T> {
     return super.clone() as ODataNavigationPropertyResource<T>;
+  }
+
+  override transform<R>(
+    opts: (
+      builder: ApplyExpressionBuilder<T>,
+      current?: ApplyExpression<T>
+    ) => ApplyExpression<T>,
+    {type, fields}: {type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }} = {}): ODataNavigationPropertyResource<R> {
+    return super.transform<R>(opts, {type, fields}) as ODataNavigationPropertyResource<R>;
   }
   //#endregion
 
