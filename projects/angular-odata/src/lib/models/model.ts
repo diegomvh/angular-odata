@@ -339,7 +339,7 @@ export class ODataModel<T> {
     return this.toEntity(INCLUDE_DEEP);
   }
 
-  set(path: string | string[], value: any, { type }: { type?: EdmType | string } = {}) {
+  set(path: keyof T | string | string[], value: any, { type }: { type?: EdmType | string } = {}) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -353,7 +353,7 @@ export class ODataModel<T> {
     }
   }
 
-  get(path: string | string[]): any {
+  get(path: keyof T | string | string[]): any {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -368,7 +368,7 @@ export class ODataModel<T> {
     return value;
   }
 
-  has(path: string | string[]): boolean {
+  has(path: keyof T | string | string[]): boolean {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -386,7 +386,7 @@ export class ODataModel<T> {
   reset({
     path,
     silent = false,
-  }: { path?: string | string[]; silent?: boolean } = {}) {
+  }: { path?: keyof T | string | string[]; silent?: boolean } = {}) {
     const pathArray: string[] = (
       path === undefined
         ? []
