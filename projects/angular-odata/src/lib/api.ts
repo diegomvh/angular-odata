@@ -184,7 +184,7 @@ export class ODataApi {
       entitySet !== undefined
         ? this.findStructuredTypeForType<T>(entitySet.entityType)
         : undefined;
-    return ODataSingletonResource.factory<T>(this, { path, schema: structuredType });
+    return ODataSingletonResource.factory<T>(this, { path, structuredType: structuredType });
   }
 
   /**
@@ -198,7 +198,7 @@ export class ODataApi {
       entitySet !== undefined
         ? this.findStructuredTypeForType<T>(entitySet.entityType)
         : undefined;
-    return ODataEntitySetResource.factory<T>(this, { path, schema: structuredType });
+    return ODataEntitySetResource.factory<T>(this, { path, structuredType });
   }
 
   /**
@@ -208,7 +208,7 @@ export class ODataApi {
    */
   action<P, R>(path: string): ODataActionResource<P, R> {
     const callable = this.findCallableForType<R>(path);
-    return ODataActionResource.factory<P, R>(this, { path, schema: callable });
+    return ODataActionResource.factory<P, R>(this, { path, callable });
   }
 
   /**
@@ -218,7 +218,7 @@ export class ODataApi {
    */
   function<P, R>(path: string): ODataFunctionResource<P, R> {
     const callable = this.findCallableForType<R>(path);
-    return ODataFunctionResource.factory<P, R>(this, { path, schema: callable });
+    return ODataFunctionResource.factory<P, R>(this, { path, callable: callable });
   }
 
   enumType<T>(name_or_type: string) {

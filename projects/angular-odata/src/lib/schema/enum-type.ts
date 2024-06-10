@@ -1,19 +1,17 @@
-import { EnumTypeConfig, Parser, ParserOptions } from '../types';
-import { ODataSchemaElement } from './element';
+import { EnumTypeConfig, ParserOptions } from '../types';
+import { ODataParserSchemaElement } from './element';
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataEnumType<E> extends ODataSchemaElement {
-  parser: ODataEnumTypeParser<E>;
+export class ODataEnumType<E> extends ODataParserSchemaElement<E, ODataEnumTypeParser<E>> {
   members: { [name: string]: E } | { [value: number]: string };
   constructor(config: EnumTypeConfig<E>, schema: ODataSchema) {
-    super(config, schema);
-    this.members = config.members;
-    this.parser = new ODataEnumTypeParser<E>(
+    super(config, schema, new ODataEnumTypeParser<E>(
       config,
       schema.namespace,
       schema.alias,
-    );
+    ));
+    this.members = config.members;
   }
 
   configure({

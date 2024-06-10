@@ -20,18 +20,19 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     api: ODataApi,
     {
       path,
-      schema,
-      query,
+      structuredType,
     }: {
       path: string;
-      schema?: ODataStructuredType<S>;
-      query?: ODataQueryOptions<S>;
+      structuredType?: ODataStructuredType<S>;
     },
   ) {
     const segments = new ODataPathSegments();
     const segment = segments.add(PathSegment.singleton, path);
-    if (schema !== undefined) segment.type(schema.type());
-    return new ODataSingletonResource<S>(api, { segments, query, schema });
+    if (structuredType !== undefined) {
+      segment.outgoingType(structuredType.type());
+      segment.incomingType(structuredType.type());
+    }
+    return new ODataSingletonResource<S>(api, { segments });
   }
   override clone(): ODataSingletonResource<T> {
     return super.clone() as ODataSingletonResource<T>;

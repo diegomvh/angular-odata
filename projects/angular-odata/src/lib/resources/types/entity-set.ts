@@ -25,19 +25,23 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     api: ODataApi,
     {
       path,
-      schema,
-      query,
+      structuredType,
+      query
     }: {
       path: string;
-      schema?: ODataStructuredType<E>;
+      structuredType?: ODataStructuredType<E>;
       query?: ODataQueryOptions<E>;
     },
   ) {
     const segments = new ODataPathSegments();
     const segment = segments.add(PathSegment.entitySet, path);
-    if (schema !== undefined) segment.type(schema.type());
-    return new ODataEntitySetResource<E>(api, { segments, query, schema });
+    if (structuredType !== undefined) {
+      segment.outgoingType(structuredType.type());
+      segment.incomingType(structuredType.type());
+    }
+    return new ODataEntitySetResource<E>(api, { segments, query });
   }
+
   override clone(): ODataEntitySetResource<T> {
     return super.clone() as ODataEntitySetResource<T>;
   }
@@ -54,7 +58,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   entity(key?: any) {
     const entity = ODataEntityResource.factory<T>(this.api, {
-      schema: this.schema as ODataStructuredType<T>,
       segments: this.cloneSegments(),
       query: this.cloneQuery<T>(),
     });
@@ -74,26 +77,25 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   count() {
     return ODataCountResource.factory<T>(this.api, {
-      schema: this.schema as ODataStructuredType<T>,
       segments: this.cloneSegments(),
       query: this.cloneQuery<T>(),
     });
   }
 
   cast<C>(type: string) {
-    const baseSchema = this.schema as ODataStructuredType<T>;
+    const thisType = this.incomingType();
+    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
     const castSchema = this.api.findStructuredTypeForType<C>(type);
     if (
       castSchema !== undefined &&
       baseSchema !== undefined &&
       !castSchema.isSubtypeOf(baseSchema)
     )
-      throw new Error(`Cannot cast to ${type}`);
+      throw new Error(`cast: Cannot cast to ${type}`);
     const segments = this.cloneSegments();
-    segments.add(PathSegment.type, type).type(type);
+    segments.add(PathSegment.type, type).incomingType(type);
     return new ODataEntitySetResource<C>(this.api, {
       segments,
-      schema: castSchema,
       query: this.cloneQuery<C>(),
     });
   }

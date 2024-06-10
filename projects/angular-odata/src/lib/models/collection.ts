@@ -188,11 +188,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
   ) {
     if (
       this._resource !== null &&
-      this._resource.type() !== resource.type() &&
+      this._resource.outgoingType() !== resource.outgoingType() &&
       !this._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        `attach: Can't reattach ${this._resource.type()} to ${resource.type()}`
+        `attach: Can't reattach ${this._resource.outgoingType()} to ${resource.outgoingType()}`
       );
 
     this._entries.forEach(({ model }) => {

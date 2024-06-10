@@ -2,12 +2,11 @@ import { ModelOptions, ODataModelOptions } from '../models';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
 import {
-  Parser,
   ParserOptions,
   StructuredTypeConfig,
   StructuredTypeFieldConfig,
 } from '../types';
-import { ODataSchemaElement } from './element';
+import { ODataParserSchemaElement } from './element';
 import {
   JsonSchemaOptions,
   ODataEntityTypeKey,
@@ -16,22 +15,20 @@ import {
 } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataStructuredType<T> extends ODataSchemaElement {
+export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStructuredTypeParser<T>> {
   base?: string;
   parent?: ODataStructuredType<any>;
   children: ODataStructuredType<any>[] = [];
   model?: typeof ODataModel;
   collection?: typeof ODataCollection;
-  parser: ODataStructuredTypeParser<T>;
 
   constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
-    super(config, schema);
-    this.base = config.base;
-    this.parser = new ODataStructuredTypeParser(
+    super(config, schema, new ODataStructuredTypeParser(
       config,
       schema.namespace,
       schema.alias
-    );
+    ));
+    this.base = config.base;
     this.model = config.model as typeof ODataModel;
     this.collection = config.collection as typeof ODataCollection;
   }

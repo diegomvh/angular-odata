@@ -1,4 +1,4 @@
-import { AnnotationConfig } from '../types';
+import { AnnotationConfig, Parser } from '../types';
 import { Strings } from '../utils';
 import { ODataAnnotatable } from './annotation';
 import { ODataSchema } from './schema';
@@ -68,5 +68,17 @@ export class ODataSchemaElement extends ODataAnnotatable {
   isSupertypeOf(schema: ODataSchemaElement): boolean {
     if (this.isTypeOf(schema.type())) return true;
     return false;
+  }
+}
+
+export class ODataParserSchemaElement<E, P extends Parser<E>> extends ODataSchemaElement { 
+  parser: P;
+  constructor(
+    config: { annotations?: AnnotationConfig[]; name: string },
+    schema: ODataSchema,
+    parser: P
+  ) {
+    super(config, schema);
+    this.parser = parser;
   }
 }

@@ -10,7 +10,6 @@ import {
   ODataEntityResource,
   ODataEntitySetResource,
   ODataFunctionResource,
-  ODataMetadata,
   ODataMetadataResource,
   ODataNavigationPropertyResource,
   ODataOptions,
