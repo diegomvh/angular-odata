@@ -88,7 +88,7 @@ describe('ODataClient', () => {
     );
     const api = client.apiFor(set);
     const parser = api.parserForType<Person>(
-      set.type() as string,
+      set.outgoingType() as string,
     ) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
@@ -205,7 +205,7 @@ describe('ODataClient', () => {
     const json = func.toJson();
     expect(json).toEqual({
       segments: [
-        { name: 'entitySet', path: 'People', type: 'TripPin.Person' },
+        { name: 'entitySet', path: 'People', incomingType: 'TripPin.Person', outgoingType: 'TripPin.Person' },
         { name: 'function', path: 'NS.MyFunction' },
       ],
       options: {},
@@ -224,7 +224,7 @@ describe('ODataClient', () => {
     const json = func.toJson();
     expect(json).toEqual({
       segments: [
-        { name: 'entitySet', path: 'People', type: 'TripPin.Person' },
+        { name: 'entitySet', path: 'People', incomingType: 'TripPin.Person', outgoingType: 'TripPin.Person' },
         { name: 'function', path: 'NS.MyFunction' },
       ],
       options: {

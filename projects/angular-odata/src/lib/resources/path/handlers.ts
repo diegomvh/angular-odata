@@ -8,9 +8,13 @@ export class SegmentHandler {
   get name() {
     return this.segment.name;
   }
-  type(value?: string) {
-    if (value !== undefined) this.segment.type = value;
-    return this.segment.type;
+  outgoingType(value?: string) {
+    if (value !== undefined) this.segment.outgoingType = value;
+    return this.segment.outgoingType;
+  }
+  incomingType(value?: string) {
+    if (value !== undefined) this.segment.incomingType = value;
+    return this.segment.incomingType;
   }
   path(value?: string) {
     if (value !== undefined) this.segment.path = value;

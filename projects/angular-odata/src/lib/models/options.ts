@@ -980,11 +980,11 @@ export class ODataModelOptions<T> {
   ) {
     if (
       self._resource !== null &&
-      resource.type() !== self._resource.type() &&
+      resource.outgoingType() !== self._resource.outgoingType() &&
       !self._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        `Can't attach ${resource.type()} to ${self._resource.type()}`
+        `Can't attach ${resource.outgoingType()} to ${self._resource.outgoingType()}`
       );
 
     const current = self._resource;
@@ -1078,7 +1078,7 @@ export class ODataModelOptions<T> {
     if (this.entitySet === undefined) return null;
     return ODataEntitySetResource.factory<T>(this.api, {
       path: this.entitySet.name,
-      schema: this.schema,
+      structuredType: this.schema,
       query,
     });
   }

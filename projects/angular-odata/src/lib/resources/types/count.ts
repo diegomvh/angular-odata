@@ -6,25 +6,25 @@ import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { ODataOptions } from './options';
-import { ODataStructuredType } from '../../schema';
 
 export class ODataCountResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<T>(
     api: ODataApi,
     {
-      schema,
       segments,
       query,
     }: {
-      schema?: ODataStructuredType<T>;
       segments: ODataPathSegments;
       query?: ODataQueryOptions<T>;
     },
   ) {
-    segments.add(PathSegment.count, $COUNT).type(EdmType.Int32);
+    const currentType = segments.last()?.outgoingType();
+    const segment = segments.add(PathSegment.count, $COUNT);
+    segment.outgoingType(currentType);
+    segment.incomingType(EdmType.Int32);
     query?.keep(QueryOption.filter, QueryOption.search);
-    return new ODataCountResource<T>(api, { schema, segments, query });
+    return new ODataCountResource<T>(api, { segments, query });
   }
   override clone(): ODataCountResource<T> {
     return super.clone() as ODataCountResource<T>;
@@ -34,10 +34,6 @@ export class ODataCountResource<T> extends ODataResource<T> {
   //#region Requests
   protected override get(options?: ODataOptions): Observable<any> {
     return super.get({ responseType: 'value', ...options });
-  }
-
-  override returnType() {
-    return EdmType.Int32;
   }
   //#endregion
 

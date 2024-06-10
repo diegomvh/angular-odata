@@ -8,7 +8,8 @@ import { SegmentHandler } from './handlers';
 export type ODataSegment = {
   name: PathSegment;
   path: string;
-  type?: string;
+  outgoingType?: string;
+  incomingType?: string;
   key?: any;
   parameters?: any;
 };
@@ -109,7 +110,7 @@ export class ODataPathSegments {
 
   types({ key = false }: { key?: boolean } = {}): string[] {
     return this.segments({ key })
-      .map((s) => s.type())
+      .map((s) => s.outgoingType())
       .filter((t) => t !== undefined) as string[];
   }
 
@@ -145,7 +146,8 @@ export class ODataPathSegments {
         name: s.name as string,
         path: s.path,
       } as any;
-      if (s.type !== undefined) json.type = s.type;
+      if (s.incomingType !== undefined) json.incomingType = s.incomingType;
+      if (s.outgoingType !== undefined) json.outgoingType = s.outgoingType;
       if (s.key !== undefined) json.key = s.key;
       if (s.parameters !== undefined) json.parameters = s.parameters;
       return json;

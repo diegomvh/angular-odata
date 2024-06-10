@@ -34,44 +34,33 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     {
       path,
       type,
-      schema,
       segments,
-      query,
     }: {
       path: string;
       type?: string;
-      schema?: ODataStructuredType<N>;
       segments: ODataPathSegments;
-      query?: ODataQueryOptions<N>;
     }
   ) {
     const segment = segments.add(PathSegment.navigationProperty, path);
-    if (schema !== undefined) segment.type(schema.type());
-    else if (type !== undefined) segment.type(type);
-    query?.keep(QueryOption.format);
+    if (type !== undefined) {
+      segment.outgoingType(type);
+      segment.incomingType(type);
+    }
     return new ODataNavigationPropertyResource<N>(api, {
       segments,
-      query,
-      schema,
     });
   }
 
   static fromResource<N>(resource: ODataResource<any>, path: string) {
-    const baseType = resource.type();
-    let baseSchema = resource.schema as ODataStructuredType<any> | undefined;
+    const baseType = resource.outgoingType();
+    let baseSchema = baseType !== undefined ? resource.api.structuredType<any>(baseType) : undefined;
     let fieldType: string | undefined;
-    let fieldSchema: ODataStructuredType<N> | undefined;
     if (baseSchema !== undefined) {
       const field = baseSchema.field<N>(path);
       fieldType = field?.type;
-      fieldSchema =
-        fieldType !== undefined
-          ? resource.api.findStructuredTypeForType(fieldType)
-          : undefined;
-      baseSchema =
-        field !== undefined
-          ? baseSchema.findParentSchemaForField<N>(field)
-          : undefined;
+      baseSchema = field !== undefined
+        ? baseSchema.findParentSchemaForField<N>(field)
+        : undefined;
     }
 
     const navigation = ODataNavigationPropertyResource.factory<N>(
@@ -79,9 +68,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       {
         path,
         type: fieldType,
-        schema: fieldSchema,
         segments: resource.cloneSegments(),
-        query: resource.cloneQuery<N>(),
       }
     );
 
@@ -154,14 +141,14 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   count() {
     return ODataCountResource.factory<T>(this.api, {
-      schema: this.schema as ODataStructuredType<T>,
       segments: this.cloneSegments(),
       query: this.cloneQuery<T>(),
     });
   }
 
   cast<C>(type: string) {
-    const baseSchema = this.schema as ODataStructuredType<T>;
+    const thisType = this.incomingType();
+    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
     const castSchema = this.api.findStructuredTypeForType<C>(type);
     if (
       castSchema !== undefined &&
@@ -170,10 +157,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     )
       throw new Error(`Cannot cast to ${type}`);
     const segments = this.cloneSegments();
-    segments.add(PathSegment.type, type).type(type);
+    segments.add(PathSegment.type, type).incomingType(type);
     return new ODataNavigationPropertyResource<C>(this.api, {
       segments,
-      schema: castSchema,
       query: this.cloneQuery<C>(),
     });
   }

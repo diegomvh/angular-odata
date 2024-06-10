@@ -4,7 +4,6 @@ import type { ODataApi } from '../../api';
 import { $ID, $REF, ODATA_ID } from '../../constants';
 import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { ODataEntities, ODataEntity } from '../responses/types';
 import { ODataEntityResource } from './entity';
@@ -20,12 +19,10 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     api: ODataApi,
     {
       segments,
-      query,
-    }: { segments: ODataPathSegments; query?: ODataQueryOptions<P> }
+    }: { segments: ODataPathSegments; }
   ) {
     segments.add(PathSegment.reference, $REF);
-    query?.clear();
-    return new ODataReferenceResource<P>(api, { segments, query });
+    return new ODataReferenceResource<P>(api, { segments });
   }
   override clone(): ODataReferenceResource<T> {
     return super.clone() as ODataReferenceResource<T>;

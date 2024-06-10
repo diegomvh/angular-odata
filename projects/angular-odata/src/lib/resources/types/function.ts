@@ -22,38 +22,35 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     api: ODataApi,
     {
       path,
-      schema,
+      callable,
       segments,
-      query,
     }: {
       path?: string;
-      schema?: ODataCallable<R>;
+      callable?: ODataCallable<R>;
       segments?: ODataPathSegments;
-      query?: ODataQueryOptions<R>;
     },
   ) {
-    segments = segments || new ODataPathSegments();
-    path = schema !== undefined ? schema.path() : path;
+    segments = segments ?? new ODataPathSegments();
+    path = callable !== undefined ? callable.path() : path;
     if (path === undefined)
       throw new Error(`ODataActionResource: path is required`);
 
     const segment = segments.add(PathSegment.function, path);
-    if (schema !== undefined) segment.type(schema.type());
-    return new ODataFunctionResource<P, R>(api, {
-      segments,
-      query,
-      schema,
-    });
+    if (callable !== undefined) {
+      segment.outgoingType(callable.type());
+      segment.incomingType(callable.parser.return?.type);
+    }
+    return new ODataFunctionResource<P, R>(api, { segments });
   }
 
   static fromResource<P, R>(resource: ODataResource<any>, path: string) {
-    const baseType = resource.type();
-    const schema = resource.api.findCallableForType<R>(path, baseType);
-    const bindingType = schema?.binding()?.type;
+    const baseType = resource.outgoingType();
+    const callable = resource.api.findCallableForType<R>(path, baseType);
+    const bindingType = callable?.binding()?.type;
 
     const func = ODataFunctionResource.factory<P, R>(resource.api, {
       path,
-      schema,
+      callable,
       segments: resource.cloneSegments(),
     });
 
@@ -72,12 +69,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return super.clone() as ODataFunctionResource<P, R>;
   }
   //#endregion
-
-  override returnType() {
-    return this.schema instanceof ODataCallable
-      ? this.schema.parser.return?.type
-      : undefined;
-  }
 
   parameters(params: P | null, { alias }: { alias?: boolean } = {}) {
     let parameters = params !== null ? this.encode(params) : null;

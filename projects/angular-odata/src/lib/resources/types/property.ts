@@ -29,41 +29,30 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     {
       path,
       type,
-      schema,
       segments,
-      query,
     }: {
       path: string;
       type?: string;
-      schema?: ODataStructuredType<P>;
       segments: ODataPathSegments;
-      query?: ODataQueryOptions<P>;
     }
   ) {
     const segment = segments.add(PathSegment.property, path);
-    if (schema !== undefined) segment.type(schema.type());
-    else if (type !== undefined) segment.type(type);
-
-    query?.clear();
+    if (type !== undefined) {
+      segment.outgoingType(type);
+      segment.incomingType(type);
+    }
     return new ODataPropertyResource<P>(api, {
       segments,
-      query,
-      schema,
     });
   }
 
   static fromResource<N>(resource: ODataResource<any>, path: string) {
-    const baseType = resource.type();
-    let baseSchema = resource.schema as ODataStructuredType<any> | undefined;
+    const baseType = resource.outgoingType();
+    let baseSchema = baseType !== undefined ? resource.api.structuredType<any>(baseType) : undefined;
     let fieldType: string | undefined;
-    let fieldSchema: ODataStructuredType<N> | undefined;
     if (baseSchema !== undefined) {
       const field = baseSchema.field<N>(path);
       fieldType = field?.type;
-      fieldSchema =
-        fieldType !== undefined
-          ? resource.api.findStructuredTypeForType(fieldType)
-          : undefined;
       baseSchema =
         field !== undefined
           ? baseSchema.findParentSchemaForField<N>(field)
@@ -73,9 +62,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     const property = ODataPropertyResource.factory<N>(resource.api, {
       path,
       type: fieldType,
-      schema: fieldSchema,
       segments: resource.cloneSegments(),
-      query: resource.cloneQuery<N>(),
     });
 
     // Switch entitySet to binding type if available
@@ -123,19 +110,13 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   value() {
-    return ODataValueResource.factory<T>(this.api, {
-      type: this.returnType(),
-      schema: this.schema as ODataStructuredType<T>,
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
+    return ODataValueResource.fromResource<T>(this);
   }
 
   count() {
     return ODataCountResource.factory<T>(this.api, {
-      schema: this.schema as ODataStructuredType<T>,
       segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
+      query: this.cloneQuery<T>()
     });
   }
 
@@ -159,23 +140,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   */
 
   property<P>(path: string) {
-    let type: string | undefined;
-    let schema: ODataStructuredType<P> | undefined;
-    if (this.schema instanceof ODataStructuredType) {
-      const field = this.schema.field<any>(path as keyof T);
-      type = field?.type;
-      schema =
-        field !== undefined
-          ? this.schema.findParentSchemaForField<P>(field)
-          : undefined;
-    }
-    return ODataPropertyResource.factory<P>(this.api, {
-      path,
-      type,
-      schema,
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<P>(),
-    });
+    return ODataPropertyResource.fromResource<P>(this, path);
   }
 
   //#region Requests

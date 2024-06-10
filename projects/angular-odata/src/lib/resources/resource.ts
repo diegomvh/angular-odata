@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, share } from 'rxjs';
 import type { ODataApi } from '../api';
 import {
   DEFAULT_VERSION,
@@ -9,8 +9,7 @@ import {
 import { ODataHelper } from '../helper';
 import type { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
-import { ODataSchemaElement } from '../schema/element';
-import { ParserOptions, Parser, QueryOption, PathSegment, StructuredTypeFieldConfig } from '../types';
+import { ParserOptions, Parser, QueryOption, PathSegment, StructuredTypeFieldConfig, EdmType } from '../types';
 import { Objects, Strings, Types } from '../utils';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {
@@ -40,7 +39,6 @@ export type EntityKey<T> =
 export class ODataResource<T> {
   // VARIABLES
   public api: ODataApi;
-  public schema?: ODataSchemaElement;
   protected pathSegments: ODataPathSegments;
   protected queryOptions: ODataQueryOptions<T>;
   constructor(
@@ -48,31 +46,28 @@ export class ODataResource<T> {
     {
       segments,
       query,
-      schema,
     }: {
       segments?: ODataPathSegments;
       query?: ODataQueryOptions<T>;
-      schema?: ODataSchemaElement;
     } = {}
   ) {
     this.api = api;
     this.pathSegments = segments ?? new ODataPathSegments();
     this.queryOptions = query ?? new ODataQueryOptions();
-    this.schema = schema;
   }
 
   /**
-   * @returns string The type of the resource
+   * @returns string The outgoing type of the resource
    */
-  type() {
-    return this.pathSegments.last()?.type();
+  outgoingType() {
+    return this.pathSegments.last()?.outgoingType();
   }
 
   /**
-   * @returns string The type of the return
+   * @returns string The incoming type of the return
    */
-  returnType() {
-    return this.schema?.type() ?? this.pathSegments.last()?.type();
+  incomingType() {
+    return this.pathSegments.last()?.incomingType();
   }
 
   /**
@@ -104,7 +99,7 @@ export class ODataResource<T> {
   ): M {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
-    const type = annots?.type ?? this.returnType();
+    const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for model`);
     const ModelType = this.api.modelForType(type);
     let entitySet = annots?.entitySet;
@@ -121,7 +116,7 @@ export class ODataResource<T> {
   ): C {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
-    const type = annots?.type ?? this.returnType();
+    const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for collection`);
     const CollectionType = this.api.collectionForType(type);
     let entitySet = annots?.entitySet;
@@ -134,26 +129,39 @@ export class ODataResource<T> {
   //#endregion
 
   isTypeOf(other: ODataResource<any>) {
+    const thisType = this.outgoingType();
+    const otherType = other.outgoingType();
+    const thisStructured = thisType !== undefined ? this.api.structuredType<T>(thisType) : undefined;
+    const otherStructured = otherType !== undefined ? this.api.structuredType<T>(otherType) : undefined;
     return (
-      this.schema !== undefined &&
-      other.schema !== undefined &&
-      this.schema?.isTypeOf(other.schema.type())
+      thisStructured !== undefined &&
+      otherStructured !== undefined &&
+      otherType !== undefined &&
+      thisStructured.isTypeOf(otherType)
     );
   }
 
   isSubtypeOf(other: ODataResource<any>) {
+    const thisType = this.outgoingType();
+    const otherType = other.outgoingType();
+    const thisStructured = thisType !== undefined ? this.api.structuredType<T>(thisType) : undefined;
+    const otherStructured = otherType !== undefined ? this.api.structuredType<T>(otherType) : undefined;
     return (
-      this.schema !== undefined &&
-      other.schema !== undefined &&
-      this.schema?.isSubtypeOf(other.schema)
+      thisStructured !== undefined &&
+      otherStructured !== undefined &&
+      thisStructured.isSubtypeOf(otherStructured)
     );
   }
 
   isSupertypeOf(other: ODataResource<any>) {
+    const thisType = this.outgoingType();
+    const otherType = other.outgoingType();
+    const thisStructured = thisType !== undefined ? this.api.structuredType<T>(thisType) : undefined;
+    const otherStructured = otherType !== undefined ? this.api.structuredType<T>(otherType) : undefined;
     return (
-      this.schema !== undefined &&
-      other.schema !== undefined &&
-      this.schema?.isSupertypeOf(other.schema)
+      thisStructured !== undefined &&
+      otherStructured !== undefined &&
+      thisStructured.isSupertypeOf(otherStructured)
     );
   }
 
@@ -172,9 +180,8 @@ export class ODataResource<T> {
       escape: false,
     }
   ): [string, { [name: string]: any }] {
-    const type = this.type();
-    const schema = type ? this.api.findStructuredTypeForType(type) : this.schema;
-    const parser = schema !== undefined && 'parser' in schema ? ((<any>schema).parser as Parser<T>) : undefined;
+    const type = this.outgoingType();
+    const parser = type !== undefined ? this.api.parserForType<T>(type) : undefined;
     const [spath, sparams] = this.pathSegments.pathAndParams({
       escape,
       parser,
@@ -218,7 +225,6 @@ export class ODataResource<T> {
   clone(): ODataResource<T> {
     const Ctor = this.constructor as typeof ODataResource;
     return new Ctor(this.api, {
-      schema: this.schema,
       segments: this.cloneSegments(),
       query: this.cloneQuery<T>(),
     });
@@ -236,9 +242,6 @@ export class ODataResource<T> {
     if (dataType !== undefined) {
       // Parser from data type
       return this.api.parserForType<T>(dataType);
-    } else if (this.schema !== undefined && 'parser' in this.schema) {
-      // Parser from resource schema
-      return (<any>this.schema).parser as Parser<T> | undefined;
     } else if (resourceType !== undefined) {
       // Parser from resource type
       return this.api.parserForType<T>(resourceType);
@@ -255,18 +258,11 @@ export class ODataResource<T> {
       options !== undefined && Types.isPlainObject(value)
         ? ODataHelper[options.version || DEFAULT_VERSION].type(value)
         : resourceType;
-    if (type !== undefined) {
-      // Parser from type
-      return this.api.parserForType<T>(type);
-    } else if (this.schema !== undefined && 'parser' in this.schema) {
-      // Parser from resource schema
-      return (<any>this.schema).parser as Parser<T> | undefined;
-    }
-    return undefined;
+    return (type !== undefined) ? this.api.parserForType<T>(type) : undefined;
   }
 
   deserialize(value: any, options?: ParserOptions): any {
-    const resourceType = this.returnType();
+    const resourceType = this.incomingType();
     const _d = (value: any, options?: ParserOptions) => {
       const parser = this.__deserializeParser(value, options, resourceType);
       return parser !== undefined && 'deserialize' in parser
@@ -279,7 +275,7 @@ export class ODataResource<T> {
   }
 
   serialize(value: any, options?: ParserOptions): any {
-    const resourceType = this.type();
+    const resourceType = this.outgoingType();
     const _s = (value: any, options?: ParserOptions) => {
       const parser = this.__serializeParser(value, options, resourceType);
       return parser !== undefined && 'serialize' in parser
@@ -292,7 +288,7 @@ export class ODataResource<T> {
   }
 
   encode(value: any, options?: ParserOptions): any {
-    const resourceType = this.type();
+    const resourceType = this.outgoingType();
     const _e = (value: any, options?: ParserOptions) => {
       const parser = this.__serializeParser(value, options, resourceType);
       return parser !== undefined && 'encode' in parser
@@ -334,9 +330,9 @@ export class ODataResource<T> {
   segment(
     f: (q: ODataPathSegmentsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
-    f(
-      new ODataPathSegmentsHandler<T>(this.pathSegments),
-      this.schema instanceof ODataStructuredType ? this.schema : undefined
+    const type = this.outgoingType();
+    f(new ODataPathSegmentsHandler<T>(this.pathSegments), 
+      type !== undefined ? this.api.structuredType<T>(type) : undefined
     );
     return this;
   }
@@ -349,9 +345,9 @@ export class ODataResource<T> {
   query(
     f: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
-    f(
-      new ODataQueryOptionsHandler<T>(this.queryOptions),
-      this.schema instanceof ODataStructuredType ? this.schema : undefined
+    const type = this.outgoingType();
+    f(new ODataQueryOptionsHandler<T>(this.queryOptions), 
+      type !== undefined ? this.api.structuredType<T>(type) : undefined
     );
     return this;
   }
@@ -368,10 +364,12 @@ export class ODataResource<T> {
     if (type === undefined) {
       type = Strings.uniqueId({ prefix: "Transformation", suffix: "Type" });
     }
+    const schema = this.api.structuredTypeForType<R>(type, fields);
+    const segments = this.cloneSegments();
+    segments.last()?.incomingType(schema.type());
     const Ctor = this.constructor as typeof ODataResource;
     return new Ctor(this.api, {
-      schema: this.api.structuredTypeForType<R>(type, fields),
-      segments: this.cloneSegments(),
+      segments,
       query
     });
   }
@@ -391,10 +389,9 @@ export class ODataResource<T> {
   }
 
   protected resolveKey(value: any): EntityKey<T> | undefined {
-    return ODataResource.resolveKey<T>(
-      value,
-      this.schema as ODataStructuredType<T>
-    );
+    const type = this.outgoingType();
+    const structured = type !== undefined ? this.api.structuredType<T>(type) : undefined;
+    return ODataResource.resolveKey<T>(value, structured);
   }
   //#endregion
 

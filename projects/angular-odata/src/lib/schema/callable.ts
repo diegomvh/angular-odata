@@ -1,24 +1,22 @@
-import { CallableConfig, ParserOptions, Parser } from '../types';
-import { ODataSchemaElement } from './element';
+import { CallableConfig, ParserOptions } from '../types';
+import { ODataParserSchemaElement } from './element';
 import { ODataCallableParser } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataCallable<R> extends ODataSchemaElement {
+export class ODataCallable<R> extends ODataParserSchemaElement<R, ODataCallableParser<R>> {
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
-  parser: ODataCallableParser<R>;
 
   constructor(config: CallableConfig, schema: ODataSchema) {
-    super(config, schema);
-    this.entitySetPath = config.entitySetPath;
-    this.bound = config.bound;
-    this.composable = config.composable;
-    this.parser = new ODataCallableParser(
+    super(config, schema, new ODataCallableParser(
       config,
       schema.namespace,
       schema.alias,
-    );
+    ));
+    this.entitySetPath = config.entitySetPath;
+    this.bound = config.bound;
+    this.composable = config.composable;
   }
 
   path() {

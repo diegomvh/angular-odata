@@ -1,10 +1,8 @@
 import { Observable } from 'rxjs';
 import type { ODataApi } from '../../api';
 import { $VALUE } from '../../constants';
-import { ODataStructuredType } from '../../schema/structured-type';
 import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { ODataOptions } from './options';
 
@@ -13,30 +11,30 @@ export class ODataValueResource<T> extends ODataResource<T> {
   static factory<V>(
     api: ODataApi,
     {
-      type,
-      schema,
       segments,
-      query,
     }: {
-      type?: string;
-      schema?: ODataStructuredType<V>;
       segments: ODataPathSegments;
-      query?: ODataQueryOptions<V>;
     },
   ) {
-    const baseType = type;
-    const bindingType = schema?.type();
-
+    const currentType = segments.last()?.outgoingType();
     const segment = segments.add(PathSegment.value, $VALUE);
-    if (schema !== undefined) segment.type(schema.type());
-    else if (type !== undefined) segment.type(type);
+    segment.incomingType(currentType);
+    return new ODataValueResource<V>(api, { segments });
+  }
 
-    query?.clear();
-    const value = new ODataValueResource<V>(api, { segments, query, schema });
+  static fromResource<V>(resource: ODataResource<any>) {
+    const baseType = resource.outgoingType();
+    let baseSchema = baseType !== undefined ? resource.api.structuredType<any>(baseType) : undefined;
+    const value = ODataValueResource.factory<V>(
+      resource.api,
+      {
+        segments: resource.cloneSegments(),
+      }
+    );
 
     // Switch entitySet to binding type if available
-    if (bindingType !== undefined && bindingType !== baseType) {
-      let entitySet = api.findEntitySetForType(bindingType);
+    if (baseSchema !== undefined && baseSchema.type() !== baseType) {
+      let entitySet = resource.api.findEntitySetForType(baseSchema.type());
       if (entitySet !== undefined) {
         value.segment((s) => s.entitySet().path(entitySet!.name));
       }
