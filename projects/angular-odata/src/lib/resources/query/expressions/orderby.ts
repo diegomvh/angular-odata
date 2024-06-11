@@ -1,6 +1,6 @@
 import { Parser, ParserOptions } from '../../../types';
 import { Types } from '../../../utils';
-import type { QueryCustomType } from '../builder';
+import { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { render, FieldFactory, Renderable, RenderableFactory } from './syntax';
 

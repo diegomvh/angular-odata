@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { ODataApi } from '../../api';
+import { ODataApi } from '../../api';
 import { $METADATA, ACCEPT, APPLICATION_XML } from '../../constants';
 import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
@@ -19,6 +19,7 @@ export class ODataMetadataResource extends ODataResource<any> {
     segments.add(PathSegment.metadata, $METADATA);
     return new ODataMetadataResource(api, segments);
   }
+
   override clone(): ODataMetadataResource {
     return super.clone() as ODataMetadataResource;
   }

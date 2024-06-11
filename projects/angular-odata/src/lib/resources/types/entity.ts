@@ -1,8 +1,7 @@
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { ODataApi } from '../../api';
+import { ODataApi } from '../../api';
 import { ODataModel } from '../../models';
-import { ODataStructuredType } from '../../schema/structured-type';
 import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';

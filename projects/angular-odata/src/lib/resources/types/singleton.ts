@@ -1,11 +1,9 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { ODataApi } from '../../api';
+import { ODataApi } from '../../api';
 import { ODataModel } from '../../models';
-import { ODataStructuredType } from '../../schema';
 import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { ODataEntity } from '../responses';
 import { ODataActionResource } from './action';
@@ -20,17 +18,17 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     api: ODataApi,
     {
       path,
-      structuredType,
+      type,
     }: {
       path: string;
-      structuredType?: ODataStructuredType<S>;
+      type?: string;
     },
   ) {
     const segments = new ODataPathSegments();
     const segment = segments.add(PathSegment.singleton, path);
-    if (structuredType !== undefined) {
-      segment.outgoingType(structuredType.type());
-      segment.incomingType(structuredType.type());
+    if (type !== undefined) {
+      segment.outgoingType(type);
+      segment.incomingType(type);
     }
     return new ODataSingletonResource<S>(api, { segments });
   }

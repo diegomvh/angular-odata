@@ -168,7 +168,7 @@ export class ODataModel<T> {
     name: keyof T | string
   ): ODataNavigationPropertyResource<N> {
     const field = this._meta.findField<N>(name);
-    if (!field || !field.isNavigation)
+    if (!field || !field.navigation)
       throw Error(
         `navigationProperty: Can't find navigation property ${name as string}`
       );
@@ -186,7 +186,7 @@ export class ODataModel<T> {
 
   property<N>(name: string): ODataPropertyResource<N> {
     const field = this._meta.findField<N>(name);
-    if (!field || field.isNavigation)
+    if (!field || field.navigation)
       throw Error(`property: Can't find property ${name}`);
 
     const resource = this.resource();
@@ -802,7 +802,7 @@ export class ODataModel<T> {
     if (!field)
       throw Error(`fetchAttribute: Can't find attribute ${name as string}`);
 
-    if (field.isStructuredType() && field.isCollection) {
+    if (field.isStructuredType() && field.collection) {
       let collection = field.collectionFactory<P>({ parent: this });
       collection.query((q) => q.restore(options as ODataQueryArguments<P>));
       return this._request(collection.fetch(options), () => {
@@ -841,10 +841,10 @@ export class ODataModel<T> {
       | ODataCollection<P, ODataModel<P>>
       | null;
     if (field.isStructuredType() && model === undefined) {
-      if (field.isCollection) {
+      if (field.collection) {
         model = field.collectionFactory({ parent: this });
       } else {
-        const ref = field.isNavigation
+        const ref = field.navigation
           ? (this.referenced(field) as P)
           : undefined;
         model =

@@ -1,7 +1,7 @@
 import { PathSegment } from '../../types';
 import { Types } from '../../utils';
 import { EntityKey } from '../resource';
-import type { ODataPathSegments, ODataSegment } from './segments';
+import { ODataPathSegments, ODataSegment } from './segments';
 
 export class SegmentHandler {
   constructor(private segment: ODataSegment) {}

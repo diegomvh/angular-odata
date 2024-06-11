@@ -1,7 +1,7 @@
 import { ODataStructuredTypeFieldParser } from '../../../schema';
 import { Parser, ParserOptions } from '../../../types';
 import { Objects, Types } from '../../../utils';
-import type { QueryCustomType } from '../builder';
+import { QueryCustomType } from '../builder';
 import { normalizeValue } from '../builder';
 import { ApplyExpression, GroupByTransformations } from './apply';
 import { ComputeExpression } from './compute';

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { ODataApi } from '../../api';
+import { ODataApi } from '../../api';
 import { $ID, $REF, ODATA_ID } from '../../constants';
 import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
@@ -24,6 +24,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     segments.add(PathSegment.reference, $REF);
     return new ODataReferenceResource<P>(api, { segments });
   }
+
   override clone(): ODataReferenceResource<T> {
     return super.clone() as ODataReferenceResource<T>;
   }

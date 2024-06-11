@@ -4,9 +4,9 @@ import {
   HttpResponse,
   HttpResponseBase,
 } from '@angular/common/http';
-import type { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, Subject } from 'rxjs';
-import type { ODataApi } from '../../api';
+import { ODataApi } from '../../api';
 import {
   $BATCH,
   ACCEPT,
@@ -33,11 +33,11 @@ import { Arrays } from '../../utils/arrays';
 import { Http } from '../../utils/http';
 import { Strings } from '../../utils/strings';
 import { ODataPathSegments } from '../path';
-import type { ODataRequest } from '../request';
+import { ODataRequest } from '../request';
 import { ODataResource } from '../resource';
-import type { ODataResponse } from '../responses';
-import type { ODataOptions } from './options';
-import type { ODataApiOptions } from '../../options';
+import { ODataResponse } from '../responses';
+import { ODataOptions } from './options';
+import { ODataApiOptions } from '../../options';
 
 export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
   id: string;

@@ -1,5 +1,5 @@
 import { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
-import type { ODataApi } from '../api';
+import { ODataApi } from '../api';
 import {
   $BATCH,
   $QUERY,

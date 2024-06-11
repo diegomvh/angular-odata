@@ -1,12 +1,11 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { ODataApi } from '../../api';
+import { ODataApi } from '../../api';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
 import { ODataCallable } from '../../schema/callable';
 import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { ODataEntities, ODataEntity, ODataProperty } from '../responses';
 import {

@@ -1,4 +1,4 @@
-import type { ODataRequest, ODataResponse } from '../resources';
+import { ODataRequest, ODataResponse } from '../resources';
 import { ODataCache } from './cache';
 
 export class ODataInMemoryCache extends ODataCache {

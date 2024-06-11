@@ -5,7 +5,7 @@ import {
   ODataEntitySetResource,
   ODataBatchResource,
 } from './types';
-import type {
+import {
   ODataFunctionResource,
   ODataActionResource,
   ODataCountResource,

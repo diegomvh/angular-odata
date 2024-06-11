@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import type { ODataApi } from '../../api';
+import { ODataApi } from '../../api';
 import { $COUNT } from '../../constants';
 import { EdmType, PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
@@ -26,6 +26,7 @@ export class ODataCountResource<T> extends ODataResource<T> {
     query?.keep(QueryOption.filter, QueryOption.search);
     return new ODataCountResource<T>(api, { segments, query });
   }
+
   override clone(): ODataCountResource<T> {
     return super.clone() as ODataCountResource<T>;
   }

@@ -178,8 +178,8 @@ export class ODataClient {
   structuredTypeByName<T>(name: string) {
     return this.settings!.structuredTypeByName<T>(name);
   }
-  callableByName<T>(name: string) {
-    return this.settings!.callableByName<T>(name);
+  callableByName<T>(name: string, bindingType?: string) {
+    return this.settings!.callableByName<T>(name, bindingType);
   }
   entitySetByName(name: string) {
     return this.settings!.entitySetByName(name);
