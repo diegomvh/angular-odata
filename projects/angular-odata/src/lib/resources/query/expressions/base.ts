@@ -1,6 +1,6 @@
 import { Parser, ParserOptions } from '../../../types';
 import { Types } from '../../../utils';
-import type { QueryCustomType } from '../builder';
+import { QueryCustomType } from '../builder';
 import { Renderable } from './syntax';
 
 export abstract class Expression<T> implements Renderable {

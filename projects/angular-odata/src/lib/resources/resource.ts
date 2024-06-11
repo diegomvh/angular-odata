@@ -1,5 +1,5 @@
 import { Observable, share } from 'rxjs';
-import type { ODataApi } from '../api';
+import { ODataApi } from '../api';
 import {
   DEFAULT_VERSION,
   PARAM_SEPARATOR,
@@ -7,7 +7,7 @@ import {
   VALUE_SEPARATOR,
 } from '../constants';
 import { ODataHelper } from '../helper';
-import type { ODataCollection, ODataModel } from '../models';
+import { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import { ParserOptions, Parser, QueryOption, PathSegment, StructuredTypeFieldConfig, EdmType } from '../types';
 import { Objects, Strings, Types } from '../utils';
@@ -17,16 +17,16 @@ import {
   ODataQueryOptions,
   ODataQueryOptionsHandler,
 } from './query';
-import type {
+import {
   ApplyExpression,
   ApplyExpressionBuilder,
   QueryCustomType,
 } from './query';
-import type {
+import {
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
 } from './responses/index';
-import type { ODataOptions } from './types';
+import { ODataOptions } from './types';
 
 export type EntityKey<T> =
   | {
@@ -265,9 +265,7 @@ export class ODataResource<T> {
     const resourceType = this.incomingType();
     const _d = (value: any, options?: ParserOptions) => {
       const parser = this.__deserializeParser(value, options, resourceType);
-      return parser !== undefined && 'deserialize' in parser
-        ? parser.deserialize(value, options)
-        : value;
+      return parser !== undefined ? parser.deserialize(value, options) : value;
     };
     return Array.isArray(value)
       ? value.map((v) => _d(v, options))
@@ -278,9 +276,7 @@ export class ODataResource<T> {
     const resourceType = this.outgoingType();
     const _s = (value: any, options?: ParserOptions) => {
       const parser = this.__serializeParser(value, options, resourceType);
-      return parser !== undefined && 'serialize' in parser
-        ? parser.serialize(value, options)
-        : value;
+      return parser !== undefined ? parser.serialize(value, options) : value;
     };
     return Array.isArray(value)
       ? value.map((v) => _s(v, options))
@@ -291,9 +287,7 @@ export class ODataResource<T> {
     const resourceType = this.outgoingType();
     const _e = (value: any, options?: ParserOptions) => {
       const parser = this.__serializeParser(value, options, resourceType);
-      return parser !== undefined && 'encode' in parser
-        ? parser.encode(value, options)
-        : value;
+      return parser !== undefined ? parser.encode(value, options) : value;
     };
     return Array.isArray(value)
       ? value.map((v) => _e(v, options))

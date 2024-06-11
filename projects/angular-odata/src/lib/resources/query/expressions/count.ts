@@ -1,6 +1,6 @@
 import { Parser, ParserOptions, QueryOption } from '../../../types';
 import { Objects, Types } from '../../../utils';
-import type { QueryCustomType } from '../builder';
+import { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FilterExpression, FilterExpressionBuilder } from './filter';
 import {

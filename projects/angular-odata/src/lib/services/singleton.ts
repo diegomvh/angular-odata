@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import type { ODataModel } from '../models/model';
-import type {
+import { ODataModel } from '../models/model';
+import {
   ODataEntity,
   ODataOptions,
   ODataSingletonResource,

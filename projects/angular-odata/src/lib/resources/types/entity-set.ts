@@ -1,14 +1,13 @@
-import type { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EMPTY } from 'rxjs';
 import { expand, map, reduce } from 'rxjs/operators';
-import type { ODataApi } from '../../api';
-import type { ODataCollection, ODataModel } from '../../models';
-import type { ODataStructuredType } from '../../schema/structured-type';
+import { ODataApi } from '../../api';
+import { ODataCollection, ODataModel } from '../../models';
 import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types';
 import { ODataPathSegments } from '../path';
-import type { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../query';
+import { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import type {
+import {
   ODataEntities,
   ODataEntitiesAnnotations,
   ODataEntity,
@@ -17,7 +16,7 @@ import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
-import type { ODataOptions } from './options';
+import { ODataOptions } from './options';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -25,19 +24,19 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     api: ODataApi,
     {
       path,
-      structuredType,
+      type,
       query
     }: {
       path: string;
-      structuredType?: ODataStructuredType<E>;
+      type?: string;
       query?: ODataQueryOptions<E>;
     },
   ) {
     const segments = new ODataPathSegments();
     const segment = segments.add(PathSegment.entitySet, path);
-    if (structuredType !== undefined) {
-      segment.outgoingType(structuredType.type());
-      segment.incomingType(structuredType.type());
+    if (type !== undefined) {
+      segment.outgoingType(type);
+      segment.incomingType(type);
     }
     return new ODataEntitySetResource<E>(api, { segments, query });
   }

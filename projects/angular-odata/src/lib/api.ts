@@ -5,7 +5,7 @@ import { ODataCache, ODataInMemoryCache } from './cache';
 import { DEFAULT_VERSION } from './constants';
 import { ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
 import { ODataApiOptions } from './options';
-import type {
+import {
   ODataMetadata,
   ODataOptions,
   ODataResource,
@@ -33,7 +33,7 @@ import {
   ODataSchema,
   ODataStructuredType,
 } from './schema';
-import type { ODataEntityService } from './services/entity';
+import { ODataEntityService } from './services/entity';
 import {
   ApiConfig,
   ApiOptions,
@@ -180,11 +180,7 @@ export class ODataApi {
    */
   singleton<T>(path: string) {
     const entitySet = this.findEntitySetByName(path);
-    const structuredType =
-      entitySet !== undefined
-        ? this.findStructuredTypeForType<T>(entitySet.entityType)
-        : undefined;
-    return ODataSingletonResource.factory<T>(this, { path, structuredType: structuredType });
+    return ODataSingletonResource.factory<T>(this, { path, type: entitySet?.entityType });
   }
 
   /**
@@ -194,11 +190,7 @@ export class ODataApi {
    */
   entitySet<T>(path: string): ODataEntitySetResource<T> {
     const entitySet = this.findEntitySetByName(path);
-    const structuredType =
-      entitySet !== undefined
-        ? this.findStructuredTypeForType<T>(entitySet.entityType)
-        : undefined;
-    return ODataEntitySetResource.factory<T>(this, { path, structuredType });
+    return ODataEntitySetResource.factory<T>(this, { path, type: entitySet?.entityType });
   }
 
   /**

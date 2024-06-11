@@ -8,7 +8,7 @@ import {
   EVENT_SPLITTER,
 } from '../constants';
 import { ODataHelper } from '../helper';
-import type {
+import {
   EntityKey,
   ODataEntitiesAnnotations,
   ODataQueryOptions,
@@ -317,7 +317,7 @@ export class ODataModelField<F> {
   field: string;
   parser: ODataStructuredTypeFieldParser<F>;
   options: ODataModelOptions<any>;
-  meta?: ODataModelOptions<any>;
+  optionsForType?: (type: string) => ODataModelOptions<any> | undefined;
   modelForType?: (t: string) => typeof ODataModel<any> | undefined;
   collectionForType?: (t: string) => typeof ODataCollection<any, ODataModel<any>> | undefined;
   enumForType?: (t: string) => ODataEnumType<F> | undefined;
@@ -354,12 +354,12 @@ export class ODataModelField<F> {
     return this.parser.type;
   }
 
-  get isNavigation() {
-    return Boolean(this.parser.navigation);
+  get navigation() {
+    return this.parser.navigation;
   }
 
-  get isCollection() {
-    return Boolean(this.parser.collection);
+  get collection() {
+    return this.parser.collection;
   }
 
   annotatedValue<T>(term: string | RegExp) {
@@ -383,7 +383,7 @@ export class ODataModelField<F> {
     concurrency: boolean;
     options: ParserOptions;
   }) {
-    this.meta = optionsForType(this.type);
+    this.optionsForType = optionsForType;
     this.modelForType = modelForType;
     this.collectionForType = collectionForType;
     this.enumForType = enumForType;
@@ -498,23 +498,24 @@ export class ODataModelField<F> {
   }
 
   defaults(): any {
-    return this.isStructuredType() && this.meta !== undefined
-      ? this.meta.defaults()
+    const meta = this.optionsForType ? this.optionsForType(this.type) : undefined;
+    return this.isStructuredType() && meta !== undefined
+      ? meta.defaults()
       : this.default;
   }
 
   deserialize(value: any, options?: ParserOptions): F {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = options ?? this.parserOptions;
     return this.parser.deserialize(value, parserOptions);
   }
 
   serialize(value: F, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = options ?? this.parserOptions;
     return this.parser.serialize(value, parserOptions);
   }
 
   encode(value: F, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = options ?? this.parserOptions;
     return this.parser.encode(value, parserOptions);
   }
 
@@ -529,7 +530,7 @@ export class ODataModelField<F> {
       )
     )
       throw new Error("Can't build resource for non compatible base type");
-    return this.isNavigation
+    return this.navigation
       ? (base as ODataEntityResource<T>).navigationProperty<F>(this.parser.name)
       : (base as ODataEntityResource<T>).property<F>(this.parser.name);
   }
@@ -541,14 +542,6 @@ export class ODataModelField<F> {
       ? base.property(this.parser.name as keyof T, 'collection')
       : base.property(this.parser.name as keyof T, 'single');
   }
-
-  /*
-  schemaFactory<T, F>(
-    base: ODataStructuredType<T>
-  ): ODataStructuredType<F> | undefined {
-    return this.api.findStructuredTypeForType(this.parser.type);
-  }
-  */
 
   modelFactory<F>({
     parent,
@@ -623,8 +616,12 @@ export class ODataModelAttribute<T> {
     private _field: ODataModelField<T>
   ) { }
 
+  get type() {
+    return this._field.type;
+  }
+
   get navigation() {
-    return Boolean(this._field.isNavigation);
+    return this._field.navigation;
   }
 
   get computed() {
@@ -641,10 +638,6 @@ export class ODataModelAttribute<T> {
 
   get options() {
     return this._field.options;
-  }
-
-  get meta() {
-    return this._field.meta;
   }
 
   get name() {
@@ -797,7 +790,7 @@ export class ODataModelOptions<T> {
     this.name = schema.name;
     this.base = schema.base;
     this.schema = schema;
-    this.cid = config?.cid || CID_FIELD_NAME;
+    this.cid = config?.cid ?? CID_FIELD_NAME;
     config.fields.forEach((value, key) => this.addField<any>(key, value));
   }
 
@@ -894,7 +887,7 @@ export class ODataModelOptions<T> {
         ? this.parent.fields({ include_navigation, include_parents })
         : []),
       ...this._fields.filter(
-        (field) => include_navigation || !field.isNavigation
+        (field) => include_navigation || !field.navigation
       ),
     ];
   }
@@ -1033,7 +1026,7 @@ export class ODataModelOptions<T> {
       if (resource === null) break;
       if (
         ODataModelOptions.isModel(model) &&
-        (prevField === null || prevField.isCollection)
+        (prevField === null || prevField.collection)
       ) {
         const m = model as ODataModel<any>;
         // Resolve subtype if collection not is from field
@@ -1078,7 +1071,7 @@ export class ODataModelOptions<T> {
     if (this.entitySet === undefined) return null;
     return ODataEntitySetResource.factory<T>(this.api, {
       path: this.entitySet.name,
-      structuredType: this.schema,
+      type: this.entitySet.entityType,
       query,
     });
   }
@@ -1183,7 +1176,7 @@ export class ODataModelOptions<T> {
     const key = new Map<string, any>();
     for (const kt of keyTypes) {
       let v = value as any;
-      let options = this as ODataModelOptions<any>;
+      let options = this as ODataModelOptions<any> | undefined;
       let field: ODataModelField<any> | undefined;
       for (const name of kt.name.split('/')) {
         if (options === undefined) break;
@@ -1191,11 +1184,8 @@ export class ODataModelOptions<T> {
           .fields({ include_navigation: false, include_parents: true })
           .find((field: ODataModelField<any>) => field.field === name);
         if (field !== undefined) {
-          v =
-            Types.isPlainObject(v) || ODataModelOptions.isModel(v)
-              ? v[field.name]
-              : v;
-          options = field.meta as ODataModelOptions<any>;
+          v = Types.isPlainObject(v) || ODataModelOptions.isModel(v) ? v[field.name] : v;
+          options = this.api.optionsForType(field.type);
         }
       }
       if (field === undefined) return undefined;
@@ -1255,8 +1245,8 @@ export class ODataModelOptions<T> {
         include_navigation: false,
         include_parents: true,
       }).find((field: ODataModelField<any>) => field.field === ref.property);
-      const to = (attr.meta as ODataModelOptions<any>)
-        .fields({ include_navigation: false, include_parents: true })
+      const meta = this.api.optionsForType<any>(attr.type);
+      const to = meta?.fields({ include_navigation: false, include_parents: true })
         .find(
           (field: ODataModelField<any>) =>
             field.field === ref.referencedProperty
@@ -1494,10 +1484,9 @@ export class ODataModelOptions<T> {
     if (
       self._parent !== null &&
       ((ODataModelOptions.isModel(self._parent[0]) &&
-        (self._parent[1] as ODataModelField<any>).meta !== self._meta) ||
+        self._parent[1] !== null && this.api.optionsForType(self._parent[1].type) !== self._meta) ||
         (ODataModelOptions.isCollection(self._parent[0]) &&
-          (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model
-            .meta !== self._meta))
+          (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model.meta !== self._meta))
     ) {
       entity[this.api.options.helper.ODATA_TYPE] = `#${this.schema.type()}`;
     }
@@ -1742,7 +1731,7 @@ export class ODataModelOptions<T> {
           ODataModelOptions.isCollection(value) ||
             ODataModelOptions.isModel(value)
             ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
-            : modelField.isCollection
+            : modelField.collection
               ? modelField.collectionFactory<F>({
                 parent: self,
                 value: value as F[] | { [name: string]: any }[],
@@ -1760,7 +1749,8 @@ export class ODataModelOptions<T> {
 
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
-        const ref = modelField.meta?.resolveReferential(attr.get(), attr);
+        const meta = this.api.optionsForType<F>(modelField.type);
+        const ref = meta?.resolveReferential(attr.get(), attr);
         if (ref !== null && ref !== undefined) {
           Object.assign(self, ref);
         }

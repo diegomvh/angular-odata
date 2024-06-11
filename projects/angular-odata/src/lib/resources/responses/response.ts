@@ -17,7 +17,7 @@ import {
   ODATA_ENTITYID_HEADERS,
   PREFERENCE_APPLIED,
 } from '../../constants';
-import type { ODataApi } from '../../api';
+import { ODataApi } from '../../api';
 import { ODataRequest } from '../request';
 import { ODataResponseOptions } from './options';
 import { Http } from '../../utils/http';
