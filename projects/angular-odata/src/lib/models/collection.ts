@@ -3,7 +3,6 @@ import { finalize, map, switchMap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from '../constants';
 import { ODataHelper } from '../helper';
 import {
-  EntityKey,
   ODataActionOptions,
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
@@ -1019,7 +1018,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     options: ODataFunctionOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
-    if (!(resource instanceof ODataEntityResource))
+    if (!(resource instanceof ODataEntitySetResource))
       return throwError(
         () =>
           new Error(

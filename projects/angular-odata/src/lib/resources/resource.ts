@@ -30,8 +30,8 @@ import { ODataOptions } from './types';
 
 export type EntityKey<T> =
   | {
-      readonly [P in keyof T]?: T[P];
-    }
+    readonly [P in keyof T]?: T[P];
+  }
   | QueryCustomType
   | string
   | number;
@@ -171,8 +171,8 @@ export class ODataResource<T> {
     return test === 'path'
       ? otherPath === selfPath
       : test === 'params'
-      ? Types.isEqual(selfParams, otherParams)
-      : otherPath === selfPath && Types.isEqual(selfParams, otherParams);
+        ? Types.isEqual(selfParams, otherParams)
+        : otherPath === selfPath && Types.isEqual(selfParams, otherParams);
   }
 
   pathAndParams(
@@ -230,7 +230,7 @@ export class ODataResource<T> {
     });
   }
 
-  private __serializeParser(
+  private __parser(
     value: any,
     options?: ParserOptions,
     resourceType?: string
@@ -249,22 +249,10 @@ export class ODataResource<T> {
     return undefined;
   }
 
-  private __deserializeParser(
-    value: any,
-    options?: ParserOptions,
-    resourceType?: string
-  ): Parser<T> | undefined {
-    const type =
-      options !== undefined && Types.isPlainObject(value)
-        ? ODataHelper[options.version || DEFAULT_VERSION].type(value)
-        : resourceType;
-    return (type !== undefined) ? this.api.parserForType<T>(type) : undefined;
-  }
-
   deserialize(value: any, options?: ParserOptions): any {
     const resourceType = this.incomingType();
     const _d = (value: any, options?: ParserOptions) => {
-      const parser = this.__deserializeParser(value, options, resourceType);
+      const parser = this.__parser(value, options, resourceType);
       return parser !== undefined ? parser.deserialize(value, options) : value;
     };
     return Array.isArray(value)
@@ -275,7 +263,7 @@ export class ODataResource<T> {
   serialize(value: any, options?: ParserOptions): any {
     const resourceType = this.outgoingType();
     const _s = (value: any, options?: ParserOptions) => {
-      const parser = this.__serializeParser(value, options, resourceType);
+      const parser = this.__parser(value, options, resourceType);
       return parser !== undefined ? parser.serialize(value, options) : value;
     };
     return Array.isArray(value)
@@ -286,7 +274,7 @@ export class ODataResource<T> {
   encode(value: any, options?: ParserOptions): any {
     const resourceType = this.outgoingType();
     const _e = (value: any, options?: ParserOptions) => {
-      const parser = this.__serializeParser(value, options, resourceType);
+      const parser = this.__parser(value, options, resourceType);
       return parser !== undefined ? parser.encode(value, options) : value;
     };
     return Array.isArray(value)
@@ -325,7 +313,7 @@ export class ODataResource<T> {
     f: (q: ODataPathSegmentsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
     const type = this.outgoingType();
-    f(new ODataPathSegmentsHandler<T>(this.pathSegments), 
+    f(new ODataPathSegmentsHandler<T>(this.pathSegments),
       type !== undefined ? this.api.structuredType<T>(type) : undefined
     );
     return this;
@@ -340,7 +328,7 @@ export class ODataResource<T> {
     f: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
   ) {
     const type = this.outgoingType();
-    f(new ODataQueryOptionsHandler<T>(this.queryOptions), 
+    f(new ODataQueryOptionsHandler<T>(this.queryOptions),
       type !== undefined ? this.api.structuredType<T>(type) : undefined
     );
     return this;
@@ -351,7 +339,7 @@ export class ODataResource<T> {
       builder: ApplyExpressionBuilder<T>,
       current?: ApplyExpression<T>
     ) => ApplyExpression<T>,
-    {type, fields}: {type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }} = {}): ODataResource<R> {
+    { type, fields }: { type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig } } = {}): ODataResource<R> {
     const query = this.cloneQuery<any>();
     const handler = new ODataQueryOptionsHandler<T>(query);
     handler.apply(opts);
@@ -393,14 +381,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     } = {}
@@ -412,14 +400,14 @@ export class ODataResource<T> {
     body: any,
     options: ODataOptions & {
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
@@ -431,14 +419,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
@@ -450,14 +438,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
@@ -468,14 +456,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
