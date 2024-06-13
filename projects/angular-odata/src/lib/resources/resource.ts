@@ -63,6 +63,16 @@ export class ODataResource<T> {
     return this.pathSegments.last()?.outgoingType();
   }
 
+  enumType() {
+    const type = this.incomingType() ?? this.outgoingType();
+    return type !== undefined ? this.api.enumType<T>(type) : undefined;
+  }
+
+  structuredType() {
+    const type = this.incomingType() ?? this.outgoingType();
+    return type !== undefined ? this.api.structuredType<T>(type) : undefined;
+  }
+
   /**
    * @returns string The incoming type of the return
    */
@@ -340,15 +350,34 @@ export class ODataResource<T> {
       current?: ApplyExpression<T>
     ) => ApplyExpression<T>,
     { type, fields }: { type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig } } = {}): ODataResource<R> {
-    const query = this.cloneQuery<any>();
-    const handler = new ODataQueryOptionsHandler<T>(query);
-    handler.apply(opts);
+
     if (type === undefined) {
       type = Strings.uniqueId({ prefix: "Transformation", suffix: "Type" });
     }
-    const schema = this.api.structuredTypeForType<R>(type, fields);
+    
+    // Resolve Schema
+    let schema = this.api.findSchemaForType(type);
+    if (schema === undefined) {
+      const namespace = type.substring(0, type.lastIndexOf(".")) ?? this.api.name!;
+      schema = this.api.createSchema({ namespace });
+    }
+
+    // Resolve Structured Type
+    let structuredType = schema.findStructuredTypeForType<R>(type);
+    if (structuredType === undefined) {
+      const name = type.substring(type.lastIndexOf("."));
+      structuredType = schema.createStructuredType({ name, fields });
+    }
+
+    // Segments
     const segments = this.cloneSegments();
-    segments.last()?.incomingType(schema.type());
+    segments.last()?.incomingType(structuredType.type());
+
+    // Query
+    const query = this.cloneQuery<any>();
+    const handler = new ODataQueryOptionsHandler<T>(query);
+    handler.apply(opts);
+
     const Ctor = this.constructor as typeof ODataResource;
     return new Ctor(this.api, {
       segments,

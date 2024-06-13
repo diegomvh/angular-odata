@@ -57,14 +57,9 @@ export class ODataSchema extends ODataAnnotatable {
       | undefined;
   }
 
-  public createStructuredType<T>(config: StructuredTypeConfig<T>,
-  {
-    options,
-  }: {
-    options: ParserOptions;
-  }) {
+  public createStructuredType<T>(config: StructuredTypeConfig<T>) {
     const entity = new ODataStructuredType<T>(config, this);
-    entity.configure({ options});
+    entity.configure({ options: this.api.options.parserOptions });
     this.entities.push(entity);
     return entity;
   }
