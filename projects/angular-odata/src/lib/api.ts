@@ -339,7 +339,7 @@ export class ODataApi {
       },
     };
 
-  private createSchema(config: SchemaConfig) {
+  public createSchema(config: SchemaConfig) {
     const schema = new ODataSchema(config, this);
     schema.configure({
       options: this.options.parserOptions
@@ -348,19 +348,7 @@ export class ODataApi {
     return schema;
   }
 
-  private schemaForType(type: string) {
-    const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
-    if (schemas.length === 0) {
-      const namespace = type.substring(0, type.lastIndexOf(".")) || this.name!;
-      return this.createSchema({ namespace });
-    };
-    if (schemas.length === 1) return schemas[0];
-    return schemas
-      .sort((s1, s2) => s1.namespace.length - s2.namespace.length)
-      .pop() as ODataSchema;
-  }
-
-  private findSchemaForType(type: string) {
+  public findSchemaForType(type: string) {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
     if (schemas.length === 0) return undefined;
     if (schemas.length === 1) return schemas[0];
@@ -376,18 +364,6 @@ export class ODataApi {
     const enumType = this.findSchemaForType(type)?.findEnumTypeForType<T>(type);
     this.memo.forType.enum.set(type, enumType);
     return enumType;
-  }
-
-  public structuredTypeForType<T>(type: string, fields?: { [P in keyof T]?: StructuredTypeFieldConfig }) {
-    const schema = this.schemaForType(type);
-    let structuredType = schema.findStructuredTypeForType<T>(type);
-    if (structuredType === undefined) {
-      const name = type.substring(type.lastIndexOf("."));
-      structuredType = schema.createStructuredType({ name, fields }, {
-        options: this.options.parserOptions,
-      });
-    }
-    return structuredType;
   }
 
   public findStructuredTypeForType<T>(type: string) {
