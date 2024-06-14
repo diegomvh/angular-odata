@@ -62,9 +62,9 @@ export class ODataModel<T> {
   // Events
   events$: ODataModelEventEmitter<T>;
 
-  static buildMetaOptions<T>({config, schema}: { config?: ModelOptions; schema: ODataStructuredType<T>; }) {
+  static buildMetaOptions<T>({config, structuredType}: { config?: ModelOptions; structuredType: ODataStructuredType<T>; }) {
   if (config === undefined) {
-    let fields = schema
+    let fields = structuredType
       .fields({ include_navigation: true, include_parents: true })
       .reduce((acc, field) => {
         let name = field.name;
@@ -84,7 +84,7 @@ export class ODataModel<T> {
       fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
     };
   }
-  return new ODataModelOptions<T>({ config, schema });
+  return new ODataModelOptions<T>({ config, structuredType });
 }
 
   constructor(
@@ -114,7 +114,7 @@ export class ODataModel<T> {
     // Client Id
     (<any>this)[this._meta.cid] =
       (<any>data)[this._meta.cid] ||
-      Strings.uniqueId({ prefix: `${Klass.meta.schema.name.toLowerCase()}-` });
+      Strings.uniqueId({ prefix: `${Klass.meta.structuredType.name.toLowerCase()}-` });
 
     if (!reset)
       data = Objects.merge(this.defaults(), data as { [name: string]: any }) as Partial<T>;
@@ -210,7 +210,7 @@ export class ODataModel<T> {
   //#endregion
 
   schema() {
-    return this._meta.schema;
+    return this._meta.structuredType;
   }
 
   annots() {

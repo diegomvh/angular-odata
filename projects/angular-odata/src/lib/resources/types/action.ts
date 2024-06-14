@@ -20,23 +20,24 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     api: ODataApi,
     {
       path,
-      callable,
+      type,
+      returnType,
       segments,
     }: {
-      path?: string;
-      callable?: ODataCallable<R>;
+      path: string;
+      type?: string;
+      returnType?: string;
       segments?: ODataPathSegments;
     },
   ) {
     segments = segments ?? new ODataPathSegments();
-    path = callable !== undefined ? callable.path() : path;
-    if (path === undefined)
-      throw new Error(`ODataActionResource: path is required`);
 
     const segment = segments.add(PathSegment.action, path);
-    if (callable !== undefined) {
-      segment.outgoingType(callable.type());
-      segment.incomingType(callable.parser.return?.type);
+    if (type !== undefined) {
+      segment.outgoingType(type);
+    }
+    if (returnType !== undefined) {
+      segment.incomingType(returnType);
     }
     return new ODataActionResource<P, R>(api, { segments });
   }
@@ -48,7 +49,8 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
     const action = ODataActionResource.factory<P, R>(resource.api, {
       path,
-      callable,
+      type: callable?.type(),
+      returnType: callable?.returnType(),
       segments: resource.cloneSegments(),
     });
 

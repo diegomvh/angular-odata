@@ -254,7 +254,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (annots?.type !== undefined && Model.meta !== null) {
       const schema = Model.meta.findChildOptions((o) =>
         o.isTypeOf(annots.type as string)
-      )?.schema;
+      )?.structuredType;
       if (schema !== undefined && schema.model !== undefined)
         // Change to child model
         Model = schema.model;

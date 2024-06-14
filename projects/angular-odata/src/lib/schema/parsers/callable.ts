@@ -156,7 +156,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   }) {
     this.parserOptions = options;
     if (this.return)
-      this.parser = parserForType(this.return.type) || NONE_PARSER;
+      this.parser = parserForType(this.return.type) ?? NONE_PARSER;
     this.parameters.forEach((p) =>
       p.configure({ options, parserForType }),
     );
@@ -164,5 +164,9 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   binding() {
     return this.parameters.find((p) => p.name === CALLABLE_BINDING_PARAMETER);
+  }
+
+  returnType() {
+    return this.return?.type;
   }
 }

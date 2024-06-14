@@ -563,12 +563,12 @@ export class ODataModelField<F> {
     }
 
     if (annots?.type !== undefined && Model.meta !== null) {
-      const schema = Model.meta.findChildOptions((o) =>
+      const meta = Model.meta.findChildOptions((o) =>
         o.isTypeOf(annots.type as string)
-      )?.schema;
-      if (schema !== undefined && schema.model !== undefined)
+      )?.structuredType;
+      if (meta !== undefined && meta.model !== undefined)
         // Change to child model
-        Model = schema.model;
+        Model = meta.model;
     }
 
     return new Model((value || {}) as Partial<F> | { [name: string]: any }, {
@@ -773,7 +773,7 @@ export class ODataModelOptions<T> {
   cid: string;
   base?: string;
   private _fields: ODataModelField<any>[] = [];
-  schema: ODataStructuredType<T>;
+  structuredType: ODataStructuredType<T>;
   entitySet?: ODataEntitySet;
   // Hierarchy
   parent?: ODataModelOptions<any>;
@@ -782,40 +782,40 @@ export class ODataModelOptions<T> {
 
   constructor({
     config,
-    schema,
+    structuredType,
   }: {
     config: ModelOptions;
-    schema: ODataStructuredType<T>;
+    structuredType: ODataStructuredType<T>;
   }) {
-    this.name = schema.name;
-    this.base = schema.base;
-    this.schema = schema;
+    this.name = structuredType.name;
+    this.base = structuredType.base;
+    this.structuredType = structuredType;
     this.cid = config?.cid ?? CID_FIELD_NAME;
     config.fields.forEach((value, key) => this.addField<any>(key, value));
   }
 
   get api() {
-    return this.schema.api;
+    return this.structuredType.api;
   }
 
   type({ alias = false }: { alias?: boolean } = {}) {
-    return this.schema.type({ alias });
+    return this.structuredType.type({ alias });
   }
 
   isOpenType() {
-    return this.schema.isOpenType();
+    return this.structuredType.isOpenType();
   }
 
   isEntityType() {
-    return this.schema.isEntityType();
+    return this.structuredType.isEntityType();
   }
 
   isComplexType() {
-    return this.schema.isComplexType();
+    return this.structuredType.isComplexType();
   }
 
   isTypeOf(type: string) {
-    return this.schema.isTypeOf(type);
+    return this.structuredType.isTypeOf(type);
   }
 
   isModelFor(entity: T | { [name: string]: any }) {
@@ -912,7 +912,7 @@ export class ODataModelOptions<T> {
     const { field, parser, ...opts } = options;
     if (field === undefined || name === undefined)
       throw new Error('Model Properties need name and field');
-    const fieldParser = parser ?? this.schema.field<F>(field as keyof T);
+    const fieldParser = parser ?? this.structuredType.field<F>(field as keyof T);
     if (fieldParser === undefined)
       throw new Error(`No parser for ${field} with name = ${name}`);
     const modelField = new ODataModelField<F>(this, {
@@ -936,7 +936,7 @@ export class ODataModelOptions<T> {
     name: string,
     type: EdmType | string
   ) {
-    const structuredFieldParser = this.schema.addField<F>(name, { type });
+    const structuredFieldParser = this.structuredType.addField<F>(name, { type });
     structuredFieldParser.configure({
       parserForType: (type: EdmType | string) => this.api.parserForType(type),
       options: this.api.options,
@@ -1172,7 +1172,7 @@ export class ODataModelOptions<T> {
       single = true,
     }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {}
   ): EntityKey<T> | { [name: string]: any } | undefined {
-    const keyTypes = this.schema.keys({ include_parents: true });
+    const keyTypes = this.structuredType.keys({ include_parents: true });
     const key = new Map<string, any>();
     for (const kt of keyTypes) {
       let v = value as any;
@@ -1488,7 +1488,7 @@ export class ODataModelOptions<T> {
         (ODataModelOptions.isCollection(self._parent[0]) &&
           (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model.meta !== self._meta))
     ) {
-      entity[this.api.options.helper.ODATA_TYPE] = `#${this.schema.type()}`;
+      entity[this.api.options.helper.ODATA_TYPE] = `#${this.structuredType.type()}`;
     }
 
     return entity as T | { [name: string]: any };
