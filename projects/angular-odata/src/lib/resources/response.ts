@@ -3,10 +3,9 @@ import {
   ODataEntityAnnotations,
   ODataEntitiesAnnotations,
   ODataPropertyAnnotations,
-} from './annotations';
-import { Types } from '../../utils/types';
-import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntity, ODataProperty } from './types';
+} from '../annotations';
+import { Types } from '../utils/types';
+import { ODataResource } from './resource';
 import {
   APPLICATION_JSON,
   ODATA_VERSION_HEADERS,
@@ -16,12 +15,27 @@ import {
   ETAG_HEADERS,
   ODATA_ENTITYID_HEADERS,
   PREFERENCE_APPLIED,
-} from '../../constants';
-import { ODataApi } from '../../api';
-import { ODataRequest } from '../request';
+} from '../constants';
+import { ODataApi } from '../api';
+import { ODataRequest } from './request';
+import { Http } from '../utils/http';
+import { ODataContext } from '../helper';
 import { ODataResponseOptions } from './options';
-import { Http } from '../../utils/http';
-import { ODataContext } from '../../helper';
+
+export type ODataEntity<T> = {
+  entity: T | null;
+  annots: ODataEntityAnnotations<T>;
+};
+
+export type ODataEntities<T> = {
+  entities: T[] | null;
+  annots: ODataEntitiesAnnotations<T>;
+};
+
+export type ODataProperty<T> = {
+  property: T | null;
+  annots: ODataPropertyAnnotations<T>;
+};
 
 /**
  * OData Response

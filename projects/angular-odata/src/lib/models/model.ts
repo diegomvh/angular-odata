@@ -3,8 +3,6 @@ import { finalize, map } from 'rxjs/operators';
 import {
   EntityKey,
   ODataActionOptions,
-  ODataEntity,
-  ODataEntityAnnotations,
   ODataEntityResource,
   ODataFunctionOptions,
   ODataNavigationPropertyResource,
@@ -31,6 +29,8 @@ import {
   ModelFieldOptions,
 } from './options';
 import { EdmType, ParserOptions } from '../types';
+import { ODataEntityAnnotations } from '../annotations';
+import { ODataEntity } from '../resources/response';
 
 export class ODataModel<T> {
   // Properties

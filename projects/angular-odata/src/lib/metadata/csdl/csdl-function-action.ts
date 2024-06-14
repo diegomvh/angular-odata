@@ -1,4 +1,4 @@
-import { CallableConfig, Parameter } from "../../../types";
+import { CallableConfig, Parameter } from "../../types";
 import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 
 export class CsdlFunction {

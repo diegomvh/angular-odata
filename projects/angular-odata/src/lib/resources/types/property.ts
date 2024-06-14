@@ -1,18 +1,16 @@
 import { EMPTY, Observable } from 'rxjs';
-import { concatMap, expand, map, reduce, toArray } from 'rxjs/operators';
+import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
-import { ODataStructuredType } from '../../schema';
 import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types';
 import { ODataPathSegments } from '../path';
-import { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../query';
+import { ApplyExpression, ApplyExpressionBuilder } from '../query';
 import { ODataResource } from '../resource';
 import {
   ODataEntities,
-  ODataEntitiesAnnotations,
   ODataEntity,
   ODataProperty,
-} from '../responses';
+} from '../response';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
@@ -21,6 +19,7 @@ import {
 } from './options';
 import { ODataValueResource } from './value';
 import { ODataCountResource } from './count';
+import { ODataEntitiesAnnotations } from '../../annotations';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory

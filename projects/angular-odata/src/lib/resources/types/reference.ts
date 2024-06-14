@@ -5,7 +5,7 @@ import { $ID, $REF, ODATA_ID } from '../../constants';
 import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntity } from '../responses/types';
+import { ODataEntities, ODataEntity } from '../response';
 import { ODataEntityResource } from './entity';
 import {
   ODataEntitiesOptions,

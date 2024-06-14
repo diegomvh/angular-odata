@@ -1,6 +1,4 @@
 import {
-  CsdlAnnotation,
-  CsdlAnnotable,
   CsdlTerm,
   CsdlAnnotations,
 } from './csdl-annotation';
@@ -9,7 +7,7 @@ import { CsdlEnumType } from './csdl-enum-type';
 import { CsdlEntityType, CsdlComplexType } from './csdl-structured-type';
 import { CsdlFunction, CsdlAction } from './csdl-function-action';
 import { CsdlEntityContainer } from './csdl-entity-container';
-import { SchemaConfig } from '../../../types';
+import { SchemaConfig } from '../../types';
 
 export class CsdlSchema {
   constructor(

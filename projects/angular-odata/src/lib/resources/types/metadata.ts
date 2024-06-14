@@ -5,8 +5,8 @@ import { $METADATA, ACCEPT, APPLICATION_XML } from '../../constants';
 import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
-import { ODataMetadata } from '../responses';
 import { ODataOptions } from './options';
+import { ODataMetadata } from '../../metadata/metadata';
 
 export class ODataMetadataResource extends ODataResource<any> {
   constructor(api: ODataApi, segments?: ODataPathSegments) {

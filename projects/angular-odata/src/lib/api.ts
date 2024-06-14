@@ -6,7 +6,6 @@ import { DEFAULT_VERSION } from './constants';
 import { ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
 import { ODataApiOptions } from './options';
 import {
-  ODataMetadata,
   ODataOptions,
   ODataResource,
   ODataSegment,
@@ -45,6 +44,7 @@ import {
   QueryOption,
   SchemaConfig,
 } from './types';
+import { ODataMetadata } from './metadata/metadata';
 
 /**
  * Api abstraction for consuming OData services.

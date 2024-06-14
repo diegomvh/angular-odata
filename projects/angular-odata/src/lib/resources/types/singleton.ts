@@ -5,7 +5,7 @@ import { ODataModel } from '../../models';
 import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
-import { ODataEntity } from '../responses';
+import { ODataEntity } from '../response';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigation-property';

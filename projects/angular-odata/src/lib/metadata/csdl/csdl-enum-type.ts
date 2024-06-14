@@ -1,4 +1,4 @@
-import { EnumTypeConfig, EnumTypeFieldConfig } from "../../../types";
+import { EnumTypeConfig, EnumTypeFieldConfig } from "../../types";
 import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 
 export class CsdlEnumType extends CsdlAnnotable {

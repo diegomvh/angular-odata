@@ -1,4 +1,4 @@
-import { AnnotationConfig } from "../../../types";
+import { AnnotationConfig } from "../../types";
 
 export class CsdlAnnotable {
   constructor(public annotations?: CsdlAnnotation[]) {}

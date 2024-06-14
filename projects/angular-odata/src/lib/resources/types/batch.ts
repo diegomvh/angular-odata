@@ -35,9 +35,9 @@ import { Strings } from '../../utils/strings';
 import { ODataPathSegments } from '../path';
 import { ODataRequest } from '../request';
 import { ODataResource } from '../resource';
-import { ODataResponse } from '../responses';
 import { ODataOptions } from './options';
 import { ODataApiOptions } from '../../options';
+import { ODataResponse } from '../response';
 
 export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
   id: string;

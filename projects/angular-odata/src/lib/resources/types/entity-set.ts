@@ -7,16 +7,13 @@ import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types
 import { ODataPathSegments } from '../path';
 import { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import {
-  ODataEntities,
-  ODataEntitiesAnnotations,
-  ODataEntity,
-} from '../responses';
 import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
 import { ODataOptions } from './options';
+import { ODataEntities, ODataEntity } from '../response';
+import { ODataEntitiesAnnotations } from '../../annotations';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
