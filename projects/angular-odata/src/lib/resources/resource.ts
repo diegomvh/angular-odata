@@ -22,11 +22,8 @@ import {
   ApplyExpressionBuilder,
   QueryCustomType,
 } from './query';
-import {
-  ODataEntitiesAnnotations,
-  ODataEntityAnnotations,
-} from './responses/index';
 import { ODataOptions } from './types';
+import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
 
 export type EntityKey<T> =
   | {

@@ -10,14 +10,12 @@ import {
 import { ODataHelper } from '../helper';
 import {
   EntityKey,
-  ODataEntitiesAnnotations,
   ODataQueryOptions,
   ODataQueryOptionsHandler,
   ODataResource,
   ODataSingletonResource,
 } from '../resources';
 import {
-  ODataEntityAnnotations,
   ODataEntityResource,
   ODataEntitySetResource,
   ODataNavigationPropertyResource,
@@ -34,6 +32,7 @@ import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
 import { EventEmitter } from '@angular/core';
+import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
 
 export enum ODataModelEventType {
   Change = 'change',

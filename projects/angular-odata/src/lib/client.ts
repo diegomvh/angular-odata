@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ODataApi } from './api';
 import { ODataConfigLoader } from './loaders';
 import { ODataCollection, ODataModel } from './models/index';

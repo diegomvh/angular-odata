@@ -2,7 +2,7 @@ import { CsdlEntitySet } from './csdl-entity-set';
 import { CsdlSingleton } from './csdl-singleton';
 import { CsdlFunctionImport, CsdlActionImport } from './csdl-function-action';
 import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
-import { EntityContainerConfig } from '../../../types';
+import { EntityContainerConfig } from '../../types';
 
 export class CsdlEntityContainer extends CsdlAnnotable {
   constructor(

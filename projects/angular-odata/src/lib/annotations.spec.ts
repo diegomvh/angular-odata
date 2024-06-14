@@ -1,5 +1,5 @@
-import { VERSION_4_0 } from '../../constants';
-import { ODataHelper } from '../../helper';
+import { VERSION_4_0 } from './constants';
+import { ODataHelper } from './helper';
 import { ODataEntitiesAnnotations } from './annotations';
 
 describe('ODataEntitiesAnnotations', () => {

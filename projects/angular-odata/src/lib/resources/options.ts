@@ -4,16 +4,16 @@ import {
   ODataVersion,
   ParserOptions,
   ResponseOptions,
-} from '../../types';
+} from '../types';
 import {
   DEFAULT_VERSION,
   MAX_AGE,
   VERSION_2_0,
   VERSION_3_0,
   VERSION_4_0,
-} from '../../constants';
+} from '../constants';
 
-import { ODataHelper } from '../../helper';
+import { ODataHelper } from '../helper';
 
 export class ODataResponseOptions implements ResponseOptions {
   version: ODataVersion;

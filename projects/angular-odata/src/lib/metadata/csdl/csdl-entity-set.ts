@@ -1,4 +1,4 @@
-import { EntitySetConfig } from '../../../types';
+import { EntitySetConfig } from '../../types';
 import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
 import { CsdlNavigationPropertyBinding } from './csdl-navigation-property-binding';
 

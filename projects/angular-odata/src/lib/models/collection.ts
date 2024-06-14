@@ -4,8 +4,6 @@ import { DEFAULT_VERSION } from '../constants';
 import { ODataHelper } from '../helper';
 import {
   ODataActionOptions,
-  ODataEntitiesAnnotations,
-  ODataEntityAnnotations,
   ODataEntityResource,
   ODataEntitySetResource,
   ODataFunctionOptions,
@@ -30,6 +28,7 @@ import {
   ODataModelOptions,
   ODataModelState,
 } from './options';
+import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
 
 export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M> {

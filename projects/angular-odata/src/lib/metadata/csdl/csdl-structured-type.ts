@@ -1,4 +1,4 @@
-import { StructuredTypeConfig } from '../../../types';
+import { StructuredTypeConfig } from '../../types';
 import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
 import {
   CsdlProperty,

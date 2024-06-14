@@ -8,9 +8,8 @@ import { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../q
 import { ODataResource } from '../resource';
 import {
   ODataEntities,
-  ODataEntitiesAnnotations,
   ODataEntity,
-} from '../responses';
+} from '../response';
 import { ODataCountResource } from './count';
 import { ODataMediaResource } from './media';
 import {
@@ -20,6 +19,7 @@ import {
 } from './options';
 import { ODataPropertyResource } from './property';
 import { ODataReferenceResource } from './reference';
+import { ODataEntitiesAnnotations } from '../../annotations';
 
 /**
  * OData Navigation Property Resource

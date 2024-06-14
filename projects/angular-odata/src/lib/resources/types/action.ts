@@ -2,17 +2,16 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
-import { ODataCallable } from '../../schema/callable';
 import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntity, ODataProperty } from '../responses';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
   ODataOptions,
   ODataPropertyOptions,
 } from './options';
+import { ODataEntities, ODataEntity, ODataProperty } from '../response';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory

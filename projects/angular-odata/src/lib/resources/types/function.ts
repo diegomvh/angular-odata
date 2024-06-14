@@ -3,17 +3,16 @@ import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
-import { ODataCallable } from '../../schema/callable';
 import { PathSegment } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntity, ODataProperty } from '../responses';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
   ODataOptions,
   ODataPropertyOptions,
 } from './options';
+import { ODataEntities, ODataEntity, ODataProperty } from '../response';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
