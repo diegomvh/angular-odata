@@ -44,7 +44,6 @@ import {
   PathSegment,
   QueryOption,
   SchemaConfig,
-  StructuredTypeFieldConfig,
 } from './types';
 
 /**
@@ -200,7 +199,7 @@ export class ODataApi {
    */
   action<P, R>(path: string): ODataActionResource<P, R> {
     const callable = this.findCallableForType<R>(path);
-    return ODataActionResource.factory<P, R>(this, { path, callable });
+    return ODataActionResource.factory<P, R>(this, { path, type: callable?.type(), returnType: callable?.returnType() });
   }
 
   /**
@@ -210,7 +209,11 @@ export class ODataApi {
    */
   function<P, R>(path: string): ODataFunctionResource<P, R> {
     const callable = this.findCallableForType<R>(path);
-    return ODataFunctionResource.factory<P, R>(this, { path, callable: callable });
+    return ODataFunctionResource.factory<P, R>(this, { path, type: callable?.type(), returnType: callable?.returnType() });
+  }
+
+  callable<T>(name_or_type: string) {
+    return this.findCallableByName<T>(name_or_type) ?? this.findCallableForType<T>(name_or_type);
   }
 
   enumType<T>(name_or_type: string) {
@@ -583,10 +586,10 @@ export class ODataApi {
       // Edm, Base Parsers
       parser = this.parsers.get(type) as Parser<T>;
     } else if (!type.startsWith('Edm.')) {
-      // EnumType, ComplexType and EntityType Parsers
+      // Callable, EnumType, StructuredType (ComplexType and EntityType) Parsers
       let value =
-        this.findCallableForType<T>(type, bindingType) ||
-        this.findEnumTypeForType<T>(type) ||
+        this.findCallableForType<T>(type, bindingType) ??
+        this.findEnumTypeForType<T>(type) ??
         this.findStructuredTypeForType<T>(type);
       parser = value?.parser as Parser<T>;
     }
@@ -605,7 +608,7 @@ export class ODataApi {
     if (!type.startsWith('Edm.')) {
       structuredType = this.findStructuredTypeForType<T>(type) ?? structuredType;
       if (structuredType !== undefined) {
-        meta = ODataModel.buildMetaOptions({config, schema: structuredType});
+        meta = ODataModel.buildMetaOptions({config, structuredType});
       }
     }
     // Set Options for next time

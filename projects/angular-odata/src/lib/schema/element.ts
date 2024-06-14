@@ -44,8 +44,9 @@ export class ODataSchemaElement extends ODataAnnotatable {
    * @param type String representation of the type
    * @returns True if the callable is type of the given type
    */
-  isTypeOf(type: string): boolean {
-    var names = [`${this.schema.namespace}.${this.name}`];
+  isTypeOf(type: string | ODataSchemaElement): boolean {
+    type = typeof type === 'string' ? type : type.type();
+    const names = [`${this.schema.namespace}.${this.name}`];
     if (this.schema.alias) names.push(`${this.schema.alias}.${this.name}`);
     return names.includes(type);
   }

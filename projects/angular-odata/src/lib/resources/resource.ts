@@ -63,16 +63,6 @@ export class ODataResource<T> {
     return this.pathSegments.last()?.outgoingType();
   }
 
-  enumType() {
-    const type = this.incomingType() ?? this.outgoingType();
-    return type !== undefined ? this.api.enumType<T>(type) : undefined;
-  }
-
-  structuredType() {
-    const type = this.incomingType() ?? this.outgoingType();
-    return type !== undefined ? this.api.structuredType<T>(type) : undefined;
-  }
-
   /**
    * @returns string The incoming type of the return
    */
@@ -85,6 +75,21 @@ export class ODataResource<T> {
    */
   types(): string[] {
     return this.pathSegments.types();
+  }
+
+  callable() {
+    const type = this.outgoingType() ?? this.incomingType();
+    return type !== undefined ? this.api.callable<T>(type) : undefined;
+  }
+
+  enumType() {
+    const type = this.outgoingType() ?? this.incomingType();
+    return type !== undefined ? this.api.enumType<T>(type) : undefined;
+  }
+
+  structuredType() {
+    const type = this.outgoingType() ?? this.incomingType();
+    return type !== undefined ? this.api.structuredType<T>(type) : undefined;
   }
 
   /**
@@ -139,23 +144,18 @@ export class ODataResource<T> {
   //#endregion
 
   isTypeOf(other: ODataResource<any>) {
-    const thisType = this.outgoingType();
-    const otherType = other.outgoingType();
-    const thisStructured = thisType !== undefined ? this.api.structuredType<T>(thisType) : undefined;
-    const otherStructured = otherType !== undefined ? this.api.structuredType<T>(otherType) : undefined;
+    const thisStructured = this.structuredType();
+    const otherStructured = other.structuredType();
     return (
       thisStructured !== undefined &&
       otherStructured !== undefined &&
-      otherType !== undefined &&
-      thisStructured.isTypeOf(otherType)
+      thisStructured.isTypeOf(otherStructured)
     );
   }
 
   isSubtypeOf(other: ODataResource<any>) {
-    const thisType = this.outgoingType();
-    const otherType = other.outgoingType();
-    const thisStructured = thisType !== undefined ? this.api.structuredType<T>(thisType) : undefined;
-    const otherStructured = otherType !== undefined ? this.api.structuredType<T>(otherType) : undefined;
+    const thisStructured = this.structuredType();
+    const otherStructured = other.structuredType();
     return (
       thisStructured !== undefined &&
       otherStructured !== undefined &&
@@ -164,10 +164,8 @@ export class ODataResource<T> {
   }
 
   isSupertypeOf(other: ODataResource<any>) {
-    const thisType = this.outgoingType();
-    const otherType = other.outgoingType();
-    const thisStructured = thisType !== undefined ? this.api.structuredType<T>(thisType) : undefined;
-    const otherStructured = otherType !== undefined ? this.api.structuredType<T>(otherType) : undefined;
+    const thisStructured = this.structuredType();
+    const otherStructured = other.structuredType();
     return (
       thisStructured !== undefined &&
       otherStructured !== undefined &&

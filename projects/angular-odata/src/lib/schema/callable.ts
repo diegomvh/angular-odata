@@ -79,4 +79,8 @@ export class ODataCallable<R> extends ODataParserSchemaElement<R, ODataCallableP
   binding() {
     return this.parser.binding();
   }
+
+  returnType() {
+    return this.parser.returnType(); 
+  }
 }
