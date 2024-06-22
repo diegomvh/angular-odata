@@ -10,6 +10,7 @@ export type ODataSegment = {
   path: string;
   outgoingType?: string;
   incomingType?: string;
+  bindingType?: string;
   key?: any;
   parameters?: any;
 };
@@ -23,9 +24,9 @@ function pathSegmentsBuilder(
   if (segment.name === PathSegment.function) {
     let [path, params] = segment.parameters
       ? buildPathAndQuery({
-          func: { [segment.path]: segment.parameters },
-          escape,
-        })
+        func: { [segment.path]: segment.parameters },
+        escape,
+      })
       : buildPathAndQuery({ func: segment.path, escape });
     if (path.startsWith(PATH_SEPARATOR)) {
       path = path.slice(1);
