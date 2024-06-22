@@ -20,24 +20,29 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     api: ODataApi,
     {
       path,
-      type,
-      returnType,
+      outgoingType,
+      incomingType,
+      bindingType,
       segments,
     }: {
       path: string;
-      type?: string; 
-      returnType?: string; 
+      outgoingType?: string;
+      incomingType?: string;
+      bindingType?: string;
       segments?: ODataPathSegments;
     },
   ) {
     segments = segments ?? new ODataPathSegments();
 
     const segment = segments.add(PathSegment.function, path);
-    if (type !== undefined) {
-      segment.outgoingType(type);
+    if (outgoingType !== undefined) {
+      segment.outgoingType(outgoingType);
     }
-    if (returnType !== undefined) {
-      segment.incomingType(returnType);
+    if (incomingType !== undefined) {
+      segment.incomingType(incomingType);
+    }
+    if (bindingType !== undefined) {
+      segment.bindingType(bindingType);
     }
     return new ODataFunctionResource<P, R>(api, { segments });
   }
@@ -49,8 +54,8 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
     const func = ODataFunctionResource.factory<P, R>(resource.api, {
       path,
-      type: callable?.type(),
-      returnType: callable?.returnType(),
+      outgoingType: callable?.type(),
+      incomingType: callable?.returnType(),
       segments: resource.cloneSegments(),
     });
 

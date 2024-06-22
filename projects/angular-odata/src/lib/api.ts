@@ -199,7 +199,7 @@ export class ODataApi {
    */
   action<P, R>(path: string): ODataActionResource<P, R> {
     const callable = this.findCallableForType<R>(path);
-    return ODataActionResource.factory<P, R>(this, { path, type: callable?.type(), returnType: callable?.returnType() });
+    return ODataActionResource.factory<P, R>(this, { path, outgoingType: callable?.type(), incomingType: callable?.returnType() });
   }
 
   /**
@@ -209,7 +209,7 @@ export class ODataApi {
    */
   function<P, R>(path: string): ODataFunctionResource<P, R> {
     const callable = this.findCallableForType<R>(path);
-    return ODataFunctionResource.factory<P, R>(this, { path, type: callable?.type(), returnType: callable?.returnType() });
+    return ODataFunctionResource.factory<P, R>(this, { path, outgoingType: callable?.type(), incomingType: callable?.returnType() });
   }
 
   callable<T>(name_or_type: string) {
@@ -417,7 +417,7 @@ export class ODataApi {
     // Build Ad-hoc model
     const Model = class extends ODataModel<any> { } as typeof ODataModel;
     // Build Meta
-    Model.meta = this.optionsForType(structured.type(), {structuredType: structured})!;
+    Model.meta = this.optionsForType(structured.type(), { structuredType: structured })!;
     if (Model.meta !== undefined) {
       // Configure
       Model.meta.configure({
@@ -598,7 +598,7 @@ export class ODataApi {
     return parser;
   }
 
-  public optionsForType<T>(type: string, {structuredType, config}: {structuredType?: ODataStructuredType<T>, config?: ModelOptions} = {}) {
+  public optionsForType<T>(type: string, { structuredType, config }: { structuredType?: ODataStructuredType<T>, config?: ModelOptions } = {}) {
     // Strucutred Options
     if (this.memo.forType.options.has(type)) {
       return this.memo.forType.options.get(type) as | ODataModelOptions<T> | undefined;
@@ -608,7 +608,7 @@ export class ODataApi {
     if (!type.startsWith('Edm.')) {
       structuredType = this.findStructuredTypeForType<T>(type) ?? structuredType;
       if (structuredType !== undefined) {
-        meta = ODataModel.buildMetaOptions({config, structuredType});
+        meta = ODataModel.buildMetaOptions({ config, structuredType });
       }
     }
     // Set Options for next time
