@@ -7,6 +7,7 @@ import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
 import { ODataOptions } from './options';
 import { ODataMetadata } from '../../metadata/metadata';
+import { ODataMetadataParser } from '../../metadata';
 
 export class ODataMetadataResource extends ODataResource<any> {
   constructor(api: ODataApi, segments?: ODataPathSegments) {
@@ -33,7 +34,7 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   //#region Shortcuts
   fetch(options?: ODataOptions): Observable<ODataMetadata> {
-    return this.get(options).pipe(map((body: any) => new ODataMetadata(body)));
+    return this.get(options).pipe(map((body: any) => (new ODataMetadataParser(body)).metadata()));
   }
   //#endregion
 }
