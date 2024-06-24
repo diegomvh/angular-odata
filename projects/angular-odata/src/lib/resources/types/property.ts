@@ -242,7 +242,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     res.query((q) => q.top(1));
     return res.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) => ({
-        entity: entities !== null ? entities[0] || null : null,
+        entity: entities !== null && entities.length === 1 ? entities[0] : null,
         annots,
       }))
     );
