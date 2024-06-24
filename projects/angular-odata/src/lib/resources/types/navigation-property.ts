@@ -415,11 +415,13 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOption[];
     }
   ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }> {
-    return this.fetchMany(1, options).pipe(
+    const res = this.clone();
+    res.query((q) => q.top(1));
+    return res.fetch({responseType: 'entities', ...options}).pipe(
       map(({ entities, annots }) => ({
-        entity: entities.length === 1 ? entities[0] : null,
+        entity: entities !== null && entities.length === 1 ? entities[0] : null,
         annots,
-      }))
+      })),
     );
   }
 }

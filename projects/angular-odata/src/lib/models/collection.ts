@@ -357,7 +357,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   } = {}): Observable<M[]> {
     const resource = this.resource();
     if (!resource)
-      return throwError(() => new Error('fetchMany: Resource is null'));
+      return throwError(() => new Error('fetch: Resource is null'));
 
     const obs$ =
       resource instanceof ODataEntitySetResource
@@ -394,7 +394,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   } = {}): Observable<M[]> {
     const resource = this.resource();
     if (!resource)
-      return throwError(() => new Error('fetchMany: Resource is null'));
+      return throwError(() => new Error('fetchAll: Resource is null'));
 
     const obs$ = resource.fetchAll({ withCount, ...options });
 
@@ -442,7 +442,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           reset: true,
           add: add ?? true,
           merge: merge ?? true,
-          remove: remove ?? true
+          remove: remove ?? false
         }) : [];
     });
   }
@@ -459,9 +459,26 @@ export class ODataCollection<T, M extends ODataModel<T>>
     remove?: boolean;
     withCount?: boolean;
   } = {}) {
-    return this.fetchMany(1, { withCount, add, merge, remove, ...options }).pipe(
-      map((models) => models[0])
+    const resource = this.resource();
+    if (!resource)
+      return throwError(() => new Error('fetchOne: Resource is null'));
+
+    resource.query((q) =>
+      remove || this.length == 0 ? q.skip().clear() : q.skip(this.length)
     );
+
+    const obs$ = resource.fetchOne({ withCount, ...options });
+
+    return this._request(obs$, ({ entity, annots }) => {
+      this._annotations = annots;
+      return (entity !== null) ?
+        this.assign([entity], {
+          reset: true,
+          add: add ?? true,
+          merge: merge ?? true,
+          remove: remove ?? false
+        }) : [];
+    });
   }
 
   /**
