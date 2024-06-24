@@ -61,10 +61,17 @@ export class ODataResource<T> {
   }
 
   /**
-   * @returns string The incoming type of the return
+   * @returns string The incoming type of the resource
    */
   incomingType() {
     return this.pathSegments.last()?.incomingType();
+  }
+
+  /**
+   * @returns string The binding type of the resource
+   */
+  bindingType() {
+    return this.pathSegments.last()?.bindingType();
   }
 
   /**
@@ -238,18 +245,19 @@ export class ODataResource<T> {
   private __parser(
     value: any,
     options?: ParserOptions,
-    resourceType?: string
+    resourceType?: string,
+    bindingType?: string
   ): Parser<T> | undefined {
     const dataType =
       options !== undefined && Types.isPlainObject(value)
-        ? ODataHelper[options.version || DEFAULT_VERSION].type(value)
+        ? ODataHelper[options.version ?? DEFAULT_VERSION].type(value)
         : undefined;
     if (dataType !== undefined) {
       // Parser from data type
       return this.api.parserForType<T>(dataType);
     } else if (resourceType !== undefined) {
       // Parser from resource type
-      return this.api.parserForType<T>(resourceType);
+      return this.api.parserForType<T>(resourceType, bindingType);
     }
     return undefined;
   }
@@ -267,8 +275,9 @@ export class ODataResource<T> {
 
   serialize(value: any, options?: ParserOptions): any {
     const resourceType = this.outgoingType();
+    const bindingType = this.bindingType();
     const _s = (value: any, options?: ParserOptions) => {
-      const parser = this.__parser(value, options, resourceType);
+      const parser = this.__parser(value, options, resourceType, bindingType);
       return parser !== undefined ? parser.serialize(value, options) : value;
     };
     return Array.isArray(value)
@@ -349,7 +358,7 @@ export class ODataResource<T> {
     if (type === undefined) {
       type = Strings.uniqueId({ prefix: "Transformation", suffix: "Type" });
     }
-    
+
     // Resolve Schema
     let schema = this.api.findSchemaForType(type);
     if (schema === undefined) {

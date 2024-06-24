@@ -4,7 +4,7 @@ import { EntityKey } from '../resource';
 import { ODataPathSegments, ODataSegment } from './segments';
 
 export class SegmentHandler {
-  constructor(private segment: ODataSegment) {}
+  constructor(private segment: ODataSegment) { }
   get name() {
     return this.segment.name;
   }
@@ -15,6 +15,10 @@ export class SegmentHandler {
   incomingType(value?: string) {
     if (value !== undefined) this.segment.incomingType = value;
     return this.segment.incomingType;
+  }
+  bindingType(value?: string) {
+    if (value !== undefined) this.segment.bindingType = value;
+    return this.segment.bindingType;
   }
   path(value?: string) {
     if (value !== undefined) this.segment.path = value;
@@ -43,7 +47,7 @@ export class SegmentHandler {
 }
 
 export class ODataPathSegmentsHandler<T> {
-  constructor(protected segments: ODataPathSegments) {}
+  constructor(protected segments: ODataPathSegments) { }
   entitySet() {
     return this.segments.get(PathSegment.entitySet);
   }
