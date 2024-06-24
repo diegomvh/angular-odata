@@ -477,7 +477,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           add: add ?? true,
           merge: merge ?? true,
           remove: remove ?? false
-        }) : [];
+        })[0] : null;
     });
   }
 
