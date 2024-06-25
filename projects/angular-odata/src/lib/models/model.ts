@@ -19,7 +19,6 @@ import { Objects, Strings, Types } from '../utils';
 import { ODataCollection } from './collection';
 import {
   INCLUDE_DEEP,
-  INCLUDE_SHALLOW,
   ModelOptions,
   ODataModelField,
   ODataModelOptions,
@@ -64,7 +63,7 @@ export class ODataModel<T> {
 
   static buildMetaOptions<T>({config, structuredType}: { config?: ModelOptions; structuredType: ODataStructuredType<T>; }) {
   if (config === undefined) {
-    let fields = structuredType
+    const fields = structuredType
       .fields({ include_navigation: true, include_parents: true })
       .reduce((acc, field) => {
         let name = field.name;
@@ -431,12 +430,11 @@ export class ODataModel<T> {
       silent?: boolean;
     } = {}
   ) {
-    return this._meta.assign(this, entity, { add, merge, remove, reset, silent, reparent });
+    return this._meta.assign(this, entity, { add, merge, remove, reset, silent, reparent }) as this;
   }
 
   clone<M extends ODataModel<T>>() {
-    let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toEntity(INCLUDE_SHALLOW), {
+    return new (<typeof ODataModel>this.constructor)(this.toEntity(INCLUDE_DEEP), {
       resource: this.resource() as ODataResource<T>,
       annots: this.annots(),
     }) as M;
@@ -460,7 +458,7 @@ export class ODataModel<T> {
   }: ODataOptions & {
     options?: ODataOptions;
   } = {}): Observable<this> {
-    let resource = this.resource();
+    const resource = this.resource();
     if (!resource)
       return throwError(() => new Error('fetch: Resource is null'));
 
@@ -477,8 +475,7 @@ export class ODataModel<T> {
     }
     return this._request(obs$, ({ entity, annots }) => {
       this._annotations = annots;
-      this.assign(annots.attributes(entity || {}, 'full'), { reset: true });
-      return this;
+      return this.assign(entity ?? {}, { reset: true });
     });
   }
 
@@ -493,7 +490,7 @@ export class ODataModel<T> {
     validate?: boolean;
     options?: ODataOptions;
   } = {}): Observable<this> {
-    let resource = this.resource();
+    const resource = this.resource();
     if (!resource) return throwError(() => new Error('save: Resource is null'));
     if (
       !(
@@ -540,7 +537,7 @@ export class ODataModel<T> {
       include_concurrency: true,
       include_navigation: navigation,
     });
-    let obs$ =
+    const obs$ =
       method === 'create'
         ? resource.create(_entity as T, options)
         : method === 'modify'
@@ -554,14 +551,7 @@ export class ODataModel<T> {
           });
     return this._request(obs$, ({ entity, annots }) => {
       this._annotations = annots;
-      this.assign(
-        annots.attributes(
-          entity || (_entity as { [name: string]: any }),
-          'full'
-        ),
-        { reset: true }
-      );
-      return this;
+      return this.assign(entity ?? (_entity as { [name: string]: any }), { reset: true });
     });
   }
 
@@ -569,8 +559,8 @@ export class ODataModel<T> {
     ...options
   }: ODataOptions & {
     options?: ODataOptions;
-  } = {}): Observable<this> {
-    let resource = this.resource();
+  } = {}) {
+    const resource = this.resource();
     if (!resource)
       return throwError(() => new Error('destroy: Resource is null'));
 
@@ -591,7 +581,6 @@ export class ODataModel<T> {
         () => new Error("destroy: Can't destroy model without key")
       );
 
-    const _entity = this.toEntity({ field_mapping: true }) as T;
     const obs$ = resource.destroy({ etag: this.annots().etag, ...options });
     return this._request(obs$, (resp) => {
       this.events$.trigger(ODataModelEventType.Destroy);
@@ -622,9 +611,9 @@ export class ODataModel<T> {
   }
 
   encode<E>(name: keyof T, options?: ParserOptions) {
-    let value = (<any>this)[name];
+    const value = (<any>this)[name];
     if (value === undefined) return undefined;
-    let field = this._meta.findField<E>(name);
+    const field = this._meta.findField<E>(name);
     return field ? field.encode(value, options) : value;
   }
 
@@ -803,14 +792,14 @@ export class ODataModel<T> {
       throw Error(`fetchAttribute: Can't find attribute ${name as string}`);
 
     if (field.isStructuredType() && field.collection) {
-      let collection = field.collectionFactory<P>({ parent: this });
+      const collection = field.collectionFactory<P>({ parent: this });
       collection.query((q) => q.restore(options as ODataQueryArguments<P>));
       return this._request(collection.fetch(options), () => {
         this.assign({ [name]: collection });
         return collection;
       });
     } else if (field.isStructuredType()) {
-      let model = field.modelFactory<P>({ parent: this });
+      const model = field.modelFactory<P>({ parent: this });
       model.query((q) => q.restore(options as ODataQueryArguments<P>));
       return this._request(model.fetch(options), () => {
         this.assign({ [name]: model });
@@ -887,10 +876,7 @@ export class ODataModel<T> {
     } else if (model === null) {
       obs$ = reference.unset({ etag, ...options });
     }
-    return this._request(obs$, (model) => {
-      this.assign({ [name]: model });
-      return this;
-    });
+    return this._request(obs$, (model) => this.assign({ [name]: model }));
   }
 
   setReference<N>(
@@ -923,10 +909,7 @@ export class ODataModel<T> {
     } else if (model === null) {
       obs$ = reference.unset({ etag, ...options });
     }
-    return this._request(obs$, (model) => {
-      this.assign({ [name]: model });
-      return this;
-    });
+    return this._request(obs$, (model) => this.assign({ [name]: model }));
   }
 
   //#region Model Identity

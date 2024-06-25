@@ -1,5 +1,5 @@
 import { forkJoin, Observable, of, throwError } from 'rxjs';
-import { finalize, map, switchMap } from 'rxjs/operators';
+import { defaultIfEmpty, finalize, map, switchMap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from '../constants';
 import { ODataHelper } from '../helper';
 import {
@@ -18,7 +18,6 @@ import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
   INCLUDE_DEEP,
-  INCLUDE_SHALLOW,
   ModelFieldOptions,
   ODataModelEntry,
   ODataModelEvent,
@@ -323,8 +322,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   clone<C extends ODataCollection<T, M>>() {
-    const Ctor = <typeof ODataCollection>this.constructor;
-    return new Ctor(this.toEntities(INCLUDE_SHALLOW), {
+    return new (<typeof ODataCollection>this.constructor)(this.toEntities(INCLUDE_DEEP), {
       resource: this.resource(),
       annots: this.annots(),
     }) as C;
@@ -494,7 +492,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }: ODataOptions & {
     relModel?: boolean;
     method?: 'update' | 'modify';
-  } = {}): Observable<this> {
+  } = {}): Observable<M[]> {
     const resource = this.resource();
     if (resource instanceof ODataPropertyResource)
       return throwError(
@@ -531,59 +529,49 @@ export class ODataCollection<T, M extends ODataModel<T>>
         toUpdateEntity.push(model);
       }
     });
-    if (
-      toDestroyEntity.length > 0 ||
-      toRemoveReference.length > 0 ||
-      toDestroyContained.length > 0 ||
-      toCreateEntity.length > 0 ||
-      toAddReference.length > 0 ||
-      toCreateContained.length > 0 ||
-      toUpdateEntity.length > 0 ||
-      toUpdateContained.length > 0
-    ) {
-      const obs$ = forkJoin([
-        ...toDestroyEntity.map((m) => m.asEntity((e) => e.destroy(options))),
-        ...toRemoveReference.map((m) =>
-          (this._model.meta.api.options.deleteRefBy === 'path'
-            ? (resource as ODataNavigationPropertyResource<T>).key(m.key())
-            : (resource as ODataNavigationPropertyResource<T>)
+    const obs$ = forkJoin([
+      ...toDestroyEntity.map((m) => m.asEntity((e) => e.destroy(options))),
+      ...toRemoveReference.map((m) =>
+        (this._model.meta.api.options.deleteRefBy === 'path'
+          ? (resource as ODataNavigationPropertyResource<T>).key(m.key())
+          : (resource as ODataNavigationPropertyResource<T>)
+        )
+          .reference()
+          .remove(
+            this._model.meta.api.options.deleteRefBy === 'id'
+              ? (m.asEntity((e) => e.resource()) as ODataEntityResource<T>)
+              : undefined,
+            options
           )
-            .reference()
-            .remove(
-              this._model.meta.api.options.deleteRefBy === 'id'
-                ? (m.asEntity((e) => e.resource()) as ODataEntityResource<T>)
-                : undefined,
-              options
-            )
-        ),
-        ...toDestroyContained.map((m) => m.destroy(options)),
-        ...toCreateEntity.map((m) =>
-          m.asEntity((e) => e.save({ method: 'create', ...options }))
-        ),
-        ...toAddReference.map((m) =>
-          (resource as ODataNavigationPropertyResource<T>)
-            .reference()
-            .add(
-              m.asEntity((e) => e.resource()) as ODataEntityResource<T>,
-              options
-            )
-        ),
-        ...toCreateContained.map((m) =>
-          m.save({ method: 'create', ...options })
-        ),
-        ...toUpdateEntity.map((m) =>
-          m.asEntity((e) => e.save({ method, ...options }))
-        ),
-        ...toUpdateContained.map((m) => m.save({ method, ...options })),
-      ]);
-      return this._request(obs$, () => {
-        this._entries = this._entries
-          .filter((entry) => entry.state !== ODataModelState.Removed)
-          .map((entry) => ({ ...entry, state: ODataModelState.Unchanged }));
-        return this;
-      });
-    }
-    return of(this);
+      ),
+      ...toDestroyContained.map((m) => m.destroy(options)),
+      ...toCreateEntity.map((m) =>
+        m.asEntity((e) => e.save({ method: 'create', ...options }))
+      ),
+      ...toAddReference.map((m) =>
+        (resource as ODataNavigationPropertyResource<T>)
+          .reference()
+          .add(
+            m.asEntity((e) => e.resource()) as ODataEntityResource<T>,
+            options
+          )
+      ),
+      ...toCreateContained.map((m) =>
+        m.save({ method: 'create', ...options })
+      ),
+      ...toUpdateEntity.map((m) =>
+        m.asEntity((e) => e.save({ method, ...options }))
+      ),
+      ...toUpdateContained.map((m) => m.save({ method, ...options })),
+    ]).pipe(
+      defaultIfEmpty(null)
+    );
+    return this._request(obs$, () => {
+      this._entries = this._entries
+        .filter((entry) => entry.state !== ODataModelState.Removed)
+        .map((entry) => ({ ...entry, state: ODataModelState.Unchanged }));
+      return this.models();
+    });
   }
 
   private _addServer(model: M, options?: ODataOptions): Observable<M> {
@@ -635,7 +623,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let entry = this._findEntry(model);
     if (entry !== undefined && entry.state !== ODataModelState.Removed) {
       if (merge) {
-        entry.model.assign(model.toEntity() as T);
+        entry.model.assign(model.toEntity(INCLUDE_DEEP) as T);
       }
       return entry.model;
     }
@@ -1050,7 +1038,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
           (resp) => resp
         );
       case 'model':
-        return this._request(func.callModel(params, options), (resp) => resp);
+        return this._request(
+          func.callModel(params, options), 
+          (resp) => resp
+        );
       case 'collection':
         return this._request(
           func.callCollection(params, options),
@@ -1087,7 +1078,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
           (resp) => resp
         );
       case 'model':
-        return this._request(action.callModel(params, options), (resp) => resp);
+        return this._request(
+          action.callModel(params, options), 
+          (resp) => resp
+        );
       case 'collection':
         return this._request(
           action.callCollection(params, options),

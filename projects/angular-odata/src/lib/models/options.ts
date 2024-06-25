@@ -1548,12 +1548,10 @@ export class ODataModelOptions<T> {
   ) {
     const changes: string[] = [];
 
-    // The model 
-    const model = self as any;
     // Update annotations
-    model.annots().update(entity);
+    self.annots().update(entity);
     // Update attributes
-    const attrs = model.annots().attributes(entity, 'full');
+    const attrs = self.annots().attributes(entity, 'full');
     Object.entries(attrs)
       .filter(([, value]) => value !== undefined) // Filter undefined
       .forEach(([key, value]) => {
@@ -1566,8 +1564,8 @@ export class ODataModelOptions<T> {
           }
         } else {
           // Basic assignment
-          const current = model[key];
-          model[key] = value;
+          const current = (<any>self)[key];
+          (<any>self)[key] = value;
           if (current !== value) changes.push(key);
         }
       });
@@ -1578,6 +1576,7 @@ export class ODataModelOptions<T> {
         { options: { changes } }
       );
     }
+    return self;
   }
 
   static isModel(obj: any) {
