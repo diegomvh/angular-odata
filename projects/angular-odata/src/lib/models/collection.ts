@@ -936,7 +936,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
       silent?: boolean;
     } = {}
   ) {
-    const Model = this._model;
     const offset = remove ? 0 : this.length;
 
     const models: M[] = [];
@@ -982,7 +981,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
     }
 
-    if (this.models().some((m, i) => m !== models[i])) {
+    if (this.models().slice(offset).some((m, i) => m !== models[i])) {
       models.forEach((m, i) => this._moveModel(m, i));
       this.events$.trigger(ODataModelEventType.Sort);
     }
