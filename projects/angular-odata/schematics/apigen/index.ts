@@ -1,11 +1,14 @@
 import { strings, normalize } from '@angular-devkit/core';
-import { apply, SchematicContext, chain, Tree, url, Source, move, template, mergeWith, MergeStrategy } from '@angular-devkit/schematics';
+import { apply, SchematicContext, chain, Tree, url, move, template, mergeWith, MergeStrategy } from '@angular-devkit/schematics';
 
 import { Schema as ApiGenSchema } from './schema';
 import { ODataMetadataParser } from './metadata/parser';
 
 export function apigen(options: ApiGenSchema) {
   return (tree: Tree, context: SchematicContext) => {
+    const schemaSourceTemplate = url("./files/schema");
+    const configSourceTemplate = url("./files/config");
+    const moduleSourceTemplate = url("./files/module");
     const enumSourceTemplate = url("./files/enum");
     const entitySourceTemplate = url("./files/entity");
     const complexSourceTemplate = url("./files/complex");
