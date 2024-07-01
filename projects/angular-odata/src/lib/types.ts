@@ -209,6 +209,15 @@ export interface Cache {
   get<T>(key: string, ...opts: any[]): T | undefined;
 }
 
+export type Api = {
+    enums?: {[name: string]: any}
+    complexes?: {[name: string]: any}
+    entities?: {[name: string]: any}
+    services?: {[name: string]: { new (...params: any[]): any; }}
+    models?: {[name: string]: { new (...params: any[]): any; }};
+    collections?: {[name: string]: { new (...params: any[]): any; }};
+}
+
 //#region Configs
 export type ApiConfig = {
   serviceRootUrl: string;
@@ -286,7 +295,7 @@ export type StructuredTypeConfig<T> = {
   fields?: { [P in keyof T]?: StructuredTypeFieldConfig };
 };
 
-export type Parameter = {
+export type ParameterConfig = {
   type: string;
   nullable?: boolean;
   collection?: boolean;
@@ -297,7 +306,7 @@ export type CallableConfig = {
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
-  parameters?: { [name: string]: Parameter };
+  parameters?: { [name: string]: ParameterConfig };
   return?: { type: string; collection?: boolean };
 };
 export type EntitySetConfig = {
