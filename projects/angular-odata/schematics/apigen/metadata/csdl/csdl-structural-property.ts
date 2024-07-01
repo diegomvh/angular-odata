@@ -1,4 +1,3 @@
-import { toTypescriptType } from "../../utils";
 import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
@@ -13,14 +12,6 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
     super(annotations);
     this.collection = type.startsWith("Collection(");
     this.type = this.collection ? type.substring(11, type.length - 1) : type;
-  }
-
-  tsType() {
-    return toTypescriptType(this.type);
-  }
-
-  tsName() {
-    return this.name; 
   }
 }
 

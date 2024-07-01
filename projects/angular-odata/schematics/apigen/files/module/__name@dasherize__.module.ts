@@ -1,3 +1,8 @@
-export enum <%= classify(name) %>Module {<% for(let member of members) { %>
-  <%= member.name %> = <%= member.value %>,<% } %>
-}
+import { NgModule } from '@angular/core';
+
+@NgModule({
+  providers: [{<% for(let entitySet of entitySets) { %>
+  <%= entitySet.name %>Service,<% } %>
+  ]
+})
+export class <%= classify(name) %>Module { }
