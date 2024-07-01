@@ -3,7 +3,7 @@ import {
   CallableConfig,
   NONE_PARSER,
   ParserOptions,
-  Parameter,
+  ParameterConfig,
   Parser,
 } from '../../types';
 import { ODataEnumTypeParser } from './enum-type';
@@ -17,7 +17,7 @@ export class ODataParameterParser<T> {
   nullable?: boolean;
   parserOptions?: ParserOptions;
 
-  constructor(name: string, parameter: Parameter) {
+  constructor(name: string, parameter: ParameterConfig) {
     this.name = name;
     this.type = parameter.type;
     this.parser = NONE_PARSER;
@@ -101,7 +101,7 @@ export class ODataCallableParser<R> implements Parser<R> {
     this.return = config.return;
     this.parser = NONE_PARSER;
     this.parameters = Object.entries(config.parameters || []).map(
-      ([name, p]) => new ODataParameterParser(name, p as Parameter),
+      ([name, p]) => new ODataParameterParser(name, p as ParameterConfig),
     );
   }
 

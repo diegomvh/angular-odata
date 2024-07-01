@@ -1,4 +1,4 @@
-import { CallableConfig, Parameter } from "../../types";
+import { CallableConfig, ParameterConfig } from "../../types";
 import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
 
 export class CsdlFunction {
@@ -74,7 +74,7 @@ export class CsdlParameter extends CsdlAnnotable {
     super(annotations);
   }
 
-  toConfig(): Parameter {
+  toConfig(): ParameterConfig {
     return {
       type: this.type,
       nullable: this.nullable,
