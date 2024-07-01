@@ -16,6 +16,11 @@ export class CsdlStructuredType extends CsdlAnnotable {
   ) {
     super(annotations);
   }
+
+  type: string = '';
+  setNamespace(ns: string) {
+    this.type = `${ns}.${this.name}`;
+  }
 }
 
 export class CsdlComplexType extends CsdlStructuredType {

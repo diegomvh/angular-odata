@@ -2,6 +2,7 @@ import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
 import { CsdlNavigationPropertyBinding } from './csdl-navigation-property-binding';
 
 export class CsdlSingleton extends CsdlAnnotable {
+  entityType: string;
   constructor(
     public name: string,
     public type: string,
@@ -9,5 +10,6 @@ export class CsdlSingleton extends CsdlAnnotable {
     annotations?: CsdlAnnotation[],
   ) {
     super(annotations);
+    this.entityType = this.type;
   }
 }

@@ -10,6 +10,11 @@ export class CsdlEnumType extends CsdlAnnotable {
   ) {
     super(annotations)
   }
+
+  type: string = '';
+  setNamespace(ns: string) {
+    this.type = `${ns}.${this.name}`;
+  }
 }
 
 export class CsdlMember extends CsdlAnnotable {
