@@ -209,15 +209,6 @@ export interface Cache {
   get<T>(key: string, ...opts: any[]): T | undefined;
 }
 
-export type Api = {
-    enums?: {[name: string]: any}
-    complexes?: {[name: string]: any}
-    entities?: {[name: string]: any}
-    services?: {[name: string]: { new (...params: any[]): any; }}
-    models?: {[name: string]: { new (...params: any[]): any; }};
-    collections?: {[name: string]: { new (...params: any[]): any; }};
-}
-
 //#region Configs
 export type ApiConfig = {
   serviceRootUrl: string;
