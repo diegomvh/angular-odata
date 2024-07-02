@@ -171,29 +171,6 @@ export class ODataClient {
     //return this.injector.get(this.settings!.serviceForEntityType(type));
     return undefined;
   }
-
-  enumTypeByName<T>(name: string) {
-    return this.settings!.enumTypeByName<T>(name);
-  }
-  structuredTypeByName<T>(name: string) {
-    return this.settings!.structuredTypeByName<T>(name);
-  }
-  callableByName<T>(name: string, bindingType?: string) {
-    return this.settings!.callableByName<T>(name, bindingType);
-  }
-  entitySetByName(name: string) {
-    return this.settings!.entitySetByName(name);
-  }
-  modelByName(name: string): typeof ODataModel {
-    return this.settings!.modelByName(name);
-  }
-  collectionByName(name: string): typeof ODataCollection {
-    return this.settings!.collectionByName(name);
-  }
-  serviceByName(name: string): ODataEntityService<any> | undefined {
-    //return this.injector.get(this.settings!.serviceByName(name));
-    return undefined;
-  }
   //#endregion
 
   //#region API Resource Proxy Methods
