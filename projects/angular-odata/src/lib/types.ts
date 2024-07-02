@@ -287,7 +287,7 @@ export type StructuredTypeConfig<T> = {
   fields?: { [P in keyof T]?: StructuredTypeFieldConfig };
 };
 
-export type Parameter = {
+export type ParameterConfig = {
   type: string;
   nullable?: boolean;
   collection?: boolean;
@@ -298,7 +298,7 @@ export type CallableConfig = {
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
-  parameters?: { [name: string]: Parameter };
+  parameters?: { [name: string]: ParameterConfig };
   return?: { type: string; collection?: boolean };
 };
 
