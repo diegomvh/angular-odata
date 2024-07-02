@@ -178,9 +178,9 @@ export class ODataApi {
    * @param path Name of the singleton
    * @returns
    */
-  singleton<T>(type: string) {
-    const singleton = this.findEntitySetForType(type);
-    return ODataSingletonResource.factory<T>(this, { path: singleton?.name ?? type, type: singleton?.entityType });
+  singleton<T>(name: string) {
+    const singleton = this.findSingletonByName(name);
+    return ODataSingletonResource.factory<T>(this, { path: singleton?.name ?? name, type: singleton?.entityType });
   }
 
   /**
@@ -188,9 +188,9 @@ export class ODataApi {
    * @param path Name of the entity set
    * @returns
    */
-  entitySet<T>(type: string): ODataEntitySetResource<T> {
-    const entitySet = this.findEntitySetForType(type);
-    return ODataEntitySetResource.factory<T>(this, { path: entitySet?.name ?? type, type: entitySet?.entityType });
+  entitySet<T>(name: string): ODataEntitySetResource<T> {
+    const entitySet = this.findEntitySetByName(name);
+    return ODataEntitySetResource.factory<T>(this, { path: entitySet?.name ?? name, type: entitySet?.entityType });
   }
 
   /**
@@ -400,6 +400,20 @@ export class ODataApi {
     this.memo.entitySets.set(type, entitySet);
     return entitySet;
   }
+
+  public findEntitySetByName(name: string) {
+    if (this.memo.entitySets.has(name)) {
+      return this.memo.entitySets.get(name) as ODataEntitySet | undefined;
+    }
+    const schema = this.schemas
+      .reduce(
+        (acc, schema) => [...acc, ...schema.entitySets],
+        <ODataEntitySet[]>[]
+      )
+      .find((e) => e.name === name);
+    this.memo.entitySets.set(name, schema);
+    return schema;
+  }
   //#endregion
 
   //#region Singletons
@@ -412,6 +426,20 @@ export class ODataApi {
     const singletons = this.findSchemaForType(type)?.findSingletonForType(type);
     this.memo.singletons.set(type, singletons);
     return singletons;
+  }
+
+  public findSingletonByName(name: string) {
+    if (this.memo.singletons.has(name)) {
+      return this.memo.singletons.get(name) as ODataEntitySet | undefined;
+    }
+    const schema = this.schemas
+      .reduce(
+        (acc, schema) => [...acc, ...schema.entitySets],
+        <ODataEntitySet[]>[]
+      )
+      .find((e) => e.name === name);
+    this.memo.singletons.set(name, schema);
+    return schema;
   }
   //#endregion
 
