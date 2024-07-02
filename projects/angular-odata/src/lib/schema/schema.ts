@@ -6,6 +6,7 @@ import { ODataCallable } from './callable';
 import { ODataEntityContainer } from './entity-container';
 import { ODataEntitySet } from './entity-set';
 import { ODataEnumType } from './enum-type';
+import { ODataSingleton } from './singleton';
 import { ODataStructuredType } from './structured-type';
 
 export class ODataSchema extends ODataAnnotatable {
@@ -47,6 +48,13 @@ export class ODataSchema extends ODataAnnotatable {
     return this.containers.reduce(
       (acc, container) => [...acc, ...container.entitySets],
       [] as ODataEntitySet[],
+    );
+  }
+
+  get singletons() {
+    return this.containers.reduce(
+      (acc, container) => [...acc, ...container.singletons],
+      [] as ODataSingleton[],
     );
   }
 
@@ -93,6 +101,10 @@ export class ODataSchema extends ODataAnnotatable {
 
   public findEntitySetForType(type: string) {
     return this.entitySets.find((e) => e.isTypeOf(type));
+  }
+
+  public findSingletonForType(type: string) {
+    return this.singletons.find((e) => e.isTypeOf(type));
   }
   //#endregion
 
