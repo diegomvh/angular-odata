@@ -244,6 +244,7 @@ export type EntityContainerConfig = {
   name: string;
   annotations?: AnnotationConfig[];
   entitySets?: EntitySetConfig[];
+  singletons?: SingletonConfig[];
 };
 
 export type EnumTypeFieldConfig<E> = {
@@ -300,9 +301,17 @@ export type CallableConfig = {
   parameters?: { [name: string]: Parameter };
   return?: { type: string; collection?: boolean };
 };
+
 export type EntitySetConfig = {
   name: string;
   entityType: string;
+  service: { new (...params: any[]): any };
+  annotations?: AnnotationConfig[];
+};
+
+export type SingletonConfig = {
+  name: string;
+  type: string;
   service: { new (...params: any[]): any };
   annotations?: AnnotationConfig[];
 };
