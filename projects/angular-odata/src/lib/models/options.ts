@@ -814,7 +814,7 @@ export class ODataModelOptions<T> {
   }
 
   isTypeOf(type: string) {
-    return this.structuredType.isTypeOf(type);
+    return this.structuredType.type() === type;
   }
 
   isModelFor(entity: T | { [name: string]: any }) {
@@ -866,8 +866,8 @@ export class ODataModelOptions<T> {
         optionsForType: (t: string) => this.api.optionsForType(t),
         modelForType: (t: string) => this.api.modelForType(t),
         collectionForType: (t: string) => this.api.collectionForType(t),
-        enumForType: (t: string) => this.api.findEnumTypeForType(t),
-        structuredForType: (t: string) => this.api.findStructuredTypeForType(t),
+        enumForType: (t: string) => this.api.findEnumType(t),
+        structuredForType: (t: string) => this.api.findStructuredType(t),
         concurrency,
         options,
       });
@@ -948,8 +948,8 @@ export class ODataModelOptions<T> {
       optionsForType: (t: string) => this.api.optionsForType(t),
       modelForType: (t: string) => this.api.modelForType(t),
       collectionForType: (t: string) => this.api.collectionForType(t),
-      enumForType: (t: string) => this.api.findEnumTypeForType(t),
-      structuredForType: (t: string) => this.api.findStructuredTypeForType(t),
+      enumForType: (t: string) => this.api.findEnumType(t),
+      structuredForType: (t: string) => this.api.findStructuredType(t),
       options: this.api.options,
       concurrency: false,
     });

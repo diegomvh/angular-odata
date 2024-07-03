@@ -59,7 +59,7 @@ export class ODataSettings {
   //#region Configs shortcuts
   public enumTypeForType<T>(type: string) {
     let values = this.apis
-      .map((api) => api.findEnumTypeForType<T>(type))
+      .map((api) => api.findEnumType<T>(type))
       .filter((e) => e);
     if (values.length === 0) throw Error(`No Enum for type ${type} was found`);
     if (values.length > 1)
@@ -69,7 +69,7 @@ export class ODataSettings {
 
   public structuredTypeForType<T>(type: string) {
     let values = this.apis
-      .map((api) => api.findStructuredTypeForType<T>(type))
+      .map((api) => api.findStructuredType<T>(type))
       .filter((e) => e);
     if (values.length === 0)
       throw Error(`No Structured for type ${type} was found`);
@@ -80,7 +80,7 @@ export class ODataSettings {
 
   public callableForType<T>(type: string, bindingType?: string) {
     let values = this.apis
-      .map((api) => api.findCallableForType<T>(type, bindingType))
+      .map((api) => api.findCallable<T>(type, bindingType))
       .filter((e) => e);
     if (values.length === 0)
       throw Error(`No Callable for type ${type} was found`);
@@ -91,7 +91,7 @@ export class ODataSettings {
 
   public entitySetForType(type: string) {
     let values = this.apis
-      .map((api) => api.findEntitySetForType(type))
+      .map((api) => api.findEntitySet(type))
       .filter((e) => e);
     if (values.length === 0)
       throw Error(`No EntitySet for type ${type} was found`);
@@ -113,7 +113,7 @@ export class ODataSettings {
 
   public modelForType(type: string) {
     let values = this.apis
-      .map((api) => api.findModelForType(type))
+      .map((api) => api.findModel(type))
       .filter((e) => e);
     if (values.length === 0) throw Error(`No Model for type ${type} was found`);
     if (values.length > 1)
@@ -123,7 +123,7 @@ export class ODataSettings {
 
   public collectionForType(type: string) {
     let values = this.apis
-      .map((api) => api.findCollectionForType(type))
+      .map((api) => api.findCollection(type))
       .filter((e) => e);
     if (values.length === 0)
       throw Error(`No Collection for type ${type} was found`);

@@ -39,7 +39,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
     options: ParserOptions;
   }) {
     if (this.base) {
-      const parent = this.api.findStructuredTypeForType(
+      const parent = this.api.findStructuredType(
         this.base
       ) as ODataStructuredType<any>;
       parent.children.push(this);

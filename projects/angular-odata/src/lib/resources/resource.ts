@@ -359,16 +359,15 @@ export class ODataResource<T> {
       type = Strings.uniqueId({ prefix: "Transformation", suffix: "Type" });
     }
 
-    // Resolve Schema
-    let schema = this.api.findSchemaForType(type);
-    if (schema === undefined) {
-      const namespace = type.substring(0, type.lastIndexOf(".")) ?? this.api.name!;
-      schema = this.api.createSchema({ namespace });
-    }
-
     // Resolve Structured Type
-    let structuredType = schema.findStructuredTypeForType<R>(type);
+    let structuredType = this.api.findStructuredType<R>(type);
     if (structuredType === undefined) {
+      // Resolve Schema
+      let schema = this.api.findSchema(type);
+      if (schema === undefined) {
+        const namespace = type.substring(0, type.lastIndexOf(".")) ?? this.api.name!;
+        schema = this.api.createSchema({ namespace });
+      }
       const name = type.substring(type.lastIndexOf("."));
       structuredType = schema.createStructuredType({ name, fields });
     }

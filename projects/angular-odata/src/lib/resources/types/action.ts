@@ -48,7 +48,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
   static fromResource<P, R>(resource: ODataResource<any>, path: string) {
     const baseType = resource.outgoingType();
-    const callable = resource.api.findCallableForType<R>(path, baseType);
+    const callable = resource.api.findCallable<R>(path, baseType);
     const bindingType = callable?.binding()?.type;
 
     const action = ODataActionResource.factory<P, R>(resource.api, {
@@ -61,7 +61,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
     // Switch entitySet to binding type if available
     if (bindingType !== undefined && bindingType !== baseType) {
-      let entitySet = resource.api.findEntitySetForType(bindingType);
+      let entitySet = resource.api.findEntitySet(bindingType);
       if (entitySet !== undefined) {
         action.segment((s) => s.entitySet().path(entitySet!.name));
       }

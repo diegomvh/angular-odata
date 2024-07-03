@@ -47,7 +47,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
         value,
-        this.api.findStructuredTypeForType<T>(types[index])
+        this.api.findStructuredType<T>(types[index])
       )
     );
     entity.segment((s) => s.keys(keys));
@@ -81,7 +81,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const thisType = this.incomingType();
     const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
     // Downcast
-    const castSchema = baseSchema?.findChildSchema((s) => s.isTypeOf(type));
+    const castSchema = baseSchema?.findChildSchema((s) => s.type() === type);
     if (
       castSchema !== undefined &&
       baseSchema !== undefined &&

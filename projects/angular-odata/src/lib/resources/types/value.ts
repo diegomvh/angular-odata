@@ -34,7 +34,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
 
     // Switch entitySet to binding type if available
     if (baseSchema !== undefined && baseSchema.type() !== baseType) {
-      let entitySet = resource.api.findEntitySetForType(baseSchema.type());
+      let entitySet = resource.api.findEntitySet(baseSchema.type());
       if (entitySet !== undefined) {
         value.segment((s) => s.entitySet().path(entitySet!.name));
       }

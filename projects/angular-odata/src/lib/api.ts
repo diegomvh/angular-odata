@@ -179,8 +179,8 @@ export class ODataApi {
    * @returns
    */
   singleton<T>(name: string) {
-    const singleton = this.findSingletonByName(name);
-    return ODataSingletonResource.factory<T>(this, { path: singleton?.name ?? name, type: singleton?.entityType });
+    const singleton = this.findSingleton(name);
+    return ODataSingletonResource.factory<T>(this, { path: singleton?.name ?? name, type: singleton?.singletonType });
   }
 
   /**
@@ -189,7 +189,7 @@ export class ODataApi {
    * @returns
    */
   entitySet<T>(name: string): ODataEntitySetResource<T> {
-    const entitySet = this.findEntitySetByName(name);
+    const entitySet = this.findEntitySet(name);
     return ODataEntitySetResource.factory<T>(this, { path: entitySet?.name ?? name, type: entitySet?.entityType });
   }
 
@@ -199,7 +199,7 @@ export class ODataApi {
    * @returns ODataActionResource
    */
   action<P, R>(path: string): ODataActionResource<P, R> {
-    const callable = this.findCallableForType<R>(path);
+    const callable = this.findCallable<R>(path);
     return ODataActionResource.factory<P, R>(this, { path, outgoingType: callable?.type(), incomingType: callable?.returnType() });
   }
 
@@ -209,20 +209,20 @@ export class ODataApi {
    * @returns ODataFunctionResource
    */
   function<P, R>(path: string): ODataFunctionResource<P, R> {
-    const callable = this.findCallableForType<R>(path);
+    const callable = this.findCallable<R>(path);
     return ODataFunctionResource.factory<P, R>(this, { path, outgoingType: callable?.type(), incomingType: callable?.returnType() });
   }
 
   callable<T>(type: string) {
-    return this.findCallableForType<T>(type);
+    return this.findCallable<T>(type);
   }
 
   enumType<T>(type: string) {
-    return this.findEnumTypeForType<T>(type);
+    return this.findEnumType<T>(type);
   }
 
   structuredType<T>(type: string) {
-    return this.findStructuredTypeForType<T>(type);
+    return this.findStructuredType<T>(type);
   }
 
   //request(req: ODataRequest<any>): Observable<any> {
@@ -338,7 +338,7 @@ export class ODataApi {
     return schema;
   }
 
-  public findSchemaForType(type: string) {
+  public findSchema(type: string) {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
     if (schemas.length === 0) return undefined;
     if (schemas.length === 1) return schemas[0];
@@ -348,107 +348,134 @@ export class ODataApi {
   }
 
   //#region EnumTypes
-  public findEnumTypeForType<T>(type: string) {
-    if (this.memo.enumTypes.has(type)) {
-      return this.memo.enumTypes.get(type) as ODataEnumType<T> | undefined;
+  public findEnumType<T>(value: string) {
+    if (this.memo.enumTypes.has(value)) {
+      return this.memo.enumTypes.get(value) as ODataEnumType<T> | undefined;
     }
-    const enumType = this.findSchemaForType(type)?.findEnumTypeForType<T>(type);
-    this.memo.enumTypes.set(type, enumType);
+    const enumTypes = this.schemas
+      .reduce(
+        (acc, schema) => [...acc, ...schema.enums],
+        <ODataEnumType<T>[]>[]
+      );
+    let enumType = enumTypes.find((e) => e.type() === value);
+    enumType = enumType ?? enumTypes.find((e) => e.name === value);
+    this.memo.enumTypes.set(value, enumType);
     return enumType;
   }
   //#endregion
 
   //#region StructuredTypes
-  public findStructuredTypeForType<T>(type: string) {
-    if (this.memo.structuredTypes.has(type)) {
-      return this.memo.structuredTypes.get(type) as
+  public findStructuredType<T>(value: string) {
+    if (this.memo.structuredTypes.has(value)) {
+      return this.memo.structuredTypes.get(value) as
         | ODataStructuredType<T>
         | undefined;
     }
-    const structuredType =
-      this.findSchemaForType(type)?.findStructuredTypeForType<T>(type);
-    this.memo.structuredTypes.set(type, structuredType);
+    const structuredTypes = this.schemas
+      .reduce(
+        (acc, schema) => [...acc, ...schema.entities],
+        <ODataStructuredType<T>[]>[]
+      );
+    let structuredType = structuredTypes.find((e) => e.type() === value);
+    structuredType = structuredType ?? structuredTypes.find((e) => e.name === value);
+    this.memo.structuredTypes.set(value, structuredType);
     return structuredType;
   }
   //#endregion
 
   //#region Callables
-  public findCallableForType<T>(type: string, bindingType?: string) {
-    const key = bindingType !== undefined ? `${bindingType}/${type}` : type;
+  public findCallable<R>(value: string, bindingType?: string) {
+    const key = bindingType !== undefined ? `${bindingType}/${value}` : value;
     if (this.memo.callables.has(key)) {
       return this.memo.callables.get(key) as
-        | ODataCallable<T>
+        | ODataCallable<R>
         | undefined;
     }
-    const callable = this.findSchemaForType(type)?.findCallableForType<T>(
-      type,
-      bindingType
-    );
+
+    const bindingStructuredType =
+      bindingType !== undefined
+        ? this.findStructuredType<any>(bindingType)
+        : undefined;
+    const callables = this.schemas
+      .reduce(
+        (acc, schema) => [...acc, ...schema.callables],
+        <ODataCallable<R>[]>[]
+      );
+    let callable = callables.find((c) => {
+      const isCallableType = c.type() == value;
+      const callableBindingType = c.binding()?.type;
+      const callableBindingStructuredType =
+        callableBindingType !== undefined
+          ? this.findStructuredType(callableBindingType)
+          : undefined;
+
+      return (
+        isCallableType &&
+        (!bindingStructuredType ||
+          (callableBindingStructuredType &&
+            bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
+      );
+    });
+    callable = callable ?? callables.find((c) => {
+      const isCallableType = c.name == value;
+      const callableBindingType = c.binding()?.type;
+      const callableBindingStructuredType =
+        callableBindingType !== undefined
+          ? this.findStructuredType(callableBindingType)
+          : undefined;
+
+      return (
+        isCallableType &&
+        (!bindingStructuredType ||
+          (callableBindingStructuredType &&
+            bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
+      );
+    });
+
     this.memo.callables.set(key, callable);
     return callable;
   }
   //#endregion
 
   //#region EntitySets
-  public findEntitySetForType(type: string) {
-    if (this.memo.entitySets.has(type)) {
-      return this.memo.entitySets.get(type) as
-        | ODataEntitySet
-        | undefined;
+  public findEntitySet(value: string) {
+    if (this.memo.entitySets.has(value)) {
+      return this.memo.entitySets.get(value) as ODataEntitySet | undefined;
     }
-    const entitySet = this.findSchemaForType(type)?.findEntitySetForType(type);
-    this.memo.entitySets.set(type, entitySet);
-    return entitySet;
-  }
-
-  public findEntitySetByName(name: string) {
-    if (this.memo.entitySets.has(name)) {
-      return this.memo.entitySets.get(name) as ODataEntitySet | undefined;
-    }
-    const schema = this.schemas
+    const entitySets = this.schemas
       .reduce(
         (acc, schema) => [...acc, ...schema.entitySets],
         <ODataEntitySet[]>[]
-      )
-      .find((e) => e.name === name);
-    this.memo.entitySets.set(name, schema);
-    return schema;
+      );
+    let entitySet = entitySets.find((e) => e.type() === value);
+    entitySet = entitySet ?? entitySets.find((e) => e.name === value);
+    this.memo.entitySets.set(value, entitySet);
+    return entitySet;
   }
   //#endregion
 
   //#region Singletons
-  public findSingletonForType(type: string) {
-    if (this.memo.singletons.has(type)) {
-      return this.memo.singletons.get(type) as
-        | ODataEntitySet
-        | undefined;
+  public findSingleton(value: string) {
+    if (this.memo.singletons.has(value)) {
+      return this.memo.singletons.get(value) as ODataSingleton | undefined;
     }
-    const singletons = this.findSchemaForType(type)?.findSingletonForType(type);
-    this.memo.singletons.set(type, singletons);
-    return singletons;
-  }
-
-  public findSingletonByName(name: string) {
-    if (this.memo.singletons.has(name)) {
-      return this.memo.singletons.get(name) as ODataEntitySet | undefined;
-    }
-    const schema = this.schemas
+    const singletons = this.schemas
       .reduce(
-        (acc, schema) => [...acc, ...schema.entitySets],
-        <ODataEntitySet[]>[]
-      )
-      .find((e) => e.name === name);
-    this.memo.singletons.set(name, schema);
-    return schema;
+        (acc, schema) => [...acc, ...schema.singletons],
+        <ODataSingleton[]>[]
+      );
+    let singleton = singletons.find((e) => e.type() === value);
+    singleton = singleton ?? singletons.find((e) => e.name === value);
+    this.memo.singletons.set(value, singleton);
+    return singleton;
   }
   //#endregion
 
-  public findModelForType(type: string) {
-    return this.findStructuredTypeForType<any>(type)?.model;
+  public findModel(type: string) {
+    return this.findStructuredType<any>(type)?.model;
   }
 
   public createModel(structured: ODataStructuredType<any>) {
-
     if (structured.model !== undefined) return structured.model;
     // Build Ad-hoc model
     const Model = class extends ODataModel<any> { } as typeof ODataModel;
@@ -466,18 +493,19 @@ export class ODataApi {
   }
 
   public modelForType(type: string) {
-    let Model = this.findModelForType(type);
+    let Model = this.findModel(type);
     if (Model === undefined) {
-      const structured = this.findStructuredTypeForType<any>(type);
+      const structured = this.findStructuredType<any>(type);
       if (structured === undefined) throw Error(`No structured type for ${type}`);
       Model = this.createModel(structured);
     }
     return Model;
   }
 
-  public findCollectionForType(type: string) {
-    return this.findStructuredTypeForType<any>(type)?.collection;
+  public findCollection(type: string) {
+    return this.findStructuredType<any>(type)?.collection;
   }
+
   public createCollection(structured: ODataStructuredType<any>, model?: typeof ODataModel<any>) {
     if (structured.collection !== undefined) return structured.collection;
     if (model === undefined) model = this.createModel(structured);
@@ -492,9 +520,9 @@ export class ODataApi {
   }
 
   public collectionForType(type: string) {
-    let Collection = this.findCollectionForType(type);
+    let Collection = this.findCollection(type);
     if (Collection === undefined) {
-      const structured = this.findStructuredTypeForType<any>(type);
+      const structured = this.findStructuredType<any>(type);
       if (structured === undefined) throw Error(`No structured type for ${type}`);
       const Model = this.modelForType(type);
       Collection = this.createCollection(structured, Model);
@@ -503,7 +531,7 @@ export class ODataApi {
   }
 
   public findServiceForType(type: string) {
-    return this.findEntitySetForType(type)?.service as
+    return this.findEntitySet(type)?.service as
       | typeof ODataEntityService
       | undefined;
   }
@@ -543,9 +571,9 @@ export class ODataApi {
     } else if (!type.startsWith('Edm.')) {
       // Callable, EnumType, StructuredType (ComplexType and EntityType) Parsers
       let value =
-        this.findCallableForType<T>(type, bindingType) ??
-        this.findEnumTypeForType<T>(type) ??
-        this.findStructuredTypeForType<T>(type);
+        this.findCallable<T>(type, bindingType) ??
+        this.findEnumType<T>(type) ??
+        this.findStructuredType<T>(type);
       parser = value?.parser as Parser<T>;
     }
     // Set Parser for next time
@@ -561,7 +589,7 @@ export class ODataApi {
 
     let meta: ODataModelOptions<T> | undefined = undefined;
     if (!type.startsWith('Edm.')) {
-      structuredType = this.findStructuredTypeForType<T>(type) ?? structuredType;
+      structuredType = this.findStructuredType<T>(type) ?? structuredType;
       if (structuredType !== undefined) {
         meta = ODataModel.buildMetaOptions({ config, structuredType });
       }

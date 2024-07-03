@@ -81,7 +81,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   cast<C>(type: string) {
     const thisType = this.incomingType();
     const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
-    const castSchema = this.api.findStructuredTypeForType<C>(type);
+    const castSchema = this.api.findStructuredType<C>(type);
     if (
       castSchema !== undefined &&
       baseSchema !== undefined &&

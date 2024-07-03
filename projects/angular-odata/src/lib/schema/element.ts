@@ -44,11 +44,10 @@ export class ODataSchemaElement extends ODataAnnotatable {
    * @param type String representation of the type
    * @returns True if the callable is type of the given type
    */
-  isTypeOf(type: string | ODataSchemaElement): boolean {
-    type = typeof type === 'string' ? type : type.type();
+  isTypeOf(schema: ODataSchemaElement): boolean {
     const names = [`${this.schema.namespace}.${this.name}`];
     if (this.schema.alias) names.push(`${this.schema.alias}.${this.name}`);
-    return names.includes(type);
+    return names.includes(schema.type());
   }
 
   /**
@@ -57,7 +56,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
    * @returns True if the callable is type of the given type
    */
   isSubtypeOf(schema: ODataSchemaElement): boolean {
-    if (this.isTypeOf(schema.type())) return true;
+    if (this.isTypeOf(schema)) return true;
     return false;
   }
 
@@ -67,7 +66,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
    * @returns True if the callable is type of the given type
    */
   isSupertypeOf(schema: ODataSchemaElement): boolean {
-    if (this.isTypeOf(schema.type())) return true;
+    if (this.isTypeOf(schema)) return true;
     return false;
   }
 }
