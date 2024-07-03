@@ -34,22 +34,27 @@ export class ODataSettings {
   public defaultApi() {
     return this.apis.find((c) => c.default) as ODataApi;
   }
+
   public findApiByName(name: string) {
     return this.apis.find((c) => c.name === name);
   }
+
   public apiByName(name: string) {
     const api = this.findApiByName(name);
     if (api === undefined) throw new Error(`No API for name: ${name}`);
     return api;
   }
+
   public findApiForTypes(types: string[]) {
     return this.apis.find((c) =>
       c.schemas.some((s) => types.some((type) => s.isNamespaceOf(type))),
     );
   }
+
   public findApiForType(type: string) {
     return this.findApiForTypes([type]);
   }
+
   public apiForType(type: string) {
     const api = this.findApiForType(type);
     if (api === undefined) throw new Error(`No API for type: ${type}`);

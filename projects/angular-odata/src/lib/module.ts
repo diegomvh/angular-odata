@@ -20,7 +20,7 @@ export interface PassedInitialConfig {
 
 export const ODATA_CONFIG = new InjectionToken<ApiConfig>('odata.config');
 
-export function createLoader(passedConfig: PassedInitialConfig) {
+export function createSyncLoader(passedConfig: PassedInitialConfig) {
   return new ODataConfigSyncLoader(passedConfig.config!);
 }
 
@@ -30,9 +30,9 @@ export function provideODataClient(
 ): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: ODATA_CONFIG, useValue: passedConfig },
-    passedConfig?.loader || {
+    passedConfig?.loader ?? {
       provide: ODataConfigLoader,
-      useFactory: createLoader,
+      useFactory: createSyncLoader,
       deps: [ODATA_CONFIG],
     },
     ODataClient,
@@ -56,9 +56,9 @@ export class ODataModule {
         { provide: ODATA_CONFIG, useValue: passedConfig },
 
         // Create the loader: Either the one getting passed or a sync one
-        passedConfig?.loader || {
+        passedConfig?.loader ?? {
           provide: ODataConfigLoader,
-          useFactory: createLoader,
+          useFactory: createSyncLoader,
           deps: [ODATA_CONFIG],
         },
         ODataClient,

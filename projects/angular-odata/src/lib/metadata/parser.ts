@@ -44,7 +44,6 @@ import { CsdlSchema } from './csdl/csdl-schema';
 import { CsdlSingleton } from './csdl/csdl-singleton';
 import { CsdlTypeDefinition } from './csdl/csdl-type-definition';
 import { VERSION_4_0 } from '../constants';
-import { ApiConfig, ODataVersion } from '../types';
 import { ODataMetadata } from './metadata';
 
 enum FieldType {
