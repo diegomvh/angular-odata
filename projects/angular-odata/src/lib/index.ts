@@ -22,3 +22,6 @@ export * from './resources/index';
 
 // Cache
 export * from './cache/index';
+
+// Metadata
+export * from './metadata/index';
