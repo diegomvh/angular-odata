@@ -50,7 +50,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
         value,
-        this.api.findStructuredTypeForType<T>(types[index]),
+        this.api.findStructuredType<T>(types[index]),
       ),
     );
     singleton.segment((s) => s.keys(keys));

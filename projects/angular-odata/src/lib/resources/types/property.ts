@@ -66,7 +66,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
     // Switch entitySet to binding type if available
     if (baseSchema !== undefined && baseSchema.type() !== baseType) {
-      let entitySet = resource.api.findEntitySetForType(baseSchema.type());
+      let entitySet = resource.api.findEntitySet(baseSchema.type());
       if (entitySet !== undefined) {
         property.segment((s) => s.entitySet().path(entitySet!.name));
       }
@@ -101,7 +101,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
         value,
-        this.api.findStructuredTypeForType<T>(types[index])
+        this.api.findStructuredType<T>(types[index])
       )
     );
     property.segment((s) => s.keys(keys));

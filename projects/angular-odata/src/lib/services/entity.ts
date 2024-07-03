@@ -11,7 +11,7 @@ export abstract class ODataEntityService<T> extends ODataBaseService {
    */
   get structuredTypeSchema() {
     return this.apiNameOrEntityType !== undefined
-      ? this.api.findStructuredTypeForType<T>(this.apiNameOrEntityType)
+      ? this.api.findStructuredType<T>(this.apiNameOrEntityType)
       : undefined;
   }
 }

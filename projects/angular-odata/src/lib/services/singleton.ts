@@ -32,7 +32,7 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
    * The schema for the singleton.
    */
   get singletonSchema() {
-    return this.api.findEntitySetForType(this.name);
+    return this.api.findEntitySet(this.name);
   }
 
   /**

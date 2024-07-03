@@ -25,7 +25,7 @@ export class ODataCallable<R> extends ODataParserSchemaElement<R, ODataCallableP
     else if (this.bound) path = `${this.schema.namespace}.${this.name}`;
     else
       path = this.parser.return
-        ? this.api.findEntitySetForType(this.parser.return.type)?.name ||
+        ? this.api.findEntitySet(this.parser.return.type)?.name ||
           this.name
         : this.name;
     return path;

@@ -392,7 +392,7 @@ describe('ODataClient', () => {
         },
       ],
     };
-    const parser = api.findCallableForType<any>(
+    const parser = api.findCallable<any>(
       'ParserTesting.TestingAction',
     ) as Parser<any>;
     const result = parser.serialize(parameters, api.options);

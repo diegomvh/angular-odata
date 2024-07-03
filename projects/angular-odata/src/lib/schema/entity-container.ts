@@ -10,10 +10,10 @@ export class ODataEntityContainer extends ODataSchemaElement {
 
   constructor(config: EntityContainerConfig, schema: ODataSchema) {
     super(config, schema);
-    this.entitySets = (config.entitySets || []).map(
+    this.entitySets = (config.entitySets ?? []).map(
       (config) => new ODataEntitySet(config, schema),
     );
-    this.singletons = (config.singletons || []).map(
+    this.singletons = (config.singletons ?? []).map(
       (config) => new ODataSingleton(config, schema),
     );
   }

@@ -59,52 +59,11 @@ export class ODataSchema extends ODataAnnotatable {
   }
 
   //#region Find for Type
-  public findEnumTypeForType<T>(type: string) {
-    return this.enums.find((e) => e.isTypeOf(type)) as
-      | ODataEnumType<T>
-      | undefined;
-  }
-
   public createStructuredType<T>(config: StructuredTypeConfig<T>) {
     const entity = new ODataStructuredType<T>(config, this);
     entity.configure({ options: this.api.options.parserOptions });
     this.entities.push(entity);
     return entity;
-  }
-
-  public findStructuredTypeForType<T>(type: string) {
-    return this.entities.find((e) => e.isTypeOf(type)) as
-      | ODataStructuredType<T>
-      | undefined;
-  }
-
-  public findCallableForType<T>(type: string, bindingType?: string) {
-    const bindingStructuredType =
-      bindingType !== undefined
-        ? this.api.findStructuredTypeForType<any>(bindingType)
-        : undefined;
-    return this.callables.find((c) => {
-      const isCallableType = c.isTypeOf(type);
-      const callableBindingType = c.binding()?.type;
-      const callableBindingStructuredType =
-        callableBindingType !== undefined
-          ? this.api.findStructuredTypeForType(callableBindingType)
-          : undefined;
-      return (
-        isCallableType &&
-        (!bindingStructuredType ||
-          (callableBindingStructuredType &&
-            bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
-      );
-    }) as ODataCallable<T> | undefined;
-  }
-
-  public findEntitySetForType(type: string) {
-    return this.entitySets.find((e) => e.isTypeOf(type));
-  }
-
-  public findSingletonForType(type: string) {
-    return this.singletons.find((e) => e.isTypeOf(type));
   }
   //#endregion
 
