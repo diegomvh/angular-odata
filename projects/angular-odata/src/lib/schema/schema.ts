@@ -23,25 +23,14 @@ export class ODataSchema extends ODataAnnotatable {
     this.api = api;
     this.namespace = config.namespace;
     this.alias = config.alias;
-    this.enums = (config.enums || []).map(
-      (config) => new ODataEnumType(config, this),
-    );
-    this.entities = (config.entities || []).map(
-      (config) => new ODataStructuredType(config, this),
-    );
-    this.callables = OData.mergeCallableParameters(config.callables || []).map(
-      (config) => new ODataCallable(config, this),
-    );
-    this.containers = (config.containers || []).map(
-      (config) => new ODataEntityContainer(config, this),
-    );
+    this.enums = (config.enums ?? []).map((config) => new ODataEnumType(config, this));
+    this.entities = (config.entities ?? []).map((config) => new ODataStructuredType(config, this));
+    this.callables = OData.mergeCallableParameters(config.callables ?? []).map((config) => new ODataCallable(config, this));
+    this.containers = (config.containers ?? []).map((config) => new ODataEntityContainer(config, this));
   }
 
   isNamespaceOf(type: string) {
-    return (
-      type.startsWith(this.namespace) ||
-      (this.alias && type.startsWith(this.alias))
-    );
+    return (type.startsWith(this.namespace) ?? (this.alias && type.startsWith(this.alias)));
   }
 
   get entitySets() {
