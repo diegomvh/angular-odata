@@ -186,7 +186,9 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
    */
   callModel<M extends ODataModel<R>>(
     params: P | null,
-    { alias, ...options }: { alias?: boolean } & ODataOptions = {},
+    { alias, ModelType, ...options }: ODataOptions & { alias?: boolean, 
+      ModelType?: typeof ODataModel;
+     } = {}
   ): Observable<M | null> {
     return this.call(params, {
       responseType: 'entity',
@@ -194,7 +196,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       ...options,
     }).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel<M>(entity, { annots }) : null,
+        entity ? this.asModel<M>(entity, { annots, ModelType }) : null,
       ),
     );
   }
@@ -226,7 +228,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
    */
   callCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
     params: P | null,
-    { alias, ...options }: { alias?: boolean } & ODataOptions = {},
+    { alias, CollectionType, ...options }: { alias?: boolean, CollectionType?: typeof ODataCollection } & ODataOptions = {},
   ): Observable<C | null> {
     return this.call(params, {
       responseType: 'entities',
@@ -234,7 +236,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       ...options,
     }).pipe(
       map(({ entities, annots }) =>
-        entities ? this.asCollection<M, C>(entities, { annots }) : null,
+        entities ? this.asCollection<M, C>(entities, { annots, CollectionType }) : null,
       ),
     );
   }

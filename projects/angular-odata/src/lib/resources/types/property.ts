@@ -195,11 +195,13 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @returns The model
    */
   fetchModel<M extends ODataModel<T>>(
-    options: ODataOptions = {}
+    options: ODataOptions & {
+      ModelType?: typeof ODataModel;
+    } = {},
   ): Observable<M | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel<M>(entity, { annots }) : null
+        entity ? this.asModel<M>(entity, { annots, ModelType: options?.ModelType }) : null
       )
     );
   }
@@ -223,11 +225,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @returns The collection
    */
   fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
-    options: ODataOptions & { withCount?: boolean } = {}
+    options: ODataOptions & { withCount?: boolean, CollectionType?: typeof ODataCollection } = {}
   ): Observable<C | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
-        entities ? this.asCollection<M, C>(entities, { annots }) : null
+        entities ? this.asCollection<M, C>(entities, { annots, CollectionType: options?.CollectionType }) : null
       )
     );
   }
