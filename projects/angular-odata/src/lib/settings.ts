@@ -136,26 +136,5 @@ export class ODataSettings {
       throw Error('Multiple APIs: More than one value was found');
     return values[0] as typeof ODataCollection;
   }
-
-  public serviceForType(type: string) {
-    let values = this.apis
-      .map((api) => api.findServiceForType(type))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No Service for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
-    return values[0] as typeof ODataEntityService;
-  }
-  public serviceForEntityType(type: string) {
-    let values = this.apis
-      .map((api) => api.findServiceForEntityType(type))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No Service for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
-    return values[0] as typeof ODataEntityService;
-  }
   //#endregion
 }

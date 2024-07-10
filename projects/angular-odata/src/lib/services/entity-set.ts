@@ -13,6 +13,19 @@ import {
 import { ODataEntityService } from './entity';
 
 export class ODataEntitySetService<T> extends ODataEntityService<T> {
+  static Model?: typeof ODataModel;
+  static Collection?: typeof ODataCollection;
+
+  model(entity?: Partial<T>): ODataModel<T> {
+    const Service = this.constructor as typeof ODataEntitySetService;
+    return this.entity().asModel<ODataModel<T>>(entity, { ModelType: Service.Model });
+  }
+
+  collection(entities?: Partial<T>[]): ODataCollection<T, ODataModel<T>> {
+    const Service = this.constructor as typeof ODataEntitySetService;
+    return this.entities().asCollection<ODataModel<T>, ODataCollection<T, ODataModel<T>>>(entities, { CollectionType: Service.Collection });
+  }
+
   /**
    * Get the entity set resource for this service.
    */

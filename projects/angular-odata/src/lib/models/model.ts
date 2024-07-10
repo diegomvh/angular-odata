@@ -751,7 +751,7 @@ export class ODataModel<T> {
   //#endregion
 
   // Cast
-  cast<S>(type: string) {
+  cast<S>(type: string, ModelType?: typeof ODataModel) {
     //: ODataModel<S> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource))
@@ -762,7 +762,7 @@ export class ODataModel<T> {
     return resource
       .cast<S>(type)
       .asModel(this.toEntity(INCLUDE_DEEP) as { [name: string]: any }, {
-        annots: this.annots() as any,
+        annots: this.annots() as any, ModelType
       });
   }
 

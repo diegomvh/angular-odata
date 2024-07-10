@@ -114,13 +114,14 @@ export class ODataResource<T> {
   //#region Models
   asModel<M extends ODataModel<T>>(
     entity?: Partial<T> | { [name: string]: any },
-    { annots }: { annots?: ODataEntityAnnotations<T> } = {}
+    { annots, ModelType }: { annots?: ODataEntityAnnotations<T>, ModelType?: typeof ODataModel } = {}
   ): M {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for model`);
-    const ModelType = this.api.modelForType(type);
+    if (ModelType === undefined)
+      ModelType = this.api.modelForType(type);
     let entitySet = annots?.entitySet;
     if (entitySet !== undefined) {
       resource = this.api.entitySet<T>(entitySet).entity(entity as Partial<T>);
@@ -131,13 +132,14 @@ export class ODataResource<T> {
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities?: Partial<T>[] | { [name: string]: any }[],
-    { annots }: { annots?: ODataEntitiesAnnotations<T> } = {}
+    { annots, CollectionType }: { annots?: ODataEntitiesAnnotations<T>, CollectionType?: typeof ODataCollection } = {}
   ): C {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for collection`);
-    const CollectionType = this.api.collectionForType(type);
+    if (CollectionType === undefined)
+      CollectionType = this.api.collectionForType(type);
     let entitySet = annots?.entitySet;
     if (entitySet !== undefined) {
       resource = this.api.entitySet<T>(entitySet);

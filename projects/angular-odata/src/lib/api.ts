@@ -33,7 +33,6 @@ import {
   ODataSingleton,
   ODataStructuredType,
 } from './schema';
-import { ODataEntityService } from './services/entity';
 import {
   ApiConfig,
   ApiOptions,
@@ -530,12 +529,6 @@ export class ODataApi {
     return Collection;
   }
 
-  public findServiceForType(type: string) {
-    return this.findEntitySet(type)?.service as
-      | typeof ODataEntityService
-      | undefined;
-  }
-
   public findEntitySetForEntityType(entityType: string) {
     if (this.memo.entitySets.has(entityType)) {
       return this.memo.entitySets.get(entityType) as
@@ -550,12 +543,6 @@ export class ODataApi {
       .find((e) => e.entityType === entityType);
     this.memo.entitySets.set(entityType, entitySet);
     return entitySet;
-  }
-
-  public findServiceForEntityType(entityType: string) {
-    return this.findEntitySetForEntityType(entityType)?.service as
-      | typeof ODataEntityService
-      | undefined;
   }
 
   public parserForType<T>(type: string | EdmType, bindingType?: string) {

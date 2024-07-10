@@ -12,6 +12,11 @@ import { ODataEntityService } from './entity';
  * www.odata.org/getting-started/advanced-tutorial/#singleton
  */
 export class ODataSingletonService<T> extends ODataEntityService<T> {
+  static Model?: typeof ODataModel;
+  model(entity?: Partial<T>): ODataModel<T> {
+    const Service = this.constructor as typeof ODataSingletonService;
+    return this.entity().asModel<ODataModel<T>>(entity, { ModelType: Service.Model });
+  }
   /**
    * Get the entity resource for this service.
    * @param key The entity key.
