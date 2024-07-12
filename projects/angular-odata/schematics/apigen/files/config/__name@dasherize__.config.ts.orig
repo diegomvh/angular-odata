@@ -1,7 +1,0 @@
-<<<<<<< HEAD
-export const <%= classify(Name) %>Config = {
-=======
-export enum <%= classify(name) %>Config {<% for(let member of members) { %>
-  <%= member.name %> = <%= member.value %>,<% } %>
->>>>>>> b1d32ee (Schematics)
-}
