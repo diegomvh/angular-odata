@@ -1,10 +1,8 @@
-import {
-  CsdlReference,
-} from './csdl/csdl-reference';
+import { JSDOM } from 'jsdom';
 
-import { CsdlSchema } from './csdl/csdl-schema';
-import { VERSION_4_0 } from '../constants';
 import { ODataMetadata } from './metadata';
+
+const VERSION_4_0: string = "4.0";
 
 enum FieldType {
   ATTRIBUTE,
@@ -109,13 +107,10 @@ export class ODataMetadataParser {
 
   public readonly document: Document;
 
-  constructor(xml: string) {
+  constructor(source: string) {
     try {
-      const parser: DOMParser = new DOMParser();
-      this.document = parser.parseFromString(xml, 'text/xml');
-
-      this.checkVersion(document);
-
+      this.document = new JSDOM(source, {contentType: "text/xml"}).window.document;
+      this.checkVersion();
     } catch (error) {
       throw new Error('Unable to parse metadata, ' + error);
     }
@@ -136,12 +131,10 @@ export class ODataMetadataParser {
         new Field(ODataMetadataParser.TAG_INCLUDE_ANNOTATIONS, FieldType.TAG),
         new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
       ],
-    ).map(t => new CsdlReference(t));
+    );
 
-    const dataServices: Element =
-      this.document.documentElement.getElementsByTagName(
-        ODataMetadataParser.TAG_DATA_SERVICES,
-      )[0];
+    const dataServices: Element = this.document.documentElement
+      .getElementsByTagName(ODataMetadataParser.TAG_DATA_SERVICES)[0];
     const schemas = this.getObjects(dataServices, ODataMetadataParser.TAG_SCHEMA, [
       new Field(ODataMetadataParser.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
       new Field(ODataMetadataParser.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
@@ -154,14 +147,14 @@ export class ODataMetadataParser {
       new Field(ODataMetadataParser.TAG_TYPE_DEFINITION, FieldType.TAG),
       new Field(ODataMetadataParser.TAG_TERM, FieldType.TAG),
       new Field(ODataMetadataParser.TAG_ANNOTATIONS, FieldType.TAG),
-    ]).map(s => new CsdlSchema(s));
+    ]);
 
     return new ODataMetadata(version, references, schemas);
   }
 
-  protected checkVersion(document: Document) {
+  protected checkVersion() {
     // check version
-    const attributes: NamedNodeMap = document.documentElement.attributes;
+    const attributes: NamedNodeMap = this.document.documentElement.attributes;
     if (!attributes) {
       throw new Error('OData version is not specified in the metadata');
     }

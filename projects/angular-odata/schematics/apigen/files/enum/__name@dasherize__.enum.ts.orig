@@ -1,0 +1,9 @@
+<<<<<<< HEAD
+export const <%= classify(Name) %>Type = '<%= classify(FullName) %>';
+export enum <%= classify(Name) %> {<% for(let member of Member) { %>
+  <%= member.Name %> = <%= member.Value %>,<% } %>
+=======
+export enum <%= classify(name) %> {<% for(let member of members) { %>
+  <%= member.name %> = <%= member.value %>,<% } %>
+>>>>>>> b1d32ee (Schematics)
+}

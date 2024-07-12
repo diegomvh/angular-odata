@@ -1,4 +1,3 @@
-import { StructuredTypeConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import {
   CsdlProperty,
@@ -42,6 +41,14 @@ export class CsdlStructuredType extends CsdlAnnotable {
     this.Abstract = Abstract;
   }
 
+  name() {
+    return `${this.Name}`;
+  }
+
+  namespace() {
+    return `${this.schema.Namespace}`;
+  }
+
   fullName() {
     return `${this.schema.Namespace}.${this.Name}`;
   }
@@ -76,17 +83,6 @@ export class CsdlComplexType extends CsdlStructuredType {
       Abstract,
       Annotation
     });
-  }
-
-  toConfig(): StructuredTypeConfig<any> {
-    const fields = {};
-    return {
-      name: this.Name,
-      base: this.BaseType,
-      open: this.OpenType,
-      annotations: this.Annotation?.map(t => t.toConfig()),
-      fields: [...(this.Property ?? []).map(t => t.toConfig()), ...(this.NavigationProperty ?? []).map(t => t.toConfig())].reduce((acc, p) => Object.assign(acc, {[p.name]: p}), {}),
-    } as StructuredTypeConfig<any>;
   }
 }
 
@@ -129,17 +125,6 @@ export class CsdlEntityType extends CsdlStructuredType {
     this.Key = Key ? new CsdlKey(Key) : undefined;
     this.HasStream = HasStream;
   }
-
-  toConfig(): StructuredTypeConfig<any> {
-    return {
-      name: this.Name,
-      base: this.BaseType,
-      open: this.OpenType,
-      annotations: this.Annotation?.map(t => t.toConfig()),
-      keys: this.Key?.toConfig(),
-      fields: [...(this.Property ?? []).map(t => t.toConfig()), ...(this.NavigationProperty ?? []).map(t => t.toConfig())].reduce((acc, p) => Object.assign(acc, {[p.name]: p}), {}),
-    } as StructuredTypeConfig<any>;
-  }
 }
 
 export class CsdlKey {
@@ -147,10 +132,6 @@ export class CsdlKey {
 
   constructor({ PropertyRefs }: { PropertyRefs: any[] }) {
     this.PropertyRefs = PropertyRefs?.map(p => new CsdlPropertyRef(p));
-  }
-
-  toConfig() {
-    return this.PropertyRefs.map(t => t.toConfig());
   }
 }
 
@@ -161,12 +142,5 @@ export class CsdlPropertyRef {
   constructor({ Name, Alias }: { Name: string, Alias?: string }) {
     this.Name = Name;
     this.Alias = Alias;
-  }
-
-  toConfig(): { name: string; alias?: string } {
-    return {
-      name: this.Name,
-      alias: this.Alias
-    }
   }
 }

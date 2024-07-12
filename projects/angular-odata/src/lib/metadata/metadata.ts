@@ -1,20 +1,15 @@
-import {
-  CsdlReference,
-} from './csdl/csdl-reference';
+import { CsdlReference } from "./csdl/csdl-reference";
+import { CsdlSchema } from "./csdl/csdl-schema";
 
-import { CsdlSchema } from './csdl/csdl-schema';
 import { ApiConfig, ODataVersion } from '../types';
+
 export class ODataMetadata {
-  constructor(
-    public version: string,
-    public references: CsdlReference[],
-    public schemas: CsdlSchema[]
-  ) {}
+  constructor(public Version: string, public References: CsdlReference[], public Schemas: CsdlSchema[]) {}
 
   toConfig(base?: ApiConfig): ApiConfig {
     return Object.assign({
-      version: this.version as ODataVersion,
-      schemas: this.schemas.map(s => s.toConfig())
+      version: this.Version as ODataVersion,
+      schemas: this.Schemas.map(s => s.toConfig())
     }, base ?? {}) as ApiConfig;
   }
 }

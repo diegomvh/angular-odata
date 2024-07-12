@@ -1,0 +1,14 @@
+<<<<<<< HEAD
+import { NgModule } from '@angular/core';
+
+@NgModule({
+  providers: [{<% for(let set of EntitySet) { %>
+  <%= set.Name %>Service,<% } %>
+  ]
+})
+export class <%= classify(Name) %>Module { }
+=======
+export enum <%= classify(name) %>Module {<% for(let member of members) { %>
+  <%= member.name %> = <%= member.value %>,<% } %>
+}
+>>>>>>> b1d32ee (Schematics)

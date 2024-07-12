@@ -3,7 +3,6 @@ import { CsdlSingleton } from './csdl-singleton';
 import { CsdlFunctionImport, CsdlActionImport } from './csdl-function-action';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlSchema } from "./csdl-schema";
-import { EntityContainerConfig } from '../../types';
 
 export class CsdlEntityContainer extends CsdlAnnotable {
   public Name: string;
@@ -42,15 +41,15 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     this.ActionImport = ActionImport?.map(a => new CsdlActionImport(this, a));
   }
 
-  get Namespace() {
-    return this.schema.Namespace;
+  name() {
+    return `${this.Name}`;
   }
 
-  toConfig(): EntityContainerConfig {
-    return {
-      name: this.Name,
-      annotations: this.Annotation?.map(t => t.toConfig()),
-      entitySets: this.EntitySet?.map(t => t.toConfig()),
-    }
+  namespace() {
+    return `${this.schema.Namespace}`;
+  }
+
+  fullName() {
+    return `${this.schema.Namespace}.${this.Name}`;
   }
 }
