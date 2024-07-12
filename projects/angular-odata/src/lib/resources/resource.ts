@@ -1,4 +1,4 @@
-import { Observable, share } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ODataApi } from '../api';
 import {
   DEFAULT_VERSION,
@@ -9,7 +9,7 @@ import {
 import { ODataHelper } from '../helper';
 import { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
-import { ParserOptions, Parser, QueryOption, PathSegment, StructuredTypeFieldConfig, EdmType } from '../types';
+import { ParserOptions, Parser, QueryOption, PathSegment, StructuredTypeFieldConfig } from '../types';
 import { Objects, Strings, Types } from '../utils';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {

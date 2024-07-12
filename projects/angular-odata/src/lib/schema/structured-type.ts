@@ -1,4 +1,3 @@
-import { ModelOptions, ODataModelOptions } from '../models';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
 import {
