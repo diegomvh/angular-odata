@@ -5,9 +5,14 @@ import { Schema as ApiGenSchema } from '../schema';
 
 const makeRelativePath = (from: string, to: string) => {
     if (from === '') { return to; }
-    else if (to.startsWith(from)) { return to.substring(from.length + 1); } 
-    else if (from.startsWith(to)) { return `../${from.substring(to.length + 1)}`;
-    } else { return to; }
+    if (to.startsWith(from)) { return to.substring(from.length + 1); } 
+    let shared = from;
+    let i = 0;
+    while(shared.length > 0 && !to.startsWith(shared)) { 
+        shared = shared.substring(0, shared.lastIndexOf('/')); 
+        i++;
+    }
+    return Array.from({ length: i }).fill('..').join('/') + "/" + to.substring(shared.length + 1);
 }
 
 export abstract class Base {
@@ -33,7 +38,6 @@ export abstract class Base {
             .filter(a => a[1].path() != this.path())
             .reduce((acc, i) => {
                 const path = makeRelativePath(this.directory(), i[1].path());
-                console.log(this.directory(), i[1].path(), path);
                 if (acc[path] === undefined) {
                     acc[path] = [];
                 }
