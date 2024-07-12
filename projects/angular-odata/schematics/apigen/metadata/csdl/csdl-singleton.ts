@@ -24,7 +24,14 @@ export class CsdlSingleton extends CsdlAnnotable {
     this.NavigationPropertyBindings = NavigationPropertyBindings?.map(n => new CsdlNavigationPropertyBinding(n));
   }
 
+  name() {
+    return `${this.Name}`;
+  }
+
+  namespace() {
+    return `${this.container.namespace()}`;
+  }
   fullName() {
-    return `${this.container.Namespace}.${this.Name}`;
+    return `${this.container.namespace()}.${this.Name}`;
   }
 }

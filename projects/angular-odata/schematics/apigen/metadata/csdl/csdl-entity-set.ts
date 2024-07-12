@@ -1,4 +1,3 @@
-import { EntitySetConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlEntityContainer } from './csdl-entity-container';
 import { CsdlNavigationPropertyBinding } from './csdl-navigation-property-binding';
@@ -24,16 +23,15 @@ export class CsdlEntitySet extends CsdlAnnotable {
     this.IncludeInServiceDocument = IncludeInServiceDocument;
   }
 
-  fullName() {
-    return `${this.container.Namespace}.${this.Name}`;
+  name() {
+    return `${this.Name}`;
   }
 
-  toConfig(): EntitySetConfig {
-    return {
-      name: this.Name,
-      entityType: this.EntityType,
-      service: {},
-      annotations: this.Annotation?.map(t => t.toConfig()),
-    } as EntitySetConfig;
+  namespace() {
+    return `${this.container.namespace()}`;
+  }
+
+  fullName() {
+    return `${this.container.namespace()}.${this.Name}`;
   }
 }

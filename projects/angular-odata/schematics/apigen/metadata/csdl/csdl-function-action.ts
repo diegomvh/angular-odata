@@ -1,4 +1,3 @@
-import { CallableConfig, ParameterConfig } from "../../types";
 import { CsdlAnnotable } from "./csdl-annotation";
 import type { CsdlEntityContainer } from "./csdl-entity-container";
 import type { CsdlSchema } from "./csdl-schema";
@@ -40,17 +39,6 @@ export class CsdlFunction extends CsdlCallable {
     super(schema, {Name, ReturnType, IsBound, EntitySetPath, Parameters});
     this.IsComposable = IsComposable;
   }
-
-  toConfig(): CallableConfig {
-    return {
-      name: this.Name,
-      entitySetPath: this.EntitySetPath,
-      bound: this.IsBound,
-      composable: this.IsComposable,
-      parameters: this.Parameters?.map(p => p.toConfig()),
-      return: this.ReturnType?.toConfig(),
-    } as CallableConfig;
-  }
 }
 
 export class CsdlAction extends CsdlCallable {
@@ -63,16 +51,6 @@ export class CsdlAction extends CsdlCallable {
   }
   ) {
     super(schema, {Name, ReturnType, IsBound, EntitySetPath, Parameters});
-  }
-
-  toConfig(): CallableConfig {
-    return {
-      name: this.Name,
-      entitySetPath: this.EntitySetPath,
-      bound: this.IsBound,
-      parameters: this.Parameters?.map(p => p.toConfig()),
-      return: this.ReturnType?.toConfig(),
-    } as CallableConfig;
   }
 }
 
@@ -139,14 +117,6 @@ export class CsdlParameter extends CsdlAnnotable {
     this.Scale = Scale;
     this.SRID = SRID;
   }
-
-  toConfig(): ParameterConfig {
-    return {
-      type: this.Type,
-      nullable: this.Nullable,
-      collection: false
-    }
-  }
 }
 
 export class CsdlReturnType {
@@ -171,12 +141,5 @@ export class CsdlReturnType {
     this.Precision = Precision;
     this.Scale = Scale;
     this.SRID = SRID;
-  }
-
-  toConfig(): { type: string; collection?: boolean | undefined; } | undefined {
-    return {
-      type: this.Type,
-      collection: false
-    };
   }
 }

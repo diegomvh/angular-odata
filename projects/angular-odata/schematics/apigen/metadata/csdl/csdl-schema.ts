@@ -4,7 +4,6 @@ import { CsdlEnumType } from './csdl-enum-type';
 import { CsdlEntityType, CsdlComplexType } from './csdl-structured-type';
 import { CsdlFunction, CsdlAction } from './csdl-function-action';
 import { CsdlEntityContainer } from './csdl-entity-container';
-import { SchemaConfig } from '../../types';
 
 export class CsdlSchema {
   Namespace: string;
@@ -43,17 +42,5 @@ export class CsdlSchema {
     this.TypeDefinition = TypeDefinition?.map(t => new CsdlTypeDefinition(this, t));
     this.Term = Term?.map(t => new CsdlTerm(this, t));
     this.Annotations = Annotations?.map(a => new CsdlAnnotations(this, a));
-  }
-
-  toConfig(): SchemaConfig {
-    return {
-      namespace: this.Namespace,
-      alias: this.Alias,
-      annotations: this.Annotations?.map(t => t.toConfig()),
-      enums: this.EntityType?.map(t => t.toConfig()),
-      entities: [...(this.ComplexType ?? []).map(t => t.toConfig()), ...(this.EntityType ?? []).map(t => t.toConfig())],
-      callables: [...(this.Function ?? []).map(t => t.toConfig()), ...(this.Action ?? []).map(t => t.toConfig())],
-      containers: this.EntityContainer?.map(t => t.toConfig())
-    } as SchemaConfig;
   }
 }

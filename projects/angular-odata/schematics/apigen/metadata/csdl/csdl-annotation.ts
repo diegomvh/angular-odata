@@ -1,4 +1,3 @@
-import { AnnotationConfig } from "../../types";
 import type { CsdlSchema } from "./csdl-schema";
 
 export class CsdlAnnotable {
@@ -20,10 +19,6 @@ export class CsdlAnnotations extends CsdlAnnotable {
     super({ Annotation });
     this.Target = Target;
     this.Qualifier = Qualifier;
-  }
-
-  toConfig(): AnnotationConfig[] {
-    return (this.Annotation?? []).map(a => a.toConfig());
   }
 }
 
@@ -51,15 +46,6 @@ export class CsdlAnnotation {
     this.Collection = Collection;
     this.Record = Record;
     this.Members = Members;
-  }
-
-  toConfig(): AnnotationConfig {
-    return {
-      term: this.Term,
-      string: this.String,
-      bool: this.Bool,
-      int: this.Int,
-    } as AnnotationConfig;
   }
 }
 

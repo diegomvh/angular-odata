@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "SchematicsMetadata",
+  "title": "Metadata Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "The name for the module.",
+      "type": "string"
+    },
+    "metadata": {
+      "description": "The url of the metadata.",
+      "type": "string"
+    },
+    "output": {
+      "description": "The target directory.",
+      "type": "string"
+    },
+    "purge": {
+      "description": "Remove all files in output target.",
+      "type": "boolean"
+    },
+    "models": {
+      "description": "Create models.",
+      "type": "boolean"
+    },
+    "entity": {
+      "type": "string",
+      "visible": false
+    }
+   },
+  "required": [
+    "name",
+    "metadata"
+  ]
+}

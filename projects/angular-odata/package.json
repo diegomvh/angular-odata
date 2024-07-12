@@ -24,9 +24,20 @@
   },
   "homepage": "https://github.com/diegomvh/angular-odata",
   "private": false,
+   "scripts": {
+    "build": "../../node_modules/.bin/tsc -p tsconfig.schematics.json",
+    "copy:schemas": "cp --parents schematics/*/schema.json ../../dist/angular-odata/",
+    "copy:files": "cp --parents -p schematics/*/files/**/* ../../dist/angular-odata/",
+    "copy:collection": "cp schematics/collection.json ../../dist/angular-odata/schematics/collection.json",
+    "postbuild": "npm run copy:schemas && npm run copy:files && npm run copy:collection"
+  },
   "peerDependencies": {
     "@angular/common": ">=14.0.0",
     "@angular/core": ">=14.0.0"
+  },
+  "schematics": "./schematics/collection.json",
+  "ng-add": {
+    "save": "dependencies"
   },
   "dependencies": {
     "tslib": "^2.3.0"
