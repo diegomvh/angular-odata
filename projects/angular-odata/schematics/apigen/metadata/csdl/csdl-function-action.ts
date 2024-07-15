@@ -2,55 +2,57 @@ import { CsdlAnnotable } from "./csdl-annotation";
 import type { CsdlEntityContainer } from "./csdl-entity-container";
 import type { CsdlSchema } from "./csdl-schema";
 
+export const BINDING_PARAMETER_NAME: string = "bindingParameter";
+
 export class CsdlCallable {
   Name: string;
   ReturnType?: CsdlReturnType;
   IsBound?: boolean;
   EntitySetPath?: string;
-  Parameters?: CsdlParameter[];
+  Parameter?: CsdlParameter[];
 
-  constructor(private schema: CsdlSchema, {Name, ReturnType, IsBound, EntitySetPath, Parameters}: {
+  constructor(private schema: CsdlSchema, {Name, ReturnType, IsBound, EntitySetPath, Parameter}: {
     Name: string,
     ReturnType?: any,
     IsBound?: boolean,
     EntitySetPath?: string,
-    Parameters?: any[]
+    Parameter?: any[]
   }
   ) {
     this.Name = Name;
     this.ReturnType = ReturnType ? new CsdlReturnType(ReturnType) : undefined;
     this.IsBound = IsBound;
     this.EntitySetPath = EntitySetPath;
-    this.Parameters = Parameters?.map(p => new CsdlParameter(p));
+    this.Parameter = Parameter?.map(p => new CsdlParameter(p));
   }
 }
 export class CsdlFunction extends CsdlCallable {
   IsComposable?: boolean;
 
-  constructor(schema: CsdlSchema, {Name, ReturnType, IsBound, EntitySetPath, IsComposable, Parameters}: {
+  constructor(schema: CsdlSchema, {Name, ReturnType, IsBound, EntitySetPath, IsComposable, Parameter}: {
     Name: string,
     ReturnType: any,
     IsBound?: boolean,
     EntitySetPath?: string,
     IsComposable?: boolean,
-    Parameters?: any[]
+    Parameter?: any[]
   }
   ) {
-    super(schema, {Name, ReturnType, IsBound, EntitySetPath, Parameters});
+    super(schema, {Name, ReturnType, IsBound, EntitySetPath, Parameter});
     this.IsComposable = IsComposable;
   }
 }
 
 export class CsdlAction extends CsdlCallable {
-  constructor(schema: CsdlSchema, {Name, ReturnType, IsBound, EntitySetPath, Parameters}: {
+  constructor(schema: CsdlSchema, {Name, ReturnType, IsBound, EntitySetPath, Parameter}: {
     Name: string,
     ReturnType?: any,
     IsBound?: boolean,
     EntitySetPath?: string,
-    Parameters?: any[]
+    Parameter?: any[]
   }
   ) {
-    super(schema, {Name, ReturnType, IsBound, EntitySetPath, Parameters});
+    super(schema, {Name, ReturnType, IsBound, EntitySetPath, Parameter});
   }
 }
 
@@ -92,6 +94,7 @@ export class CsdlActionImport {
 export class CsdlParameter extends CsdlAnnotable {
   Name: string;
   Type: string;
+  Collection: boolean;
   Nullable?: boolean;
   MaxLength?: number;
   Precision?: number;
@@ -110,7 +113,8 @@ export class CsdlParameter extends CsdlAnnotable {
   }) {
     super({Annotation});
     this.Name = Name;
-    this.Type = Type;
+    this.Collection = Type.startsWith("Collection(");
+    this.Type = this.Collection ? Type.substring(11, Type.length - 1) : Type;
     this.Nullable = Nullable;
     this.MaxLength = MaxLength;
     this.Precision = Precision;
@@ -121,6 +125,7 @@ export class CsdlParameter extends CsdlAnnotable {
 
 export class CsdlReturnType {
   Type: string;
+  Collection: boolean;
   Nullable?: boolean;
   MaxLength?: number;
   Precision?: number;
@@ -135,7 +140,8 @@ export class CsdlReturnType {
     Scale?: number,
     SRID?: string,
   }) {
-    this.Type = Type;
+    this.Collection = Type.startsWith("Collection(");
+    this.Type = this.Collection ? Type.substring(11, Type.length - 1) : Type;
     this.Nullable = Nullable;
     this.MaxLength = MaxLength;
     this.Precision = Precision;
