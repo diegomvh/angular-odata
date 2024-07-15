@@ -21,6 +21,7 @@ export class Service extends Base
             type: this.edmElement instanceof CsdlEntitySet ? this.edmElement.EntityType : 
                 this.edmElement instanceof CsdlSingleton ? this.edmElement.Type : 
                 this.options.name,
+            callables: (this.callables ?? []),
         };
     }
     public entityType() {

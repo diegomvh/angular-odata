@@ -2,7 +2,8 @@ import { getRandomName } from "../../random"
 import { Import } from "./import";
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
-import { BINDING_PARAMETER_NAME, CsdlCallable } from "../metadata/csdl/csdl-function-action";
+import { BINDING_PARAMETER_NAME, CsdlAction, CsdlCallable } from "../metadata/csdl/csdl-function-action";
+import { toTypescriptType } from "../utils";
 
 const makeRelativePath = (from: string, to: string) => {
   if (from === '') { return to; }
@@ -28,6 +29,34 @@ export class Callable {
   }
   bindingParameter() {
     return this.callable.Parameter?.find(p => p.Name === BINDING_PARAMETER_NAME);
+  }
+
+  returnType() {
+    return this.callable.ReturnType;
+  }
+
+  fullName() {
+    return this.callable.fullName();
+  } 
+
+  resourceFunction() {
+    const bindingParameter = this.bindingParameter();
+    const returnType = this.returnType();
+    const bindingType = bindingParameter !== undefined ? toTypescriptType(bindingParameter.Type) : '';
+    const bindingMethod = bindingParameter?.Collection ? 'entity' : 'entities';
+    const baseMethod = this.callable instanceof CsdlAction ? 'action' : 'function';
+    return `public ${this.callable.Name}(key: EntityKey<${bindingType}>): ODataActionResource<> {
+    return this.${bindingMethod}(key).${baseMethod}<>('${this.fullName()}');
+  }`;
+  }
+  callableFunction() {
+    const bindingParameter = this.bindingParameter();
+    const returnType = this.returnType();
+    const bindingType = bindingParameter !== undefined ? toTypescriptType(bindingParameter.Type) : '';
+    const baseMethod = this.callable instanceof CsdlAction ? 'callAction' : 'callFunction';
+    return `public call${this.callable.Name}(key: EntityKey<${bindingType}>) {
+    return this.${baseMethod}({}, this.${this.callable.Name}(key), 'none', options);
+  }`;
   }
 }
 
@@ -86,15 +115,9 @@ export abstract class Base {
   }
 
 
-  protected callables: [string, Callable][] = [];
+  protected callables: Callable[] = [];
   public addCallable(callable: Callable) {
-    if (this.callables.every(d => d[1] != callable)) {
-      var alias = callable.name()!;
-      while (this.callables.some(d => d[0] == alias)) {
-        alias = getRandomName();
-      }
-      this.callables.push([alias, callable]);
-    }
+    this.callables.push(callable);
   }
 
   public addCallables(callables: Callable[]) {
