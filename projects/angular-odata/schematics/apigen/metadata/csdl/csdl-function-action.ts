@@ -25,6 +25,16 @@ export class CsdlCallable {
     this.EntitySetPath = EntitySetPath;
     this.Parameter = Parameter?.map(p => new CsdlParameter(p));
   }
+
+  name() {
+    return `${this.Name}`;
+  }
+  namespace() {
+    return `${this.schema.Namespace}`;
+  }
+  fullName() {
+    return `${this.namespace()}.${this.Name}`;
+  }
 }
 export class CsdlFunction extends CsdlCallable {
   IsComposable?: boolean;
