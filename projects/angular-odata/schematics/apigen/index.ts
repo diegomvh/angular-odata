@@ -7,11 +7,11 @@ import { toTypescriptType } from './utils';
 import { Module } from './angular/module';
 import { ApiConfig } from './angular/api-config';
 import { Enum } from './angular/enum';
-import { Base, Index } from './angular/base';
+import { Base, Callable, Index } from './angular/base';
 import { Entity } from './angular/entity';
 import { Service } from './angular/service';
 
-const functions = {
+const utils = {
   toTypescriptType,
 };
 
@@ -72,6 +72,12 @@ export function apigen(options: ApiGenSchema) {
           }
         }
 
+        const functions = meta.functions().map(f => new Callable(f));
+        const actions = meta.actions().map(a => new Callable(a));
+        [...sources].filter(s => s instanceof Service).forEach((s: Service) => {
+          s.addCallables(functions.filter(f => f.isBound() && f.bindingParameter()?.Type === s.entityType()));
+          s.addCallables(actions.filter(f => f.isBound() && f.bindingParameter()?.Type === s.entityType()));
+        });
         [...sources].forEach(s => {
           for (let t of s.importTypes()) {
             s.addDependencies(sources.filter(s => s.fullName() === t));
@@ -83,7 +89,7 @@ export function apigen(options: ApiGenSchema) {
             ...{ name: s.name(), fileName: s.fileName(), fullName: s.fullName(), imports: s.imports() },
             ...s.variables(),
             ...strings,
-            ...functions
+            ...utils
           }),
           move(normalize(`${basePath}/${s.directory()}`))]
         )).reduce((rules, s) => [...rules, mergeWith(s, MergeStrategy.Overwrite)], [] as Rule[]));
