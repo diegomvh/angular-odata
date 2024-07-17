@@ -9,7 +9,10 @@ import {
   template,
   mergeWith,
   MergeStrategy,
+  SchematicsException
 } from '@angular-devkit/schematics';
+import { createDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { parseName } from '@schematics/angular/utility/parse-name';
 
 import { Schema as ApiGenSchema } from './schema';
 import { ODataMetadataParser } from './metadata/parser';
@@ -26,12 +29,26 @@ const utils = {
 };
 
 export function apigen(options: ApiGenSchema) {
-  return (tree: Tree, context: SchematicContext) => {
-    const basePath =
-      '/' +
-      (options.output
-        ? options.output + '/' + strings.dasherize(options.name)
-        : strings.dasherize(options.name));
+  return async (tree: Tree, context: SchematicContext) => {
+    const workspace = await getWorkspace(tree)
+    if (!options.project) {
+      options.project = workspace.projects.keys().next().value;
+    }
+    const project = workspace.projects.get(options.project);
+    if (!project) {
+      throw new SchematicsException(`Invalid project name: ${options.project}`);
+    }
+
+    if (options.path === undefined) {
+      options.path = await createDefaultPath(tree, options.project as string);
+    }
+
+    const parsedPath = parseName(options.path, options.name);
+    options.name = parsedPath.name;
+    options.path = parsedPath.path;
+
+    const modulePath = options.path + '/' + strings.dasherize(options.name);
+
     return fetch(options.metadata)
       .then((resp) => resp.text())
       .then((data) => new ODataMetadataParser(data).metadata())
@@ -128,7 +145,7 @@ export function apigen(options: ApiGenSchema) {
                   ...strings,
                   ...utils,
                 }),
-                move(normalize(`${basePath}/${s.directory()}`)),
+                move(normalize(`${modulePath}/${s.directory()}`)),
               ]),
             )
             .reduce(

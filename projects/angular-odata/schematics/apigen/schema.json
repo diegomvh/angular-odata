@@ -12,23 +12,24 @@
       "description": "The url of the metadata.",
       "type": "string"
     },
-    "output": {
-      "description": "The target directory.",
-      "type": "string"
-    },
-    "purge": {
-      "description": "Remove all files in output target.",
-      "type": "boolean"
-    },
-    "models": {
-      "description": "Create models.",
-      "type": "boolean"
-    },
-    "entity": {
+    "path": {
       "type": "string",
+      "format": "path",
+      "description": "The path at which to create the module, relative to the workspace root.",
       "visible": false
+    },
+    "project": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "serviceRootUrl": {
+      "description": "The serviceRootUrl of the api.",
+      "type": "string"
     }
-   },
+  },
   "required": [
     "name",
     "metadata"

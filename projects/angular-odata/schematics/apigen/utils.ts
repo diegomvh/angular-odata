@@ -70,3 +70,23 @@ export const toTypescriptType = (type: string, geo: boolean = true) => {
     }
   }
 };
+
+export const makeRelativePath = (from: string, to: string) => {
+  if (from === '') {
+    return to;
+  }
+  if (to.startsWith(from)) {
+    return to.substring(from.length + 1);
+  }
+  let shared = from;
+  let i = 0;
+  while (shared.length > 0 && !to.startsWith(shared)) {
+    shared = shared.substring(0, shared.lastIndexOf('/'));
+    i++;
+  }
+  return (
+    Array.from({ length: i }).fill('..').join('/') +
+    '/' +
+    to.substring(shared.length + (to.startsWith("/") ? 0 : 1))
+  );
+};

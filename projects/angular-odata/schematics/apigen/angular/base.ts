@@ -5,32 +5,11 @@ import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import {
   BINDING_PARAMETER_NAME,
-  CsdlAction,
   CsdlCallable,
   CsdlFunction,
   CsdlParameter,
 } from '../metadata/csdl/csdl-function-action';
-import { toTypescriptType } from '../utils';
-
-const makeRelativePath = (from: string, to: string) => {
-  if (from === '') {
-    return to;
-  }
-  if (to.startsWith(from)) {
-    return to.substring(from.length + 1);
-  }
-  let shared = from;
-  let i = 0;
-  while (shared.length > 0 && !to.startsWith(shared)) {
-    shared = shared.substring(0, shared.lastIndexOf('/'));
-    i++;
-  }
-  return (
-    Array.from({ length: i }).fill('..').join('/') +
-    '/' +
-    to.substring(shared.length)
-  );
-};
+import { makeRelativePath, toTypescriptType } from '../utils';
 
 export class Callable {
   constructor(protected callable: CsdlCallable) {}
