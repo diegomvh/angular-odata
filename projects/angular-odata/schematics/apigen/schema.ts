@@ -1,7 +1,8 @@
 export interface Schema {
   name: string;
+  project: string;
   metadata: string;
-  output: string;
+  path: string;
   serviceRootUrl?: string;
   version?: string;
   creation?: Date;
