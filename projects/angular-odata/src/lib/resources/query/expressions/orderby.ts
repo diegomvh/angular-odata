@@ -6,7 +6,10 @@ import { render, FieldFactory, Renderable, RenderableFactory } from './syntax';
 
 export type OrderAttribute = 'asc' | 'desc';
 export class OrderByField implements Renderable {
-  constructor(protected field: Renderable, protected order: OrderAttribute) {}
+  constructor(
+    protected field: Renderable,
+    protected order: OrderAttribute,
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'OrderByField';
@@ -43,7 +46,10 @@ export class OrderByField implements Renderable {
   }
 
   clone() {
-    return new OrderByField(typeof this.field !== 'string' ? this.field.clone() : this.field, this.order);
+    return new OrderByField(
+      typeof this.field !== 'string' ? this.field.clone() : this.field,
+      this.order,
+    );
   }
   resolve(parser: any) {
     return parser;
@@ -71,16 +77,16 @@ export class OrderByExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: OrderByExpressionBuilder<T>,
-      current?: OrderByExpression<T>
+      current?: OrderByExpression<T>,
     ) => OrderByExpression<T>,
-    current?: OrderByExpression<T>
+    current?: OrderByExpression<T>,
   ): OrderByExpression<T> {
     return opts(
       {
         t: FieldFactory<Required<T>>(),
         e: () => new OrderByExpression<T>(),
       },
-      current
+      current,
     ) as OrderByExpression<T>;
   }
 

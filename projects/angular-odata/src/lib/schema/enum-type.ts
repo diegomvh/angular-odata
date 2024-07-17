@@ -3,22 +3,21 @@ import { ODataParserSchemaElement } from './element';
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataEnumType<E> extends ODataParserSchemaElement<E, ODataEnumTypeParser<E>> {
+export class ODataEnumType<E> extends ODataParserSchemaElement<
+  E,
+  ODataEnumTypeParser<E>
+> {
   members: { [name: string]: E } | { [value: number]: string };
   constructor(config: EnumTypeConfig<E>, schema: ODataSchema) {
-    super(config, schema, new ODataEnumTypeParser<E>(
+    super(
       config,
-      schema.namespace,
-      schema.alias,
-    ));
+      schema,
+      new ODataEnumTypeParser<E>(config, schema.namespace, schema.alias),
+    );
     this.members = config.members;
   }
 
-  configure({
-    options,
-  }: {
-    options: ParserOptions;
-  }) {
+  configure({ options }: { options: ParserOptions }) {
     this.parser.configure({ options });
   }
 

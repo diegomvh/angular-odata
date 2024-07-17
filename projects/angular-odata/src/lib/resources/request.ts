@@ -280,8 +280,8 @@ export class ODataRequest<T> {
       ['property', 'entity', 'entities'].indexOf(this._responseType) !== -1
       ? 'json'
       : this._responseType === 'value'
-      ? 'text'
-      : <'arraybuffer' | 'blob' | 'json' | 'text'>this._responseType;
+        ? 'text'
+        : <'arraybuffer' | 'blob' | 'json' | 'text'>this._responseType;
   }
 
   get path() {

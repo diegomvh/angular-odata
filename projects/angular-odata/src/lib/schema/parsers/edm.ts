@@ -21,8 +21,10 @@ const EdmParser = <T>(
   },
   encode(value: any, options: StructuredTypeFieldOptions): any {
     return Array.isArray(value)
-      ? value.map((v) => !isRawType(v) ? _e(v, options) : v)
-      : !isRawType(value) ? _e(value, options) : value;
+      ? value.map((v) => (!isRawType(v) ? _e(v, options) : v))
+      : !isRawType(value)
+        ? _e(value, options)
+        : value;
   },
 });
 

@@ -34,7 +34,7 @@ describe('OData search builder', () => {
     describe('as factory function', () => {
       it('field', () => {
         const compare1 = ExpandExpression.factory<Person>(({ e, t }) =>
-          e().field(t.Car)
+          e().field(t.Car),
         );
 
         expect(compare1.render()).toBe('Car');
@@ -42,7 +42,7 @@ describe('OData search builder', () => {
 
       it('navigation', () => {
         const compare1 = ExpandExpression.factory<Person>(({ e, t }) =>
-          e().field(t.Car?.Model)
+          e().field(t.Car?.Model),
         );
 
         expect(compare1.render()).toBe('Car/Model');
@@ -58,11 +58,11 @@ describe('OData search builder', () => {
             f.expand(({ e, t }) => e().field(t.Model));
             f.skip(1);
             f.filter(({ e, t }) => e().eq(t.Year, 2000));
-          })
+          }),
         );
 
         expect(compare1.render()).toBe(
-          'Car($expand=Model;$filter=Year eq 2000;$skip=1)'
+          'Car($expand=Model;$filter=Year eq 2000;$skip=1)',
         );
       });
 
@@ -72,11 +72,11 @@ describe('OData search builder', () => {
             f.filter(({ e, t }) => e().in(t.Name, ['BMW', 'Audi']));
             f.skip(1);
             f.top(1);
-          })
+          }),
         );
 
         expect(compare1.render()).toBe(
-          "Car/Model($filter=Name in ('BMW','Audi');$skip=1;$top=1)"
+          "Car/Model($filter=Name in ('BMW','Audi');$skip=1;$top=1)",
         );
       });
     });

@@ -182,8 +182,8 @@ export abstract class ODataCache implements Cache {
     return req.isFetch()
       ? this.handleFetch(req, res$)
       : req.isMutate()
-      ? this.handleMutate(req, res$)
-      : res$;
+        ? this.handleMutate(req, res$)
+        : res$;
   }
 
   private handleFetch(

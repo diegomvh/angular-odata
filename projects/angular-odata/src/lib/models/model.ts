@@ -38,18 +38,18 @@ export class ODataModel<T> {
   // Parent
   _parent:
     | [
-      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-      ODataModelField<any> | null
-    ]
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null,
+      ]
     | null = null;
   _resource: ODataResource<T> | null = null;
   _resources: {
     parent:
-    | [
-      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-      ODataModelField<any> | null
-    ]
-    | null;
+      | [
+          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+          ODataModelField<any> | null,
+        ]
+      | null;
     resource: ODataResource<T> | null;
   }[] = [];
   _attributes: Map<string, ODataModelAttribute<any>> = new Map<
@@ -61,30 +61,36 @@ export class ODataModel<T> {
   // Events
   events$: ODataModelEventEmitter<T>;
 
-  static buildMetaOptions<T>({config, structuredType}: { config?: ModelOptions; structuredType: ODataStructuredType<T>; }) {
-  if (config === undefined) {
-    const fields = structuredType
-      .fields({ include_navigation: true, include_parents: true })
-      .reduce((acc, field) => {
-        let name = field.name;
-        // Prevent collision with reserved keywords
-        while (RESERVED_FIELD_NAMES.includes(name)) {
-          name = name + '_';
-        }
-        return Object.assign(acc, {
-          [name]: {
-            field: field.name,
-            default: field.default,
-            required: !field.nullable,
-          },
-        });
-      }, {});
-    config = {
-      fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
-    };
+  static buildMetaOptions<T>({
+    config,
+    structuredType,
+  }: {
+    config?: ModelOptions;
+    structuredType: ODataStructuredType<T>;
+  }) {
+    if (config === undefined) {
+      const fields = structuredType
+        .fields({ include_navigation: true, include_parents: true })
+        .reduce((acc, field) => {
+          let name = field.name;
+          // Prevent collision with reserved keywords
+          while (RESERVED_FIELD_NAMES.includes(name)) {
+            name = name + '_';
+          }
+          return Object.assign(acc, {
+            [name]: {
+              field: field.name,
+              default: field.default,
+              required: !field.nullable,
+            },
+          });
+        }, {});
+      config = {
+        fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
+      };
+    }
+    return new ODataModelOptions<T>({ config, structuredType });
   }
-  return new ODataModelOptions<T>({ config, structuredType });
-}
 
   constructor(
     data: Partial<T> | { [name: string]: any } = {},
@@ -96,12 +102,12 @@ export class ODataModel<T> {
     }: {
       parent?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null
+        ODataModelField<any> | null,
       ];
       resource?: ODataResource<T> | null;
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
-    } = {}
+    } = {},
   ) {
     const Klass = this.constructor as typeof ODataModel;
     if (Klass.meta === undefined)
@@ -113,10 +119,15 @@ export class ODataModel<T> {
     // Client Id
     (<any>this)[this._meta.cid] =
       (<any>data)[this._meta.cid] ||
-      Strings.uniqueId({ prefix: `${Klass.meta.structuredType.name.toLowerCase()}-` });
+      Strings.uniqueId({
+        prefix: `${Klass.meta.structuredType.name.toLowerCase()}-`,
+      });
 
     if (!reset)
-      data = Objects.merge(this.defaults(), data as { [name: string]: any }) as Partial<T>;
+      data = Objects.merge(
+        this.defaults(),
+        data as { [name: string]: any },
+      ) as Partial<T>;
 
     this.assign(data, { reset });
   }
@@ -142,7 +153,7 @@ export class ODataModel<T> {
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>
       | ODataSingletonResource<T>
-      | null
+      | null,
   ) {
     // Push current parent and resource
     this._resources.push({ parent: this._parent, resource: this._resource });
@@ -164,22 +175,22 @@ export class ODataModel<T> {
   }
 
   navigationProperty<N>(
-    name: keyof T | string
+    name: keyof T | string,
   ): ODataNavigationPropertyResource<N> {
     const field = this._meta.findField<N>(name);
     if (!field || !field.navigation)
       throw Error(
-        `navigationProperty: Can't find navigation property ${name as string}`
+        `navigationProperty: Can't find navigation property ${name as string}`,
       );
 
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
       throw Error(
-        "navigationProperty: Can't get navigation without ODataEntityResource with key"
+        "navigationProperty: Can't get navigation without ODataEntityResource with key",
       );
 
     return field.resourceFactory<T, N>(
-      resource
+      resource,
     ) as ODataNavigationPropertyResource<N>;
   }
 
@@ -191,7 +202,7 @@ export class ODataModel<T> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
       throw Error(
-        "property: Can't get property without ODataEntityResource with key"
+        "property: Can't get property without ODataEntityResource with key",
       );
 
     return field.resourceFactory<T, N>(resource) as ODataPropertyResource<N>;
@@ -202,7 +213,7 @@ export class ODataModel<T> {
       | ODataEntityResource<T>
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>
-      | ODataSingletonResource<T>
+      | ODataSingletonResource<T>,
   ) {
     return this._meta.attach(this, resource);
   }
@@ -231,7 +242,7 @@ export class ODataModel<T> {
   }
 
   isParentOf(
-    child: ODataModel<any> | ODataCollection<any, ODataModel<any>>
+    child: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
   ): boolean {
     return (
       child !== this &&
@@ -244,7 +255,7 @@ export class ODataModel<T> {
     {
       field_mapping = false,
       resolve = true,
-    }: { field_mapping?: boolean; resolve?: boolean } = {}
+    }: { field_mapping?: boolean; resolve?: boolean } = {},
   ): { [name: string]: any } | null | undefined {
     return this._meta.resolveReferential(this, attr, {
       field_mapping,
@@ -257,7 +268,7 @@ export class ODataModel<T> {
     {
       field_mapping = false,
       resolve = true,
-    }: { field_mapping?: boolean; resolve?: boolean } = {}
+    }: { field_mapping?: boolean; resolve?: boolean } = {},
   ): { [name: string]: any } | null | undefined {
     return this._meta.resolveReferenced(this, attr, {
       field_mapping,
@@ -338,7 +349,11 @@ export class ODataModel<T> {
     return this.toEntity(INCLUDE_DEEP);
   }
 
-  set(path: keyof T | string | string[], value: any, { type }: { type?: EdmType | string } = {}) {
+  set(
+    path: keyof T | string | string[],
+    value: any,
+    { type }: { type?: EdmType | string } = {},
+  ) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -428,28 +443,38 @@ export class ODataModel<T> {
       reset?: boolean;
       reparent?: boolean;
       silent?: boolean;
-    } = {}
+    } = {},
   ) {
-    return this._meta.assign(this, entity, { add, merge, remove, reset, silent, reparent }) as this;
+    return this._meta.assign(this, entity, {
+      add,
+      merge,
+      remove,
+      reset,
+      silent,
+      reparent,
+    }) as this;
   }
 
   clone<M extends ODataModel<T>>() {
-    return new (<typeof ODataModel>this.constructor)(this.toEntity(INCLUDE_DEEP), {
-      resource: this.resource() as ODataResource<T>,
-      annots: this.annots(),
-    }) as M;
+    return new (<typeof ODataModel>this.constructor)(
+      this.toEntity(INCLUDE_DEEP),
+      {
+        resource: this.resource() as ODataResource<T>,
+        annots: this.annots(),
+      },
+    ) as M;
   }
 
   private _request<T, R>(
     obs$: Observable<T>,
-    mapCallback: (response: T) => R
+    mapCallback: (response: T) => R,
   ): Observable<R> {
     this.events$.trigger(ODataModelEventType.Request, {
       options: { observable: obs$ },
     });
     return obs$.pipe(
       map((response) => mapCallback(response)),
-      finalize(() => this.events$.trigger(ODataModelEventType.Sync))
+      finalize(() => this.events$.trigger(ODataModelEventType.Sync)),
     );
   }
 
@@ -501,8 +526,8 @@ export class ODataModel<T> {
       return throwError(
         () =>
           new Error(
-            'save: Resource type ODataEntityResource/ODataNavigationPropertyResource needed'
-          )
+            'save: Resource type ODataEntityResource/ODataNavigationPropertyResource needed',
+          ),
       );
 
     // Resolve method and resource key
@@ -510,8 +535,8 @@ export class ODataModel<T> {
       return throwError(
         () =>
           new Error(
-            'save: Composite key require a specific method, use create/update/modify'
-          )
+            'save: Composite key require a specific method, use create/update/modify',
+          ),
       );
     method = method || (!resource.hasKey() ? 'create' : 'update');
     if (
@@ -520,7 +545,7 @@ export class ODataModel<T> {
       !resource.hasKey()
     )
       return throwError(
-        () => new Error('save: Update/Patch require entity key')
+        () => new Error('save: Update/Patch require entity key'),
       );
     if (
       resource instanceof ODataNavigationPropertyResource ||
@@ -542,16 +567,18 @@ export class ODataModel<T> {
         ? resource.create(_entity as T, options)
         : method === 'modify'
           ? resource.modify(_entity as T, {
-            etag: this.annots().etag,
-            ...options,
-          })
+              etag: this.annots().etag,
+              ...options,
+            })
           : resource.update(_entity as T, {
-            etag: this.annots().etag,
-            ...options,
-          });
+              etag: this.annots().etag,
+              ...options,
+            });
     return this._request(obs$, ({ entity, annots }) => {
       this._annotations = annots;
-      return this.assign(entity ?? (_entity as { [name: string]: any }), { reset: true });
+      return this.assign(entity ?? (_entity as { [name: string]: any }), {
+        reset: true,
+      });
     });
   }
 
@@ -573,12 +600,12 @@ export class ODataModel<T> {
       return throwError(
         () =>
           new Error(
-            'destroy: Resource type ODataEntityResource/ODataNavigationPropertyResource needed'
-          )
+            'destroy: Resource type ODataEntityResource/ODataNavigationPropertyResource needed',
+          ),
       );
     if (!resource.hasKey())
       return throwError(
-        () => new Error("destroy: Can't destroy model without key")
+        () => new Error("destroy: Can't destroy model without key"),
       );
 
     const obs$ = resource.destroy({ etag: this.annots().etag, ...options });
@@ -593,7 +620,7 @@ export class ODataModel<T> {
    * @param ctx Function to execute
    */
   query(
-    ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
+    ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void,
   ) {
     const resource = this.resource();
     return (resource ? this._meta.query(this, resource, ctx) : this) as this;
@@ -645,7 +672,7 @@ export class ODataModel<T> {
       | 'none'
       | 'blob'
       | 'arraybuffer',
-    options: ODataFunctionOptions<R> = {}
+    options: ODataFunctionOptions<R> = {},
   ): Observable<
     | R
     | ODataModel<R>
@@ -659,8 +686,8 @@ export class ODataModel<T> {
       return throwError(
         () =>
           new Error(
-            "callFunction: Can't call function without ODataEntityResource with key"
-          )
+            "callFunction: Can't call function without ODataEntityResource with key",
+          ),
       );
 
     const func = resource.function<P, R>(name).query((q) => q.restore(options));
@@ -668,26 +695,26 @@ export class ODataModel<T> {
       case 'property':
         return this._request(
           func.callProperty(params, options),
-          (resp) => resp
+          (resp) => resp,
         );
       case 'model':
         return this._request(func.callModel(params, options), (resp) => resp);
       case 'collection':
         return this._request(
           func.callCollection(params, options),
-          (resp) => resp
+          (resp) => resp,
         );
       case 'blob':
         return this._request(func.callBlob(params, options), (resp) => resp);
       case 'arraybuffer':
         return this._request(
           func.callArraybuffer(params, options),
-          (resp) => resp
+          (resp) => resp,
         );
       default:
         return this._request(
           func.call(params, { responseType, ...options }),
-          (resp) => resp
+          (resp) => resp,
         );
     }
   }
@@ -702,7 +729,7 @@ export class ODataModel<T> {
       | 'none'
       | 'blob'
       | 'arraybuffer',
-    { ...options }: {} & ODataActionOptions<R> = {}
+    { ...options }: {} & ODataActionOptions<R> = {},
   ): Observable<
     | R
     | ODataModel<R>
@@ -716,8 +743,8 @@ export class ODataModel<T> {
       return throwError(
         () =>
           new Error(
-            "callAction: Can't call action without ODataEntityResource with key"
-          )
+            "callAction: Can't call action without ODataEntityResource with key",
+          ),
       );
 
     const action = resource.action<P, R>(name).query((q) => q.restore(options));
@@ -725,26 +752,26 @@ export class ODataModel<T> {
       case 'property':
         return this._request(
           action.callProperty(params, options),
-          (resp) => resp
+          (resp) => resp,
         );
       case 'model':
         return this._request(action.callModel(params, options), (resp) => resp);
       case 'collection':
         return this._request(
           action.callCollection(params, options),
-          (resp) => resp
+          (resp) => resp,
         );
       case 'blob':
         return this._request(action.callBlob(params, options), (resp) => resp);
       case 'arraybuffer':
         return this._request(
           action.callArraybuffer(params, options),
-          (resp) => resp
+          (resp) => resp,
         );
       default:
         return this._request(
           action.call(params, { responseType, ...options }),
-          (resp) => resp
+          (resp) => resp,
         );
     }
   }
@@ -756,23 +783,24 @@ export class ODataModel<T> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource))
       throw new Error(
-        `cast: Can't cast to derived model without ODataEntityResource`
+        `cast: Can't cast to derived model without ODataEntityResource`,
       );
 
     return resource
       .cast<S>(type)
       .asModel(this.toEntity(INCLUDE_DEEP) as { [name: string]: any }, {
-        annots: this.annots() as any, ModelType
+        annots: this.annots() as any,
+        ModelType,
       });
   }
 
   fetchNavigationProperty<S>(
     name: keyof T | string,
     responseType: 'model' | 'collection',
-    options: ODataQueryArgumentsOptions<S> = {}
+    options: ODataQueryArgumentsOptions<S> = {},
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
     const nav = this.navigationProperty<S>(
-      name
+      name,
     ) as ODataNavigationPropertyResource<S>;
     nav.query((q) => q.restore(options));
     switch (responseType) {
@@ -785,7 +813,7 @@ export class ODataModel<T> {
 
   fetchAttribute<P>(
     name: keyof T | string,
-    options: ODataQueryArgumentsOptions<P> = {}
+    options: ODataQueryArgumentsOptions<P> = {},
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
     const field = this._meta.findField<P>(name);
     if (!field)
@@ -807,7 +835,7 @@ export class ODataModel<T> {
       });
     } else {
       const prop = field.resourceFactory<T, P>(
-        this.resource()!
+        this.resource()!,
       ) as ODataPropertyResource<P>;
       prop.query((q) => q.restore(options as ODataQueryArguments<P>));
       return this._request(prop.fetchProperty(options), (resp) => {
@@ -818,7 +846,7 @@ export class ODataModel<T> {
   }
 
   getAttribute<P>(
-    name: keyof T | string
+    name: keyof T | string,
   ): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null | undefined {
     const field = this._meta.findField<P>(name);
     if (!field)
@@ -849,7 +877,7 @@ export class ODataModel<T> {
   setAttribute<N>(
     name: keyof T | string,
     model: ODataModel<N> | ODataCollection<N, ODataModel<N>> | null,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<this> {
     const reference = (
       this.navigationProperty<N>(name) as ODataNavigationPropertyResource<N>
@@ -860,7 +888,7 @@ export class ODataModel<T> {
     if (model instanceof ODataModel) {
       obs$ = reference.set(
         model.asEntity((e) => e.resource()) as ODataEntityResource<N>,
-        { etag, ...options }
+        { etag, ...options },
       );
     } else if (model instanceof ODataCollection) {
       obs$ = forkJoin(
@@ -869,9 +897,9 @@ export class ODataModel<T> {
           .map((m) =>
             reference.add(
               m.asEntity((e) => e.resource()) as ODataEntityResource<N>,
-              options
-            )
-          )
+              options,
+            ),
+          ),
       );
     } else if (model === null) {
       obs$ = reference.unset({ etag, ...options });
@@ -882,7 +910,7 @@ export class ODataModel<T> {
   setReference<N>(
     name: keyof T | string,
     model: ODataModel<N> | ODataCollection<N, ODataModel<N>> | null,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<this> {
     const reference = (
       this.navigationProperty<N>(name) as ODataNavigationPropertyResource<N>
@@ -893,7 +921,7 @@ export class ODataModel<T> {
     if (model instanceof ODataModel) {
       obs$ = reference.set(
         model.asEntity((e) => e.resource()) as ODataEntityResource<N>,
-        { etag, ...options }
+        { etag, ...options },
       );
     } else if (model instanceof ODataCollection) {
       obs$ = forkJoin(
@@ -902,9 +930,9 @@ export class ODataModel<T> {
           .map((m) =>
             reference.add(
               m.asEntity((e) => e.resource()) as ODataEntityResource<N>,
-              options
-            )
-          )
+              options,
+            ),
+          ),
       );
     } else if (model === null) {
       obs$ = reference.unset({ etag, ...options });
@@ -964,6 +992,4 @@ export class ODataModel<T> {
   //#endregion
 }
 
-const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(
-  ODataModel.prototype
-);
+const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);

@@ -23,14 +23,25 @@ export class ODataSchema extends ODataAnnotatable {
     this.api = api;
     this.namespace = config.namespace;
     this.alias = config.alias;
-    this.enums = (config.enums ?? []).map((config) => new ODataEnumType(config, this));
-    this.entities = (config.entities ?? []).map((config) => new ODataStructuredType(config, this));
-    this.callables = OData.mergeCallableParameters(config.callables ?? []).map((config) => new ODataCallable(config, this));
-    this.containers = (config.containers ?? []).map((config) => new ODataEntityContainer(config, this));
+    this.enums = (config.enums ?? []).map(
+      (config) => new ODataEnumType(config, this),
+    );
+    this.entities = (config.entities ?? []).map(
+      (config) => new ODataStructuredType(config, this),
+    );
+    this.callables = OData.mergeCallableParameters(config.callables ?? []).map(
+      (config) => new ODataCallable(config, this),
+    );
+    this.containers = (config.containers ?? []).map(
+      (config) => new ODataEntityContainer(config, this),
+    );
   }
 
   isNamespaceOf(type: string) {
-    return (type.startsWith(this.namespace) ?? (this.alias && type.startsWith(this.alias)));
+    return (
+      type.startsWith(this.namespace) ??
+      (this.alias && type.startsWith(this.alias))
+    );
   }
 
   get entitySets() {
@@ -56,22 +67,12 @@ export class ODataSchema extends ODataAnnotatable {
   }
   //#endregion
 
-  configure({
-    options,
-  }: {
-    options: ParserOptions;
-  }) {
+  configure({ options }: { options: ParserOptions }) {
     // Configure Enums
-    this.enums.forEach((enu) =>
-      enu.configure({ options }),
-    );
+    this.enums.forEach((enu) => enu.configure({ options }));
     // Configure Entities
-    this.entities.forEach((structured) =>
-      structured.configure({ options }),
-    );
+    this.entities.forEach((structured) => structured.configure({ options }));
     // Configure callables
-    this.callables.forEach((callable) =>
-      callable.configure({ options }),
-    );
+    this.callables.forEach((callable) => callable.configure({ options }));
   }
 }

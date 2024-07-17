@@ -49,21 +49,21 @@ export class ODataClient {
     private loader: ODataConfigLoader,
   ) {
     this.loader.loadConfigs().subscribe((configs) => {
-        this.settings = new ODataSettings(configs);
-        this.settings.configure({
-          requester: (req: ODataRequest<any>): Observable<any> =>
-            this.http.request(req.method, `${req.url}`, {
-              body: req.body,
-              context: req.context,
-              headers: req.headers,
-              observe: req.observe,
-              params: req.params,
-              reportProgress: req.reportProgress,
-              responseType: req.responseType,
-              withCredentials: req.withCredentials,
-            }),
-        });
+      this.settings = new ODataSettings(configs);
+      this.settings.configure({
+        requester: (req: ODataRequest<any>): Observable<any> =>
+          this.http.request(req.method, `${req.url}`, {
+            body: req.body,
+            context: req.context,
+            headers: req.headers,
+            observe: req.observe,
+            params: req.params,
+            reportProgress: req.reportProgress,
+            responseType: req.responseType,
+            withCredentials: req.withCredentials,
+          }),
       });
+    });
   }
 
   //#region Resolve Building Blocks

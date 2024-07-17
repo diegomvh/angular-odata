@@ -24,13 +24,13 @@ export class ODataValueResource<T> extends ODataResource<T> {
 
   static fromResource<V>(resource: ODataResource<any>) {
     const baseType = resource.outgoingType();
-    let baseSchema = baseType !== undefined ? resource.api.structuredType<any>(baseType) : undefined;
-    const value = ODataValueResource.factory<V>(
-      resource.api,
-      {
-        segments: resource.cloneSegments(),
-      }
-    );
+    let baseSchema =
+      baseType !== undefined
+        ? resource.api.structuredType<any>(baseType)
+        : undefined;
+    const value = ODataValueResource.factory<V>(resource.api, {
+      segments: resource.cloneSegments(),
+    });
 
     // Switch entitySet to binding type if available
     if (baseSchema !== undefined && baseSchema.type() !== baseType) {

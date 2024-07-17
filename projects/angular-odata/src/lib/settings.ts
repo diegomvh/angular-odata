@@ -117,9 +117,7 @@ export class ODataSettings {
   }
 
   public modelForType(type: string) {
-    let values = this.apis
-      .map((api) => api.findModel(type))
-      .filter((e) => e);
+    let values = this.apis.map((api) => api.findModel(type)).filter((e) => e);
     if (values.length === 0) throw Error(`No Model for type ${type} was found`);
     if (values.length > 1)
       throw Error('Multiple APIs: More than one value was found');

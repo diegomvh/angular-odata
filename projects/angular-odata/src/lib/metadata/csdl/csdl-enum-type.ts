@@ -1,23 +1,31 @@
-import { EnumTypeConfig, EnumTypeFieldConfig } from "../../types";
-import { CsdlAnnotable } from "./csdl-annotation";
-import type { CsdlSchema } from "./csdl-schema";
+import { EnumTypeConfig, EnumTypeFieldConfig } from '../../types';
+import { CsdlAnnotable } from './csdl-annotation';
+import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlEnumType extends CsdlAnnotable {
   Name: string;
   Member: CsdlMember[];
   UnderlyingType?: string;
   IsFlags?: boolean;
-  constructor(private schema: CsdlSchema, {Name, Member, UnderlyingType, IsFlags, Annotation}: {
-    Name: string,
-    Member: any[],
-    UnderlyingType?: string,
-    IsFlags?: boolean,
-    Annotation?: any[],
-  }
+  constructor(
+    private schema: CsdlSchema,
+    {
+      Name,
+      Member,
+      UnderlyingType,
+      IsFlags,
+      Annotation,
+    }: {
+      Name: string;
+      Member: any[];
+      UnderlyingType?: string;
+      IsFlags?: boolean;
+      Annotation?: any[];
+    },
   ) {
-    super({Annotation})
+    super({ Annotation });
     this.Name = Name;
-    this.Member = Member.map(m => new CsdlMember(m));
+    this.Member = Member.map((m) => new CsdlMember(m));
     this.UnderlyingType = UnderlyingType;
     this.IsFlags = IsFlags;
   }
@@ -29,8 +37,8 @@ export class CsdlEnumType extends CsdlAnnotable {
   toConfig(): EnumTypeConfig<any> {
     return {
       name: this.Name,
-      annotations: this.Annotation?.map(a => a.toConfig()),
-      members: this.Member.map(m => m.toConfig()),
+      annotations: this.Annotation?.map((a) => a.toConfig()),
+      members: this.Member.map((m) => m.toConfig()),
       fields: {},
       flags: this.IsFlags,
     } as EnumTypeConfig<any>;
@@ -40,12 +48,16 @@ export class CsdlEnumType extends CsdlAnnotable {
 export class CsdlMember extends CsdlAnnotable {
   Name: string;
   Value?: number;
-  constructor({Name, Value, Annotation}: {
-    Name: string,
-    Value?: number,
-    Annotation?: any[],
+  constructor({
+    Name,
+    Value,
+    Annotation,
+  }: {
+    Name: string;
+    Value?: number;
+    Annotation?: any[];
   }) {
-    super({Annotation})
+    super({ Annotation });
     this.Name = Name;
     this.Value = Value;
   }
@@ -53,7 +65,7 @@ export class CsdlMember extends CsdlAnnotable {
   toConfig(): EnumTypeFieldConfig<any> {
     return {
       value: this.Value,
-      annotations: this.Annotation?.map(a => a.toConfig()),
+      annotations: this.Annotation?.map((a) => a.toConfig()),
     } as EnumTypeFieldConfig<any>;
   }
 }

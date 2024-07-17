@@ -3,17 +3,20 @@ import { ODataParserSchemaElement } from './element';
 import { ODataCallableParser } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataCallable<R> extends ODataParserSchemaElement<R, ODataCallableParser<R>> {
+export class ODataCallable<R> extends ODataParserSchemaElement<
+  R,
+  ODataCallableParser<R>
+> {
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
 
   constructor(config: CallableConfig, schema: ODataSchema) {
-    super(config, schema, new ODataCallableParser(
+    super(
       config,
-      schema.namespace,
-      schema.alias,
-    ));
+      schema,
+      new ODataCallableParser(config, schema.namespace, schema.alias),
+    );
     this.entitySetPath = config.entitySetPath;
     this.bound = config.bound;
     this.composable = config.composable;
@@ -25,20 +28,15 @@ export class ODataCallable<R> extends ODataParserSchemaElement<R, ODataCallableP
     else if (this.bound) path = `${this.schema.namespace}.${this.name}`;
     else
       path = this.parser.return
-        ? this.api.findEntitySet(this.parser.return.type)?.name ||
-          this.name
+        ? this.api.findEntitySet(this.parser.return.type)?.name || this.name
         : this.name;
     return path;
   }
 
-  configure({
-    options,
-  }: {
-    options: ParserOptions;
-  }) {
+  configure({ options }: { options: ParserOptions }) {
     this.parser.configure({
       options,
-      parserForType: (t: string) => this.api.parserForType(t)
+      parserForType: (t: string) => this.api.parserForType(t),
     });
   }
 
@@ -81,6 +79,6 @@ export class ODataCallable<R> extends ODataParserSchemaElement<R, ODataCallableP
   }
 
   returnType() {
-    return this.parser.returnType(); 
+    return this.parser.returnType();
   }
 }

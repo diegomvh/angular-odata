@@ -1,5 +1,15 @@
 import { strings, normalize } from '@angular-devkit/core';
-import { apply, SchematicContext, chain, Tree, Rule, move, template, mergeWith, MergeStrategy } from '@angular-devkit/schematics';
+import {
+  apply,
+  SchematicContext,
+  chain,
+  Tree,
+  Rule,
+  move,
+  template,
+  mergeWith,
+  MergeStrategy,
+} from '@angular-devkit/schematics';
 
 import { Schema as ApiGenSchema } from './schema';
 import { ODataMetadataParser } from './metadata/parser';
@@ -17,13 +27,20 @@ const utils = {
 
 export function apigen(options: ApiGenSchema) {
   return (tree: Tree, context: SchematicContext) => {
-    const basePath = "/" + (options.output ? options.output + "/" + strings.dasherize(options.name) : strings.dasherize(options.name));
+    const basePath =
+      '/' +
+      (options.output
+        ? options.output + '/' + strings.dasherize(options.name)
+        : strings.dasherize(options.name));
     return fetch(options.metadata)
-      .then(resp => resp.text())
-      .then(data => (new ODataMetadataParser(data)).metadata())
-      .then(meta => {
+      .then((resp) => resp.text())
+      .then((data) => new ODataMetadataParser(data).metadata())
+      .then((meta) => {
         options.creation = new Date();
-        options.serviceRootUrl = options.metadata.substring(0, options.metadata.length - 9);
+        options.serviceRootUrl = options.metadata.substring(
+          0,
+          options.metadata.length - 9,
+        );
         options.version = meta.Version;
         const module = new Module(options);
         const config = new ApiConfig(options);
@@ -34,36 +51,36 @@ export function apigen(options: ApiGenSchema) {
         for (let s of meta.Schemas) {
           const namespace = s.Namespace;
           // Enum
-          for (const enumType of (s.EnumType ?? [])) {
+          for (const enumType of s.EnumType ?? []) {
             const enu = new Enum(options, enumType);
             index.addDependency(enu);
             sources.push(enu);
           }
           // Entity
-          for (let entityType of (s.EntityType ?? [])) {
+          for (let entityType of s.EntityType ?? []) {
             const entity = new Entity(options, entityType);
             index.addDependency(entity);
             sources.push(entity);
           }
           // Complex
-          for (let complexType of (s.ComplexType ?? [])) {
+          for (let complexType of s.ComplexType ?? []) {
             const entity = new Entity(options, complexType);
             index.addDependency(entity);
             sources.push(entity);
           }
           // Container
-          for (let entityContainer of (s.EntityContainer ?? [])) {
+          for (let entityContainer of s.EntityContainer ?? []) {
             const service = new Service(options, entityContainer);
             module.addService(service);
             index.addDependency(service);
             sources.push(service);
-            for (let entitySet of (entityContainer.EntitySet ?? [])) {
+            for (let entitySet of entityContainer.EntitySet ?? []) {
               const service = new Service(options, entitySet);
               module.addService(service);
               index.addDependency(service);
               sources.push(service);
             }
-            for (let singleton of (entityContainer.Singleton ?? [])) {
+            for (let singleton of entityContainer.Singleton ?? []) {
               const service = new Service(options, singleton);
               module.addService(service);
               index.addDependency(service);
@@ -72,27 +89,53 @@ export function apigen(options: ApiGenSchema) {
           }
         }
 
-        const functions = meta.functions().map(f => new Callable(f));
-        const actions = meta.actions().map(a => new Callable(a));
-        [...sources].filter(s => s instanceof Service).forEach((s: Service) => {
-          s.addCallables(functions.filter(f => f.isBound() && f.bindingParameter()?.Type === s.entityType()));
-          s.addCallables(actions.filter(f => f.isBound() && f.bindingParameter()?.Type === s.entityType()));
-        });
-        [...sources].forEach(s => {
+        const functions = meta.functions().map((f) => new Callable(f));
+        const actions = meta.actions().map((a) => new Callable(a));
+        [...sources]
+          .filter((s) => s instanceof Service)
+          .forEach((s: Service) => {
+            s.addCallables(
+              functions.filter(
+                (f) =>
+                  f.isBound() && f.bindingParameter()?.Type === s.entityType(),
+              ),
+            );
+            s.addCallables(
+              actions.filter(
+                (f) =>
+                  f.isBound() && f.bindingParameter()?.Type === s.entityType(),
+              ),
+            );
+          });
+        [...sources].forEach((s) => {
           for (let t of s.importTypes()) {
-            s.addDependencies(sources.filter(s => s.fullName() === t));
+            s.addDependencies(sources.filter((s) => s.fullName() === t));
           }
-          s.cleanImportedNames(); 
+          s.cleanImportedNames();
         });
-        return chain(sources.map(s => apply(s.template(), [
-          template({
-            ...{ name: s.name(), fileName: s.fileName(), fullName: s.fullName(), imports: s.imports() },
-            ...s.variables(),
-            ...strings,
-            ...utils
-          }),
-          move(normalize(`${basePath}/${s.directory()}`))]
-        )).reduce((rules, s) => [...rules, mergeWith(s, MergeStrategy.Overwrite)], [] as Rule[]));
+        return chain(
+          sources
+            .map((s) =>
+              apply(s.template(), [
+                template({
+                  ...{
+                    name: s.name(),
+                    fileName: s.fileName(),
+                    fullName: s.fullName(),
+                    imports: s.imports(),
+                  },
+                  ...s.variables(),
+                  ...strings,
+                  ...utils,
+                }),
+                move(normalize(`${basePath}/${s.directory()}`)),
+              ]),
+            )
+            .reduce(
+              (rules, s) => [...rules, mergeWith(s, MergeStrategy.Overwrite)],
+              [] as Rule[],
+            ),
+        );
       });
   };
 }

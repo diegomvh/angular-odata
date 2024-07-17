@@ -35,16 +35,16 @@ export class ComputeExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: ComputeExpressionBuilder<T>,
-      current?: ComputeExpression<T>
+      current?: ComputeExpression<T>,
     ) => ComputeExpression<T>,
-    current?: ComputeExpression<T>
+    current?: ComputeExpression<T>,
   ): ComputeExpression<T> {
     return opts(
       {
         t: FieldFactory<Required<T>>(),
         e: () => new ComputeExpression<T>(),
       },
-      current
+      current,
     ) as ComputeExpression<T>;
   }
 
@@ -76,7 +76,7 @@ export class ComputeExpression<T> extends Expression<T> {
     options?: ParserOptions;
   } = {}): string {
     let children = this._children.map((n) =>
-      n.render({ aliases, escape, prefix, parser, options })
+      n.render({ aliases, escape, prefix, parser, options }),
     );
     return this.names
       .map((name, index) => `${children[index]} as ${name}`)
@@ -98,7 +98,7 @@ export class ComputeExpression<T> extends Expression<T> {
 
   field<T>(
     name: string,
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ComputeExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,

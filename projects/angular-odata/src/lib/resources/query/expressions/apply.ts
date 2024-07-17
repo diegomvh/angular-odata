@@ -47,9 +47,11 @@ export class GroupByTransformations<T> extends Expression<T> {
 
   static fromJson<T>(json: { [name: string]: any }): GroupByTransformations<T> {
     return new GroupByTransformations<T>({
-      children: json['children'].map((c: any) => typeof c !== 'string' ? RenderableFactory(c) : c),
+      children: json['children'].map((c: any) =>
+        typeof c !== 'string' ? RenderableFactory(c) : c,
+      ),
       methods: json['methods'],
-      aliases: json['aliases']
+      aliases: json['aliases'],
     });
   }
 
@@ -67,24 +69,34 @@ export class GroupByTransformations<T> extends Expression<T> {
     options?: ParserOptions;
   } = {}): string {
     const children = this._children.map((n) =>
-      typeof n !== 'string' ? n.render({ aliases, escape, prefix, parser, options }) : n
+      typeof n !== 'string'
+        ? n.render({ aliases, escape, prefix, parser, options })
+        : n,
     );
     return `aggregate(${children
-      .map((child, index) =>  
-        (!child) ? `${this.methods[index]} as ${this.aliases[index]}` : `${child} with ${this.methods[index]} as ${this.aliases[index]}`
+      .map((child, index) =>
+        !child
+          ? `${this.methods[index]} as ${this.aliases[index]}`
+          : `${child} with ${this.methods[index]} as ${this.aliases[index]}`,
       )
       .join(',')})`;
   }
 
   clone() {
     return new GroupByTransformations<T>({
-      children: this._children.map((c) => typeof c !== 'string' ? c.clone() : c),
+      children: this._children.map((c) =>
+        typeof c !== 'string' ? c.clone() : c,
+      ),
       methods: this.methods,
-      aliases: this.aliases
+      aliases: this.aliases,
     });
   }
 
-  private _add(node: Renderable, method: AggregateMethod | string, alias: string): GroupByTransformations<T> {
+  private _add(
+    node: Renderable,
+    method: AggregateMethod | string,
+    alias: string,
+  ): GroupByTransformations<T> {
     this._children.push(node);
     this.methods.push(method);
     this.aliases.push(alias);
@@ -94,48 +106,31 @@ export class GroupByTransformations<T> extends Expression<T> {
   aggregate(
     value: any,
     method: AggregateMethod | string,
-    alias: string
+    alias: string,
   ): GroupByTransformations<T> {
     return this._add(value, method, alias);
   }
 
-  sum(
-    value: any,
-    alias: string
-  ): GroupByTransformations<T> {
+  sum(value: any, alias: string): GroupByTransformations<T> {
     return this.aggregate(value, 'sum', alias);
   }
 
-  min(
-    value: any,
-    alias: string
-  ): GroupByTransformations<T> {
+  min(value: any, alias: string): GroupByTransformations<T> {
     return this.aggregate(value, 'min', alias);
   }
 
-  max(
-    value: any,
-    alias: string
-  ): GroupByTransformations<T> {
+  max(value: any, alias: string): GroupByTransformations<T> {
     return this.aggregate(value, 'max', alias);
   }
 
-  average(
-    value: any,
-    alias: string
-  ): GroupByTransformations<T> {
+  average(value: any, alias: string): GroupByTransformations<T> {
     return this.aggregate(value, 'average', alias);
   }
-  countdistinct(
-    value: any,
-    alias: string
-  ): GroupByTransformations<T> {
+  countdistinct(value: any, alias: string): GroupByTransformations<T> {
     return this.aggregate(value, 'countdistinct', alias);
   }
 
-  count(
-    alias: string
-  ): GroupByTransformations<T> {
+  count(alias: string): GroupByTransformations<T> {
     return this.aggregate('' as any, '$count', alias);
   }
 }
@@ -160,16 +155,16 @@ export class ApplyExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: ApplyExpressionBuilder<T>,
-      current?: ApplyExpression<T>
+      current?: ApplyExpression<T>,
     ) => ApplyExpression<T>,
-    current?: ApplyExpression<T>
+    current?: ApplyExpression<T>,
   ): ApplyExpression<T> {
     return opts(
       {
         t: FieldFactory<Required<T>>(),
         e: () => new ApplyExpression<T>(),
       },
-      current
+      current,
     ) as ApplyExpression<T>;
   }
 
@@ -216,14 +211,14 @@ export class ApplyExpression<T> extends Expression<T> {
   aggregate(
     value: any,
     method: AggregateMethod,
-    alias: string
+    alias: string,
   ): ApplyExpression<T> {
     return this._add(syntax.aggregate(value, method, alias));
   }
 
   //topcount
   topCount(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -234,7 +229,7 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //topsum
   topSum(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -245,7 +240,7 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //toppercent
   topPercent(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -256,7 +251,7 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //bottomcount
   bottomCount(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -267,7 +262,7 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //bottomsum
   bottomSum(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -278,7 +273,7 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //bottompercent
   bottomPercent(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -288,7 +283,7 @@ export class ApplyExpression<T> extends Expression<T> {
   }
 
   identity(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -298,7 +293,7 @@ export class ApplyExpression<T> extends Expression<T> {
   }
 
   concat(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -310,11 +305,12 @@ export class ApplyExpression<T> extends Expression<T> {
   //groupby
   groupBy(
     props: (e: { rollup: (f: any) => any }) => any | any[],
-    opts?: (e: GroupByTransformations<T>) => GroupByTransformations<T>
+    opts?: (e: GroupByTransformations<T>) => GroupByTransformations<T>,
   ): ApplyExpression<T> {
     let properties = props({ rollup: (e: any) => syntax.rollup(e) });
     properties = Array.isArray(properties) ? properties : [properties];
-    const transformations = (opts !== undefined) ? opts(new GroupByTransformations()) : undefined;
+    const transformations =
+      opts !== undefined ? opts(new GroupByTransformations()) : undefined;
     return this._add(syntax.groupby(properties, transformations));
   }
 
@@ -325,7 +321,7 @@ export class ApplyExpression<T> extends Expression<T> {
       e: (connector?: FilterConnector) => FilterExpression<T>;
       o: ODataOperators<T>;
       f: ODataFunctions<T>;
-    }) => FilterExpression<T>
+    }) => FilterExpression<T>,
   ) {
     const exp = opts({
       t: FieldFactory<Required<T>>(),
@@ -358,7 +354,7 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //expand
   expand(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
@@ -374,7 +370,7 @@ export class ApplyExpression<T> extends Expression<T> {
       e: (connector?: SearchConnector) => SearchExpression<T>;
       o: ODataOperators<T>;
       f: ODataFunctions<T>;
-    }) => SearchExpression<T>
+    }) => SearchExpression<T>,
   ) {
     const exp = opts({
       t: FieldFactory<Required<T>>(),
@@ -388,7 +384,7 @@ export class ApplyExpression<T> extends Expression<T> {
 
   //compute
   compute(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
   ): ApplyExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,

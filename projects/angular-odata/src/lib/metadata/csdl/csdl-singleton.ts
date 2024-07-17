@@ -7,21 +7,26 @@ export class CsdlSingleton extends CsdlAnnotable {
   Type: string;
   NavigationPropertyBindings?: CsdlNavigationPropertyBinding[];
 
-  constructor(private container: CsdlEntityContainer, {
-    Name,
-    Type,
-    NavigationPropertyBindings,
-    Annotation,
-  }: {
-    Name: string;
-    Type: string;
-    NavigationPropertyBindings?: any[];
-    Annotation?: any[];
-  }) {
-    super({Annotation});
+  constructor(
+    private container: CsdlEntityContainer,
+    {
+      Name,
+      Type,
+      NavigationPropertyBindings,
+      Annotation,
+    }: {
+      Name: string;
+      Type: string;
+      NavigationPropertyBindings?: any[];
+      Annotation?: any[];
+    },
+  ) {
+    super({ Annotation });
     this.Name = Name;
     this.Type = Type;
-    this.NavigationPropertyBindings = NavigationPropertyBindings?.map(n => new CsdlNavigationPropertyBinding(n));
+    this.NavigationPropertyBindings = NavigationPropertyBindings?.map(
+      (n) => new CsdlNavigationPropertyBinding(n),
+    );
   }
 
   fullName() {

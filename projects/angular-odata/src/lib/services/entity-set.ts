@@ -18,12 +18,17 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
 
   model(entity?: Partial<T>): ODataModel<T> {
     const Service = this.constructor as typeof ODataEntitySetService;
-    return this.entity().asModel<ODataModel<T>>(entity, { ModelType: Service.Model });
+    return this.entity().asModel<ODataModel<T>>(entity, {
+      ModelType: Service.Model,
+    });
   }
 
   collection(entities?: Partial<T>[]): ODataCollection<T, ODataModel<T>> {
     const Service = this.constructor as typeof ODataEntitySetService;
-    return this.entities().asCollection<ODataModel<T>, ODataCollection<T, ODataModel<T>>>(entities, { CollectionType: Service.Collection });
+    return this.entities().asCollection<
+      ODataModel<T>,
+      ODataCollection<T, ODataModel<T>>
+    >(entities, { CollectionType: Service.Collection });
   }
 
   /**
@@ -214,8 +219,8 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return method === 'create'
       ? this.create(attrs, options)
       : method === 'modify'
-      ? this.modify(key, attrs, { etag, ...options })
-      : this.update(key, attrs, { etag, ...options });
+        ? this.modify(key, attrs, { etag, ...options })
+        : this.update(key, attrs, { etag, ...options });
   }
   //#endregion
 }

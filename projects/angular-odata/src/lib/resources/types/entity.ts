@@ -24,7 +24,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     }: {
       segments: ODataPathSegments;
       query?: ODataQueryOptions<E>;
-    }
+    },
   ) {
     query?.keep(QueryOption.expand, QueryOption.select, QueryOption.format);
     return new ODataEntityResource<E>(api, { segments, query });
@@ -47,8 +47,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
         value,
-        this.api.findStructuredType<T>(types[index])
-      )
+        this.api.findStructuredType<T>(types[index]),
+      ),
     );
     entity.segment((s) => s.keys(keys));
     return entity;
@@ -79,7 +79,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   cast<C>(type: string) {
     const thisType = this.incomingType();
-    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
+    const baseSchema =
+      thisType !== undefined ? this.api.structuredType(thisType) : undefined;
     // Downcast
     const castSchema = baseSchema?.findChildSchema((s) => s.type() === type);
     if (
@@ -99,21 +100,21 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     attrs: Partial<T>,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   protected override put(
     attrs: Partial<T>,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
   protected override patch(
     attrs: Partial<T>,
-    options: ODataOptions = {}
+    options: ODataOptions = {},
   ): Observable<any> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
@@ -125,7 +126,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   protected override get(
     options: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    } = {}
+    } = {},
   ): Observable<any> {
     return super.get({ responseType: 'entity', ...options });
   }
@@ -134,21 +135,21 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Shortcuts
   create(
     attrs: Partial<T>,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<ODataEntity<T>> {
     return this.post(attrs, options);
   }
 
   update(
     attrs: Partial<T>,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<ODataEntity<T>> {
     return this.put(attrs, options);
   }
 
   modify(
     attrs: Partial<T>,
-    options?: ODataOptions
+    options?: ODataOptions,
   ): Observable<ODataEntity<T>> {
     return this.patch(attrs, options);
   }
@@ -160,7 +161,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   fetch(
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ): Observable<ODataEntity<T>> {
     if (!this.hasKey())
       return throwError(() => new Error('fetch: Entity resource without key'));
@@ -170,7 +171,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   fetchEntity(
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ): Observable<T | null> {
     return this.fetch(options).pipe(map(({ entity }) => entity));
   }
@@ -179,12 +180,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
       ModelType?: typeof ODataModel;
-    }
+    },
   ): Observable<M | null> {
     return this.fetch(options).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel<M>(entity, { annots, ModelType: options?.ModelType }) : null
-      )
+        entity
+          ? this.asModel<M>(entity, { annots, ModelType: options?.ModelType })
+          : null,
+      ),
     );
   }
   //#endregion

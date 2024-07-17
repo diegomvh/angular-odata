@@ -1,5 +1,5 @@
-import { StructuredTypeFieldConfig } from "../../types";
-import { CsdlAnnotable } from "./csdl-annotation";
+import { StructuredTypeFieldConfig } from '../../types';
+import { CsdlAnnotable } from './csdl-annotation';
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   Name: string;
@@ -18,10 +18,10 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
     Nullable?: boolean;
     Annotation?: any[];
   }) {
-    super({Annotation});
+    super({ Annotation });
     this.Name = Name;
     this.Nullable = Nullable;
-    this.Collection = Type.startsWith("Collection(");
+    this.Collection = Type.startsWith('Collection(');
     this.Type = this.Collection ? Type.substring(11, Type.length - 1) : Type;
   }
 }
@@ -57,7 +57,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
     DefaultValue?: string;
     Annotation?: any[];
   }) {
-    super({Name, Type, Nullable, Annotation});
+    super({ Name, Type, Nullable, Annotation });
     this.MaxLength = MaxLength;
     this.Precision = Precision;
     this.Scale = Scale;
@@ -77,8 +77,8 @@ export class CsdlProperty extends CsdlStructuralProperty {
       navigation: false,
       precision: this.Precision,
       scale: this.Scale,
-      annotations: this.Annotation?.map(a => a.toConfig()),
-    } as StructuredTypeFieldConfig & {name: string};
+      annotations: this.Annotation?.map((a) => a.toConfig()),
+    } as StructuredTypeFieldConfig & { name: string };
   }
 }
 
@@ -96,7 +96,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     ContainsTarget,
     ReferentialConstraints,
     OnDelete,
-    Annotation
+    Annotation,
   }: {
     Name: string;
     Type: string;
@@ -107,10 +107,12 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     OnDelete?: any;
     Annotation?: any[];
   }) {
-    super({Name, Type, Nullable, Annotation});
+    super({ Name, Type, Nullable, Annotation });
     this.Partner = Partner;
     this.ContainsTarget = ContainsTarget;
-    this.ReferentialConstraints = ReferentialConstraints?.map(r => new CsdlReferentialConstraint(r));
+    this.ReferentialConstraints = ReferentialConstraints?.map(
+      (r) => new CsdlReferentialConstraint(r),
+    );
     this.OnDelete = OnDelete ? new CsdlOnDelete(OnDelete) : undefined;
   }
 
@@ -121,9 +123,12 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
       collection: this.Collection,
       nullable: this.Nullable,
       navigation: true,
-      annotations: this.Annotation?.map(a => a.toConfig()),
-      referentials: this.ReferentialConstraints?.map(r => ({ property: r.Property, referencedProperty: r.ReferencedProperty })),
-    } as StructuredTypeFieldConfig & {name: string};
+      annotations: this.Annotation?.map((a) => a.toConfig()),
+      referentials: this.ReferentialConstraints?.map((r) => ({
+        property: r.Property,
+        referencedProperty: r.ReferencedProperty,
+      })),
+    } as StructuredTypeFieldConfig & { name: string };
   }
 }
 
@@ -131,7 +136,13 @@ export class CsdlReferentialConstraint {
   Property: string;
   ReferencedProperty: string;
 
-  constructor({Property, ReferencedProperty}: {Property: string, ReferencedProperty: string}) {
+  constructor({
+    Property,
+    ReferencedProperty,
+  }: {
+    Property: string;
+    ReferencedProperty: string;
+  }) {
     this.Property = Property;
     this.ReferencedProperty = ReferencedProperty;
   }
@@ -140,7 +151,7 @@ export class CsdlReferentialConstraint {
 export class CsdlOnDelete {
   Action: string;
 
-  constructor({Action}: {Action: string}) {
+  constructor({ Action }: { Action: string }) {
     this.Action = Action;
   }
 }

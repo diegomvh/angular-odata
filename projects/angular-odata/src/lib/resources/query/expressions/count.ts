@@ -14,7 +14,7 @@ import {
 export class CountField<T> implements Renderable {
   constructor(
     protected field: any,
-    private values: { [name: string]: any } = {}
+    private values: { [name: string]: any } = {},
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -76,12 +76,12 @@ export class CountField<T> implements Renderable {
   filter(
     opts: (
       builder: FilterExpressionBuilder<T>,
-      current?: FilterExpression<T>
-    ) => FilterExpression<T>
+      current?: FilterExpression<T>,
+    ) => FilterExpression<T>,
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.factory<T>(opts, this.values[QueryOption.filter])
+      FilterExpression.factory<T>(opts, this.values[QueryOption.filter]),
     );
   }
 
@@ -89,7 +89,7 @@ export class CountField<T> implements Renderable {
     const values = Object.keys(this.values).reduce(
       (acc, key) =>
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
-      {}
+      {},
     );
     return new CountField<T>(this.field.clone(), values);
   }
@@ -125,16 +125,16 @@ export class CountExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: CountExpressionBuilder<T>,
-      current?: CountExpression<T>
+      current?: CountExpression<T>,
     ) => CountExpression<T>,
-    current?: CountExpression<T>
+    current?: CountExpression<T>,
   ): CountExpression<T> {
     return opts(
       {
         t: FieldFactory<Required<T>>(),
         e: () => new CountExpression<T>(),
       },
-      current
+      current,
     ) as CountExpression<T>;
   }
 
@@ -180,7 +180,7 @@ export class CountExpression<T> extends Expression<T> {
 
   field<F>(
     field: F[],
-    opts?: (e: { t: F; f: CountField<F> }) => CountExpression<F>
+    opts?: (e: { t: F; f: CountField<F> }) => CountExpression<F>,
   ): CountExpression<F> {
     let countField = new CountField<F>(field);
     if (opts !== undefined)

@@ -47,7 +47,7 @@ export const pathAndParamsFromQueryOptions = <T>(
     escape,
     parser,
     options,
-  }: { escape?: boolean; parser?: Parser<T>; options?: ParserOptions } = {}
+  }: { escape?: boolean; parser?: Parser<T>; options?: ParserOptions } = {},
 ): [string, { [name: string]: any }] => {
   const aliases: QueryCustomType[] = [];
   const queryOptions = [
@@ -78,7 +78,7 @@ export const pathAndParamsFromQueryOptions = <T>(
           ? value.map((v: Expression<T>) =>
               Types.rawType(v).endsWith('Expression')
                 ? raw(v.render({ aliases, escape, parser, options }))
-                : v
+                : v,
             )
           : raw(
               (value as Expression<T>).render({
@@ -86,7 +86,7 @@ export const pathAndParamsFromQueryOptions = <T>(
                 escape,
                 parser,
                 options,
-              })
+              }),
             );
       }
       return Object.assign(acc, { [key]: value });
@@ -196,15 +196,13 @@ export class ODataQueryOptions<T> {
 
   remove(...keys: QueryOption[]) {
     for (let key of this._values.keys()) {
-      if (keys.includes(key)) 
-        this._values.delete(key);
+      if (keys.includes(key)) this._values.delete(key);
     }
   }
 
   keep(...keys: QueryOption[]) {
     for (let key of this._values.keys()) {
-      if (!keys.includes(key)) 
-        this._values.delete(key);
+      if (!keys.includes(key)) this._values.delete(key);
     }
   }
 
