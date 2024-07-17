@@ -48,6 +48,18 @@ export class Service extends Base
         } else if (this.edmElement instanceof CsdlSingleton) {
             imports.push(this.edmElement.Type);
         }
+        for (var call of this.callables ?? []) {
+            const ret = call.returnType();
+            if (ret !== undefined && !ret.Type.startsWith("Edm.")) {
+                imports.push(ret.Type);
+            }
+            const params = call.parameters();
+            for (let param of params) {
+                if (!param.Type.startsWith("Edm.")) {
+                    imports.push(param.Type);
+                }
+            }
+        }
         return imports;
     }
 }
