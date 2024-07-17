@@ -1,8 +1,9 @@
+import { strings } from '@angular-devkit/core';
 import { getRandomName } from "../../random"
 import { Import } from "./import";
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
-import { BINDING_PARAMETER_NAME, CsdlAction, CsdlCallable } from "../metadata/csdl/csdl-function-action";
+import { BINDING_PARAMETER_NAME, CsdlAction, CsdlCallable, CsdlFunction } from "../metadata/csdl/csdl-function-action";
 import { toTypescriptType } from "../utils";
 
 const makeRelativePath = (from: string, to: string) => {
@@ -40,22 +41,36 @@ export class Callable {
   } 
 
   resourceFunction() {
+    const isFunction = this.callable instanceof CsdlFunction;
+    const methodName = strings.camelize(this.callable.Name);
     const bindingParameter = this.bindingParameter();
-    const returnType = this.returnType();
     const bindingType = bindingParameter !== undefined ? toTypescriptType(bindingParameter.Type) : '';
-    const bindingMethod = bindingParameter?.Collection ? 'entity' : 'entities';
-    const baseMethod = this.callable instanceof CsdlAction ? 'action' : 'function';
-    return `public ${this.callable.Name}(key: EntityKey<${bindingType}>): ODataActionResource<> {
-    return this.${bindingMethod}(key).${baseMethod}<>('${this.fullName()}');
+    const returnType = this.returnType();
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const bindingMethod = !bindingParameter?.Collection ? 'entity' : 'entities';
+    const baseMethod = isFunction ? 'function' : 'action';
+    const keyParameter = !bindingParameter?.Collection ? `key: EntityKey<${bindingType}>` : '';
+    const key = !bindingParameter?.Collection ? `key` : '';
+    return `public ${methodName}(${keyParameter}) {
+    return this.${bindingMethod}(${key}).${baseMethod}<, ${retType}>('${this.fullName()}');
   }`;
   }
   callableFunction() {
+    const isFunction = this.callable instanceof CsdlFunction;
+    const methodResourceName = strings.camelize(this.callable.Name);
+    const methodName = strings.classify(this.callable.Name);
     const bindingParameter = this.bindingParameter();
     const returnType = this.returnType();
+    const responseType = returnType === undefined ? 'none' : 
+      returnType?.Collection ? 'entities' : 
+      returnType?.Type.startsWith("Edm.") ? 'property' : 
+      'entity';
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
     const bindingType = bindingParameter !== undefined ? toTypescriptType(bindingParameter.Type) : '';
-    const baseMethod = this.callable instanceof CsdlAction ? 'callAction' : 'callFunction';
-    return `public call${this.callable.Name}(key: EntityKey<${bindingType}>) {
-    return this.${baseMethod}({}, this.${this.callable.Name}(key), 'none', options);
+    const baseMethod = isFunction ? 'callFunction' : 'callAction';
+    const optionsType = isFunction ? 'ODataFunctionOptions' : 'ODataActionOptions';
+    return `public call${methodName}(key: EntityKey<${bindingType}>, options?: ${optionsType}<${retType}>) {
+    return this.${baseMethod}<, ${retType}>({}, this.${methodResourceName}(key), '${responseType}', options);
   }`;
   }
 }
