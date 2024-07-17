@@ -16,14 +16,18 @@ export class ODataServiceFactory {
   entitySet<T>(
     entitySetName: string,
     apiNameOrEntityType?: string,
-    options: {Model?: { new (...params: any[]): ODataModel<T> }, Collection?: { new (...params: any[]): ODataCollection<T, ODataModel<T>> }} = {}
+    options: {
+      Model?: { new (...params: any[]): ODataModel<T> };
+      Collection?: {
+        new (...params: any[]): ODataCollection<T, ODataModel<T>>;
+      };
+    } = {},
   ): ODataEntitySetService<T> {
-    const Service = class extends ODataEntitySetService<T> { Model = options?.Model; Collection = options?.Collection; };
-    return new Service(
-      this.client,
-      entitySetName,
-      apiNameOrEntityType,
-    );
+    const Service = class extends ODataEntitySetService<T> {
+      Model = options?.Model;
+      Collection = options?.Collection;
+    };
+    return new Service(this.client, entitySetName, apiNameOrEntityType);
   }
 
   /** Factory method to create a singleton service.
@@ -33,13 +37,11 @@ export class ODataServiceFactory {
   singleton<T>(
     singletonName: string,
     apiNameOrEntityType?: string,
-    options: {Model?: { new (...params: any[]): ODataModel<T> } } = {}
+    options: { Model?: { new (...params: any[]): ODataModel<T> } } = {},
   ): ODataSingletonService<T> {
-    const Service = class extends ODataSingletonService<T> { Model = options?.Model };
-    return new Service(
-      this.client,
-      singletonName,
-      apiNameOrEntityType,
-    );
+    const Service = class extends ODataSingletonService<T> {
+      Model = options?.Model;
+    };
+    return new Service(this.client, singletonName, apiNameOrEntityType);
   }
 }

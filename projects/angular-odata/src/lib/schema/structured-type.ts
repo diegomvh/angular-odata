@@ -14,7 +14,10 @@ import {
 } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStructuredTypeParser<T>> {
+export class ODataStructuredType<T> extends ODataParserSchemaElement<
+  T,
+  ODataStructuredTypeParser<T>
+> {
   base?: string;
   parent?: ODataStructuredType<any>;
   children: ODataStructuredType<any>[] = [];
@@ -22,24 +25,20 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
   collection?: typeof ODataCollection;
 
   constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
-    super(config, schema, new ODataStructuredTypeParser(
+    super(
       config,
-      schema.namespace,
-      schema.alias
-    ));
+      schema,
+      new ODataStructuredTypeParser(config, schema.namespace, schema.alias),
+    );
     this.base = config.base;
     this.model = config.model as typeof ODataModel;
     this.collection = config.collection as typeof ODataCollection;
   }
 
-  configure({
-    options,
-  }: {
-    options: ParserOptions;
-  }) {
+  configure({ options }: { options: ParserOptions }) {
     if (this.base) {
       const parent = this.api.findStructuredType(
-        this.base
+        this.base,
       ) as ODataStructuredType<any>;
       parent.children.push(this);
       this.parent = parent;
@@ -49,7 +48,10 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
       parserForType: (t: string) => this.api.parserForType(t),
     });
     if (this.model !== undefined) {
-      this.model.meta = this.api.optionsForType<T>(this.type(), {config: this.model.options, structuredType: this})!;
+      this.model.meta = this.api.optionsForType<T>(this.type(), {
+        config: this.model.options,
+        structuredType: this,
+      })!;
       if (this.model.meta !== undefined) {
         // Configure
         this.model.meta.configure({ options });
@@ -123,7 +125,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
 
   addField<F>(
     name: string,
-    config: StructuredTypeFieldConfig
+    config: StructuredTypeFieldConfig,
   ): ODataStructuredTypeFieldParser<F> {
     return this.parser.addField(name, config);
   }
@@ -134,7 +136,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
    * @returns The schema that matches the predicate.
    */
   findParentSchema(
-    predicate: (p: ODataStructuredType<any>) => boolean
+    predicate: (p: ODataStructuredType<any>) => boolean,
   ): ODataStructuredType<any> | undefined {
     if (predicate(this)) return this as ODataStructuredType<any>;
     if (this.parent === undefined) return undefined;
@@ -142,7 +144,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
   }
 
   findChildSchema(
-    predicate: (p: ODataStructuredType<any>) => boolean
+    predicate: (p: ODataStructuredType<any>) => boolean,
   ): ODataStructuredType<any> | undefined {
     if (predicate(this)) return this;
     let match: ODataStructuredType<any> | undefined;
@@ -163,7 +165,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
       (p) =>
         p
           .fields({ include_parents: false, include_navigation: true })
-          .find((f) => f === field) !== undefined
+          .find((f) => f === field) !== undefined,
     ) as ODataStructuredType<E>;
   }
 
@@ -185,7 +187,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
       include_parents?: boolean;
       include_navigation?: boolean;
       include_etag?: boolean;
-    } = {}
+    } = {},
   ): Partial<T> {
     return this.parser.pick(attrs, {
       include_etag,
@@ -294,7 +296,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<T, ODataStr
     }: {
       method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {}
+    } = {},
   ) {
     return this.parser.validate(attrs, { method, navigation });
   }

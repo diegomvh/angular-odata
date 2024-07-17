@@ -3,9 +3,17 @@ import { EMPTY } from 'rxjs';
 import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
-import { PathSegment, QueryOption, StructuredTypeFieldConfig } from '../../types';
+import {
+  PathSegment,
+  QueryOption,
+  StructuredTypeFieldConfig,
+} from '../../types';
 import { ODataPathSegments } from '../path';
-import { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../query';
+import {
+  ApplyExpression,
+  ApplyExpressionBuilder,
+  ODataQueryOptions,
+} from '../query';
 import { ODataResource } from '../resource';
 import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
@@ -22,7 +30,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     {
       path,
       type,
-      query
+      query,
     }: {
       path: string;
       type?: string;
@@ -45,10 +53,20 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   override transform<R>(
     opts: (
       builder: ApplyExpressionBuilder<T>,
-      current?: ApplyExpression<T>
+      current?: ApplyExpression<T>,
     ) => ApplyExpression<T>,
-    {type, fields}: {type?: string, fields?: { [P in keyof R]?: StructuredTypeFieldConfig }} = {}): ODataEntitySetResource<R> {
-    return super.transform<R>(opts, {type, fields}) as ODataEntitySetResource<R>;
+    {
+      type,
+      fields,
+    }: {
+      type?: string;
+      fields?: { [P in keyof R]?: StructuredTypeFieldConfig };
+    } = {},
+  ): ODataEntitySetResource<R> {
+    return super.transform<R>(opts, {
+      type,
+      fields,
+    }) as ODataEntitySetResource<R>;
   }
   //#endregion
 
@@ -80,7 +98,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   cast<C>(type: string) {
     const thisType = this.incomingType();
-    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
+    const baseSchema =
+      thisType !== undefined ? this.api.structuredType(thisType) : undefined;
     const castSchema = this.api.findStructuredType<C>(type);
     if (
       castSchema !== undefined &&
@@ -226,7 +245,12 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   ): Observable<C | null> {
     return this.fetch(options).pipe(
       map(({ entities, annots }) =>
-        entities ? this.asCollection<M, C>(entities, { annots, CollectionType: options?.CollectionType }) : null,
+        entities
+          ? this.asCollection<M, C>(entities, {
+              annots,
+              CollectionType: options?.CollectionType,
+            })
+          : null,
       ),
     );
   }

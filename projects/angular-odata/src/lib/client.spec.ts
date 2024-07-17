@@ -205,7 +205,12 @@ describe('ODataClient', () => {
     const json = func.toJson();
     expect(json).toEqual({
       segments: [
-        { name: 'entitySet', path: 'People', incomingType: 'TripPin.Person', outgoingType: 'TripPin.Person' },
+        {
+          name: 'entitySet',
+          path: 'People',
+          incomingType: 'TripPin.Person',
+          outgoingType: 'TripPin.Person',
+        },
         { name: 'function', path: 'NS.MyFunction' },
       ],
       options: {},
@@ -224,7 +229,12 @@ describe('ODataClient', () => {
     const json = func.toJson();
     expect(json).toEqual({
       segments: [
-        { name: 'entitySet', path: 'People', incomingType: 'TripPin.Person', outgoingType: 'TripPin.Person' },
+        {
+          name: 'entitySet',
+          path: 'People',
+          incomingType: 'TripPin.Person',
+          outgoingType: 'TripPin.Person',
+        },
         { name: 'function', path: 'NS.MyFunction' },
       ],
       options: {

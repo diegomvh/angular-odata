@@ -3,7 +3,7 @@ import {
   CsdlProperty,
   CsdlNavigationProperty,
 } from './csdl-structural-property';
-import type { CsdlSchema } from "./csdl-schema";
+import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlStructuredType extends CsdlAnnotable {
   Name: string;
@@ -13,7 +13,8 @@ export class CsdlStructuredType extends CsdlAnnotable {
   OpenType?: boolean;
   Abstract?: boolean;
 
-  constructor(private schema: CsdlSchema, 
+  constructor(
+    private schema: CsdlSchema,
     {
       Name,
       Property,
@@ -23,19 +24,21 @@ export class CsdlStructuredType extends CsdlAnnotable {
       Abstract,
       Annotation,
     }: {
-      Name: string,
-      Property?: any[],
-      NavigationProperty?: any[],
-      BaseType?: string,
-      OpenType?: boolean,
-      Abstract?: boolean,
-      Annotation?: any[],
+      Name: string;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      Annotation?: any[];
     },
   ) {
     super({ Annotation });
     this.Name = Name;
-    this.Property = Property?.map(p => new CsdlProperty(p));
-    this.NavigationProperty = NavigationProperty?.map(n => new CsdlNavigationProperty(n));
+    this.Property = Property?.map((p) => new CsdlProperty(p));
+    this.NavigationProperty = NavigationProperty?.map(
+      (n) => new CsdlNavigationProperty(n),
+    );
     this.BaseType = BaseType;
     this.OpenType = OpenType;
     this.Abstract = Abstract;
@@ -55,7 +58,8 @@ export class CsdlStructuredType extends CsdlAnnotable {
 }
 
 export class CsdlComplexType extends CsdlStructuredType {
-  constructor(schema: CsdlSchema, 
+  constructor(
+    schema: CsdlSchema,
     {
       Name,
       Property,
@@ -65,13 +69,13 @@ export class CsdlComplexType extends CsdlStructuredType {
       Abstract,
       Annotation,
     }: {
-      Name: string,
-      Property?: any[],
-      NavigationProperty?: any[],
-      BaseType?: string,
-      OpenType?: boolean,
-      Abstract?: boolean,
-      Annotation?: any[],
+      Name: string;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      Annotation?: any[];
     },
   ) {
     super(schema, {
@@ -81,7 +85,7 @@ export class CsdlComplexType extends CsdlStructuredType {
       BaseType,
       OpenType,
       Abstract,
-      Annotation
+      Annotation,
     });
   }
 }
@@ -90,7 +94,8 @@ export class CsdlEntityType extends CsdlStructuredType {
   Key?: CsdlKey;
   HasStream?: boolean;
 
-  constructor(schema: CsdlSchema, 
+  constructor(
+    schema: CsdlSchema,
     {
       Name,
       Key,
@@ -102,15 +107,15 @@ export class CsdlEntityType extends CsdlStructuredType {
       HasStream,
       Annotation,
     }: {
-      Name: string,
-      Key?: any,
-      Property?: any[],
-      NavigationProperty?: any[],
-      BaseType?: string,
-      OpenType?: boolean,
-      Abstract?: boolean,
-      HasStream?: boolean,
-      Annotation?: any[],
+      Name: string;
+      Key?: any;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      HasStream?: boolean;
+      Annotation?: any[];
     },
   ) {
     super(schema, {
@@ -120,7 +125,7 @@ export class CsdlEntityType extends CsdlStructuredType {
       BaseType,
       OpenType,
       Abstract,
-      Annotation
+      Annotation,
     });
     this.Key = Key ? new CsdlKey(Key) : undefined;
     this.HasStream = HasStream;
@@ -131,7 +136,7 @@ export class CsdlKey {
   PropertyRefs: CsdlPropertyRef[];
 
   constructor({ PropertyRefs }: { PropertyRefs: any[] }) {
-    this.PropertyRefs = PropertyRefs?.map(p => new CsdlPropertyRef(p));
+    this.PropertyRefs = PropertyRefs?.map((p) => new CsdlPropertyRef(p));
   }
 }
 
@@ -139,7 +144,7 @@ export class CsdlPropertyRef {
   Name: string;
   Alias?: string;
 
-  constructor({ Name, Alias }: { Name: string, Alias?: string }) {
+  constructor({ Name, Alias }: { Name: string; Alias?: string }) {
     this.Name = Name;
     this.Alias = Alias;
   }

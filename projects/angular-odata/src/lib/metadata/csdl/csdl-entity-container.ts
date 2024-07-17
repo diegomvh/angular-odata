@@ -2,7 +2,7 @@ import { CsdlEntitySet } from './csdl-entity-set';
 import { CsdlSingleton } from './csdl-singleton';
 import { CsdlFunctionImport, CsdlActionImport } from './csdl-function-action';
 import { CsdlAnnotable } from './csdl-annotation';
-import type { CsdlSchema } from "./csdl-schema";
+import type { CsdlSchema } from './csdl-schema';
 import { EntityContainerConfig } from '../../types';
 
 export class CsdlEntityContainer extends CsdlAnnotable {
@@ -13,7 +13,8 @@ export class CsdlEntityContainer extends CsdlAnnotable {
   public FunctionImport?: CsdlFunctionImport[];
   public ActionImport?: CsdlActionImport[];
 
-  constructor(private schema: CsdlSchema, 
+  constructor(
+    private schema: CsdlSchema,
     {
       Name,
       Extend,
@@ -23,23 +24,25 @@ export class CsdlEntityContainer extends CsdlAnnotable {
       ActionImport,
       Annotation,
     }: {
-      Name: string,
-      Extend?: string,
-      EntitySet?: any[],
-      Singleton?: any[],
-      FunctionImport?: any[],
-      ActionImport?: any[],
-      Annotation?: any[],
-    }
+      Name: string;
+      Extend?: string;
+      EntitySet?: any[];
+      Singleton?: any[];
+      FunctionImport?: any[];
+      ActionImport?: any[];
+      Annotation?: any[];
+    },
   ) {
-    super({Annotation});
+    super({ Annotation });
 
     this.Name = Name;
     this.Extend = Extend;
-    this.EntitySet = EntitySet?.map(e => new CsdlEntitySet(this, e));
-    this.Singleton = Singleton?.map(s => new CsdlSingleton(this, s));
-    this.FunctionImport = FunctionImport?.map(f => new CsdlFunctionImport(this, f));
-    this.ActionImport = ActionImport?.map(a => new CsdlActionImport(this, a));
+    this.EntitySet = EntitySet?.map((e) => new CsdlEntitySet(this, e));
+    this.Singleton = Singleton?.map((s) => new CsdlSingleton(this, s));
+    this.FunctionImport = FunctionImport?.map(
+      (f) => new CsdlFunctionImport(this, f),
+    );
+    this.ActionImport = ActionImport?.map((a) => new CsdlActionImport(this, a));
   }
 
   get Namespace() {
@@ -49,8 +52,8 @@ export class CsdlEntityContainer extends CsdlAnnotable {
   toConfig(): EntityContainerConfig {
     return {
       name: this.Name,
-      annotations: this.Annotation?.map(t => t.toConfig()),
-      entitySets: this.EntitySet?.map(t => t.toConfig()),
-    }
+      annotations: this.Annotation?.map((t) => t.toConfig()),
+      entitySets: this.EntitySet?.map((t) => t.toConfig()),
+    };
   }
 }

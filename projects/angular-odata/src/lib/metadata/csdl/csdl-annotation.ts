@@ -1,21 +1,27 @@
-import { AnnotationConfig } from "../../types";
-import type { CsdlSchema } from "./csdl-schema";
+import { AnnotationConfig } from '../../types';
+import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlAnnotable {
-  Annotation?: CsdlAnnotation[]
+  Annotation?: CsdlAnnotation[];
   constructor({ Annotation }: { Annotation?: any[] }) {
-    this.Annotation = Annotation?.map(a => new CsdlAnnotation(a));
+    this.Annotation = Annotation?.map((a) => new CsdlAnnotation(a));
   }
 }
 
 export class CsdlAnnotations extends CsdlAnnotable {
   Target: string;
   Qualifier?: string;
-  constructor(private schema: CsdlSchema, { Target, Qualifier, Annotation }: {
-    Target: string,
-    Qualifier?: string,
-    Annotation: CsdlAnnotation[],
-  }
+  constructor(
+    private schema: CsdlSchema,
+    {
+      Target,
+      Qualifier,
+      Annotation,
+    }: {
+      Target: string;
+      Qualifier?: string;
+      Annotation: CsdlAnnotation[];
+    },
   ) {
     super({ Annotation });
     this.Target = Target;
@@ -23,7 +29,7 @@ export class CsdlAnnotations extends CsdlAnnotable {
   }
 
   toConfig(): AnnotationConfig[] {
-    return (this.Annotation?? []).map(a => a.toConfig());
+    return (this.Annotation ?? []).map((a) => a.toConfig());
   }
 }
 
@@ -35,14 +41,22 @@ export class CsdlAnnotation {
   Collection?: any;
   Record?: any;
   Members?: any;
-  constructor({ Term, String, Bool, Int, Collection, Record, Members }: {
-    Term: string,
-    String?: string,
-    Bool?: boolean,
-    Int?: number,
-    Collection?: any,
-    Record?: any,
-    Members?: any,
+  constructor({
+    Term,
+    String,
+    Bool,
+    Int,
+    Collection,
+    Record,
+    Members,
+  }: {
+    Term: string;
+    String?: string;
+    Bool?: boolean;
+    Int?: number;
+    Collection?: any;
+    Record?: any;
+    Members?: any;
   }) {
     this.Term = Term;
     this.String = String;
@@ -77,21 +91,38 @@ export class CsdlTerm {
   String?: string;
   Bool?: boolean;
   Int?: number;
-  constructor(private schema: CsdlSchema, { Name, Type, BaseTerm, DefaultValue, AppliesTo, Nullable, MaxLength, Precision, Scale, SRID, String, Bool, Int }: {
-    Name: string,
-    Type: string,
-    BaseTerm?: string,
-    DefaultValue?: string,
-    AppliesTo?: string,
-    Nullable?: boolean,
-    MaxLength?: number,
-    Precision?: number,
-    Scale?: number,
-    SRID?: string,
-    String?: string,
-    Bool?: boolean,
-    Int?: number,
-  }) {
+  constructor(
+    private schema: CsdlSchema,
+    {
+      Name,
+      Type,
+      BaseTerm,
+      DefaultValue,
+      AppliesTo,
+      Nullable,
+      MaxLength,
+      Precision,
+      Scale,
+      SRID,
+      String,
+      Bool,
+      Int,
+    }: {
+      Name: string;
+      Type: string;
+      BaseTerm?: string;
+      DefaultValue?: string;
+      AppliesTo?: string;
+      Nullable?: boolean;
+      MaxLength?: number;
+      Precision?: number;
+      Scale?: number;
+      SRID?: string;
+      String?: string;
+      Bool?: boolean;
+      Int?: number;
+    },
+  ) {
     this.Name = Name;
     this.Type = Type;
     this.BaseTerm = BaseTerm;
@@ -113,13 +144,17 @@ export class CsdlCollection {
   Records: CsdlRecord[];
   PropertyPaths: CsdlPropertyPath[];
   NavigationPropertyPaths: CsdlNavigationPropertyPath[];
-  constructor({ Strings, Records, PropertyPaths, NavigationPropertyPaths }: {
-    Strings: CsdlString[],
-    Records: CsdlRecord[],
-    PropertyPaths: CsdlPropertyPath[],
-    NavigationPropertyPaths: CsdlNavigationPropertyPath[],
-  }
-  ) {
+  constructor({
+    Strings,
+    Records,
+    PropertyPaths,
+    NavigationPropertyPaths,
+  }: {
+    Strings: CsdlString[];
+    Records: CsdlRecord[];
+    PropertyPaths: CsdlPropertyPath[];
+    NavigationPropertyPaths: CsdlNavigationPropertyPath[];
+  }) {
     this.Strings = Strings;
     this.Records = Records;
     this.PropertyPaths = PropertyPaths;
@@ -128,18 +163,28 @@ export class CsdlCollection {
 }
 
 export class CsdlRecord {
-  Properties: CsdlPropertyValue[]
-  constructor({Properties}: {Properties: CsdlPropertyValue[]}) { 
+  Properties: CsdlPropertyValue[];
+  constructor({ Properties }: { Properties: CsdlPropertyValue[] }) {
     this.Properties = Properties;
   }
 }
 
 export class CsdlPropertyValue {
-  Name: string; 
-  String?: string; 
-  Date?: Date; 
+  Name: string;
+  String?: string;
+  Date?: Date;
   Members?: CsdlEnumMember[];
-  constructor({ Name, String, Date, Members }: { Name: string, String?: string, Date?: Date, Members?: CsdlEnumMember[] }) {
+  constructor({
+    Name,
+    String,
+    Date,
+    Members,
+  }: {
+    Name: string;
+    String?: string;
+    Date?: Date;
+    Members?: CsdlEnumMember[];
+  }) {
     this.Name = Name;
     this.String = String;
     this.Date = Date;
@@ -149,28 +194,28 @@ export class CsdlPropertyValue {
 
 export class CsdlEnumMember {
   TextContent: string;
-  constructor({TextContent}: {TextContent: string }) { 
+  constructor({ TextContent }: { TextContent: string }) {
     this.TextContent = TextContent;
   }
 }
 
 export class CsdlString {
   TextContent: string;
-  constructor({TextContent}: {TextContent: string }) { 
+  constructor({ TextContent }: { TextContent: string }) {
     this.TextContent = TextContent;
   }
 }
 
 export class CsdlPropertyPath {
   TextContent: string;
-  constructor({TextContent}: {TextContent: string }) { 
+  constructor({ TextContent }: { TextContent: string }) {
     this.TextContent = TextContent;
   }
 }
 
 export class CsdlNavigationPropertyPath {
   TextContent: string;
-  constructor({TextContent}: {TextContent: string }) { 
+  constructor({ TextContent }: { TextContent: string }) {
     this.TextContent = TextContent;
   }
 }

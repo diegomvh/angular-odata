@@ -9,18 +9,29 @@ export class CsdlEntitySet extends CsdlAnnotable {
   public NavigationPropertyBinding?: CsdlNavigationPropertyBinding[];
   public IncludeInServiceDocument?: boolean;
 
-  constructor(private container: CsdlEntityContainer, { Name, EntityType, NavigationPropertyBinding, IncludeInServiceDocument, Annotation }: {
-    Name: string,
-    EntityType: string,
-    NavigationPropertyBinding?: any[],
-    IncludeInServiceDocument?: boolean,
-    Annotation?: any[],
-  }) {
-    super({Annotation});
+  constructor(
+    private container: CsdlEntityContainer,
+    {
+      Name,
+      EntityType,
+      NavigationPropertyBinding,
+      IncludeInServiceDocument,
+      Annotation,
+    }: {
+      Name: string;
+      EntityType: string;
+      NavigationPropertyBinding?: any[];
+      IncludeInServiceDocument?: boolean;
+      Annotation?: any[];
+    },
+  ) {
+    super({ Annotation });
 
     this.Name = Name;
     this.EntityType = EntityType;
-    this.NavigationPropertyBinding = NavigationPropertyBinding?.map(n => new CsdlNavigationPropertyBinding(n));
+    this.NavigationPropertyBinding = NavigationPropertyBinding?.map(
+      (n) => new CsdlNavigationPropertyBinding(n),
+    );
     this.IncludeInServiceDocument = IncludeInServiceDocument;
   }
 
@@ -33,7 +44,7 @@ export class CsdlEntitySet extends CsdlAnnotable {
       name: this.Name,
       entityType: this.EntityType,
       service: {},
-      annotations: this.Annotation?.map(t => t.toConfig()),
+      annotations: this.Annotation?.map((t) => t.toConfig()),
     } as EntitySetConfig;
   }
 }

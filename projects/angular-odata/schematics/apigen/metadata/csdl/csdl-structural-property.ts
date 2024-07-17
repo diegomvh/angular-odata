@@ -1,4 +1,4 @@
-import { CsdlAnnotable } from "./csdl-annotation";
+import { CsdlAnnotable } from './csdl-annotation';
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   Name: string;
@@ -17,10 +17,10 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
     Nullable?: boolean;
     Annotation?: any[];
   }) {
-    super({Annotation});
+    super({ Annotation });
     this.Name = Name;
     this.Nullable = Nullable;
-    this.Collection = Type.startsWith("Collection(");
+    this.Collection = Type.startsWith('Collection(');
     this.Type = this.Collection ? Type.substring(11, Type.length - 1) : Type;
   }
 }
@@ -56,7 +56,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
     DefaultValue?: string;
     Annotation?: any[];
   }) {
-    super({Name, Type, Nullable, Annotation});
+    super({ Name, Type, Nullable, Annotation });
     this.MaxLength = MaxLength;
     this.Precision = Precision;
     this.Scale = Scale;
@@ -64,7 +64,6 @@ export class CsdlProperty extends CsdlStructuralProperty {
     this.SRID = SRID;
     this.DefaultValue = DefaultValue;
   }
-
 }
 
 export class CsdlNavigationProperty extends CsdlStructuralProperty {
@@ -81,7 +80,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     ContainsTarget,
     ReferentialConstraints,
     OnDelete,
-    Annotation
+    Annotation,
   }: {
     Name: string;
     Type: string;
@@ -92,10 +91,12 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     OnDelete?: any;
     Annotation?: any[];
   }) {
-    super({Name, Type, Nullable, Annotation});
+    super({ Name, Type, Nullable, Annotation });
     this.Partner = Partner;
     this.ContainsTarget = ContainsTarget;
-    this.ReferentialConstraints = ReferentialConstraints?.map(r => new CsdlReferentialConstraint(r));
+    this.ReferentialConstraints = ReferentialConstraints?.map(
+      (r) => new CsdlReferentialConstraint(r),
+    );
     this.OnDelete = OnDelete ? new CsdlOnDelete(OnDelete) : undefined;
   }
 }
@@ -104,7 +105,13 @@ export class CsdlReferentialConstraint {
   Property: string;
   ReferencedProperty: string;
 
-  constructor({Property, ReferencedProperty}: {Property: string, ReferencedProperty: string}) {
+  constructor({
+    Property,
+    ReferencedProperty,
+  }: {
+    Property: string;
+    ReferencedProperty: string;
+  }) {
     this.Property = Property;
     this.ReferencedProperty = ReferencedProperty;
   }
@@ -113,7 +120,7 @@ export class CsdlReferentialConstraint {
 export class CsdlOnDelete {
   Action: string;
 
-  constructor({Action}: {Action: string}) {
+  constructor({ Action }: { Action: string }) {
     this.Action = Action;
   }
 }

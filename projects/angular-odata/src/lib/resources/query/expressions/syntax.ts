@@ -34,7 +34,7 @@ export interface Renderable {
 }
 
 export const FieldFactory = <T extends object>(
-  names: (string | Renderable)[] = []
+  names: (string | Renderable)[] = [],
 ): any =>
   new Proxy({ _names: names } as T, {
     get(target: T, key: string | symbol) {
@@ -54,7 +54,7 @@ export const FieldFactory = <T extends object>(
           options?: ParserOptions;
         }) => {
           let values = names.map((n: any) =>
-            render(n, { aliases, escape, prefix, parser, options })
+            render(n, { aliases, escape, prefix, parser, options }),
           );
           if (prefix && (names.length === 0 || typeof names[0] === 'string')) {
             values = [prefix, ...values];
@@ -77,7 +77,7 @@ export const FieldFactory = <T extends object>(
               typeof name === 'string'
                 ? acc?.field(name)
                 : name?.resolve(parser),
-            parser
+            parser,
           );
       } else {
         return FieldFactory([...names, key as string]);
@@ -143,7 +143,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
         derivedCtor.prototype,
         name,
         Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null)
+          Object.create(null),
       );
     });
   });
@@ -165,7 +165,7 @@ export function render(
     prefix?: string;
     parser?: Parser<any>;
     options?: ParserOptions;
-  } = {}
+  } = {},
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
     return render(value(syntax), {
@@ -192,7 +192,7 @@ export function render(
 export function resolve(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
     let fields = values.filter(
-      (v: any) => Types.isObject(v) && 'isField' in v && v.isField()
+      (v: any) => Types.isObject(v) && 'isField' in v && v.isField(),
     );
     if (fields.length === 1 && Types.isObject(parser) && 'field' in parser) {
       return fields[0].resolve(parser);
@@ -204,7 +204,7 @@ export function resolve(values: any, parser?: Parser<any>) {
 export function encode(
   values: any,
   parser?: Parser<any>,
-  options?: ParserOptions
+  options?: ParserOptions,
 ) {
   if (parser !== undefined) {
     return values.map((v: any) => {
@@ -225,7 +225,7 @@ export class Function<T> implements Renderable {
     protected name: string,
     protected values: any[],
     protected normalize: Normalize,
-    protected escape: boolean = false
+    protected escape: boolean = false,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -237,7 +237,7 @@ export class Function<T> implements Renderable {
       $type: Types.rawType(this),
       name: this.name,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
       ),
       normalize: this.normalize,
     };
@@ -248,7 +248,7 @@ export class Function<T> implements Renderable {
       json['name'],
       json['values'].map((v: any) => RenderableFactory(v)),
       json['normalize'],
-      json['escape']
+      json['escape'],
     );
   }
 
@@ -286,7 +286,7 @@ export class Function<T> implements Renderable {
           parser,
           normalize: this.normalize === 'all' || this.normalize === 'right',
           options,
-        })
+        }),
       ),
     ];
     return `${this.name}(${params.join(', ')})`;
@@ -297,7 +297,7 @@ export class Function<T> implements Renderable {
       this.name,
       this.values.map((v) => Objects.clone(v)),
       this.normalize,
-      this.escape
+      this.escape,
     );
   }
 
@@ -335,7 +335,7 @@ export class StringAndCollectionFunctions<T> {
     left: any,
     right: number,
     length?: number,
-    normalize: Normalize = 'none'
+    normalize: Normalize = 'none',
   ) {
     let values = [left, right];
     if (length !== undefined) {
@@ -358,7 +358,7 @@ export class StringFunctions<T> {
   matchesPattern(
     left: any | string,
     pattern: string,
-    normalize: Normalize = 'none'
+    normalize: Normalize = 'none',
   ) {
     return new Function<T>('matchesPattern', [left, pattern], normalize);
   }
@@ -468,7 +468,7 @@ export class Operator<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: Normalize
+    protected normalize: Normalize,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -480,7 +480,7 @@ export class Operator<T> implements Renderable {
       $type: Types.rawType(this),
       op: this.op,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
       ),
       normalize: this.normalize,
     };
@@ -490,7 +490,7 @@ export class Operator<T> implements Renderable {
     return new Operator<T>(
       json['op'],
       json['values'].map((v: any) => RenderableFactory(v)),
-      json['normalize']
+      json['normalize'],
     );
   }
 
@@ -530,7 +530,7 @@ export class Operator<T> implements Renderable {
                 normalize:
                   this.normalize === 'all' || this.normalize === 'right',
                 options,
-              })
+              }),
             )
             .join(',')})`
         : render(right, {
@@ -550,7 +550,7 @@ export class Operator<T> implements Renderable {
     return new Operator(
       this.op,
       this.values.map((v) => Objects.clone(v)),
-      this.normalize
+      this.normalize,
     );
   }
   resolve(parser: any) {
@@ -685,7 +685,7 @@ export class Aggregate<T> implements Renderable {
   constructor(
     protected value: Renderable,
     protected method: AggregateMethod,
-    protected alias: string
+    protected alias: string,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -705,7 +705,7 @@ export class Aggregate<T> implements Renderable {
     return new Aggregate<T>(
       RenderableFactory(json['value']),
       json['method'],
-      json['alias']
+      json['alias'],
     );
   }
 
@@ -742,7 +742,7 @@ export class Aggregate<T> implements Renderable {
 export class GroupBy<T> implements Renderable {
   constructor(
     protected properties: Renderable[],
-    protected transformations?: Renderable
+    protected transformations?: Renderable,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -760,7 +760,7 @@ export class GroupBy<T> implements Renderable {
   static fromJson<T>(json: { [name: string]: any }): GroupBy<T> {
     return new GroupBy<T>(
       json['properties'].map((p: any) => RenderableFactory(p)),
-      RenderableFactory(json['transformations'])
+      RenderableFactory(json['transformations']),
     );
   }
 
@@ -785,7 +785,7 @@ export class GroupBy<T> implements Renderable {
           prefix,
           parser,
           options,
-        })
+        }),
       )
       .join(',');
     const transformations = this.transformations
@@ -804,7 +804,7 @@ export class GroupBy<T> implements Renderable {
   clone() {
     return new GroupBy(
       Objects.clone(this.properties),
-      Objects.clone(this.transformations)
+      Objects.clone(this.transformations),
     );
   }
   resolve(parser: any) {
@@ -841,7 +841,7 @@ export class Transformations<T> {
   bottomPercent(
     value: number,
     field: Renderable,
-    normalize: Normalize = 'none'
+    normalize: Normalize = 'none',
   ) {
     return new Function<T>('bottompercent', [value, field], normalize);
   }
@@ -873,7 +873,7 @@ export class Type<T> implements Renderable {
   constructor(
     protected name: string,
     protected type: string,
-    protected value?: any
+    protected value?: any,
   ) {}
   get [Symbol.toStringTag]() {
     return 'Type';
@@ -892,7 +892,7 @@ export class Type<T> implements Renderable {
     return new Type<T>(
       json['name'],
       json['type'],
-      RenderableFactory(json['value'])
+      RenderableFactory(json['value']),
     );
   }
 
@@ -939,7 +939,7 @@ export class Lambda<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected alias?: string
+    protected alias?: string,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -951,7 +951,7 @@ export class Lambda<T> implements Renderable {
       $type: Types.rawType(this),
       op: this.op,
       values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v
+        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
       ),
       alias: this.alias,
     };
@@ -961,7 +961,7 @@ export class Lambda<T> implements Renderable {
     return new Lambda<T>(
       json['op'],
       json['values'].map((v: any) => RenderableFactory(v)),
-      json['alias']
+      json['alias'],
     );
   }
 
@@ -1000,7 +1000,7 @@ export class Lambda<T> implements Renderable {
     return new Lambda(
       this.op,
       this.values.map((v) => Objects.clone(v)),
-      this.alias
+      this.alias,
     );
   }
   resolve(parser: any) {

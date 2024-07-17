@@ -17,7 +17,7 @@ import {
 export class ExpandField<T> implements Renderable {
   constructor(
     protected field: any,
-    private values: { [name: string]: any } = {}
+    private values: { [name: string]: any } = {},
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -88,11 +88,11 @@ export class ExpandField<T> implements Renderable {
     const values = Object.keys(this.values).reduce(
       (acc, key) =>
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
-      {}
+      {},
     );
     return new ExpandField<T>(
       typeof this.field === 'string' ? this.field : this.field.clone(),
-      values
+      values,
     );
   }
 
@@ -103,55 +103,55 @@ export class ExpandField<T> implements Renderable {
   select(
     opts: (
       builder: SelectExpressionBuilder<T>,
-      current?: SelectExpression<T>
-    ) => SelectExpression<T>
+      current?: SelectExpression<T>,
+    ) => SelectExpression<T>,
   ): SelectExpression<T> {
     return this.option(
       QueryOption.select,
-      SelectExpression.factory<T>(opts, this.values[QueryOption.select])
+      SelectExpression.factory<T>(opts, this.values[QueryOption.select]),
     );
   }
 
   expand(
     opts: (
       builder: ExpandExpressionBuilder<T>,
-      current?: ExpandExpression<T>
-    ) => ExpandExpression<T>
+      current?: ExpandExpression<T>,
+    ) => ExpandExpression<T>,
   ) {
     return this.option(
       QueryOption.expand,
-      ExpandExpression.factory<T>(opts, this.values[QueryOption.expand])
+      ExpandExpression.factory<T>(opts, this.values[QueryOption.expand]),
     );
   }
 
   filter(
     opts: (
       builder: FilterExpressionBuilder<T>,
-      current?: FilterExpression<T>
-    ) => FilterExpression<T>
+      current?: FilterExpression<T>,
+    ) => FilterExpression<T>,
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.factory<T>(opts, this.values[QueryOption.filter])
+      FilterExpression.factory<T>(opts, this.values[QueryOption.filter]),
     );
   }
 
   search(opts: (builder: SearchExpressionBuilder<T>) => SearchExpression<T>) {
     return this.option(
       QueryOption.search,
-      SearchExpression.factory<T>(opts, this.values[QueryOption.search])
+      SearchExpression.factory<T>(opts, this.values[QueryOption.search]),
     );
   }
 
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder<T>,
-      current?: OrderByExpression<T>
-    ) => OrderByExpression<T>
+      current?: OrderByExpression<T>,
+    ) => OrderByExpression<T>,
   ) {
     return this.option(
       QueryOption.orderBy,
-      OrderByExpression.factory<T>(opts, this.values[QueryOption.orderBy])
+      OrderByExpression.factory<T>(opts, this.values[QueryOption.orderBy]),
     );
   }
 
@@ -198,16 +198,16 @@ export class ExpandExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: ExpandExpressionBuilder<T>,
-      current?: ExpandExpression<T>
+      current?: ExpandExpression<T>,
     ) => ExpandExpression<T>,
-    current?: ExpandExpression<T>
+    current?: ExpandExpression<T>,
   ): ExpandExpression<T> {
     return opts(
       {
         t: FieldFactory<Required<T>>(),
         e: () => new ExpandExpression<T>(),
       },
-      current
+      current,
     ) as ExpandExpression<T>;
   }
 
@@ -253,7 +253,7 @@ export class ExpandExpression<T> extends Expression<T> {
 
   field<F>(
     field: F,
-    opts?: (e: ExpandField<Unpacked<F>>) => void
+    opts?: (e: ExpandField<Unpacked<F>>) => void,
   ): ExpandExpression<T> {
     let node = new ExpandField<Unpacked<F>>(field);
     if (opts !== undefined) opts(node);
