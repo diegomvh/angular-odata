@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -224,7 +217,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>attach(value: M)</code>
+                    <code>attach(value: <a href="../undefineds/.html" target="_self">M</a>)</code>
                 </td>
             </tr>
 
@@ -263,7 +256,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                        <code>M</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >M</a></code>
                                             </td>
 
                                             <td>
@@ -276,7 +269,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -302,7 +295,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>entity(key?: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>)</code>
+                    <code>entity(key?: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -333,7 +326,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -371,7 +364,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -417,7 +410,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -465,7 +458,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -490,7 +483,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -536,7 +529,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -584,7 +577,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -609,7 +602,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -690,7 +683,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -757,7 +750,7 @@ export abstract class ODataEntityService&lt;T&gt; extends ODataBaseService {
    */
   get structuredTypeSchema() {
     return this.apiNameOrEntityType !&#x3D;&#x3D; undefined
-      ? this.api.findStructuredTypeForType&lt;T&gt;(this.apiNameOrEntityType)
+      ? this.api.findStructuredType&lt;T&gt;(this.apiNameOrEntityType)
       : undefined;
   }
 }
@@ -802,6 +795,19 @@ export abstract class ODataEntityService&lt;T&gt; extends ODataBaseService {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataEntityService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

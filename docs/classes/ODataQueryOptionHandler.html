@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -235,7 +228,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(o: <a href="../undefineds/QueryOption.html" target="_self">Map&lt;QueryOption | any&gt;</a>, n: <a href="../undefineds/QueryOption.html" target="_self">QueryOption</a>)</code>
+<code>constructor(o: Map<QueryOption | any>, n: <a href="../undefineds/QueryOption.html" target="_self">QueryOption</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -261,7 +254,7 @@
                                                         <td>o</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >Map&lt;QueryOption | any&gt;</a></code>
+                                                                    <code>Map&lt;QueryOption | any&gt;</code>
                                                         </td>
                                                   
                                                     <td>
@@ -318,8 +311,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="77"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:77</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -328,7 +321,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>any[]</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any[]</a></code>
 
                         </div>
                 </td>
@@ -350,15 +343,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>assertObject(create: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                    <code>assertObject(create: <a href="../undefineds/.html" target="_self">boolean</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="131"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:131</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="134"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:134</a></div>
                         </td>
                     </tr>
 
@@ -381,7 +374,7 @@
                                         <tr>
                                                 <td>create</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
                                             </td>
 
                                             <td>
@@ -394,7 +387,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>literal type</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 
                         </div>
                             <div class="io-description">
@@ -417,15 +410,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>assign(values: literal type)</code>
+<code>assign(values: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="201"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:201</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="204"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:204</a></div>
                         </td>
                     </tr>
 
@@ -451,7 +444,7 @@
                                         <tr>
                                                 <td>values</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -468,7 +461,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -491,15 +484,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>at(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>at(index: <a href="../undefineds/.html" target="_self">number</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="113"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:113</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="116"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:116</a></div>
                         </td>
                     </tr>
 
@@ -525,7 +518,7 @@
                                         <tr>
                                                 <td>index</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -542,7 +535,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -573,8 +566,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="210"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:210</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:213</a></div>
                         </td>
                     </tr>
 
@@ -585,7 +578,7 @@
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                 </td>
@@ -612,8 +605,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="60"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:60</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -624,7 +617,7 @@
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -648,15 +641,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>every(predicate: (value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>) => void)</code>
+<code>every(predicate: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="121"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:121</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="124"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:124</a></div>
                         </td>
                     </tr>
 
@@ -679,7 +672,7 @@
                                         <tr>
                                                 <td>predicate</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -692,7 +685,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -715,15 +708,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>find(predicate: (value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>) => void)</code>
+<code>find(predicate: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="125"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:125</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -746,7 +739,7 @@
                                         <tr>
                                                 <td>predicate</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -759,7 +752,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -782,15 +775,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, def?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>get(path: <a href="../undefineds/.html" target="_self">string</a>, def?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="163"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:163</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="166"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:166</a></div>
                         </td>
                     </tr>
 
@@ -816,7 +809,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -832,7 +825,7 @@
                                         <tr>
                                                 <td>def</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -849,7 +842,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -872,15 +865,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>has(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>has(path: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="191"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:191</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:194</a></div>
                         </td>
                     </tr>
 
@@ -906,7 +899,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -923,7 +916,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -947,15 +940,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>push(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>push(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="87"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:87</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -981,7 +974,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -998,7 +991,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1021,15 +1014,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>remove(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>remove(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="95"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:95</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -1055,7 +1048,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1072,7 +1065,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1095,15 +1088,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>set(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>set(path: <a href="../undefineds/.html" target="_self">string</a>, value: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="152"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:152</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="155"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:155</a></div>
                         </td>
                     </tr>
 
@@ -1129,7 +1122,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1145,7 +1138,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1162,7 +1155,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1185,15 +1178,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>some(predicate: (value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>) => void)</code>
+<code>some(predicate: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="117"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:117</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:120</a></div>
                         </td>
                     </tr>
 
@@ -1216,7 +1209,7 @@
                                         <tr>
                                                 <td>predicate</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1229,7 +1222,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1259,8 +1252,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:52</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -1271,7 +1264,7 @@
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1294,15 +1287,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toString(undefined: literal type)</code>
+<code>toString(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="213"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:213</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="216"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:216</a></div>
                         </td>
                     </tr>
 
@@ -1325,7 +1318,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1341,7 +1334,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1364,15 +1357,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>unset(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>unset(path: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="172"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:172</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="175"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:175</a></div>
                         </td>
                     </tr>
 
@@ -1397,7 +1390,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1410,7 +1403,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1433,15 +1426,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>value(v?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>value(v?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="70"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:70</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -1467,7 +1460,7 @@
                                         <tr>
                                                 <td>v</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1484,7 +1477,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1520,7 +1513,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:44</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:47</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -1576,7 +1569,10 @@ import {
 } from &#x27;./options&#x27;;
 
 export class ODataQueryOptionHandler&lt;T&gt; {
-  constructor(private o: Map&lt;QueryOption, any&gt;, private n: QueryOption) {}
+  constructor(
+    private o: Map&lt;QueryOption, any&gt;,
+    private n: QueryOption,
+  ) {}
 
   /**
    * The name of the managed odata query option.
@@ -1635,7 +1631,7 @@ export class ODataQueryOptionHandler&lt;T&gt; {
   remove(value: any) {
     this.o.set(
       this.n,
-      this.assertArray().filter((v) &#x3D;&gt; v !&#x3D;&#x3D; value)
+      this.assertArray().filter((v) &#x3D;&gt; v !&#x3D;&#x3D; value),
     );
     // If only one and not is array... down to value
     if (
@@ -1716,7 +1712,7 @@ export class ODataQueryOptionHandler&lt;T&gt; {
     if (Types.isArray(this.o.get(this.n))) {
       this.o.set(
         this.n,
-        this.o.get(this.n).filter((v: any) &#x3D;&gt; !Types.isEmpty(v))
+        this.o.get(this.n).filter((v: any) &#x3D;&gt; !Types.isEmpty(v)),
       );
       if (this.o.get(this.n).length &#x3D;&#x3D;&#x3D; 1)
         this.o.set(this.n, this.o.get(this.n)[0]);
@@ -1756,7 +1752,7 @@ export class ODataQueryOptionHandler&lt;T&gt; {
   }: { escape?: boolean; parser?: Parser&lt;T&gt; } &#x3D; {}): string {
     const [_, params] &#x3D; pathAndParamsFromQueryOptions(
       new Map&lt;QueryOption, any&gt;([[this.n, this.o.get(this.n)]]),
-      { escape, parser }
+      { escape, parser },
     );
     return params[&#x60;$${this.n}&#x60;];
   }
@@ -1820,8 +1816,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   select(
     opts: (
       builder: SelectExpressionBuilder&lt;T&gt;,
-      current?: SelectExpression&lt;T&gt;
-    ) &#x3D;&gt; SelectExpression&lt;T&gt;
+      current?: SelectExpression&lt;T&gt;,
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;,
   ): SelectExpression&lt;T&gt;;
   select(opts: Select&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   select(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1831,8 +1827,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.select,
         SelectExpression.factory(
           opts,
-          this.options.expression(QueryOption.select)
-        )
+          this.options.expression(QueryOption.select),
+        ),
       );
     }
     return this.options.option&lt;Select&lt;T&gt;&gt;(QueryOption.select, opts);
@@ -1846,8 +1842,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   expand(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
-      current?: ExpandExpression&lt;T&gt;
-    ) &#x3D;&gt; ExpandExpression&lt;T&gt;
+      current?: ExpandExpression&lt;T&gt;,
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
   ): ExpandExpression&lt;T&gt;;
   expand(opts: Expand&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   expand(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1857,8 +1853,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.expand,
         ExpandExpression.factory(
           opts,
-          this.options.expression(QueryOption.expand)
-        )
+          this.options.expression(QueryOption.expand),
+        ),
       );
     }
     return this.options.option&lt;Expand&lt;T&gt;&gt;(QueryOption.expand, opts);
@@ -1873,8 +1869,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   compute(
     opts: (
       builder: ComputeExpressionBuilder&lt;T&gt;,
-      current?: ComputeExpression&lt;T&gt;
-    ) &#x3D;&gt; ComputeExpression&lt;T&gt;
+      current?: ComputeExpression&lt;T&gt;,
+    ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
   ): ComputeExpression&lt;T&gt;;
   compute(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   compute(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1884,8 +1880,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.compute,
         ComputeExpression.factory(
           opts,
-          this.options.expression(QueryOption.compute)
-        )
+          this.options.expression(QueryOption.compute),
+        ),
       );
     }
     return this.options.option&lt;string&gt;(QueryOption.compute, opts);
@@ -1900,8 +1896,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   apply(
     opts: (
       builder: ApplyExpressionBuilder&lt;T&gt;,
-      current?: ApplyExpression&lt;T&gt;
-    ) &#x3D;&gt; ApplyExpression&lt;T&gt;
+      current?: ApplyExpression&lt;T&gt;,
+    ) &#x3D;&gt; ApplyExpression&lt;T&gt;,
   ): ApplyExpression&lt;T&gt;;
   apply(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   apply(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1911,8 +1907,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.apply,
         ApplyExpression.factory(
           opts,
-          this.options.expression(QueryOption.apply)
-        )
+          this.options.expression(QueryOption.apply),
+        ),
       );
     }
     return this.options.option&lt;string&gt;(QueryOption.apply, opts);
@@ -1949,8 +1945,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   search(
     opts: (
       builder: SearchExpressionBuilder&lt;T&gt;,
-      current?: SearchExpression&lt;T&gt;
-    ) &#x3D;&gt; SearchExpression&lt;T&gt;
+      current?: SearchExpression&lt;T&gt;,
+    ) &#x3D;&gt; SearchExpression&lt;T&gt;,
   ): SearchExpression&lt;T&gt;;
   search(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   search(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1960,8 +1956,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.search,
         SearchExpression.factory(
           opts,
-          this.options.expression(QueryOption.search)
-        )
+          this.options.expression(QueryOption.search),
+        ),
       );
     }
     return this.options.option&lt;string&gt;(QueryOption.search, opts);
@@ -1975,8 +1971,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   filter(
     opts: (
       builder: FilterExpressionBuilder&lt;T&gt;,
-      current?: FilterExpression&lt;T&gt;
-    ) &#x3D;&gt; FilterExpression&lt;T&gt;
+      current?: FilterExpression&lt;T&gt;,
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
   ): FilterExpression&lt;T&gt;;
   filter(opts: Filter&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   filter(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1986,8 +1982,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.filter,
         FilterExpression.factory(
           opts,
-          this.options.expression(QueryOption.filter)
-        )
+          this.options.expression(QueryOption.filter),
+        ),
       );
     }
     return this.options.option&lt;Filter&lt;T&gt;&gt;(QueryOption.filter, opts);
@@ -2001,8 +1997,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;
-    ) &#x3D;&gt; OrderByExpression&lt;T&gt;
+      current?: OrderByExpression&lt;T&gt;,
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
   ): OrderByExpression&lt;T&gt;;
   orderBy(opts: OrderBy&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   orderBy(): ODataQueryOptionHandler&lt;T&gt;;
@@ -2012,8 +2008,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.orderBy,
         OrderByExpression.factory(
           opts,
-          this.options.expression(QueryOption.orderBy)
-        )
+          this.options.expression(QueryOption.orderBy),
+        ),
       );
     }
     return this.options.option&lt;OrderBy&lt;T&gt;&gt;(QueryOption.orderBy, opts);
@@ -2126,7 +2122,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.select instanceof SelectExpression) {
         this.options.expression(
           QueryOption.select,
-          options.select as SelectExpression&lt;T&gt;
+          options.select as SelectExpression&lt;T&gt;,
         );
       } else if (options.select !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.select, options.select);
@@ -2138,7 +2134,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.expand instanceof ExpandExpression) {
         this.options.expression(
           QueryOption.expand,
-          options.expand as ExpandExpression&lt;T&gt;
+          options.expand as ExpandExpression&lt;T&gt;,
         );
       } else if (options.expand !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.expand, options.expand);
@@ -2150,7 +2146,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.compute instanceof ComputeExpression) {
         this.options.expression(
           QueryOption.compute,
-          options.compute as ComputeExpression&lt;T&gt;
+          options.compute as ComputeExpression&lt;T&gt;,
         );
       } else if (options.compute !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.compute, options.compute);
@@ -2162,7 +2158,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.apply instanceof ApplyExpression) {
         this.options.expression(
           QueryOption.apply,
-          options.apply as ApplyExpression&lt;T&gt;
+          options.apply as ApplyExpression&lt;T&gt;,
         );
       } else if (options.apply !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.apply, options.apply);
@@ -2181,7 +2177,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.search instanceof SearchExpression) {
         this.options.expression(
           QueryOption.search,
-          options.search as SearchExpression&lt;T&gt;
+          options.search as SearchExpression&lt;T&gt;,
         );
       } else if (options.search !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.search, options.search);
@@ -2193,7 +2189,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.filter instanceof FilterExpression) {
         this.options.expression(
           QueryOption.filter,
-          options.filter as FilterExpression&lt;T&gt;
+          options.filter as FilterExpression&lt;T&gt;,
         );
       } else if (options.filter !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.filter, options.filter);
@@ -2205,7 +2201,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.orderBy instanceof OrderByExpression) {
         this.options.expression(
           QueryOption.orderBy,
-          options.orderBy as OrderByExpression&lt;T&gt;
+          options.orderBy as OrderByExpression&lt;T&gt;,
         );
       } else if (options.orderBy !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.orderBy, options.orderBy);
@@ -2272,6 +2268,19 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataQueryOptionHandler.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

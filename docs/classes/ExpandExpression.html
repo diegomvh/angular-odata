@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -234,7 +227,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(undefined: literal type)</code>
+<code>constructor(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -259,7 +252,7 @@
                                                 <tr>
                                                   
                                                         <td>
-                                                                    <code>literal type</code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -449,7 +442,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>factory(opts: (builder: ExpandExpressionBuilder<T>,current: <a href="../undefineds/Expand.html">ExpandExpression<T></a>) => void, current?: <a href="../undefineds/Expand.html" target="_self">ExpandExpression&lt;T&gt;</a>)</code>
+                    <code>factory(opts: <a href="../undefineds/.html" target="_self">function</a>, current?: <a href="../undefineds/Expand.html" target="_self">ExpandExpression&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -488,7 +481,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -536,7 +529,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>field(field: F, opts?: (e?: ExpandField<Unpacked<F>>) => void)</code>
+<code>field(field: <a href="../undefineds/.html" target="_self">F</a>, opts?: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
@@ -575,7 +568,7 @@
                                         <tr>
                                                 <td>field</td>
                                             <td>
-                                                        <code>F</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >F</a></code>
                                             </td>
 
                                             <td>
@@ -587,7 +580,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -625,7 +618,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fromJson(json: literal type)</code>
+                    <code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -664,7 +657,7 @@
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -700,7 +693,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>render(undefined: literal type)</code>
+<code>render(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -737,7 +730,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -753,7 +746,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -801,7 +794,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -844,7 +837,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>{}</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{}</a></code>
 
                         </div>
                 </td>
@@ -887,7 +880,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -907,7 +900,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>resolve(parser: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>resolve(parser: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
@@ -944,7 +937,7 @@
                                         <tr>
                                                 <td>parser</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -957,7 +950,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1006,7 +999,7 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, ParserOptions, QueryOption } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
-import type { QueryCustomType, Unpacked } from &#x27;../builder&#x27;;
+import { QueryCustomType, Unpacked } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
 import { OrderByExpression, OrderByExpressionBuilder } from &#x27;./orderby&#x27;;
@@ -1023,7 +1016,7 @@ import {
 export class ExpandField&lt;T&gt; implements Renderable {
   constructor(
     protected field: any,
-    private values: { [name: string]: any } &#x3D; {}
+    private values: { [name: string]: any } &#x3D; {},
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -1094,11 +1087,11 @@ export class ExpandField&lt;T&gt; implements Renderable {
     const values &#x3D; Object.keys(this.values).reduce(
       (acc, key) &#x3D;&gt;
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
-      {}
+      {},
     );
     return new ExpandField&lt;T&gt;(
       typeof this.field &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? this.field : this.field.clone(),
-      values
+      values,
     );
   }
 
@@ -1109,55 +1102,55 @@ export class ExpandField&lt;T&gt; implements Renderable {
   select(
     opts: (
       builder: SelectExpressionBuilder&lt;T&gt;,
-      current?: SelectExpression&lt;T&gt;
-    ) &#x3D;&gt; SelectExpression&lt;T&gt;
+      current?: SelectExpression&lt;T&gt;,
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;,
   ): SelectExpression&lt;T&gt; {
     return this.option(
       QueryOption.select,
-      SelectExpression.factory&lt;T&gt;(opts, this.values[QueryOption.select])
+      SelectExpression.factory&lt;T&gt;(opts, this.values[QueryOption.select]),
     );
   }
 
   expand(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
-      current?: ExpandExpression&lt;T&gt;
-    ) &#x3D;&gt; ExpandExpression&lt;T&gt;
+      current?: ExpandExpression&lt;T&gt;,
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
   ) {
     return this.option(
       QueryOption.expand,
-      ExpandExpression.factory&lt;T&gt;(opts, this.values[QueryOption.expand])
+      ExpandExpression.factory&lt;T&gt;(opts, this.values[QueryOption.expand]),
     );
   }
 
   filter(
     opts: (
       builder: FilterExpressionBuilder&lt;T&gt;,
-      current?: FilterExpression&lt;T&gt;
-    ) &#x3D;&gt; FilterExpression&lt;T&gt;
+      current?: FilterExpression&lt;T&gt;,
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.factory&lt;T&gt;(opts, this.values[QueryOption.filter])
+      FilterExpression.factory&lt;T&gt;(opts, this.values[QueryOption.filter]),
     );
   }
 
   search(opts: (builder: SearchExpressionBuilder&lt;T&gt;) &#x3D;&gt; SearchExpression&lt;T&gt;) {
     return this.option(
       QueryOption.search,
-      SearchExpression.factory&lt;T&gt;(opts, this.values[QueryOption.search])
+      SearchExpression.factory&lt;T&gt;(opts, this.values[QueryOption.search]),
     );
   }
 
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;
-    ) &#x3D;&gt; OrderByExpression&lt;T&gt;
+      current?: OrderByExpression&lt;T&gt;,
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
   ) {
     return this.option(
       QueryOption.orderBy,
-      OrderByExpression.factory&lt;T&gt;(opts, this.values[QueryOption.orderBy])
+      OrderByExpression.factory&lt;T&gt;(opts, this.values[QueryOption.orderBy]),
     );
   }
 
@@ -1204,16 +1197,16 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
-      current?: ExpandExpression&lt;T&gt;
+      current?: ExpandExpression&lt;T&gt;,
     ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
-    current?: ExpandExpression&lt;T&gt;
+    current?: ExpandExpression&lt;T&gt;,
   ): ExpandExpression&lt;T&gt; {
     return opts(
       {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new ExpandExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as ExpandExpression&lt;T&gt;;
   }
 
@@ -1259,7 +1252,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   field&lt;F&gt;(
     field: F,
-    opts?: (e: ExpandField&lt;Unpacked&lt;F&gt;&gt;) &#x3D;&gt; void
+    opts?: (e: ExpandField&lt;Unpacked&lt;F&gt;&gt;) &#x3D;&gt; void,
   ): ExpandExpression&lt;T&gt; {
     let node &#x3D; new ExpandField&lt;Unpacked&lt;F&gt;&gt;(field);
     if (opts !&#x3D;&#x3D; undefined) opts(node);
@@ -1307,6 +1300,19 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
             var COMPODOC_CURRENT_PAGE_URL = 'ExpandExpression.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

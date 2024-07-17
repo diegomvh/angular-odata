@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -215,6 +208,9 @@
                                 <a href="#batch" >batch</a>
                             </li>
                             <li>
+                                <a href="#callable" >callable</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Public</span>
                                 <a href="#collectionForType" >collectionForType</a>
                             </li>
@@ -222,27 +218,34 @@
                                 <a href="#configure" >configure</a>
                             </li>
                             <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#createCollection" >createCollection</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#createModel" >createModel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#createSchema" >createSchema</a>
+                            </li>
+                            <li>
                                 <a href="#entitySet" >entitySet</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#findCallableByName" >findCallableByName</a>
+                                <a href="#enumType" >enumType</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#findCallableForType" >findCallableForType</a>
+                                <a href="#findCallable" >findCallable</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#findCollectionByName" >findCollectionByName</a>
+                                <a href="#findCollection" >findCollection</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#findCollectionForType" >findCollectionForType</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#findEntitySetByName" >findEntitySetByName</a>
+                                <a href="#findEntitySet" >findEntitySet</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -250,51 +253,23 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#findEntitySetForType" >findEntitySetForType</a>
+                                <a href="#findEnumType" >findEnumType</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#findEnumTypeByName" >findEnumTypeByName</a>
+                                <a href="#findModel" >findModel</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#findEnumTypeForType" >findEnumTypeForType</a>
+                                <a href="#findSchema" >findSchema</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#findModelByName" >findModelByName</a>
+                                <a href="#findSingleton" >findSingleton</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#findModelForType" >findModelForType</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#findOptionsForType" >findOptionsForType</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#findSchemaForType" >findSchemaForType</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#findServiceByName" >findServiceByName</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#findServiceForEntityType" >findServiceForEntityType</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#findServiceForType" >findServiceForType</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#findStructuredTypeByName" >findStructuredTypeByName</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#findStructuredTypeForType" >findStructuredTypeForType</a>
+                                <a href="#findStructuredType" >findStructuredType</a>
                             </li>
                             <li>
                                 <a href="#fromJson" >fromJson</a>
@@ -317,13 +292,23 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
+                                <a href="#optionsForType" >optionsForType</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
                                 <a href="#parserForType" >parserForType</a>
+                            </li>
+                            <li>
+                                <a href="#populate" >populate</a>
                             </li>
                             <li>
                                 <a href="#request" >request</a>
                             </li>
                             <li>
                                 <a href="#singleton" >singleton</a>
+                            </li>
+                            <li>
+                                <a href="#structuredType" >structuredType</a>
                             </li>
                         </ul>
                     </td>
@@ -343,12 +328,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(config: <a href="../undefineds/ApiConfig.html" target="_self">ApiConfig</a>)</code>
+<code>constructor(config: <a href="../classes/ApiConfig.html" target="_self">ApiConfig</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">projects/angular-odata/src/lib/api.ts:64</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">projects/angular-odata/src/lib/api.ts:70</a></div>
                             </td>
                         </tr>
 
@@ -369,7 +354,7 @@
                                                         <td>config</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/typealiases.html#ApiConfig" target="_self" >ApiConfig</a></code>
+                                                                        <code><a href="../classes/ApiConfig.html" target="_self" >ApiConfig</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -410,7 +395,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">projects/angular-odata/src/lib/api.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">projects/angular-odata/src/lib/api.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -430,13 +415,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Date</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/angular-odata/src/lib/api.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">projects/angular-odata/src/lib/api.ts:60</a></div>
                         </td>
                     </tr>
 
@@ -456,13 +441,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">projects/angular-odata/src/lib/api.ts:53</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">projects/angular-odata/src/lib/api.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -483,13 +468,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">projects/angular-odata/src/lib/api.ts:60</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">projects/angular-odata/src/lib/api.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -510,33 +495,26 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>literal type</code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 
                     </td>
                 </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
-    forType: {
-      enum: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
-      structured: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
-      callable: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
-      entitySet: new Map&lt;string, ODataEntitySet | undefined&gt;(),
-      parser: new Map&lt;string, Parser&lt;any&gt;&gt;(),
-      options: new Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;(),
-    },
-    byName: {
-      enum: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
-      structured: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
-      callable: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
-      entitySet: new Map&lt;string, ODataEntitySet | undefined&gt;(),
-    },
+    enumTypes: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
+    structuredTypes: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
+    callables: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
+    entitySets: new Map&lt;string, ODataEntitySet | undefined&gt;(),
+    singletons: new Map&lt;string, ODataSingleton | undefined&gt;(),
+    parsers: new Map&lt;string, Parser&lt;any&gt;&gt;(),
+    options: new Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;(),
   }</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="294" class="link-to-prism">projects/angular-odata/src/lib/api.ts:294</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="333" class="link-to-prism">projects/angular-odata/src/lib/api.ts:333</a></div>
                         </td>
                     </tr>
 
@@ -556,13 +534,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/api.ts:50</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">projects/angular-odata/src/lib/api.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -583,13 +561,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/api.ts:51</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">projects/angular-odata/src/lib/api.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -615,7 +593,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">projects/angular-odata/src/lib/api.ts:56</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">projects/angular-odata/src/lib/api.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -641,7 +619,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">projects/angular-odata/src/lib/api.ts:62</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">projects/angular-odata/src/lib/api.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -662,13 +640,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/api.ts:48</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/angular-odata/src/lib/api.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -688,13 +666,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/ODataSchema.html" target="_self" >ODataSchema[]</a></code>
+                        <i>Type : </i>        <code><a href="../interfaces/Schema.html" target="_self" >ODataSchema[]</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">projects/angular-odata/src/lib/api.ts:64</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">projects/angular-odata/src/lib/api.ts:70</a></div>
                         </td>
                     </tr>
 
@@ -714,13 +692,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/api.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">projects/angular-odata/src/lib/api.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -740,13 +718,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#ODataVersion" target="_self" >ODataVersion</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">projects/angular-odata/src/lib/api.ts:52</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">projects/angular-odata/src/lib/api.ts:58</a></div>
                         </td>
                     </tr>
 
@@ -773,15 +751,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>action(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>action(path: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="193"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:193</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="212"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:212</a></div>
                         </td>
                     </tr>
 
@@ -816,7 +794,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -864,8 +842,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="156"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:156</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:177</a></div>
                         </td>
                     </tr>
 
@@ -891,6 +869,81 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="callable"></a>
+                    <span class="name">
+                        <span ><b>callable</b></span>
+                        <a href="#callable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>callable(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="235"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:235</a></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>type</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="collectionForType"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
@@ -902,15 +955,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>collectionForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>collectionForType(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="411"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:411</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="540"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:540</a></div>
                         </td>
                     </tr>
 
@@ -933,7 +986,7 @@
                                         <tr>
                                                 <td>type</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -946,7 +999,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -969,15 +1022,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>configure(settings: literal type)</code>
+<code>configure(settings: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="92"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:92</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:101</a></div>
                         </td>
                     </tr>
 
@@ -1001,7 +1054,7 @@
                                         <tr>
                                                 <td>settings</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1017,7 +1070,226 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createCollection"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>createCollection</b></span>
+                        <a href="#createCollection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createCollection(structured: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;any&gt;</a>, model?: <a href="../undefineds/.html" target="_self">&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="527"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:527</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>structured</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>model</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createModel"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>createModel</b></span>
+                        <a href="#createModel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createModel(structured: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="493"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:493</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>structured</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createSchema"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>createSchema</b></span>
+                        <a href="#createSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createSchema(config: <a href="../undefineds/SchemaConfig.html" target="_self">SchemaConfig</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="351"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:351</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>config</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#SchemaConfig" target="_self" >SchemaConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1040,15 +1312,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>entitySet(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>entitySet(name: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="179"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:179</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="199"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:199</a></div>
                         </td>
                     </tr>
 
@@ -1075,14 +1347,13 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>path</td>
+                                                <td>name</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1090,10 +1361,6 @@
                                             </td>
 
 
-                                            <td>
-                                                    <p>Name of the entity set</p>
-
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1113,115 +1380,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findCallableByName"></a>
+                    <a name="enumType"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findCallableByName</b></span>
-                        <a href="#findCallableByName"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>enumType</b></span>
+                        <a href="#enumType"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findCallableByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, bindingType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>enumType(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="485"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:485</a></div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>name</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>bindingType</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findCallableForType"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findCallableForType</b></span>
-                        <a href="#findCallableForType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findCallableForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, bindingType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="356"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:356</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="239"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:239</a></div>
                         </td>
                     </tr>
 
@@ -1252,7 +1428,7 @@
                                         <tr>
                                                 <td>type</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1261,23 +1437,11 @@
 
 
                                         </tr>
-                                        <tr>
-                                                <td>bindingType</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1291,29 +1455,37 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findCollectionByName"></a>
+                    <a name="findCallable"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>findCollectionByName</b></span>
-                        <a href="#findCollectionByName"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>findCallable</b></span>
+                        <a href="#findCallable"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findCollectionByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>findCallable(value: <a href="../undefineds/.html" target="_self">string</a>, bindingType?: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="524"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:524</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="405"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:405</a></div>
                         </td>
                     </tr>
 
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>R</li>
+                            </ul>
+                        </td>
+                    </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -1331,9 +1503,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>name</td>
+                                                <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1342,11 +1514,23 @@
 
 
                                         </tr>
+                                        <tr>
+                                                <td>bindingType</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1360,26 +1544,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findCollectionForType"></a>
+                    <a name="findCollection"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>findCollectionForType</b></span>
-                        <a href="#findCollectionForType"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>findCollection</b></span>
+                        <a href="#findCollection"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findCollectionForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>findCollection(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="407"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:407</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="523"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:523</a></div>
                         </td>
                     </tr>
 
@@ -1402,7 +1586,7 @@
                                         <tr>
                                                 <td>type</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1415,7 +1599,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1429,26 +1613,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findEntitySetByName"></a>
+                    <a name="findEntitySet"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>findEntitySetByName</b></span>
-                        <a href="#findEntitySetByName"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>findEntitySet</b></span>
+                        <a href="#findEntitySet"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findEntitySetByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>findEntitySet(value: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="504"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:504</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="458"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:458</a></div>
                         </td>
                     </tr>
 
@@ -1469,9 +1653,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>name</td>
+                                                <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1484,7 +1668,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1509,15 +1693,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findEntitySetForEntityType(entityType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>findEntitySetForEntityType(entityType: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="433"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:433</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="552"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:552</a></div>
                         </td>
                     </tr>
 
@@ -1540,7 +1724,7 @@
                                         <tr>
                                                 <td>entityType</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1553,7 +1737,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1567,95 +1751,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findEntitySetForType"></a>
+                    <a name="findEnumType"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>findEntitySetForType</b></span>
-                        <a href="#findEntitySetForType"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>findEnumType</b></span>
+                        <a href="#findEnumType"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findEntitySetForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>findEnumType(value: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="371"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:371</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findEnumTypeByName"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findEnumTypeByName</b></span>
-                        <a href="#findEnumTypeByName"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findEnumTypeByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="455"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:455</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="370"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:370</a></div>
                         </td>
                     </tr>
 
@@ -1684,9 +1799,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>name</td>
+                                                <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1699,7 +1814,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1713,26 +1828,233 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findEnumTypeForType"></a>
+                    <a name="findModel"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>findEnumTypeForType</b></span>
-                        <a href="#findEnumTypeForType"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>findModel</b></span>
+                        <a href="#findModel"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findEnumTypeForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>findModel(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="335"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:335</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="489"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:489</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>type</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findSchema"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>findSchema</b></span>
+                        <a href="#findSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findSchema(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="360"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:360</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>type</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findSingleton"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>findSingleton</b></span>
+                        <a href="#findSingleton"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findSingleton(value: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="474"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:474</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findStructuredType"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>findStructuredType</b></span>
+                        <a href="#findStructuredType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findStructuredType(value: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="386"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:386</a></div>
                         </td>
                     </tr>
 
@@ -1761,9 +2083,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>type</td>
+                                                <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1776,652 +2098,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findModelByName"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findModelByName</b></span>
-                        <a href="#findModelByName"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findModelByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="518"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:518</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>name</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findModelForType"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findModelForType</b></span>
-                        <a href="#findModelForType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findModelForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="382"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:382</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findOptionsForType"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findOptionsForType</b></span>
-                        <a href="#findOptionsForType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findOptionsForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="559"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:559</a></div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findSchemaForType"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>findSchemaForType</b></span>
-                        <a href="#findSchemaForType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findSchemaForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="326"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:326</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findServiceByName"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findServiceByName</b></span>
-                        <a href="#findServiceByName"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findServiceByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="530"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:530</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>name</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findServiceForEntityType"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findServiceForEntityType</b></span>
-                        <a href="#findServiceForEntityType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findServiceForEntityType(entityType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="449"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:449</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>entityType</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findServiceForType"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findServiceForType</b></span>
-                        <a href="#findServiceForType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findServiceForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="427"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:427</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findStructuredTypeByName"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findStructuredTypeByName</b></span>
-                        <a href="#findStructuredTypeByName"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findStructuredTypeByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="469"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:469</a></div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>name</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findStructuredTypeForType"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>findStructuredTypeForType</b></span>
-                        <a href="#findStructuredTypeForType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findStructuredTypeForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="344"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:344</a></div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2444,15 +2121,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fromJson(json: literal type)</code>
+<code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="107"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:107</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -2484,7 +2161,7 @@
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -2520,15 +2197,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fromJson(json: literal type)</code>
+<code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:111</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="132"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:132</a></div>
                         </td>
                     </tr>
 
@@ -2559,7 +2236,7 @@
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -2595,15 +2272,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fromJson(json: literal type)</code>
+<code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="140"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:140</a></div>
                         </td>
                     </tr>
 
@@ -2626,7 +2303,7 @@
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -2639,7 +2316,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2662,15 +2339,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>function(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>function(path: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="203"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:203</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:226</a></div>
                         </td>
                     </tr>
 
@@ -2705,7 +2382,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -2753,8 +2430,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="148"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:148</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="169"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:169</a></div>
                         </td>
                     </tr>
 
@@ -2791,15 +2468,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>modelForType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>modelForType(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="386"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:386</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="512"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:512</a></div>
                         </td>
                     </tr>
 
@@ -2822,7 +2499,7 @@
                                         <tr>
                                                 <td>type</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -2835,7 +2512,101 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="optionsForType"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>optionsForType</b></span>
+                        <a href="#optionsForType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>optionsForType(type: <a href="../undefineds/.html" target="_self">string</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="589"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:589</a></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>type</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2860,15 +2631,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>parserForType(type: <a href="../classes/Type.html" target="_self">string | EdmType</a>, bindingType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>parserForType(type: <a href="../classes/Type.html" target="_self">string | EdmType</a>, bindingType?: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="536"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:536</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="566"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:566</a></div>
                         </td>
                     </tr>
 
@@ -2911,7 +2682,7 @@
                                         <tr>
                                                 <td>bindingType</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -2938,6 +2709,73 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="populate"></a>
+                    <span class="name">
+                        <span ><b>populate</b></span>
+                        <a href="#populate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>populate(metadata: <a href="../classes/ODataMetadata.html" target="_self">ODataMetadata</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:114</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>metadata</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataMetadata.html" target="_self" >ODataMetadata</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="request"></a>
                     <span class="name">
                         <span ><b>request</b></span>
@@ -2947,15 +2785,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>request(method: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, resource: <a href="../classes/ODataResource.html" target="_self">ODataResource&lt;any&gt;</a>, options)</code>
+<code>request(method: <a href="../undefineds/.html" target="_self">string</a>, resource: <a href="../classes/ODataResource.html" target="_self">ODataResource&lt;any&gt;</a>, options: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="209"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:209</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="248"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:248</a></div>
                         </td>
                     </tr>
 
@@ -2986,7 +2824,7 @@
                                         <tr>
                                                 <td>method</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -3022,7 +2860,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3045,15 +2883,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>singleton(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>singleton(name: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="165"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:165</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="186"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:186</a></div>
                         </td>
                     </tr>
 
@@ -3080,14 +2918,13 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>path</td>
+                                                <td>name</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -3095,16 +2932,87 @@
                                             </td>
 
 
-                                            <td>
-                                                    <p>Name of the singleton</p>
-
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="structuredType"></a>
+                    <span class="name">
+                        <span ><b>structuredType</b></span>
+                        <a href="#structuredType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>structuredType(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="243"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:243</a></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>type</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3127,45 +3035,51 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpEvent, HttpEventType } from &#x27;@angular/common/http&#x27;;
 import { NEVER, Observable } from &#x27;rxjs&#x27;;
 import { catchError, map } from &#x27;rxjs/operators&#x27;;
-import { ODataCache, ODataInMemoryCache } from &#x27;./cache/index&#x27;;
+import { ODataCache, ODataInMemoryCache } from &#x27;./cache&#x27;;
 import { DEFAULT_VERSION } from &#x27;./constants&#x27;;
-import { ODataCollection, ODataModel, ODataModelOptions } from &#x27;./models/index&#x27;;
-import { ODataApiOptions } from &#x27;./options&#x27;;
 import {
-  ODataActionResource,
+  ModelOptions,
+  ODataCollection,
+  ODataModel,
+  ODataModelOptions,
+} from &#x27;./models&#x27;;
+import { ODataApiOptions } from &#x27;./options&#x27;;
+import { ODataOptions, ODataResource, ODataSegment } from &#x27;./resources&#x27;;
+import {
+  ODataQueryOptions,
+  ODataPathSegments,
+  ODataRequest,
+  ODataResponse,
   ODataBatchResource,
+  ODataMetadataResource,
+  ODataActionResource,
+  ODataFunctionResource,
   ODataEntityResource,
   ODataEntitySetResource,
-  ODataFunctionResource,
-  ODataMetadataResource,
-  ODataNavigationPropertyResource,
-  ODataOptions,
-  ODataPathSegments,
-  ODataQueryOptions,
-  ODataRequest,
-  ODataResource,
-  ODataResponse,
-  ODataSegment,
   ODataSingletonResource,
-} from &#x27;./resources/index&#x27;;
+  ODataNavigationPropertyResource,
+} from &#x27;./resources&#x27;;
 import {
   EDM_PARSERS,
   ODataCallable,
   ODataEntitySet,
   ODataEnumType,
   ODataSchema,
+  ODataSingleton,
   ODataStructuredType,
 } from &#x27;./schema&#x27;;
-import { ODataEntityService } from &#x27;./services/entity&#x27;;
 import {
   ApiConfig,
   ApiOptions,
   EdmType,
   NONE_PARSER,
+  ODataVersion,
   Parser,
   PathSegment,
   QueryOption,
+  SchemaConfig,
 } from &#x27;./types&#x27;;
+import { ODataMetadata } from &#x27;./metadata/metadata&#x27;;
 
 /**
  * Api abstraction for consuming OData services.
@@ -3175,7 +3089,7 @@ export class ODataApi {
   serviceRootUrl: string;
   metadataUrl: string;
   name?: string;
-  version: string;
+  version: ODataVersion;
   default: boolean;
   creation: Date;
   // Options
@@ -3193,16 +3107,19 @@ export class ODataApi {
     this.serviceRootUrl &#x3D; config.serviceRootUrl;
     if (this.serviceRootUrl.indexOf(&#x27;?&#x27;) !&#x3D; -1)
       throw new Error(
-        &quot;The &#x27;serviceRootUrl&#x27; should not contain query string. Please use &#x27;params&#x27; to add extra parameters&quot;
+        &quot;The &#x27;serviceRootUrl&#x27; should not contain query string. Please use &#x27;params&#x27; to add extra parameters&quot;,
       );
     if (!this.serviceRootUrl.endsWith(&#x27;/&#x27;)) this.serviceRootUrl +&#x3D; &#x27;/&#x27;;
     this.metadataUrl &#x3D; &#x60;${this.serviceRootUrl}$metadata&#x60;;
     this.name &#x3D; config.name;
-    this.version &#x3D; config.version || DEFAULT_VERSION;
-    this.default &#x3D; config.default || false;
-    this.creation &#x3D; config.creation || new Date();
+    this.version &#x3D; config.version ?? DEFAULT_VERSION;
+    this.default &#x3D; config.default ?? false;
+    this.creation &#x3D; config.creation ?? new Date();
     this.options &#x3D; new ODataApiOptions(
-      Object.assign(&lt;ApiOptions&gt;{ version: this.version }, config.options || {})
+      Object.assign(
+        &lt;ApiOptions&gt;{ version: this.version },
+        config.options || {},
+      ),
     );
 
     this.cache &#x3D; (config.cache as ODataCache) || new ODataInMemoryCache();
@@ -3210,22 +3127,34 @@ export class ODataApi {
 
     this.parsers &#x3D; new Map(Object.entries(config.parsers || EDM_PARSERS));
 
-    this.schemas &#x3D; (config.schemas || []).map(
-      (schema) &#x3D;&gt; new ODataSchema(schema, this)
+    this.schemas &#x3D; (config.schemas ?? []).map(
+      (schema) &#x3D;&gt; new ODataSchema(schema, this),
     );
   }
 
   configure(
     settings: {
       requester?: (request: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;;
-    } &#x3D; {}
+    } &#x3D; {},
   ) {
     this.requester &#x3D; settings.requester;
     this.schemas.forEach((schema) &#x3D;&gt; {
       schema.configure({
         options: this.options.parserOptions,
-        parserForType: (type: string | EdmType) &#x3D;&gt; this.parserForType(type),
-        findOptionsForType: (type: string) &#x3D;&gt; this.findOptionsForType(type),
+      });
+    });
+  }
+
+  populate(metadata: ODataMetadata) {
+    const config &#x3D; metadata.toConfig();
+    this.version &#x3D; config.version ?? DEFAULT_VERSION;
+    const schemas &#x3D; (config.schemas ?? []).map(
+      (schema) &#x3D;&gt; new ODataSchema(schema, this),
+    );
+    this.schemas &#x3D; [...this.schemas, ...schemas];
+    schemas.forEach((schema) &#x3D;&gt; {
+      schema.configure({
+        options: this.options.parserOptions,
       });
     });
   }
@@ -3288,13 +3217,12 @@ export class ODataApi {
    * @param path Name of the singleton
    * @returns
    */
-  singleton&lt;T&gt;(path: string) {
-    const entitySet &#x3D; this.findEntitySetByName(path);
-    const schema &#x3D;
-      entitySet !&#x3D;&#x3D; undefined
-        ? this.findStructuredTypeForType&lt;T&gt;(entitySet.entityType)
-        : undefined;
-    return ODataSingletonResource.factory&lt;T&gt;(this, { path, schema });
+  singleton&lt;T&gt;(name: string) {
+    const singleton &#x3D; this.findSingleton(name);
+    return ODataSingletonResource.factory&lt;T&gt;(this, {
+      path: singleton?.name ?? name,
+      type: singleton?.singletonType,
+    });
   }
 
   /**
@@ -3302,13 +3230,12 @@ export class ODataApi {
    * @param path Name of the entity set
    * @returns
    */
-  entitySet&lt;T&gt;(path: string): ODataEntitySetResource&lt;T&gt; {
-    const entitySet &#x3D; this.findEntitySetByName(path);
-    const schema &#x3D;
-      entitySet !&#x3D;&#x3D; undefined
-        ? this.findStructuredTypeForType&lt;T&gt;(entitySet.entityType)
-        : undefined;
-    return ODataEntitySetResource.factory&lt;T&gt;(this, { path, schema });
+  entitySet&lt;T&gt;(name: string): ODataEntitySetResource&lt;T&gt; {
+    const entitySet &#x3D; this.findEntitySet(name);
+    return ODataEntitySetResource.factory&lt;T&gt;(this, {
+      path: entitySet?.name ?? name,
+      type: entitySet?.entityType,
+    });
   }
 
   /**
@@ -3317,8 +3244,12 @@ export class ODataApi {
    * @returns ODataActionResource
    */
   action&lt;P, R&gt;(path: string): ODataActionResource&lt;P, R&gt; {
-    const schema &#x3D; this.findCallableForType&lt;R&gt;(path);
-    return ODataActionResource.factory&lt;P, R&gt;(this, { path, schema });
+    const callable &#x3D; this.findCallable&lt;R&gt;(path);
+    return ODataActionResource.factory&lt;P, R&gt;(this, {
+      path,
+      outgoingType: callable?.type(),
+      incomingType: callable?.returnType(),
+    });
   }
 
   /**
@@ -3327,8 +3258,24 @@ export class ODataApi {
    * @returns ODataFunctionResource
    */
   function&lt;P, R&gt;(path: string): ODataFunctionResource&lt;P, R&gt; {
-    const schema &#x3D; this.findCallableForType&lt;R&gt;(path);
-    return ODataFunctionResource.factory&lt;P, R&gt;(this, { path, schema });
+    const callable &#x3D; this.findCallable&lt;R&gt;(path);
+    return ODataFunctionResource.factory&lt;P, R&gt;(this, {
+      path,
+      outgoingType: callable?.type(),
+      incomingType: callable?.returnType(),
+    });
+  }
+
+  callable&lt;T&gt;(type: string) {
+    return this.findCallable&lt;T&gt;(type);
+  }
+
+  enumType&lt;T&gt;(type: string) {
+    return this.findEnumType&lt;T&gt;(type);
+  }
+
+  structuredType&lt;T&gt;(type: string) {
+    return this.findStructuredType&lt;T&gt;(type);
   }
 
   //request(req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; {
@@ -3350,7 +3297,7 @@ export class ODataApi {
       observe?: &#x27;body&#x27; | &#x27;events&#x27; | &#x27;response&#x27;;
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
-    }
+    },
   ): Observable&lt;any&gt; {
     let req &#x3D; ODataRequest.factory(this, method, resource, {
       body: options.body,
@@ -3376,8 +3323,8 @@ export class ODataApi {
       map((res: HttpEvent&lt;any&gt;) &#x3D;&gt;
         res.type &#x3D;&#x3D;&#x3D; HttpEventType.Response
           ? ODataResponse.fromHttpResponse&lt;any&gt;(req, res)
-          : res
-      )
+          : res,
+      ),
     );
 
     if (this.errorHandler !&#x3D;&#x3D; undefined)
@@ -3410,7 +3357,7 @@ export class ODataApi {
       default:
         // Guard against new future observe types being added.
         throw new Error(
-          &#x60;Unreachable: unhandled observe type ${options.observe}}&#x60;
+          &#x60;Unreachable: unhandled observe type ${options.observe}}&#x60;,
         );
     }
   }
@@ -3418,38 +3365,33 @@ export class ODataApi {
   //# region Find by Type
   // Memoize
   private memo: {
-    forType: {
-      enum: Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;;
-      structured: Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;;
-      callable: Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;;
-      entitySet: Map&lt;string, ODataEntitySet | undefined&gt;;
-      parser: Map&lt;string, Parser&lt;any&gt;&gt;;
-      options: Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;;
-    };
-    byName: {
-      enum: Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;;
-      structured: Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;;
-      callable: Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;;
-      entitySet: Map&lt;string, ODataEntitySet | undefined&gt;;
-    };
+    enumTypes: Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;;
+    structuredTypes: Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;;
+    callables: Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;;
+    entitySets: Map&lt;string, ODataEntitySet | undefined&gt;;
+    singletons: Map&lt;string, ODataSingleton | undefined&gt;;
+    parsers: Map&lt;string, Parser&lt;any&gt;&gt;;
+    options: Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;;
   } &#x3D; {
-    forType: {
-      enum: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
-      structured: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
-      callable: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
-      entitySet: new Map&lt;string, ODataEntitySet | undefined&gt;(),
-      parser: new Map&lt;string, Parser&lt;any&gt;&gt;(),
-      options: new Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;(),
-    },
-    byName: {
-      enum: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
-      structured: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
-      callable: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
-      entitySet: new Map&lt;string, ODataEntitySet | undefined&gt;(),
-    },
+    enumTypes: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
+    structuredTypes: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
+    callables: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
+    entitySets: new Map&lt;string, ODataEntitySet | undefined&gt;(),
+    singletons: new Map&lt;string, ODataSingleton | undefined&gt;(),
+    parsers: new Map&lt;string, Parser&lt;any&gt;&gt;(),
+    options: new Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;(),
   };
 
-  private findSchemaForType(type: string) {
+  public createSchema(config: SchemaConfig) {
+    const schema &#x3D; new ODataSchema(config, this);
+    schema.configure({
+      options: this.options.parserOptions,
+    });
+    this.schemas.push(schema);
+    return schema;
+  }
+
+  public findSchema(type: string) {
     const schemas &#x3D; this.schemas.filter((s) &#x3D;&gt; s.isNamespaceOf(type));
     if (schemas.length &#x3D;&#x3D;&#x3D; 0) return undefined;
     if (schemas.length &#x3D;&#x3D;&#x3D; 1) return schemas[0];
@@ -3458,211 +3400,207 @@ export class ODataApi {
       .pop();
   }
 
-  public findEnumTypeForType&lt;T&gt;(type: string) {
-    if (this.memo.forType.enum.has(type)) {
-      return this.memo.forType.enum.get(type) as ODataEnumType&lt;T&gt; | undefined;
+  //#region EnumTypes
+  public findEnumType&lt;T&gt;(value: string) {
+    if (this.memo.enumTypes.has(value)) {
+      return this.memo.enumTypes.get(value) as ODataEnumType&lt;T&gt; | undefined;
     }
-    const enumType &#x3D; this.findSchemaForType(type)?.findEnumTypeForType&lt;T&gt;(type);
-    this.memo.forType.enum.set(type, enumType);
+    const enumTypes &#x3D; this.schemas.reduce(
+      (acc, schema) &#x3D;&gt; [...acc, ...schema.enums],
+      &lt;ODataEnumType&lt;T&gt;[]&gt;[],
+    );
+    let enumType &#x3D; enumTypes.find((e) &#x3D;&gt; e.type() &#x3D;&#x3D;&#x3D; value);
+    enumType &#x3D; enumType ?? enumTypes.find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; value);
+    this.memo.enumTypes.set(value, enumType);
     return enumType;
   }
+  //#endregion
 
-  public findStructuredTypeForType&lt;T&gt;(type: string) {
-    if (this.memo.forType.structured.has(type)) {
-      return this.memo.forType.structured.get(type) as
+  //#region StructuredTypes
+  public findStructuredType&lt;T&gt;(value: string) {
+    if (this.memo.structuredTypes.has(value)) {
+      return this.memo.structuredTypes.get(value) as
         | ODataStructuredType&lt;T&gt;
         | undefined;
     }
-    const structuredType &#x3D;
-      this.findSchemaForType(type)?.findStructuredTypeForType&lt;T&gt;(type);
-    this.memo.forType.structured.set(type, structuredType);
+    const structuredTypes &#x3D; this.schemas.reduce(
+      (acc, schema) &#x3D;&gt; [...acc, ...schema.entities],
+      &lt;ODataStructuredType&lt;T&gt;[]&gt;[],
+    );
+    let structuredType &#x3D; structuredTypes.find((e) &#x3D;&gt; e.type() &#x3D;&#x3D;&#x3D; value);
+    structuredType &#x3D;
+      structuredType ?? structuredTypes.find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; value);
+    this.memo.structuredTypes.set(value, structuredType);
     return structuredType;
   }
+  //#endregion
 
-  public findCallableForType&lt;T&gt;(type: string, bindingType?: string) {
-    const key &#x3D; bindingType !&#x3D;&#x3D; undefined ? &#x60;${bindingType}/${type}&#x60; : type;
-    if (this.memo.forType.callable.has(key)) {
-      return this.memo.forType.callable.get(key) as
-        | ODataCallable&lt;T&gt;
-        | undefined;
+  //#region Callables
+  public findCallable&lt;R&gt;(value: string, bindingType?: string) {
+    const key &#x3D; bindingType !&#x3D;&#x3D; undefined ? &#x60;${bindingType}/${value}&#x60; : value;
+    if (this.memo.callables.has(key)) {
+      return this.memo.callables.get(key) as ODataCallable&lt;R&gt; | undefined;
     }
-    const callable &#x3D; this.findSchemaForType(type)?.findCallableForType&lt;T&gt;(
-      type,
-      bindingType
+
+    const bindingStructuredType &#x3D;
+      bindingType !&#x3D;&#x3D; undefined
+        ? this.findStructuredType&lt;any&gt;(bindingType)
+        : undefined;
+    const callables &#x3D; this.schemas.reduce(
+      (acc, schema) &#x3D;&gt; [...acc, ...schema.callables],
+      &lt;ODataCallable&lt;R&gt;[]&gt;[],
     );
-    this.memo.forType.callable.set(key, callable);
+    let callable &#x3D; callables.find((c) &#x3D;&gt; {
+      const isCallableType &#x3D; c.type() &#x3D;&#x3D; value;
+      const callableBindingType &#x3D; c.binding()?.type;
+      const callableBindingStructuredType &#x3D;
+        callableBindingType !&#x3D;&#x3D; undefined
+          ? this.findStructuredType(callableBindingType)
+          : undefined;
+
+      return (
+        isCallableType &amp;&amp;
+        (!bindingStructuredType ||
+          (callableBindingStructuredType &amp;&amp;
+            bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
+      );
+    });
+    callable &#x3D;
+      callable ??
+      callables.find((c) &#x3D;&gt; {
+        const isCallableType &#x3D; c.name &#x3D;&#x3D; value;
+        const callableBindingType &#x3D; c.binding()?.type;
+        const callableBindingStructuredType &#x3D;
+          callableBindingType !&#x3D;&#x3D; undefined
+            ? this.findStructuredType(callableBindingType)
+            : undefined;
+
+        return (
+          isCallableType &amp;&amp;
+          (!bindingStructuredType ||
+            (callableBindingStructuredType &amp;&amp;
+              bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
+        );
+      });
+
+    this.memo.callables.set(key, callable);
     return callable;
   }
+  //#endregion
 
-  public findEntitySetForType(type: string) {
-    if (this.memo.forType.entitySet.has(type)) {
-      return this.memo.forType.entitySet.get(type) as
-        | ODataEntitySet
-        | undefined;
+  //#region EntitySets
+  public findEntitySet(value: string) {
+    if (this.memo.entitySets.has(value)) {
+      return this.memo.entitySets.get(value) as ODataEntitySet | undefined;
     }
-    const entitySet &#x3D; this.findSchemaForType(type)?.findEntitySetForType(type);
-    this.memo.forType.entitySet.set(type, entitySet);
+    const entitySets &#x3D; this.schemas.reduce(
+      (acc, schema) &#x3D;&gt; [...acc, ...schema.entitySets],
+      &lt;ODataEntitySet[]&gt;[],
+    );
+    let entitySet &#x3D; entitySets.find((e) &#x3D;&gt; e.type() &#x3D;&#x3D;&#x3D; value);
+    entitySet &#x3D; entitySet ?? entitySets.find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; value);
+    this.memo.entitySets.set(value, entitySet);
     return entitySet;
   }
+  //#endregion
 
-  public findModelForType(type: string) {
-    return this.findStructuredTypeForType&lt;any&gt;(type)?.model;
+  //#region Singletons
+  public findSingleton(value: string) {
+    if (this.memo.singletons.has(value)) {
+      return this.memo.singletons.get(value) as ODataSingleton | undefined;
+    }
+    const singletons &#x3D; this.schemas.reduce(
+      (acc, schema) &#x3D;&gt; [...acc, ...schema.singletons],
+      &lt;ODataSingleton[]&gt;[],
+    );
+    let singleton &#x3D; singletons.find((e) &#x3D;&gt; e.type() &#x3D;&#x3D;&#x3D; value);
+    singleton &#x3D; singleton ?? singletons.find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; value);
+    this.memo.singletons.set(value, singleton);
+    return singleton;
+  }
+  //#endregion
+
+  public findModel(type: string) {
+    return this.findStructuredType&lt;any&gt;(type)?.model;
   }
 
-  public modelForType(type: string) {
-    let Model &#x3D; this.findModelForType(type);
-    if (Model &#x3D;&#x3D;&#x3D; undefined) {
-      // Build Ad-hoc model
-      let schema &#x3D; this.findStructuredTypeForType&lt;any&gt;(type);
-      if (schema &#x3D;&#x3D;&#x3D; undefined) throw Error(&#x60;No schema for ${type}&#x60;);
-      Model &#x3D; class extends ODataModel&lt;any&gt; {} as typeof ODataModel;
-      // Build Meta
-      Model.buildMeta({ schema });
+  public createModel(structured: ODataStructuredType&lt;any&gt;) {
+    if (structured.model !&#x3D;&#x3D; undefined) return structured.model;
+    // Build Ad-hoc model
+    const Model &#x3D; class extends ODataModel&lt;any&gt; {} as typeof ODataModel;
+    // Build Meta
+    Model.meta &#x3D; this.optionsForType(structured.type(), {
+      structuredType: structured,
+    })!;
+    if (Model.meta !&#x3D;&#x3D; undefined) {
       // Configure
       Model.meta.configure({
         options: this.options.parserOptions,
-        parserForType: (type: string | EdmType) &#x3D;&gt; this.parserForType(type),
-        findOptionsForType: (type: string) &#x3D;&gt; this.findOptionsForType(type),
       });
-      // Store New Model for next time
-      schema.model &#x3D; Model;
+    }
+    // Store New Model for next time
+    structured.model &#x3D; Model;
+    return Model;
+  }
+
+  public modelForType(type: string) {
+    let Model &#x3D; this.findModel(type);
+    if (Model &#x3D;&#x3D;&#x3D; undefined) {
+      const structured &#x3D; this.findStructuredType&lt;any&gt;(type);
+      if (structured &#x3D;&#x3D;&#x3D; undefined)
+        throw Error(&#x60;No structured type for ${type}&#x60;);
+      Model &#x3D; this.createModel(structured);
     }
     return Model;
   }
 
-  public findCollectionForType(type: string) {
-    return this.findStructuredTypeForType&lt;any&gt;(type)?.collection;
+  public findCollection(type: string) {
+    return this.findStructuredType&lt;any&gt;(type)?.collection;
+  }
+
+  public createCollection(
+    structured: ODataStructuredType&lt;any&gt;,
+    model?: typeof ODataModel&lt;any&gt;,
+  ) {
+    if (structured.collection !&#x3D;&#x3D; undefined) return structured.collection;
+    if (model &#x3D;&#x3D;&#x3D; undefined) model &#x3D; this.createModel(structured);
+    const Collection &#x3D; class extends ODataCollection&lt;any, ODataModel&lt;any&gt;&gt; {
+      static override model &#x3D; model!;
+    } as typeof ODataCollection;
+    structured.collection &#x3D; Collection;
+    return Collection;
   }
 
   public collectionForType(type: string) {
-    let Collection &#x3D; this.findCollectionForType(type);
+    let Collection &#x3D; this.findCollection(type);
     if (Collection &#x3D;&#x3D;&#x3D; undefined) {
-      let schema &#x3D; this.findStructuredTypeForType&lt;any&gt;(type);
-      if (schema &#x3D;&#x3D;&#x3D; undefined) throw Error(&#x27;&#x27;);
-      Collection &#x3D; class extends ODataCollection&lt;
-        any,
-        ODataModel&lt;any&gt;
-      &gt; {} as typeof ODataCollection;
-      Collection.model &#x3D; this.modelForType(type);
-      // Store New Collection for next time
-      schema.collection &#x3D; Collection;
+      const structured &#x3D; this.findStructuredType&lt;any&gt;(type);
+      if (structured &#x3D;&#x3D;&#x3D; undefined)
+        throw Error(&#x60;No structured type for ${type}&#x60;);
+      const Model &#x3D; this.modelForType(type);
+      Collection &#x3D; this.createCollection(structured, Model);
     }
     return Collection;
   }
 
-  public findServiceForType(type: string) {
-    return this.findEntitySetForType(type)?.service as
-      | typeof ODataEntityService
-      | undefined;
-  }
-
   public findEntitySetForEntityType(entityType: string) {
-    if (this.memo.forType.entitySet.has(entityType)) {
-      return this.memo.forType.entitySet.get(entityType) as
-        | ODataEntitySet
-        | undefined;
+    if (this.memo.entitySets.has(entityType)) {
+      return this.memo.entitySets.get(entityType) as ODataEntitySet | undefined;
     }
     const entitySet &#x3D; this.schemas
       .reduce(
         (acc, schema) &#x3D;&gt; [...acc, ...schema.entitySets],
-        &lt;ODataEntitySet[]&gt;[]
+        &lt;ODataEntitySet[]&gt;[],
       )
       .find((e) &#x3D;&gt; e.entityType &#x3D;&#x3D;&#x3D; entityType);
-    this.memo.forType.entitySet.set(entityType, entitySet);
+    this.memo.entitySets.set(entityType, entitySet);
     return entitySet;
-  }
-
-  public findServiceForEntityType(entityType: string) {
-    return this.findEntitySetForEntityType(entityType)?.service as
-      | typeof ODataEntityService
-      | undefined;
-  }
-
-  public findEnumTypeByName&lt;T&gt;(name: string) {
-    if (this.memo.byName.enum.has(name)) {
-      return this.memo.byName.enum.get(name) as ODataEnumType&lt;T&gt; | undefined;
-    }
-    const enumType &#x3D; this.schemas
-      .reduce(
-        (acc, schema) &#x3D;&gt; [...acc, ...schema.enums],
-        &lt;ODataEnumType&lt;T&gt;[]&gt;[]
-      )
-      .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name);
-    this.memo.byName.enum.set(name, enumType);
-    return enumType;
-  }
-
-  public findStructuredTypeByName&lt;T&gt;(name: string) {
-    if (this.memo.byName.structured.has(name)) {
-      return this.memo.byName.structured.get(name) as
-        | ODataStructuredType&lt;T&gt;
-        | undefined;
-    }
-    const structuredType &#x3D; this.schemas
-      .reduce(
-        (acc, schema) &#x3D;&gt; [...acc, ...schema.entities],
-        &lt;ODataStructuredType&lt;T&gt;[]&gt;[]
-      )
-      .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name);
-    this.memo.byName.structured.set(name, structuredType);
-    return structuredType;
-  }
-
-  public findCallableByName&lt;T&gt;(name: string, bindingType?: string) {
-    const key &#x3D; bindingType !&#x3D;&#x3D; undefined ? &#x60;${bindingType}/${name}&#x60; : name;
-    if (this.memo.byName.callable.has(key)) {
-      return this.memo.byName.callable.get(key) as ODataCallable&lt;T&gt; | undefined;
-    }
-    const callable &#x3D; this.schemas
-      .reduce(
-        (acc, schema) &#x3D;&gt; [...acc, ...schema.callables],
-        &lt;ODataCallable&lt;T&gt;[]&gt;[]
-      )
-      .find(
-        (c) &#x3D;&gt;
-          c.name &#x3D;&#x3D;&#x3D; name &amp;&amp;
-          (bindingType &#x3D;&#x3D;&#x3D; undefined || c.binding()?.type &#x3D;&#x3D;&#x3D; bindingType)
-      );
-    this.memo.byName.callable.set(key, callable);
-    return callable;
-  }
-
-  public findEntitySetByName(name: string) {
-    if (this.memo.byName.entitySet.has(name)) {
-      return this.memo.byName.entitySet.get(name) as ODataEntitySet | undefined;
-    }
-    const schema &#x3D; this.schemas
-      .reduce(
-        (acc, schema) &#x3D;&gt; [...acc, ...schema.entitySets],
-        &lt;ODataEntitySet[]&gt;[]
-      )
-      .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name);
-    this.memo.byName.entitySet.set(name, schema);
-    return schema;
-  }
-
-  public findModelByName(name: string) {
-    return this.findStructuredTypeByName&lt;any&gt;(name)?.model as
-      | typeof ODataModel
-      | undefined;
-  }
-
-  public findCollectionByName(name: string) {
-    return this.findStructuredTypeByName&lt;any&gt;(name)?.collection as
-      | typeof ODataCollection
-      | undefined;
-  }
-
-  public findServiceByName(name: string) {
-    return this.findEntitySetByName(name)?.service as
-      | typeof ODataEntityService
-      | undefined;
   }
 
   public parserForType&lt;T&gt;(type: string | EdmType, bindingType?: string) {
     const key &#x3D; bindingType !&#x3D;&#x3D; undefined ? &#x60;${bindingType}/${type}&#x60; : type;
-    if (this.memo.forType.parser.has(key)) {
-      return this.memo.forType.parser.get(key) as Parser&lt;T&gt;;
+    if (this.memo.parsers.has(key)) {
+      return this.memo.parsers.get(key) as Parser&lt;T&gt;;
     }
     // None Parser by default
     let parser: Parser&lt;T&gt; &#x3D; NONE_PARSER;
@@ -3670,30 +3608,40 @@ export class ODataApi {
       // Edm, Base Parsers
       parser &#x3D; this.parsers.get(type) as Parser&lt;T&gt;;
     } else if (!type.startsWith(&#x27;Edm.&#x27;)) {
-      // EnumType, ComplexType and EntityType Parsers
+      // Callable, EnumType, StructuredType (ComplexType and EntityType) Parsers
       let value &#x3D;
-        this.findCallableForType&lt;T&gt;(type, bindingType) ||
-        this.findEnumTypeForType&lt;T&gt;(type) ||
-        this.findStructuredTypeForType&lt;T&gt;(type);
+        this.findCallable&lt;T&gt;(type, bindingType) ??
+        this.findEnumType&lt;T&gt;(type) ??
+        this.findStructuredType&lt;T&gt;(type);
       parser &#x3D; value?.parser as Parser&lt;T&gt;;
     }
     // Set Parser for next time
-    this.memo.forType.parser.set(key, parser);
+    this.memo.parsers.set(key, parser);
     return parser;
   }
 
-  public findOptionsForType&lt;T&gt;(type: string) {
+  public optionsForType&lt;T&gt;(
+    type: string,
+    {
+      structuredType,
+      config,
+    }: { structuredType?: ODataStructuredType&lt;T&gt;; config?: ModelOptions } &#x3D; {},
+  ) {
     // Strucutred Options
-    if (this.memo.forType.options.has(type)) {
-      return this.memo.forType.options.get(type) as
-        | ODataModelOptions&lt;T&gt;
-        | undefined;
+    if (this.memo.options.has(type)) {
+      return this.memo.options.get(type) as ODataModelOptions&lt;T&gt; | undefined;
     }
-    const st &#x3D; this.findStructuredTypeForType&lt;T&gt;(type);
-    const options &#x3D; st?.model?.meta;
+
+    let meta: ODataModelOptions&lt;T&gt; | undefined &#x3D; undefined;
+    if (!type.startsWith(&#x27;Edm.&#x27;)) {
+      structuredType &#x3D; this.findStructuredType&lt;T&gt;(type) ?? structuredType;
+      if (structuredType !&#x3D;&#x3D; undefined) {
+        meta &#x3D; ODataModel.buildMetaOptions({ config, structuredType });
+      }
+    }
     // Set Options for next time
-    this.memo.forType.options.set(type, options);
-    return options;
+    this.memo.options.set(type, meta);
+    return meta;
   }
 }
 </code></pre>
@@ -3737,6 +3685,19 @@ export class ODataApi {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataApi.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

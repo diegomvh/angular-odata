@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -126,11 +119,17 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts</code>
+            <code>projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts</code>
         </p>
 
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../classes/CsdlAnnotable.html" target="_self" >CsdlAnnotable</a></code>
+            </p>
 
 
 
@@ -147,27 +146,47 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#isFlags" >isFlags</a>
+                                <a href="#IsFlags" >IsFlags</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#members" >members</a>
+                                <a href="#Member" >Member</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#name" >name</a>
+                                <a href="#Name" >Name</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#underlyingType" >underlyingType</a>
+                                <a href="#UnderlyingType" >UnderlyingType</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Annotation" >Annotation</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
 
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#fullName" >fullName</a>
+                            </li>
+                            <li>
+                                <a href="#name" >name</a>
+                            </li>
+                            <li>
+                                <a href="#namespace" >namespace</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
 
 
@@ -183,12 +202,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, members: <a href="../classes/CsdlEnumMember.html" target="_self">CsdlEnumMember[]</a>, underlyingType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, isFlags?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>constructor(schema: <a href="../classes/CsdlSchema.html" target="_self">CsdlSchema</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="1" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:1</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:8</a></div>
                             </td>
                         </tr>
 
@@ -206,10 +225,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>name</td>
+                                                        <td>schema</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../classes/CsdlSchema.html" target="_self" >CsdlSchema</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -218,38 +237,13 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>members</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../classes/CsdlEnumMember.html" target="_self" >CsdlEnumMember[]</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
                                                             No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>underlyingType</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>isFlags</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
                                                     </td>
                                                     
                                                 </tr>
@@ -271,24 +265,23 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="isFlags"></a>
+                    <a name="IsFlags"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>isFlags</b></span>
-                        <a href="#isFlags"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>IsFlags</b></span>
+                        <a href="#IsFlags"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:6</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:8</a></div>
                         </td>
                     </tr>
 
@@ -299,23 +292,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="members"></a>
+                    <a name="Member"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>members</b></span>
-                        <a href="#members"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Member</b></span>
+                        <a href="#Member"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/CsdlEnumMember.html" target="_self" >CsdlEnumMember[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlMember[]</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="4" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:4</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:6</a></div>
                         </td>
                     </tr>
 
@@ -326,23 +318,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="name"></a>
+                    <a name="Name"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>name</b></span>
-                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Name</b></span>
+                        <a href="#Name"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="3" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:3</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:5</a></div>
                         </td>
                     </tr>
 
@@ -353,24 +344,57 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="underlyingType"></a>
+                    <a name="UnderlyingType"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>underlyingType</b></span>
-                        <a href="#underlyingType"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>UnderlyingType</b></span>
+                        <a href="#UnderlyingType"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-enum-type.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:7</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Annotation"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>Annotation</b></span>
+                        <a href="#Annotation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlAnnotation[]</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/CsdlAnnotable.html" target="_self" >CsdlAnnotable</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:4</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -379,7 +403,123 @@
     </table>
 </section>
 
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fullName"></a>
+                    <span class="name">
+                        <span ><b>fullName</b></span>
+                        <a href="#fullName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fullName()</code>
+                </td>
+            </tr>
 
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="name"></a>
+                    <span class="name">
+                        <span ><b>name</b></span>
+                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>name()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="32"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="namespace"></a>
+                    <span class="name">
+                        <span ><b>namespace</b></span>
+                        <a href="#namespace"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>namespace()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="36"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
 
 
 
@@ -389,20 +529,66 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export class CsdlEnumType {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlAnnotable } from &#x27;./csdl-annotation&#x27;;
+import type { CsdlSchema } from &#x27;./csdl-schema&#x27;;
+
+export class CsdlEnumType extends CsdlAnnotable {
+  Name: string;
+  Member: CsdlMember[];
+  UnderlyingType?: string;
+  IsFlags?: boolean;
   constructor(
-    public name: string,
-    public members: CsdlEnumMember[],
-    public underlyingType?: string,
-    public isFlags?: boolean,
-  ) {}
+    private schema: CsdlSchema,
+    {
+      Name,
+      Member,
+      UnderlyingType,
+      IsFlags,
+      Annotation,
+    }: {
+      Name: string;
+      Member: any[];
+      UnderlyingType?: string;
+      IsFlags?: boolean;
+      Annotation?: any[];
+    },
+  ) {
+    super({ Annotation });
+    this.Name &#x3D; Name;
+    this.Member &#x3D; Member.map((m) &#x3D;&gt; new CsdlMember(m));
+    this.UnderlyingType &#x3D; UnderlyingType;
+    this.IsFlags &#x3D; IsFlags;
+  }
+
+  name() {
+    return &#x60;${this.Name}&#x60;;
+  }
+
+  namespace() {
+    return &#x60;${this.schema.Namespace}&#x60;;
+  }
+
+  fullName() {
+    return &#x60;${this.schema.Namespace}.${this.Name}&#x60;;
+  }
 }
 
-export class CsdlEnumMember {
-  constructor(
-    public name: string,
-    public value?: number,
-  ) {}
+export class CsdlMember extends CsdlAnnotable {
+  Name: string;
+  Value?: number;
+  constructor({
+    Name,
+    Value,
+    Annotation,
+  }: {
+    Name: string;
+    Value?: number;
+    Annotation?: any[];
+  }) {
+    super({ Annotation });
+    this.Name &#x3D; Name;
+    this.Value &#x3D; Value;
+  }
 }
 </code></pre>
     </div>
@@ -445,6 +631,19 @@ export class CsdlEnumMember {
             var COMPODOC_CURRENT_PAGE_URL = 'CsdlEnumType.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

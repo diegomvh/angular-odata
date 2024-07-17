@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -152,6 +145,22 @@
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Static</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Model" >Model</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
                 <tr>
                     <td class="col-md-4">
@@ -168,6 +177,9 @@
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#entity" >entity</a>
+                            </li>
+                            <li>
+                                <a href="#model" >model</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -216,6 +228,34 @@
 </section>
 
 
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Model"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>Model</b></span>
+                        <a href="#Model"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:15</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
 
             <section data-compodoc="block-methods">
     
@@ -237,7 +277,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>attach(model: M)</code>
+                    <code>attach(model: <a href="../undefineds/.html" target="_self">M</a>)</code>
                 </td>
             </tr>
 
@@ -250,7 +290,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:27</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:34</a></code>
 </div>
                         </td>
                     </tr>
@@ -285,7 +325,7 @@
                                         <tr>
                                                 <td>model</td>
                                             <td>
-                                                        <code>M</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >M</a></code>
                                             </td>
 
                                             <td>
@@ -302,7 +342,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -340,7 +380,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:19</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:26</a></code>
 </div>
                         </td>
                     </tr>
@@ -352,9 +392,76 @@
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataSingletonResource.html" target="_self" >ODataSingletonResource&lt;T&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataSingletonResource&lt;T&gt;</a></code>
 
                         </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="model"></a>
+                    <span class="name">
+                        <span ><b>model</b></span>
+                        <a href="#model"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>model(entity?: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="16"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entity</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataModel.html" target="_self" >ODataModel&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -374,15 +481,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>patch(attrs: Partial<T>, options?)</code>
+                    <code>patch(attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="58"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:58</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="65"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:65</a></div>
                         </td>
                     </tr>
 
@@ -408,7 +515,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -440,7 +547,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -465,15 +572,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(attrs: Partial<T>, options?)</code>
+                    <code>update(attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:44</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -499,7 +606,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -531,7 +638,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -556,7 +663,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -602,7 +709,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -650,7 +757,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -675,7 +782,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -721,7 +828,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -769,7 +876,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -794,7 +901,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -875,7 +982,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -911,7 +1018,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:34</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:41</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -930,8 +1037,8 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
-import type { ODataModel } from &#x27;../models/model&#x27;;
-import type {
+import { ODataModel } from &#x27;../models/model&#x27;;
+import {
   ODataEntity,
   ODataOptions,
   ODataSingletonResource,
@@ -943,6 +1050,13 @@ import { ODataEntityService } from &#x27;./entity&#x27;;
  * www.odata.org/getting-started/advanced-tutorial/#singleton
  */
 export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; {
+  static Model?: typeof ODataModel;
+  model(entity?: Partial&lt;T&gt;): ODataModel&lt;T&gt; {
+    const Service &#x3D; this.constructor as typeof ODataSingletonService;
+    return this.entity().asModel&lt;ODataModel&lt;T&gt;&gt;(entity, {
+      ModelType: Service.Model,
+    });
+  }
   /**
    * Get the entity resource for this service.
    * @param key The entity key.
@@ -963,7 +1077,7 @@ export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * The schema for the singleton.
    */
   get singletonSchema() {
-    return this.api.findEntitySetByName(this.name);
+    return this.api.findEntitySet(this.name);
   }
 
   /**
@@ -1035,6 +1149,19 @@ export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
             var COMPODOC_CURRENT_PAGE_URL = 'ODataSingletonService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

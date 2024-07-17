@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="./" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="./" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -108,29 +101,29 @@
     </ol>
     <ul class="dependencies-list">
         <li>
-            <b>@angular/animations</b> : ^17.0.0</li>
+            <b>@angular/animations</b> : ^18.1.0</li>
         <li>
-            <b>@angular/common</b> : ^17.0.0</li>
+            <b>@angular/common</b> : ^18.1.0</li>
         <li>
-            <b>@angular/compiler</b> : ^17.0.0</li>
+            <b>@angular/compiler</b> : ^18.1.0</li>
         <li>
-            <b>@angular/core</b> : ^17.0.0</li>
+            <b>@angular/core</b> : ^18.1.0</li>
         <li>
-            <b>@angular/forms</b> : ^17.0.0</li>
+            <b>@angular/forms</b> : ^18.1.0</li>
         <li>
-            <b>@angular/platform-browser</b> : ^17.0.0</li>
+            <b>@angular/platform-browser</b> : ^18.1.0</li>
         <li>
-            <b>@angular/platform-browser-dynamic</b> : ^17.0.0</li>
+            <b>@angular/platform-browser-dynamic</b> : ^18.1.0</li>
         <li>
-            <b>@angular/router</b> : ^17.0.0</li>
+            <b>@angular/router</b> : ^18.1.0</li>
         <li>
-            <b>@compodoc/compodoc</b> : ^1.1.23</li>
+            <b>jsdom</b> : ^24.1.0</li>
         <li>
             <b>rxjs</b> : ~7.8.0</li>
         <li>
             <b>tslib</b> : ^2.3.0</li>
         <li>
-            <b>zone.js</b> : ~0.14.2</li>
+            <b>zone.js</b> : ~0.14.3</li>
     </ul>
 
 
@@ -168,6 +161,19 @@
             var COMPODOC_CURRENT_PAGE_URL = 'dependencies.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="./js/libs/custom-elements.min.js"></script>
        <script src="./js/libs/lit-html.js"></script>

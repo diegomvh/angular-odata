@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -184,7 +177,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, ...opts: any[])</code>
+<code>get(key: <a href="../undefineds/.html" target="_self">string</a>, opts: <a href="../undefineds/.html" target="_self">any[]</a>)</code>
                 </td>
             </tr>
 
@@ -223,7 +216,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -235,7 +228,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                        <code>any[]</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any[]</a></code>
                                             </td>
 
                                             <td>
@@ -248,7 +241,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>T | undefined</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >T | undefined</a></code>
 
                         </div>
                             <div class="io-description">
@@ -271,7 +264,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>put(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, payload: T, ...opts: any[])</code>
+<code>put(key: <a href="../undefineds/.html" target="_self">string</a>, payload: <a href="../undefineds/.html" target="_self">T</a>, opts: <a href="../undefineds/.html" target="_self">any[]</a>)</code>
                 </td>
             </tr>
 
@@ -310,7 +303,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -322,7 +315,7 @@
                                         <tr>
                                                 <td>payload</td>
                                             <td>
-                                                        <code>T</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >T</a></code>
                                             </td>
 
                                             <td>
@@ -334,7 +327,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                        <code>any[]</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any[]</a></code>
                                             </td>
 
                                             <td>
@@ -347,7 +340,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -482,7 +475,7 @@ export enum JsonType {
   object &#x3D; &#x27;object&#x27;,
   array &#x3D; &#x27;array&#x27;,
   boolean &#x3D; &#x27;boolean&#x27;,
-  null &#x3D; &#x27;null&#x27;
+  null &#x3D; &#x27;null&#x27;,
 }
 
 export interface ApiOptions {
@@ -544,12 +537,12 @@ export interface Parser&lt;T&gt; {
   // Deserialize value/s from request body.
   deserialize(
     value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions,
   ): T;
   // Serialize value/s for request body.
   serialize(
     value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions,
   ): any;
   //Encode value/s for URL parameter or query-string.
   encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
@@ -609,6 +602,7 @@ export type EntityContainerConfig &#x3D; {
   name: string;
   annotations?: AnnotationConfig[];
   entitySets?: EntitySetConfig[];
+  singletons?: SingletonConfig[];
 };
 
 export type EnumTypeFieldConfig&lt;E&gt; &#x3D; {
@@ -648,10 +642,10 @@ export type StructuredTypeConfig&lt;T&gt; &#x3D; {
   collection?: { new (...params: any[]): any };
   annotations?: AnnotationConfig[];
   keys?: { name: string; alias?: string }[];
-  fields: { [P in keyof T]?: StructuredTypeFieldConfig };
+  fields?: { [P in keyof T]?: StructuredTypeFieldConfig };
 };
 
-export type Parameter &#x3D; {
+export type ParameterConfig &#x3D; {
   type: string;
   nullable?: boolean;
   collection?: boolean;
@@ -662,12 +656,20 @@ export type CallableConfig &#x3D; {
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
-  parameters?: { [name: string]: Parameter };
+  parameters?: { [name: string]: ParameterConfig };
   return?: { type: string; collection?: boolean };
 };
+
 export type EntitySetConfig &#x3D; {
   name: string;
   entityType: string;
+  service: { new (...params: any[]): any };
+  annotations?: AnnotationConfig[];
+};
+
+export type SingletonConfig &#x3D; {
+  name: string;
+  type: string;
   service: { new (...params: any[]): any };
   annotations?: AnnotationConfig[];
 };
@@ -712,6 +714,19 @@ export type EntitySetConfig &#x3D; {
             var COMPODOC_CURRENT_PAGE_URL = 'Cache.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

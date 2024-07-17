@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -185,7 +178,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(config: literal type)</code>
+<code>constructor(config: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -211,7 +204,7 @@
                                                         <td>config</td>
                                                   
                                                         <td>
-                                                                    <code>literal type</code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -279,7 +272,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>annotatedValue(term: string | RegExp)</code>
+<code>annotatedValue(term: <a href="../undefineds/.html" target="_self">string | RegExp</a>)</code>
                 </td>
             </tr>
 
@@ -321,7 +314,7 @@
                                         <tr>
                                                 <td>term</td>
                                             <td>
-                                                        <code>string | RegExp</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | RegExp</a></code>
                                             </td>
 
                                             <td>
@@ -338,7 +331,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>T | undefined</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >T | undefined</a></code>
 
                         </div>
                             <div class="io-description">
@@ -362,7 +355,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findAnnotation(predicate: (annot: <a href="../classes/ODataAnnotation.html">ODataAnnotation</a>) => void)</code>
+<code>findAnnotation(predicate: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
@@ -396,7 +389,7 @@
                                         <tr>
                                                 <td>predicate</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -413,7 +406,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -526,6 +519,19 @@ export class ODataAnnotatable {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataAnnotatable.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

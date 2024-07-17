@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -135,7 +128,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+                            <code><a href="../classes/ODataParserSchemaElement.html" target="_self" >ODataParserSchemaElement</a></code>
             </p>
 
 
@@ -204,6 +197,9 @@
                                 <a href="#path" >path</a>
                             </li>
                             <li>
+                                <a href="#returnType" >returnType</a>
+                            </li>
+                            <li>
                                 <a href="#serialize" >serialize</a>
                             </li>
                             <li>
@@ -250,7 +246,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:12</a></div>
                             </td>
                         </tr>
 
@@ -319,13 +315,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:11</a></div>
                         </td>
                     </tr>
 
@@ -346,13 +342,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:12</a></div>
                         </td>
                     </tr>
 
@@ -373,13 +369,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:10</a></div>
                         </td>
                     </tr>
 
@@ -399,13 +395,20 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Parser.html" target="_self" >ODataCallableParser&lt;R&gt;</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >P</a></code>
 
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataParserSchemaElement.html" target="_self" >ODataParserSchemaElement</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:10</a></div>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataParserSchemaElement.html#source" target="_self" >ODataParserSchemaElement:78</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -425,7 +428,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
@@ -538,8 +541,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="86"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:86</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="77"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:77</a></div>
                         </td>
                     </tr>
 
@@ -550,7 +553,7 @@
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -574,7 +577,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>configure(undefined: literal type)</code>
+<code>configure(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -604,7 +607,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -617,7 +620,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -640,15 +643,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>deserialize(value: <a href="../undefineds/.html" target="_self">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="58"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:58</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -674,7 +677,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -707,7 +710,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -731,15 +734,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>encode(value: <a href="../undefineds/.html" target="_self">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="78"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:78</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -765,7 +768,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -798,7 +801,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -829,8 +832,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="24"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:24</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="25"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:25</a></div>
                         </td>
                     </tr>
 
@@ -839,7 +842,44 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="returnType"></a>
+                    <span class="name">
+                        <span ><b>returnType</b></span>
+                        <a href="#returnType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>returnType()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -859,15 +899,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>serialize(value: <a href="../undefineds/.html" target="_self">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="68"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:68</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="59"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -893,7 +933,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -926,7 +966,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -950,7 +990,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isSubtypeOf(schema: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
+<code>isSubtypeOf(element: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
                 </td>
             </tr>
 
@@ -987,7 +1027,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>schema</td>
+                                                <td>element</td>
                                             <td>
                                                             <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
                                             </td>
@@ -1002,7 +1042,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1026,7 +1066,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isSupertypeOf(schema: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
+<code>isSupertypeOf(element: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
                 </td>
             </tr>
 
@@ -1063,7 +1103,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>schema</td>
+                                                <td>element</td>
                                             <td>
                                                             <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
                                             </td>
@@ -1078,7 +1118,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1102,7 +1142,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isTypeOf(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>isTypeOf(element: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
                 </td>
             </tr>
 
@@ -1135,14 +1175,13 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>type</td>
+                                                <td>element</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
                                             </td>
 
                                             <td>
@@ -1150,16 +1189,12 @@
                                             </td>
 
 
-                                            <td>
-                                                    <p>String representation of the type</p>
-
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1183,7 +1218,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>titleize(term?: string | RegExp)</code>
+<code>titleize(term?: <a href="../undefineds/.html" target="_self">string | RegExp</a>)</code>
                 </td>
             </tr>
 
@@ -1224,7 +1259,7 @@ Titleize is meant for creating pretty output.</p>
                                         <tr>
                                                 <td>term</td>
                                             <td>
-                                                        <code>string | RegExp</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | RegExp</a></code>
                                             </td>
 
                                             <td>
@@ -1241,7 +1276,7 @@ Titleize is meant for creating pretty output.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1265,7 +1300,7 @@ Titleize is meant for creating pretty output.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>type(undefined: literal type)</code>
+<code>type(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -1304,7 +1339,7 @@ Titleize is meant for creating pretty output.</p>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1320,7 +1355,7 @@ Titleize is meant for creating pretty output.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1344,7 +1379,7 @@ Titleize is meant for creating pretty output.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>annotatedValue(term: string | RegExp)</code>
+<code>annotatedValue(term: <a href="../undefineds/.html" target="_self">string | RegExp</a>)</code>
                 </td>
             </tr>
 
@@ -1392,7 +1427,7 @@ Titleize is meant for creating pretty output.</p>
                                         <tr>
                                                 <td>term</td>
                                             <td>
-                                                        <code>string | RegExp</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | RegExp</a></code>
                                             </td>
 
                                             <td>
@@ -1409,7 +1444,7 @@ Titleize is meant for creating pretty output.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>T | undefined</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >T | undefined</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1433,7 +1468,7 @@ Titleize is meant for creating pretty output.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findAnnotation(predicate: (annot: <a href="../classes/ODataAnnotation.html">ODataAnnotation</a>) => void)</code>
+<code>findAnnotation(predicate: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
@@ -1473,7 +1508,7 @@ Titleize is meant for creating pretty output.</p>
                                         <tr>
                                                 <td>predicate</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1490,7 +1525,7 @@ Titleize is meant for creating pretty output.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1511,27 +1546,28 @@ Titleize is meant for creating pretty output.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CallableConfig, ParserOptions, Parser } from &#x27;../types&#x27;;
-import { ODataSchemaElement } from &#x27;./element&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CallableConfig, ParserOptions } from &#x27;../types&#x27;;
+import { ODataParserSchemaElement } from &#x27;./element&#x27;;
 import { ODataCallableParser } from &#x27;./parsers&#x27;;
 import { ODataSchema } from &#x27;./schema&#x27;;
 
-export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
+export class ODataCallable&lt;R&gt; extends ODataParserSchemaElement&lt;
+  R,
+  ODataCallableParser&lt;R&gt;
+&gt; {
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
-  parser: ODataCallableParser&lt;R&gt;;
 
   constructor(config: CallableConfig, schema: ODataSchema) {
-    super(config, schema);
+    super(
+      config,
+      schema,
+      new ODataCallableParser(config, schema.namespace, schema.alias),
+    );
     this.entitySetPath &#x3D; config.entitySetPath;
     this.bound &#x3D; config.bound;
     this.composable &#x3D; config.composable;
-    this.parser &#x3D; new ODataCallableParser(
-      config,
-      schema.namespace,
-      schema.alias,
-    );
   }
 
   path() {
@@ -1540,25 +1576,15 @@ export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
     else if (this.bound) path &#x3D; &#x60;${this.schema.namespace}.${this.name}&#x60;;
     else
       path &#x3D; this.parser.return
-        ? this.api.findEntitySetForType(this.parser.return.type)?.name ||
-          this.name
+        ? this.api.findEntitySet(this.parser.return.type)?.name || this.name
         : this.name;
     return path;
   }
 
-  configure({
-    options,
-    parserForType,
-    findOptionsForType,
-  }: {
-    options: ParserOptions;
-    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
-    findOptionsForType: (type: string) &#x3D;&gt; any;
-  }) {
+  configure({ options }: { options: ParserOptions }) {
     this.parser.configure({
       options,
-      parserForType,
-      findOptionsForType,
+      parserForType: (t: string) &#x3D;&gt; this.api.parserForType(t),
     });
   }
 
@@ -1598,6 +1624,10 @@ export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
    */
   binding() {
     return this.parser.binding();
+  }
+
+  returnType() {
+    return this.parser.returnType();
   }
 }
 </code></pre>
@@ -1641,6 +1671,19 @@ export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataCallable.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

@@ -1,0 +1,935 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >CsdlTerm</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts</code>
+        </p>
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#AppliesTo" >AppliesTo</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#BaseTerm" >BaseTerm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Bool" >Bool</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#DefaultValue" >DefaultValue</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Int" >Int</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#MaxLength" >MaxLength</a>
+                            </li>
+                            <li>
+                                <a href="#Name" >Name</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Nullable" >Nullable</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Precision" >Precision</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Scale" >Scale</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#SRID" >SRID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#String" >String</a>
+                            </li>
+                            <li>
+                                <a href="#Type" >Type</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(schema: <a href="../classes/CsdlSchema.html" target="_self">CsdlSchema</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="93" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:93</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>schema</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/CsdlSchema.html" target="_self" >CsdlSchema</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AppliesTo"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>AppliesTo</b></span>
+                        <a href="#AppliesTo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:85</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BaseTerm"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>BaseTerm</b></span>
+                        <a href="#BaseTerm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:83</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Bool"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>Bool</b></span>
+                        <a href="#Bool"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:92</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DefaultValue"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>DefaultValue</b></span>
+                        <a href="#DefaultValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:84</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Int"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>Int</b></span>
+                        <a href="#Int"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="93" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:93</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MaxLength"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>MaxLength</b></span>
+                        <a href="#MaxLength"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:87</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Name"></a>
+                    <span class="name">
+                        <span ><b>Name</b></span>
+                        <a href="#Name"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Nullable"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>Nullable</b></span>
+                        <a href="#Nullable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:86</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Precision"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>Precision</b></span>
+                        <a href="#Precision"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:88</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Scale"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>Scale</b></span>
+                        <a href="#Scale"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:89</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SRID"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>SRID</b></span>
+                        <a href="#SRID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="String"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>String</b></span>
+                        <a href="#String"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:91</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Type"></a>
+                    <span class="name">
+                        <span ><b>Type</b></span>
+                        <a href="#Type"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:82</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AnnotationConfig } from &#x27;../../types&#x27;;
+import type { CsdlSchema } from &#x27;./csdl-schema&#x27;;
+
+export class CsdlAnnotable {
+  Annotation?: CsdlAnnotation[];
+  constructor({ Annotation }: { Annotation?: any[] }) {
+    this.Annotation &#x3D; Annotation?.map((a) &#x3D;&gt; new CsdlAnnotation(a));
+  }
+}
+
+export class CsdlAnnotations extends CsdlAnnotable {
+  Target: string;
+  Qualifier?: string;
+  constructor(
+    private schema: CsdlSchema,
+    {
+      Target,
+      Qualifier,
+      Annotation,
+    }: {
+      Target: string;
+      Qualifier?: string;
+      Annotation: CsdlAnnotation[];
+    },
+  ) {
+    super({ Annotation });
+    this.Target &#x3D; Target;
+    this.Qualifier &#x3D; Qualifier;
+  }
+
+  toConfig(): AnnotationConfig[] {
+    return (this.Annotation ?? []).map((a) &#x3D;&gt; a.toConfig());
+  }
+}
+
+export class CsdlAnnotation {
+  Term: string;
+  String?: string;
+  Bool?: boolean;
+  Int?: number;
+  Collection?: any;
+  Record?: any;
+  Members?: any;
+  constructor({
+    Term,
+    String,
+    Bool,
+    Int,
+    Collection,
+    Record,
+    Members,
+  }: {
+    Term: string;
+    String?: string;
+    Bool?: boolean;
+    Int?: number;
+    Collection?: any;
+    Record?: any;
+    Members?: any;
+  }) {
+    this.Term &#x3D; Term;
+    this.String &#x3D; String;
+    this.Bool &#x3D; Bool;
+    this.Int &#x3D; Int;
+    this.Collection &#x3D; Collection;
+    this.Record &#x3D; Record;
+    this.Members &#x3D; Members;
+  }
+
+  toConfig(): AnnotationConfig {
+    return {
+      term: this.Term,
+      string: this.String,
+      bool: this.Bool,
+      int: this.Int,
+    } as AnnotationConfig;
+  }
+}
+
+export class CsdlTerm {
+  Name: string;
+  Type: string;
+  BaseTerm?: string;
+  DefaultValue?: string;
+  AppliesTo?: string;
+  Nullable?: boolean;
+  MaxLength?: number;
+  Precision?: number;
+  Scale?: number;
+  SRID?: string;
+  String?: string;
+  Bool?: boolean;
+  Int?: number;
+  constructor(
+    private schema: CsdlSchema,
+    {
+      Name,
+      Type,
+      BaseTerm,
+      DefaultValue,
+      AppliesTo,
+      Nullable,
+      MaxLength,
+      Precision,
+      Scale,
+      SRID,
+      String,
+      Bool,
+      Int,
+    }: {
+      Name: string;
+      Type: string;
+      BaseTerm?: string;
+      DefaultValue?: string;
+      AppliesTo?: string;
+      Nullable?: boolean;
+      MaxLength?: number;
+      Precision?: number;
+      Scale?: number;
+      SRID?: string;
+      String?: string;
+      Bool?: boolean;
+      Int?: number;
+    },
+  ) {
+    this.Name &#x3D; Name;
+    this.Type &#x3D; Type;
+    this.BaseTerm &#x3D; BaseTerm;
+    this.DefaultValue &#x3D; DefaultValue;
+    this.AppliesTo &#x3D; AppliesTo;
+    this.Nullable &#x3D; Nullable;
+    this.MaxLength &#x3D; MaxLength;
+    this.Precision &#x3D; Precision;
+    this.Scale &#x3D; Scale;
+    this.SRID &#x3D; SRID;
+    this.String &#x3D; String;
+    this.Bool &#x3D; Bool;
+    this.Int &#x3D; Int;
+  }
+}
+
+export class CsdlCollection {
+  Strings: CsdlString[];
+  Records: CsdlRecord[];
+  PropertyPaths: CsdlPropertyPath[];
+  NavigationPropertyPaths: CsdlNavigationPropertyPath[];
+  constructor({
+    Strings,
+    Records,
+    PropertyPaths,
+    NavigationPropertyPaths,
+  }: {
+    Strings: CsdlString[];
+    Records: CsdlRecord[];
+    PropertyPaths: CsdlPropertyPath[];
+    NavigationPropertyPaths: CsdlNavigationPropertyPath[];
+  }) {
+    this.Strings &#x3D; Strings;
+    this.Records &#x3D; Records;
+    this.PropertyPaths &#x3D; PropertyPaths;
+    this.NavigationPropertyPaths &#x3D; NavigationPropertyPaths;
+  }
+}
+
+export class CsdlRecord {
+  Properties: CsdlPropertyValue[];
+  constructor({ Properties }: { Properties: CsdlPropertyValue[] }) {
+    this.Properties &#x3D; Properties;
+  }
+}
+
+export class CsdlPropertyValue {
+  Name: string;
+  String?: string;
+  Date?: Date;
+  Members?: CsdlEnumMember[];
+  constructor({
+    Name,
+    String,
+    Date,
+    Members,
+  }: {
+    Name: string;
+    String?: string;
+    Date?: Date;
+    Members?: CsdlEnumMember[];
+  }) {
+    this.Name &#x3D; Name;
+    this.String &#x3D; String;
+    this.Date &#x3D; Date;
+    this.Members &#x3D; Members;
+  }
+}
+
+export class CsdlEnumMember {
+  TextContent: string;
+  constructor({ TextContent }: { TextContent: string }) {
+    this.TextContent &#x3D; TextContent;
+  }
+}
+
+export class CsdlString {
+  TextContent: string;
+  constructor({ TextContent }: { TextContent: string }) {
+    this.TextContent &#x3D; TextContent;
+  }
+}
+
+export class CsdlPropertyPath {
+  TextContent: string;
+  constructor({ TextContent }: { TextContent: string }) {
+    this.TextContent &#x3D; TextContent;
+  }
+}
+
+export class CsdlNavigationPropertyPath {
+  TextContent: string;
+  constructor({ TextContent }: { TextContent: string }) {
+    this.TextContent &#x3D; TextContent;
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'CsdlTerm-1.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

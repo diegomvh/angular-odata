@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -169,7 +162,16 @@
                                 <a href="#identity" >identity</a>
                             </li>
                             <li>
+                                <a href="#orderby" >orderby</a>
+                            </li>
+                            <li>
                                 <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                <a href="#skip" >skip</a>
+                            </li>
+                            <li>
+                                <a href="#top" >top</a>
                             </li>
                             <li>
                                 <a href="#topCount" >topCount</a>
@@ -212,15 +214,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>aggregate(value: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, method: <a href="../undefineds/AggregateMethod.html" target="_self">AggregateMethod</a>, alias: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>aggregate(value: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, method: <a href="../undefineds/AggregateMethod.html" target="_self">AggregateMethod</a>, alias: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="814"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:814</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="816"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:816</a></div>
                         </td>
                     </tr>
 
@@ -267,7 +269,7 @@
                                         <tr>
                                                 <td>alias</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -303,15 +305,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>bottomCount(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>bottomCount(value: <a href="../undefineds/.html" target="_self">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="831"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:831</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="833"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:833</a></div>
                         </td>
                     </tr>
 
@@ -335,7 +337,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -402,15 +404,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>bottomPercent(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>bottomPercent(value: <a href="../undefineds/.html" target="_self">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="839"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:839</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="841"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:841</a></div>
                         </td>
                     </tr>
 
@@ -434,7 +436,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -501,15 +503,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>bottomSum(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>bottomSum(value: <a href="../undefineds/.html" target="_self">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="835"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:835</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="837"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:837</a></div>
                         </td>
                     </tr>
 
@@ -533,7 +535,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -600,15 +602,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>filter(left: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>filter(value: <a href="../undefineds/.html" target="_self">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="853"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:853</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="855"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:855</a></div>
                         </td>
                     </tr>
 
@@ -630,9 +632,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>left</td>
+                                                <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -692,8 +694,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="817"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:817</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="819"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:819</a></div>
                         </td>
                     </tr>
 
@@ -771,8 +773,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="847"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:847</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="849"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:849</a></div>
                         </td>
                     </tr>
 
@@ -792,24 +794,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="search"></a>
+                    <a name="orderby"></a>
                     <span class="name">
-                        <span ><b>search</b></span>
-                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>orderby</b></span>
+                        <a href="#orderby"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>search(left: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>orderby(value: <a href="../undefineds/.html" target="_self">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="850"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:850</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="867"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:867</a></div>
                         </td>
                     </tr>
 
@@ -831,9 +833,264 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>left</td>
+                                                <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;none&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search(value: <a href="../undefineds/.html" target="_self">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="852"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:852</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;none&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skip"></a>
+                    <span class="name">
+                        <span ><b>skip</b></span>
+                        <a href="#skip"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skip(value: <a href="../undefineds/.html" target="_self">number</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="859"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:859</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Normalize" target="_self" >Normalize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;none&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Function.html" target="_self" >Function&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="top"></a>
+                    <span class="name">
+                        <span ><b>top</b></span>
+                        <a href="#top"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>top(value: <a href="../undefineds/.html" target="_self">number</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="863"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:863</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -886,15 +1143,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>topCount(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>topCount(value: <a href="../undefineds/.html" target="_self">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="820"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:820</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="822"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:822</a></div>
                         </td>
                     </tr>
 
@@ -918,7 +1175,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -985,15 +1242,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>topPercent(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>topPercent(value: <a href="../undefineds/.html" target="_self">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="827"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:827</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="829"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:829</a></div>
                         </td>
                     </tr>
 
@@ -1017,7 +1274,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -1084,15 +1341,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>topSum(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>topSum(value: <a href="../undefineds/.html" target="_self">number</a>, field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="824"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:824</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="826"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:826</a></div>
                         </td>
                     </tr>
 
@@ -1116,7 +1373,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -1183,9 +1440,9 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataStructuredTypeFieldParser } from &#x27;../../../schema&#x27;;
 import { Parser, ParserOptions } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
-import type { QueryCustomType } from &#x27;../builder&#x27;;
+import { QueryCustomType } from &#x27;../builder&#x27;;
 import { normalizeValue } from &#x27;../builder&#x27;;
-import { ApplyExpression } from &#x27;./apply&#x27;;
+import { ApplyExpression, GroupByTransformations } from &#x27;./apply&#x27;;
 import { ComputeExpression } from &#x27;./compute&#x27;;
 import { CountExpression } from &#x27;./count&#x27;;
 import { ExpandExpression } from &#x27;./expand&#x27;;
@@ -1216,7 +1473,7 @@ export interface Renderable {
 }
 
 export const FieldFactory &#x3D; &lt;T extends object&gt;(
-  names: (string | Renderable)[] &#x3D; []
+  names: (string | Renderable)[] &#x3D; [],
 ): any &#x3D;&gt;
   new Proxy({ _names: names } as T, {
     get(target: T, key: string | symbol) {
@@ -1236,7 +1493,7 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
           options?: ParserOptions;
         }) &#x3D;&gt; {
           let values &#x3D; names.map((n: any) &#x3D;&gt;
-            render(n, { aliases, escape, prefix, parser, options })
+            render(n, { aliases, escape, prefix, parser, options }),
           );
           if (prefix &amp;&amp; (names.length &#x3D;&#x3D;&#x3D; 0 || typeof names[0] &#x3D;&#x3D;&#x3D; &#x27;string&#x27;)) {
             values &#x3D; [prefix, ...values];
@@ -1259,7 +1516,7 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
               typeof name &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
                 ? acc?.field(name)
                 : name?.resolve(parser),
-            parser
+            parser,
           );
       } else {
         return FieldFactory([...names, key as string]);
@@ -1293,6 +1550,8 @@ export const RenderableFactory &#x3D; (value: any): Renderable &#x3D;&gt; {
         return SearchExpression.fromJson(value);
       case &#x27;CountExpression&#x27;:
         return CountExpression.fromJson(value);
+      case &#x27;GroupByTransformations&#x27;:
+        return GroupByTransformations.fromJson(value);
       case &#x27;Function&#x27;:
         return Function.fromJson(value);
       case &#x27;Operator&#x27;:
@@ -1323,7 +1582,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
         derivedCtor.prototype,
         name,
         Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null)
+          Object.create(null),
       );
     });
   });
@@ -1345,7 +1604,7 @@ export function render(
     prefix?: string;
     parser?: Parser&lt;any&gt;;
     options?: ParserOptions;
-  } &#x3D; {}
+  } &#x3D; {},
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
     return render(value(syntax), {
@@ -1372,7 +1631,7 @@ export function render(
 export function resolve(values: any, parser?: Parser&lt;any&gt;) {
   if (parser !&#x3D;&#x3D; undefined) {
     let fields &#x3D; values.filter(
-      (v: any) &#x3D;&gt; Types.isObject(v) &amp;&amp; &#x27;isField&#x27; in v &amp;&amp; v.isField()
+      (v: any) &#x3D;&gt; Types.isObject(v) &amp;&amp; &#x27;isField&#x27; in v &amp;&amp; v.isField(),
     );
     if (fields.length &#x3D;&#x3D;&#x3D; 1 &amp;&amp; Types.isObject(parser) &amp;&amp; &#x27;field&#x27; in parser) {
       return fields[0].resolve(parser);
@@ -1384,7 +1643,7 @@ export function resolve(values: any, parser?: Parser&lt;any&gt;) {
 export function encode(
   values: any,
   parser?: Parser&lt;any&gt;,
-  options?: ParserOptions
+  options?: ParserOptions,
 ) {
   if (parser !&#x3D;&#x3D; undefined) {
     return values.map((v: any) &#x3D;&gt; {
@@ -1405,7 +1664,7 @@ export class Function&lt;T&gt; implements Renderable {
     protected name: string,
     protected values: any[],
     protected normalize: Normalize,
-    protected escape: boolean &#x3D; false
+    protected escape: boolean &#x3D; false,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -1417,7 +1676,7 @@ export class Function&lt;T&gt; implements Renderable {
       $type: Types.rawType(this),
       name: this.name,
       values: this.values.map((v) &#x3D;&gt;
-        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v
+        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v,
       ),
       normalize: this.normalize,
     };
@@ -1428,7 +1687,7 @@ export class Function&lt;T&gt; implements Renderable {
       json[&#x27;name&#x27;],
       json[&#x27;values&#x27;].map((v: any) &#x3D;&gt; RenderableFactory(v)),
       json[&#x27;normalize&#x27;],
-      json[&#x27;escape&#x27;]
+      json[&#x27;escape&#x27;],
     );
   }
 
@@ -1466,7 +1725,7 @@ export class Function&lt;T&gt; implements Renderable {
           parser,
           normalize: this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;right&#x27;,
           options,
-        })
+        }),
       ),
     ];
     return &#x60;${this.name}(${params.join(&#x27;, &#x27;)})&#x60;;
@@ -1477,7 +1736,7 @@ export class Function&lt;T&gt; implements Renderable {
       this.name,
       this.values.map((v) &#x3D;&gt; Objects.clone(v)),
       this.normalize,
-      this.escape
+      this.escape,
     );
   }
 
@@ -1515,7 +1774,7 @@ export class StringAndCollectionFunctions&lt;T&gt; {
     left: any,
     right: number,
     length?: number,
-    normalize: Normalize &#x3D; &#x27;none&#x27;
+    normalize: Normalize &#x3D; &#x27;none&#x27;,
   ) {
     let values &#x3D; [left, right];
     if (length !&#x3D;&#x3D; undefined) {
@@ -1538,7 +1797,7 @@ export class StringFunctions&lt;T&gt; {
   matchesPattern(
     left: any | string,
     pattern: string,
-    normalize: Normalize &#x3D; &#x27;none&#x27;
+    normalize: Normalize &#x3D; &#x27;none&#x27;,
   ) {
     return new Function&lt;T&gt;(&#x27;matchesPattern&#x27;, [left, pattern], normalize);
   }
@@ -1648,7 +1907,7 @@ export class Operator&lt;T&gt; implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: Normalize
+    protected normalize: Normalize,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -1660,7 +1919,7 @@ export class Operator&lt;T&gt; implements Renderable {
       $type: Types.rawType(this),
       op: this.op,
       values: this.values.map((v) &#x3D;&gt;
-        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v
+        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v,
       ),
       normalize: this.normalize,
     };
@@ -1670,7 +1929,7 @@ export class Operator&lt;T&gt; implements Renderable {
     return new Operator&lt;T&gt;(
       json[&#x27;op&#x27;],
       json[&#x27;values&#x27;].map((v: any) &#x3D;&gt; RenderableFactory(v)),
-      json[&#x27;normalize&#x27;]
+      json[&#x27;normalize&#x27;],
     );
   }
 
@@ -1710,7 +1969,7 @@ export class Operator&lt;T&gt; implements Renderable {
                 normalize:
                   this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;right&#x27;,
                 options,
-              })
+              }),
             )
             .join(&#x27;,&#x27;)})&#x60;
         : render(right, {
@@ -1730,7 +1989,7 @@ export class Operator&lt;T&gt; implements Renderable {
     return new Operator(
       this.op,
       this.values.map((v) &#x3D;&gt; Objects.clone(v)),
-      this.normalize
+      this.normalize,
     );
   }
   resolve(parser: any) {
@@ -1865,7 +2124,7 @@ export class Aggregate&lt;T&gt; implements Renderable {
   constructor(
     protected value: Renderable,
     protected method: AggregateMethod,
-    protected alias: string
+    protected alias: string,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -1885,7 +2144,7 @@ export class Aggregate&lt;T&gt; implements Renderable {
     return new Aggregate&lt;T&gt;(
       RenderableFactory(json[&#x27;value&#x27;]),
       json[&#x27;method&#x27;],
-      json[&#x27;alias&#x27;]
+      json[&#x27;alias&#x27;],
     );
   }
 
@@ -1922,7 +2181,7 @@ export class Aggregate&lt;T&gt; implements Renderable {
 export class GroupBy&lt;T&gt; implements Renderable {
   constructor(
     protected properties: Renderable[],
-    protected transformations?: Renderable
+    protected transformations?: Renderable,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -1940,7 +2199,7 @@ export class GroupBy&lt;T&gt; implements Renderable {
   static fromJson&lt;T&gt;(json: { [name: string]: any }): GroupBy&lt;T&gt; {
     return new GroupBy&lt;T&gt;(
       json[&#x27;properties&#x27;].map((p: any) &#x3D;&gt; RenderableFactory(p)),
-      RenderableFactory(json[&#x27;transformations&#x27;])
+      RenderableFactory(json[&#x27;transformations&#x27;]),
     );
   }
 
@@ -1965,7 +2224,7 @@ export class GroupBy&lt;T&gt; implements Renderable {
           prefix,
           parser,
           options,
-        })
+        }),
       )
       .join(&#x27;,&#x27;);
     const transformations &#x3D; this.transformations
@@ -1984,7 +2243,7 @@ export class GroupBy&lt;T&gt; implements Renderable {
   clone() {
     return new GroupBy(
       Objects.clone(this.properties),
-      Objects.clone(this.transformations)
+      Objects.clone(this.transformations),
     );
   }
   resolve(parser: any) {
@@ -2021,7 +2280,7 @@ export class Transformations&lt;T&gt; {
   bottomPercent(
     value: number,
     field: Renderable,
-    normalize: Normalize &#x3D; &#x27;none&#x27;
+    normalize: Normalize &#x3D; &#x27;none&#x27;,
   ) {
     return new Function&lt;T&gt;(&#x27;bottompercent&#x27;, [value, field], normalize);
   }
@@ -2029,11 +2288,23 @@ export class Transformations&lt;T&gt; {
   identity() {
     return new Function&lt;T&gt;(&#x27;identity&#x27;, [], &#x27;none&#x27;);
   }
-  search(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
-    return new Function&lt;T&gt;(&#x27;search&#x27;, [left], normalize);
+  search(value: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;search&#x27;, [value], normalize);
   }
-  filter(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
-    return new Function&lt;T&gt;(&#x27;filter&#x27;, [left], normalize);
+  filter(value: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;filter&#x27;, [value], normalize);
+  }
+
+  skip(value: number, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;top&#x27;, [value], normalize);
+  }
+
+  top(value: number, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;top&#x27;, [value], normalize);
+  }
+
+  orderby(value: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
+    return new Function&lt;T&gt;(&#x27;filter&#x27;, [value], normalize);
   }
 }
 
@@ -2041,7 +2312,7 @@ export class Type&lt;T&gt; implements Renderable {
   constructor(
     protected name: string,
     protected type: string,
-    protected value?: any
+    protected value?: any,
   ) {}
   get [Symbol.toStringTag]() {
     return &#x27;Type&#x27;;
@@ -2060,7 +2331,7 @@ export class Type&lt;T&gt; implements Renderable {
     return new Type&lt;T&gt;(
       json[&#x27;name&#x27;],
       json[&#x27;type&#x27;],
-      RenderableFactory(json[&#x27;value&#x27;])
+      RenderableFactory(json[&#x27;value&#x27;]),
     );
   }
 
@@ -2097,7 +2368,7 @@ export class Type&lt;T&gt; implements Renderable {
     parser &#x3D;
       parser instanceof ODataStructuredTypeFieldParser &amp;&amp;
       parser.isStructuredType()
-        ? parser.structured()
+        ? parser.structuredType()
         : parser;
     return parser?.findChildParser((p: any) &#x3D;&gt; p.isTypeOf(this.type));
   }
@@ -2107,7 +2378,7 @@ export class Lambda&lt;T&gt; implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected alias?: string
+    protected alias?: string,
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -2119,7 +2390,7 @@ export class Lambda&lt;T&gt; implements Renderable {
       $type: Types.rawType(this),
       op: this.op,
       values: this.values.map((v) &#x3D;&gt;
-        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v
+        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v,
       ),
       alias: this.alias,
     };
@@ -2129,7 +2400,7 @@ export class Lambda&lt;T&gt; implements Renderable {
     return new Lambda&lt;T&gt;(
       json[&#x27;op&#x27;],
       json[&#x27;values&#x27;].map((v: any) &#x3D;&gt; RenderableFactory(v)),
-      json[&#x27;alias&#x27;]
+      json[&#x27;alias&#x27;],
     );
   }
 
@@ -2168,7 +2439,7 @@ export class Lambda&lt;T&gt; implements Renderable {
     return new Lambda(
       this.op,
       this.values.map((v) &#x3D;&gt; Objects.clone(v)),
-      this.alias
+      this.alias,
     );
   }
   resolve(parser: any) {
@@ -2284,6 +2555,19 @@ export const syntax: ODataSyntax&lt;any&gt; &#x3D; new ODataSyntax&lt;any&gt;();
             var COMPODOC_CURRENT_PAGE_URL = 'Transformations.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

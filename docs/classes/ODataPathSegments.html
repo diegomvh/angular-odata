@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -225,7 +218,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:88</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:90</a></div>
                             </td>
                         </tr>
 
@@ -288,7 +281,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:88</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -315,15 +308,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>add(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>add(name: <a href="../undefineds/.html" target="_self">string</a>, path: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="201"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:201</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="204"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:204</a></div>
                         </td>
                     </tr>
 
@@ -346,7 +339,7 @@
                                         <tr>
                                                 <td>name</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -358,7 +351,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -371,7 +364,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -401,8 +394,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="167"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:167</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:170</a></div>
                         </td>
                     </tr>
 
@@ -431,15 +424,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>find(predicate: (segment: <a href="../undefineds/ODataSegment.html">ODataSegment</a>) => void)</code>
+<code>find(predicate: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="172"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:172</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="175"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:175</a></div>
                         </td>
                     </tr>
 
@@ -462,7 +455,7 @@
                                         <tr>
                                                 <td>predicate</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -475,7 +468,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -498,15 +491,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>first(undefined: literal type)</code>
+<code>first(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="191"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:191</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:194</a></div>
                         </td>
                     </tr>
 
@@ -529,7 +522,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -545,7 +538,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -570,15 +563,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fromJson(json: literal type[])</code>
+                    <code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type[]</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="155"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:155</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="158"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:158</a></div>
                         </td>
                     </tr>
 
@@ -601,7 +594,7 @@
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                        <code>literal type[]</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type[]</a></code>
                                             </td>
 
                                             <td>
@@ -637,15 +630,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>get(name: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="207"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:207</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:210</a></div>
                         </td>
                     </tr>
 
@@ -668,7 +661,7 @@
                                         <tr>
                                                 <td>name</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -681,7 +674,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -704,15 +697,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>keys(values?: <a href="../undefineds/EntityKey.html" target="_self">(EntityKey&lt;any&gt; | undefined)[]</a>)</code>
+<code>keys(values?: <a href="../classes/Entity.html" target="_self">(EntityKey&lt;any&gt; | undefined)[]</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="116"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:116</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="118"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:118</a></div>
                         </td>
                     </tr>
 
@@ -735,7 +728,7 @@
                                         <tr>
                                                 <td>values</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >(EntityKey&lt;any&gt; | undefined)[]</a></code>
+                                                            <code><a href="../classes/Entity.html" target="_self" >(EntityKey&lt;any&gt; | undefined)[]</a></code>
                                             </td>
 
                                             <td>
@@ -748,7 +741,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -771,15 +764,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>last(undefined: literal type)</code>
+<code>last(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="196"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:196</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="199"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:199</a></div>
                         </td>
                     </tr>
 
@@ -802,7 +795,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -818,7 +811,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -841,15 +834,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pathAndParams(undefined: literal type)</code>
+<code>pathAndParams(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="94"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:94</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="96"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:96</a></div>
                         </td>
                     </tr>
 
@@ -872,7 +865,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -904,15 +897,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>segments(undefined: literal type)</code>
+<code>segments(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="177"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:177</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="180"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:180</a></div>
                         </td>
                     </tr>
 
@@ -935,7 +928,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -951,7 +944,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -981,8 +974,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="142"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:142</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:144</a></div>
                         </td>
                     </tr>
 
@@ -991,7 +984,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -1011,15 +1004,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toString(undefined: literal type)</code>
+<code>toString(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="131"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:131</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:133</a></div>
                         </td>
                     </tr>
 
@@ -1042,7 +1035,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1058,7 +1051,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1081,15 +1074,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>types(undefined: literal type)</code>
+<code>types(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="110"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:110</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="112"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/segments.ts:112</a></div>
                         </td>
                     </tr>
 
@@ -1112,7 +1105,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1128,7 +1121,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>string[]</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string[]</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1158,7 +1151,9 @@ import { SegmentHandler } from &#x27;./handlers&#x27;;
 export type ODataSegment &#x3D; {
   name: PathSegment;
   path: string;
-  type?: string;
+  outgoingType?: string;
+  incomingType?: string;
+  bindingType?: string;
   key?: any;
   parameters?: any;
 };
@@ -1167,7 +1162,7 @@ function pathSegmentsBuilder(
   segment: ODataSegment,
   escape: boolean &#x3D; false,
   parser?: Parser&lt;any&gt;,
-  options?: ParserOptions
+  options?: ParserOptions,
 ): [string, { [name: string]: any }] {
   if (segment.name &#x3D;&#x3D;&#x3D; PathSegment.function) {
     let [path, params] &#x3D; segment.parameters
@@ -1195,7 +1190,7 @@ function pathSegmentsBuilder(
     if (
       typeof key &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp;
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
-        key
+        key,
       )
     ) {
       key &#x3D; raw(key);
@@ -1215,7 +1210,7 @@ export const pathAndParamsFromSegments &#x3D; (
     escape?: boolean;
     parser?: Parser&lt;any&gt;;
     options?: ParserOptions;
-  } &#x3D; {}
+  } &#x3D; {},
 ): [string, { [name: string]: any }] &#x3D;&gt; {
   const result &#x3D; segments.reduce(
     (acc, segment) &#x3D;&gt; {
@@ -1223,13 +1218,13 @@ export const pathAndParamsFromSegments &#x3D; (
         segment,
         escape,
         parser,
-        options
+        options,
       );
       acc.paths.push(path);
       acc.params &#x3D; Object.assign(acc.params, params);
       return acc;
     },
-    { paths: [] as string[], params: {} as { [name: string]: any } }
+    { paths: [] as string[], params: {} as { [name: string]: any } },
   );
   return [result.paths.join(PATH_SEPARATOR), result.params];
 };
@@ -1259,7 +1254,7 @@ export class ODataPathSegments {
 
   types({ key &#x3D; false }: { key?: boolean } &#x3D; {}): string[] {
     return this.segments({ key })
-      .map((s) &#x3D;&gt; s.type())
+      .map((s) &#x3D;&gt; s.outgoingType())
       .filter((t) &#x3D;&gt; t !&#x3D;&#x3D; undefined) as string[];
   }
 
@@ -1295,7 +1290,8 @@ export class ODataPathSegments {
         name: s.name as string,
         path: s.path,
       } as any;
-      if (s.type !&#x3D;&#x3D; undefined) json.type &#x3D; s.type;
+      if (s.incomingType !&#x3D;&#x3D; undefined) json.incomingType &#x3D; s.incomingType;
+      if (s.outgoingType !&#x3D;&#x3D; undefined) json.outgoingType &#x3D; s.outgoingType;
       if (s.key !&#x3D;&#x3D; undefined) json.key &#x3D; s.key;
       if (s.parameters !&#x3D;&#x3D; undefined) json.parameters &#x3D; s.parameters;
       return json;
@@ -1310,7 +1306,7 @@ export class ODataPathSegments {
         type: s.type,
         key: s.key,
         parameters: s.parameters,
-      }))
+      })),
     );
   }
 
@@ -1333,7 +1329,7 @@ export class ODataPathSegments {
             PathSegment.entitySet,
             PathSegment.navigationProperty,
             PathSegment.property,
-          ].indexOf(s.name) !&#x3D;&#x3D; -1
+          ].indexOf(s.name) !&#x3D;&#x3D; -1,
       );
     return segments.map((s) &#x3D;&gt; new SegmentHandler(s));
   }
@@ -1402,6 +1398,19 @@ export class ODataPathSegments {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataPathSegments.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

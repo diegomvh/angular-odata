@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -231,7 +224,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(client: <a href="../injectables/ODataClient.html" target="_self">ODataClient</a>, name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, apiNameOrEntityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(client: <a href="../injectables/ODataClient.html" target="_self">ODataClient</a>, name: <a href="../undefineds/.html" target="_self">string</a>, apiNameOrEntityType?: <a href="../undefineds/.html" target="_self">string</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -269,7 +262,7 @@
                                                         <td>name</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -281,7 +274,7 @@
                                                         <td>apiNameOrEntityType</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -319,7 +312,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -359,7 +352,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -407,7 +400,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -432,7 +425,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -472,7 +465,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -545,7 +538,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -585,7 +578,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -658,7 +651,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -698,7 +691,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -746,7 +739,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;undefined&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;undefined&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -771,7 +764,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: "property" | "entity" | "entities" | "none", options: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self">&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</a>, options: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -812,7 +805,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -840,7 +833,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
-                                                        <code>&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</a></code>
                                             </td>
 
                                             <td>
@@ -870,7 +863,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -895,7 +888,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -935,7 +928,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -983,7 +976,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1008,7 +1001,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1048,7 +1041,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -1121,7 +1114,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1161,7 +1154,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -1234,7 +1227,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1274,7 +1267,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -1322,7 +1315,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;undefined&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;undefined&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1347,7 +1340,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: "property" | "entity" | "entities" | "none", options: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self">&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</a>, options: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1388,7 +1381,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -1416,7 +1409,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
-                                                        <code>&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</a></code>
                                             </td>
 
                                             <td>
@@ -1446,7 +1439,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1471,7 +1464,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1546,7 +1539,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1571,7 +1564,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1671,7 +1664,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: "entity" | "entities", options: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/.html" target="_self">&quot;entity&quot; | &quot;entities&quot;</a>, options: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1725,7 +1718,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
-                                                        <code>&quot;entity&quot; | &quot;entities&quot;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;entity&quot; | &quot;entities&quot;</a></code>
                                             </td>
 
                                             <td>
@@ -1755,7 +1748,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1820,7 +1813,7 @@ export abstract class ODataBaseService {
   constructor(
     protected client: ODataClient,
     protected name: string,
-    protected apiNameOrEntityType?: string
+    protected apiNameOrEntityType?: string,
   ) {}
 
   get api() {
@@ -1831,31 +1824,31 @@ export abstract class ODataBaseService {
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;entity&#x27;,
-    options?: ODataFunctionOptions&lt;R&gt;
+    options?: ODataFunctionOptions&lt;R&gt;,
   ): Observable&lt;ODataEntity&lt;R&gt;&gt;;
   protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;entities&#x27;,
-    options?: ODataFunctionOptions&lt;R&gt;
+    options?: ODataFunctionOptions&lt;R&gt;,
   ): Observable&lt;ODataEntities&lt;R&gt;&gt;;
   protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27;,
-    options?: ODataFunctionOptions&lt;R&gt;
+    options?: ODataFunctionOptions&lt;R&gt;,
   ): Observable&lt;ODataProperty&lt;R&gt;&gt;;
   protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;none&#x27;,
-    options?: ODataFunctionOptions&lt;R&gt;
+    options?: ODataFunctionOptions&lt;R&gt;,
   ): Observable&lt;null&gt;;
   protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27;,
-    options: ODataFunctionOptions&lt;R&gt; &#x3D; {}
+    options: ODataFunctionOptions&lt;R&gt; &#x3D; {},
   ): Observable&lt;any&gt; {
     resource.query((q) &#x3D;&gt; q.restore(options));
     return resource.call(params, {
@@ -1868,31 +1861,31 @@ export abstract class ODataBaseService {
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;entity&#x27;,
-    options?: ODataActionOptions&lt;R&gt;
+    options?: ODataActionOptions&lt;R&gt;,
   ): Observable&lt;ODataEntity&lt;R&gt;&gt;;
   protected callAction&lt;P, R&gt;(
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;entities&#x27;,
-    options?: ODataActionOptions&lt;R&gt;
+    options?: ODataActionOptions&lt;R&gt;,
   ): Observable&lt;ODataEntities&lt;R&gt;&gt;;
   protected callAction&lt;P, R&gt;(
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27;,
-    options?: ODataActionOptions&lt;R&gt;
+    options?: ODataActionOptions&lt;R&gt;,
   ): Observable&lt;ODataProperty&lt;R&gt;&gt;;
   protected callAction&lt;P, R&gt;(
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;none&#x27;,
-    options?: ODataActionOptions&lt;R&gt;
+    options?: ODataActionOptions&lt;R&gt;,
   ): Observable&lt;null&gt;;
   protected callAction&lt;P, R&gt;(
     params: P | null,
     resource: ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27;,
-    options: ODataActionOptions&lt;R&gt; &#x3D; {}
+    options: ODataActionOptions&lt;R&gt; &#x3D; {},
   ): Observable&lt;any&gt; {
     resource.query((q) &#x3D;&gt; q.restore(options));
     return resource.call(params, {
@@ -1904,17 +1897,17 @@ export abstract class ODataBaseService {
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entity&#x27;,
-    options?: ODataQueryArgumentsOptions&lt;S&gt;
+    options?: ODataQueryArgumentsOptions&lt;S&gt;,
   ): Observable&lt;ODataEntity&lt;S&gt;&gt;;
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entities&#x27;,
-    options?: ODataQueryArgumentsOptions&lt;S&gt;
+    options?: ODataQueryArgumentsOptions&lt;S&gt;,
   ): Observable&lt;ODataEntities&lt;S&gt;&gt;;
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entity&#x27; | &#x27;entities&#x27;,
-    options: ODataQueryArgumentsOptions&lt;S&gt; &#x3D; {}
+    options: ODataQueryArgumentsOptions&lt;S&gt; &#x3D; {},
   ): Observable&lt;any&gt; {
     resource.query((q) &#x3D;&gt; q.restore(options));
     return resource.fetch({ responseType: responseType as any, ...options });
@@ -1961,6 +1954,19 @@ export abstract class ODataBaseService {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataBaseService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

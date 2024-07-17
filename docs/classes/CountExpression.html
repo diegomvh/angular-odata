@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -234,7 +227,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(undefined: literal type)</code>
+<code>constructor(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -259,7 +252,7 @@
                                                 <tr>
                                                   
                                                         <td>
-                                                                    <code>literal type</code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -381,7 +374,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>CountExpression&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CountExpression&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -427,7 +420,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>CountExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CountExpression&lt;T&gt;</a></code>
 
                         </div>
                 </td>
@@ -449,7 +442,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>factory(opts: (builder: <a href="../undefineds/CountExpressionBuilder.html">CountExpressionBuilder<T></a>,current: CountExpression<T>) => void, current?: CountExpression<T>)</code>
+                    <code>factory(opts: <a href="../undefineds/.html" target="_self">function</a>, current?: <a href="../undefineds/.html" target="_self">CountExpression&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -488,7 +481,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -500,7 +493,7 @@
                                         <tr>
                                                 <td>current</td>
                                             <td>
-                                                        <code>CountExpression&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >CountExpression&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -513,7 +506,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>CountExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CountExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -536,7 +529,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>field(field: F[], opts?: (e?: literal type) => void)</code>
+<code>field(field: <a href="../undefineds/.html" target="_self">F[]</a>, opts?: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
@@ -575,7 +568,7 @@
                                         <tr>
                                                 <td>field</td>
                                             <td>
-                                                        <code>F[]</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >F[]</a></code>
                                             </td>
 
                                             <td>
@@ -587,7 +580,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -600,7 +593,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>CountExpression&lt;F&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CountExpression&lt;F&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -625,7 +618,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fromJson(json: literal type)</code>
+                    <code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -664,7 +657,7 @@
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -677,7 +670,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>CountExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CountExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -700,7 +693,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>render(undefined: literal type)</code>
+<code>render(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -737,7 +730,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -753,7 +746,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -801,7 +794,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -844,7 +837,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>{}</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{}</a></code>
 
                         </div>
                 </td>
@@ -887,7 +880,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -907,7 +900,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>resolve(parser: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>resolve(parser: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
@@ -944,7 +937,7 @@
                                         <tr>
                                                 <td>parser</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -957,7 +950,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1006,7 +999,7 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, ParserOptions, QueryOption } from &#x27;../../../types&#x27;;
 import { Objects, Types } from &#x27;../../../utils&#x27;;
-import type { QueryCustomType } from &#x27;../builder&#x27;;
+import { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
 import {
@@ -1020,7 +1013,7 @@ import {
 export class CountField&lt;T&gt; implements Renderable {
   constructor(
     protected field: any,
-    private values: { [name: string]: any } &#x3D; {}
+    private values: { [name: string]: any } &#x3D; {},
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -1082,12 +1075,12 @@ export class CountField&lt;T&gt; implements Renderable {
   filter(
     opts: (
       builder: FilterExpressionBuilder&lt;T&gt;,
-      current?: FilterExpression&lt;T&gt;
-    ) &#x3D;&gt; FilterExpression&lt;T&gt;
+      current?: FilterExpression&lt;T&gt;,
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
   ) {
     return this.option(
       QueryOption.filter,
-      FilterExpression.factory&lt;T&gt;(opts, this.values[QueryOption.filter])
+      FilterExpression.factory&lt;T&gt;(opts, this.values[QueryOption.filter]),
     );
   }
 
@@ -1095,7 +1088,7 @@ export class CountField&lt;T&gt; implements Renderable {
     const values &#x3D; Object.keys(this.values).reduce(
       (acc, key) &#x3D;&gt;
         Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
-      {}
+      {},
     );
     return new CountField&lt;T&gt;(this.field.clone(), values);
   }
@@ -1131,16 +1124,16 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: CountExpressionBuilder&lt;T&gt;,
-      current?: CountExpression&lt;T&gt;
+      current?: CountExpression&lt;T&gt;,
     ) &#x3D;&gt; CountExpression&lt;T&gt;,
-    current?: CountExpression&lt;T&gt;
+    current?: CountExpression&lt;T&gt;,
   ): CountExpression&lt;T&gt; {
     return opts(
       {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new CountExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as CountExpression&lt;T&gt;;
   }
 
@@ -1186,7 +1179,7 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   field&lt;F&gt;(
     field: F[],
-    opts?: (e: { t: F; f: CountField&lt;F&gt; }) &#x3D;&gt; CountExpression&lt;F&gt;
+    opts?: (e: { t: F; f: CountField&lt;F&gt; }) &#x3D;&gt; CountExpression&lt;F&gt;,
   ): CountExpression&lt;F&gt; {
     let countField &#x3D; new CountField&lt;F&gt;(field);
     if (opts !&#x3D;&#x3D; undefined)
@@ -1238,6 +1231,19 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
             var COMPODOC_CURRENT_PAGE_URL = 'CountExpression.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

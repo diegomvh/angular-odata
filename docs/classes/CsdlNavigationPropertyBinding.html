@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -126,7 +119,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/responses/csdl/csdl-navigation-property-binding.ts</code>
+            <code>projects/angular-odata/schematics/apigen/metadata/csdl/csdl-navigation-property-binding.ts</code>
         </p>
 
 
@@ -147,12 +140,10 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#path" >path</a>
+                                <a href="#Path" >Path</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#target" >target</a>
+                                <a href="#Target" >Target</a>
                             </li>
                         </ul>
                     </td>
@@ -173,12 +164,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, target: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="1" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-navigation-property-binding.ts:1</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="3" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-navigation-property-binding.ts:3</a></div>
                             </td>
                         </tr>
 
@@ -196,22 +187,9 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>path</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>target</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -237,23 +215,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="path"></a>
+                    <a name="Path"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>path</b></span>
-                        <a href="#path"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Path</b></span>
+                        <a href="#Path"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="3" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-navigation-property-binding.ts:3</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="2" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-navigation-property-binding.ts:2</a></div>
                         </td>
                     </tr>
 
@@ -264,23 +241,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="target"></a>
+                    <a name="Target"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>target</b></span>
-                        <a href="#target"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Target</b></span>
+                        <a href="#Target"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="4" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-navigation-property-binding.ts:4</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="3" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-navigation-property-binding.ts:3</a></div>
                         </td>
                     </tr>
 
@@ -300,10 +276,13 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export class CsdlNavigationPropertyBinding {
-  constructor(
-    public path: string,
-    public target: string,
-  ) {}
+  Path: string;
+  Target: string;
+
+  constructor({ Path, Target }: { Path: string; Target: string }) {
+    this.Path &#x3D; Path;
+    this.Target &#x3D; Target;
+  }
 }
 </code></pre>
     </div>
@@ -346,6 +325,19 @@
             var COMPODOC_CURRENT_PAGE_URL = 'CsdlNavigationPropertyBinding.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

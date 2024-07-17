@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -191,7 +184,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:49</a></div>
                             </td>
                         </tr>
 
@@ -255,8 +248,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="49"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:49</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="57"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -265,7 +258,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -292,8 +285,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="43"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:43</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -302,7 +295,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -329,8 +322,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:52</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="60"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:60</a></div>
                         </td>
                     </tr>
 
@@ -339,7 +332,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -359,15 +352,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>keys(values?: <a href="../undefineds/EntityKey.html" target="_self">(EntityKey&lt;T&gt; | undefined)[]</a>)</code>
+<code>keys(values?: <a href="../classes/Entity.html" target="_self">(EntityKey&lt;T&gt; | undefined)[]</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="55"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:55</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -390,7 +383,7 @@
                                         <tr>
                                                 <td>values</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >(EntityKey&lt;T&gt; | undefined)[]</a></code>
+                                                            <code><a href="../classes/Entity.html" target="_self" >(EntityKey&lt;T&gt; | undefined)[]</a></code>
                                             </td>
 
                                             <td>
@@ -403,7 +396,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -433,8 +426,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="61"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:61</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -443,7 +436,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -470,8 +463,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="58"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:58</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="66"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -480,7 +473,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -507,8 +500,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="46"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:46</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/path/handlers.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -517,7 +510,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -537,16 +530,24 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PathSegment } from &#x27;../../types&#x27;;
 import { Types } from &#x27;../../utils&#x27;;
 import { EntityKey } from &#x27;../resource&#x27;;
-import type { ODataPathSegments, ODataSegment } from &#x27;./segments&#x27;;
+import { ODataPathSegments, ODataSegment } from &#x27;./segments&#x27;;
 
 export class SegmentHandler {
   constructor(private segment: ODataSegment) {}
   get name() {
     return this.segment.name;
   }
-  type(value?: string) {
-    if (value !&#x3D;&#x3D; undefined) this.segment.type &#x3D; value;
-    return this.segment.type;
+  outgoingType(value?: string) {
+    if (value !&#x3D;&#x3D; undefined) this.segment.outgoingType &#x3D; value;
+    return this.segment.outgoingType;
+  }
+  incomingType(value?: string) {
+    if (value !&#x3D;&#x3D; undefined) this.segment.incomingType &#x3D; value;
+    return this.segment.incomingType;
+  }
+  bindingType(value?: string) {
+    if (value !&#x3D;&#x3D; undefined) this.segment.bindingType &#x3D; value;
+    return this.segment.bindingType;
   }
   path(value?: string) {
     if (value !&#x3D;&#x3D; undefined) this.segment.path &#x3D; value;
@@ -639,6 +640,19 @@ export class ODataPathSegmentsHandler&lt;T&gt; {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataPathSegmentsHandler.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -126,7 +119,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/responses/csdl/csdl-structural-property.ts</code>
+            <code>projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structural-property.ts</code>
         </p>
 
 
@@ -153,47 +146,45 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#defaultValue" >defaultValue</a>
+                                <a href="#DefaultValue" >DefaultValue</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#maxLength" >maxLength</a>
+                                <a href="#MaxLength" >MaxLength</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#precision" >precision</a>
+                                <a href="#Precision" >Precision</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#scale" >scale</a>
+                                <a href="#Scale" >Scale</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#srid" >srid</a>
+                                <a href="#SRID" >SRID</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#unicode" >unicode</a>
+                                <a href="#Unicode" >Unicode</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#name" >name</a>
+                                <a href="#Collection" >Collection</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
+                                <a href="#Name" >Name</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Optional</span>
-                                <a href="#nullable" >nullable</a>
+                                <a href="#Nullable" >Nullable</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#type" >type</a>
+                                <a href="#Type" >Type</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Annotation" >Annotation</a>
                             </li>
                         </ul>
                     </td>
@@ -214,12 +205,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nullable?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, maxLength?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, precision?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, scale?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, unicode?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, srid?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, defaultValue?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structural-property.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structural-property.ts:34</a></div>
                             </td>
                         </tr>
 
@@ -237,110 +228,13 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>name</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
                                                             No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>type</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>nullable</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>maxLength</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>precision</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>scale</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>unicode</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>srid</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>defaultValue</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
                                                     </td>
                                                     
                                                 </tr>
@@ -362,24 +256,23 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="defaultValue"></a>
+                    <a name="DefaultValue"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>defaultValue</b></span>
-                        <a href="#defaultValue"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>DefaultValue</b></span>
+                        <a href="#DefaultValue"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structural-property.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structural-property.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -390,24 +283,23 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="maxLength"></a>
+                    <a name="MaxLength"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>maxLength</b></span>
-                        <a href="#maxLength"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>MaxLength</b></span>
+                        <a href="#MaxLength"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structural-property.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structural-property.ts:29</a></div>
                         </td>
                     </tr>
 
@@ -418,24 +310,23 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="precision"></a>
+                    <a name="Precision"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>precision</b></span>
-                        <a href="#precision"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Precision</b></span>
+                        <a href="#Precision"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structural-property.ts:15</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structural-property.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -446,24 +337,23 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="scale"></a>
+                    <a name="Scale"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>scale</b></span>
-                        <a href="#scale"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Scale</b></span>
+                        <a href="#Scale"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structural-property.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structural-property.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -474,24 +364,23 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="srid"></a>
+                    <a name="SRID"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>srid</b></span>
-                        <a href="#srid"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>SRID</b></span>
+                        <a href="#SRID"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structural-property.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structural-property.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -502,24 +391,23 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="unicode"></a>
+                    <a name="Unicode"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>unicode</b></span>
-                        <a href="#unicode"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Unicode</b></span>
+                        <a href="#Unicode"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structural-property.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structural-property.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -530,17 +418,16 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="name"></a>
+                    <a name="Collection"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>name</b></span>
-                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Collection</b></span>
+                        <a href="#Collection"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
@@ -552,7 +439,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlStructuralProperty.html#source" target="_self" >CsdlStructuralProperty:3</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlStructuralProperty.html#source" target="_self" >CsdlStructuralProperty:6</a></code>
 </div>
                         </td>
                     </tr>
@@ -564,18 +451,83 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="nullable"></a>
+                    <a name="Name"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                            <span class="modifier">Optional</span>
-                        <span ><b>nullable</b></span>
-                        <a href="#nullable"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Name</b></span>
+                        <a href="#Name"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/CsdlStructuralProperty.html" target="_self" >CsdlStructuralProperty</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlStructuralProperty.html#source" target="_self" >CsdlStructuralProperty:4</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Nullable"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>Nullable</b></span>
+                        <a href="#Nullable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/CsdlStructuralProperty.html" target="_self" >CsdlStructuralProperty</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlStructuralProperty.html#source" target="_self" >CsdlStructuralProperty:7</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Type"></a>
+                    <span class="name">
+                        <span ><b>Type</b></span>
+                        <a href="#Type"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
@@ -599,29 +551,29 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="type"></a>
+                    <a name="Annotation"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>type</b></span>
-                        <a href="#type"><span class="icon ion-ios-link"></span></a>
+                            <span class="modifier">Optional</span>
+                        <span ><b>Annotation</b></span>
+                        <a href="#Annotation"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlAnnotation[]</a></code>
 
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Inherited from         <code><a href="../classes/CsdlStructuralProperty.html" target="_self" >CsdlStructuralProperty</a></code>
+                                <div class="io-line">Inherited from         <code><a href="../classes/CsdlAnnotable.html" target="_self" >CsdlAnnotable</a></code>
 </div>
                             </td>
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlStructuralProperty.html#source" target="_self" >CsdlStructuralProperty:4</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:4</a></code>
 </div>
                         </td>
                     </tr>
@@ -641,53 +593,131 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export abstract class CsdlStructuralProperty {
-  constructor(
-    public name: string,
-    public type: string,
-    public nullable?: boolean,
-  ) {}
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlAnnotable } from &#x27;./csdl-annotation&#x27;;
+
+export abstract class CsdlStructuralProperty extends CsdlAnnotable {
+  Name: string;
+  Type: string;
+  Collection: boolean;
+  Nullable?: boolean;
+
+  constructor({
+    Name,
+    Type,
+    Nullable,
+    Annotation,
+  }: {
+    Name: string;
+    Type: string;
+    Nullable?: boolean;
+    Annotation?: any[];
+  }) {
+    super({ Annotation });
+    this.Name &#x3D; Name;
+    this.Nullable &#x3D; Nullable;
+    this.Collection &#x3D; Type.startsWith(&#x27;Collection(&#x27;);
+    this.Type &#x3D; this.Collection ? Type.substring(11, Type.length - 1) : Type;
+  }
 }
 
 export class CsdlProperty extends CsdlStructuralProperty {
-  constructor(
-    name: string,
-    type: string,
-    nullable?: boolean,
-    public maxLength?: number,
-    public precision?: number,
-    public scale?: number,
-    public unicode?: boolean,
-    public srid?: string,
-    public defaultValue?: string,
-  ) {
-    super(name, type, nullable);
+  MaxLength?: number;
+  Precision?: number;
+  Scale?: number;
+  Unicode?: boolean;
+  SRID?: string;
+  DefaultValue?: string;
+
+  constructor({
+    Name,
+    Type,
+    Nullable,
+    MaxLength,
+    Precision,
+    Scale,
+    Unicode,
+    SRID,
+    DefaultValue,
+    Annotation,
+  }: {
+    Name: string;
+    Type: string;
+    Nullable?: boolean;
+    MaxLength?: number;
+    Precision?: number;
+    Scale?: number;
+    Unicode?: boolean;
+    SRID?: string;
+    DefaultValue?: string;
+    Annotation?: any[];
+  }) {
+    super({ Name, Type, Nullable, Annotation });
+    this.MaxLength &#x3D; MaxLength;
+    this.Precision &#x3D; Precision;
+    this.Scale &#x3D; Scale;
+    this.Unicode &#x3D; Unicode;
+    this.SRID &#x3D; SRID;
+    this.DefaultValue &#x3D; DefaultValue;
   }
 }
 
 export class CsdlNavigationProperty extends CsdlStructuralProperty {
-  constructor(
-    name: string,
-    type: string,
-    nullable?: boolean,
-    public partner?: string,
-    public containsTarget?: boolean,
-    public referentialConstraints?: CsdlReferentialConstraint[],
-    public onDelete?: CsdlOnDelete,
-  ) {
-    super(name, type, nullable);
+  public Partner?: string;
+  public ContainsTarget?: boolean;
+  public ReferentialConstraints?: CsdlReferentialConstraint[];
+  public OnDelete?: CsdlOnDelete;
+
+  constructor({
+    Name,
+    Type,
+    Nullable,
+    Partner,
+    ContainsTarget,
+    ReferentialConstraints,
+    OnDelete,
+    Annotation,
+  }: {
+    Name: string;
+    Type: string;
+    Nullable?: boolean;
+    Partner?: string;
+    ContainsTarget?: boolean;
+    ReferentialConstraints?: any[];
+    OnDelete?: any;
+    Annotation?: any[];
+  }) {
+    super({ Name, Type, Nullable, Annotation });
+    this.Partner &#x3D; Partner;
+    this.ContainsTarget &#x3D; ContainsTarget;
+    this.ReferentialConstraints &#x3D; ReferentialConstraints?.map(
+      (r) &#x3D;&gt; new CsdlReferentialConstraint(r),
+    );
+    this.OnDelete &#x3D; OnDelete ? new CsdlOnDelete(OnDelete) : undefined;
   }
 }
 
 export class CsdlReferentialConstraint {
-  constructor(
-    public property: string,
-    public referencedProperty: string,
-  ) {}
+  Property: string;
+  ReferencedProperty: string;
+
+  constructor({
+    Property,
+    ReferencedProperty,
+  }: {
+    Property: string;
+    ReferencedProperty: string;
+  }) {
+    this.Property &#x3D; Property;
+    this.ReferencedProperty &#x3D; ReferencedProperty;
+  }
 }
 
 export class CsdlOnDelete {
-  constructor(public action: string) {}
+  Action: string;
+
+  constructor({ Action }: { Action: string }) {
+    this.Action &#x3D; Action;
+  }
 }
 </code></pre>
     </div>
@@ -730,6 +760,19 @@ export class CsdlOnDelete {
             var COMPODOC_CURRENT_PAGE_URL = 'CsdlProperty.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

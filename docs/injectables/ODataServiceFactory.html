@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -171,7 +164,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:8</a></div>
                             </td>
                         </tr>
 
@@ -227,15 +220,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>entitySet(entitySetName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, apiNameOrEntityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>entitySet(entitySetName: <a href="../undefineds/.html" target="_self">string</a>, apiNameOrEntityType?: <a href="../undefineds/.html" target="_self">string</a>, options: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="15"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:15</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="16"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:16</a></div>
                         </td>
                     </tr>
 
@@ -262,6 +255,7 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Default value</td>
                                                 <td>Description</td>
                                         </tr>
                                     </thead>
@@ -269,13 +263,15 @@
                                         <tr>
                                                 <td>entitySetName</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
                                                     No
                                             </td>
 
+                                            <td>
+                                            </td>
 
                                             <td>
                                                     <p>Name of the entity set.</p>
@@ -285,17 +281,36 @@
                                         <tr>
                                                 <td>apiNameOrEntityType</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
                                                     Yes
                                             </td>
 
+                                            <td>
+                                            </td>
 
                                             <td>
                                                     <p>Name of the API or the type of the entity.</p>
 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                            <td>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -325,15 +340,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>singleton(singletonName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, apiNameOrEntityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>singleton(singletonName: <a href="../undefineds/.html" target="_self">string</a>, apiNameOrEntityType?: <a href="../undefineds/.html" target="_self">string</a>, options: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="30"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:30</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -360,6 +375,7 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Default value</td>
                                                 <td>Description</td>
                                         </tr>
                                     </thead>
@@ -367,13 +383,15 @@
                                         <tr>
                                                 <td>singletonName</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
                                                     No
                                             </td>
 
+                                            <td>
+                                            </td>
 
                                             <td>
                                                     <p>Name of the singleton.</p>
@@ -383,24 +401,43 @@
                                         <tr>
                                                 <td>apiNameOrEntityType</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
                                                     Yes
                                             </td>
 
+                                            <td>
+                                            </td>
 
                                             <td>
                                                     <p>Name of the API or the type of the entity.</p>
 
                                             </td>
                                         </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataSingletonService.html" target="_self" >ODataSingletonService&lt;T&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataSingletonService&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -420,6 +457,7 @@
 import { ODataClient } from &#x27;../client&#x27;;
 import { ODataEntitySetService } from &#x27;./entity-set&#x27;;
 import { ODataSingletonService } from &#x27;./singleton&#x27;;
+import { ODataCollection, ODataModel } from &#x27;../models&#x27;;
 
 @Injectable()
 export class ODataServiceFactory {
@@ -433,12 +471,18 @@ export class ODataServiceFactory {
   entitySet&lt;T&gt;(
     entitySetName: string,
     apiNameOrEntityType?: string,
+    options: {
+      Model?: { new (...params: any[]): ODataModel&lt;T&gt; };
+      Collection?: {
+        new (...params: any[]): ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;;
+      };
+    } &#x3D; {},
   ): ODataEntitySetService&lt;T&gt; {
-    return new (class extends ODataEntitySetService&lt;T&gt; {})(
-      this.client,
-      entitySetName,
-      apiNameOrEntityType,
-    );
+    const Service &#x3D; class extends ODataEntitySetService&lt;T&gt; {
+      Model &#x3D; options?.Model;
+      Collection &#x3D; options?.Collection;
+    };
+    return new Service(this.client, entitySetName, apiNameOrEntityType);
   }
 
   /** Factory method to create a singleton service.
@@ -448,12 +492,12 @@ export class ODataServiceFactory {
   singleton&lt;T&gt;(
     singletonName: string,
     apiNameOrEntityType?: string,
+    options: { Model?: { new (...params: any[]): ODataModel&lt;T&gt; } } &#x3D; {},
   ): ODataSingletonService&lt;T&gt; {
-    return new (class extends ODataSingletonService&lt;T&gt; {})(
-      this.client,
-      singletonName,
-      apiNameOrEntityType,
-    );
+    const Service &#x3D; class extends ODataSingletonService&lt;T&gt; {
+      Model &#x3D; options?.Model;
+    };
+    return new Service(this.client, singletonName, apiNameOrEntityType);
   }
 }
 </code></pre>
@@ -502,6 +546,19 @@ export class ODataServiceFactory {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataServiceFactory.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

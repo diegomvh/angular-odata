@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -273,12 +266,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(undefined: literal type)</code>
+<code>constructor(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="142" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:142</a></div>
                             </td>
                         </tr>
 
@@ -298,7 +291,7 @@
                                                 <tr>
                                                   
                                                         <td>
-                                                                    <code>literal type</code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -383,8 +376,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="118"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:118</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="206"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:206</a></div>
                         </td>
                     </tr>
 
@@ -420,7 +413,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -443,15 +436,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>aggregate(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, method: <a href="../undefineds/AggregateMethod.html" target="_self">AggregateMethod</a>, alias: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>aggregate(value: <a href="../undefineds/.html" target="_self">any</a>, method: <a href="../undefineds/AggregateMethod.html" target="_self">AggregateMethod</a>, alias: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="123"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:123</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="211"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:211</a></div>
                         </td>
                     </tr>
 
@@ -474,7 +467,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -498,7 +491,7 @@
                                         <tr>
                                                 <td>alias</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -511,7 +504,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -534,15 +527,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>bottomCount(opts: (e: literal type) => void)</code>
+<code>bottomCount(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="165"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:165</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="253"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:253</a></div>
                         </td>
                     </tr>
 
@@ -565,7 +558,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -578,7 +571,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -601,15 +594,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>bottomPercent(opts: (e: literal type) => void)</code>
+<code>bottomPercent(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="187"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:187</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="275"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:275</a></div>
                         </td>
                     </tr>
 
@@ -632,7 +625,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -645,7 +638,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -668,15 +661,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>bottomSum(opts: (e: literal type) => void)</code>
+<code>bottomSum(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="176"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:176</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="264"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:264</a></div>
                         </td>
                     </tr>
 
@@ -699,7 +692,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -712,7 +705,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -748,7 +741,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:112</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:200</a></code>
 </div>
                         </td>
                     </tr>
@@ -758,7 +751,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                 </td>
@@ -778,15 +771,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>compute(opts: (e: literal type) => void)</code>
+<code>compute(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="279"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:279</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="386"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:386</a></div>
                         </td>
                     </tr>
 
@@ -809,7 +802,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -822,7 +815,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -845,15 +838,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>concat(opts: (e: literal type) => void)</code>
+<code>concat(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="207"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:207</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="295"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:295</a></div>
                         </td>
                     </tr>
 
@@ -876,7 +869,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -889,7 +882,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -912,15 +905,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>expand(opts: (e: literal type) => void)</code>
+<code>expand(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="249"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:249</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="356"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:356</a></div>
                         </td>
                     </tr>
 
@@ -943,7 +936,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -956,7 +949,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -981,15 +974,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>factory(opts: (builder: <a href="../undefineds/ApplyExpressionBuilder.html">ApplyExpressionBuilder<T></a>,current: ApplyExpression<T>) => void, current?: ApplyExpression<T>)</code>
+                    <code>factory(opts: <a href="../undefineds/.html" target="_self">function</a>, current?: <a href="../undefineds/.html" target="_self">ApplyExpression&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="67"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:67</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="155"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:155</a></div>
                         </td>
                     </tr>
 
@@ -1020,7 +1013,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1032,7 +1025,7 @@
                                         <tr>
                                                 <td>current</td>
                                             <td>
-                                                        <code>ApplyExpression&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1045,7 +1038,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1068,15 +1061,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>filter(opts: (e: literal type) => void)</code>
+<code>filter(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="230"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:230</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="318"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:318</a></div>
                         </td>
                     </tr>
 
@@ -1099,7 +1092,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1112,7 +1105,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1137,15 +1130,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fromJson(json: literal type)</code>
+                    <code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="88"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:88</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="176"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:176</a></div>
                         </td>
                     </tr>
 
@@ -1176,7 +1169,7 @@
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1189,7 +1182,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1212,15 +1205,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>groupBy(props: (e: literal type) => void, opts?: (e?: <a href="../undefineds/Transform.html">GroupByTransformations<T></a>) => void)</code>
+<code>groupBy(props: <a href="../undefineds/.html" target="_self">function</a>, opts?: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="218"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:218</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="306"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:306</a></div>
                         </td>
                     </tr>
 
@@ -1243,7 +1236,7 @@
                                         <tr>
                                                 <td>props</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1255,7 +1248,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1268,7 +1261,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1291,15 +1284,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>identity(opts: (e: literal type) => void)</code>
+<code>identity(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="197"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:197</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="285"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:285</a></div>
                         </td>
                     </tr>
 
@@ -1322,7 +1315,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1335,7 +1328,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1358,7 +1351,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>render(undefined: literal type)</code>
+<code>render(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -1371,7 +1364,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:94</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:182</a></code>
 </div>
                         </td>
                     </tr>
@@ -1395,7 +1388,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1411,7 +1404,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1434,15 +1427,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>search(opts: (e: literal type) => void)</code>
+<code>search(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="260"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:260</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="367"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:367</a></div>
                         </td>
                     </tr>
 
@@ -1465,7 +1458,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1478,7 +1471,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1516,7 +1509,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:83</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:171</a></code>
 </div>
                         </td>
                     </tr>
@@ -1526,7 +1519,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -1546,15 +1539,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>topCount(opts: (e: literal type) => void)</code>
+<code>topCount(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="132"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:132</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:220</a></div>
                         </td>
                     </tr>
 
@@ -1577,7 +1570,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1590,7 +1583,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1613,15 +1606,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>topPercent(opts: (e: literal type) => void)</code>
+<code>topPercent(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="154"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:154</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="242"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:242</a></div>
                         </td>
                     </tr>
 
@@ -1644,7 +1637,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1657,7 +1650,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1680,15 +1673,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>topSum(opts: (e: literal type) => void)</code>
+<code>topSum(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="143"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:143</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="231"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:231</a></div>
                         </td>
                     </tr>
 
@@ -1711,7 +1704,7 @@
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1724,7 +1717,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1770,7 +1763,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>{}</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{}</a></code>
 
                         </div>
                 </td>
@@ -1813,7 +1806,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -1833,7 +1826,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>resolve(parser: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>resolve(parser: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
@@ -1870,7 +1863,7 @@
                                         <tr>
                                                 <td>parser</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1883,7 +1876,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1919,7 +1912,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:63</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="151" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:151</a></div>
                                 </td>
                             </tr>
 
@@ -1931,8 +1924,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, ParserOptions } from &#x27;../../../types&#x27;;
-import { Objects } from &#x27;../../../utils&#x27;;
-import type { QueryCustomType } from &#x27;../builder&#x27;;
+import { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { FilterConnector, FilterExpression } from &#x27;./filter&#x27;;
 import { SearchConnector, SearchExpression } from &#x27;./search&#x27;;
@@ -1949,7 +1941,45 @@ import {
   AggregateMethod,
 } from &#x27;./syntax&#x27;;
 
-class GroupByTransformations&lt;T&gt; implements Renderable {
+export class GroupByTransformations&lt;T&gt; extends Expression&lt;T&gt; {
+  protected methods: (AggregateMethod | string)[];
+  protected aliases: string[];
+  constructor({
+    children,
+    methods,
+    aliases,
+  }: {
+    children?: Renderable[];
+    methods?: (AggregateMethod | string)[];
+    aliases?: string[];
+  } &#x3D; {}) {
+    super({ children });
+    this.methods &#x3D; methods || [];
+    this.aliases &#x3D; aliases || [];
+  }
+
+  get [Symbol.toStringTag]() {
+    return &#x27;GroupByTransformations&#x27;;
+  }
+
+  override toJson() {
+    const json &#x3D; super.toJson();
+    return Object.assign(json, {
+      methods: this.methods,
+      aliases: this.aliases,
+    });
+  }
+
+  static fromJson&lt;T&gt;(json: { [name: string]: any }): GroupByTransformations&lt;T&gt; {
+    return new GroupByTransformations&lt;T&gt;({
+      children: json[&#x27;children&#x27;].map((c: any) &#x3D;&gt;
+        typeof c !&#x3D;&#x3D; &#x27;string&#x27; ? RenderableFactory(c) : c,
+      ),
+      methods: json[&#x27;methods&#x27;],
+      aliases: json[&#x27;aliases&#x27;],
+    });
+  }
+
   render({
     aliases,
     escape,
@@ -1957,25 +1987,76 @@ class GroupByTransformations&lt;T&gt; implements Renderable {
     parser,
     options,
   }: {
-    aliases?: QueryCustomType[] | undefined;
-    escape?: boolean | undefined;
-    prefix?: string | undefined;
-    parser?: Parser&lt;any&gt; | undefined;
-    options?: ParserOptions | undefined;
-  }): string {
-    throw new Error(&#x27;Method not implemented.&#x27;);
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
+    options?: ParserOptions;
+  } &#x3D; {}): string {
+    const children &#x3D; this._children.map((n) &#x3D;&gt;
+      typeof n !&#x3D;&#x3D; &#x27;string&#x27;
+        ? n.render({ aliases, escape, prefix, parser, options })
+        : n,
+    );
+    return &#x60;aggregate(${children
+      .map((child, index) &#x3D;&gt;
+        !child
+          ? &#x60;${this.methods[index]} as ${this.aliases[index]}&#x60;
+          : &#x60;${child} with ${this.methods[index]} as ${this.aliases[index]}&#x60;,
+      )
+      .join(&#x27;,&#x27;)})&#x60;;
   }
-  toString(): string {
-    throw new Error(&#x27;Method not implemented.&#x27;);
-  }
-  toJson() {
-    throw new Error(&#x27;Method not implemented.&#x27;);
-  }
+
   clone() {
-    throw new Error(&#x27;Method not implemented.&#x27;);
+    return new GroupByTransformations&lt;T&gt;({
+      children: this._children.map((c) &#x3D;&gt;
+        typeof c !&#x3D;&#x3D; &#x27;string&#x27; ? c.clone() : c,
+      ),
+      methods: this.methods,
+      aliases: this.aliases,
+    });
   }
-  resolve(parser: any) {
-    throw new Error(&#x27;Method not implemented.&#x27;);
+
+  private _add(
+    node: Renderable,
+    method: AggregateMethod | string,
+    alias: string,
+  ): GroupByTransformations&lt;T&gt; {
+    this._children.push(node);
+    this.methods.push(method);
+    this.aliases.push(alias);
+    return this;
+  }
+
+  aggregate(
+    value: any,
+    method: AggregateMethod | string,
+    alias: string,
+  ): GroupByTransformations&lt;T&gt; {
+    return this._add(value, method, alias);
+  }
+
+  sum(value: any, alias: string): GroupByTransformations&lt;T&gt; {
+    return this.aggregate(value, &#x27;sum&#x27;, alias);
+  }
+
+  min(value: any, alias: string): GroupByTransformations&lt;T&gt; {
+    return this.aggregate(value, &#x27;min&#x27;, alias);
+  }
+
+  max(value: any, alias: string): GroupByTransformations&lt;T&gt; {
+    return this.aggregate(value, &#x27;max&#x27;, alias);
+  }
+
+  average(value: any, alias: string): GroupByTransformations&lt;T&gt; {
+    return this.aggregate(value, &#x27;average&#x27;, alias);
+  }
+  countdistinct(value: any, alias: string): GroupByTransformations&lt;T&gt; {
+    return this.aggregate(value, &#x27;countdistinct&#x27;, alias);
+  }
+
+  count(alias: string): GroupByTransformations&lt;T&gt; {
+    return this.aggregate(&#x27;&#x27; as any, &#x27;$count&#x27;, alias);
   }
 }
 
@@ -1999,16 +2080,16 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: ApplyExpressionBuilder&lt;T&gt;,
-      current?: ApplyExpression&lt;T&gt;
+      current?: ApplyExpression&lt;T&gt;,
     ) &#x3D;&gt; ApplyExpression&lt;T&gt;,
-    current?: ApplyExpression&lt;T&gt;
+    current?: ApplyExpression&lt;T&gt;,
   ): ApplyExpression&lt;T&gt; {
     return opts(
       {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new ApplyExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as ApplyExpression&lt;T&gt;;
   }
 
@@ -2047,7 +2128,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
     });
   }
 
-  private _add(node: Renderable): ApplyExpression&lt;any&gt; {
+  private _add(node: Renderable): ApplyExpression&lt;T&gt; {
     this._children.push(node);
     return this;
   }
@@ -2055,14 +2136,14 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   aggregate(
     value: any,
     method: AggregateMethod,
-    alias: string
+    alias: string,
   ): ApplyExpression&lt;T&gt; {
     return this._add(syntax.aggregate(value, method, alias));
   }
 
   //topcount
   topCount(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2073,7 +2154,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   //topsum
   topSum(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2084,7 +2165,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   //toppercent
   topPercent(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2095,7 +2176,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   //bottomcount
   bottomCount(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2106,7 +2187,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   //bottomsum
   bottomSum(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2117,7 +2198,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   //bottompercent
   bottomPercent(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2127,7 +2208,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   identity(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2137,7 +2218,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   concat(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2149,13 +2230,13 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   //groupby
   groupBy(
     props: (e: { rollup: (f: any) &#x3D;&gt; any }) &#x3D;&gt; any | any[],
-    opts?: (e: GroupByTransformations&lt;T&gt;) &#x3D;&gt; GroupByTransformations&lt;T&gt;
+    opts?: (e: GroupByTransformations&lt;T&gt;) &#x3D;&gt; GroupByTransformations&lt;T&gt;,
   ): ApplyExpression&lt;T&gt; {
     let properties &#x3D; props({ rollup: (e: any) &#x3D;&gt; syntax.rollup(e) });
     properties &#x3D; Array.isArray(properties) ? properties : [properties];
-    let options &#x3D; undefined;
-    if (opts !&#x3D;&#x3D; undefined) options &#x3D; opts(new GroupByTransformations());
-    return this._add(syntax.groupby(properties, options));
+    const transformations &#x3D;
+      opts !&#x3D;&#x3D; undefined ? opts(new GroupByTransformations()) : undefined;
+    return this._add(syntax.groupby(properties, transformations));
   }
 
   //filter
@@ -2165,7 +2246,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
       e: (connector?: FilterConnector) &#x3D;&gt; FilterExpression&lt;T&gt;;
       o: ODataOperators&lt;T&gt;;
       f: ODataFunctions&lt;T&gt;;
-    }) &#x3D;&gt; FilterExpression&lt;T&gt;
+    }) &#x3D;&gt; FilterExpression&lt;T&gt;,
   ) {
     const exp &#x3D; opts({
       t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
@@ -2177,9 +2258,28 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return this._add(transformations.filter(exp));
   }
 
+  /*
+  orderBy(
+    opts: (
+      builder: OrderByExpressionBuilder&lt;T&gt;,
+      current?: OrderByExpression&lt;T&gt;
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
+    current?: OrderByExpression&lt;T&gt;
+  ) {
+    const exp &#x3D; opts(
+      {
+        t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
+        e: () &#x3D;&gt; new OrderByExpression&lt;T&gt;(),
+      },
+      current
+    ) as OrderByExpression&lt;T&gt;;
+    return this._add(transformations.orderby(exp));
+  }
+  */
+
   //expand
   expand(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2195,7 +2295,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
       e: (connector?: SearchConnector) &#x3D;&gt; SearchExpression&lt;T&gt;;
       o: ODataOperators&lt;T&gt;;
       f: ODataFunctions&lt;T&gt;;
-    }) &#x3D;&gt; SearchExpression&lt;T&gt;
+    }) &#x3D;&gt; SearchExpression&lt;T&gt;,
   ) {
     const exp &#x3D; opts({
       t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
@@ -2209,7 +2309,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   //compute
   compute(
-    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable
+    opts: (e: { o: ODataOperators&lt;T&gt;; f: ODataFunctions&lt;T&gt; }) &#x3D;&gt; Renderable,
   ): ApplyExpression&lt;T&gt; {
     const node &#x3D; opts({
       o: operators as ODataOperators&lt;T&gt;,
@@ -2217,6 +2317,20 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
     });
     return this._add(node);
   }
+
+  /*
+  skip(
+    total: number
+  ): ApplyExpression&lt;T&gt; {
+    return this._add(transformations.skip(total));
+  }
+
+  top(
+    total: number
+  ): ApplyExpression&lt;T&gt; {
+    return this._add(transformations.top(total));
+  }
+  */
 }
 </code></pre>
     </div>
@@ -2259,6 +2373,19 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
             var COMPODOC_CURRENT_PAGE_URL = 'ApplyExpression.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

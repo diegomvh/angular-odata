@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -126,7 +119,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts</code>
+            <code>projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts</code>
         </p>
 
 
@@ -155,40 +148,39 @@
                             <li>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#maxLength" >maxLength</a>
+                                <a href="#MaxLength" >MaxLength</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#name" >name</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Optional</span>
-                                <a href="#precision" >precision</a>
+                                <a href="#Name" >Name</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#scale" >scale</a>
+                                <a href="#Precision" >Precision</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#srid" >srid</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#underlayingType" >underlayingType</a>
+                                <a href="#Scale" >Scale</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#unicode" >unicode</a>
+                                <a href="#SRID" >SRID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#UnderlayingType" >UnderlayingType</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Optional</span>
-                                <a href="#annotationList" >annotationList</a>
+                                <a href="#Unicode" >Unicode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Annotation" >Annotation</a>
                             </li>
                         </ul>
                     </td>
@@ -209,12 +201,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, underlayingType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, maxLength?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, precision?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, scale?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, unicode?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, srid?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, annotationList?: <a href="../classes/CsdlAnnotation.html" target="_self">CsdlAnnotation[]</a>)</code>
+<code>constructor(schema: <a href="../classes/CsdlSchema.html" target="_self">CsdlSchema</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="3" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts:3</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts:11</a></div>
                             </td>
                         </tr>
 
@@ -232,10 +224,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>name</td>
+                                                        <td>schema</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../classes/CsdlSchema.html" target="_self" >CsdlSchema</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -244,86 +236,13 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>underlayingType</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
                                                             No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>maxLength</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>precision</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>scale</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>unicode</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>srid</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>annotationList</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="../classes/CsdlAnnotation.html" target="_self" >CsdlAnnotation[]</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
                                                     </td>
                                                     
                                                 </tr>
@@ -345,24 +264,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="maxLength"></a>
+                    <a name="MaxLength"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>maxLength</b></span>
-                        <a href="#maxLength"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>MaxLength</b></span>
+                        <a href="#MaxLength"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts:7</a></div>
                         </td>
                     </tr>
 
@@ -373,23 +292,23 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="name"></a>
+                    <a name="Name"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>name</b></span>
-                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Name</b></span>
+                        <a href="#Name"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts:5</a></div>
                         </td>
                     </tr>
 
@@ -400,52 +319,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="precision"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                            <span class="modifier">Optional</span>
-                        <span ><b>precision</b></span>
-                        <a href="#precision"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts:8</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="scale"></a>
+                    <a name="Precision"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>scale</b></span>
-                        <a href="#scale"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Precision</b></span>
+                        <a href="#Precision"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts:8</a></div>
                         </td>
                     </tr>
 
@@ -456,24 +347,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="srid"></a>
+                    <a name="Scale"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>srid</b></span>
-                        <a href="#srid"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Scale</b></span>
+                        <a href="#Scale"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts:9</a></div>
                         </td>
                     </tr>
 
@@ -484,51 +375,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="underlayingType"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>underlayingType</b></span>
-                        <a href="#underlayingType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts:6</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="unicode"></a>
+                    <a name="SRID"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
                             <span class="modifier">Optional</span>
-                        <span ><b>unicode</b></span>
-                        <a href="#unicode"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>SRID</b></span>
+                        <a href="#SRID"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-type-definition.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts:11</a></div>
                         </td>
                     </tr>
 
@@ -539,18 +403,72 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="annotationList"></a>
+                    <a name="UnderlayingType"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                            <span class="modifier">Optional</span>
-                        <span ><b>annotationList</b></span>
-                        <a href="#annotationList"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>UnderlayingType</b></span>
+                        <a href="#UnderlayingType"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/CsdlAnnotation.html" target="_self" >CsdlAnnotation[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts:6</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Unicode"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>Unicode</b></span>
+                        <a href="#Unicode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-type-definition.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Annotation"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>Annotation</b></span>
+                        <a href="#Annotation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlAnnotation[]</a></code>
 
                     </td>
                 </tr>
@@ -562,7 +480,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:2</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:4</a></code>
 </div>
                         </td>
                     </tr>
@@ -583,19 +501,47 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlAnnotable, CsdlAnnotation } from &#x27;./csdl-annotation&#x27;;
+import type { CsdlSchema } from &#x27;./csdl-schema&#x27;;
 
 export class CsdlTypeDefinition extends CsdlAnnotable {
+  public Name: string;
+  public UnderlayingType: string;
+  public MaxLength?: number;
+  public Precision?: number;
+  public Scale?: number;
+  public Unicode?: boolean;
+  public SRID?: string;
+
   constructor(
-    public name: string,
-    public underlayingType: string,
-    public maxLength?: number,
-    public precision?: number,
-    public scale?: number,
-    public unicode?: boolean,
-    public srid?: string,
-    annotationList?: CsdlAnnotation[],
+    private schema: CsdlSchema,
+    {
+      Name,
+      UnderlayingType,
+      MaxLength,
+      Precision,
+      Scale,
+      Unicode,
+      SRID,
+      Annotation,
+    }: {
+      Name: string;
+      UnderlayingType: string;
+      MaxLength?: number;
+      Precision?: number;
+      Scale?: number;
+      Unicode?: boolean;
+      SRID?: string;
+      Annotation?: CsdlAnnotation[];
+    },
   ) {
-    super(annotationList);
+    super({ Annotation });
+    this.Name &#x3D; Name;
+    this.UnderlayingType &#x3D; UnderlayingType;
+    this.MaxLength &#x3D; MaxLength;
+    this.Precision &#x3D; Precision;
+    this.Scale &#x3D; Scale;
+    this.Unicode &#x3D; Unicode;
+    this.SRID &#x3D; SRID;
   }
 }
 </code></pre>
@@ -639,6 +585,19 @@ export class CsdlTypeDefinition extends CsdlAnnotable {
             var COMPODOC_CURRENT_PAGE_URL = 'CsdlTypeDefinition.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -233,13 +226,13 @@
                             <a href="#ODataContext" title="projects/angular-odata/src/lib/helper.ts" ><b>ODataContext</b>&nbsp;&nbsp;&nbsp;(projects/.../helper.ts)</a>
                         </li>
                         <li>
-                            <a href="#ODataEntities" title="projects/angular-odata/src/lib/resources/responses/types.ts" ><b>ODataEntities</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#ODataEntities" title="projects/angular-odata/src/lib/resources/response.ts" ><b>ODataEntities</b>&nbsp;&nbsp;&nbsp;(projects/.../response.ts)</a>
                         </li>
                         <li>
                             <a href="#ODataEntitiesOptions" title="projects/angular-odata/src/lib/resources/types/options.ts" ><b>ODataEntitiesOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
                         </li>
                         <li>
-                            <a href="#ODataEntity" title="projects/angular-odata/src/lib/resources/responses/types.ts" ><b>ODataEntity</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#ODataEntity" title="projects/angular-odata/src/lib/resources/response.ts" ><b>ODataEntity</b>&nbsp;&nbsp;&nbsp;(projects/.../response.ts)</a>
                         </li>
                         <li>
                             <a href="#ODataEntityOptions" title="projects/angular-odata/src/lib/resources/types/options.ts" ><b>ODataEntityOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
@@ -260,7 +253,7 @@
                             <a href="#ODataOptions" title="projects/angular-odata/src/lib/resources/types/options.ts" ><b>ODataOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
                         </li>
                         <li>
-                            <a href="#ODataProperty" title="projects/angular-odata/src/lib/resources/responses/types.ts" ><b>ODataProperty</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#ODataProperty" title="projects/angular-odata/src/lib/resources/response.ts" ><b>ODataProperty</b>&nbsp;&nbsp;&nbsp;(projects/.../response.ts)</a>
                         </li>
                         <li>
                             <a href="#ODataPropertyOptions" title="projects/angular-odata/src/lib/resources/types/options.ts" ><b>ODataPropertyOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
@@ -278,6 +271,9 @@
                             <a href="#ODataVersion" title="projects/angular-odata/src/lib/types.ts" ><b>ODataVersion</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
+                            <a href="#OrderAttribute" title="projects/angular-odata/src/lib/resources/query/expressions/orderby.ts" ><b>OrderAttribute</b>&nbsp;&nbsp;&nbsp;(projects/.../orderby.ts)</a>
+                        </li>
+                        <li>
                             <a href="#OrderBy" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>OrderBy</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -290,7 +286,7 @@
                             <a href="#OrderByType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>OrderByType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
-                            <a href="#Parameter" title="projects/angular-odata/src/lib/types.ts" ><b>Parameter</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#ParameterConfig" title="projects/angular-odata/src/lib/types.ts" ><b>ParameterConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
                             <a href="#QueryCustomType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>QueryCustomType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -315,6 +311,9 @@
                         </li>
                         <li>
                             <a href="#SelectType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>SelectType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SingletonConfig" title="projects/angular-odata/src/lib/types.ts" ><b>SingletonConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
                             <a href="#StructuredTypeConfig" title="projects/angular-odata/src/lib/types.ts" ><b>StructuredTypeConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -350,7 +349,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>&quot;sum&quot; | &quot;min&quot; | &quot;max&quot; | &quot;average&quot; | &quot;countdistinct&quot;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;sum&quot; | &quot;min&quot; | &quot;max&quot; | &quot;average&quot; | &quot;countdistinct&quot;</a></code>
 </code>
                 </td>
             </tr>
@@ -366,7 +365,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>&quot;all&quot; | &quot;right&quot; | &quot;left&quot; | &quot;none&quot;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;all&quot; | &quot;right&quot; | &quot;left&quot; | &quot;none&quot;</a></code>
 </code>
                 </td>
             </tr>
@@ -384,7 +383,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -416,7 +415,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code> | NestedExpandOptions&lt;T&gt;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" > | NestedExpandOptions&lt;T&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -432,7 +431,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -448,7 +447,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | ExpandObject&lt;T&gt;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | ExpandObject&lt;T&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -480,7 +479,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -496,7 +495,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -512,7 +511,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -528,7 +527,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -560,7 +559,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code> |  | NestedOrderBy&lt;T&gt;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" > |  | NestedOrderBy&lt;T&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -576,7 +575,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | OrderByObject&lt;T&gt;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | OrderByObject&lt;T&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -592,7 +591,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -608,7 +607,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -640,7 +639,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | </code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | </a></code>
 </code>
                 </td>
             </tr>
@@ -656,7 +655,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -672,7 +671,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -706,7 +705,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -722,7 +721,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -738,7 +737,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>&quot;public&quot; | &quot;private&quot; | &quot;no-cache&quot; | &quot;no-store&quot;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;public&quot; | &quot;private&quot; | &quot;no-cache&quot; | &quot;no-store&quot;</a></code>
 </code>
                 </td>
             </tr>
@@ -754,7 +753,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -770,7 +769,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -786,7 +785,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -802,7 +801,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -818,7 +817,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -834,7 +833,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>&quot;cache-first&quot; | &quot;cache-and-network&quot; | &quot;network-only&quot; | &quot;no-cache&quot; | &quot;cache-only&quot;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;cache-first&quot; | &quot;cache-and-network&quot; | &quot;network-only&quot; | &quot;no-cache&quot; | &quot;cache-only&quot;</a></code>
 </code>
                 </td>
             </tr>
@@ -850,7 +849,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>&quot;minimal&quot; | &quot;full&quot; | &quot;none&quot;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;minimal&quot; | &quot;full&quot; | &quot;none&quot;</a></code>
 </code>
                 </td>
             </tr>
@@ -866,7 +865,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>&quot;2.0&quot; | &quot;3.0&quot; | &quot;4.0&quot;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;2.0&quot; | &quot;3.0&quot; | &quot;4.0&quot;</a></code>
 </code>
                 </td>
             </tr>
@@ -876,13 +875,13 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="Parameter"></a>
-                    <span class="name "><b>Parameter</b><a href="#Parameter"><span class="icon ion-ios-link"></span></a></span>
+                    <a name="ParameterConfig"></a>
+                    <span class="name "><b>ParameterConfig</b><a href="#ParameterConfig"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -898,7 +897,23 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SingletonConfig"></a>
+                    <span class="name "><b>SingletonConfig</b><a href="#SingletonConfig"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -914,7 +929,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -930,7 +945,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -948,7 +963,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -966,7 +981,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -984,7 +999,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1002,7 +1017,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1038,7 +1053,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1056,7 +1071,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>&quot;and&quot; | &quot;or&quot;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;and&quot; | &quot;or&quot;</a></code>
 </code>
                 </td>
             </tr>
@@ -1072,7 +1087,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1090,7 +1105,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1106,7 +1121,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1122,7 +1137,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1138,7 +1153,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1154,7 +1169,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>Array&lt;T&gt;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Array&lt;T&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -1172,7 +1187,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1188,7 +1203,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1204,7 +1219,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1220,7 +1235,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1254,7 +1269,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1270,7 +1285,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1286,7 +1301,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1302,7 +1317,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1318,7 +1333,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1334,7 +1349,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" ></a></code>
 </code>
                 </td>
             </tr>
@@ -1352,13 +1367,13 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
         </tbody>
     </table>
-</section>    <h3>projects/angular-odata/src/lib/resources/responses/types.ts</h3>
+</section>    <h3>projects/angular-odata/src/lib/resources/response.ts</h3>
     <section data-compodoc="block-typealias">
     <table class="table table-sm table-bordered">
         <tbody>
@@ -1370,7 +1385,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1386,7 +1401,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1402,7 +1417,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1420,7 +1435,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1438,7 +1453,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1450,13 +1465,29 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="OrderAttribute"></a>
+                    <span class="name "><b>OrderAttribute</b><a href="#OrderAttribute"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;asc&quot; | &quot;desc&quot;</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="OrderByExpressionBuilder"></a>
                     <span class="name "><b>OrderByExpressionBuilder</b><a href="#OrderByExpressionBuilder"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1474,7 +1505,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>&quot;AND&quot; | &quot;OR&quot;</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;AND&quot; | &quot;OR&quot;</a></code>
 </code>
                 </td>
             </tr>
@@ -1490,7 +1521,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1508,7 +1539,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>literal type</code>
+                    <code>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
 </code>
                 </td>
             </tr>
@@ -1546,6 +1577,19 @@
             var COMPODOC_CURRENT_PAGE_URL = 'typealiases.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

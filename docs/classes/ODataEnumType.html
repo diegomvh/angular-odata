@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -135,7 +128,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+                            <code><a href="../classes/ODataParserSchemaElement.html" target="_self" >ODataParserSchemaElement</a></code>
             </p>
 
 
@@ -245,12 +238,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(config: <a href="../classes/Type.html" target="_self">EnumTypeConfig&lt;E&gt;</a>, schema: <a href="../classes/ODataSchema.html" target="_self">ODataSchema</a>)</code>
+<code>constructor(config: <a href="../undefineds/EnumTypeConfig.html" target="_self">EnumTypeConfig&lt;E&gt;</a>, schema: <a href="../classes/ODataSchema.html" target="_self">ODataSchema</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:10</a></div>
                             </td>
                         </tr>
 
@@ -271,7 +264,7 @@
                                                         <td>config</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../classes/Type.html" target="_self" >EnumTypeConfig&lt;E&gt;</a></code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#EnumTypeConfig" target="_self" >EnumTypeConfig&lt;E&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -318,13 +311,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>literal type | literal type</code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type | literal type</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:10</a></div>
                         </td>
                     </tr>
 
@@ -344,13 +337,20 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEnumTypeParser&lt;E&gt;</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >P</a></code>
 
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataParserSchemaElement.html" target="_self" >ODataParserSchemaElement</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:7</a></div>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataParserSchemaElement.html#source" target="_self" >ODataParserSchemaElement:78</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -370,7 +370,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                     </td>
                 </tr>
@@ -476,15 +476,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>configure(undefined: literal type)</code>
+<code>configure(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="19"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:19</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="20"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -506,7 +506,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -519,7 +519,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -542,15 +542,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>deserialize(value: <a href="../undefineds/.html" target="_self">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:63</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -576,7 +576,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -609,7 +609,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>E</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >E</a></code>
 
                         </div>
                             <div class="io-description">
@@ -633,15 +633,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: E, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>encode(value: <a href="../undefineds/.html" target="_self">E</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="83"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:83</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -667,7 +667,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                        <code>E</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >E</a></code>
                                             </td>
 
                                             <td>
@@ -700,7 +700,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -724,15 +724,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>field(enu: string | E)</code>
+<code>field(enu: <a href="../undefineds/.html" target="_self">string | E</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:44</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -758,7 +758,7 @@
                                         <tr>
                                                 <td>enu</td>
                                             <td>
-                                                        <code>string | E</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | E</a></code>
                                             </td>
 
                                             <td>
@@ -775,7 +775,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -799,15 +799,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fields(value?: E)</code>
+<code>fields(value?: <a href="../undefineds/.html" target="_self">E</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="35"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:35</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="28"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -832,7 +832,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                        <code>E</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >E</a></code>
                                             </td>
 
                                             <td>
@@ -869,15 +869,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>mapFields(mapper: (field: <a href="../objects/OData.html">ODataEnumTypeFieldParser<E></a>) => void)</code>
+<code>mapFields(mapper: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="53"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:53</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -911,7 +911,7 @@
                                         <tr>
                                                 <td>mapper</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -928,7 +928,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -952,15 +952,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pack(value: number[])</code>
+<code>pack(value: <a href="../undefineds/.html" target="_self">number[]</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="91"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:91</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="84"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:84</a></div>
                         </td>
                     </tr>
 
@@ -983,7 +983,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                        <code>number[]</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number[]</a></code>
                                             </td>
 
                                             <td>
@@ -996,7 +996,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1019,15 +1019,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: E, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>serialize(value: <a href="../undefineds/.html" target="_self">E</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="73"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:73</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="66"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -1053,7 +1053,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                        <code>E</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >E</a></code>
                                             </td>
 
                                             <td>
@@ -1086,7 +1086,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1110,15 +1110,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>unpack(value: E)</code>
+<code>unpack(value: <a href="../undefineds/.html" target="_self">E</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="87"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:87</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -1141,7 +1141,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                        <code>E</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >E</a></code>
                                             </td>
 
                                             <td>
@@ -1154,7 +1154,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1177,7 +1177,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isSubtypeOf(schema: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
+<code>isSubtypeOf(element: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
                 </td>
             </tr>
 
@@ -1214,7 +1214,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>schema</td>
+                                                <td>element</td>
                                             <td>
                                                             <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
                                             </td>
@@ -1229,7 +1229,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1253,7 +1253,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isSupertypeOf(schema: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
+<code>isSupertypeOf(element: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
                 </td>
             </tr>
 
@@ -1290,7 +1290,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>schema</td>
+                                                <td>element</td>
                                             <td>
                                                             <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
                                             </td>
@@ -1305,7 +1305,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1329,7 +1329,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isTypeOf(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>isTypeOf(element: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
                 </td>
             </tr>
 
@@ -1362,14 +1362,13 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>type</td>
+                                                <td>element</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
                                             </td>
 
                                             <td>
@@ -1377,16 +1376,12 @@
                                             </td>
 
 
-                                            <td>
-                                                    <p>String representation of the type</p>
-
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1410,7 +1405,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>titleize(term?: string | RegExp)</code>
+<code>titleize(term?: <a href="../undefineds/.html" target="_self">string | RegExp</a>)</code>
                 </td>
             </tr>
 
@@ -1451,7 +1446,7 @@ Titleize is meant for creating pretty output.</p>
                                         <tr>
                                                 <td>term</td>
                                             <td>
-                                                        <code>string | RegExp</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | RegExp</a></code>
                                             </td>
 
                                             <td>
@@ -1468,7 +1463,7 @@ Titleize is meant for creating pretty output.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1492,7 +1487,7 @@ Titleize is meant for creating pretty output.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>type(undefined: literal type)</code>
+<code>type(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -1531,7 +1526,7 @@ Titleize is meant for creating pretty output.</p>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1547,7 +1542,7 @@ Titleize is meant for creating pretty output.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1571,7 +1566,7 @@ Titleize is meant for creating pretty output.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>annotatedValue(term: string | RegExp)</code>
+<code>annotatedValue(term: <a href="../undefineds/.html" target="_self">string | RegExp</a>)</code>
                 </td>
             </tr>
 
@@ -1619,7 +1614,7 @@ Titleize is meant for creating pretty output.</p>
                                         <tr>
                                                 <td>term</td>
                                             <td>
-                                                        <code>string | RegExp</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | RegExp</a></code>
                                             </td>
 
                                             <td>
@@ -1636,7 +1631,7 @@ Titleize is meant for creating pretty output.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>T | undefined</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >T | undefined</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1660,7 +1655,7 @@ Titleize is meant for creating pretty output.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findAnnotation(predicate: (annot: <a href="../classes/ODataAnnotation.html">ODataAnnotation</a>) => void)</code>
+<code>findAnnotation(predicate: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
@@ -1700,7 +1695,7 @@ Titleize is meant for creating pretty output.</p>
                                         <tr>
                                                 <td>predicate</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1717,7 +1712,7 @@ Titleize is meant for creating pretty output.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1738,34 +1733,27 @@ Titleize is meant for creating pretty output.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EnumTypeConfig, Parser, ParserOptions } from &#x27;../types&#x27;;
-import { ODataSchemaElement } from &#x27;./element&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EnumTypeConfig, ParserOptions } from &#x27;../types&#x27;;
+import { ODataParserSchemaElement } from &#x27;./element&#x27;;
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from &#x27;./parsers&#x27;;
 import { ODataSchema } from &#x27;./schema&#x27;;
 
-export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
-  parser: ODataEnumTypeParser&lt;E&gt;;
+export class ODataEnumType&lt;E&gt; extends ODataParserSchemaElement&lt;
+  E,
+  ODataEnumTypeParser&lt;E&gt;
+&gt; {
   members: { [name: string]: E } | { [value: number]: string };
   constructor(config: EnumTypeConfig&lt;E&gt;, schema: ODataSchema) {
-    super(config, schema);
-    this.members &#x3D; config.members;
-    this.parser &#x3D; new ODataEnumTypeParser&lt;E&gt;(
+    super(
       config,
-      schema.namespace,
-      schema.alias,
+      schema,
+      new ODataEnumTypeParser&lt;E&gt;(config, schema.namespace, schema.alias),
     );
+    this.members &#x3D; config.members;
   }
 
-  configure({
-    options,
-    parserForType,
-    findOptionsForType,
-  }: {
-    options: ParserOptions;
-    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
-    findOptionsForType: (type: string) &#x3D;&gt; any;
-  }) {
-    this.parser.configure({ options, parserForType, findOptionsForType });
+  configure({ options }: { options: ParserOptions }) {
+    this.parser.configure({ options });
   }
 
   /**
@@ -1873,6 +1861,19 @@ export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataEnumType.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

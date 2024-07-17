@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -126,7 +119,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/responses/csdl/csdl-structured-type.ts</code>
+            <code>projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts</code>
         </p>
 
 
@@ -147,8 +140,7 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#propertyRefs" >propertyRefs</a>
+                                <a href="#PropertyRefs" >PropertyRefs</a>
                             </li>
                         </ul>
                     </td>
@@ -169,12 +161,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(propertyRefs: CsdlPropertyRef[])</code>
+<code>constructor(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structured-type.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="136" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:136</a></div>
                             </td>
                         </tr>
 
@@ -192,10 +184,9 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>propertyRefs</td>
                                                   
                                                         <td>
-                                                                    <code>CsdlPropertyRef[]</code>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -221,23 +212,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="propertyRefs"></a>
+                    <a name="PropertyRefs"></a>
                     <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>propertyRefs</b></span>
-                        <a href="#propertyRefs"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>PropertyRefs</b></span>
+                        <a href="#PropertyRefs"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>CsdlPropertyRef[]</code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlPropertyRef[]</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structured-type.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="136" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:136</a></div>
                         </td>
                     </tr>
 
@@ -256,59 +246,156 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlAnnotable } from &#x27;./csdl-annotation&#x27;;
+import {
   CsdlProperty,
   CsdlNavigationProperty,
 } from &#x27;./csdl-structural-property&#x27;;
+import type { CsdlSchema } from &#x27;./csdl-schema&#x27;;
 
-export class CsdlStructuredType {
+export class CsdlStructuredType extends CsdlAnnotable {
+  Name: string;
+  Property?: CsdlProperty[];
+  NavigationProperty?: CsdlNavigationProperty[];
+  BaseType?: string;
+  OpenType?: boolean;
+  Abstract?: boolean;
+
   constructor(
-    public name: string,
-    public properties?: CsdlProperty[],
-    public navigationProperties?: CsdlNavigationProperty[],
-    public baseType?: string,
-    public openType?: boolean,
-    public abstract?: boolean,
-  ) {}
+    private schema: CsdlSchema,
+    {
+      Name,
+      Property,
+      NavigationProperty,
+      BaseType,
+      OpenType,
+      Abstract,
+      Annotation,
+    }: {
+      Name: string;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      Annotation?: any[];
+    },
+  ) {
+    super({ Annotation });
+    this.Name &#x3D; Name;
+    this.Property &#x3D; Property?.map((p) &#x3D;&gt; new CsdlProperty(p));
+    this.NavigationProperty &#x3D; NavigationProperty?.map(
+      (n) &#x3D;&gt; new CsdlNavigationProperty(n),
+    );
+    this.BaseType &#x3D; BaseType;
+    this.OpenType &#x3D; OpenType;
+    this.Abstract &#x3D; Abstract;
+  }
+
+  name() {
+    return &#x60;${this.Name}&#x60;;
+  }
+
+  namespace() {
+    return &#x60;${this.schema.Namespace}&#x60;;
+  }
+
+  fullName() {
+    return &#x60;${this.schema.Namespace}.${this.Name}&#x60;;
+  }
 }
 
 export class CsdlComplexType extends CsdlStructuredType {
   constructor(
-    name: string,
-    properties?: CsdlProperty[],
-    navigationProperties?: CsdlNavigationProperty[],
-    baseType?: string,
-    openType?: boolean,
-    abstract?: boolean,
+    schema: CsdlSchema,
+    {
+      Name,
+      Property,
+      NavigationProperty,
+      BaseType,
+      OpenType,
+      Abstract,
+      Annotation,
+    }: {
+      Name: string;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      Annotation?: any[];
+    },
   ) {
-    super(name, properties, navigationProperties, baseType, openType, abstract);
+    super(schema, {
+      Name,
+      Property,
+      NavigationProperty,
+      BaseType,
+      OpenType,
+      Abstract,
+      Annotation,
+    });
   }
 }
 
 export class CsdlEntityType extends CsdlStructuredType {
+  Key?: CsdlKey;
+  HasStream?: boolean;
+
   constructor(
-    name: string,
-    public key?: CsdlKey,
-    properties?: CsdlProperty[],
-    navigationProperties?: CsdlNavigationProperty[],
-    baseType?: string,
-    openType?: boolean,
-    abstract?: boolean,
-    public hasStream?: boolean,
+    schema: CsdlSchema,
+    {
+      Name,
+      Key,
+      Property,
+      NavigationProperty,
+      BaseType,
+      OpenType,
+      Abstract,
+      HasStream,
+      Annotation,
+    }: {
+      Name: string;
+      Key?: any;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      HasStream?: boolean;
+      Annotation?: any[];
+    },
   ) {
-    super(name, properties, navigationProperties, baseType, openType, abstract);
+    super(schema, {
+      Name,
+      Property,
+      NavigationProperty,
+      BaseType,
+      OpenType,
+      Abstract,
+      Annotation,
+    });
+    this.Key &#x3D; Key ? new CsdlKey(Key) : undefined;
+    this.HasStream &#x3D; HasStream;
   }
 }
 
 export class CsdlKey {
-  constructor(public propertyRefs: CsdlPropertyRef[]) {}
+  PropertyRefs: CsdlPropertyRef[];
+
+  constructor({ PropertyRefs }: { PropertyRefs: any[] }) {
+    this.PropertyRefs &#x3D; PropertyRefs?.map((p) &#x3D;&gt; new CsdlPropertyRef(p));
+  }
 }
 
 export class CsdlPropertyRef {
-  constructor(
-    public name: string,
-    public alias?: string,
-  ) {}
+  Name: string;
+  Alias?: string;
+
+  constructor({ Name, Alias }: { Name: string; Alias?: string }) {
+    this.Name &#x3D; Name;
+    this.Alias &#x3D; Alias;
+  }
 }
 </code></pre>
     </div>
@@ -351,6 +438,19 @@ export class CsdlPropertyRef {
             var COMPODOC_CURRENT_PAGE_URL = 'CsdlKey.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

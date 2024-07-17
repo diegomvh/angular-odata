@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -197,12 +190,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, order: "asc" | "desc")</code>
+<code>constructor(field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>, order: <a href="../undefineds/OrderAttribute.html" target="_self">OrderAttribute</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:8</a></div>
                             </td>
                         </tr>
 
@@ -235,7 +228,7 @@
                                                         <td>order</td>
                                                   
                                                         <td>
-                                                                    <code>&quot;asc&quot; | &quot;desc&quot;</code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#OrderAttribute" target="_self" >OrderAttribute</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -278,8 +271,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:44</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="48"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -308,15 +301,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>render(undefined: literal type)</code>
+<code>render(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="22"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:22</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="26"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:26</a></div>
                         </td>
                     </tr>
 
@@ -338,7 +331,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -351,7 +344,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -374,15 +367,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>resolve(parser: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>resolve(parser: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="47"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:47</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -405,7 +398,7 @@
                                         <tr>
                                                 <td>parser</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -418,7 +411,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -448,8 +441,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="14"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:14</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="18"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:18</a></div>
                         </td>
                     </tr>
 
@@ -458,7 +451,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>{ $type: any; field: any; order: &quot;asc&quot; | &quot;desc&quot;; }</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#OrderAttribute" target="_self" >{ $type: any; field: any; order: OrderAttribute; }</a></code>
 
                         </div>
                 </td>
@@ -491,7 +484,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:10</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:14</a></div>
                                 </td>
                             </tr>
 
@@ -504,12 +497,16 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, ParserOptions } from &#x27;../../../types&#x27;;
 import { Types } from &#x27;../../../utils&#x27;;
-import type { QueryCustomType } from &#x27;../builder&#x27;;
+import { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
 import { render, FieldFactory, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
 
+export type OrderAttribute &#x3D; &#x27;asc&#x27; | &#x27;desc&#x27;;
 export class OrderByField implements Renderable {
-  constructor(protected field: Renderable, protected order: &#x27;asc&#x27; | &#x27;desc&#x27;) {}
+  constructor(
+    protected field: Renderable,
+    protected order: OrderAttribute,
+  ) {}
 
   get [Symbol.toStringTag]() {
     return &#x27;OrderByField&#x27;;
@@ -546,7 +543,10 @@ export class OrderByField implements Renderable {
   }
 
   clone() {
-    return new OrderByField(this.field.clone(), this.order);
+    return new OrderByField(
+      typeof this.field !&#x3D;&#x3D; &#x27;string&#x27; ? this.field.clone() : this.field,
+      this.order,
+    );
   }
   resolve(parser: any) {
     return parser;
@@ -557,6 +557,7 @@ export type OrderByExpressionBuilder&lt;T&gt; &#x3D; {
   t: Required&lt;T&gt;;
   e: () &#x3D;&gt; OrderByExpression&lt;T&gt;;
 };
+
 export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
   constructor({
     children,
@@ -573,16 +574,16 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;
+      current?: OrderByExpression&lt;T&gt;,
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
-    current?: OrderByExpression&lt;T&gt;
+    current?: OrderByExpression&lt;T&gt;,
   ): OrderByExpression&lt;T&gt; {
     return opts(
       {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new OrderByExpression&lt;T&gt;(),
       },
-      current
+      current,
     ) as OrderByExpression&lt;T&gt;;
   }
 
@@ -676,6 +677,19 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
             var COMPODOC_CURRENT_PAGE_URL = 'OrderByField.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -122,7 +115,10 @@
                             <a href="#EdmType" title="projects/angular-odata/src/lib/types.ts" ><b>EdmType</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
-                            <a href="#FieldType" title="projects/angular-odata/src/lib/resources/responses/metadata.ts" ><b>FieldType</b>&nbsp;&nbsp;&nbsp;(projects/.../metadata.ts)</a>
+                            <a href="#FieldType" title="projects/angular-odata/schematics/apigen/metadata/parser.ts" ><b>FieldType</b>&nbsp;&nbsp;&nbsp;(projects/.../parser.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FieldType" title="projects/angular-odata/src/lib/metadata/parser.ts" ><b>FieldType</b>&nbsp;&nbsp;&nbsp;(projects/.../parser.ts)</a>
                         </li>
                         <li>
                             <a href="#JsonType" title="projects/angular-odata/src/lib/types.ts" ><b>JsonType</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -137,10 +133,13 @@
                             <a href="#PathSegment" title="projects/angular-odata/src/lib/types.ts" ><b>PathSegment</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
-                            <a href="#QueryCustomTypes" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>QueryCustomTypes</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                            <a href="#QueryOption" title="projects/angular-odata/src/lib/types.ts" ><b>QueryOption</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
-                            <a href="#QueryOption" title="projects/angular-odata/src/lib/types.ts" ><b>QueryOption</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#" title="projects/angular-odata/schematics/apigen/files/enum/__fileName__.ts" ><b></b>&nbsp;&nbsp;&nbsp;(projects/.../__fileName__.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#QueryCustomTypes" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>QueryCustomTypes</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
                             <a href="#StandardAggregateMethods" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>StandardAggregateMethods</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -855,7 +854,30 @@
             </tbody>
         </table>
 </section>
-    <h3>projects/angular-odata/src/lib/resources/responses/metadata.ts</h3>
+    <h3>projects/angular-odata/schematics/apigen/metadata/parser.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="FieldType"></a>
+                        <span class="name "><b>FieldType</b><a href="#FieldType"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ATTRIBUTE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;TAG
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>projects/angular-odata/src/lib/metadata/parser.ts</h3>
     <section data-compodoc="block-enums">
         <table class="table table-sm table-bordered">
             <tbody>
@@ -1026,6 +1048,19 @@
             </tbody>
         </table>
 </section>
+    <h3>projects/angular-odata/schematics/apigen/files/enum/__fileName__.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name=""></a>
+                        <span class="name "><b></b><a href="#"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
     <h3>projects/angular-odata/src/lib/resources/query/builder.ts</h3>
     <section data-compodoc="block-enums">
         <table class="table table-sm table-bordered">
@@ -1151,6 +1186,19 @@
             var COMPODOC_CURRENT_PAGE_URL = 'enumerations.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

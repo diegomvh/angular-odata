@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -144,6 +137,27 @@
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Static</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Collection" >Collection</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Model" >Model</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
                 <tr>
                     <td class="col-md-4">
@@ -164,6 +178,9 @@
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#attach" >attach</a>
+                            </li>
+                            <li>
+                                <a href="#collection" >collection</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -196,6 +213,9 @@
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#fetchOrCreate" >fetchOrCreate</a>
+                            </li>
+                            <li>
+                                <a href="#model" >model</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -248,6 +268,56 @@
 </section>
 
 
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Collection"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>Collection</b></span>
+                        <a href="#Collection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:17</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Model"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>Model</b></span>
+                        <a href="#Model"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
 
             <section data-compodoc="block-methods">
     
@@ -269,7 +339,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>attach(model: M)</code>
+                    <code>attach(model: <a href="../undefineds/.html" target="_self">M</a>)</code>
                 </td>
             </tr>
 
@@ -282,7 +352,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:35</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:53</a></code>
 </div>
                         </td>
                     </tr>
@@ -317,7 +387,7 @@
                                         <tr>
                                                 <td>model</td>
                                             <td>
-                                                        <code>M</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >M</a></code>
                                             </td>
 
                                             <td>
@@ -334,7 +404,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -359,15 +429,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>attach(model: C)</code>
+                    <code>attach(model: <a href="../undefineds/.html" target="_self">C</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="36"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:36</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -398,7 +468,7 @@
                                         <tr>
                                                 <td>model</td>
                                             <td>
-                                                        <code>C</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >C</a></code>
                                             </td>
 
                                             <td>
@@ -411,7 +481,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -436,15 +506,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>attach(model: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                    <code>attach(model: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="37"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:37</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -467,7 +537,7 @@
                                         <tr>
                                                 <td>model</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -480,7 +550,74 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="collection"></a>
+                    <span class="name">
+                        <span ><b>collection</b></span>
+                        <a href="#collection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>collection(entities?: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="26"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entities</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -505,15 +642,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>create(attrs: Partial<T>, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
+                    <code>create(attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="87"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:87</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="105"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:105</a></div>
                         </td>
                     </tr>
 
@@ -539,7 +676,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -572,7 +709,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -597,15 +734,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>destroy(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, options?)</code>
+                    <code>destroy(key: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="136"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:136</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="154"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:154</a></div>
                         </td>
                     </tr>
 
@@ -631,7 +768,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -663,7 +800,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -695,8 +832,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="19"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:19</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -729,7 +866,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>entity(key?: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>)</code>
+                    <code>entity(key?: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -742,7 +879,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:27</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:45</a></code>
 </div>
                         </td>
                     </tr>
@@ -769,7 +906,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -786,7 +923,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataEntityResource.html" target="_self" >ODataEntityResource&lt;T&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntityResource&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -818,8 +955,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="56"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:56</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="74"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:74</a></div>
                         </td>
                     </tr>
 
@@ -862,7 +999,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -887,15 +1024,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchMany(top: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, options?)</code>
+                    <code>fetchMany(top: <a href="../undefineds/.html" target="_self">number</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="65"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:65</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="83"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:83</a></div>
                         </td>
                     </tr>
 
@@ -921,7 +1058,7 @@
                                         <tr>
                                                 <td>top</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -951,7 +1088,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -976,15 +1113,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchOne(options?)</code>
+                    <code>fetchOne(options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="78"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:78</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="96"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:96</a></div>
                         </td>
                     </tr>
 
@@ -1023,7 +1160,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1048,15 +1185,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchOrCreate(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, undefined)</code>
+                    <code>fetchOrCreate(key: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, undefined: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="154"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:154</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="172"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:172</a></div>
                         </td>
                     </tr>
 
@@ -1083,7 +1220,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1101,7 +1238,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1135,7 +1272,74 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="model"></a>
+                    <span class="name">
+                        <span ><b>model</b></span>
+                        <a href="#model"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>model(entity?: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="19"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:19</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entity</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataModel.html" target="_self" >ODataModel&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1160,15 +1364,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>modify(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?)</code>
+                    <code>modify(key: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="137"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:137</a></div>
                         </td>
                     </tr>
 
@@ -1194,7 +1398,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1210,7 +1414,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1242,7 +1446,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1267,15 +1471,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>save(attrs: Partial<T>, undefined)</code>
+                    <code>save(attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, undefined: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="176"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:176</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:194</a></div>
                         </td>
                     </tr>
 
@@ -1302,7 +1506,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1336,7 +1540,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1361,15 +1565,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?)</code>
+                    <code>update(key: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="101"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:101</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:119</a></div>
                         </td>
                     </tr>
 
@@ -1395,7 +1599,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1411,7 +1615,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1443,7 +1647,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1468,7 +1672,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1514,7 +1718,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -1562,7 +1766,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1587,7 +1791,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1633,7 +1837,7 @@
                                         <tr>
                                                 <td>params</td>
                                             <td>
-                                                        <code>P | null</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
                                             </td>
 
                                             <td>
@@ -1681,7 +1885,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1706,7 +1910,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1787,7 +1991,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1823,7 +2027,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:48</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:66</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -1856,6 +2060,24 @@ import {
 import { ODataEntityService } from &#x27;./entity&#x27;;
 
 export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; {
+  static Model?: typeof ODataModel;
+  static Collection?: typeof ODataCollection;
+
+  model(entity?: Partial&lt;T&gt;): ODataModel&lt;T&gt; {
+    const Service &#x3D; this.constructor as typeof ODataEntitySetService;
+    return this.entity().asModel&lt;ODataModel&lt;T&gt;&gt;(entity, {
+      ModelType: Service.Model,
+    });
+  }
+
+  collection(entities?: Partial&lt;T&gt;[]): ODataCollection&lt;T, ODataModel&lt;T&gt;&gt; {
+    const Service &#x3D; this.constructor as typeof ODataEntitySetService;
+    return this.entities().asCollection&lt;
+      ODataModel&lt;T&gt;,
+      ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;
+    &gt;(entities, { CollectionType: Service.Collection });
+  }
+
   /**
    * Get the entity set resource for this service.
    */
@@ -1889,7 +2111,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * The schema for the entity set.
    */
   get entitySetSchema() {
-    return this.api.findEntitySetByName(this.name);
+    return this.api.findEntitySet(this.name);
   }
 
   /**
@@ -2044,8 +2266,8 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     return method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;
       ? this.create(attrs, options)
       : method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;
-      ? this.modify(key, attrs, { etag, ...options })
-      : this.update(key, attrs, { etag, ...options });
+        ? this.modify(key, attrs, { etag, ...options })
+        : this.update(key, attrs, { etag, ...options });
   }
   //#endregion
 }
@@ -2090,6 +2312,19 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
             var COMPODOC_CURRENT_PAGE_URL = 'ODataEntitySetService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

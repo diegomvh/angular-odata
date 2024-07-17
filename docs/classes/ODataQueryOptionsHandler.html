@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -344,7 +337,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="225" class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:225</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="228" class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:228</a></div>
                             </td>
                         </tr>
 
@@ -401,15 +394,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>alias(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, name?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>alias(value: <a href="../undefineds/.html" target="_self">any</a>, name?: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="244"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:244</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="247"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:247</a></div>
                         </td>
                     </tr>
 
@@ -435,7 +428,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -451,7 +444,7 @@
                                         <tr>
                                                 <td>name</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -468,7 +461,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -492,15 +485,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>apply(opts: (builder: <a href="../undefineds/ApplyExpressionBuilder.html">ApplyExpressionBuilder<T></a>,current: ApplyExpression<T>) => void)</code>
+<code>apply(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="360"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:360</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="363"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:363</a></div>
                         </td>
                     </tr>
 
@@ -527,7 +520,7 @@ If opts is given then set te value as new value for $compute.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -544,7 +537,7 @@ If opts is given then set te value as new value for $compute.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ApplyExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -567,15 +560,15 @@ If opts is given then set te value as new value for $compute.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>apply(opts: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>apply(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="366"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:366</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="369"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:369</a></div>
                         </td>
                     </tr>
 
@@ -598,7 +591,7 @@ If opts is given then set te value as new value for $compute.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -641,8 +634,8 @@ If opts is given then set te value as new value for $compute.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="367"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:367</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="370"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:370</a></div>
                         </td>
                     </tr>
 
@@ -671,15 +664,15 @@ If opts is given then set te value as new value for $compute.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>apply(opts?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>apply(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="368"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:368</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="371"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:371</a></div>
                         </td>
                     </tr>
 
@@ -702,7 +695,7 @@ If opts is given then set te value as new value for $compute.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -715,7 +708,7 @@ If opts is given then set te value as new value for $compute.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -738,15 +731,15 @@ If opts is given then set te value as new value for $compute.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>binary(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>binary(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="262"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:262</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="265"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:265</a></div>
                         </td>
                     </tr>
 
@@ -772,7 +765,7 @@ If opts is given then set te value as new value for $compute.</p>
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -789,7 +782,7 @@ If opts is given then set te value as new value for $compute.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -820,8 +813,8 @@ If opts is given then set te value as new value for $compute.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="569"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:569</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="572"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:572</a></div>
                         </td>
                     </tr>
 
@@ -832,7 +825,7 @@ If opts is given then set te value as new value for $compute.</p>
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                 </td>
@@ -852,15 +845,15 @@ If opts is given then set te value as new value for $compute.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>compute(opts: (builder: <a href="../undefineds/ComputeExpressionBuilder.html">ComputeExpressionBuilder<T></a>,current: ComputeExpression<T>) => void)</code>
+<code>compute(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="333"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:333</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="336"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:336</a></div>
                         </td>
                     </tr>
 
@@ -887,7 +880,7 @@ If opts is given then set te value as new value for $compute.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -904,7 +897,7 @@ If opts is given then set te value as new value for $compute.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>ComputeExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ComputeExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -927,15 +920,15 @@ If opts is given then set te value as new value for $compute.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>compute(opts: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>compute(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="339"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:339</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="342"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:342</a></div>
                         </td>
                     </tr>
 
@@ -958,7 +951,7 @@ If opts is given then set te value as new value for $compute.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1001,8 +994,8 @@ If opts is given then set te value as new value for $compute.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="340"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:340</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="343"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:343</a></div>
                         </td>
                     </tr>
 
@@ -1031,15 +1024,15 @@ If opts is given then set te value as new value for $compute.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>compute(opts?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>compute(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="341"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:341</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="344"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:344</a></div>
                         </td>
                     </tr>
 
@@ -1062,7 +1055,7 @@ If opts is given then set te value as new value for $compute.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1075,7 +1068,7 @@ If opts is given then set te value as new value for $compute.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1098,15 +1091,15 @@ If opts is given then set te value as new value for $compute.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>duration(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>duration(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="253"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:253</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="256"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:256</a></div>
                         </td>
                     </tr>
 
@@ -1132,7 +1125,7 @@ If opts is given then set te value as new value for $compute.</p>
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1149,7 +1142,7 @@ If opts is given then set te value as new value for $compute.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1173,15 +1166,15 @@ If opts is given then set te value as new value for $compute.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>expand(opts: (builder: ExpandExpressionBuilder<T>,current: <a href="../undefineds/Expand.html">ExpandExpression<T></a>) => void)</code>
+<code>expand(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="306"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:306</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="309"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:309</a></div>
                         </td>
                     </tr>
 
@@ -1208,7 +1201,7 @@ If opts is given then set te value as new value for $expand.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1255,8 +1248,8 @@ If opts is given then set te value as new value for $expand.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="312"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:312</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="315"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:315</a></div>
                         </td>
                     </tr>
 
@@ -1322,8 +1315,8 @@ If opts is given then set te value as new value for $expand.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="313"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:313</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="316"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:316</a></div>
                         </td>
                     </tr>
 
@@ -1352,15 +1345,15 @@ If opts is given then set te value as new value for $expand.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>expand(opts?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>expand(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="314"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:314</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="317"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:317</a></div>
                         </td>
                     </tr>
 
@@ -1383,7 +1376,7 @@ If opts is given then set te value as new value for $expand.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1396,7 +1389,7 @@ If opts is given then set te value as new value for $expand.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1419,15 +1412,15 @@ If opts is given then set te value as new value for $expand.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>filter(opts: (builder: FilterExpressionBuilder<T>,current: <a href="../undefineds/Filter.html">FilterExpression<T></a>) => void)</code>
+<code>filter(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="435"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:435</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="438"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:438</a></div>
                         </td>
                     </tr>
 
@@ -1454,7 +1447,7 @@ If opts is given then set te value as new value for $filter.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -1501,8 +1494,8 @@ If opts is given then set te value as new value for $filter.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="441"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:441</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="444"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:444</a></div>
                         </td>
                     </tr>
 
@@ -1568,8 +1561,8 @@ If opts is given then set te value as new value for $filter.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="442"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:442</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="445"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:445</a></div>
                         </td>
                     </tr>
 
@@ -1598,15 +1591,15 @@ If opts is given then set te value as new value for $filter.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>filter(opts?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>filter(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="443"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:443</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="446"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:446</a></div>
                         </td>
                     </tr>
 
@@ -1629,7 +1622,7 @@ If opts is given then set te value as new value for $filter.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1642,7 +1635,7 @@ If opts is given then set te value as new value for $filter.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1665,15 +1658,15 @@ If opts is given then set te value as new value for $filter.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>format(opts: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>format(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="387"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:387</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="390"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:390</a></div>
                         </td>
                     </tr>
 
@@ -1700,7 +1693,7 @@ If opts is given then set te value as new value for $format.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1747,8 +1740,8 @@ If opts is given then set te value as new value for $format.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="388"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:388</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="391"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:391</a></div>
                         </td>
                     </tr>
 
@@ -1777,15 +1770,15 @@ If opts is given then set te value as new value for $format.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>format(opts?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>format(opts?: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="389"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:389</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="392"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:392</a></div>
                         </td>
                     </tr>
 
@@ -1808,7 +1801,7 @@ If opts is given then set te value as new value for $format.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1821,7 +1814,7 @@ If opts is given then set te value as new value for $format.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1844,15 +1837,15 @@ If opts is given then set te value as new value for $format.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fromJson(json: literal type)</code>
+<code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="683"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:683</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="686"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:686</a></div>
                         </td>
                     </tr>
 
@@ -1875,7 +1868,7 @@ If opts is given then set te value as new value for $format.</p>
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1888,7 +1881,7 @@ If opts is given then set te value as new value for $format.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1911,15 +1904,15 @@ If opts is given then set te value as new value for $format.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>keep(keys: <a href="../undefineds/QueryOption.html" target="_self">QueryOption[]</a>)</code>
+<code>keep(...keys: QueryOption[])</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="519"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:519</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="522"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:522</a></div>
                         </td>
                     </tr>
 
@@ -1942,7 +1935,7 @@ If opts is given then set te value as new value for $format.</p>
                                         <tr>
                                                 <td>keys</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >QueryOption[]</a></code>
+                                                        <code>QueryOption[]</code>
                                             </td>
 
                                             <td>
@@ -1955,7 +1948,7 @@ If opts is given then set te value as new value for $format.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1978,15 +1971,15 @@ If opts is given then set te value as new value for $format.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>normalize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>normalize(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="271"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:271</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="274"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:274</a></div>
                         </td>
                     </tr>
 
@@ -2012,7 +2005,7 @@ If opts is given then set te value as new value for $format.</p>
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -2029,7 +2022,7 @@ If opts is given then set te value as new value for $format.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2053,15 +2046,15 @@ If opts is given then set te value as new value for $format.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>orderBy(opts: (builder: OrderByExpressionBuilder<T>,current: <a href="../undefineds/OrderBy.html">OrderByExpression<T></a>) => void)</code>
+<code>orderBy(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="461"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:461</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="464"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:464</a></div>
                         </td>
                     </tr>
 
@@ -2088,7 +2081,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -2135,8 +2128,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="467"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:467</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="470"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:470</a></div>
                         </td>
                     </tr>
 
@@ -2202,8 +2195,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="468"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:468</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="471"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:471</a></div>
                         </td>
                     </tr>
 
@@ -2232,15 +2225,15 @@ If opts is given then set te value as new value for $orderby.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>orderBy(opts?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>orderBy(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="469"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:469</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="472"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:472</a></div>
                         </td>
                     </tr>
 
@@ -2263,7 +2256,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -2276,7 +2269,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2299,15 +2292,15 @@ If opts is given then set te value as new value for $orderby.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>paging(undefined: literal type)</code>
+<code>paging(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="527"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:527</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="530"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:530</a></div>
                         </td>
                     </tr>
 
@@ -2332,7 +2325,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -2348,7 +2341,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2371,15 +2364,15 @@ If opts is given then set te value as new value for $orderby.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>raw(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>raw(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="233"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:233</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="236"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:236</a></div>
                         </td>
                     </tr>
 
@@ -2405,7 +2398,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -2422,7 +2415,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2446,15 +2439,15 @@ If opts is given then set te value as new value for $orderby.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>remove(keys: <a href="../undefineds/QueryOption.html" target="_self">QueryOption[]</a>)</code>
+<code>remove(...keys: QueryOption[])</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="515"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:515</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="518"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:518</a></div>
                         </td>
                     </tr>
 
@@ -2477,7 +2470,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                         <tr>
                                                 <td>keys</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >QueryOption[]</a></code>
+                                                        <code>QueryOption[]</code>
                                             </td>
 
                                             <td>
@@ -2490,7 +2483,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2520,8 +2513,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="562"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:562</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="565"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:565</a></div>
                         </td>
                     </tr>
 
@@ -2532,7 +2525,7 @@ If opts is given then set te value as new value for $orderby.</p>
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                 </td>
@@ -2559,8 +2552,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="584"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:584</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="587"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:587</a></div>
                         </td>
                     </tr>
 
@@ -2603,7 +2596,7 @@ If opts is given then set te value as new value for $orderby.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2626,15 +2619,15 @@ If opts is given then set te value as new value for $orderby.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>search(opts: (builder: <a href="../undefineds/SearchExpressionBuilder.html">SearchExpressionBuilder<T></a>,current: SearchExpression<T>) => void)</code>
+<code>search(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="409"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:409</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="412"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:412</a></div>
                         </td>
                     </tr>
 
@@ -2661,7 +2654,7 @@ If opts is given then set te value as new value for $search.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -2678,7 +2671,7 @@ If opts is given then set te value as new value for $search.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>SearchExpression&lt;T&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >SearchExpression&lt;T&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2701,15 +2694,15 @@ If opts is given then set te value as new value for $search.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>search(opts: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>search(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="415"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:415</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="418"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:418</a></div>
                         </td>
                     </tr>
 
@@ -2732,7 +2725,7 @@ If opts is given then set te value as new value for $search.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -2775,8 +2768,8 @@ If opts is given then set te value as new value for $search.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="416"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:416</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="419"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:419</a></div>
                         </td>
                     </tr>
 
@@ -2805,15 +2798,15 @@ If opts is given then set te value as new value for $search.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>search(opts?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>search(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="417"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:417</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="420"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:420</a></div>
                         </td>
                     </tr>
 
@@ -2836,7 +2829,7 @@ If opts is given then set te value as new value for $search.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -2849,7 +2842,7 @@ If opts is given then set te value as new value for $search.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2872,15 +2865,15 @@ If opts is given then set te value as new value for $search.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>select(opts: (builder: SelectExpressionBuilder<T>,current: <a href="../undefineds/Select.html">SelectExpression<T></a>) => void)</code>
+<code>select(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="280"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:280</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="283"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:283</a></div>
                         </td>
                     </tr>
 
@@ -2907,7 +2900,7 @@ If opts is given then set te value as new value for $select.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -2954,8 +2947,8 @@ If opts is given then set te value as new value for $select.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="286"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:286</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="289"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:289</a></div>
                         </td>
                     </tr>
 
@@ -3021,8 +3014,8 @@ If opts is given then set te value as new value for $select.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="287"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:287</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="290"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:290</a></div>
                         </td>
                     </tr>
 
@@ -3051,15 +3044,15 @@ If opts is given then set te value as new value for $select.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>select(opts?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>select(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="288"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:288</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="291"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:291</a></div>
                         </td>
                     </tr>
 
@@ -3082,7 +3075,7 @@ If opts is given then set te value as new value for $select.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -3095,7 +3088,7 @@ If opts is given then set te value as new value for $select.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3118,15 +3111,15 @@ If opts is given then set te value as new value for $select.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>skip(opts: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>skip(opts: <a href="../undefineds/.html" target="_self">number</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="498"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:498</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="501"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:501</a></div>
                         </td>
                     </tr>
 
@@ -3153,7 +3146,7 @@ If opts is given then set te value as new value for $skip.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -3200,8 +3193,8 @@ If opts is given then set te value as new value for $skip.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="499"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:499</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="502"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:502</a></div>
                         </td>
                     </tr>
 
@@ -3230,15 +3223,15 @@ If opts is given then set te value as new value for $skip.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>skip(opts?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>skip(opts?: <a href="../undefineds/.html" target="_self">number</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="500"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:500</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="503"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:503</a></div>
                         </td>
                     </tr>
 
@@ -3261,7 +3254,7 @@ If opts is given then set te value as new value for $skip.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -3274,7 +3267,7 @@ If opts is given then set te value as new value for $skip.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3297,15 +3290,15 @@ If opts is given then set te value as new value for $skip.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>skiptoken(opts: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>skiptoken(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="509"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:509</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="512"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:512</a></div>
                         </td>
                     </tr>
 
@@ -3332,7 +3325,7 @@ If opts is given then set te value as new value for $skiptoken.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -3379,8 +3372,8 @@ If opts is given then set te value as new value for $skiptoken.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="510"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:510</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="513"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:513</a></div>
                         </td>
                     </tr>
 
@@ -3409,15 +3402,15 @@ If opts is given then set te value as new value for $skiptoken.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>skiptoken(opts?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>skiptoken(opts?: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="511"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:511</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="514"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:514</a></div>
                         </td>
                     </tr>
 
@@ -3440,7 +3433,7 @@ If opts is given then set te value as new value for $skiptoken.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -3453,7 +3446,7 @@ If opts is given then set te value as new value for $skiptoken.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3483,8 +3476,8 @@ If opts is given then set te value as new value for $skiptoken.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="576"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:576</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="579"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:579</a></div>
                         </td>
                     </tr>
 
@@ -3495,7 +3488,7 @@ If opts is given then set te value as new value for $skiptoken.</p>
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -3522,8 +3515,8 @@ If opts is given then set te value as new value for $skiptoken.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="679"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:679</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="682"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:682</a></div>
                         </td>
                     </tr>
 
@@ -3532,7 +3525,7 @@ If opts is given then set te value as new value for $skiptoken.</p>
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -3552,15 +3545,15 @@ If opts is given then set te value as new value for $skiptoken.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>top(opts: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>top(opts: <a href="../undefineds/.html" target="_self">number</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="487"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:487</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="490"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:490</a></div>
                         </td>
                     </tr>
 
@@ -3587,7 +3580,7 @@ If opts is given then set te value as new value for $top.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -3634,8 +3627,8 @@ If opts is given then set te value as new value for $top.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="488"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:488</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="491"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:491</a></div>
                         </td>
                     </tr>
 
@@ -3664,15 +3657,15 @@ If opts is given then set te value as new value for $top.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>top(opts?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>top(opts?: <a href="../undefineds/.html" target="_self">number</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="489"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:489</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="492"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:492</a></div>
                         </td>
                     </tr>
 
@@ -3695,7 +3688,7 @@ If opts is given then set te value as new value for $top.</p>
                                         <tr>
                                                 <td>opts</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -3708,7 +3701,7 @@ If opts is given then set te value as new value for $top.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3731,15 +3724,15 @@ If opts is given then set te value as new value for $top.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toString(undefined: literal type)</code>
+<code>toString(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="687"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:687</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="690"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:690</a></div>
                         </td>
                     </tr>
 
@@ -3762,7 +3755,7 @@ If opts is given then set te value as new value for $top.</p>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -3778,7 +3771,7 @@ If opts is given then set te value as new value for $top.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3808,8 +3801,8 @@ If opts is given then set te value as new value for $top.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="398"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:398</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="401"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:401</a></div>
                         </td>
                     </tr>
 
@@ -3883,8 +3876,8 @@ If opts is given then set te value as new value for $transform.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="399"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:399</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="402"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:402</a></div>
                         </td>
                     </tr>
 
@@ -3920,8 +3913,8 @@ If opts is given then set te value as new value for $transform.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="400"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:400</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="403"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:403</a></div>
                         </td>
                     </tr>
 
@@ -3957,7 +3950,7 @@ If opts is given then set te value as new value for $transform.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -4015,7 +4008,10 @@ import {
 } from &#x27;./options&#x27;;
 
 export class ODataQueryOptionHandler&lt;T&gt; {
-  constructor(private o: Map&lt;QueryOption, any&gt;, private n: QueryOption) {}
+  constructor(
+    private o: Map&lt;QueryOption, any&gt;,
+    private n: QueryOption,
+  ) {}
 
   /**
    * The name of the managed odata query option.
@@ -4074,7 +4070,7 @@ export class ODataQueryOptionHandler&lt;T&gt; {
   remove(value: any) {
     this.o.set(
       this.n,
-      this.assertArray().filter((v) &#x3D;&gt; v !&#x3D;&#x3D; value)
+      this.assertArray().filter((v) &#x3D;&gt; v !&#x3D;&#x3D; value),
     );
     // If only one and not is array... down to value
     if (
@@ -4155,7 +4151,7 @@ export class ODataQueryOptionHandler&lt;T&gt; {
     if (Types.isArray(this.o.get(this.n))) {
       this.o.set(
         this.n,
-        this.o.get(this.n).filter((v: any) &#x3D;&gt; !Types.isEmpty(v))
+        this.o.get(this.n).filter((v: any) &#x3D;&gt; !Types.isEmpty(v)),
       );
       if (this.o.get(this.n).length &#x3D;&#x3D;&#x3D; 1)
         this.o.set(this.n, this.o.get(this.n)[0]);
@@ -4195,7 +4191,7 @@ export class ODataQueryOptionHandler&lt;T&gt; {
   }: { escape?: boolean; parser?: Parser&lt;T&gt; } &#x3D; {}): string {
     const [_, params] &#x3D; pathAndParamsFromQueryOptions(
       new Map&lt;QueryOption, any&gt;([[this.n, this.o.get(this.n)]]),
-      { escape, parser }
+      { escape, parser },
     );
     return params[&#x60;$${this.n}&#x60;];
   }
@@ -4259,8 +4255,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   select(
     opts: (
       builder: SelectExpressionBuilder&lt;T&gt;,
-      current?: SelectExpression&lt;T&gt;
-    ) &#x3D;&gt; SelectExpression&lt;T&gt;
+      current?: SelectExpression&lt;T&gt;,
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;,
   ): SelectExpression&lt;T&gt;;
   select(opts: Select&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   select(): ODataQueryOptionHandler&lt;T&gt;;
@@ -4270,8 +4266,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.select,
         SelectExpression.factory(
           opts,
-          this.options.expression(QueryOption.select)
-        )
+          this.options.expression(QueryOption.select),
+        ),
       );
     }
     return this.options.option&lt;Select&lt;T&gt;&gt;(QueryOption.select, opts);
@@ -4285,8 +4281,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   expand(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
-      current?: ExpandExpression&lt;T&gt;
-    ) &#x3D;&gt; ExpandExpression&lt;T&gt;
+      current?: ExpandExpression&lt;T&gt;,
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
   ): ExpandExpression&lt;T&gt;;
   expand(opts: Expand&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   expand(): ODataQueryOptionHandler&lt;T&gt;;
@@ -4296,8 +4292,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.expand,
         ExpandExpression.factory(
           opts,
-          this.options.expression(QueryOption.expand)
-        )
+          this.options.expression(QueryOption.expand),
+        ),
       );
     }
     return this.options.option&lt;Expand&lt;T&gt;&gt;(QueryOption.expand, opts);
@@ -4312,8 +4308,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   compute(
     opts: (
       builder: ComputeExpressionBuilder&lt;T&gt;,
-      current?: ComputeExpression&lt;T&gt;
-    ) &#x3D;&gt; ComputeExpression&lt;T&gt;
+      current?: ComputeExpression&lt;T&gt;,
+    ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
   ): ComputeExpression&lt;T&gt;;
   compute(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   compute(): ODataQueryOptionHandler&lt;T&gt;;
@@ -4323,8 +4319,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.compute,
         ComputeExpression.factory(
           opts,
-          this.options.expression(QueryOption.compute)
-        )
+          this.options.expression(QueryOption.compute),
+        ),
       );
     }
     return this.options.option&lt;string&gt;(QueryOption.compute, opts);
@@ -4339,8 +4335,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   apply(
     opts: (
       builder: ApplyExpressionBuilder&lt;T&gt;,
-      current?: ApplyExpression&lt;T&gt;
-    ) &#x3D;&gt; ApplyExpression&lt;T&gt;
+      current?: ApplyExpression&lt;T&gt;,
+    ) &#x3D;&gt; ApplyExpression&lt;T&gt;,
   ): ApplyExpression&lt;T&gt;;
   apply(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   apply(): ODataQueryOptionHandler&lt;T&gt;;
@@ -4350,8 +4346,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.apply,
         ApplyExpression.factory(
           opts,
-          this.options.expression(QueryOption.apply)
-        )
+          this.options.expression(QueryOption.apply),
+        ),
       );
     }
     return this.options.option&lt;string&gt;(QueryOption.apply, opts);
@@ -4388,8 +4384,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   search(
     opts: (
       builder: SearchExpressionBuilder&lt;T&gt;,
-      current?: SearchExpression&lt;T&gt;
-    ) &#x3D;&gt; SearchExpression&lt;T&gt;
+      current?: SearchExpression&lt;T&gt;,
+    ) &#x3D;&gt; SearchExpression&lt;T&gt;,
   ): SearchExpression&lt;T&gt;;
   search(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   search(): ODataQueryOptionHandler&lt;T&gt;;
@@ -4399,8 +4395,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.search,
         SearchExpression.factory(
           opts,
-          this.options.expression(QueryOption.search)
-        )
+          this.options.expression(QueryOption.search),
+        ),
       );
     }
     return this.options.option&lt;string&gt;(QueryOption.search, opts);
@@ -4414,8 +4410,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   filter(
     opts: (
       builder: FilterExpressionBuilder&lt;T&gt;,
-      current?: FilterExpression&lt;T&gt;
-    ) &#x3D;&gt; FilterExpression&lt;T&gt;
+      current?: FilterExpression&lt;T&gt;,
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
   ): FilterExpression&lt;T&gt;;
   filter(opts: Filter&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   filter(): ODataQueryOptionHandler&lt;T&gt;;
@@ -4425,8 +4421,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.filter,
         FilterExpression.factory(
           opts,
-          this.options.expression(QueryOption.filter)
-        )
+          this.options.expression(QueryOption.filter),
+        ),
       );
     }
     return this.options.option&lt;Filter&lt;T&gt;&gt;(QueryOption.filter, opts);
@@ -4440,8 +4436,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;
-    ) &#x3D;&gt; OrderByExpression&lt;T&gt;
+      current?: OrderByExpression&lt;T&gt;,
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
   ): OrderByExpression&lt;T&gt;;
   orderBy(opts: OrderBy&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   orderBy(): ODataQueryOptionHandler&lt;T&gt;;
@@ -4451,8 +4447,8 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOption.orderBy,
         OrderByExpression.factory(
           opts,
-          this.options.expression(QueryOption.orderBy)
-        )
+          this.options.expression(QueryOption.orderBy),
+        ),
       );
     }
     return this.options.option&lt;OrderBy&lt;T&gt;&gt;(QueryOption.orderBy, opts);
@@ -4565,7 +4561,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.select instanceof SelectExpression) {
         this.options.expression(
           QueryOption.select,
-          options.select as SelectExpression&lt;T&gt;
+          options.select as SelectExpression&lt;T&gt;,
         );
       } else if (options.select !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.select, options.select);
@@ -4577,7 +4573,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.expand instanceof ExpandExpression) {
         this.options.expression(
           QueryOption.expand,
-          options.expand as ExpandExpression&lt;T&gt;
+          options.expand as ExpandExpression&lt;T&gt;,
         );
       } else if (options.expand !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.expand, options.expand);
@@ -4589,7 +4585,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.compute instanceof ComputeExpression) {
         this.options.expression(
           QueryOption.compute,
-          options.compute as ComputeExpression&lt;T&gt;
+          options.compute as ComputeExpression&lt;T&gt;,
         );
       } else if (options.compute !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.compute, options.compute);
@@ -4601,7 +4597,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.apply instanceof ApplyExpression) {
         this.options.expression(
           QueryOption.apply,
-          options.apply as ApplyExpression&lt;T&gt;
+          options.apply as ApplyExpression&lt;T&gt;,
         );
       } else if (options.apply !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.apply, options.apply);
@@ -4620,7 +4616,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.search instanceof SearchExpression) {
         this.options.expression(
           QueryOption.search,
-          options.search as SearchExpression&lt;T&gt;
+          options.search as SearchExpression&lt;T&gt;,
         );
       } else if (options.search !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.search, options.search);
@@ -4632,7 +4628,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.filter instanceof FilterExpression) {
         this.options.expression(
           QueryOption.filter,
-          options.filter as FilterExpression&lt;T&gt;
+          options.filter as FilterExpression&lt;T&gt;,
         );
       } else if (options.filter !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.filter, options.filter);
@@ -4644,7 +4640,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       if (options.orderBy instanceof OrderByExpression) {
         this.options.expression(
           QueryOption.orderBy,
-          options.orderBy as OrderByExpression&lt;T&gt;
+          options.orderBy as OrderByExpression&lt;T&gt;,
         );
       } else if (options.orderBy !&#x3D;&#x3D; null) {
         this.options.option(QueryOption.orderBy, options.orderBy);
@@ -4711,6 +4707,19 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataQueryOptionsHandler.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

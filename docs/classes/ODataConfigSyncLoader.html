@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -174,7 +167,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(passedConfigs: <a href="../undefineds/ApiConfig.html" target="_self">ApiConfig | ApiConfig[]</a>)</code>
+<code>constructor(passedConfigs: <a href="../classes/ApiConfig.html" target="_self">ApiConfig | ApiConfig[]</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -200,7 +193,7 @@
                                                         <td>passedConfigs</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/typealiases.html#ApiConfig" target="_self" >ApiConfig | ApiConfig[]</a></code>
+                                                                        <code><a href="../classes/ApiConfig.html" target="_self" >ApiConfig | ApiConfig[]</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -253,7 +246,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ApiConfig" target="_self" >Observable&lt;ApiConfig[]&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/ApiConfig.html" target="_self" >Observable&lt;ApiConfig[]&gt;</a></code>
 
                         </div>
                 </td>
@@ -270,9 +263,9 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { forkJoin, Observable, of } from &#x27;rxjs&#x27;;
-import { map } from &#x27;rxjs/operators&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable, forkJoin, map, of } from &#x27;rxjs&#x27;;
 import { ApiConfig } from &#x27;./types&#x27;;
+import { ODataMetadataParser } from &#x27;./metadata&#x27;;
 
 export abstract class ODataConfigLoader {
   abstract loadConfigs(): Observable&lt;ApiConfig[]&gt;;
@@ -282,37 +275,48 @@ export class ODataConfigSyncLoader implements ODataConfigLoader {
   constructor(private readonly passedConfigs: ApiConfig | ApiConfig[]) {}
 
   loadConfigs(): Observable&lt;ApiConfig[]&gt; {
-    if (Array.isArray(this.passedConfigs)) {
-      return of(this.passedConfigs);
-    }
-
-    return of([this.passedConfigs]);
+    return Array.isArray(this.passedConfigs)
+      ? of(this.passedConfigs)
+      : of([this.passedConfigs]);
   }
 }
 
 export class ODataConfigAsyncLoader implements ODataConfigLoader {
   constructor(
     private readonly configs$:
-      | Observable&lt;ApiConfig&gt;
       | Observable&lt;ApiConfig&gt;[]
-      | Observable&lt;ApiConfig[]&gt;
+      | Observable&lt;ApiConfig | ApiConfig[]&gt;,
   ) {}
 
   loadConfigs(): Observable&lt;ApiConfig[]&gt; {
-    if (Array.isArray(this.configs$)) {
-      return forkJoin(this.configs$);
-    }
+    return Array.isArray(this.configs$)
+      ? forkJoin(this.configs$)
+      : (this.configs$ as Observable&lt;ApiConfig | ApiConfig[]&gt;).pipe(
+          map((value) &#x3D;&gt;
+            Array.isArray(value)
+              ? (value as ApiConfig[])
+              : ([value] as ApiConfig[]),
+          ),
+        );
+  }
+}
 
-    const singleConfigOrArray &#x3D; this.configs$ as Observable&lt;unknown&gt;;
+export class ODataMetadataLoader implements ODataConfigLoader {
+  constructor(
+    private readonly sources$: Observable&lt;string | string[]&gt;,
+    private readonly baseConfigs: ApiConfig | ApiConfig[],
+  ) {}
 
-    return singleConfigOrArray.pipe(
-      map((value: unknown) &#x3D;&gt; {
-        if (Array.isArray(value)) {
-          return value as ApiConfig[];
-        }
-
-        return [value] as ApiConfig[];
-      })
+  loadConfigs(): Observable&lt;ApiConfig[]&gt; {
+    const configs &#x3D; Array.isArray(this.baseConfigs)
+      ? this.baseConfigs
+      : [this.baseConfigs];
+    return this.sources$.pipe(
+      map((source) &#x3D;&gt;
+        (Array.isArray(source) ? source : [source]).map((m, i) &#x3D;&gt;
+          new ODataMetadataParser(m).metadata().toConfig(configs[i] ?? {}),
+        ),
+      ),
     );
   }
 }
@@ -357,6 +361,19 @@ export class ODataConfigAsyncLoader implements ODataConfigLoader {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataConfigSyncLoader.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>

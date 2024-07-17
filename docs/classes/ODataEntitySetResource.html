@@ -13,7 +13,7 @@
     </head>
     <body>
           <script>
-               // Blocking script to avaoid flickering dark mode
+               // Blocking script to avoid flickering dark mode
                // Dark mode toggle button
                var useDark = window.matchMedia('(prefers-color-scheme: dark)');
                var darkModeState = useDark.matches;
@@ -60,20 +60,13 @@
                     darkModeState = darkModeStateLocal === 'true';
                }
                toggleDarkMode(darkModeState);
-
-               if ($darkModeToggles.length > 0) {
-                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
-                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
-                              darkModeState = !darkModeState;
-                              toggleDarkMode(darkModeState);
-                         });
-                    }
-               }
           </script>
 
-        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">angular-odata documentation</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
@@ -82,7 +75,7 @@
 
         <div class="container-fluid main">
            <div class="row main">
-               <div class="hidden-xs menu">
+               <div class="d-none d-md-block menu">
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
@@ -164,11 +157,6 @@
                                     <span class="modifier">Protected</span>
                                 <a href="#queryOptions" >queryOptions</a>
                             </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Optional</span>
-                                <a href="#schema" >schema</a>
-                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -236,18 +224,24 @@
                                 <a href="#post" >post</a>
                             </li>
                             <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#__deserializeParser" >__deserializeParser</a>
+                                    <span class="modifier"></span>
+                                <a href="#transform" >transform</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#__serializeParser" >__serializeParser</a>
+                                <a href="#__parser" >__parser</a>
                             </li>
                             <li>
                                 <a href="#asCollection" >asCollection</a>
                             </li>
                             <li>
                                 <a href="#asModel" >asModel</a>
+                            </li>
+                            <li>
+                                <a href="#bindingType" >bindingType</a>
+                            </li>
+                            <li>
+                                <a href="#callable" >callable</a>
                             </li>
                             <li>
                                 <a href="#clearKey" >clearKey</a>
@@ -275,10 +269,16 @@
                                 <a href="#endpointUrl" >endpointUrl</a>
                             </li>
                             <li>
+                                <a href="#enumType" >enumType</a>
+                            </li>
+                            <li>
                                 <a href="#hasEntityKey" >hasEntityKey</a>
                             </li>
                             <li>
                                 <a href="#hasKey" >hasKey</a>
+                            </li>
+                            <li>
+                                <a href="#incomingType" >incomingType</a>
                             </li>
                             <li>
                                 <a href="#isEqualTo" >isEqualTo</a>
@@ -291,6 +291,9 @@
                             </li>
                             <li>
                                 <a href="#isTypeOf" >isTypeOf</a>
+                            </li>
+                            <li>
+                                <a href="#outgoingType" >outgoingType</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -311,22 +314,19 @@
                                 <a href="#resolveKey" >resolveKey</a>
                             </li>
                             <li>
-                                <a href="#returnType" >returnType</a>
-                            </li>
-                            <li>
                                 <a href="#segment" >segment</a>
                             </li>
                             <li>
                                 <a href="#serialize" >serialize</a>
                             </li>
                             <li>
+                                <a href="#structuredType" >structuredType</a>
+                            </li>
+                            <li>
                                 <a href="#toJson" >toJson</a>
                             </li>
                             <li>
                                 <a href="#toString" >toString</a>
-                            </li>
-                            <li>
-                                <a href="#type" >type</a>
                             </li>
                             <li>
                                 <a href="#types" >types</a>
@@ -375,7 +375,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:38</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:47</a></code>
 </div>
                         </td>
                     </tr>
@@ -409,7 +409,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:40</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:48</a></code>
 </div>
                         </td>
                     </tr>
@@ -443,42 +443,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:41</a></code>
-</div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="schema"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                            <span class="modifier">Optional</span>
-                        <span ><b>schema</b></span>
-                        <a href="#schema"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
-
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
-</div>
-                            </td>
-                        </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:39</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:49</a></code>
 </div>
                         </td>
                     </tr>
@@ -506,15 +471,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>action(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>action(path: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="57"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:57</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="84"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:84</a></div>
                         </td>
                     </tr>
 
@@ -546,7 +511,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -559,7 +524,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -582,15 +547,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>cast(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>cast(type: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="73"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:73</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:99</a></div>
                         </td>
                     </tr>
 
@@ -621,7 +586,7 @@
                                         <tr>
                                                 <td>type</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -672,7 +637,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:40</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:49</a></code>
 </div>
                         </td>
                     </tr>
@@ -709,8 +674,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="65"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:65</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="92"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:92</a></div>
                         </td>
                     </tr>
 
@@ -719,7 +684,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -739,15 +704,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>create(attrs: Partial<T>, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
+<code>create(attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="110"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:110</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="137"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:137</a></div>
                         </td>
                     </tr>
 
@@ -770,7 +735,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -795,7 +760,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -818,15 +783,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>entity(key?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>entity(key?: <a href="../undefineds/.html" target="_self">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="45"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:45</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -849,7 +814,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -862,7 +827,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -887,15 +852,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>factory(api: <a href="../classes/ODataApi.html" target="_self">ODataApi</a>, undefined: literal type)</code>
+                    <code>factory(api: <a href="../classes/ODataApi.html" target="_self">ODataApi</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="23"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:23</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="28"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -937,7 +902,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -973,15 +938,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetch(options?)</code>
+<code>fetch(options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="117"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:117</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:144</a></div>
                         </td>
                     </tr>
 
@@ -1036,15 +1001,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchAll(options?)</code>
+<code>fetchAll(options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="126"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:126</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="153"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:153</a></div>
                         </td>
                     </tr>
 
@@ -1076,7 +1041,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;literal type&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;literal type&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1099,15 +1064,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchCollection(options?)</code>
+<code>fetchCollection(options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="210"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:210</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="239"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:239</a></div>
                         </td>
                     </tr>
 
@@ -1148,7 +1113,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;C | null&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;C | null&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1171,15 +1136,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchEntities(options?)</code>
+<code>fetchEntities(options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="201"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:201</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="230"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:230</a></div>
                         </td>
                     </tr>
 
@@ -1211,7 +1176,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;[] | null&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;[] | null&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1234,15 +1199,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchMany(top: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, options?)</code>
+<code>fetchMany(top: <a href="../undefineds/.html" target="_self">number</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="157"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:157</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="184"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:184</a></div>
                         </td>
                     </tr>
 
@@ -1265,7 +1230,7 @@
                                         <tr>
                                                 <td>top</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
                                             </td>
 
                                             <td>
@@ -1289,7 +1254,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;literal type&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;literal type&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1312,15 +1277,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchOne(options?)</code>
+<code>fetchOne(options?: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="187"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:187</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="214"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:214</a></div>
                         </td>
                     </tr>
 
@@ -1352,7 +1317,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;literal type&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;literal type&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1375,15 +1340,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>function(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>function(path: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="61"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:61</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="88"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -1415,7 +1380,7 @@
                                         <tr>
                                                 <td>path</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1428,7 +1393,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1454,7 +1419,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>get(options)</code>
+                    <code>get(options: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
@@ -1467,7 +1432,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:99</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:126</a></code>
 </div>
                         </td>
                     </tr>
@@ -1504,7 +1469,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1530,7 +1495,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>post(attrs: Partial<T>, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
+                    <code>post(attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -1543,7 +1508,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:92</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:119</a></code>
 </div>
                         </td>
                     </tr>
@@ -1567,7 +1532,7 @@
                                         <tr>
                                                 <td>attrs</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1592,7 +1557,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1606,18 +1571,18 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="__deserializeParser"></a>
+                    <a name="transform"></a>
                     <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>__deserializeParser</b></span>
-                        <a href="#__deserializeParser"><span class="icon ion-ios-link"></span></a>
+                            <span class="modifier"></span>
+                        <span ><b>transform</b></span>
+                        <a href="#transform"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>__deserializeParser(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>, resourceType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>transform(opts: <a href="../undefineds/.html" target="_self">function</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -1630,11 +1595,19 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:246</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:53</a></code>
 </div>
                         </td>
                     </tr>
 
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>R</li>
+                            </ul>
+                        </td>
+                    </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -1648,50 +1621,43 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>value</td>
+                                                <td>opts</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
                                                     No
                                             </td>
 
+                                            <td>
+                                            </td>
 
                                         </tr>
                                         <tr>
-                                                <td>options</td>
                                             <td>
-                                                            <code><a href="../interfaces/ParserOptions.html" target="_self" >ParserOptions</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>resourceType</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                    No
                                             </td>
 
                                             <td>
-                                                    Yes
+                                                    <code>{}</code>
                                             </td>
-
 
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../interfaces/Parser.html" target="_self" >Parser | undefined</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntitySetResource&lt;R&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1705,18 +1671,18 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="__serializeParser"></a>
+                    <a name="__parser"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                        <span ><b>__serializeParser</b></span>
-                        <a href="#__serializeParser"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>__parser</b></span>
+                        <a href="#__parser"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>__serializeParser(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>, resourceType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>__parser(value: <a href="../undefineds/.html" target="_self">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>, resourceType?: <a href="../undefineds/.html" target="_self">string</a>, bindingType?: <a href="../undefineds/.html" target="_self">string</a>)</code>
                 </td>
             </tr>
 
@@ -1729,7 +1695,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:224</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:268</a></code>
 </div>
                         </td>
                     </tr>
@@ -1753,7 +1719,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -1777,7 +1743,19 @@
                                         <tr>
                                                 <td>resourceType</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>bindingType</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1813,7 +1791,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>asCollection(entities?: Partial<T>[] | literal type[], undefined: literal type)</code>
+<code>asCollection(entities?: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;[] | literal type[]</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -1826,7 +1804,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:114</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:147</a></code>
 </div>
                         </td>
                     </tr>
@@ -1860,7 +1838,7 @@
                                         <tr>
                                                 <td>entities</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt;[] | literal type[]</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;[] | literal type[]</a></code>
                                             </td>
 
                                             <td>
@@ -1873,7 +1851,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1889,7 +1867,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>C</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >C</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1912,7 +1890,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>asModel(entity?: Partial<T> | literal type, undefined: literal type)</code>
+<code>asModel(entity?: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt; | literal type</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
                 </td>
             </tr>
 
@@ -1925,7 +1903,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:97</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:124</a></code>
 </div>
                         </td>
                     </tr>
@@ -1958,7 +1936,7 @@
                                         <tr>
                                                 <td>entity</td>
                                             <td>
-                                                        <code>Partial&lt;T&gt; | literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt; | literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1971,7 +1949,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
                                             </td>
 
                                             <td>
@@ -1987,12 +1965,102 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>M</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >M</a></code>
 
                         </div>
                             <div class="io-description">
                                 
                             </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bindingType"></a>
+                    <span class="name">
+                        <span ><b>bindingType</b></span>
+                        <a href="#bindingType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>bindingType()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:82</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>string The binding type of the resource</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="callable"></a>
+                    <span class="name">
+                        <span ><b>callable</b></span>
+                        <a href="#callable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>callable()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:93</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
                 </td>
             </tr>
         </tbody>
@@ -2023,7 +2091,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:92</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:119</a></code>
 </div>
                         </td>
                     </tr>
@@ -2033,7 +2101,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -2066,7 +2134,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:316</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:334</a></code>
 </div>
                         </td>
                     </tr>
@@ -2076,7 +2144,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>this</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >this</a></code>
 
                         </div>
                 </td>
@@ -2109,7 +2177,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:321</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:339</a></code>
 </div>
                         </td>
                     </tr>
@@ -2127,7 +2195,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -2160,7 +2228,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:311</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:329</a></code>
 </div>
                         </td>
                     </tr>
@@ -2170,7 +2238,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -2192,7 +2260,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>delete(options)</code>
+                    <code>delete(options: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
@@ -2205,7 +2273,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:461</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:520</a></code>
 </div>
                         </td>
                     </tr>
@@ -2242,7 +2310,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2265,7 +2333,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>deserialize(value: <a href="../undefineds/.html" target="_self">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
@@ -2278,7 +2346,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:265</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:288</a></code>
 </div>
                         </td>
                     </tr>
@@ -2302,7 +2370,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -2327,7 +2395,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2350,7 +2418,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>encode(value: <a href="../undefineds/.html" target="_self">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
@@ -2363,7 +2431,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:291</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:311</a></code>
 </div>
                         </td>
                     </tr>
@@ -2387,7 +2455,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -2412,7 +2480,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2435,7 +2503,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>endpointUrl(undefined)</code>
+<code>endpointUrl(undefined: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
@@ -2448,7 +2516,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:189</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:234</a></code>
 </div>
                         </td>
                     </tr>
@@ -2484,12 +2552,55 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
                                 
                             </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="enumType"></a>
+                    <span class="name">
+                        <span ><b>enumType</b></span>
+                        <a href="#enumType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>enumType()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:98</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
                 </td>
             </tr>
         </tbody>
@@ -2520,7 +2631,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:88</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:115</a></code>
 </div>
                         </td>
                     </tr>
@@ -2530,7 +2641,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -2563,7 +2674,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:84</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:111</a></code>
 </div>
                         </td>
                     </tr>
@@ -2573,11 +2684,58 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
                                 <p>boolean The resource has key ?</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="incomingType"></a>
+                    <span class="name">
+                        <span ><b>incomingType</b></span>
+                        <a href="#incomingType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>incomingType()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:75</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>string The incoming type of the resource</p>
 
                             </div>
                 </td>
@@ -2597,7 +2755,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isEqualTo(other: <a href="../classes/ODataResource.html" target="_self">ODataResource&lt;any&gt;</a>, test?: "path" | "params")</code>
+<code>isEqualTo(other: <a href="../classes/ODataResource.html" target="_self">ODataResource&lt;any&gt;</a>, test?: <a href="../undefineds/.html" target="_self">&quot;path&quot; | &quot;params&quot;</a>)</code>
                 </td>
             </tr>
 
@@ -2610,7 +2768,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:156</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:202</a></code>
 </div>
                         </td>
                     </tr>
@@ -2646,7 +2804,7 @@
                                         <tr>
                                                 <td>test</td>
                                             <td>
-                                                        <code>&quot;path&quot; | &quot;params&quot;</code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >&quot;path&quot; | &quot;params&quot;</a></code>
                                             </td>
 
                                             <td>
@@ -2659,7 +2817,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2695,7 +2853,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:140</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:182</a></code>
 </div>
                         </td>
                     </tr>
@@ -2732,7 +2890,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2768,7 +2926,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:148</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:192</a></code>
 </div>
                         </td>
                     </tr>
@@ -2805,7 +2963,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2841,7 +2999,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:132</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:172</a></code>
 </div>
                         </td>
                     </tr>
@@ -2878,11 +3036,58 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
                                 
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="outgoingType"></a>
+                    <span class="name">
+                        <span ><b>outgoingType</b></span>
+                        <a href="#outgoingType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>outgoingType()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:68</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>string The outgoing type of the resource</p>
+
                             </div>
                 </td>
             </tr>
@@ -2903,7 +3108,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>patch(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
+                    <code>patch(body: <a href="../undefineds/.html" target="_self">any</a>, options: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
@@ -2916,7 +3121,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:442</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:501</a></code>
 </div>
                         </td>
                     </tr>
@@ -2941,7 +3146,7 @@
                                         <tr>
                                                 <td>body</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -2970,7 +3175,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2993,7 +3198,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pathAndParams(undefined)</code>
+<code>pathAndParams(undefined: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
@@ -3006,7 +3211,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:166</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:212</a></code>
 </div>
                         </td>
                     </tr>
@@ -3062,7 +3267,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>put(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
+                    <code>put(body: <a href="../undefineds/.html" target="_self">any</a>, options: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
@@ -3075,7 +3280,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:423</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:482</a></code>
 </div>
                         </td>
                     </tr>
@@ -3100,7 +3305,7 @@
                                         <tr>
                                                 <td>body</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -3129,7 +3334,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;any&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3152,7 +3357,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>query(f: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>,s: <a href="../objects/OData.html">ODataStructuredType<T></a>) => void)</code>
+<code>query(f: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
@@ -3165,7 +3370,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:350</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:365</a></code>
 </div>
                         </td>
                     </tr>
@@ -3193,7 +3398,7 @@ Create an object handler for mutate the query options of the resource</p>
                                         <tr>
                                                 <td>f</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -3210,7 +3415,7 @@ Create an object handler for mutate the query options of the resource</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>this</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >this</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3235,7 +3440,7 @@ Create an object handler for mutate the query options of the resource</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolveKey(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, schema?: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;T&gt;</a>)</code>
+                    <code>resolveKey(value: <a href="../undefineds/.html" target="_self">any</a>, schema?: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -3248,7 +3453,7 @@ Create an object handler for mutate the query options of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:364</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:423</a></code>
 </div>
                         </td>
                     </tr>
@@ -3280,7 +3485,7 @@ Create an object handler for mutate the query options of the resource</p>
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -3305,58 +3510,11 @@ Create an object handler for mutate the query options of the resource</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey | undefined</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >EntityKey | undefined</a></code>
 
                         </div>
                             <div class="io-description">
                                 
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="returnType"></a>
-                    <span class="name">
-                        <span ><b>returnType</b></span>
-                        <a href="#returnType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>returnType()</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
-</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:70</a></code>
-</div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                <p>string The type of the return</p>
-
                             </div>
                 </td>
             </tr>
@@ -3375,7 +3533,7 @@ Create an object handler for mutate the query options of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>segment(f: (q: <a href="../objects/OData.html">ODataPathSegmentsHandler<T></a>,s: <a href="../objects/OData.html">ODataStructuredType<T></a>) => void)</code>
+<code>segment(f: <a href="../undefineds/.html" target="_self">function</a>)</code>
                 </td>
             </tr>
 
@@ -3388,7 +3546,7 @@ Create an object handler for mutate the query options of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:331</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:349</a></code>
 </div>
                         </td>
                     </tr>
@@ -3416,7 +3574,7 @@ Create an object handler for mutate the path segments of the resource</p>
                                         <tr>
                                                 <td>f</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -3433,7 +3591,7 @@ Create an object handler for mutate the path segments of the resource</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>this</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >this</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3457,7 +3615,7 @@ Create an object handler for mutate the path segments of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>serialize(value: <a href="../undefineds/.html" target="_self">any</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
@@ -3470,7 +3628,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:278</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:299</a></code>
 </div>
                         </td>
                     </tr>
@@ -3494,7 +3652,7 @@ Create an object handler for mutate the path segments of the resource</p>
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -3519,12 +3677,55 @@ Create an object handler for mutate the path segments of the resource</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
                                 
                             </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="structuredType"></a>
+                    <span class="name">
+                        <span ><b>structuredType</b></span>
+                        <a href="#structuredType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>structuredType()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:103</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
                 </td>
             </tr>
         </tbody>
@@ -3555,7 +3756,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:304</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:322</a></code>
 </div>
                         </td>
                     </tr>
@@ -3565,7 +3766,7 @@ Create an object handler for mutate the path segments of the resource</p>
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>{ segments: any; options: any; }</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ segments: any; options: any; }</a></code>
 
                         </div>
                 </td>
@@ -3585,7 +3786,7 @@ Create an object handler for mutate the path segments of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toString(undefined)</code>
+<code>toString(undefined: <a href="../undefineds/.html" target="_self"></a>)</code>
                 </td>
             </tr>
 
@@ -3598,7 +3799,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:203</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:248</a></code>
 </div>
                         </td>
                     </tr>
@@ -3636,58 +3837,11 @@ Create an object handler for mutate the path segments of the resource</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
 
                         </div>
                             <div class="io-description">
                                 
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="type"></a>
-                    <span class="name">
-                        <span ><b>type</b></span>
-                        <a href="#type"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>type()</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
-</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:63</a></code>
-</div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                <p>string The type of the resource</p>
-
                             </div>
                 </td>
             </tr>
@@ -3719,7 +3873,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:77</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:89</a></code>
 </div>
                         </td>
                     </tr>
@@ -3729,7 +3883,7 @@ Create an object handler for mutate the path segments of the resource</p>
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>string[]</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string[]</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3750,25 +3904,30 @@ Create an object handler for mutate the path segments of the resource</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { concat, EMPTY, Observable } from &#x27;rxjs&#x27;;
-import { concatMap, expand, map, reduce, toArray } from &#x27;rxjs/operators&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
+import { EMPTY } from &#x27;rxjs&#x27;;
+import { expand, map, reduce } from &#x27;rxjs/operators&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import { ODataCollection, ODataModel } from &#x27;../../models&#x27;;
-import { ODataStructuredType } from &#x27;../../schema/structured-type&#x27;;
-import { PathSegment, QueryOption } from &#x27;../../types&#x27;;
-import { ODataPathSegments } from &#x27;../path&#x27;;
-import { ODataQueryOptions } from &#x27;../query&#x27;;
-import { ODataResource } from &#x27;../resource&#x27;;
 import {
-  ODataEntities,
-  ODataEntitiesAnnotations,
-  ODataEntity,
-} from &#x27;../responses&#x27;;
+  PathSegment,
+  QueryOption,
+  StructuredTypeFieldConfig,
+} from &#x27;../../types&#x27;;
+import { ODataPathSegments } from &#x27;../path&#x27;;
+import {
+  ApplyExpression,
+  ApplyExpressionBuilder,
+  ODataQueryOptions,
+} from &#x27;../query&#x27;;
+import { ODataResource } from &#x27;../resource&#x27;;
 import { ODataActionResource } from &#x27;./action&#x27;;
 import { ODataCountResource } from &#x27;./count&#x27;;
 import { ODataEntityResource } from &#x27;./entity&#x27;;
 import { ODataFunctionResource } from &#x27;./function&#x27;;
 import { ODataOptions } from &#x27;./options&#x27;;
+import { ODataEntities, ODataEntity } from &#x27;../response&#x27;;
+import { ODataEntitiesAnnotations } from &#x27;../../annotations&#x27;;
 
 export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   //#region Factory
@@ -3776,27 +3935,49 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
     api: ODataApi,
     {
       path,
-      schema,
+      type,
       query,
     }: {
       path: string;
-      schema?: ODataStructuredType&lt;E&gt;;
+      type?: string;
       query?: ODataQueryOptions&lt;E&gt;;
     },
   ) {
     const segments &#x3D; new ODataPathSegments();
     const segment &#x3D; segments.add(PathSegment.entitySet, path);
-    if (schema !&#x3D;&#x3D; undefined) segment.type(schema.type());
-    return new ODataEntitySetResource&lt;E&gt;(api, { segments, query, schema });
+    if (type !&#x3D;&#x3D; undefined) {
+      segment.outgoingType(type);
+      segment.incomingType(type);
+    }
+    return new ODataEntitySetResource&lt;E&gt;(api, { segments, query });
   }
+
   override clone(): ODataEntitySetResource&lt;T&gt; {
     return super.clone() as ODataEntitySetResource&lt;T&gt;;
+  }
+
+  override transform&lt;R&gt;(
+    opts: (
+      builder: ApplyExpressionBuilder&lt;T&gt;,
+      current?: ApplyExpression&lt;T&gt;,
+    ) &#x3D;&gt; ApplyExpression&lt;T&gt;,
+    {
+      type,
+      fields,
+    }: {
+      type?: string;
+      fields?: { [P in keyof R]?: StructuredTypeFieldConfig };
+    } &#x3D; {},
+  ): ODataEntitySetResource&lt;R&gt; {
+    return super.transform&lt;R&gt;(opts, {
+      type,
+      fields,
+    }) as ODataEntitySetResource&lt;R&gt;;
   }
   //#endregion
 
   entity(key?: any) {
     const entity &#x3D; ODataEntityResource.factory&lt;T&gt;(this.api, {
-      schema: this.schema as ODataStructuredType&lt;T&gt;,
       segments: this.cloneSegments(),
       query: this.cloneQuery&lt;T&gt;(),
     });
@@ -3816,26 +3997,26 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
 
   count() {
     return ODataCountResource.factory&lt;T&gt;(this.api, {
-      schema: this.schema as ODataStructuredType&lt;T&gt;,
       segments: this.cloneSegments(),
       query: this.cloneQuery&lt;T&gt;(),
     });
   }
 
   cast&lt;C&gt;(type: string) {
-    const baseSchema &#x3D; this.schema as ODataStructuredType&lt;T&gt;;
-    const castSchema &#x3D; this.api.findStructuredTypeForType&lt;C&gt;(type);
+    const thisType &#x3D; this.incomingType();
+    const baseSchema &#x3D;
+      thisType !&#x3D;&#x3D; undefined ? this.api.structuredType(thisType) : undefined;
+    const castSchema &#x3D; this.api.findStructuredType&lt;C&gt;(type);
     if (
       castSchema !&#x3D;&#x3D; undefined &amp;&amp;
       baseSchema !&#x3D;&#x3D; undefined &amp;&amp;
       !castSchema.isSubtypeOf(baseSchema)
     )
-      throw new Error(&#x60;Cannot cast to ${type}&#x60;);
+      throw new Error(&#x60;cast: Cannot cast to ${type}&#x60;);
     const segments &#x3D; this.cloneSegments();
-    segments.add(PathSegment.type, type).type(type);
+    segments.add(PathSegment.type, type).incomingType(type);
     return new ODataEntitySetResource&lt;C&gt;(this.api, {
       segments,
-      schema: castSchema,
       query: this.cloneQuery&lt;C&gt;(),
     });
   }
@@ -3881,14 +4062,14 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
       bodyQueryOptions?: QueryOption[];
     },
   ): Observable&lt;{ entities: T[]; annots: ODataEntitiesAnnotations&lt;T&gt; }&gt; {
-    let res &#x3D; this.clone();
+    const res &#x3D; this.clone();
     // Clean Paging
     res.query((q) &#x3D;&gt; q.removePaging());
-    let fetch &#x3D; (opts?: {
+    const fetch &#x3D; (opts?: {
       skip?: number;
       skiptoken?: string;
       top?: number;
-    }): Observable&lt;ODataEntities&lt;T&gt;&gt; &#x3D;&gt; {
+    }): Observable&lt;ODataEntities&lt;any&gt;&gt; &#x3D;&gt; {
       if (opts) {
         res.query((q) &#x3D;&gt; q.paging(opts));
       }
@@ -3898,9 +4079,9 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
       expand(({ annots }) &#x3D;&gt;
         annots.skip || annots.skiptoken ? fetch(annots) : EMPTY,
       ),
-      map(({ entities, annots }) &#x3D;&gt; ({ entities: entities || [], annots })),
+      map(({ entities, annots }) &#x3D;&gt; ({ entities: entities ?? [], annots })),
       reduce((acc, { entities, annots }) &#x3D;&gt; ({
-        entities: [...(acc.entities || []), ...(entities || [])],
+        entities: [...(acc.entities ?? []), ...(entities ?? [])],
         annots: acc.annots.union(annots),
       })),
     );
@@ -3913,8 +4094,8 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
       bodyQueryOptions?: QueryOption[];
     },
   ): Observable&lt;{ entities: T[]; annots: ODataEntitiesAnnotations&lt;T&gt; }&gt; {
-    let res &#x3D; this.clone();
-    let fetch &#x3D; (opts?: {
+    const res &#x3D; this.clone();
+    const fetch &#x3D; (opts?: {
       skip?: number;
       skiptoken?: string;
       top?: number;
@@ -3928,9 +4109,9 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
       expand(({ annots }) &#x3D;&gt;
         annots.skip || annots.skiptoken ? fetch(annots) : EMPTY,
       ),
-      map(({ entities, annots }) &#x3D;&gt; ({ entities: entities || [], annots })),
+      map(({ entities, annots }) &#x3D;&gt; ({ entities: entities ?? [], annots })),
       reduce((acc, { entities, annots }) &#x3D;&gt; ({
-        entities: [...(acc.entities || []), ...(entities || [])],
+        entities: [...(acc.entities ?? []), ...(entities ?? [])],
         annots: acc.annots.union(annots),
       })),
     );
@@ -3942,9 +4123,11 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
       bodyQueryOptions?: QueryOption[];
     },
   ): Observable&lt;{ entity: T | null; annots: ODataEntitiesAnnotations&lt;T&gt; }&gt; {
-    return this.fetchMany(1, options).pipe(
+    const res &#x3D; this.clone();
+    res.query((q) &#x3D;&gt; q.top(1));
+    return res.fetch(options).pipe(
       map(({ entities, annots }) &#x3D;&gt; ({
-        entity: entities.length &#x3D;&#x3D;&#x3D; 1 ? entities[0] : null,
+        entity: entities !&#x3D;&#x3D; null &amp;&amp; entities.length &#x3D;&#x3D;&#x3D; 1 ? entities[0] : null,
         annots,
       })),
     );
@@ -3963,11 +4146,17 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
     options?: ODataOptions &amp; {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
+      CollectionType?: typeof ODataCollection;
     },
   ): Observable&lt;C | null&gt; {
     return this.fetch(options).pipe(
       map(({ entities, annots }) &#x3D;&gt;
-        entities ? this.asCollection&lt;M, C&gt;(entities, { annots }) : null,
+        entities
+          ? this.asCollection&lt;M, C&gt;(entities, {
+              annots,
+              CollectionType: options?.CollectionType,
+            })
+          : null,
       ),
     );
   }
@@ -4014,6 +4203,19 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
             var COMPODOC_CURRENT_PAGE_URL = 'ODataEntitySetResource.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>
