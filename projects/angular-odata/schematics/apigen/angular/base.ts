@@ -3,7 +3,7 @@ import { getRandomName } from "../../random"
 import { Import } from "./import";
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
-import { BINDING_PARAMETER_NAME, CsdlAction, CsdlCallable, CsdlFunction } from "../metadata/csdl/csdl-function-action";
+import { BINDING_PARAMETER_NAME, CsdlAction, CsdlCallable, CsdlFunction, CsdlParameter } from "../metadata/csdl/csdl-function-action";
 import { toTypescriptType } from "../utils";
 
 const makeRelativePath = (from: string, to: string) => {
@@ -15,7 +15,7 @@ const makeRelativePath = (from: string, to: string) => {
     shared = shared.substring(0, shared.lastIndexOf('/'));
     i++;
   }
-  return Array.from({ length: i }).fill('..').join('/') + "/" + to.substring(shared.length + 1);
+  return Array.from({ length: i }).fill('..').join('/') + "/" + to.substring(shared.length);
 }
 
 export class Callable {
@@ -30,6 +30,10 @@ export class Callable {
   }
   bindingParameter() {
     return this.callable.Parameter?.find(p => p.Name === BINDING_PARAMETER_NAME);
+  }
+
+  parameters() {
+    return this.callable.Parameter?.filter(p => p.Name !== BINDING_PARAMETER_NAME) ?? [] as CsdlParameter[];
   }
 
   returnType() {
@@ -51,26 +55,45 @@ export class Callable {
     const baseMethod = isFunction ? 'function' : 'action';
     const keyParameter = !bindingParameter?.Collection ? `key: EntityKey<${bindingType}>` : '';
     const key = !bindingParameter?.Collection ? `key` : '';
+    const parameters = this.parameters();
+    const parametersType = parameters.length === 0 ? 'null' : `{${parameters.map(p => `${p.Name}: ${toTypescriptType(p.Type)}`).join(', ')}}`;
     return `public ${methodName}(${keyParameter}) {
-    return this.${bindingMethod}(${key}).${baseMethod}<, ${retType}>('${this.fullName()}');
+    return this.${bindingMethod}(${key}).${baseMethod}<${parametersType}, ${retType}>('${this.fullName()}');
   }`;
   }
+
   callableFunction() {
     const isFunction = this.callable instanceof CsdlFunction;
+    const bindingParameter = this.bindingParameter();
+    const parameters = this.parameters();
+    const returnType = this.returnType();
+
     const methodResourceName = strings.camelize(this.callable.Name);
     const methodName = strings.classify(this.callable.Name);
-    const bindingParameter = this.bindingParameter();
-    const returnType = this.returnType();
     const responseType = returnType === undefined ? 'none' : 
       returnType?.Collection ? 'entities' : 
       returnType?.Type.startsWith("Edm.") ? 'property' : 
       'entity';
     const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+
     const bindingType = bindingParameter !== undefined ? toTypescriptType(bindingParameter.Type) : '';
     const baseMethod = isFunction ? 'callFunction' : 'callAction';
-    const optionsType = isFunction ? 'ODataFunctionOptions' : 'ODataActionOptions';
-    return `public call${methodName}(key: EntityKey<${bindingType}>, options?: ${optionsType}<${retType}>) {
-    return this.${baseMethod}<, ${retType}>({}, this.${methodResourceName}(key), '${responseType}', options);
+    const parametersCall = parameters.length === 0 ? 'null' : `{${parameters.map(p => p.Name).join(', ')}}`;
+
+    // Method arguments
+    let args = !bindingParameter?.Collection ? [`key: EntityKey<${bindingType}>`] : [];
+    args = [...args, ...(parameters.length === 0 ? [] : parameters.map(p => `${p.Name}: ${toTypescriptType(p.Type)}`))];
+    const optionsType = returnType !== undefined && returnType.Type.startsWith("Edm.") ? 
+      (isFunction ? 'ODataOptions & {alias?: boolean}' : 'ODataOptions') : 
+        isFunction ? `ODataFunctionOptions<${retType}>` : `ODataActionOptions<${retType}>`;
+    args.push(`options?: ${optionsType}`);
+
+    // Key parameter
+    const key = !bindingParameter?.Collection ? `key` : '';
+
+    // Render
+    return `public call${methodName}(${args.join(", ")}) {
+    return this.${baseMethod}(${parametersCall}, this.${methodResourceName}(${key}), '${responseType}', options);
   }`;
   }
 }

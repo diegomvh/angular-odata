@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ODataClient, ODataSingletonService } from 'angular-odata';<% for (let imp of imports) { %>
+import { ODataClient, 
+  ODataActionResource, 
+  ODataActionOptions, 
+  ODataFunctionResource, 
+  ODataFunctionOptions, 
+  ODataEntitySetService, 
+  ODataOptions,
+  ODataSingletonService,
+  EntityKey } from 'angular-odata';<% for (let imp of imports) { %>
 import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 @Injectable()

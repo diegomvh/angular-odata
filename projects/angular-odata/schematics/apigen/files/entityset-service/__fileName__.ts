@@ -5,6 +5,7 @@ import { ODataClient,
   ODataFunctionResource, 
   ODataFunctionOptions, 
   ODataEntitySetService, 
+  ODataOptions,
   EntityKey } from 'angular-odata';<% for (let imp of imports) { %>
 import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 
