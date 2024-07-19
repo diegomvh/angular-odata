@@ -10,6 +10,7 @@ import {
   CsdlParameter,
 } from '../metadata/csdl/csdl-function-action';
 import { makeRelativePath, toTypescriptType } from '../utils';
+import { ODataMetadata } from '../metadata';
 
 export class Callable {
   constructor(protected callable: CsdlCallable) {}
@@ -211,6 +212,33 @@ export class Index extends Base {
   }
   public override fileName() {
     return 'index';
+  }
+  public override directory() {
+    return '';
+  }
+  public override fullName() {
+    return this.name();
+  }
+  public override importTypes(): string[] {
+    return [];
+  }
+}
+
+export class Metadata extends Base {
+  constructor(options: ApiGenSchema, private meta: ODataMetadata) {
+    super(options);
+  }
+  public override template(): Source {
+    return url('./files/metadata');
+  }
+  public override variables(): { [name: string]: any } {
+    return { content: JSON.stringify(this.meta.toJson(), null, 2) };
+  }
+  public override name() {
+    return '';
+  }
+  public override fileName() {
+    return 'metadata';
   }
   public override directory() {
     return '';

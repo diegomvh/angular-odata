@@ -16,6 +16,18 @@ export class ODataMetadata {
     });
   }
 
+  toJson() {
+    return {
+      Version: this.Version,
+      References: this.References.map((r) => {
+        return r.toJson();
+      }),
+      Schemas: this.Schemas.map((s) => {
+        return s.toJson();
+      }),
+    };
+  }
+
   functions() {
     return this.Schemas.reduce((acc, s) => {
       return [...acc, ...(s.Function ?? [])];

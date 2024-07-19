@@ -19,4 +19,12 @@ export class ODataMetadata {
       base ?? {},
     ) as ApiConfig;
   }
+
+  static fromJson(json: any): ODataMetadata {
+    return new ODataMetadata(
+      json.Version,
+      json.References.map((r: any) => new CsdlReference(r)),
+      json.Schemas.map((s: any) => new CsdlSchema(s)),
+    );
+  }
 }

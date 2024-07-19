@@ -20,7 +20,7 @@ import { toTypescriptType } from './utils';
 import { Module } from './angular/module';
 import { ApiConfig } from './angular/api-config';
 import { Enum } from './angular/enum';
-import { Base, Callable, Index } from './angular/base';
+import { Base, Callable, Index, Metadata } from './angular/base';
 import { Entity } from './angular/entity';
 import { Service } from './angular/service';
 
@@ -59,12 +59,13 @@ export function apigen(options: ApiGenSchema) {
           options.metadata.length - 9,
         );
         options.version = meta.Version;
+        const metadata = new Metadata(options, meta);
         const module = new Module(options);
         const config = new ApiConfig(options);
         const index = new Index(options);
         index.addDependency(module);
         index.addDependency(config);
-        const sources: Base[] = [index, module, config];
+        const sources: Base[] = [metadata, index, module, config];
         for (let s of meta.Schemas) {
           const namespace = s.Namespace;
           // Enum
