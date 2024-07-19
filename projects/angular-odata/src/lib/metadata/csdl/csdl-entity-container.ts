@@ -1,37 +1,18 @@
 import { CsdlEntitySet } from './csdl-entity-set';
 import { CsdlSingleton } from './csdl-singleton';
 import { CsdlFunctionImport, CsdlActionImport } from './csdl-function-action';
-import { CsdlAnnotable } from './csdl-annotation';
-import type { CsdlSchema } from './csdl-schema';
+import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
 import { EntityContainerConfig } from '../../types';
 
 export class CsdlEntityContainer extends CsdlAnnotable {
-  public Name: string;
-  public Extend?: string;
-  public EntitySet?: CsdlEntitySet[];
-  public Singleton?: CsdlSingleton[];
-  public FunctionImport?: CsdlFunctionImport[];
-  public ActionImport?: CsdlActionImport[];
-
   constructor(
-    private schema: CsdlSchema,
-    {
-      Name,
-      Extend,
-      EntitySet,
-      Singleton,
-      FunctionImport,
-      ActionImport,
-      Annotation,
-    }: {
-      Name: string;
-      Extend?: string;
-      EntitySet?: any[];
-      Singleton?: any[];
-      FunctionImport?: any[];
-      ActionImport?: any[];
-      Annotation?: any[];
-    },
+    public name: string,
+    public extend?: string,
+    public entitySets?: CsdlEntitySet[],
+    public singletons?: CsdlSingleton[],
+    public functionImports?: CsdlFunctionImport[],
+    public actionImports?: CsdlActionImport[],
+    annotations?: CsdlAnnotation[],
   ) {
     super({ Annotation });
 
@@ -45,34 +26,15 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     this.ActionImport = ActionImport?.map((a) => new CsdlActionImport(this, a));
   }
 
-  override toJson() {
-    return {
-      ...super.toJson(),
-      Extend: this.Extend,
-      EntitySet: this.EntitySet?.map((e) => e.toJson()),
-      Singleton: this.Singleton?.map((s) => s.toJson()),
-      FunctionImport: this.FunctionImport?.map((f) => f.toJson()),
-      ActionImport: this.ActionImport?.map((a) => a.toJson()),
-    };
-  }
-
-  name() {
-    return `${this.Name}`;
-  }
-
-  namespace() {
-    return `${this.schema.Namespace}`;
-  }
-
-  fullName() {
-    return `${this.schema.Namespace}.${this.Name}`;
+  get Namespace() {
+    return this.schema.Namespace;
   }
 
   toConfig(): EntityContainerConfig {
     return {
-      name: this.Name,
-      annotations: this.Annotation?.map((t) => t.toConfig()),
-      entitySets: this.EntitySet?.map((t) => t.toConfig()),
-    };
+      name: this.name,
+      annotations: this.annotations?.map(t => t.toConfig()),
+      entitySets: this.entitySets?.map(t => t.toConfig()),
+    }
   }
 }

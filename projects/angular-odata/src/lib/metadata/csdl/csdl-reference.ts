@@ -1,4 +1,4 @@
-import { CsdlAnnotable } from './csdl-annotation';
+import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
 
 export class CsdlReference extends CsdlAnnotable {
   Uri: string;
@@ -22,15 +22,6 @@ export class CsdlReference extends CsdlAnnotable {
       (i) => new CsdlIncludeAnnotations(i),
     );
   }
-
-  override toJson() {
-    return {
-      ...super.toJson(),
-      Uri: this.Uri,
-      Includes: this.Includes?.map((i) => i.toJson()),
-      IncludeAnnotations: this.IncludeAnnotations?.map((i) => i.toJson()),
-    };
-  }
 }
 
 export class CsdlInclude {
@@ -39,13 +30,6 @@ export class CsdlInclude {
   constructor({ Namespace, Alias }: { Namespace: string; Alias?: string }) {
     this.Namespace = Namespace;
     this.Alias = Alias;
-  }
-
-  toJson() {
-    return {
-      Namespace: this.Namespace,
-      Alias: this.Alias,
-    };
   }
 }
 
@@ -65,13 +49,5 @@ export class CsdlIncludeAnnotations {
     this.TermNamespace = TermNamespace;
     this.Qualifier = Qualifier;
     this.TargetNamespace = TargetNamespace;
-  }
-
-  toJson() {
-    return {
-      TermNamespace: this.TermNamespace,
-      Qualifier: this.Qualifier,
-      TargetNamespace: this.TargetNamespace,
-    };
   }
 }

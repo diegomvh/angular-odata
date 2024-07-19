@@ -47,7 +47,6 @@ export class CsdlSingleton extends CsdlAnnotable {
   namespace() {
     return `${this.container.namespace()}`;
   }
-
   fullName() {
     return `${this.container.namespace()}.${this.Name}`;
   }

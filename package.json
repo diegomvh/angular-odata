@@ -1,6 +1,6 @@
 {
   "name": "angular-odata",
-  "version": "0.126.0",
+  "version": "0.128.0",
   "license": "MIT",
   "description": "Client side OData typescript library for Angular",
   "repository": {
@@ -28,11 +28,13 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng test angular-odata && ng build angular-odata --configuration production",
+    "schematics": "cd projects/angular-odata && npm run build && npm run postbuild",
+    "link": "npm link angular-odata",
     "test": "ng test",
     "watch": "ng build --watch --configuration development",
     "docs": "compodoc -p projects/angular-odata/tsconfig.lib.json -d docs --disableGraph --disableCoverage",
-    "versioning": "npm version 0.127.0 --allow-same-version && cd projects/angular-odata && npm version 0.127.0 --allow-same-version && cd ../..",
-    "publish": "npm run build && npm publish dist/angular-odata/",
+    "versioning": "npm version 0.128.0 --allow-same-version && cd projects/angular-odata && npm version 0.128.0 --allow-same-version && cd ../..",
+    "publish": "npm run build && npm run schematics && npm publish dist/angular-odata/",
     "release": "cp README.md projects/angular-odata/README.md && npm run docs && npm run publish",
     "prettier": "prettier --write \"projects/angular-odata/**/*.ts\""
   },
@@ -55,6 +57,7 @@
     "@angular/cli": "~16.2.1",
     "@angular/compiler-cli": "^16.2.0",
     "@types/jasmine": "~4.3.0",
+    "@types/jsdom": "^21.1.7",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
