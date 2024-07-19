@@ -1,4 +1,3 @@
-import { EnumTypeConfig, EnumTypeFieldConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlSchema } from './csdl-schema';
 
@@ -52,16 +51,6 @@ export class CsdlEnumType extends CsdlAnnotable {
   fullName() {
     return `${this.schema.Namespace}.${this.Name}`;
   }
-
-  toConfig(): EnumTypeConfig<any> {
-    return {
-      name: this.Name,
-      annotations: this.Annotation?.map((a) => a.toConfig()),
-      members: this.Member.map((m) => m.toConfig()),
-      fields: {},
-      flags: this.IsFlags,
-    } as EnumTypeConfig<any>;
-  }
 }
 
 export class CsdlMember extends CsdlAnnotable {
@@ -81,10 +70,11 @@ export class CsdlMember extends CsdlAnnotable {
     this.Value = Value;
   }
 
-  toConfig(): EnumTypeFieldConfig<any> {
-    return {
-      value: this.Value,
-      annotations: this.Annotation?.map((a) => a.toConfig()),
-    } as EnumTypeFieldConfig<any>;
+  override toJson() {
+    const json: {[key: string]: any} = {...super.toJson(), Name: this.Name};
+    if (this.Value) {
+      json['Value'] = this.Value;
+    }
+    return json;
   }
 }

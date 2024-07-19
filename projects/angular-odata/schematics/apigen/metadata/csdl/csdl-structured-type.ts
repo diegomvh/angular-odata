@@ -1,4 +1,3 @@
-import { StructuredTypeConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import {
   CsdlProperty,
@@ -101,19 +100,11 @@ export class CsdlComplexType extends CsdlStructuredType {
       Annotation,
     });
   }
-
-  toConfig(): StructuredTypeConfig<any> {
-    const fields = {};
+  
+  override toJson() {
     return {
-      name: this.Name,
-      base: this.BaseType,
-      open: this.OpenType,
-      annotations: this.Annotation?.map((t) => t.toConfig()),
-      fields: [
-        ...(this.Property ?? []).map((t) => t.toConfig()),
-        ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
-      ].reduce((acc, p) => Object.assign(acc, { [p.name]: p }), {}),
-    } as StructuredTypeConfig<any>;
+      ...super.toJson(),
+    };
   }
 }
 
@@ -158,18 +149,12 @@ export class CsdlEntityType extends CsdlStructuredType {
     this.HasStream = HasStream;
   }
 
-  toConfig(): StructuredTypeConfig<any> {
+  override toJson() {
     return {
-      name: this.Name,
-      base: this.BaseType,
-      open: this.OpenType,
-      annotations: this.Annotation?.map((t) => t.toConfig()),
-      keys: this.Key?.toConfig(),
-      fields: [
-        ...(this.Property ?? []).map((t) => t.toConfig()),
-        ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
-      ].reduce((acc, p) => Object.assign(acc, { [p.name]: p }), {}),
-    } as StructuredTypeConfig<any>;
+      ...super.toJson(),
+      Key: this.Key?.toJson(),
+      HasStream: this.HasStream,
+    };
   }
 }
 
@@ -180,8 +165,10 @@ export class CsdlKey {
     this.PropertyRefs = PropertyRefs?.map((p) => new CsdlPropertyRef(p));
   }
 
-  toConfig() {
-    return this.PropertyRefs.map((t) => t.toConfig());
+  toJson() {
+    return {
+      PropertyRefs: this.PropertyRefs?.map((p) => p.toJson()),
+    };
   }
 }
 
@@ -194,10 +181,10 @@ export class CsdlPropertyRef {
     this.Alias = Alias;
   }
 
-  toConfig(): { name: string; alias?: string } {
+  toJson() {
     return {
-      name: this.Name,
-      alias: this.Alias,
+      Name: this.Name,
+      Alias: this.Alias,
     };
   }
 }

@@ -24,6 +24,22 @@ export class CsdlSchema {
     public annotations?: CsdlAnnotations[],
   ) { }
 
+  toJson() {
+    return {
+      Namespace: this.Namespace,
+      Alias: this.Alias,
+      EnumType: this.EnumType?.map((e) => e.toJson()),
+      ComplexType: this.ComplexType?.map((c) => c.toJson()),
+      EntityType: this.EntityType?.map((e) => e.toJson()),
+      Function: this.Function?.map((f) => f.toJson()),
+      Action: this.Action?.map((a) => a.toJson()),
+      EntityContainer: this.EntityContainer?.map((e) => e.toJson()),
+      TypeDefinition: this.TypeDefinition?.map((t) => t.toJson()),
+      Term: this.Term?.map((t) => t.toJson()),
+      Annotations: this.Annotations?.map((a) => a.toJson()),
+    }
+  }
+
   toConfig(): SchemaConfig {
     return {
       namespace: this.namespace,
