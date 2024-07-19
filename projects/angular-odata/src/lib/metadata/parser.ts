@@ -134,7 +134,7 @@ export class ODataMetadataParser {
         new Field(ODataMetadataParser.TAG_INCLUDE_ANNOTATIONS, FieldType.TAG),
         new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
       ],
-    ).map((t) => new CsdlReference(t));
+    );
 
     const dataServices: Element =
       this.document.documentElement.getElementsByTagName(
@@ -156,7 +156,7 @@ export class ODataMetadataParser {
         new Field(ODataMetadataParser.TAG_TERM, FieldType.TAG),
         new Field(ODataMetadataParser.TAG_ANNOTATIONS, FieldType.TAG),
       ],
-    ).map((s) => new CsdlSchema(s));
+    );
 
     return new ODataMetadata(version, references, schemas);
   }

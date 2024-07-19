@@ -29,7 +29,26 @@ export class CsdlSingleton extends CsdlAnnotable {
     );
   }
 
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Name: this.Name,
+      Type: this.Type,
+      NavigationPropertyBindings: this.NavigationPropertyBindings?.map(
+        (n) => n.toJson(),
+      ),
+    };
+  }
+
+  name() {
+    return `${this.Name}`;
+  }
+
+  namespace() {
+    return `${this.container.namespace()}`;
+  }
+
   fullName() {
-    return `${this.container.Namespace}.${this.Name}`;
+    return `${this.container.namespace()}.${this.Name}`;
   }
 }

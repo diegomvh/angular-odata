@@ -71,12 +71,12 @@ export class ODataApi {
 
   constructor(config: ApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;
-    if (this.serviceRootUrl.indexOf('?') != -1)
+    if (this.serviceRootUrl.includes('?'))
       throw new Error(
         "The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters",
       );
     if (!this.serviceRootUrl.endsWith('/')) this.serviceRootUrl += '/';
-    this.metadataUrl = `${this.serviceRootUrl}$metadata`;
+    this.metadataUrl = config.metadataUrl ?? `${this.serviceRootUrl}$metadata`;
     this.name = config.name;
     this.version = config.version ?? DEFAULT_VERSION;
     this.default = config.default ?? false;
@@ -88,11 +88,12 @@ export class ODataApi {
       ),
     );
 
-    this.cache = (config.cache as ODataCache) || new ODataInMemoryCache();
+    this.cache = (config.cache as ODataCache) ?? new ODataInMemoryCache();
     this.errorHandler = config.errorHandler;
 
-    this.parsers = new Map(Object.entries(config.parsers || EDM_PARSERS));
+    this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
+    console.log(config.metadata);
     this.schemas = (config.schemas ?? []).map(
       (schema) => new ODataSchema(schema, this),
     );

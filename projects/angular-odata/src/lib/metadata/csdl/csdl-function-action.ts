@@ -3,12 +3,14 @@ import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlEntityContainer } from './csdl-entity-container';
 import type { CsdlSchema } from './csdl-schema';
 
+export const BINDING_PARAMETER_NAME: string = 'bindingParameter';
+
 export class CsdlCallable {
   Name: string;
   ReturnType?: CsdlReturnType;
   IsBound?: boolean;
   EntitySetPath?: string;
-  Parameters?: CsdlParameter[];
+  Parameter?: CsdlParameter[];
 
   constructor(
     private schema: CsdlSchema,
@@ -17,20 +19,49 @@ export class CsdlCallable {
       ReturnType,
       IsBound,
       EntitySetPath,
-      Parameters,
+      Parameter,
     }: {
       Name: string;
       ReturnType?: any;
       IsBound?: boolean;
       EntitySetPath?: string;
-      Parameters?: any[];
+      Parameter?: any[];
     },
   ) {
     this.Name = Name;
     this.ReturnType = ReturnType ? new CsdlReturnType(ReturnType) : undefined;
     this.IsBound = IsBound;
     this.EntitySetPath = EntitySetPath;
-    this.Parameters = Parameters?.map((p) => new CsdlParameter(p));
+    this.Parameter = Parameter?.map((p) => new CsdlParameter(p));
+  }
+
+  toJson() {
+    const json: {[key: string]: any} = {
+      Name: this.Name,
+    }
+    if (this.ReturnType) {
+      json['ReturnType'] = this.ReturnType.toJson();
+    }
+    if (this.IsBound) {
+      json['IsBound'] = this.IsBound;
+    }
+    if (this.EntitySetPath) {
+      json['EntitySetPath'] = this.EntitySetPath;
+    }
+    if (this.Parameter) {
+      json['Parameter'] = this.Parameter.map((p) => p.toJson());
+    }
+    return json;
+  }
+
+  name() {
+    return `${this.Name}`;
+  }
+  namespace() {
+    return `${this.schema.Namespace}`;
+  }
+  fullName() {
+    return `${this.namespace()}.${this.Name}`;
   }
 }
 export class CsdlFunction extends CsdlCallable {
@@ -44,18 +75,25 @@ export class CsdlFunction extends CsdlCallable {
       IsBound,
       EntitySetPath,
       IsComposable,
-      Parameters,
+      Parameter,
     }: {
       Name: string;
       ReturnType: any;
       IsBound?: boolean;
       EntitySetPath?: string;
       IsComposable?: boolean;
-      Parameters?: any[];
+      Parameter?: any[];
     },
   ) {
-    super(schema, { Name, ReturnType, IsBound, EntitySetPath, Parameters });
+    super(schema, { Name, ReturnType, IsBound, EntitySetPath, Parameter });
     this.IsComposable = IsComposable;
+  }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      IsComposable: this.IsComposable,
+    }
   }
 
   toConfig(): CallableConfig {
@@ -64,7 +102,7 @@ export class CsdlFunction extends CsdlCallable {
       entitySetPath: this.EntitySetPath,
       bound: this.IsBound,
       composable: this.IsComposable,
-      parameters: this.Parameters?.map((p) => p.toConfig()),
+      parameters: this.Parameter?.map((p) => p.toConfig()),
       return: this.ReturnType?.toConfig(),
     } as CallableConfig;
   }
@@ -78,16 +116,22 @@ export class CsdlAction extends CsdlCallable {
       ReturnType,
       IsBound,
       EntitySetPath,
-      Parameters,
+      Parameter,
     }: {
       Name: string;
       ReturnType?: any;
       IsBound?: boolean;
       EntitySetPath?: string;
-      Parameters?: any[];
+      Parameter?: any[];
     },
   ) {
-    super(schema, { Name, ReturnType, IsBound, EntitySetPath, Parameters });
+    super(schema, { Name, ReturnType, IsBound, EntitySetPath, Parameter });
+  }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+    }
   }
 
   toConfig(): CallableConfig {
@@ -95,7 +139,7 @@ export class CsdlAction extends CsdlCallable {
       name: this.Name,
       entitySetPath: this.EntitySetPath,
       bound: this.IsBound,
-      parameters: this.Parameters?.map((p) => p.toConfig()),
+      parameters: this.Parameter?.map((p) => p.toConfig()),
       return: this.ReturnType?.toConfig(),
     } as CallableConfig;
   }
@@ -126,6 +170,15 @@ export class CsdlFunctionImport {
     this.EntitySet = EntitySet;
     this.IncludeInServiceDocument = IncludeInServiceDocument;
   }
+
+  toJson() {
+    return {
+      Name: this.Name,
+      FunctionName: this.FunctionName,
+      EntitySet: this.EntitySet,
+      IncludeInServiceDocument: this.IncludeInServiceDocument,
+    };
+  }
 }
 
 export class CsdlActionImport {
@@ -149,11 +202,20 @@ export class CsdlActionImport {
     this.Action = Action;
     this.EntitySet = EntitySet;
   }
+
+  toJson() {
+    return {
+      Name: this.Name,
+      Action: this.Action,
+      EntitySet: this.EntitySet,
+    };
+  }
 }
 
 export class CsdlParameter extends CsdlAnnotable {
   Name: string;
   Type: string;
+  Collection: boolean;
   Nullable?: boolean;
   MaxLength?: number;
   Precision?: number;
@@ -181,12 +243,26 @@ export class CsdlParameter extends CsdlAnnotable {
   }) {
     super({ Annotation });
     this.Name = Name;
-    this.Type = Type;
+    this.Collection = Type.startsWith('Collection(');
+    this.Type = this.Collection ? Type.substring(11, Type.length - 1) : Type;
     this.Nullable = Nullable;
     this.MaxLength = MaxLength;
     this.Precision = Precision;
     this.Scale = Scale;
     this.SRID = SRID;
+  }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Name: this.Name,
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
+      Nullable: this.Nullable,
+      MaxLength: this.MaxLength,
+      Precision: this.Precision,
+      Scale: this.Scale,
+      SRID: this.SRID,
+    };
   }
 
   toConfig(): ParameterConfig {
@@ -200,6 +276,7 @@ export class CsdlParameter extends CsdlAnnotable {
 
 export class CsdlReturnType {
   Type: string;
+  Collection: boolean;
   Nullable?: boolean;
   MaxLength?: number;
   Precision?: number;
@@ -221,12 +298,24 @@ export class CsdlReturnType {
     Scale?: number;
     SRID?: string;
   }) {
-    this.Type = Type;
+    this.Collection = Type.startsWith('Collection(');
+    this.Type = this.Collection ? Type.substring(11, Type.length - 1) : Type;
     this.Nullable = Nullable;
     this.MaxLength = MaxLength;
     this.Precision = Precision;
     this.Scale = Scale;
     this.SRID = SRID;
+  }
+
+  toJson() {
+    return {
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
+      Nullable: this.Nullable,
+      MaxLength: this.MaxLength,
+      Precision: this.Precision,
+      Scale: this.Scale,
+      SRID: this.SRID,
+    };
   }
 
   toConfig(): { type: string; collection?: boolean | undefined } | undefined {

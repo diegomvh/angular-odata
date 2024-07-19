@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { ODataMetadata } from './metadata';
 
 export type ODataVersion = '2.0' | '3.0' | '4.0';
 export type FetchPolicy =
@@ -212,6 +213,8 @@ export interface Cache {
 //#region Configs
 export type ApiConfig = {
   serviceRootUrl: string;
+  metadataUrl?: string;
+  metadata?: ODataMetadata,
   name?: string;
   version?: ODataVersion;
   default?: boolean;

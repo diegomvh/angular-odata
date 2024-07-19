@@ -100,7 +100,7 @@ export class CsdlComplexType extends CsdlStructuredType {
       Annotation,
     });
   }
-
+  
   override toJson() {
     return {
       ...super.toJson(),

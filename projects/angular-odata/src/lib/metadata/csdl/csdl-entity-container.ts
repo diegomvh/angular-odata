@@ -45,8 +45,27 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     this.ActionImport = ActionImport?.map((a) => new CsdlActionImport(this, a));
   }
 
-  get Namespace() {
-    return this.schema.Namespace;
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Extend: this.Extend,
+      EntitySet: this.EntitySet?.map((e) => e.toJson()),
+      Singleton: this.Singleton?.map((s) => s.toJson()),
+      FunctionImport: this.FunctionImport?.map((f) => f.toJson()),
+      ActionImport: this.ActionImport?.map((a) => a.toJson()),
+    };
+  }
+
+  name() {
+    return `${this.Name}`;
+  }
+
+  namespace() {
+    return `${this.schema.Namespace}`;
+  }
+
+  fullName() {
+    return `${this.schema.Namespace}.${this.Name}`;
   }
 
   toConfig(): EntityContainerConfig {

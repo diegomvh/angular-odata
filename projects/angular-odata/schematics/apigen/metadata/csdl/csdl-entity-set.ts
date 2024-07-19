@@ -34,6 +34,17 @@ export class CsdlEntitySet extends CsdlAnnotable {
     this.IncludeInServiceDocument = IncludeInServiceDocument;
   }
 
+  override toJson() {
+    const json: {[key: string]: any} = {...super.toJson(), Name: this.Name, EntityType: this.EntityType};
+    if (this.NavigationPropertyBinding) {
+      json['NavigationPropertyBinding'] = this.NavigationPropertyBinding.map((n) => n.toJson());
+    }
+    if (this.IncludeInServiceDocument) {
+      json['IncludeInServiceDocument'] = this.IncludeInServiceDocument;
+    }
+    return json;
+  }
+
   name() {
     return `${this.Name}`;
   }

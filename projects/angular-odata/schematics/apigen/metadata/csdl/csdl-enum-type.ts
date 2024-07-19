@@ -29,6 +29,17 @@ export class CsdlEnumType extends CsdlAnnotable {
     this.IsFlags = IsFlags;
   }
 
+  override toJson() {
+    const json: {[key: string]: any} = {...super.toJson(), Name: this.Name, Member: this.Member.map((m) => m.toJson())};
+    if (this.UnderlyingType) {
+      json['UnderlyingType'] = this.UnderlyingType;
+    }
+    if (this.IsFlags) {
+      json['IsFlags'] = this.IsFlags;
+    }
+    return json;
+  }
+
   name() {
     return `${this.Name}`;
   }
@@ -57,5 +68,13 @@ export class CsdlMember extends CsdlAnnotable {
     super({ Annotation });
     this.Name = Name;
     this.Value = Value;
+  }
+
+  override toJson() {
+    const json: {[key: string]: any} = {...super.toJson(), Name: this.Name};
+    if (this.Value) {
+      json['Value'] = this.Value;
+    }
+    return json;
   }
 }
