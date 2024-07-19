@@ -1,5 +1,5 @@
-import { StructuredTypeFieldConfig } from "../../types";
-import { CsdlAnnotable, CsdlAnnotation } from "./csdl-annotation";
+import { StructuredTypeFieldConfig } from '../../types';
+import { CsdlAnnotable } from './csdl-annotation';
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   Name: string;
@@ -23,6 +23,15 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
     this.Nullable = Nullable;
     this.Collection = Type.startsWith('Collection(');
     this.Type = this.Collection ? Type.substring(11, Type.length - 1) : Type;
+  }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Name: this.Name,
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
+      Nullable: this.Nullable,
+    };
   }
 }
 
@@ -66,19 +75,31 @@ export class CsdlProperty extends CsdlStructuralProperty {
     this.DefaultValue = DefaultValue;
   }
 
+  override toJson() {
+    return {
+      ...super.toJson(),
+      MaxLength: this.MaxLength,
+      Precision: this.Precision,
+      Scale: this.Scale,
+      Unicode: this.Unicode,
+      SRID: this.SRID,
+      DefaultValue: this.DefaultValue,
+    };
+  }
+
   toConfig() {
     return {
-      name: this.name,
-      type: this.type,
-      default: this.defaultValue,
-      maxLength: this.maxLength,
-      collection: this.collection,
-      nullable: this.nullable,
+      name: this.Name,
+      type: this.Type,
+      default: this.DefaultValue,
+      maxLength: this.MaxLength,
+      collection: this.Collection,
+      nullable: this.Nullable,
       navigation: false,
-      precision: this.precision,
-      scale: this.scale,
-      annotations: this.annotations?.map(a => a.toConfig()),
-    } as StructuredTypeFieldConfig & {name: string};
+      precision: this.Precision,
+      scale: this.Scale,
+      annotations: this.Annotation?.map((a) => a.toConfig()),
+    } as StructuredTypeFieldConfig & { name: string };
   }
 }
 
@@ -116,16 +137,29 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     this.OnDelete = OnDelete ? new CsdlOnDelete(OnDelete) : undefined;
   }
 
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Partner: this.Partner,
+      ContainsTarget: this.ContainsTarget,
+      ReferentialConstraints: this.ReferentialConstraints?.map((r) => r.toJson()),
+      OnDelete: this.OnDelete?.toJson(),
+    };
+  }
+
   toConfig() {
     return {
-      name: this.name,
-      type: this.type,
-      collection: this.collection,
-      nullable: this.nullable,
+      name: this.Name,
+      type: this.Type,
+      collection: this.Collection,
+      nullable: this.Nullable,
       navigation: true,
-      annotations: this.annotations?.map(a => a.toConfig()),
-      referentials: this.referentialConstraints?.map(r => ({ property: r.property, referencedProperty: r.referencedProperty })),
-    } as StructuredTypeFieldConfig & {name: string};
+      annotations: this.Annotation?.map((a) => a.toConfig()),
+      referentials: this.ReferentialConstraints?.map((r) => ({
+        property: r.Property,
+        referencedProperty: r.ReferencedProperty,
+      })),
+    } as StructuredTypeFieldConfig & { name: string };
   }
 }
 
@@ -143,6 +177,13 @@ export class CsdlReferentialConstraint {
     this.Property = Property;
     this.ReferencedProperty = ReferencedProperty;
   }
+
+  toJson() {
+    return {
+      Property: this.Property,
+      ReferencedProperty: this.ReferencedProperty,
+    };
+  }
 }
 
 export class CsdlOnDelete {
@@ -150,5 +191,11 @@ export class CsdlOnDelete {
 
   constructor({ Action }: { Action: string }) {
     this.Action = Action;
+  }
+
+  toJson() {
+    return {
+      Action: this.Action,
+    };
   }
 }

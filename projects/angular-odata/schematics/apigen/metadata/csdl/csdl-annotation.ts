@@ -34,7 +34,7 @@ export class CsdlAnnotations extends CsdlAnnotable {
     this.Target = Target;
     this.Qualifier = Qualifier;
   }
-
+  
   override toJson() {
     const json: {[key: string]: any} = {...super.toJson(), Target: this.Target};
     if (this.Qualifier) {
@@ -77,7 +77,7 @@ export class CsdlAnnotation {
     this.Record = Record;
     this.EnumMember = EnumMember?.map((a) => new CsdlEnumMember(a));
   }
-
+  
   toJson() {
     const json: {[key: string]: any} = {Term: this.Term};
     if (this.String) {

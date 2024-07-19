@@ -3,9 +3,9 @@ import * as json from './metadata.json';
 
 export const <%= classify(name) %> = {
   serviceRootUrl: '<%= serviceRootUrl %>', 
-  metadataUrl: '<%= metadata %>', 
+  metadataUrl: '<%= metadataUrl %>', 
   metadata: ODataMetadata.fromJson(json),
-  name: '<%= name %>',
+  name: '<%= apiConfigName %>',
   version: '<%= version %>',
   creation: new Date('<%= creation.toISOString() %>'),
   parsers: EDM_PARSERS

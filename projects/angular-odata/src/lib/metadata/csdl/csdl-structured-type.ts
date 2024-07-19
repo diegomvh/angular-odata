@@ -1,19 +1,38 @@
 import { StructuredTypeConfig } from '../../types';
-import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
+import { CsdlAnnotable } from './csdl-annotation';
 import {
   CsdlProperty,
   CsdlNavigationProperty,
 } from './csdl-structural-property';
+import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlStructuredType extends CsdlAnnotable {
+  Name: string;
+  Property?: CsdlProperty[];
+  NavigationProperty?: CsdlNavigationProperty[];
+  BaseType?: string;
+  OpenType?: boolean;
+  Abstract?: boolean;
+
   constructor(
-    public name: string,
-    public properties?: CsdlProperty[],
-    public navigationProperties?: CsdlNavigationProperty[],
-    public baseType?: string,
-    public openType?: boolean,
-    public abstract?: boolean,
-    annotations?: CsdlAnnotation[],
+    private schema: CsdlSchema,
+    {
+      Name,
+      Property,
+      NavigationProperty,
+      BaseType,
+      OpenType,
+      Abstract,
+      Annotation,
+    }: {
+      Name: string;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      Annotation?: any[];
+    },
   ) {
     super({ Annotation });
     this.Name = Name;
@@ -26,6 +45,26 @@ export class CsdlStructuredType extends CsdlAnnotable {
     this.Abstract = Abstract;
   }
 
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Name: this.Name,
+      Property: this.Property?.map((p) => p.toJson()),
+      NavigationProperty: this.NavigationProperty?.map((n) => n.toJson()),
+      BaseType: this.BaseType,
+      OpenType: this.OpenType,
+      Abstract: this.Abstract,
+    };
+  }
+
+  name() {
+    return `${this.Name}`;
+  }
+
+  namespace() {
+    return `${this.schema.Namespace}`;
+  }
+
   fullName() {
     return `${this.schema.Namespace}.${this.Name}`;
   }
@@ -33,13 +72,24 @@ export class CsdlStructuredType extends CsdlAnnotable {
 
 export class CsdlComplexType extends CsdlStructuredType {
   constructor(
-    name: string,
-    properties?: CsdlProperty[],
-    navigationProperties?: CsdlNavigationProperty[],
-    baseType?: string,
-    openType?: boolean,
-    abstract?: boolean,
-    annotations?: CsdlAnnotation[],
+    schema: CsdlSchema,
+    {
+      Name,
+      Property,
+      NavigationProperty,
+      BaseType,
+      OpenType,
+      Abstract,
+      Annotation,
+    }: {
+      Name: string;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      Annotation?: any[];
+    },
   ) {
     super(schema, {
       Name,
@@ -51,30 +101,55 @@ export class CsdlComplexType extends CsdlStructuredType {
       Annotation,
     });
   }
+  
+  override toJson() {
+    return {
+      ...super.toJson(),
+    };
+  }
 
   toConfig(): StructuredTypeConfig<any> {
     const fields = {};
     return {
-      name: this.name,
-      base: this.baseType,
-      open: this.openType,
-      annotations: this.annotations?.map(t => t.toConfig()),
-      fields: [...(this.properties ?? []).map(t => t.toConfig()), ...(this.navigationProperties ?? []).map(t => t.toConfig())].reduce((acc, p) => Object.assign(acc, {[p.name]: p}), {}),
+      name: this.Name,
+      base: this.BaseType,
+      open: this.OpenType,
+      annotations: this.Annotation?.map((t) => t.toConfig()),
+      fields: [
+        ...(this.Property ?? []).map((t) => t.toConfig()),
+        ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
+      ].reduce((acc, p) => Object.assign(acc, { [p.name]: p }), {}),
     } as StructuredTypeConfig<any>;
   }
 }
 
 export class CsdlEntityType extends CsdlStructuredType {
+  Key?: CsdlKey;
+  HasStream?: boolean;
+
   constructor(
-    name: string,
-    public key?: CsdlKey,
-    properties?: CsdlProperty[],
-    navigationProperties?: CsdlNavigationProperty[],
-    baseType?: string,
-    openType?: boolean,
-    abstract?: boolean,
-    public hasStream?: boolean,
-    annotations?: CsdlAnnotation[],
+    schema: CsdlSchema,
+    {
+      Name,
+      Key,
+      Property,
+      NavigationProperty,
+      BaseType,
+      OpenType,
+      Abstract,
+      HasStream,
+      Annotation,
+    }: {
+      Name: string;
+      Key?: any;
+      Property?: any[];
+      NavigationProperty?: any[];
+      BaseType?: string;
+      OpenType?: boolean;
+      Abstract?: boolean;
+      HasStream?: boolean;
+      Annotation?: any[];
+    },
   ) {
     super(schema, {
       Name,
@@ -89,15 +164,25 @@ export class CsdlEntityType extends CsdlStructuredType {
     this.HasStream = HasStream;
   }
 
-  toConfig(): StructuredTypeConfig<any> {
-    const fields = {};
+  override toJson() {
     return {
-      name: this.name,
-      base: this.baseType,
-      open: this.openType,
-      annotations: this.annotations?.map(t => t.toConfig()),
-      keys: this.key?.toConfig(),
-      fields: [...(this.properties ?? []).map(t => t.toConfig()), ...(this.navigationProperties ?? []).map(t => t.toConfig())].reduce((acc, p) => Object.assign(acc, {[p.name]: p}), {}),
+      ...super.toJson(),
+      Key: this.Key?.toJson(),
+      HasStream: this.HasStream,
+    };
+  }
+
+  toConfig(): StructuredTypeConfig<any> {
+    return {
+      name: this.Name,
+      base: this.BaseType,
+      open: this.OpenType,
+      annotations: this.Annotation?.map((t) => t.toConfig()),
+      keys: this.Key?.toConfig(),
+      fields: [
+        ...(this.Property ?? []).map((t) => t.toConfig()),
+        ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
+      ].reduce((acc, p) => Object.assign(acc, { [p.name]: p }), {}),
     } as StructuredTypeConfig<any>;
   }
 }
@@ -109,8 +194,14 @@ export class CsdlKey {
     this.PropertyRefs = PropertyRefs?.map((p) => new CsdlPropertyRef(p));
   }
 
+  toJson() {
+    return {
+      PropertyRefs: this.PropertyRefs?.map((p) => p.toJson()),
+    };
+  }
+
   toConfig() {
-    return this.propertyRefs.map(t => t.toConfig());
+    return this.PropertyRefs.map((t) => t.toConfig());
   }
 }
 
@@ -123,10 +214,17 @@ export class CsdlPropertyRef {
     this.Alias = Alias;
   }
 
+  toJson() {
+    return {
+      Name: this.Name,
+      Alias: this.Alias,
+    };
+  }
+
   toConfig(): { name: string; alias?: string } {
     return {
-      name: this.name,
-      alias: this.alias
-    }
+      name: this.Name,
+      alias: this.Alias,
+    };
   }
 }

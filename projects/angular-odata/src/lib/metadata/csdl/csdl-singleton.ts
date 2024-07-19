@@ -1,12 +1,25 @@
-import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
+import { CsdlAnnotable } from './csdl-annotation';
+import type { CsdlEntityContainer } from './csdl-entity-container';
 import { CsdlNavigationPropertyBinding } from './csdl-navigation-property-binding';
 
 export class CsdlSingleton extends CsdlAnnotable {
+  Name: string;
+  Type: string;
+  NavigationPropertyBindings?: CsdlNavigationPropertyBinding[];
+
   constructor(
-    public name: string,
-    public type: string,
-    public navigationPropertyBindings?: CsdlNavigationPropertyBinding[],
-    annotations?: CsdlAnnotation[],
+    private container: CsdlEntityContainer,
+    {
+      Name,
+      Type,
+      NavigationPropertyBindings,
+      Annotation,
+    }: {
+      Name: string;
+      Type: string;
+      NavigationPropertyBindings?: any[];
+      Annotation?: any[];
+    },
   ) {
     super({ Annotation });
     this.Name = Name;
@@ -16,7 +29,26 @@ export class CsdlSingleton extends CsdlAnnotable {
     );
   }
 
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Name: this.Name,
+      Type: this.Type,
+      NavigationPropertyBindings: this.NavigationPropertyBindings?.map(
+        (n) => n.toJson(),
+      ),
+    };
+  }
+
+  name() {
+    return `${this.Name}`;
+  }
+
+  namespace() {
+    return `${this.container.namespace()}`;
+  }
+
   fullName() {
-    return `${this.container.Namespace}.${this.Name}`;
+    return `${this.container.namespace()}.${this.Name}`;
   }
 }

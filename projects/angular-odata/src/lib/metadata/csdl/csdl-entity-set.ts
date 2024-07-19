@@ -1,14 +1,29 @@
 import { EntitySetConfig } from '../../types';
-import { CsdlAnnotable, CsdlAnnotation } from './csdl-annotation';
+import { CsdlAnnotable } from './csdl-annotation';
+import type { CsdlEntityContainer } from './csdl-entity-container';
 import { CsdlNavigationPropertyBinding } from './csdl-navigation-property-binding';
 
 export class CsdlEntitySet extends CsdlAnnotable {
+  public Name: string;
+  public EntityType: string;
+  public NavigationPropertyBinding?: CsdlNavigationPropertyBinding[];
+  public IncludeInServiceDocument?: boolean;
+
   constructor(
-    public name: string,
-    public entityType: string,
-    public navigationPropertyBinding?: CsdlNavigationPropertyBinding[],
-    public includeInServiceDocument?: boolean,
-    annotations?: CsdlAnnotation[],
+    private container: CsdlEntityContainer,
+    {
+      Name,
+      EntityType,
+      NavigationPropertyBinding,
+      IncludeInServiceDocument,
+      Annotation,
+    }: {
+      Name: string;
+      EntityType: string;
+      NavigationPropertyBinding?: any[];
+      IncludeInServiceDocument?: boolean;
+      Annotation?: any[];
+    },
   ) {
     super({ Annotation });
 
@@ -20,16 +35,35 @@ export class CsdlEntitySet extends CsdlAnnotable {
     this.IncludeInServiceDocument = IncludeInServiceDocument;
   }
 
+  override toJson() {
+    const json: {[key: string]: any} = {...super.toJson(), Name: this.Name, EntityType: this.EntityType};
+    if (this.NavigationPropertyBinding) {
+      json['NavigationPropertyBinding'] = this.NavigationPropertyBinding.map((n) => n.toJson());
+    }
+    if (this.IncludeInServiceDocument) {
+      json['IncludeInServiceDocument'] = this.IncludeInServiceDocument;
+    }
+    return json;
+  }
+
+  name() {
+    return `${this.Name}`;
+  }
+
+  namespace() {
+    return `${this.container.namespace()}`;
+  }
+
   fullName() {
-    return `${this.container.Namespace}.${this.Name}`;
+    return `${this.container.namespace()}.${this.Name}`;
   }
 
   toConfig(): EntitySetConfig {
     return {
-      name: this.name,
-      entityType: this.entityType,
+      name: this.Name,
+      entityType: this.EntityType,
       service: {},
-      annotations: this.annotations?.map(t => t.toConfig()),
+      annotations: this.Annotation?.map((t) => t.toConfig()),
     } as EntitySetConfig;
   }
 }
