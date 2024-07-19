@@ -23,6 +23,15 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
     this.Collection = Type.startsWith('Collection(');
     this.Type = this.Collection ? Type.substring(11, Type.length - 1) : Type;
   }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Name: this.Name,
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
+      Nullable: this.Nullable,
+    };
+  }
 }
 
 export class CsdlProperty extends CsdlStructuralProperty {
@@ -64,6 +73,18 @@ export class CsdlProperty extends CsdlStructuralProperty {
     this.SRID = SRID;
     this.DefaultValue = DefaultValue;
   }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      MaxLength: this.MaxLength,
+      Precision: this.Precision,
+      Scale: this.Scale,
+      Unicode: this.Unicode,
+      SRID: this.SRID,
+      DefaultValue: this.DefaultValue,
+    };
+  }
 }
 
 export class CsdlNavigationProperty extends CsdlStructuralProperty {
@@ -99,6 +120,16 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     );
     this.OnDelete = OnDelete ? new CsdlOnDelete(OnDelete) : undefined;
   }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Partner: this.Partner,
+      ContainsTarget: this.ContainsTarget,
+      ReferentialConstraints: this.ReferentialConstraints?.map((r) => r.toJson()),
+      OnDelete: this.OnDelete?.toJson(),
+    };
+  }
 }
 
 export class CsdlReferentialConstraint {
@@ -115,6 +146,13 @@ export class CsdlReferentialConstraint {
     this.Property = Property;
     this.ReferencedProperty = ReferencedProperty;
   }
+
+  toJson() {
+    return {
+      Property: this.Property,
+      ReferencedProperty: this.ReferencedProperty,
+    };
+  }
 }
 
 export class CsdlOnDelete {
@@ -122,5 +160,11 @@ export class CsdlOnDelete {
 
   constructor({ Action }: { Action: string }) {
     this.Action = Action;
+  }
+
+  toJson() {
+    return {
+      Action: this.Action,
+    };
   }
 }

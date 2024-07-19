@@ -1,6 +1,5 @@
 import { strings } from '@angular-devkit/core';
 import { Base } from './base';
-import { Import } from './import';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Service } from './service';

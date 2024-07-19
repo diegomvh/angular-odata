@@ -34,6 +34,25 @@ export class CsdlCallable {
     this.Parameter = Parameter?.map((p) => new CsdlParameter(p));
   }
 
+  toJson() {
+    const json: {[key: string]: any} = {
+      Name: this.Name,
+    }
+    if (this.ReturnType) {
+      json['ReturnType'] = this.ReturnType.toJson();
+    }
+    if (this.IsBound) {
+      json['IsBound'] = this.IsBound;
+    }
+    if (this.EntitySetPath) {
+      json['EntitySetPath'] = this.EntitySetPath;
+    }
+    if (this.Parameter) {
+      json['Parameter'] = this.Parameter.map((p) => p.toJson());
+    }
+    return json;
+  }
+
   name() {
     return `${this.Name}`;
   }
@@ -68,6 +87,13 @@ export class CsdlFunction extends CsdlCallable {
     super(schema, { Name, ReturnType, IsBound, EntitySetPath, Parameter });
     this.IsComposable = IsComposable;
   }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      IsComposable: this.IsComposable,
+    }
+  }
 }
 
 export class CsdlAction extends CsdlCallable {
@@ -88,6 +114,12 @@ export class CsdlAction extends CsdlCallable {
     },
   ) {
     super(schema, { Name, ReturnType, IsBound, EntitySetPath, Parameter });
+  }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+    }
   }
 }
 
@@ -116,6 +148,15 @@ export class CsdlFunctionImport {
     this.EntitySet = EntitySet;
     this.IncludeInServiceDocument = IncludeInServiceDocument;
   }
+
+  toJson() {
+    return {
+      Name: this.Name,
+      FunctionName: this.FunctionName,
+      EntitySet: this.EntitySet,
+      IncludeInServiceDocument: this.IncludeInServiceDocument,
+    };
+  }
 }
 
 export class CsdlActionImport {
@@ -138,6 +179,14 @@ export class CsdlActionImport {
     this.Name = Name;
     this.Action = Action;
     this.EntitySet = EntitySet;
+  }
+
+  toJson() {
+    return {
+      Name: this.Name,
+      Action: this.Action,
+      EntitySet: this.EntitySet,
+    };
   }
 }
 
@@ -180,6 +229,19 @@ export class CsdlParameter extends CsdlAnnotable {
     this.Scale = Scale;
     this.SRID = SRID;
   }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Name: this.Name,
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
+      Nullable: this.Nullable,
+      MaxLength: this.MaxLength,
+      Precision: this.Precision,
+      Scale: this.Scale,
+      SRID: this.SRID,
+    };
+  }
 }
 
 export class CsdlReturnType {
@@ -213,5 +275,16 @@ export class CsdlReturnType {
     this.Precision = Precision;
     this.Scale = Scale;
     this.SRID = SRID;
+  }
+
+  toJson() {
+    return {
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
+      Nullable: this.Nullable,
+      MaxLength: this.MaxLength,
+      Precision: this.Precision,
+      Scale: this.Scale,
+      SRID: this.SRID,
+    };
   }
 }

@@ -44,6 +44,18 @@ export class CsdlStructuredType extends CsdlAnnotable {
     this.Abstract = Abstract;
   }
 
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Name: this.Name,
+      Property: this.Property?.map((p) => p.toJson()),
+      NavigationProperty: this.NavigationProperty?.map((n) => n.toJson()),
+      BaseType: this.BaseType,
+      OpenType: this.OpenType,
+      Abstract: this.Abstract,
+    };
+  }
+
   name() {
     return `${this.Name}`;
   }
@@ -88,6 +100,12 @@ export class CsdlComplexType extends CsdlStructuredType {
       Annotation,
     });
   }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+    };
+  }
 }
 
 export class CsdlEntityType extends CsdlStructuredType {
@@ -130,6 +148,14 @@ export class CsdlEntityType extends CsdlStructuredType {
     this.Key = Key ? new CsdlKey(Key) : undefined;
     this.HasStream = HasStream;
   }
+
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Key: this.Key?.toJson(),
+      HasStream: this.HasStream,
+    };
+  }
 }
 
 export class CsdlKey {
@@ -137,6 +163,12 @@ export class CsdlKey {
 
   constructor({ PropertyRefs }: { PropertyRefs: any[] }) {
     this.PropertyRefs = PropertyRefs?.map((p) => new CsdlPropertyRef(p));
+  }
+
+  toJson() {
+    return {
+      PropertyRefs: this.PropertyRefs?.map((p) => p.toJson()),
+    };
   }
 }
 
@@ -147,5 +179,12 @@ export class CsdlPropertyRef {
   constructor({ Name, Alias }: { Name: string; Alias?: string }) {
     this.Name = Name;
     this.Alias = Alias;
+  }
+
+  toJson() {
+    return {
+      Name: this.Name,
+      Alias: this.Alias,
+    };
   }
 }

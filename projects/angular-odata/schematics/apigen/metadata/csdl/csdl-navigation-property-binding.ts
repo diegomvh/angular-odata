@@ -6,4 +6,11 @@ export class CsdlNavigationPropertyBinding {
     this.Path = Path;
     this.Target = Target;
   }
+
+  toJson() {
+    return {
+      Path: this.Path,
+      Target: this.Target,
+    };
+  }
 }
