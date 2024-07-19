@@ -81,22 +81,14 @@ export class ODataApi {
     this.version = config.version ?? DEFAULT_VERSION;
     this.default = config.default ?? false;
     this.creation = config.creation ?? new Date();
-    this.options = new ODataApiOptions(
-      Object.assign(
-        <ApiOptions>{ version: this.version },
-        config.options || {},
-      ),
-    );
+    this.options = new ODataApiOptions({...config.options, version: this.version});
 
     this.cache = (config.cache as ODataCache) ?? new ODataInMemoryCache();
     this.errorHandler = config.errorHandler;
-
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
-    console.log(config.metadata);
-    this.schemas = (config.schemas ?? []).map(
-      (schema) => new ODataSchema(schema, this),
-    );
+    config = config.metadata ? config.metadata.toConfig(config) : config;
+    this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
   }
 
   configure(

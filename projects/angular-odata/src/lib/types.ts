@@ -224,6 +224,7 @@ export type ApiConfig = {
   options?: ApiOptions;
   parsers?: { [type: string]: Parser<any> };
   schemas?: SchemaConfig[];
+  references?: any[];
 };
 export type AnnotationConfig = {
   term: string;
