@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "SchematicsMetadata",
+  "title": "Metadata Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "The name for the module.",
+      "type": "string"
+    },
+    "metadata": {
+      "description": "The url of the metadata.",
+      "type": "string"
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path at which to create the module, relative to the workspace root.",
+      "visible": false
+    },
+    "project": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "serviceRootUrl": {
+      "description": "The serviceRootUrl of the api.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "metadata"
+  ]
+}

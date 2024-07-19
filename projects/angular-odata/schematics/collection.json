@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Add my library to the project.",
+      "factory": "./ng-add/index#ngAdd"
+    },
+    "apigen": {
+      "description": "Generate API from metadata file.",
+      "factory": "./apigen/index#apigen",
+      "schema": "./apigen/schema.json"
+    }
+  }
+}
