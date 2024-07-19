@@ -34,22 +34,27 @@ export class ODataSettings {
   public defaultApi() {
     return this.apis.find((c) => c.default) as ODataApi;
   }
+
   public findApiByName(name: string) {
     return this.apis.find((c) => c.name === name);
   }
+
   public apiByName(name: string) {
     const api = this.findApiByName(name);
     if (api === undefined) throw new Error(`No API for name: ${name}`);
     return api;
   }
+
   public findApiForTypes(types: string[]) {
     return this.apis.find((c) =>
       c.schemas.some((s) => types.some((type) => s.isNamespaceOf(type))),
     );
   }
+
   public findApiForType(type: string) {
     return this.findApiForTypes([type]);
   }
+
   public apiForType(type: string) {
     const api = this.findApiForType(type);
     if (api === undefined) throw new Error(`No API for type: ${type}`);
@@ -112,9 +117,7 @@ export class ODataSettings {
   }
 
   public modelForType(type: string) {
-    let values = this.apis
-      .map((api) => api.findModel(type))
-      .filter((e) => e);
+    let values = this.apis.map((api) => api.findModel(type)).filter((e) => e);
     if (values.length === 0) throw Error(`No Model for type ${type} was found`);
     if (values.length > 1)
       throw Error('Multiple APIs: More than one value was found');
@@ -130,27 +133,6 @@ export class ODataSettings {
     if (values.length > 1)
       throw Error('Multiple APIs: More than one value was found');
     return values[0] as typeof ODataCollection;
-  }
-
-  public serviceForType(type: string) {
-    let values = this.apis
-      .map((api) => api.findServiceForType(type))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No Service for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
-    return values[0] as typeof ODataEntityService;
-  }
-  public serviceForEntityType(type: string) {
-    let values = this.apis
-      .map((api) => api.findServiceForEntityType(type))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No Service for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
-    return values[0] as typeof ODataEntityService;
   }
   //#endregion
 }

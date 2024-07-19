@@ -101,6 +101,12 @@ export class CsdlComplexType extends CsdlStructuredType {
       Annotation,
     });
   }
+  
+  override toJson() {
+    return {
+      ...super.toJson(),
+    };
+  }
 
   toConfig(): StructuredTypeConfig<any> {
     const fields = {};
@@ -158,6 +164,14 @@ export class CsdlEntityType extends CsdlStructuredType {
     this.HasStream = HasStream;
   }
 
+  override toJson() {
+    return {
+      ...super.toJson(),
+      Key: this.Key?.toJson(),
+      HasStream: this.HasStream,
+    };
+  }
+
   toConfig(): StructuredTypeConfig<any> {
     return {
       name: this.Name,
@@ -180,6 +194,12 @@ export class CsdlKey {
     this.PropertyRefs = PropertyRefs?.map((p) => new CsdlPropertyRef(p));
   }
 
+  toJson() {
+    return {
+      PropertyRefs: this.PropertyRefs?.map((p) => p.toJson()),
+    };
+  }
+
   toConfig() {
     return this.PropertyRefs.map((t) => t.toConfig());
   }
@@ -192,6 +212,13 @@ export class CsdlPropertyRef {
   constructor({ Name, Alias }: { Name: string; Alias?: string }) {
     this.Name = Name;
     this.Alias = Alias;
+  }
+
+  toJson() {
+    return {
+      Name: this.Name,
+      Alias: this.Alias,
+    };
   }
 
   toConfig(): { name: string; alias?: string } {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ODataClient } from '../client';
 import { ODataEntitySetService } from './entity-set';
 import { ODataSingletonService } from './singleton';
+import { ODataCollection, ODataModel } from '../models';
 
 @Injectable()
 export class ODataServiceFactory {
@@ -15,12 +16,18 @@ export class ODataServiceFactory {
   entitySet<T>(
     entitySetName: string,
     apiNameOrEntityType?: string,
+    options: {
+      Model?: { new (...params: any[]): ODataModel<T> };
+      Collection?: {
+        new (...params: any[]): ODataCollection<T, ODataModel<T>>;
+      };
+    } = {},
   ): ODataEntitySetService<T> {
-    return new (class extends ODataEntitySetService<T> {})(
-      this.client,
-      entitySetName,
-      apiNameOrEntityType,
-    );
+    const Service = class extends ODataEntitySetService<T> {
+      Model = options?.Model;
+      Collection = options?.Collection;
+    };
+    return new Service(this.client, entitySetName, apiNameOrEntityType);
   }
 
   /** Factory method to create a singleton service.
@@ -30,11 +37,11 @@ export class ODataServiceFactory {
   singleton<T>(
     singletonName: string,
     apiNameOrEntityType?: string,
+    options: { Model?: { new (...params: any[]): ODataModel<T> } } = {},
   ): ODataSingletonService<T> {
-    return new (class extends ODataSingletonService<T> {})(
-      this.client,
-      singletonName,
-      apiNameOrEntityType,
-    );
+    const Service = class extends ODataSingletonService<T> {
+      Model = options?.Model;
+    };
+    return new Service(this.client, singletonName, apiNameOrEntityType);
   }
 }

@@ -19,7 +19,6 @@ import {
   ODataSegment,
   ODataSingletonResource,
 } from './resources/index';
-import { ODataEntityService } from './services/entity';
 import { ODataSettings } from './settings';
 
 function addBody<T>(
@@ -50,21 +49,21 @@ export class ODataClient {
     private loader: ODataConfigLoader,
   ) {
     this.loader.loadConfigs().subscribe((configs) => {
-        this.settings = new ODataSettings(configs);
-        this.settings.configure({
-          requester: (req: ODataRequest<any>): Observable<any> =>
-            this.http.request(req.method, `${req.url}`, {
-              body: req.body,
-              context: req.context,
-              headers: req.headers,
-              observe: req.observe,
-              params: req.params,
-              reportProgress: req.reportProgress,
-              responseType: req.responseType,
-              withCredentials: req.withCredentials,
-            }),
-        });
+      this.settings = new ODataSettings(configs);
+      this.settings.configure({
+        requester: (req: ODataRequest<any>): Observable<any> =>
+          this.http.request(req.method, `${req.url}`, {
+            body: req.body,
+            context: req.context,
+            headers: req.headers,
+            observe: req.observe,
+            params: req.params,
+            reportProgress: req.reportProgress,
+            responseType: req.responseType,
+            withCredentials: req.withCredentials,
+          }),
       });
+    });
   }
 
   //#region Resolve Building Blocks
@@ -150,26 +149,6 @@ export class ODataClient {
    */
   collectionForType(type: string): typeof ODataCollection {
     return this.settings!.collectionForType(type);
-  }
-
-  /**
-   * Resolve the service for the given string type.
-   * @param type The string type of the service.
-   * @returns The service for the given type.
-   */
-  serviceForType(type: string): ODataEntityService<any> | undefined {
-    //return this.injector.get(this.settings!.serviceForType(type));
-    return undefined;
-  }
-
-  /**
-   * Resolve the service for the given string entity type.
-   * @param type The string entity type binding to the service.
-   * @returns The service for the given entity type.
-   */
-  serviceForEntityType(type: string): ODataEntityService<any> | undefined {
-    //return this.injector.get(this.settings!.serviceForEntityType(type));
-    return undefined;
   }
   //#endregion
 

@@ -4,7 +4,7 @@ import {
   EnumTypeFieldConfig,
   ParserOptions,
   FieldParser,
-  JsonType
+  JsonType,
 } from '../../types';
 import { Enums } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
@@ -48,11 +48,7 @@ export class ODataEnumTypeParser<E>
     );
   }
 
-  configure({
-    options,
-  }: {
-    options: ParserOptions;
-  }) {
+  configure({ options }: { options: ParserOptions }) {
     this.parserOptions = options;
   }
 
@@ -135,18 +131,18 @@ export class ODataEnumTypeParser<E>
 
   // Json Schema
   toJsonSchema() {
-    return (this.flags) ?
-      ({
-        title: this.name,
-        type: JsonType.array,
-        items: {
-          type: JsonType.integer,
+    return this.flags
+      ? {
+          title: this.name,
+          type: JsonType.array,
+          items: {
+            type: JsonType.integer,
+          },
         }
-      }) :
-      ({
-        type: JsonType.integer,
-        enum: this._fields.map((f) => f.value)
-      });
+      : {
+          type: JsonType.integer,
+          enum: this._fields.map((f) => f.value),
+        };
   }
 
   validate(

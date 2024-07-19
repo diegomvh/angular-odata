@@ -204,8 +204,8 @@ export function buildPathAndQuery<T>({
     query.$select = isRawType(select)
       ? (select as unknown as QueryCustomType).value
       : Array.isArray(select)
-      ? select.join(',')
-      : select;
+        ? select.join(',')
+        : select;
   }
 
   // Search
@@ -304,8 +304,8 @@ export function buildPathAndQuery<T>({
               escape,
             }),
           }),
-        {}
-      )
+        {},
+      ),
     );
   }
 
@@ -326,7 +326,7 @@ function renderPrimitiveValue(
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
-  }
+  },
 ) {
   return `${key} eq ${normalizeValue(val, { aliases, escape })}`;
 }
@@ -337,7 +337,7 @@ function buildFilter(
     aliases,
     propPrefix,
     escape,
-  }: { aliases?: QueryCustomType[]; propPrefix?: string; escape?: boolean }
+  }: { aliases?: QueryCustomType[]; propPrefix?: string; escape?: boolean },
 ): string {
   return (
     (Array.isArray(filters) ? filters : [filters]).reduce(
@@ -354,7 +354,7 @@ function buildFilter(
         }
         return acc;
       },
-      []
+      [],
     ) as string[]
   ).join(' and ');
 
@@ -364,7 +364,7 @@ function buildFilter(
       aliases,
       propPrefix,
       escape,
-    }: { aliases?: QueryCustomType[]; propPrefix?: string; escape?: boolean }
+    }: { aliases?: QueryCustomType[]; propPrefix?: string; escape?: boolean },
   ) {
     let filterExpr = '';
     if (isRawType(filter)) {
@@ -385,13 +385,13 @@ function buildFilter(
               propName = filterKey.replace(INDEXOF_REGEX, (_, $1) =>
                 $1.trim() === ITEM_ROOT
                   ? `(${propPrefix})`
-                  : `(${propPrefix}/${$1.trim()})`
+                  : `(${propPrefix}/${$1.trim()})`,
               );
             } else if (FUNCTION_REGEX.test(filterKey)) {
               propName = filterKey.replace(FUNCTION_REGEX, (_, $1) =>
                 $1.trim() === ITEM_ROOT
                   ? `(${propPrefix})`
-                  : `(${propPrefix}/${$1.trim()})`
+                  : `(${propPrefix}/${$1.trim()})`,
               );
             } else {
               propName = `${propPrefix}/${filterKey}`;
@@ -403,8 +403,8 @@ function buildFilter(
           if (filterKey === ITEM_ROOT && Array.isArray(value)) {
             return result.concat(
               value.map((arrayValue: any) =>
-                renderPrimitiveValue(propName, arrayValue, { escape, aliases })
-              )
+                renderPrimitiveValue(propName, arrayValue, { escape, aliases }),
+              ),
             );
           }
 
@@ -415,7 +415,7 @@ function buildFilter(
           ) {
             // Simple key/value handled as equals operator
             result.push(
-              renderPrimitiveValue(propName, value, { aliases, escape })
+              renderPrimitiveValue(propName, value, { aliases, escape }),
             );
           } else if (Array.isArray(value)) {
             const op = filterKey;
@@ -423,7 +423,7 @@ function buildFilter(
               .map((v) => buildFilter(v, { aliases, propPrefix, escape }))
               .filter((f) => f)
               .map((f) =>
-                LOGICAL_OPERATORS.indexOf(op) !== -1 ? `(${f})` : f
+                LOGICAL_OPERATORS.indexOf(op) !== -1 ? `(${f})` : f,
               );
             if (builtFilters.length) {
               if (LOGICAL_OPERATORS.indexOf(op) !== -1) {
@@ -443,8 +443,8 @@ function buildFilter(
             const builtFilters = Object.keys(value).map((valueKey) =>
               buildFilterCore(
                 { [valueKey]: value[valueKey] },
-                { aliases, escape }
-              )
+                { aliases, escape },
+              ),
             );
             if (builtFilters.length) {
               if (op === 'not') {
@@ -456,7 +456,7 @@ function buildFilter(
           } else if (typeof value === 'object') {
             if ('type' in value) {
               result.push(
-                renderPrimitiveValue(propName, value, { aliases, escape })
+                renderPrimitiveValue(propName, value, { aliases, escape }),
               );
             } else {
               const operators = Object.keys(value);
@@ -466,7 +466,7 @@ function buildFilter(
                     `${propName} ${op} ${normalizeValue(value[op], {
                       aliases,
                       escape,
-                    })}`
+                    })}`,
                   );
                 } else if (LOGICAL_OPERATORS.indexOf(op) !== -1) {
                   if (Array.isArray(value[op])) {
@@ -480,9 +480,9 @@ function buildFilter(
                               propPrefix: propName,
                               escape,
                             }) +
-                            ')'
+                            ')',
                         )
-                        .join(` ${op} `)
+                        .join(` ${op} `),
                     );
                   } else {
                     result.push(
@@ -492,7 +492,7 @@ function buildFilter(
                           propPrefix: propName,
                           escape,
                         }) +
-                        ')'
+                        ')',
                     );
                   }
                 } else if (COLLECTION_OPERATORS.indexOf(op) !== -1) {
@@ -500,7 +500,7 @@ function buildFilter(
                     filterKey.toLowerCase(),
                     value[op],
                     op,
-                    propName
+                    propName,
                   );
                   if (collectionClause) {
                     result.push(collectionClause);
@@ -510,7 +510,7 @@ function buildFilter(
                     `${propName} ${op} ${normalizeValue(value[op], {
                       aliases,
                       escape,
-                    })}`
+                    })}`,
                   );
                 } else if (op === 'in') {
                   const resultingValues = Array.isArray(value[op])
@@ -526,7 +526,7 @@ function buildFilter(
                       resultingValues
                         .map((v: any) => normalizeValue(v, { aliases, escape }))
                         .join(',') +
-                      ')'
+                      ')',
                   );
                 } else if (BOOLEAN_FUNCTIONS.indexOf(op) !== -1) {
                   // Simple boolean functions (startswith, endswith, contains)
@@ -534,7 +534,7 @@ function buildFilter(
                     `${op}(${propName},${normalizeValue(value[op], {
                       aliases,
                       escape,
-                    })})`
+                    })})`,
                   );
                 } else {
                   // Nested property
@@ -557,7 +557,7 @@ function buildFilter(
 
           return result;
         },
-        []
+        [],
       );
 
       filterExpr = filtersArray.join(' and ');
@@ -571,7 +571,7 @@ function buildFilter(
     lambdaParameter: string,
     value: any,
     op: string,
-    propName: string
+    propName: string,
   ) {
     let clause = '';
 
@@ -610,7 +610,7 @@ function getStringCollectionClause(
   lambdaParameter: string,
   value: any,
   collectionOperator: string,
-  propName: string
+  propName: string,
 ) {
   let clause = '';
   const conditionOperator = collectionOperator == 'all' ? 'ne' : 'eq';
@@ -635,7 +635,7 @@ export function normalizeValue(
   {
     aliases,
     escape = false,
-  }: { aliases?: QueryCustomType[]; escape?: boolean } = {}
+  }: { aliases?: QueryCustomType[]; escape?: boolean } = {},
 ): any {
   if (typeof value === 'string') {
     return escape ? `'${escapeIllegalChars(value)}'` : `'${value}'`;
@@ -671,7 +671,7 @@ export function normalizeValue(
           .filter(([, v]) => v !== undefined)
           .map(
             ([k, v]) =>
-              `${k}=${normalizeValue(v as Value, { aliases, escape })}`
+              `${k}=${normalizeValue(v as Value, { aliases, escape })}`,
           )
           .join(',');
     }
@@ -681,7 +681,10 @@ export function normalizeValue(
 
 function buildExpand<T>(
   expands: Expand<T>,
-  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean }
+  {
+    aliases,
+    escape = false,
+  }: { aliases?: QueryCustomType[]; escape?: boolean },
 ): string {
   if (isRawType(expands)) {
     return (expands as QueryCustomType).value;
@@ -717,7 +720,7 @@ function buildExpand<T>(
 
     if (
       expandKeys.some(
-        (key) => SUPPORTED_EXPAND_PROPERTIES.indexOf(key.toLowerCase()) !== -1
+        (key) => SUPPORTED_EXPAND_PROPERTIES.indexOf(key.toLowerCase()) !== -1,
       )
     ) {
       return expandKeys
@@ -732,7 +735,7 @@ function buildExpand<T>(
               break;
             case 'orderBy':
               value = buildOrderBy(
-                (expands as NestedExpandOptions<any>)[key] as OrderBy<T>
+                (expands as NestedExpandOptions<any>)[key] as OrderBy<T>,
               );
               break;
             case 'levels':
@@ -746,7 +749,7 @@ function buildExpand<T>(
             default:
               value = buildExpand(
                 (expands as NestedExpandOptions<any>)[key] as Expand<T>,
-                { aliases, escape }
+                { aliases, escape },
               );
           }
           return `$${key.toLowerCase()}=${value}`;
@@ -759,7 +762,7 @@ function buildExpand<T>(
             (expands as NestedExpandOptions<any>)[
               key
             ] as NestedExpandOptions<any>,
-            { aliases, escape }
+            { aliases, escape },
           );
           return builtExpand ? `${key}(${builtExpand})` : key;
         })
@@ -771,7 +774,10 @@ function buildExpand<T>(
 
 function buildTransforms<T>(
   transforms: Transform<T> | Transform<T>[],
-  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean }
+  {
+    aliases,
+    escape = false,
+  }: { aliases?: QueryCustomType[]; escape?: boolean },
 ) {
   // Wrap single object an array for simplified processing
   const transformsArray = Array.isArray(transforms) ? transforms : [transforms];
@@ -796,7 +802,7 @@ function buildTransforms<T>(
         const builtFilter = buildFilter(filter, { aliases, escape });
         if (builtFilter) {
           result.push(
-            `filter(${buildFilter(builtFilter, { aliases, escape })})`
+            `filter(${buildFilter(builtFilter, { aliases, escape })})`,
           );
         }
       }
@@ -806,7 +812,7 @@ function buildTransforms<T>(
 
       return result;
     },
-    []
+    [],
   );
 
   return transformsResult.join('/') || undefined;
@@ -839,7 +845,10 @@ function buildAggregate(aggregate: AggregateType | AggregateType[]) {
 
 function buildGroupBy<T>(
   groupBy: GroupByType<T>,
-  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean }
+  {
+    aliases,
+    escape = false,
+  }: { aliases?: QueryCustomType[]; escape?: boolean },
 ) {
   if (!groupBy.properties) {
     throw new Error(`'properties' property required for groupBy`);
@@ -864,7 +873,7 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
         value.length === 2 &&
         ['asc', 'desc'].indexOf(value[1]) !== -1
           ? value.join(' ')
-          : value
+          : value,
       )
       .map((v) => `${prefix}${v as string}`)
       .join(',');
@@ -879,7 +888,10 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
 
 function buildApply(
   apply: any,
-  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean }
+  {
+    aliases,
+    escape = false,
+  }: { aliases?: QueryCustomType[]; escape?: boolean },
 ) {
   const applyArray = Array.isArray(apply) ? apply : [apply];
   return applyArray
@@ -890,7 +902,7 @@ function buildApply(
 function buildUrl(path: string, params: { [name: string]: any }): string {
   // This can be refactored using URL API. But IE does not support it.
   const queries: string[] = Object.entries(params).map(
-    ([key, value]) => `${key}=${value}`
+    ([key, value]) => `${key}=${value}`,
   );
   return queries.length ? `${path}?${queries.join('&')}` : path;
 }

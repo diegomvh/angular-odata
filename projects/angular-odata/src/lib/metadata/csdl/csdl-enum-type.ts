@@ -81,6 +81,14 @@ export class CsdlMember extends CsdlAnnotable {
     this.Value = Value;
   }
 
+  override toJson() {
+    const json: {[key: string]: any} = {...super.toJson(), Name: this.Name};
+    if (this.Value) {
+      json['Value'] = this.Value;
+    }
+    return json;
+  }
+
   toConfig(): EnumTypeFieldConfig<any> {
     return {
       value: this.Value,

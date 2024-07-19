@@ -32,7 +32,10 @@ import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
 import { EventEmitter } from '@angular/core';
-import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
+import {
+  ODataEntitiesAnnotations,
+  ODataEntityAnnotations,
+} from '../annotations';
 
 export enum ODataModelEventType {
   Change = 'change',
@@ -75,9 +78,9 @@ export class ODataModelEvent<T> {
       bubbles?: boolean;
       chain?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelAttribute<any> | number | null
+        ODataModelAttribute<any> | number | null,
       ][];
-    } = {}
+    } = {},
   ) {
     this.type = type;
     this.model = model;
@@ -88,8 +91,8 @@ export class ODataModelEvent<T> {
     this.chain = chain ?? [
       [
         (this.model || this.collection) as
-        | ODataModel<any>
-        | ODataCollection<any, ODataModel<any>>,
+          | ODataModel<any>
+          | ODataCollection<any, ODataModel<any>>,
         attr || null,
       ],
     ];
@@ -98,17 +101,15 @@ export class ODataModelEvent<T> {
 
   chain: [
     ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-    ODataModelAttribute<any> | number | null
+    ODataModelAttribute<any> | number | null,
   ][];
 
   push(
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-    attr: ODataModelAttribute<any> | number
+    attr: ODataModelAttribute<any> | number,
   ) {
     return new ODataModelEvent<any>(this.type, {
-      model:
-        this.model ??
-        (model instanceof ODataModel ? model : undefined),
+      model: this.model ?? (model instanceof ODataModel ? model : undefined),
       collection:
         this.collection ??
         (model instanceof ODataCollection
@@ -150,7 +151,7 @@ export class ODataModelEvent<T> {
             ? index === 0
               ? attr.name
               : `.${attr.name}`
-            : ''
+            : '',
       )
       .join('');
   }
@@ -208,7 +209,7 @@ export class ODataModelEventEmitter<T> extends EventEmitter<
       value?: any;
       options?: any;
       bubbles?: boolean;
-    } = {}
+    } = {},
   ) {
     const _trigger = (name: string) =>
       this.emit(
@@ -220,7 +221,7 @@ export class ODataModelEventEmitter<T> extends EventEmitter<
           attr,
           options,
           bubbles,
-        })
+        }),
       );
     if (type && EVENT_SPLITTER.test(type)) {
       for (const name of type.split(EVENT_SPLITTER)) {
@@ -279,7 +280,7 @@ export type ModelFieldOptions = {
 };
 
 export function Model({ cid = CID_FIELD_NAME }: { cid?: string } = {}) {
-  return <T extends { new(...args: any[]): {} }>(constructor: T) => {
+  return <T extends { new (...args: any[]): {} }>(constructor: T) => {
     const Klass = <any>constructor;
     if (!Klass.hasOwnProperty('options'))
       Klass.options = {
@@ -318,7 +319,9 @@ export class ODataModelField<F> {
   options: ODataModelOptions<any>;
   optionsForType?: (type: string) => ODataModelOptions<any> | undefined;
   modelForType?: (t: string) => typeof ODataModel<any> | undefined;
-  collectionForType?: (t: string) => typeof ODataCollection<any, ODataModel<any>> | undefined;
+  collectionForType?: (
+    t: string,
+  ) => typeof ODataCollection<any, ODataModel<any>> | undefined;
   enumForType?: (t: string) => ODataEnumType<F> | undefined;
   structuredForType?: (t: string) => ODataStructuredType<F> | undefined;
   default?: any;
@@ -333,7 +336,7 @@ export class ODataModelField<F> {
 
   constructor(
     options: ODataModelOptions<any>,
-    { name, field, parser, ...opts }: ODataModelFieldOptions<F>
+    { name, field, parser, ...opts }: ODataModelFieldOptions<F>,
   ) {
     this.options = options;
     this.name = name;
@@ -375,10 +378,12 @@ export class ODataModelField<F> {
     options,
   }: {
     optionsForType: (type: string) => ODataModelOptions<any> | undefined;
-    modelForType: (t: string) => typeof ODataModel<any> | undefined 
-    collectionForType: (t: string) => typeof ODataCollection<any, any> | undefined,
-    enumForType: (t: string) => ODataEnumType<any> | undefined 
-    structuredForType: (t: string) => ODataStructuredType<any> | undefined,
+    modelForType: (t: string) => typeof ODataModel<any> | undefined;
+    collectionForType: (
+      t: string,
+    ) => typeof ODataCollection<any, any> | undefined;
+    enumForType: (t: string) => ODataEnumType<any> | undefined;
+    structuredForType: (t: string) => ODataStructuredType<any> | undefined;
     concurrency: boolean;
     options: ParserOptions;
   }) {
@@ -410,7 +415,9 @@ export class ODataModelField<F> {
   }
 
   structuredType() {
-    const structuredType = this.structuredForType ? this.structuredForType(this.type) : undefined;
+    const structuredType = this.structuredForType
+      ? this.structuredForType(this.type)
+      : undefined;
     //Throw error if not found
     if (!structuredType)
       throw new Error(`Could not find structured type for ${this.parser.type}`);
@@ -437,7 +444,7 @@ export class ODataModelField<F> {
     }: {
       method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {}
+    } = {},
   ) {
     if (ODataModelOptions.isModel(value)) {
       return !value.isValid({ method, navigation }) ? value._errors : undefined;
@@ -497,7 +504,9 @@ export class ODataModelField<F> {
   }
 
   defaults(): any {
-    const meta = this.optionsForType ? this.optionsForType(this.type) : undefined;
+    const meta = this.optionsForType
+      ? this.optionsForType(this.type)
+      : undefined;
     return this.isStructuredType() && meta !== undefined
       ? meta.defaults()
       : this.default;
@@ -519,7 +528,7 @@ export class ODataModelField<F> {
   }
 
   resourceFactory<T, F>(
-    base: ODataResource<T>
+    base: ODataResource<T>,
   ): ODataNavigationPropertyResource<F> | ODataPropertyResource<F> {
     if (
       !(
@@ -535,7 +544,7 @@ export class ODataModelField<F> {
   }
 
   annotationsFactory<T, F>(
-    base: ODataEntityAnnotations<T>
+    base: ODataEntityAnnotations<T>,
   ): ODataEntityAnnotations<F> | ODataEntitiesAnnotations<F> {
     return this.parser.collection
       ? base.property(this.parser.name as keyof T, 'collection')
@@ -553,7 +562,7 @@ export class ODataModelField<F> {
   }): ODataModel<F> {
     // Model
     const annots = this.annotationsFactory(
-      parent.annots()
+      parent.annots(),
     ) as ODataEntityAnnotations<F>;
     let Model = this.modelForType ? this.modelForType(this.type) : undefined;
     if (Model === undefined) throw Error(`No Model type for ${this.name}`);
@@ -563,7 +572,7 @@ export class ODataModelField<F> {
 
     if (annots?.type !== undefined && Model.meta !== null) {
       const meta = Model.meta.findChildOptions((o) =>
-        o.isTypeOf(annots.type as string)
+        o.isTypeOf(annots.type as string),
       )?.structuredType;
       if (meta !== undefined && meta.model !== undefined)
         // Change to child model
@@ -588,9 +597,11 @@ export class ODataModelField<F> {
   }): ODataCollection<F, ODataModel<F>> {
     // Collection Factory
     const annots = this.annotationsFactory(
-      parent.annots()
+      parent.annots(),
     ) as ODataEntitiesAnnotations<F>;
-    const Collection = this.collectionForType ? this.collectionForType(this.type) : undefined;
+    const Collection = this.collectionForType
+      ? this.collectionForType(this.type)
+      : undefined;
     if (Collection === undefined)
       throw Error(`No Collection type for ${this.name}`);
     return new Collection(
@@ -599,7 +610,7 @@ export class ODataModelField<F> {
         annots: annots,
         reset,
         parent: [parent, this],
-      }
+      },
     ) as ODataCollection<F, ODataModel<F>>;
   }
 }
@@ -612,8 +623,8 @@ export class ODataModelAttribute<T> {
 
   constructor(
     private _model: ODataModel<any>,
-    private _field: ODataModelField<T>
-  ) { }
+    private _field: ODataModelField<T>,
+  ) {}
 
   get type() {
     return this._field.type;
@@ -664,7 +675,7 @@ export class ODataModelAttribute<T> {
       | null
       | undefined,
     reset: boolean = false,
-    reparent: boolean = false
+    reparent: boolean = false,
   ) {
     const current = this.get();
 
@@ -673,7 +684,7 @@ export class ODataModelAttribute<T> {
       ODataModelOptions.isCollection(current)
     )
       this.unlink(
-        current as ODataModel<T> | ODataCollection<T, ODataModel<T>>
+        current as ODataModel<T> | ODataCollection<T, ODataModel<T>>,
         //this.value !== current
       );
 
@@ -681,10 +692,10 @@ export class ODataModelAttribute<T> {
       ODataModelOptions.isModel(current) && ODataModelOptions.isModel(value)
         ? !(current as ODataModel<T>).equals(value as ODataModel<T>)
         : ODataModelOptions.isCollection(current) &&
-          ODataModelOptions.isCollection(value)
+            ODataModelOptions.isCollection(value)
           ? !(current as ODataCollection<T, ODataModel<T>>).equals(
-            value as ODataCollection<T, ODataModel<T>>
-          )
+              value as ODataCollection<T, ODataModel<T>>,
+            )
           : !Types.isEqual(current, value);
     if (reset) {
       this.value = value;
@@ -700,7 +711,7 @@ export class ODataModelAttribute<T> {
     ) {
       this.link(
         value as ODataModel<T> | ODataCollection<T, ODataModel<T>>,
-        reparent
+        reparent,
       );
     }
     return changed;
@@ -726,7 +737,7 @@ export class ODataModelAttribute<T> {
       ODataModelOptions.isCollection(this.change)
     )
       this.unlink(
-        this.change as ODataModel<T> | ODataCollection<T, ODataModel<T>>
+        this.change as ODataModel<T> | ODataCollection<T, ODataModel<T>>,
       );
     this.change = undefined;
     if (
@@ -734,13 +745,13 @@ export class ODataModelAttribute<T> {
       ODataModelOptions.isCollection(this.value)
     )
       this.link(
-        this.value as ODataModel<T> | ODataCollection<T, ODataModel<T>>
+        this.value as ODataModel<T> | ODataCollection<T, ODataModel<T>>,
       );
   }
 
   private link(
     value: ODataModel<T> | ODataCollection<T, ODataModel<T>>,
-    reparent: boolean = false
+    reparent: boolean = false,
   ) {
     this.subscription = value.events$.subscribe((e) => this.events$.emit(e));
     if (reparent) {
@@ -750,7 +761,7 @@ export class ODataModelAttribute<T> {
 
   private unlink(
     value: ODataModel<T> | ODataCollection<T, ODataModel<T>>,
-    reparent: boolean = false
+    reparent: boolean = false,
   ) {
     this.subscription?.unsubscribe();
     this.subscription = undefined;
@@ -820,7 +831,7 @@ export class ODataModelOptions<T> {
   isModelFor(entity: T | { [name: string]: any }) {
     // Resolve By Type
     const type = this.api.options.helper.type(
-      entity as { [name: string]: any }
+      entity as { [name: string]: any },
     );
     if (type && this.isTypeOf(type)) return true;
     // Resolve By fields
@@ -833,7 +844,7 @@ export class ODataModelOptions<T> {
   }
 
   findChildOptions(
-    predicate: (options: ODataModelOptions<any>) => boolean
+    predicate: (options: ODataModelOptions<any>) => boolean,
   ): ODataModelOptions<any> | undefined {
     if (predicate(this)) return this;
     let match: ODataModelOptions<any> | undefined;
@@ -844,13 +855,11 @@ export class ODataModelOptions<T> {
     return match;
   }
 
-  configure({
-    options,
-  }: {
-    options: ParserOptions;
-  }) {
+  configure({ options }: { options: ParserOptions }) {
     if (this.base) {
-      const parent = this.api.optionsForType(this.base) as ODataModelOptions<any>;
+      const parent = this.api.optionsForType(
+        this.base,
+      ) as ODataModelOptions<any>;
       parent.children.push(this);
       this.parent = parent;
     }
@@ -886,7 +895,7 @@ export class ODataModelOptions<T> {
         ? this.parent.fields({ include_navigation, include_parents })
         : []),
       ...this._fields.filter(
-        (field) => include_navigation || !field.navigation
+        (field) => include_navigation || !field.navigation,
       ),
     ];
   }
@@ -898,12 +907,16 @@ export class ODataModelOptions<T> {
     return field as ODataModelField<F>;
   }
 
-  findField<F>(name: keyof T | string, {reset}: {reset?: boolean} = {}): ODataModelField<F> | undefined {
+  findField<F>(
+    name: keyof T | string,
+    { reset }: { reset?: boolean } = {},
+  ): ODataModelField<F> | undefined {
     return this.fields({
       include_parents: true,
       include_navigation: true,
     }).find(
-      (modelField: ODataModelField<F>) => (reset && modelField.field === name) || modelField.name === name
+      (modelField: ODataModelField<F>) =>
+        (reset && modelField.field === name) || modelField.name === name,
     ) as ODataModelField<F> | undefined;
   }
 
@@ -911,7 +924,8 @@ export class ODataModelOptions<T> {
     const { field, parser, ...opts } = options;
     if (field === undefined || name === undefined)
       throw new Error('Model Properties need name and field');
-    const fieldParser = parser ?? this.structuredType.field<F>(field as keyof T);
+    const fieldParser =
+      parser ?? this.structuredType.field<F>(field as keyof T);
     if (fieldParser === undefined)
       throw new Error(`No parser for ${field} with name = ${name}`);
     const modelField = new ODataModelField<F>(this, {
@@ -933,9 +947,11 @@ export class ODataModelOptions<T> {
   private modelFieldFactory<F>(
     self: ODataModel<T>,
     name: string,
-    type: EdmType | string
+    type: EdmType | string,
   ) {
-    const structuredFieldParser = this.structuredType.addField<F>(name, { type });
+    const structuredFieldParser = this.structuredType.addField<F>(name, {
+      type,
+    });
     structuredFieldParser.configure({
       parserForType: (type: EdmType | string) => this.api.parserForType(type),
       options: this.api.options,
@@ -968,7 +984,7 @@ export class ODataModelOptions<T> {
       | ODataEntityResource<T>
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>
-      | ODataSingletonResource<T>
+      | ODataSingletonResource<T>,
   ) {
     if (
       self._resource !== null &&
@@ -976,7 +992,7 @@ export class ODataModelOptions<T> {
       !self._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        `Can't attach ${resource.outgoingType()} to ${self._resource.outgoingType()}`
+        `Can't attach ${resource.outgoingType()} to ${self._resource.outgoingType()}`,
       );
 
     const current = self._resource;
@@ -991,22 +1007,22 @@ export class ODataModelOptions<T> {
 
   //# region Resource
   static chain(
-    child: ODataModel<any> | ODataCollection<any, ODataModel<any>>
+    child: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
   ): [
     ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-    ODataModelField<any> | null
+    ODataModelField<any> | null,
   ][] {
     const chain = [] as any[];
     let tuple:
       | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null
-      ]
+          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+          ODataModelField<any> | null,
+        ]
       | null = [child, null];
     while (tuple !== null) {
       const parent = tuple as [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null
+        ODataModelField<any> | null,
       ];
       if (chain.some((p) => p[0] === parent[0])) break;
       chain.splice(0, 0, parent);
@@ -1016,7 +1032,7 @@ export class ODataModelOptions<T> {
   }
 
   static resource<T>(
-    child: ODataModel<T> | ODataCollection<T, ODataModel<T>>
+    child: ODataModel<T> | ODataCollection<T, ODataModel<T>>,
   ): ODataResource<T> | null {
     let resource: ODataResource<any> | null = null;
     let prevField: ODataModelField<any> | null = null;
@@ -1051,7 +1067,7 @@ export class ODataModelOptions<T> {
       if (field === null && model._resource !== null) {
         // Apply the query from model to new resource
         model._resource.query((qs) =>
-          resource?.query((qd) => qd.restore(qs.store()))
+          resource?.query((qd) => qd.restore(qs.store())),
         );
       } else if (field !== null) {
         resource = field.resourceFactory<any, any>(resource);
@@ -1061,7 +1077,7 @@ export class ODataModelOptions<T> {
   }
 
   collectionResourceFactory(
-    query?: ODataQueryOptions<T>
+    query?: ODataQueryOptions<T>,
   ):
     | ODataEntitySetResource<T>
     | ODataNavigationPropertyResource<T>
@@ -1076,7 +1092,7 @@ export class ODataModelOptions<T> {
   }
 
   modelResourceFactory(
-    query?: ODataQueryOptions<T>
+    query?: ODataQueryOptions<T>,
   ):
     | ODataEntityResource<T>
     | ODataNavigationPropertyResource<T>
@@ -1103,11 +1119,11 @@ export class ODataModelOptions<T> {
     }: {
       parent?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null
+        ODataModelField<any> | null,
       ];
       resource?: ODataResource<T> | null;
       annots?: ODataEntityAnnotations<T>;
-    } = {}
+    } = {},
   ) {
     // Events
     self.events$.subscribe((e) => this.events$.emit(e));
@@ -1124,10 +1140,10 @@ export class ODataModelOptions<T> {
       this.attach(
         self,
         resource as
-        | ODataEntityResource<T>
-        | ODataPropertyResource<T>
-        | ODataNavigationPropertyResource<T>
-        | ODataSingletonResource<T>
+          | ODataEntityResource<T>
+          | ODataPropertyResource<T>
+          | ODataNavigationPropertyResource<T>
+          | ODataSingletonResource<T>,
       );
     }
 
@@ -1156,7 +1172,7 @@ export class ODataModelOptions<T> {
       | ODataPropertyResource<T>
       | ODataNavigationPropertyResource<T>
       | ODataSingletonResource<T>,
-    func: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
+    func: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void,
   ) {
     resource.query(func);
     this.attach(self, resource);
@@ -1169,7 +1185,7 @@ export class ODataModelOptions<T> {
       field_mapping = false,
       resolve = true,
       single = true,
-    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {}
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {},
   ): EntityKey<T> | { [name: string]: any } | undefined {
     const keyTypes = this.structuredType.keys({ include_parents: true });
     const key = new Map<string, any>();
@@ -1183,7 +1199,10 @@ export class ODataModelOptions<T> {
           .fields({ include_navigation: false, include_parents: true })
           .find((field: ODataModelField<any>) => field.field === name);
         if (field !== undefined) {
-          v = Types.isPlainObject(v) || ODataModelOptions.isModel(v) ? v[field.name] : v;
+          v =
+            Types.isPlainObject(v) || ODataModelOptions.isModel(v)
+              ? v[field.name]
+              : v;
           options = this.api.optionsForType(field.type);
         }
       }
@@ -1205,7 +1224,7 @@ export class ODataModelOptions<T> {
       field_mapping = false,
       resolve = true,
       single = false,
-    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {}
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {},
   ): { [name: string]: any } | null | undefined {
     const referential = new Map<string, any>();
     for (const ref of attr.referentials) {
@@ -1236,7 +1255,7 @@ export class ODataModelOptions<T> {
       field_mapping = false,
       resolve = true,
       single = false,
-    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {}
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {},
   ): { [name: string]: any } | null | undefined {
     const referenced = new Map<string, any>();
     for (const ref of attr.referentials) {
@@ -1245,10 +1264,11 @@ export class ODataModelOptions<T> {
         include_parents: true,
       }).find((field: ODataModelField<any>) => field.field === ref.property);
       const meta = this.api.optionsForType<any>(attr.type);
-      const to = meta?.fields({ include_navigation: false, include_parents: true })
+      const to = meta
+        ?.fields({ include_navigation: false, include_parents: true })
         .find(
           (field: ODataModelField<any>) =>
-            field.field === ref.referencedProperty
+            field.field === ref.referencedProperty,
         );
       if (from !== undefined && to !== undefined) {
         const name = field_mapping ? to.field : to.name;
@@ -1271,7 +1291,7 @@ export class ODataModelOptions<T> {
     }: {
       method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {}
+    } = {},
   ): { [name: string]: string[] } | undefined {
     const errors = this.fields({
       include_parents: true,
@@ -1301,14 +1321,14 @@ export class ODataModelOptions<T> {
 
   hasChanged(
     self: ODataModel<T>,
-    { include_navigation = false }: { include_navigation?: boolean } = {}
+    { include_navigation = false }: { include_navigation?: boolean } = {},
   ): boolean {
     return [...self._attributes.values()]
       .filter((attr) => !attr.navigation || include_navigation)
       .some(
         (attr) =>
           (!include_navigation || attr.navigation) &&
-          attr.isChanged({ include_navigation })
+          attr.isChanged({ include_navigation }),
       );
   }
 
@@ -1324,7 +1344,7 @@ export class ODataModelOptions<T> {
       | ODataNavigationPropertyResource<T>
       | ODataSingletonResource<T>
       | null,
-    ctx: (model: M) => R
+    ctx: (model: M) => R,
   ): R {
     // Push
     self.pushResource(resource);
@@ -1335,7 +1355,7 @@ export class ODataModelOptions<T> {
         finalize(() => {
           // Pop
           self.popResource();
-        })
+        }),
       );
     } else {
       // Pop
@@ -1381,24 +1401,24 @@ export class ODataModelOptions<T> {
       changes_only?: boolean;
       field_mapping?: boolean;
       chain?: (ODataModel<any> | ODataCollection<any, ODataModel<any>>)[];
-    } = {}
+    } = {},
   ): T | { [name: string]: any } {
     let entity: any = [...self._attributes.values()]
       .filter(
         // Chain
-        (attr) => chain.every((c) => c !== attr.get())
+        (attr) => chain.every((c) => c !== attr.get()),
       )
       .filter(
         // Changes only
         (attr) =>
           !changes_only ||
-          (changes_only && attr.isChanged({ include_navigation }))
+          (changes_only && attr.isChanged({ include_navigation })),
       )
       .filter(
         (attr) =>
           // Navigation
           (include_navigation && attr.navigation && attr.get() !== null) ||
-          !attr.navigation
+          !attr.navigation,
       )
       .reduce((acc, attr) => {
         const name = field_mapping ? attr.fieldName : attr.name;
@@ -1451,7 +1471,7 @@ export class ODataModelOptions<T> {
       const nonFieldAttrs = Object.entries(self)
         .filter(
           ([k]) =>
-            names.indexOf(k) === -1 && !k.startsWith('_') && !k.endsWith('$')
+            names.indexOf(k) === -1 && !k.startsWith('_') && !k.endsWith('$'),
         )
         .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {});
       entity = { ...entity, ...nonFieldAttrs };
@@ -1483,11 +1503,14 @@ export class ODataModelOptions<T> {
     if (
       self._parent !== null &&
       ((ODataModelOptions.isModel(self._parent[0]) &&
-        self._parent[1] !== null && this.api.optionsForType(self._parent[1].type) !== self._meta) ||
+        self._parent[1] !== null &&
+        this.api.optionsForType(self._parent[1].type) !== self._meta) ||
         (ODataModelOptions.isCollection(self._parent[0]) &&
-          (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model.meta !== self._meta))
+          (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model
+            .meta !== self._meta))
     ) {
-      entity[this.api.options.helper.ODATA_TYPE] = `#${this.structuredType.type()}`;
+      entity[this.api.options.helper.ODATA_TYPE] =
+        `#${this.structuredType.type()}`;
     }
 
     return entity as T | { [name: string]: any };
@@ -1495,7 +1518,7 @@ export class ODataModelOptions<T> {
 
   reset(
     self: ODataModel<T>,
-    { name, silent = false }: { name?: string; silent?: boolean } = {}
+    { name, silent = false }: { name?: string; silent?: boolean } = {},
   ) {
     let changes: string[] = [];
     if (name !== undefined) {
@@ -1544,7 +1567,7 @@ export class ODataModelOptions<T> {
       reset?: boolean;
       reparent?: boolean;
       silent?: boolean;
-    } = {}
+    } = {},
   ) {
     const changes: string[] = [];
 
@@ -1555,11 +1578,20 @@ export class ODataModelOptions<T> {
     Object.entries(attrs)
       .filter(([, value]) => value !== undefined) // Filter undefined
       .forEach(([key, value]) => {
-        const field = this.findField(key, {reset});
+        const field = this.findField(key, { reset });
 
         if (field !== undefined || this.isOpenType()) {
           // Delegated to private setter
-          if (this.set(self, field ?? key, value, { add, merge, remove, reset, reparent, silent })) {
+          if (
+            this.set(self, field ?? key, value, {
+              add,
+              merge,
+              remove,
+              reset,
+              reparent,
+              silent,
+            })
+          ) {
             changes.push(field?.name ?? key);
           }
         } else {
@@ -1573,7 +1605,7 @@ export class ODataModelOptions<T> {
     if (!silent && changes.length > 0) {
       self.events$.trigger(
         reset ? ODataModelEventType.Reset : ODataModelEventType.Update,
-        { options: { changes } }
+        { options: { changes } },
       );
     }
     return self;
@@ -1589,10 +1621,10 @@ export class ODataModelOptions<T> {
 
   get<F>(
     self: ODataModel<T>,
-    field: ODataModelField<F> | string
+    field: ODataModelField<F> | string,
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
     const attr = self._attributes.get(
-      field instanceof ODataModelField ? field.name : field
+      field instanceof ODataModelField ? field.name : field,
     );
     if (attr !== undefined) {
       const value = attr.get();
@@ -1636,15 +1668,23 @@ export class ODataModelOptions<T> {
       | ODataModel<F>
       | ODataCollection<F, ODataModel<F>>
       | null,
-    { add, merge, remove, reset, reparent, silent, type }: { 
+    {
+      add,
+      merge,
+      remove,
+      reset,
+      reparent,
+      silent,
+      type,
+    }: {
       add?: boolean;
       merge?: boolean;
       remove?: boolean;
       reset?: boolean;
       reparent?: boolean;
       silent?: boolean;
-      type?: EdmType | string 
-    } = {}
+      type?: EdmType | string;
+    } = {},
   ): boolean {
     let modelField =
       field instanceof ODataModelField ? field : this.findField<F>(field);
@@ -1683,20 +1723,24 @@ export class ODataModelOptions<T> {
           changed = attr.set(
             value as ODataCollection<F, ODataModel<F>>,
             reset,
-            reparent
+            reparent,
           );
         } else if (Types.isArray(value)) {
           // New value is array
           currentCollection._annotations = modelField.annotationsFactory(
-            self.annots()
+            self.annots(),
           ) as ODataEntitiesAnnotations<F>;
-          currentCollection.assign(value as Partial<T>[] | { [name: string]: any }[], {
-            add,
-            merge,
-            remove,
-            reset,
-            reparent,
-            silent});
+          currentCollection.assign(
+            value as Partial<T>[] | { [name: string]: any }[],
+            {
+              add,
+              merge,
+              remove,
+              reset,
+              reparent,
+              silent,
+            },
+          );
           changed = currentCollection.hasChanged();
         }
       } else if (ODataModelOptions.isModel(current)) {
@@ -1704,14 +1748,10 @@ export class ODataModelOptions<T> {
         const currentModel = current as ODataModel<F>;
         if (ODataModelOptions.isModel(value)) {
           // New value is model
-          changed = attr.set(
-            value as ODataModel<F>,
-            reset,
-            reparent
-          );
+          changed = attr.set(value as ODataModel<F>, reset, reparent);
         } else if (Types.isPlainObject(value)) {
           currentModel._annotations = modelField.annotationsFactory(
-            self.annots()
+            self.annots(),
           ) as ODataEntityAnnotations<F>;
           currentModel.assign(value as F | { [name: string]: any }, {
             add,
@@ -1719,7 +1759,8 @@ export class ODataModelOptions<T> {
             remove,
             reset,
             reparent,
-            silent});
+            silent,
+          });
           changed = currentModel.hasChanged();
         }
       } else {
@@ -1731,17 +1772,17 @@ export class ODataModelOptions<T> {
             ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
             : modelField.collection
               ? modelField.collectionFactory<F>({
-                parent: self,
-                value: value as F[] | { [name: string]: any }[],
-                reset: reset,
-              })
+                  parent: self,
+                  value: value as F[] | { [name: string]: any }[],
+                  reset: reset,
+                })
               : modelField.modelFactory<F>({
-                parent: self,
-                value: value,
-                reset: reset,
-              }),
+                  parent: self,
+                  value: value,
+                  reset: reset,
+                }),
           reset,
-          reparent
+          reparent,
         );
       }
 
