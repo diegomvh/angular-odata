@@ -87,7 +87,6 @@ export class ODataApi {
     this.errorHandler = config.errorHandler;
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
-    config = config.metadata ? config.metadata.toConfig(config) : config;
     this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
   }
 

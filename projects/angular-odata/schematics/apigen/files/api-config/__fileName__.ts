@@ -1,12 +1,11 @@
-import { ApiConfig, EDM_PARSERS, ODataMetadata } from 'angular-odata';
+import { ApiConfig, EDM_PARSERS, ODataMetadata, ODataVersion } from 'angular-odata';
 import * as json from './metadata.json';
 
-export const <%= classify(name) %> = {
+export const <%= classify(name) %> = ODataMetadata.fromJson(json).toConfig({
   serviceRootUrl: '<%= serviceRootUrl %>', 
   metadataUrl: '<%= metadataUrl %>', 
-  metadata: ODataMetadata.fromJson(json),
   name: '<%= apiConfigName %>',
-  version: '<%= version %>',
+  version: '<%= version %>' as ODataVersion,
   creation: new Date('<%= creation.toISOString() %>'),
   parsers: EDM_PARSERS
-} as ApiConfig;
+}) as ApiConfig;

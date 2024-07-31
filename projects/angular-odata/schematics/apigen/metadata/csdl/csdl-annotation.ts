@@ -8,7 +8,7 @@ export class CsdlAnnotable {
 
   toJson() {
     const json: {[key: string]: any} = {};
-    if (this.Annotation) {
+    if (Array.isArray(this.Annotation) && this.Annotation.length > 0) {
       json['Annotation'] = this.Annotation.map((a) => a.toJson());
     }
     return json;
@@ -49,8 +49,8 @@ export class CsdlAnnotation {
   String?: string;
   Bool?: boolean;
   Int?: number;
-  Collection?: any;
-  Record?: any;
+  Collection?: CsdlCollection[];
+  Record?: CsdlRecord[];
   EnumMember?: CsdlEnumMember[];
   constructor({
     Term,
@@ -65,16 +65,16 @@ export class CsdlAnnotation {
     String?: string;
     Bool?: boolean;
     Int?: number;
-    Collection?: any;
-    Record?: any;
+    Collection?: any[];
+    Record?: any[];
     EnumMember?: any[];
   }) {
     this.Term = Term;
     this.String = String;
     this.Bool = Bool;
     this.Int = Int;
-    this.Collection = Collection;
-    this.Record = Record;
+    this.Collection = Collection?.map((a) => new CsdlCollection(a));
+    this.Record = Record?.map((a) => new CsdlRecord(a));
     this.EnumMember = EnumMember?.map((a) => new CsdlEnumMember(a));
   }
   
@@ -89,13 +89,13 @@ export class CsdlAnnotation {
     if (this.Int) {
       json['Int'] = this.Int;
     }
-    if (this.Collection) {
-      json['Collection'] = this.Collection;
+    if (Array.isArray(this.Collection) && this.Collection.length > 0) {
+      json['Collection'] = this.Collection.map((m) => m.toJson());
     }
-    if (this.Record) {
-      json['Record'] = this.Record;
+    if (Array.isArray(this.Record) && this.Record.length > 0) {
+      json['Record'] = this.Record.map((m) => m.toJson());
     }
-    if (this.EnumMember) {
+    if (Array.isArray(this.EnumMember) && this.EnumMember.length > 0) {
       json['EnumMember'] = this.EnumMember.map((m) => m.toJson());
     }
     return json ;

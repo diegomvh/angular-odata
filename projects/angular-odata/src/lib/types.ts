@@ -214,7 +214,6 @@ export interface Cache {
 export type ApiConfig = {
   serviceRootUrl: string;
   metadataUrl?: string;
-  metadata?: ODataMetadata,
   name?: string;
   version?: ODataVersion;
   default?: boolean;

@@ -45,15 +45,23 @@ export class CsdlStructuredType extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Name: this.Name,
-      Property: this.Property?.map((p) => p.toJson()),
-      NavigationProperty: this.NavigationProperty?.map((n) => n.toJson()),
-      BaseType: this.BaseType,
-      OpenType: this.OpenType,
-      Abstract: this.Abstract,
-    };
+    const json: {[key: string]: any} = { ...super.toJson(), Name: this.Name };
+    if (Array.isArray(this.Property) && this.Property.length > 0) {
+      json['Property'] = this.Property;
+    }
+    if (Array.isArray(this.NavigationProperty) && this.NavigationProperty.length > 0) {
+      json['NavigationProperty'] = this.NavigationProperty;
+    }
+    if (this.BaseType) {
+      json['BaseType'] = this.BaseType;
+    }
+    if (this.OpenType) {
+      json['OpenType'] = this.OpenType;
+    }
+    if (this.Abstract) {
+      json['Abstract'] = this.Abstract;
+    }
+    return json;
   }
 
   name() {
@@ -150,11 +158,14 @@ export class CsdlEntityType extends CsdlStructuredType {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Key: this.Key?.toJson(),
-      HasStream: this.HasStream,
-    };
+    const json: {[key: string]: any} = { ...super.toJson() };
+    if (this.Key) {
+      json['Key'] = this.Key.toJson();
+    }
+    if (this.HasStream) {
+      json['HasStream'] = this.HasStream;
+    }
+    return json;
   }
 }
 
