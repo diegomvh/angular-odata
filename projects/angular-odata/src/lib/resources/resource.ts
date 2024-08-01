@@ -7,7 +7,7 @@ import {
   VALUE_SEPARATOR,
 } from '../constants';
 import { ODataHelper } from '../helper';
-import { ODataCollection, ODataModel } from '../models';
+import { ModelInterface, ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import {
   ParserOptions,
@@ -121,7 +121,7 @@ export class ODataResource<T> {
   }
 
   //#region Models
-  asModel<M extends ODataModel<T>>(
+  asModel<M extends ODataModel<T> & ModelInterface<T>>(
     entity?: Partial<T> | { [name: string]: any },
     {
       annots,
@@ -144,7 +144,7 @@ export class ODataResource<T> {
     return new ModelType(entity, { resource, annots, reset }) as M;
   }
 
-  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+  asCollection<M extends ODataModel<T> & ModelInterface<T>, C extends ODataCollection<T, M>>(
     entities?: Partial<T>[] | { [name: string]: any }[],
     {
       annots,

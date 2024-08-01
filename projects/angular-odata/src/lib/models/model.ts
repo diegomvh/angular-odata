@@ -215,7 +215,7 @@ export class ODataModel<T> {
       | ODataPropertyResource<T>
       | ODataSingletonResource<T>,
   ) {
-    return this._meta.attach(this, resource);
+    this._meta.attach(this, resource);
   }
   //#endregion
 
@@ -621,9 +621,9 @@ export class ODataModel<T> {
    */
   query(
     ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void,
-  ) {
+  ): this {
     const resource = this.resource();
-    return (resource ? this._meta.query(this, resource, ctx) : this) as this;
+    return resource ? this._meta.query(this, resource, ctx) as this : this;
   }
 
   /**

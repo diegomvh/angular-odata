@@ -13,9 +13,9 @@ import { ODataEntityService } from './entity';
  */
 export class ODataSingletonService<T> extends ODataEntityService<T> {
   static Model?: typeof ODataModel;
-  model(entity?: Partial<T>): ODataModel<T> {
+  model(entity?: Partial<T>) {
     const Service = this.constructor as typeof ODataSingletonService;
-    return this.entity().asModel<ODataModel<T>>(entity, {
+    return this.entity().asModel(entity, {
       ModelType: Service.Model,
     });
   }

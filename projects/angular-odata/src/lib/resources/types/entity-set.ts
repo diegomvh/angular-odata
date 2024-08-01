@@ -155,7 +155,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     },
-  ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
+  ) {
     const res = this.clone();
     // Clean Paging
     res.query((q) => q.removePaging());
@@ -187,7 +187,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     },
-  ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
+  ) {
     const res = this.clone();
     const fetch = (opts?: {
       skip?: number;
@@ -216,7 +216,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     },
-  ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }> {
+  ) {
     const res = this.clone();
     res.query((q) => q.top(1));
     return res.fetch(options).pipe(
@@ -232,21 +232,21 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     },
-  ): Observable<T[] | null> {
+  ) {
     return this.fetch(options).pipe(map(({ entities }) => entities));
   }
 
-  fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+  fetchCollection(
     options?: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
       CollectionType?: typeof ODataCollection;
     },
-  ): Observable<C | null> {
+  ) {
     return this.fetch(options).pipe(
       map(({ entities, annots }) =>
         entities
-          ? this.asCollection<M, C>(entities, {
+          ? this.asCollection(entities, {
               annots,
               CollectionType: options?.CollectionType,
             })

@@ -11,7 +11,6 @@ import { ODataPathSegments } from '../path';
 import {
   ApplyExpression,
   ApplyExpressionBuilder,
-  ODataQueryOptions,
 } from '../query';
 import { ODataResource } from '../resource';
 import { ODataEntities, ODataEntity } from '../response';
@@ -317,16 +316,16 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns The model
    */
-  fetchModel<M extends ODataModel<T>>(
+  fetchModel(
     options: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
       ModelType?: typeof ODataModel;
     } = {},
-  ): Observable<M | null> {
+  ) {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
         entity
-          ? this.asModel<M>(entity, { annots, ModelType: options?.ModelType })
+          ? this.asModel(entity, { annots, ModelType: options?.ModelType })
           : null,
       ),
     );
@@ -352,17 +351,17 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns The collection
    */
-  fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+  fetchCollection(
     options: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
       CollectionType?: typeof ODataCollection;
     } = {},
-  ): Observable<C | null> {
+  ) {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
         entities
-          ? this.asCollection<M, C>(entities, {
+          ? this.asCollection(entities, {
               annots,
               CollectionType: options?.CollectionType,
             })

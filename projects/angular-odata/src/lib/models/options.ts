@@ -261,6 +261,10 @@ export enum ODataModelState {
   Unchanged,
 }
 
+ export type ModelInterface<T> = {
+    [P in keyof T]?: T[P] extends (infer U)[] ? ODataCollection<U, ODataModel<U>> : T[P];
+};
+
 export type ModelOptions = {
   cid?: string;
   fields: Map<string, ModelFieldOptions>;
