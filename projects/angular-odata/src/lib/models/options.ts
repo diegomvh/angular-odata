@@ -262,7 +262,9 @@ export enum ODataModelState {
 }
 
  export type ModelInterface<T> = {
-    [P in keyof T]?: T[P] extends (infer U)[] ? ODataCollection<U, ODataModel<U>> : T[P];
+    [P in keyof T]?: T[P] extends (infer U)[] ? ODataCollection<U, ODataModel<U>> : 
+      T[P] extends object ? ODataModel<T[P]> :
+      T[P];
 };
 
 export type ModelOptions = {

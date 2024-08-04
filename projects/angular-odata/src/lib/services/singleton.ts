@@ -15,7 +15,7 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
   static Model?: typeof ODataModel;
   model(entity?: Partial<T>) {
     const Service = this.constructor as typeof ODataSingletonService;
-    return this.entity().asModel(entity, {
+    return this.entity().asModel((entity ?? {}) as Partial<T>, {
       ModelType: Service.Model,
     });
   }

@@ -18,14 +18,14 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
 
   model(entity?: Partial<T>) {
     const Service = this.constructor as typeof ODataEntitySetService;
-    return this.entity().asModel(entity, {
+    return this.entity().asModel((entity ?? {}) as Partial<T>, {
       ModelType: Service.Model,
     });
   }
 
   collection(entities?: Partial<T>[]) {
     const Service = this.constructor as typeof ODataEntitySetService;
-    return this.entities().asCollection(entities, { CollectionType: Service.Collection });
+    return this.entities().asCollection((entities ?? []) as Partial<T>[], { CollectionType: Service.Collection });
   }
 
   /**
