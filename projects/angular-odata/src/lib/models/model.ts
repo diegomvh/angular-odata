@@ -26,6 +26,7 @@ import {
   ODataModelEventType,
   ODataModelEventEmitter,
   ModelFieldOptions,
+  ModelInterface,
 } from './options';
 import { EdmType, ParserOptions } from '../types';
 import { ODataEntityAnnotations } from '../annotations';
@@ -778,6 +779,12 @@ export class ODataModel<T> {
   //#endregion
 
   // Cast
+  cast<S>(
+    type: string, ModelType?: typeof ODataModel
+  ): ODataModel<T> & ModelInterface<T>;
+  cast<S, M extends ODataModel<S>>(
+    type: string, ModelType?: typeof ODataModel
+  ): M;
   cast<S>(type: string, ModelType?: typeof ODataModel) {
     //: ODataModel<S> {
     const resource = this.resource();

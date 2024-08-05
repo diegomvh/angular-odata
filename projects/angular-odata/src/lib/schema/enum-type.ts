@@ -81,7 +81,7 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
     return this.parser.unpack(value);
   }
 
-  pack(value: string | number) {
+  pack(value: string | number | number[]) {
     return this.parser.pack(value);
   }
 }
