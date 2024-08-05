@@ -170,15 +170,15 @@ export class CsdlEntityType extends CsdlStructuredType {
 }
 
 export class CsdlKey {
-  PropertyRefs: CsdlPropertyRef[];
+  PropertyRef: CsdlPropertyRef[];
 
-  constructor({ PropertyRefs }: { PropertyRefs: any[] }) {
-    this.PropertyRefs = PropertyRefs?.map((p) => new CsdlPropertyRef(p));
+  constructor({ PropertyRef }: { PropertyRef: any[] }) {
+    this.PropertyRef = PropertyRef?.map((p) => new CsdlPropertyRef(p));
   }
 
   toJson() {
     return {
-      PropertyRefs: this.PropertyRefs?.map((p) => p.toJson()),
+      PropertyRef: this.PropertyRef?.map((p) => p.toJson()),
     };
   }
 }
