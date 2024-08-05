@@ -7,7 +7,7 @@ import {
   VALUE_SEPARATOR,
 } from '../constants';
 import { ODataHelper } from '../helper';
-import { ODataCollection, ODataModel } from '../models';
+import { ModelInterface, ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import {
   ParserOptions,
@@ -121,16 +121,24 @@ export class ODataResource<T> {
   }
 
   //#region Models
+  asModel(
+    entity?: Partial<T> | { [name: string]: any }
+  ): ODataModel<T> & ModelInterface<T>;
+  asModel(
+    entity: Partial<T> | { [name: string]: any },
+    { annots, ModelType }: { annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; },
+  ): ODataModel<T> & ModelInterface<T>;
   asModel<M extends ODataModel<T>>(
     entity?: Partial<T> | { [name: string]: any },
-    {
-      annots,
-      ModelType,
-    }: {
-      annots?: ODataEntityAnnotations<T>;
-      ModelType?: typeof ODataModel;
-    } = {},
-  ): M {
+  ): M;
+  asModel<M extends ODataModel<T>>(
+    entity: Partial<T> | { [name: string]: any },
+    { annots, ModelType }: { annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; },
+  ): M;
+  asModel(
+    entity?: Partial<T> | { [name: string]: any },
+    { annots, ModelType }: { annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; } = {},
+  ) {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
@@ -141,19 +149,27 @@ export class ODataResource<T> {
       resource = this.api.entitySet<T>(entitySet).entity(entity as Partial<T>);
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
-    return new ModelType(entity, { resource, annots, reset }) as M;
+    return new ModelType(entity, { resource, annots, reset });
   }
 
+  asCollection(
+    entities?: Partial<T>[] | { [name: string]: any }[],
+  ): ODataCollection<T, ODataModel<T> & ModelInterface<T>>;
+  asCollection(
+    entities: Partial<T>[] | { [name: string]: any }[],
+    { annots, CollectionType }: { annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; }
+  ): ODataCollection<T, ODataModel<T> & ModelInterface<T>>;
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities?: Partial<T>[] | { [name: string]: any }[],
-    {
-      annots,
-      CollectionType,
-    }: {
-      annots?: ODataEntitiesAnnotations<T>;
-      CollectionType?: typeof ODataCollection;
-    } = {},
-  ): C {
+  ): C;
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+    entities: Partial<T>[] | { [name: string]: any }[],
+    { annots, CollectionType }: { annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; },
+  ): C;
+  asCollection(
+    entities?: Partial<T>[] | { [name: string]: any }[],
+    { annots, CollectionType }: { annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; } = {},
+  ) {
     const reset = annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
@@ -165,7 +181,7 @@ export class ODataResource<T> {
       resource = this.api.entitySet<T>(entitySet);
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
-    return new CollectionType(entities, { resource, annots, reset }) as C;
+    return new CollectionType(entities, { resource, annots, reset });
   }
   //#endregion
 
@@ -383,7 +399,7 @@ export class ODataResource<T> {
       fields,
     }: {
       type?: string;
-      fields?: { [P in keyof R]?: StructuredTypeFieldConfig };
+      fields?: { [name: string]: StructuredTypeFieldConfig };
     } = {},
   ): ODataResource<R> {
     if (type === undefined) {

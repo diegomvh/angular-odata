@@ -24,11 +24,22 @@ export class CsdlReference extends CsdlAnnotable {
   }
 
   override toJson() {
+    const json: {[key: string]: any} = {...super.toJson(), Uri: this.Uri};
+    if (this.Includes !== undefined) {
+      json['Includes'] = this.Includes.map((i) => i.toJson());
+    }
+    if (this.IncludeAnnotations !== undefined) {
+      json['IncludeAnnotations'] = this.IncludeAnnotations.map((i) => i.toJson());
+    }
+    return json;
+  }
+
+  override toConfig() {
     return {
-      ...super.toJson(),
-      Uri: this.Uri,
-      Includes: this.Includes?.map((i) => i.toJson()),
-      IncludeAnnotations: this.IncludeAnnotations?.map((i) => i.toJson()),
+      ...super.toConfig(),
+      uri: this.Uri,
+      includes: this.Includes?.map((i) => i.toConfig()),
+      includeAnnotations: this.IncludeAnnotations?.map((i) => i.toConfig()),
     };
   }
 }
@@ -45,6 +56,13 @@ export class CsdlInclude {
     return {
       Namespace: this.Namespace,
       Alias: this.Alias,
+    };
+  }
+
+  toConfig() {
+    return {
+      namespace: this.Namespace,
+      alias: this.Alias,
     };
   }
 }
@@ -72,6 +90,14 @@ export class CsdlIncludeAnnotations {
       TermNamespace: this.TermNamespace,
       Qualifier: this.Qualifier,
       TargetNamespace: this.TargetNamespace,
+    };
+  }
+
+  toConfig() {
+    return {
+      termNamespace: this.TermNamespace,
+      qualifier: this.Qualifier,
+      targetNamespace: this.TargetNamespace,
     };
   }
 }

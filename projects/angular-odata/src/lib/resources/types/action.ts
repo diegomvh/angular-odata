@@ -132,7 +132,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   callProperty(
     params: P | null,
     options: ODataOptions = {},
-  ): Observable<R | null> {
+  ) {
     return this.call(params, { responseType: 'property', ...options }).pipe(
       map(({ property }) => property),
     );
@@ -147,7 +147,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   callEntity(
     params: P | null,
     options: ODataOptions = {},
-  ): Observable<R | null> {
+  ) {
     return this.call(params, { responseType: 'entity', ...options }).pipe(
       map(({ entity }) => entity),
     );
@@ -159,14 +159,14 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * @param options Options for the request
    * @returns Observable of the result of the action
    */
-  callModel<M extends ODataModel<R>>(
+  callModel(
     params: P | null,
     options: ODataOptions & { ModelType?: typeof ODataModel } = {},
-  ): Observable<M | null> {
+  ) {
     return this.call(params, { responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
         entity
-          ? this.asModel<M>(entity, { annots, ModelType: options?.ModelType })
+          ? this.asModel(entity, { annots, ModelType: options?.ModelType })
           : null,
       ),
     );
@@ -181,7 +181,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   callEntities(
     params: P | null,
     options: ODataOptions = {},
-  ): Observable<R[] | null> {
+  ) {
     return this.call(params, { responseType: 'entities', ...options }).pipe(
       map(({ entities }) => entities),
     );
@@ -193,14 +193,14 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * @param options Options for the request
    * @returns Observable of the result of the action
    */
-  callCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
+  callCollection(
     params: P | null,
     options: ODataOptions & { CollectionType?: typeof ODataCollection } = {},
-  ): Observable<C | null> {
+  ) {
     return this.call(params, { responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
         entities
-          ? this.asCollection<M, C>(entities, {
+          ? this.asCollection(entities, {
               annots,
               CollectionType: options?.CollectionType,
             })
@@ -213,7 +213,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   callArraybuffer(
     params: P | null,
     { alias, ...options }: { alias?: boolean } & ODataOptions = {},
-  ): Observable<ArrayBuffer> {
+  ) {
     return this.call(params, {
       responseType: 'arraybuffer',
       alias,
@@ -224,7 +224,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   callBlob(
     params: P | null,
     { alias, ...options }: { alias?: boolean } & ODataOptions = {},
-  ): Observable<Blob> {
+  ) {
     return this.call(params, { responseType: 'blob', alias, ...options });
   }
 }

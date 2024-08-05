@@ -108,18 +108,17 @@ export class CsdlComplexType extends CsdlStructuredType {
     };
   }
 
-  toConfig(): StructuredTypeConfig<any> {
-    const fields = {};
+  override toConfig(): StructuredTypeConfig {
     return {
+      ...super.toConfig(),
       name: this.Name,
       base: this.BaseType,
       open: this.OpenType,
-      annotations: this.Annotation?.map((t) => t.toConfig()),
       fields: [
         ...(this.Property ?? []).map((t) => t.toConfig()),
         ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
       ].reduce((acc, p) => Object.assign(acc, { [p.name]: p }), {}),
-    } as StructuredTypeConfig<any>;
+    } as StructuredTypeConfig;
   }
 }
 
@@ -172,18 +171,18 @@ export class CsdlEntityType extends CsdlStructuredType {
     };
   }
 
-  toConfig(): StructuredTypeConfig<any> {
+  override toConfig(): StructuredTypeConfig {
     return {
+      ...super.toConfig(),
       name: this.Name,
       base: this.BaseType,
       open: this.OpenType,
-      annotations: this.Annotation?.map((t) => t.toConfig()),
       keys: this.Key?.toConfig(),
       fields: [
         ...(this.Property ?? []).map((t) => t.toConfig()),
         ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
       ].reduce((acc, p) => Object.assign(acc, { [p.name]: p }), {}),
-    } as StructuredTypeConfig<any>;
+    } as StructuredTypeConfig;
   }
 }
 
@@ -201,7 +200,7 @@ export class CsdlKey {
   }
 
   toConfig() {
-    return this.PropertyRefs.map((t) => t.toConfig());
+    return this.PropertyRefs?.map((t) => t.toConfig());
   }
 }
 

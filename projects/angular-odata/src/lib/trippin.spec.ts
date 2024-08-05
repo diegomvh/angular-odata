@@ -28,13 +28,21 @@ export const FlagEnumsConfig = {
   name: 'FlagEnums',
   flags: true,
   members: FlagEnums,
-  fields: {},
-} as EnumTypeConfig<FlagEnums>;
+  fields: {
+    Flag1: {value: FlagEnums.Flag1},
+    Flag2: {value: FlagEnums.Flag2},
+    Flag4: {value: FlagEnums.Flag4},
+  },
+} as EnumTypeConfig;
 export const PersonGenderConfig = {
   name: 'PersonGender',
   members: PersonGender,
-  fields: {},
-} as EnumTypeConfig<PersonGender>;
+  fields: {
+    Male: {value: PersonGender.Male},
+    Female: {value: PersonGender.Female},
+    Unknown: {value: PersonGender.Unknown},
+  },
+} as EnumTypeConfig;
 //#endregion
 
 //#region Entities
@@ -58,7 +66,7 @@ export const PhotoConfig = {
     },
     Name: { type: 'Edm.String' },
   },
-} as StructuredTypeConfig<Photo>;
+} as StructuredTypeConfig;
 
 export interface Airline {
   AirlineCode: string;
@@ -81,7 +89,7 @@ export const AirlineEntityConfig = {
     },
     Name: { type: 'Edm.String', nullable: false },
   },
-} as StructuredTypeConfig<Airline>;
+} as StructuredTypeConfig;
 
 export interface Airport {
   IcaoCode: string;
@@ -110,7 +118,7 @@ export const AirportEntityConfig = {
       annotations: [{ term: 'Org.OData.Core.V1.Immutable', bool: true }],
     },
   },
-} as StructuredTypeConfig<Airport>;
+} as StructuredTypeConfig;
 
 export interface PlanItem {
   PlanItemId: number;
@@ -143,7 +151,7 @@ export const PlanItemConfig = {
     EndsAt: { type: 'Edm.DateTimeOffset' },
     Duration: { type: 'Edm.String', default: 'M' },
   },
-} as StructuredTypeConfig<PlanItem>;
+} as StructuredTypeConfig;
 export interface PublicTransportation extends PlanItem {
   SeatNumber?: string;
 }
@@ -154,7 +162,7 @@ export const PublicTransportationEntityConfig = {
   fields: {
     SeatNumber: { type: 'Edm.String', default: '0' },
   },
-} as StructuredTypeConfig<PublicTransportation>;
+} as StructuredTypeConfig;
 
 export interface Flight extends PublicTransportation {
   FlightNumber: string;
@@ -172,7 +180,7 @@ export const FlightEntityConfig = {
     To: { type: `${NAMESPACE}.Airport`, navigation: true },
     Airline: { type: `${NAMESPACE}.Airline`, navigation: true },
   },
-} as StructuredTypeConfig<Flight>;
+} as StructuredTypeConfig;
 
 export interface Trip {
   TripId: number;
@@ -221,7 +229,7 @@ export const TripConfig = {
       navigation: true,
     },
   },
-} as StructuredTypeConfig<Trip>;
+} as StructuredTypeConfig;
 
 export interface Person {
   UserName: string;
@@ -264,7 +272,7 @@ export const PersonConfig = {
     Trips: { type: `${NAMESPACE}.Trip`, collection: true, navigation: true },
     Photo: { type: `${NAMESPACE}.Photo`, navigation: true },
   },
-} as StructuredTypeConfig<Person>;
+} as StructuredTypeConfig;
 //#endregion
 
 //#region Services

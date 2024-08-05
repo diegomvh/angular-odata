@@ -378,7 +378,7 @@ export class ODataStructuredTypeParser<T>
   parserOptions?: ParserOptions;
 
   constructor(
-    config: StructuredTypeConfig<T>,
+    config: StructuredTypeConfig,
     namespace: string,
     alias?: string,
   ) {

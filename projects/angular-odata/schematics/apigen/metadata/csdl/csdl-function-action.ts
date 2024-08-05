@@ -47,7 +47,7 @@ export class CsdlCallable {
     if (this.EntitySetPath) {
       json['EntitySetPath'] = this.EntitySetPath;
     }
-    if (this.Parameter) {
+    if (Array.isArray(this.Parameter) && this.Parameter.length) {
       json['Parameter'] = this.Parameter.map((p) => p.toJson());
     }
     return json;

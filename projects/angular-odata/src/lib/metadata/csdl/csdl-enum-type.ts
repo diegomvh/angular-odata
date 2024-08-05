@@ -32,10 +32,10 @@ export class CsdlEnumType extends CsdlAnnotable {
 
   override toJson() {
     const json: {[key: string]: any} = {...super.toJson(), Name: this.Name, Member: this.Member.map((m) => m.toJson())};
-    if (this.UnderlyingType) {
+    if (this.UnderlyingType !== undefined) {
       json['UnderlyingType'] = this.UnderlyingType;
     }
-    if (this.IsFlags) {
+    if (this.IsFlags !== undefined) {
       json['IsFlags'] = this.IsFlags;
     }
     return json;
@@ -53,14 +53,19 @@ export class CsdlEnumType extends CsdlAnnotable {
     return `${this.schema.Namespace}.${this.Name}`;
   }
 
-  toConfig(): EnumTypeConfig<any> {
+  override toConfig(): EnumTypeConfig {
     return {
+      ...super.toConfig(),
       name: this.Name,
-      annotations: this.Annotation?.map((a) => a.toConfig()),
-      members: this.Member.map((m) => m.toConfig()),
-      fields: {},
+      fields: this.Member.reduce(
+        (acc, m) => ({
+          ...acc,
+          [m.Name]: m.toConfig(),
+        }),
+        {},
+      ),
       flags: this.IsFlags,
-    } as EnumTypeConfig<any>;
+    } as EnumTypeConfig;
   }
 }
 
@@ -89,10 +94,8 @@ export class CsdlMember extends CsdlAnnotable {
     return json;
   }
 
-  toConfig(): EnumTypeFieldConfig<any> {
-    return {
-      value: this.Value,
-      annotations: this.Annotation?.map((a) => a.toConfig()),
-    } as EnumTypeFieldConfig<any>;
+  override toConfig(): EnumTypeFieldConfig {
+    const config: {[key: string]: any} = {...super.toConfig(), value: this.Value};
+    return config as EnumTypeFieldConfig;
   }
 }

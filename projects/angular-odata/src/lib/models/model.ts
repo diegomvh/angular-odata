@@ -26,6 +26,7 @@ import {
   ODataModelEventType,
   ODataModelEventEmitter,
   ModelFieldOptions,
+  ModelInterface,
 } from './options';
 import { EdmType, ParserOptions } from '../types';
 import { ODataEntityAnnotations } from '../annotations';
@@ -215,7 +216,7 @@ export class ODataModel<T> {
       | ODataPropertyResource<T>
       | ODataSingletonResource<T>,
   ) {
-    return this._meta.attach(this, resource);
+    this._meta.attach(this, resource);
   }
   //#endregion
 
@@ -621,9 +622,9 @@ export class ODataModel<T> {
    */
   query(
     ctx: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void,
-  ) {
+  ): this {
     const resource = this.resource();
-    return (resource ? this._meta.query(this, resource, ctx) : this) as this;
+    return resource ? this._meta.query(this, resource, ctx) as this : this;
   }
 
   /**
@@ -778,6 +779,12 @@ export class ODataModel<T> {
   //#endregion
 
   // Cast
+  cast<S>(
+    type: string, ModelType?: typeof ODataModel
+  ): ODataModel<T> & ModelInterface<T>;
+  cast<S, M extends ODataModel<S>>(
+    type: string, ModelType?: typeof ODataModel
+  ): M;
   cast<S>(type: string, ModelType?: typeof ODataModel) {
     //: ODataModel<S> {
     const resource = this.resource();

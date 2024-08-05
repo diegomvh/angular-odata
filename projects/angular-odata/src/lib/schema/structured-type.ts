@@ -24,7 +24,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
   model?: typeof ODataModel;
   collection?: typeof ODataCollection;
 
-  constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
+  constructor(config: StructuredTypeConfig, schema: ODataSchema) {
     super(
       config,
       schema,

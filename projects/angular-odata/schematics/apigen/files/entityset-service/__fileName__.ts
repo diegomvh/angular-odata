@@ -12,7 +12,7 @@ import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 @Injectable()
 export class <%= classify(name) %> extends ODataEntitySetService<<%= toTypescriptType(type) %>> {
   constructor(client: ODataClient) {
-    super(client, '<%= name %>', '<%= type %>');
+    super(client, '<%= path %>', '<%= type %>');
   }
   <%= camelize(toTypescriptType(type)) %>Model(entity?: Partial<<%= toTypescriptType(type) %>>) {
     return this.model(entity);

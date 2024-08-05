@@ -9,33 +9,22 @@ export class ODataMetadata {
   Schemas: CsdlSchema[];
   constructor(Version: string, References: any[], Schemas: any[]) {
     this.Version = Version;
-    this.References = References?.map((r) => {
-      return new CsdlReference(r);
-    });
-    this.Schemas = Schemas?.map((s) => {
-      return new CsdlSchema(s);
-    });
+    this.References = References?.map((r) => new CsdlReference(r));
+    this.Schemas = Schemas?.map((s) => new CsdlSchema(s));
   }
 
-  toConfig(base?: ApiConfig): ApiConfig {
-    return Object.assign(
-      {
-        version: this.Version as ODataVersion,
-        schemas: this.Schemas.map((s) => s.toConfig()),
-      },
-      base ?? {},
-    ) as ApiConfig;
+  toConfig(base: Partial<ApiConfig> = {}): ApiConfig {
+    base.version = base.version ?? this.Version as ODataVersion;
+    base.schemas = [...(base.schemas ?? []), ...(this.Schemas ?? []).map((s) => s.toConfig())];
+    base.references = [...(base.references ?? []), ...(this.References ?? []).map((r) => r.toConfig())];
+    return base as ApiConfig; 
   }
 
   toJson() {
     return {
       Version: this.Version,
-      References: this.References.map((r) => {
-        return r.toJson();
-      }),
-      Schemas: this.Schemas.map((s) => {
-        return s.toJson();
-      }),
+      References: this.References.map((r) => r.toJson()),
+      Schemas: this.Schemas.map((s) => s.toJson()),
     };
   }
 

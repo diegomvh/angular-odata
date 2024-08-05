@@ -59,7 +59,7 @@ export class ODataSchema extends ODataAnnotatable {
   }
 
   //#region Find for Type
-  public createStructuredType<T>(config: StructuredTypeConfig<T>) {
+  public createStructuredType<T>(config: StructuredTypeConfig) {
     const entity = new ODataStructuredType<T>(config, this);
     entity.configure({ options: this.api.options.parserOptions });
     this.entities.push(entity);

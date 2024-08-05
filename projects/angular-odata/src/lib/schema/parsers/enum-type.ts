@@ -9,11 +9,11 @@ import {
 import { Enums } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
 
-export class ODataEnumTypeFieldParser<E> extends ODataAnnotatable {
+export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   name: string;
-  value: E;
+  value: number;
 
-  constructor(name: string, field: EnumTypeFieldConfig<E>) {
+  constructor(name: string, field: EnumTypeFieldConfig) {
     super(field);
     this.name = name;
     this.value = field.value;
@@ -32,11 +32,11 @@ export class ODataEnumTypeParser<E>
   namespace: string;
   alias?: string;
   flags?: boolean;
-  members: { [name: string]: E } | { [value: number]: string };
-  private _fields: ODataEnumTypeFieldParser<E>[];
+  members: { [name: string]: number } | { [value: number]: string };
+  private _fields: ODataEnumTypeFieldParser[];
   parserOptions?: ParserOptions;
 
-  constructor(config: EnumTypeConfig<E>, namespace: string, alias?: string) {
+  constructor(config: EnumTypeConfig, namespace: string, alias?: string) {
     super(config);
     this.name = config.name;
     this.namespace = namespace;
@@ -58,15 +58,25 @@ export class ODataEnumTypeParser<E>
     return names.indexOf(type) !== -1;
   }
 
-  fields(value?: E): ODataEnumTypeFieldParser<E>[] {
-    return [
-      ...this._fields.filter(
-        (f) => value === undefined || Boolean((<any>f.value) & (<any>value)),
-      ),
-    ];
+  fields(namesValue?: string | number | number[]): ODataEnumTypeFieldParser[] {
+    if (namesValue === undefined) return [...this._fields];
+    if (Array.isArray(namesValue)) return [...this._fields.filter((f) => namesValue.includes(f.value))];
+    if (typeof namesValue === 'number') {
+      return [
+        ...this._fields.filter(
+          (f) => (this.flags && Boolean((<any>f.value) & (<any>namesValue))) ||
+            f.value === namesValue,
+        ),
+      ];
+      }
+    if (typeof namesValue === 'string') {
+      const names = namesValue.split(',').map((o) => o.trim());
+      return this._fields.filter((f) => names.includes(f.name)); 
+    }
+    return [];
   }
 
-  field(nameValue: string | E) {
+  field(nameValue: string | number) {
     let field = this.fields().find(
       (f) => f.name === nameValue || f.value === nameValue,
     );
@@ -81,7 +91,7 @@ export class ODataEnumTypeParser<E>
    * @param mapper Function that maps the value to the new value
    * @returns The fields mapped by the mapper
    */
-  mapFields<R>(mapper: (field: ODataEnumTypeFieldParser<E>) => R) {
+  mapFields<R>(mapper: (field: ODataEnumTypeFieldParser) => R) {
     return this.fields().map(mapper);
   }
 
@@ -90,28 +100,28 @@ export class ODataEnumTypeParser<E>
     // string -> number
     const parserOptions = { ...this.parserOptions, ...options };
     if (this.flags) {
-      return Enums.toValues<any>(this.members, value).reduce(
-        (acc, v) => acc | v,
+      return this.fields(value).reduce(
+        (acc, f) => acc | f.value,
         0,
-      ) as any;
+      ) as E;
     } else {
-      return Enums.toValue<any>(this.members, value) as any;
+      return this.field(value)?.value as E;
     }
   }
 
   // Serialize
-  serialize(value: E, options?: ParserOptions): string | undefined {
+  serialize(value: number, options?: ParserOptions): string | undefined {
     // Enum are string | number
     // string | number -> string
     const parserOptions = { ...this.parserOptions, ...options };
     if (this.flags) {
-      let names = Enums.toFlags(this.members, value);
+      let names = this.fields(value).map(f => f.name);
       if (names.length === 0) names = [`${value}`];
       return !parserOptions?.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
-      let name = Enums.toName(this.members, value);
+      let name = this.field(value)?.name;
       if (name === undefined) name = `${value}`;
       return !parserOptions?.stringAsEnum
         ? `${this.namespace}.${this.name}'${name}'`
@@ -120,7 +130,7 @@ export class ODataEnumTypeParser<E>
   }
 
   //Encode
-  encode(value: E, options?: ParserOptions): any {
+  encode(value: number, options?: ParserOptions): any {
     const parserOptions = { ...this.parserOptions, ...options };
     const serialized = this.serialize(value, parserOptions);
     if (serialized === undefined) return undefined;
@@ -156,22 +166,20 @@ export class ODataEnumTypeParser<E>
     } = {},
   ): string[] | undefined {
     if (this.flags) {
-      let members = Enums.toValues(this.members, member);
-      return members.some((member) => !(member in this.members))
-        ? ['mismatch']
-        : undefined;
+      let members = this.fields(member);
+      return members.length === 0 ? ['mismatch'] : undefined;
     } else {
-      return !(member in this.members) ? ['mismatch'] : undefined;
+      return this.fields(member).length !== 1 ? ['mismatch'] : undefined;
     }
   }
 
-  unpack(value: E): number[] {
-    return Enums.toValues(this.members, value);
+  unpack(value: string | number): number[] {
+    return this.fields(value).map(f => f.value);
   }
 
-  pack(value: number[]): E {
-    return Enums.toValues(this.members, value).reduce(
-      (acc, v) => acc | v,
+  pack(value: string | number | number[]): number {
+    return this.fields(value).reduce(
+      (acc, v) => acc | v.value,
       0,
     ) as any;
   }

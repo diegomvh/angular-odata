@@ -91,7 +91,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       fields,
     }: {
       type?: string;
-      fields?: { [P in keyof R]?: StructuredTypeFieldConfig };
+      fields?: { [name: string]: StructuredTypeFieldConfig };
     } = {},
   ): ODataPropertyResource<R> {
     return super.transform<R>(opts, {
@@ -207,15 +207,15 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns The model
    */
-  fetchModel<M extends ODataModel<T>>(
+  fetchModel(
     options: ODataOptions & {
       ModelType?: typeof ODataModel;
     } = {},
-  ): Observable<M | null> {
+  ) {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
         entity
-          ? this.asModel<M>(entity, { annots, ModelType: options?.ModelType })
+          ? this.asModel(entity, { annots, ModelType: options?.ModelType })
           : null,
       ),
     );
@@ -239,16 +239,16 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns The collection
    */
-  fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+  fetchCollection(
     options: ODataOptions & {
       withCount?: boolean;
       CollectionType?: typeof ODataCollection;
     } = {},
-  ): Observable<C | null> {
+  ) {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
         entities
-          ? this.asCollection<M, C>(entities, {
+          ? this.asCollection(entities, {
               annots,
               CollectionType: options?.CollectionType,
             })

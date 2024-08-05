@@ -60,18 +60,37 @@ export class CsdlSchema {
   }
 
   toJson() {
-    return {
+    const json: {[key: string]: any} = {
       Namespace: this.Namespace,
       Alias: this.Alias,
-      EnumType: this.EnumType?.map((e) => e.toJson()),
-      ComplexType: this.ComplexType?.map((c) => c.toJson()),
-      EntityType: this.EntityType?.map((e) => e.toJson()),
-      Function: this.Function?.map((f) => f.toJson()),
-      Action: this.Action?.map((a) => a.toJson()),
-      EntityContainer: this.EntityContainer?.map((e) => e.toJson()),
-      TypeDefinition: this.TypeDefinition?.map((t) => t.toJson()),
-      Term: this.Term?.map((t) => t.toJson()),
-      Annotations: this.Annotations?.map((a) => a.toJson()),
+    };
+    if (Array.isArray(this.EntityContainer) && this.EntityContainer.length) {
+      json['EntityContainer'] = this.EntityContainer.map((a) => a.toJson());
     }
+    if (Array.isArray(this.EntityType) && this.EntityType.length) {
+      json['EntityType'] = this.EntityType.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.ComplexType) && this.ComplexType.length) {
+      json['ComplexType'] = this.ComplexType.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.EnumType) && this.EnumType.length) {
+      json['EnumType'] = this.EnumType.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.TypeDefinition) && this.TypeDefinition.length) {
+      json['TypeDefinition'] = this.TypeDefinition.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.Term) && this.Term.length) {
+      json['Term'] = this.Term.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.Annotations) && this.Annotations.length) {
+      json['Annotations'] = this.Annotations.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.Action) && this.Action.length) {
+      json['Action'] = this.Action.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.Function) && this.Function.length) {
+      json['Function'] = this.Function.map((a) => a.toJson());
+    }
+    return json;
   }
 }

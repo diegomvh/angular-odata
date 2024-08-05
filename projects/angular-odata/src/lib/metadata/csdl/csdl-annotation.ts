@@ -14,6 +14,14 @@ export class CsdlAnnotable {
     }
     return json;
   }
+
+  toConfig() {
+    const config: {[key: string]: any} = {};
+    if (this.Annotation) {
+      config['annotations'] = this.Annotation.map((a) => a.toConfig());
+    }
+    return config;
+  }
 }
 
 export class CsdlAnnotations extends CsdlAnnotable {
@@ -38,13 +46,13 @@ export class CsdlAnnotations extends CsdlAnnotable {
   
   override toJson() {
     const json: {[key: string]: any} = {...super.toJson(), Target: this.Target};
-    if (this.Qualifier) {
+    if (this.Qualifier !== undefined) {
       json['Qualifier'] = this.Qualifier;
     }
     return json;
   }
 
-  toConfig(): AnnotationConfig[] {
+  override toConfig(): AnnotationConfig[] {
     return (this.Annotation ?? []).map((a) => a.toConfig());
   }
 }
