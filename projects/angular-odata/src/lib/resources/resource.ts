@@ -399,7 +399,7 @@ export class ODataResource<T> {
       fields,
     }: {
       type?: string;
-      fields?: { [P in keyof R]?: StructuredTypeFieldConfig };
+      fields?: { [name: string]: StructuredTypeFieldConfig };
     } = {},
   ): ODataResource<R> {
     if (type === undefined) {

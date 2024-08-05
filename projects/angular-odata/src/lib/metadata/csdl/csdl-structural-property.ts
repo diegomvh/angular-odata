@@ -87,8 +87,9 @@ export class CsdlProperty extends CsdlStructuralProperty {
     };
   }
 
-  toConfig() {
+  override toConfig() {
     return {
+      ...super.toConfig(),
       name: this.Name,
       type: this.Type,
       default: this.DefaultValue,
@@ -98,7 +99,6 @@ export class CsdlProperty extends CsdlStructuralProperty {
       navigation: false,
       precision: this.Precision,
       scale: this.Scale,
-      annotations: this.Annotation?.map((a) => a.toConfig()),
     } as StructuredTypeFieldConfig & { name: string };
   }
 }
@@ -147,14 +147,14 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     };
   }
 
-  toConfig() {
+  override toConfig() {
     return {
+      ...super.toConfig(),
       name: this.Name,
       type: this.Type,
       collection: this.Collection,
       nullable: this.Nullable,
       navigation: true,
-      annotations: this.Annotation?.map((a) => a.toConfig()),
       referentials: this.ReferentialConstraints?.map((r) => ({
         property: r.Property,
         referencedProperty: r.ReferencedProperty,

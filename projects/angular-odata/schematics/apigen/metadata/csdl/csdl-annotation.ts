@@ -37,7 +37,7 @@ export class CsdlAnnotations extends CsdlAnnotable {
   
   override toJson() {
     const json: {[key: string]: any} = {...super.toJson(), Target: this.Target};
-    if (this.Qualifier) {
+    if (this.Qualifier !== undefined) {
       json['Qualifier'] = this.Qualifier;
     }
     return json;

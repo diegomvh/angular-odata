@@ -52,13 +52,13 @@ export class CsdlStructuredType extends CsdlAnnotable {
     if (Array.isArray(this.NavigationProperty) && this.NavigationProperty.length > 0) {
       json['NavigationProperty'] = this.NavigationProperty;
     }
-    if (this.BaseType) {
+    if (this.BaseType !== undefined) {
       json['BaseType'] = this.BaseType;
     }
-    if (this.OpenType) {
+    if (this.OpenType !== undefined) {
       json['OpenType'] = this.OpenType;
     }
-    if (this.Abstract) {
+    if (this.Abstract !== undefined) {
       json['Abstract'] = this.Abstract;
     }
     return json;
@@ -159,10 +159,10 @@ export class CsdlEntityType extends CsdlStructuredType {
 
   override toJson() {
     const json: {[key: string]: any} = { ...super.toJson() };
-    if (this.Key) {
+    if (this.Key !== undefined) {
       json['Key'] = this.Key.toJson();
     }
-    if (this.HasStream) {
+    if (this.HasStream !== undefined) {
       json['HasStream'] = this.HasStream;
     }
     return json;

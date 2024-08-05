@@ -104,7 +104,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       fields,
     }: {
       type?: string;
-      fields?: { [P in keyof R]?: StructuredTypeFieldConfig };
+      fields?: { [name: string]: StructuredTypeFieldConfig };
     } = {},
   ): ODataNavigationPropertyResource<R> {
     return super.transform<R>(opts, {

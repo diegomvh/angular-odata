@@ -7,8 +7,8 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
   E,
   ODataEnumTypeParser<E>
 > {
-  members: { [name: string]: E } | { [value: number]: string };
-  constructor(config: EnumTypeConfig<E>, schema: ODataSchema) {
+  members: { [name: string]: number } | { [value: number]: string };
+  constructor(config: EnumTypeConfig, schema: ODataSchema) {
     super(
       config,
       schema,
@@ -25,8 +25,8 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
    * Returns the fields of the enum type.
    * @returns The fields of the enum type.
    */
-  fields(value?: E): ODataEnumTypeFieldParser<E>[] {
-    return this.parser.fields(value);
+  fields(namesValue?: string | number): ODataEnumTypeFieldParser[] {
+    return this.parser.fields(namesValue);
   }
 
   /**
@@ -34,8 +34,8 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
    * @param enu The name or value of the field
    * @returns The field with the given name or value
    */
-  field(enu: string | E) {
-    return this.parser.field(enu);
+  field(nameValue: string | number) {
+    return this.parser.field(nameValue);
   }
 
   /**
@@ -43,7 +43,7 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
    * @param mapper Function that maps the value to the new value
    * @returns The fields mapped by the mapper
    */
-  mapFields<T>(mapper: (field: ODataEnumTypeFieldParser<E>) => T) {
+  mapFields<T>(mapper: (field: ODataEnumTypeFieldParser) => T) {
     return this.parser.mapFields(mapper);
   }
 
@@ -63,7 +63,7 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
    * @param options Options for serialization
    * @returns Serialized value
    */
-  serialize(value: E, options?: ParserOptions): any {
+  serialize(value: number, options?: ParserOptions): any {
     return this.parser.serialize(value, options);
   }
 
@@ -73,15 +73,15 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
    * @param options Options for encoding
    * @returns Encoded value
    */
-  encode(value: E, options?: ParserOptions): any {
+  encode(value: number, options?: ParserOptions): any {
     return this.parser.encode(value, options);
   }
 
-  unpack(value: E) {
+  unpack(value: string | number) {
     return this.parser.unpack(value);
   }
 
-  pack(value: number[]) {
+  pack(value: string | number) {
     return this.parser.pack(value);
   }
 }

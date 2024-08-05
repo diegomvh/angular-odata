@@ -76,22 +76,22 @@ export class CsdlProperty extends CsdlStructuralProperty {
 
   override toJson() {
     const json: {[key: string]: any} = { ...super.toJson() };
-    if (this.MaxLength) {
+    if (this.MaxLength !== undefined) {
       json['MaxLength'] = this.MaxLength;
     }
-    if (this.Precision) {
+    if (this.Precision !== undefined) {
       json['Precision'] = this.Precision;
     }
-    if (this.Scale) {
+    if (this.Scale !== undefined) {
       json['Scale'] = this.Scale;
     }
-    if (this.Unicode) {
+    if (this.Unicode !== undefined) {
       json['Unicode'] = this.Unicode;
     }
-    if (this.SRID) {
+    if (this.SRID !== undefined) {
       json['SRID'] = this.SRID;
     }
-    if (this.DefaultValue) {
+    if (this.DefaultValue !== undefined) {
       json['DefaultValue'] = this.DefaultValue;
     }
     return json;
@@ -134,16 +134,16 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
 
   override toJson() {
     const json: {[key: string]: any} = { ...super.toJson() };
-    if (this.Partner) {
+    if (this.Partner !== undefined) {
       json['Partner'] = this.Partner;
     }
-    if (this.ContainsTarget) {
+    if (this.ContainsTarget !== undefined) {
       json['ContainsTarget'] = this.ContainsTarget;
     }
     if (Array.isArray(this.ReferentialConstraints) && this.ReferentialConstraints.length) {
       json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) => r.toJson());
     }
-    if (this.OnDelete) {
+    if (this.OnDelete !== undefined) {
       json['OnDelete'] = this.OnDelete;
     }
     return json;

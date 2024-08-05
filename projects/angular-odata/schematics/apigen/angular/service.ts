@@ -22,6 +22,7 @@ export class Service extends Base {
   }
   public override variables(): { [name: string]: any } {
     return {
+      path: this.edmElement.name(),
       type:
         this.edmElement instanceof CsdlEntitySet
           ? this.edmElement.EntityType

@@ -91,7 +91,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       fields,
     }: {
       type?: string;
-      fields?: { [P in keyof R]?: StructuredTypeFieldConfig };
+      fields?: { [name: string]: StructuredTypeFieldConfig };
     } = {},
   ): ODataPropertyResource<R> {
     return super.transform<R>(opts, {

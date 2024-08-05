@@ -59,7 +59,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       fields,
     }: {
       type?: string;
-      fields?: { [P in keyof R]?: StructuredTypeFieldConfig };
+      fields?: { [name: string]: StructuredTypeFieldConfig };
     } = {},
   ): ODataEntitySetResource<R> {
     return super.transform<R>(opts, {
@@ -80,11 +80,11 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return entity;
   }
 
-  action<P, R>(path: string) {
+  action<P, R>(path: string): ODataActionResource<P, R> {
     return ODataActionResource.fromResource<P, R>(this, path);
   }
 
-  function<P, R>(path: string) {
+  function<P, R>(path: string): ODataFunctionResource<P, R> {
     return ODataFunctionResource.fromResource<P, R>(this, path);
   }
 

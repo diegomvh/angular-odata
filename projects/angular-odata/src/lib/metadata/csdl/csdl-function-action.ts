@@ -265,8 +265,9 @@ export class CsdlParameter extends CsdlAnnotable {
     };
   }
 
-  toConfig(): ParameterConfig {
+  override toConfig(): ParameterConfig {
     return {
+      ...super.toConfig(),
       type: this.Type,
       nullable: this.Nullable,
       collection: false,

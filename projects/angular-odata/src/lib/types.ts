@@ -237,8 +237,8 @@ export type SchemaConfig = {
   namespace: string;
   alias?: string;
   annotations?: AnnotationConfig[];
-  enums?: EnumTypeConfig<any>[];
-  entities?: StructuredTypeConfig<any>[];
+  enums?: EnumTypeConfig[];
+  entities?: StructuredTypeConfig[];
   callables?: CallableConfig[];
   containers?: EntityContainerConfig[];
 };
@@ -250,17 +250,17 @@ export type EntityContainerConfig = {
   singletons?: SingletonConfig[];
 };
 
-export type EnumTypeFieldConfig<E> = {
-  value: E;
+export type EnumTypeFieldConfig = {
+  value: number;
   annotations?: AnnotationConfig[];
 };
 
-export type EnumTypeConfig<E> = {
+export type EnumTypeConfig = {
   name: string;
   flags?: boolean;
   annotations?: AnnotationConfig[];
-  members: { [name: string]: E } | { [value: number]: string };
-  fields: { [member: string]: EnumTypeFieldConfig<E> };
+  members: { [name: string]: number } | { [value: number]: string };
+  fields: { [member: string]: EnumTypeFieldConfig };
 };
 
 export type StructuredTypeFieldConfig = {
@@ -279,7 +279,7 @@ export type StructuredTypeFieldConfig = {
   referenced?: string;
 };
 
-export type StructuredTypeConfig<T> = {
+export type StructuredTypeConfig = {
   name: string;
   base?: string;
   open?: boolean;
@@ -287,7 +287,7 @@ export type StructuredTypeConfig<T> = {
   collection?: { new (...params: any[]): any };
   annotations?: AnnotationConfig[];
   keys?: { name: string; alias?: string }[];
-  fields?: { [P in keyof T]?: StructuredTypeFieldConfig };
+  fields?: { [name: string]: StructuredTypeFieldConfig };
 };
 
 export type ParameterConfig = {

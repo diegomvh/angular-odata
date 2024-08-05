@@ -37,10 +37,10 @@ export class CsdlEntitySet extends CsdlAnnotable {
 
   override toJson() {
     const json: {[key: string]: any} = {...super.toJson(), Name: this.Name, EntityType: this.EntityType};
-    if (this.NavigationPropertyBinding) {
+    if (this.NavigationPropertyBinding !== undefined) {
       json['NavigationPropertyBinding'] = this.NavigationPropertyBinding.map((n) => n.toJson());
     }
-    if (this.IncludeInServiceDocument) {
+    if (this.IncludeInServiceDocument !== undefined) {
       json['IncludeInServiceDocument'] = this.IncludeInServiceDocument;
     }
     return json;
@@ -58,12 +58,12 @@ export class CsdlEntitySet extends CsdlAnnotable {
     return `${this.container.namespace()}.${this.Name}`;
   }
 
-  toConfig(): EntitySetConfig {
+  override toConfig(): EntitySetConfig {
     return {
+      ...super.toConfig(),
       name: this.Name,
       entityType: this.EntityType,
       service: {},
-      annotations: this.Annotation?.map((t) => t.toConfig()),
     } as EntitySetConfig;
   }
 }
