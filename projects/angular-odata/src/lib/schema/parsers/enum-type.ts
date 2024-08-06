@@ -26,8 +26,7 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
 
 export class ODataEnumTypeParser<E>
   extends ODataAnnotatable
-  implements FieldParser<E>
-{
+  implements FieldParser<E> {
   name: string;
   namespace: string;
   alias?: string;
@@ -68,21 +67,21 @@ export class ODataEnumTypeParser<E>
             f.value === namesValue,
         ),
       ];
-      }
+    }
     if (typeof namesValue === 'string') {
       const names = namesValue.split(',').map((o) => o.trim());
-      return this._fields.filter((f) => names.includes(f.name)); 
+      return this._fields.filter((f) => names.includes(f.name));
     }
     return [];
   }
 
   field(nameValue: string | number) {
-    let field = this.fields().find(
+    const field = this.fields().find(
       (f) => f.name === nameValue || f.value === nameValue,
     );
     //Throw error if not found
-    if (field === undefined)
-      throw new Error(`${this.name} has no field named ${String(name)}`);
+    //if (field === undefined)
+    //  throw new Error(`${this.name} has no field for ${nameValue}`);
     return field;
   }
 
@@ -100,10 +99,7 @@ export class ODataEnumTypeParser<E>
     // string -> number
     const parserOptions = { ...this.parserOptions, ...options };
     if (this.flags) {
-      return this.fields(value).reduce(
-        (acc, f) => acc | f.value,
-        0,
-      ) as E;
+      return this.fields(value).reduce((acc, f) => acc | f.value, 0) as E;
     } else {
       return this.field(value)?.value as E;
     }
@@ -143,16 +139,16 @@ export class ODataEnumTypeParser<E>
   toJsonSchema() {
     return this.flags
       ? {
-          title: this.name,
-          type: JsonType.array,
-          items: {
-            type: JsonType.integer,
-          },
-        }
-      : {
+        title: this.name,
+        type: JsonType.array,
+        items: {
           type: JsonType.integer,
-          enum: this._fields.map((f) => f.value),
-        };
+        },
+      }
+      : {
+        type: JsonType.integer,
+        enum: this._fields.map((f) => f.value),
+      };
   }
 
   validate(
