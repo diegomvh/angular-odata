@@ -1,7 +1,7 @@
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
-import { ODataCollection, ODataModel } from '../../models';
+import type { ModelInterface, ODataCollection, ODataModel } from '../../models';
 import {
   PathSegment,
   QueryOption,
@@ -317,6 +317,18 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    * @returns The model
    */
   fetchModel(
+    options?: ODataOptions & {
+      bodyQueryOptions?: QueryOption[];
+      ModelType?: typeof ODataModel;
+    },
+  ): Observable<ODataModel<T> & ModelInterface<T> | null>;
+  fetchModel<M extends ODataModel<T>>(
+    options?: ODataOptions & {
+      bodyQueryOptions?: QueryOption[];
+      ModelType?: typeof ODataModel;
+    },
+  ): Observable<M | null>;
+  fetchModel(
     options: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
       ModelType?: typeof ODataModel;
@@ -352,6 +364,20 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    * @returns The collection
    */
   fetchCollection(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+      CollectionType?: typeof ODataCollection;
+    },
+  ): Observable<ODataCollection<T, ODataModel<T> & ModelInterface<T>> | null>;
+  fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+      CollectionType?: typeof ODataCollection;
+    },
+  ): Observable<C | null>;
+  fetchCollection(
     options: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
@@ -362,9 +388,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       map(({ entities, annots }) =>
         entities
           ? this.asCollection(entities, {
-              annots,
-              CollectionType: options?.CollectionType,
-            })
+            annots,
+            CollectionType: options?.CollectionType,
+          })
           : null,
       ),
     );
