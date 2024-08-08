@@ -1,6 +1,5 @@
 import { strings } from '@angular-devkit/core';
 import { Base } from './base';
-import { Import } from './import';
 import {
   CsdlComplexType,
   CsdlEntityType,
@@ -11,16 +10,18 @@ import {
   CsdlNavigationProperty,
   CsdlProperty,
 } from '../metadata/csdl/csdl-structural-property';
+import { toTypescriptType } from '../utils';
 
 export class EntityProperty {
   constructor(protected edmType: CsdlProperty | CsdlNavigationProperty) {}
 
   name() {
-    return this.edmType.Name;
+    return this.edmType.Name + (this.edmType.Nullable || this.edmType instanceof CsdlNavigationProperty ? '?' : '');
   }
 
   type() {
-    return this.edmType.Type;
+    const type = toTypescriptType(this.edmType.Type);
+    return type + (this.edmType.Collection ? '[]' : ''); 
   }
 }
 
