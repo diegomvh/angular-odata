@@ -13,6 +13,6 @@ import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 @Injectable()
 export class <%= classify(name) %> extends ODataSingletonService<<%= toTypescriptType(type) %>> {
   constructor(client: ODataClient) {
-    super(client, '<%= name %>', '<%= type %>');
+    super(client, '<%= path %>', '<%= type %>');
   }
 }
