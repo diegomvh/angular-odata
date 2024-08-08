@@ -49,13 +49,14 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   static fromResource<P, R>(resource: ODataResource<any>, path: string) {
     const baseType = resource.outgoingType();
     const callable = resource.api.findCallable<R>(path, baseType);
+
+    const outgoingType = callable?.type();
     const bindingType = callable?.binding()?.type;
+    const incomingType = callable?.type();
 
     const action = ODataActionResource.factory<P, R>(resource.api, {
       path,
-      outgoingType: callable?.type(),
-      incomingType: callable?.returnType(),
-      bindingType: bindingType,
+      outgoingType, bindingType, incomingType,
       segments: resource.cloneSegments(),
     });
 
@@ -201,9 +202,9 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       map(({ entities, annots }) =>
         entities
           ? this.asCollection(entities, {
-              annots,
-              CollectionType: options?.CollectionType,
-            })
+            annots,
+            CollectionType: options?.CollectionType,
+          })
           : null,
       ),
     );

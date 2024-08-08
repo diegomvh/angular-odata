@@ -50,12 +50,14 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   static fromResource<P, R>(resource: ODataResource<any>, path: string) {
     const baseType = resource.outgoingType();
     const callable = resource.api.findCallable<R>(path, baseType);
+
+    const outgoingType = callable?.type();
     const bindingType = callable?.binding()?.type;
+    const incomingType = callable?.type();
 
     const func = ODataFunctionResource.factory<P, R>(resource.api, {
       path,
-      outgoingType: callable?.type(),
-      incomingType: callable?.returnType(),
+      outgoingType, bindingType, incomingType,
       segments: resource.cloneSegments(),
     });
 
