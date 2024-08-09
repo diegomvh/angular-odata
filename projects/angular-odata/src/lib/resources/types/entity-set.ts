@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { EMPTY } from 'rxjs';
 import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
-import { ODataCollection } from '../../models';
+import type { ModelInterface, ODataCollection, ODataModel } from '../../models';
 import {
   PathSegment,
   QueryOption,
@@ -241,14 +241,28 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOption[];
       CollectionType?: typeof ODataCollection;
     },
+  ): Observable<ODataCollection<T, ODataModel<T> & ModelInterface<T>> | null>;
+  fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+      CollectionType?: typeof ODataCollection;
+    },
+  ): Observable<C | null>;
+  fetchCollection(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOption[];
+      CollectionType?: typeof ODataCollection;
+    },
   ) {
     return this.fetch(options).pipe(
       map(({ entities, annots }) =>
         entities
           ? this.asCollection(entities, {
-              annots,
-              CollectionType: options?.CollectionType,
-            })
+            annots,
+            CollectionType: options?.CollectionType,
+          })
           : null,
       ),
     );

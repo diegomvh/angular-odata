@@ -1,7 +1,7 @@
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
-import { ODataModel } from '../../models';
+import { ModelInterface, ODataModel } from '../../models';
 import { PathSegment, QueryOption } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
@@ -176,6 +176,18 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return this.fetch(options).pipe(map(({ entity }) => entity));
   }
 
+  fetchModel(
+    options?: ODataOptions & {
+      bodyQueryOptions?: QueryOption[];
+      ModelType?: typeof ODataModel;
+    },
+  ): Observable<ODataModel<T> & ModelInterface<T> | null>;
+  fetchModel<M extends ODataModel<T>>(
+    options?: ODataOptions & {
+      bodyQueryOptions?: QueryOption[];
+      ModelType?: typeof ODataModel;
+    },
+  ): Observable<M | null>;
   fetchModel(
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
