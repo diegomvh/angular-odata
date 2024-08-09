@@ -52,7 +52,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
     const outgoingType = callable?.type();
     const bindingType = callable?.binding()?.type;
-    const incomingType = callable?.type();
+    const incomingType = callable?.returnType();
 
     const action = ODataActionResource.factory<P, R>(resource.api, {
       path,

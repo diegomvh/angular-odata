@@ -53,7 +53,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
     const outgoingType = callable?.type();
     const bindingType = callable?.binding()?.type;
-    const incomingType = callable?.type();
+    const incomingType = callable?.returnType();
 
     const func = ODataFunctionResource.factory<P, R>(resource.api, {
       path,
