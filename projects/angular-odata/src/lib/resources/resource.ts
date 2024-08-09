@@ -126,20 +126,20 @@ export class ODataResource<T> {
   ): ODataModel<T> & ModelInterface<T>;
   asModel(
     entity: Partial<T> | { [name: string]: any },
-    { annots, ModelType }: { annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; },
+    { reset, annots, ModelType }: { reset?: boolean, annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; },
   ): ODataModel<T> & ModelInterface<T>;
   asModel<M extends ODataModel<T>>(
     entity?: Partial<T> | { [name: string]: any },
   ): M;
   asModel<M extends ODataModel<T>>(
     entity: Partial<T> | { [name: string]: any },
-    { annots, ModelType }: { annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; },
+    { reset, annots, ModelType }: { reset?: boolean, annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; },
   ): M;
   asModel(
     entity?: Partial<T> | { [name: string]: any },
-    { annots, ModelType }: { annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; } = {},
+    { reset, annots, ModelType }: { reset?: boolean, annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; } = {},
   ) {
-    const reset = annots !== undefined;
+    reset ??= annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for model`);
@@ -157,20 +157,20 @@ export class ODataResource<T> {
   ): ODataCollection<T, ODataModel<T> & ModelInterface<T>>;
   asCollection(
     entities: Partial<T>[] | { [name: string]: any }[],
-    { annots, CollectionType }: { annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; }
+    { reset, annots, CollectionType }: { reset?: boolean, annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; }
   ): ODataCollection<T, ODataModel<T> & ModelInterface<T>>;
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities?: Partial<T>[] | { [name: string]: any }[],
   ): C;
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities: Partial<T>[] | { [name: string]: any }[],
-    { annots, CollectionType }: { annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; },
+    { reset, annots, CollectionType }: { reset?: boolean, annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; },
   ): C;
   asCollection(
     entities?: Partial<T>[] | { [name: string]: any }[],
-    { annots, CollectionType }: { annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; } = {},
+    { reset, annots, CollectionType }: { reset?: boolean, annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; } = {},
   ) {
-    const reset = annots !== undefined;
+    reset ??= annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for collection`);

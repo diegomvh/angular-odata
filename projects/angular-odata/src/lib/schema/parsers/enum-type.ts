@@ -6,7 +6,6 @@ import {
   FieldParser,
   JsonType,
 } from '../../types';
-import { Enums } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
 
 export class ODataEnumTypeFieldParser extends ODataAnnotatable {
