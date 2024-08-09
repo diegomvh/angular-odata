@@ -152,7 +152,7 @@ export class ODataEnumTypeParser<E>
   }
 
   validate(
-    member: string | number,
+    value: string | number,
     {
       method,
       navigation = false,
@@ -162,10 +162,10 @@ export class ODataEnumTypeParser<E>
     } = {},
   ): string[] | undefined {
     if (this.flags) {
-      let members = this.fields(member);
-      return members.length === 0 ? ['mismatch'] : undefined;
+      let fields = this.fields(value);
+      return value && fields.length === 0 ? ['mismatch'] : undefined;
     } else {
-      return this.fields(member).length !== 1 ? ['mismatch'] : undefined;
+      return this.fields(value).length !== 1 ? ['mismatch'] : undefined;
     }
   }
 
