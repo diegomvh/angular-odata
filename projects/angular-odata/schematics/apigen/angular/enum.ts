@@ -26,6 +26,7 @@ export class Enum extends Base {
   }
   public override variables(): { [name: string]: any } {
     return {
+      type: this.name() + "EnumType",
       values: (this.edmType.Member ?? []).map((m) => new EnumValue(m)),
     };
   }

@@ -78,15 +78,19 @@ export const makeRelativePath = (from: string, to: string) => {
   if (to.startsWith(from)) {
     return to.substring(from.length + 1);
   }
-  let shared = from;
+  const froma: string[] = from.split('/');
+  const toa: string[] = to.split('/');
+  if (froma[0] !== toa[0]) { 
+    return froma.map(s => '..').join('/') + "/" + toa.join('/');
+  }
+  const shared: string[] = [];
   let i = 0;
-  while (shared.length > 0 && !to.startsWith(shared)) {
-    shared = shared.substring(0, shared.lastIndexOf('/'));
+  while (froma[i] === toa[i] && i < froma.length) {
+    shared.push(froma[i]);
     i++;
   }
   return (
-    Array.from({ length: i }).fill('..').join('/') +
-    '/' +
-    to.substring(shared.length + (to.startsWith("/") ? 0 : 1))
+    Array.from({length: froma.length - shared.length}).fill('..').join('/') +
+    to.substring(shared.join("/").length + (to.startsWith("/") ? 1 : 0))
   );
 };

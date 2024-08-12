@@ -38,6 +38,7 @@ export class Entity extends Base {
   }
   public override variables(): { [name: string]: any } {
     return {
+      type: this.name() + (this.edmType instanceof CsdlEntityType ? "EntityType" : "ComplexType"),
       baseType: this.edmType.BaseType,
       properties: [
         ...(this.edmType.Property ?? []).map((p) => new EntityProperty(p)),
