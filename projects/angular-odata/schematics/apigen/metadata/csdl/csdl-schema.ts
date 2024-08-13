@@ -62,33 +62,35 @@ export class CsdlSchema {
   toJson() {
     const json: {[key: string]: any} = {
       Namespace: this.Namespace,
-      Alias: this.Alias,
     };
-    if (Array.isArray(this.EntityContainer) && this.EntityContainer.length) {
+    if (this.Alias !== undefined) {
+      json['Alias'] = this.Alias;
+    }
+    if (Array.isArray(this.EntityContainer) && this.EntityContainer.length > 0) {
       json['EntityContainer'] = this.EntityContainer.map((a) => a.toJson());
     }
-    if (Array.isArray(this.EntityType) && this.EntityType.length) {
+    if (Array.isArray(this.EntityType) && this.EntityType.length > 0) {
       json['EntityType'] = this.EntityType.map((a) => a.toJson());
     }
-    if (Array.isArray(this.ComplexType) && this.ComplexType.length) {
+    if (Array.isArray(this.ComplexType) && this.ComplexType.length > 0) {
       json['ComplexType'] = this.ComplexType.map((a) => a.toJson());
     }
-    if (Array.isArray(this.EnumType) && this.EnumType.length) {
+    if (Array.isArray(this.EnumType) && this.EnumType.length > 0) {
       json['EnumType'] = this.EnumType.map((a) => a.toJson());
     }
-    if (Array.isArray(this.TypeDefinition) && this.TypeDefinition.length) {
+    if (Array.isArray(this.TypeDefinition) && this.TypeDefinition.length > 0) {
       json['TypeDefinition'] = this.TypeDefinition.map((a) => a.toJson());
     }
-    if (Array.isArray(this.Term) && this.Term.length) {
+    if (Array.isArray(this.Term) && this.Term.length > 0) {
       json['Term'] = this.Term.map((a) => a.toJson());
     }
-    if (Array.isArray(this.Annotations) && this.Annotations.length) {
+    if (Array.isArray(this.Annotations) && this.Annotations.length > 0) {
       json['Annotations'] = this.Annotations.map((a) => a.toJson());
     }
-    if (Array.isArray(this.Action) && this.Action.length) {
+    if (Array.isArray(this.Action) && this.Action.length > 0) {
       json['Action'] = this.Action.map((a) => a.toJson());
     }
-    if (Array.isArray(this.Function) && this.Function.length) {
+    if (Array.isArray(this.Function) && this.Function.length > 0) {
       json['Function'] = this.Function.map((a) => a.toJson());
     }
     return json;

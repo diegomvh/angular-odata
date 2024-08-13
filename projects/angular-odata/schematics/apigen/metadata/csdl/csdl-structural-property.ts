@@ -140,7 +140,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     if (this.ContainsTarget !== undefined) {
       json['ContainsTarget'] = this.ContainsTarget;
     }
-    if (Array.isArray(this.ReferentialConstraints) && this.ReferentialConstraints.length) {
+    if (Array.isArray(this.ReferentialConstraints) && this.ReferentialConstraints.length > 0) {
       json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) => r.toJson());
     }
     if (this.OnDelete !== undefined) {
