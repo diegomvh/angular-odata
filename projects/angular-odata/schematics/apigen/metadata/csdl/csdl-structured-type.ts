@@ -47,10 +47,10 @@ export class CsdlStructuredType extends CsdlAnnotable {
   override toJson() {
     const json: {[key: string]: any} = { ...super.toJson(), Name: this.Name };
     if (Array.isArray(this.Property) && this.Property.length > 0) {
-      json['Property'] = this.Property;
+      json['Property'] = this.Property.map((p) => p.toJson());
     }
     if (Array.isArray(this.NavigationProperty) && this.NavigationProperty.length > 0) {
-      json['NavigationProperty'] = this.NavigationProperty;
+      json['NavigationProperty'] = this.NavigationProperty.map((n) => n.toJson());
     }
     if (this.BaseType !== undefined) {
       json['BaseType'] = this.BaseType;

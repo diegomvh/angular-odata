@@ -7,7 +7,7 @@ export class CsdlAnnotable {
   }
 
   toJson() {
-    const json: {[key: string]: any} = {};
+    const json: { [key: string]: any } = {};
     if (Array.isArray(this.Annotation) && this.Annotation.length > 0) {
       json['Annotation'] = this.Annotation.map((a) => a.toJson());
     }
@@ -27,16 +27,16 @@ export class CsdlAnnotations extends CsdlAnnotable {
     }: {
       Target: string;
       Qualifier?: string;
-      Annotation: CsdlAnnotation[];
+      Annotation: any[];
     },
   ) {
     super({ Annotation });
     this.Target = Target;
     this.Qualifier = Qualifier;
   }
-  
+
   override toJson() {
-    const json: {[key: string]: any} = {...super.toJson(), Target: this.Target};
+    const json: { [key: string]: any } = { ...super.toJson(), Target: this.Target };
     if (this.Qualifier !== undefined) {
       json['Qualifier'] = this.Qualifier;
     }
@@ -77,16 +77,16 @@ export class CsdlAnnotation {
     this.Record = Record?.map((a) => new CsdlRecord(a));
     this.EnumMember = EnumMember?.map((a) => new CsdlEnumMember(a));
   }
-  
+
   toJson() {
-    const json: {[key: string]: any} = {Term: this.Term};
-    if (this.String) {
+    const json: { [key: string]: any } = { Term: this.Term };
+    if (this.String !== undefined) {
       json['String'] = this.String;
     }
-    if (this.Bool) {
+    if (this.Bool !== undefined) {
       json['Bool'] = this.Bool;
     }
-    if (this.Int) {
+    if (this.Int !== undefined) {
       json['Int'] = this.Int;
     }
     if (Array.isArray(this.Collection) && this.Collection.length > 0) {
@@ -98,7 +98,7 @@ export class CsdlAnnotation {
     if (Array.isArray(this.EnumMember) && this.EnumMember.length > 0) {
       json['EnumMember'] = this.EnumMember.map((m) => m.toJson());
     }
-    return json ;
+    return json;
   }
 }
 
@@ -164,38 +164,38 @@ export class CsdlTerm {
   }
 
   toJson() {
-    const json: {[key: string]: any} = {Name: this.Name, Type: this.Type};
-    if (this.BaseTerm) {
+    const json: { [key: string]: any } = { Name: this.Name, Type: this.Type };
+    if (this.BaseTerm !== undefined) {
       json['BaseTerm'] = this.BaseTerm;
     }
-    if (this.DefaultValue) {
+    if (this.DefaultValue !== undefined) {
       json['DefaultValue'] = this.DefaultValue;
     }
-    if (this.AppliesTo) {
+    if (this.AppliesTo !== undefined) {
       json['AppliesTo'] = this.AppliesTo;
     }
-    if (this.Nullable) {
+    if (this.Nullable !== undefined) {
       json['Nullable'] = this.Nullable;
     }
-    if (this.MaxLength) {
+    if (this.MaxLength !== undefined) {
       json['MaxLength'] = this.MaxLength;
     }
-    if (this.Precision) {
+    if (this.Precision !== undefined) {
       json['Precision'] = this.Precision;
     }
-    if (this.Scale) {
+    if (this.Scale !== undefined) {
       json['Scale'] = this.Scale;
     }
-    if (this.SRID) {
+    if (this.SRID !== undefined) {
       json['SRID'] = this.SRID;
     }
-    if (this.String) {
+    if (this.String !== undefined) {
       json['String'] = this.String;
     }
-    if (this.Bool) {
+    if (this.Bool !== undefined) {
       json['Bool'] = this.Bool;
     }
-    if (this.Int) {
+    if (this.Int !== undefined) {
       json['Int'] = this.Int;
     }
     return json;
@@ -203,55 +203,55 @@ export class CsdlTerm {
 }
 
 export class CsdlCollection {
-  Strings: CsdlString[];
-  Records: CsdlRecord[];
-  PropertyPaths: CsdlPropertyPath[];
-  NavigationPropertyPaths: CsdlNavigationPropertyPath[];
+  String: CsdlString[];
+  Record: CsdlRecord[];
+  PropertyPath: CsdlPropertyPath[];
+  NavigationPropertyPath: CsdlNavigationPropertyPath[];
   constructor({
-    Strings,
-    Records,
-    PropertyPaths,
-    NavigationPropertyPaths,
+    String,
+    Record,
+    PropertyPath,
+    NavigationPropertyPath,
   }: {
-    Strings: CsdlString[];
-    Records: CsdlRecord[];
-    PropertyPaths: CsdlPropertyPath[];
-    NavigationPropertyPaths: CsdlNavigationPropertyPath[];
+    String: any[];
+    Record: any[];
+    PropertyPath: any[];
+    NavigationPropertyPath: any[];
   }) {
-    this.Strings = Strings;
-    this.Records = Records;
-    this.PropertyPaths = PropertyPaths;
-    this.NavigationPropertyPaths = NavigationPropertyPaths;
+    this.String = String?.map((a) => new CsdlString(a));
+    this.Record = Record?.map((a) => new CsdlRecord(a));
+    this.PropertyPath = PropertyPath?.map((a) => new CsdlPropertyPath(a));
+    this.NavigationPropertyPath = NavigationPropertyPath?.map((a) => new CsdlNavigationPropertyPath(a));
   }
 
   toJson() {
-    const json: {[key: string]: any} = {};
-    if (this.Strings) {
-      json['Strings'] = this.Strings.map((s) => s.toJson());
-    } 
-    if (this.Records) {
-      json['Records'] = this.Records.map((r) => r.toJson());
+    const json: { [key: string]: any } = {};
+    if (Array.isArray(this.String) && this.String.length > 0) {
+      json['String'] = this.String.map((s) => s.toJson());
     }
-    if (this.PropertyPaths) {
-      json['PropertyPaths'] = this.PropertyPaths.map((p) => p.toJson());
+    if (Array.isArray(this.Record) && this.Record.length > 0) {
+      json['Record'] = this.Record.map((r) => r.toJson());
     }
-    if (this.NavigationPropertyPaths) {
-      json['NavigationPropertyPaths'] = this.NavigationPropertyPaths.map((p) => p.toJson());
+    if (Array.isArray(this.PropertyPath) && this.PropertyPath.length > 0) {
+      json['PropertyPath'] = this.PropertyPath.map((p) => p.toJson());
+    }
+    if (Array.isArray(this.NavigationPropertyPath) && this.NavigationPropertyPath.length > 0) {
+      json['NavigationPropertyPath'] = this.NavigationPropertyPath.map((p) => p.toJson());
     }
     return json;
   }
 }
 
 export class CsdlRecord {
-  Properties: CsdlPropertyValue[];
-  constructor({ Properties }: { Properties: CsdlPropertyValue[] }) {
-    this.Properties = Properties;
+  PropertyValue: CsdlPropertyValue[];
+  constructor({ PropertyValue }: { PropertyValue: any[] }) {
+    this.PropertyValue = PropertyValue?.map((a) => new CsdlPropertyValue(a));
   }
 
   toJson() {
-    const json: {[key: string]: any} = {};
-    if (this.Properties) {
-      json['Properties'] = this.Properties.map((p) => p.toJson());
+    const json: { [key: string]: any } = {};
+    if (Array.isArray(this.PropertyValue) && this.PropertyValue.length > 0) {
+      json['PropertyValue'] = this.PropertyValue.map((p) => p.toJson());
     }
     return json;
   }
@@ -280,14 +280,14 @@ export class CsdlPropertyValue {
   }
 
   toJson() {
-    const json: {[key: string]: any} = { Name: this.Name, };
-    if (this.String) {
+    const json: { [key: string]: any } = { Name: this.Name, };
+    if (this.String !== undefined) {
       json['String'] = this.String;
     }
-    if (this.Date) {
+    if (this.Date !== undefined) {
       json['Date'] = this.Date;
     }
-    if (this.EnumMember) {
+    if (Array.isArray(this.EnumMember) && this.EnumMember.length > 0) {
       json['EnumMember'] = this.EnumMember.map((m) => m.toJson());
     }
     return json;

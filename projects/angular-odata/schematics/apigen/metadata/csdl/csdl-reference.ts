@@ -25,10 +25,10 @@ export class CsdlReference extends CsdlAnnotable {
 
   override toJson() {
     const json: {[key: string]: any} = {...super.toJson(), Uri: this.Uri};
-    if (Array.isArray(this.Includes) && this.Includes.length) {
+    if (Array.isArray(this.Includes) && this.Includes.length > 0) {
       json['Includes'] = this.Includes.map((i) => i.toJson());
     }
-    if (Array.isArray(this.IncludeAnnotations) && this.IncludeAnnotations.length) {
+    if (Array.isArray(this.IncludeAnnotations) && this.IncludeAnnotations.length > 0) {
       json['IncludeAnnotations'] = this.IncludeAnnotations.map((i) => i.toJson());
     }
     return json;
