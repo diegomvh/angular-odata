@@ -96,7 +96,7 @@ export class CsdlFunction extends CsdlCallable {
     }
   }
 
-  toConfig(): CallableConfig {
+  toConfig(base?: Partial<CallableConfig>): CallableConfig {
     return {
       name: this.Name,
       entitySetPath: this.EntitySetPath,
@@ -134,7 +134,7 @@ export class CsdlAction extends CsdlCallable {
     }
   }
 
-  toConfig(): CallableConfig {
+  toConfig(base?: Partial<CallableConfig>): CallableConfig {
     return {
       name: this.Name,
       entitySetPath: this.EntitySetPath,

@@ -13,11 +13,12 @@ export class ODataMetadata {
     this.Schemas = Schemas?.map((s) => new CsdlSchema(s));
   }
 
-  toConfig(base: Partial<ApiConfig> = {}): ApiConfig {
-    base.version = base.version ?? this.Version as ODataVersion;
-    base.schemas = [...(base.schemas ?? []), ...(this.Schemas ?? []).map((s) => s.toConfig())];
-    base.references = [...(base.references ?? []), ...(this.References ?? []).map((r) => r.toConfig())];
-    return base as ApiConfig; 
+  toConfig(base?: Partial<ApiConfig>): ApiConfig {
+    return {...base, 
+      version: base?.version ?? this.Version as ODataVersion,
+      schemas: (this.Schemas ?? []).map((ms) => ms.toConfig(base?.schemas?.find(cs => cs.namespace === ms.Namespace))),
+      references: (this.References ?? []).map((mr) => mr.toConfig(base?.references?.find(cs => cs.uri === mr.Uri))),
+    } as ApiConfig;
   }
 
   toJson() {

@@ -108,12 +108,14 @@ export class CsdlComplexType extends CsdlStructuredType {
     };
   }
 
-  override toConfig(): StructuredTypeConfig {
+  override toConfig(base?: Partial<StructuredTypeConfig>): StructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
       base: this.BaseType,
-      open: this.OpenType,
+      open: base?.open ?? this.OpenType,
+      model: base?.model,
+      collection: base?.collection,
       fields: [
         ...(this.Property ?? []).map((t) => t.toConfig()),
         ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
@@ -171,12 +173,14 @@ export class CsdlEntityType extends CsdlStructuredType {
     };
   }
 
-  override toConfig(): StructuredTypeConfig {
+  override toConfig(base?: Partial<StructuredTypeConfig>): StructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
       base: this.BaseType,
-      open: this.OpenType,
+      open: base?.open ?? this.OpenType,
+      model: base?.model,
+      collection: base?.collection,
       keys: this.Key?.toConfig(),
       fields: [
         ...(this.Property ?? []).map((t) => t.toConfig()),

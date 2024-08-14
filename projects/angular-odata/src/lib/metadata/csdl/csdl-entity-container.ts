@@ -68,7 +68,7 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     return `${this.schema.Namespace}.${this.Name}`;
   }
 
-  override toConfig(): EntityContainerConfig {
+  override toConfig(base?: Partial<EntityContainerConfig>): EntityContainerConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
