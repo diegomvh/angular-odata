@@ -30,14 +30,15 @@ export class CsdlSingleton extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: {[key: string]: any} = {
       ...super.toJson(),
       Name: this.Name,
       Type: this.Type,
-      NavigationPropertyBindings: this.NavigationPropertyBindings?.map(
-        (n) => n.toJson(),
-      ),
     };
+    if (Array.isArray(this.NavigationPropertyBindings) && this.NavigationPropertyBindings.length > 0) {
+      json['NavigationPropertyBindings'] = this.NavigationPropertyBindings.map((n) => n.toJson());
+    }
+    return json;
   }
 
   name() {
