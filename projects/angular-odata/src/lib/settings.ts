@@ -8,7 +8,6 @@ import {
   ODataEnumType,
   ODataStructuredType,
 } from './schema';
-import { ODataEntityService } from './services/entity';
 import { ApiConfig, EdmType, Parser } from './types';
 
 export class ODataSettings {

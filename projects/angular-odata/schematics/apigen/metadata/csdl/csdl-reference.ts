@@ -2,22 +2,22 @@ import { CsdlAnnotable } from './csdl-annotation';
 
 export class CsdlReference extends CsdlAnnotable {
   Uri: string;
-  Includes?: CsdlInclude[];
+  Include?: CsdlInclude[];
   IncludeAnnotations?: CsdlIncludeAnnotations[];
   constructor({
     Uri,
-    Includes,
+    Include,
     IncludeAnnotations,
     Annotation,
   }: {
     Uri: string;
-    Includes?: any[];
+    Include?: any[];
     IncludeAnnotations?: any[];
     Annotation?: any[];
   }) {
     super({ Annotation });
     this.Uri = Uri;
-    this.Includes = Includes?.map((i) => new CsdlInclude(i));
+    this.Include = Include?.map((i) => new CsdlInclude(i));
     this.IncludeAnnotations = IncludeAnnotations?.map(
       (i) => new CsdlIncludeAnnotations(i),
     );
@@ -25,8 +25,8 @@ export class CsdlReference extends CsdlAnnotable {
 
   override toJson() {
     const json: {[key: string]: any} = {...super.toJson(), Uri: this.Uri};
-    if (Array.isArray(this.Includes) && this.Includes.length > 0) {
-      json['Includes'] = this.Includes.map((i) => i.toJson());
+    if (Array.isArray(this.Include) && this.Include.length > 0) {
+      json['Include'] = this.Include.map((i) => i.toJson());
     }
     if (Array.isArray(this.IncludeAnnotations) && this.IncludeAnnotations.length > 0) {
       json['IncludeAnnotations'] = this.IncludeAnnotations.map((i) => i.toJson());

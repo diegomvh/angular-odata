@@ -46,15 +46,23 @@ export class CsdlStructuredType extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Name: this.Name,
-      Property: this.Property?.map((p) => p.toJson()),
-      NavigationProperty: this.NavigationProperty?.map((n) => n.toJson()),
-      BaseType: this.BaseType,
-      OpenType: this.OpenType,
-      Abstract: this.Abstract,
-    };
+    const json: {[key: string]: any} = { ...super.toJson(), Name: this.Name };
+    if (Array.isArray(this.Property) && this.Property.length > 0) {
+      json['Property'] = this.Property.map((p) => p.toJson());
+    }
+    if (Array.isArray(this.NavigationProperty) && this.NavigationProperty.length > 0) {
+      json['NavigationProperty'] = this.NavigationProperty.map((n) => n.toJson());
+    }
+    if (this.BaseType !== undefined) {
+      json['BaseType'] = this.BaseType;
+    }
+    if (this.OpenType !== undefined) {
+      json['OpenType'] = this.OpenType;
+    }
+    if (this.Abstract !== undefined) {
+      json['Abstract'] = this.Abstract;
+    }
+    return json;
   }
 
   name() {
@@ -166,11 +174,14 @@ export class CsdlEntityType extends CsdlStructuredType {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Key: this.Key?.toJson(),
-      HasStream: this.HasStream,
-    };
+    const json: {[key: string]: any} = { ...super.toJson() };
+    if (this.Key !== undefined) {
+      json['Key'] = this.Key.toJson();
+    }
+    if (this.HasStream !== undefined) {
+      json['HasStream'] = this.HasStream;
+    }
+    return json;
   }
 
   override toConfig(base?: Partial<StructuredTypeConfig>): StructuredTypeConfig {
@@ -191,20 +202,20 @@ export class CsdlEntityType extends CsdlStructuredType {
 }
 
 export class CsdlKey {
-  PropertyRefs: CsdlPropertyRef[];
+  PropertyRef: CsdlPropertyRef[];
 
-  constructor({ PropertyRefs }: { PropertyRefs: any[] }) {
-    this.PropertyRefs = PropertyRefs?.map((p) => new CsdlPropertyRef(p));
+  constructor({ PropertyRef }: { PropertyRef: any[] }) {
+    this.PropertyRef = PropertyRef?.map((p) => new CsdlPropertyRef(p));
   }
 
   toJson() {
     return {
-      PropertyRefs: this.PropertyRefs?.map((p) => p.toJson()),
+      PropertyRef: this.PropertyRef?.map((p) => p.toJson()),
     };
   }
 
   toConfig() {
-    return this.PropertyRefs?.map((t) => t.toConfig());
+    return this.PropertyRef?.map((t) => t.toConfig());
   }
 }
 

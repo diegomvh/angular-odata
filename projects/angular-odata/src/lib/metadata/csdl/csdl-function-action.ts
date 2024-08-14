@@ -39,16 +39,16 @@ export class CsdlCallable {
     const json: {[key: string]: any} = {
       Name: this.Name,
     }
-    if (this.ReturnType) {
+    if (this.ReturnType !== undefined) {
       json['ReturnType'] = this.ReturnType.toJson();
     }
-    if (this.IsBound) {
+    if (this.IsBound !== undefined) {
       json['IsBound'] = this.IsBound;
     }
-    if (this.EntitySetPath) {
+    if (this.EntitySetPath !== undefined) {
       json['EntitySetPath'] = this.EntitySetPath;
     }
-    if (this.Parameter) {
+    if (Array.isArray(this.Parameter) && this.Parameter.length > 0) {
       json['Parameter'] = this.Parameter.map((p) => p.toJson());
     }
     return json;
