@@ -76,21 +76,21 @@ export class CsdlSchema {
     }
   }
 
-  toConfig(): SchemaConfig {
+  toConfig(base?: Partial<SchemaConfig>): SchemaConfig {
     return {
       namespace: this.Namespace,
-      alias: this.Alias,
+      alias: base?.alias ?? this.Alias,
       annotations: this.Annotations?.map((t) => t.toConfig()),
-      enums: this.EnumType?.map((t) => t.toConfig()),
+      enums: this.EnumType?.map((t) => t.toConfig(base?.enums?.find(cs => cs.name === t.Name))),
       entities: [
-        ...(this.ComplexType ?? []).map((t) => t.toConfig()),
-        ...(this.EntityType ?? []).map((t) => t.toConfig()),
+        ...(this.ComplexType ?? []).map((t) => t.toConfig(base?.entities?.find(cs => cs.name === t.Name))),
+        ...(this.EntityType ?? []).map((t) => t.toConfig(base?.entities?.find(cs => cs.name === t.Name))),
       ],
       callables: [
-        ...(this.Function ?? []).map((t) => t.toConfig()),
-        ...(this.Action ?? []).map((t) => t.toConfig()),
+        ...(this.Function ?? []).map((t) => t.toConfig(base?.callables?.find(cs => cs.name === t.Name))),
+        ...(this.Action ?? []).map((t) => t.toConfig(base?.callables?.find(cs => cs.name === t.Name))),
       ],
-      containers: this.EntityContainer?.map((t) => t.toConfig()),
+      containers: this.EntityContainer?.map((t) => t.toConfig(base?.containers?.find(cs => cs.name === t.Name))),
     } as SchemaConfig;
   }
 }

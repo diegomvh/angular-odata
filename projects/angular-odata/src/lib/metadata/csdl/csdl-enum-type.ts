@@ -53,7 +53,7 @@ export class CsdlEnumType extends CsdlAnnotable {
     return `${this.schema.Namespace}.${this.Name}`;
   }
 
-  override toConfig(): EnumTypeConfig {
+  override toConfig(base?: Partial<EnumTypeConfig>): EnumTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -94,7 +94,7 @@ export class CsdlMember extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(): EnumTypeFieldConfig {
+  override toConfig(base?: Partial<EnumTypeFieldConfig>): EnumTypeFieldConfig {
     const config: {[key: string]: any} = {...super.toConfig(), value: this.Value};
     return config as EnumTypeFieldConfig;
   }

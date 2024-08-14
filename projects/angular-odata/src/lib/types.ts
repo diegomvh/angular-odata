@@ -223,7 +223,7 @@ export type ApiConfig = {
   options?: ApiOptions;
   parsers?: { [type: string]: Parser<any> };
   schemas?: SchemaConfig[];
-  references?: any[];
+  references?: ReferenceConfig[];
 };
 export type AnnotationConfig = {
   term: string;
@@ -232,6 +232,15 @@ export type AnnotationConfig = {
   int?: number;
   permissions?: string[];
   properties?: string[];
+};
+export type ReferenceConfig = {
+  uri: string;
+  includes?: string;
+  annotations?: AnnotationConfig[];
+  enums?: EnumTypeConfig[];
+  entities?: StructuredTypeConfig[];
+  callables?: CallableConfig[];
+  containers?: EntityContainerConfig[];
 };
 export type SchemaConfig = {
   namespace: string;
