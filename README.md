@@ -11,8 +11,6 @@
   <a href="./docs/README.md">Documentation</a>
   ·
   <a href="https://github.com/diegomvh/AngularODataEntity">Demo</a>
-  ·
-  <a href="https://diegomvh.github.io/angular-odata/">Page</a>
   <br>
   <br>
 </p>
