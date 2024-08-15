@@ -46,14 +46,23 @@ export class CsdlEntityContainer extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Extend: this.Extend,
-      EntitySet: this.EntitySet?.map((e) => e.toJson()),
-      Singleton: this.Singleton?.map((s) => s.toJson()),
-      FunctionImport: this.FunctionImport?.map((f) => f.toJson()),
-      ActionImport: this.ActionImport?.map((a) => a.toJson()),
-    };
+    const json: {[key: string]: any} = { ...super.toJson() };
+    if (this.Extend !== undefined) {
+      json['Extend'] = this.Extend;
+    }
+    if (Array.isArray(this.EntitySet) && this.EntitySet.length > 0) {
+      json['EntitySet'] = this.EntitySet.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.Singleton) && this.Singleton.length > 0) {
+      json['Singleton'] = this.Singleton.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.FunctionImport) && this.FunctionImport.length > 0) {
+      json['FunctionImport'] = this.FunctionImport.map((a) => a.toJson());
+    }
+    if (Array.isArray(this.ActionImport) && this.ActionImport.length > 0) {
+      json['ActionImport'] = this.ActionImport.map((a) => a.toJson());
+    }
+    return json;
   }
 
   name() {

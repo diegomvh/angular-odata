@@ -88,7 +88,7 @@ export class CsdlMember extends CsdlAnnotable {
 
   override toJson() {
     const json: {[key: string]: any} = {...super.toJson(), Name: this.Name};
-    if (this.Value) {
+    if (this.Value !== undefined) {
       json['Value'] = this.Value;
     }
     return json;
