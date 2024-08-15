@@ -32,7 +32,7 @@
     "link": "npm link angular-odata",
     "test": "ng test",
     "watch": "ng build --watch --configuration development",
-    "docs": "compodoc -p projects/angular-odata/tsconfig.lib.json -d docs --disableGraph --disableCoverage",
+    "docs": "compodoc -p projects/angular-odata/tsconfig.lib.json -d docs/api --disableGraph --disableCoverage",
     "versioning": "npm version 0.128.0 --allow-same-version && cd projects/angular-odata && npm version 0.128.0 --allow-same-version && cd ../..",
     "publish": "npm run build && npm run schematics && npm publish dist/angular-odata/",
     "release": "cp README.md projects/angular-odata/README.md && npm run docs && npm run publish",

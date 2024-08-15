@@ -1,0 +1,1536 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ExpandField</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/angular-odata/src/lib/resources/query/expressions/expand.ts</code>
+        </p>
+
+
+
+
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
+            </p>
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#clone" >clone</a>
+                            </li>
+                            <li>
+                                <a href="#count" >count</a>
+                            </li>
+                            <li>
+                                <a href="#expand" >expand</a>
+                            </li>
+                            <li>
+                                <a href="#filter" >filter</a>
+                            </li>
+                            <li>
+                                <a href="#levels" >levels</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#option" >option</a>
+                            </li>
+                            <li>
+                                <a href="#orderBy" >orderBy</a>
+                            </li>
+                            <li>
+                                <a href="#render" >render</a>
+                            </li>
+                            <li>
+                                <a href="#resolve" >resolve</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                <a href="#select" >select</a>
+                            </li>
+                            <li>
+                                <a href="#skip" >skip</a>
+                            </li>
+                            <li>
+                                <a href="#toJson" >toJson</a>
+                            </li>
+                            <li>
+                                <a href="#top" >top</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#undefined" >undefined</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(field: <a href="../undefineds/.html" target="_self">any</a>, values: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:17</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>field</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>values</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clone"></a>
+                    <span class="name">
+                        <span ><b>clone</b></span>
+                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clone()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="87"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:87</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandField&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="count"></a>
+                    <span class="name">
+                        <span ><b>count</b></span>
+                        <a href="#count"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>count()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:170</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expand"></a>
+                    <span class="name">
+                        <span ><b>expand</b></span>
+                        <a href="#expand"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>expand(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:115</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filter"></a>
+                    <span class="name">
+                        <span ><b>filter</b></span>
+                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>filter(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="127"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:127</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="levels"></a>
+                    <span class="name">
+                        <span ><b>levels</b></span>
+                        <a href="#levels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>levels(n: <a href="../undefineds/.html" target="_self">number | &quot;max&quot;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="166"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:166</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>n</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number | &quot;max&quot;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number | &quot;max&quot;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="option"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>option</b></span>
+                        <a href="#option"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>option(name: <a href="../undefineds/QueryOption.html" target="_self">QueryOption</a>, opts?: <a href="../undefineds/.html" target="_self">O</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="175"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:175</a></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>O</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#QueryOption" target="_self" >QueryOption</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >O</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >O</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="orderBy"></a>
+                    <span class="name">
+                        <span ><b>orderBy</b></span>
+                        <a href="#orderBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>orderBy(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="146"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:146</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="render"></a>
+                    <span class="name">
+                        <span ><b>render</b></span>
+                        <a href="#render"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>render(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="33"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolve"></a>
+                    <span class="name">
+                        <span ><b>resolve</b></span>
+                        <a href="#resolve"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>resolve(parser: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>parser</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="139"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:139</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="select"></a>
+                    <span class="name">
+                        <span ><b>select</b></span>
+                        <a href="#select"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>select(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:103</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >SelectExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skip"></a>
+                    <span class="name">
+                        <span ><b>skip</b></span>
+                        <a href="#skip"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skip(n: <a href="../undefineds/.html" target="_self">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="158"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:158</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>n</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toJson"></a>
+                    <span class="name">
+                        <span ><b>toJson</b></span>
+                        <a href="#toJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toJson()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="27"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ field: any; }</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="top"></a>
+                    <span class="name">
+                        <span ><b>top</b></span>
+                        <a href="#top"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>top(n: <a href="../undefineds/.html" target="_self">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="162"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:162</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>n</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+            <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="undefined"></a>
+                        <span class="name"><b>undefined</b><a href="#undefined"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:23</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, ParserOptions, QueryOption } from &#x27;../../../types&#x27;;
+import { Objects, Types } from &#x27;../../../utils&#x27;;
+import { QueryCustomType, Unpacked } from &#x27;../builder&#x27;;
+import { Expression } from &#x27;./base&#x27;;
+import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
+import { OrderByExpression, OrderByExpressionBuilder } from &#x27;./orderby&#x27;;
+import { SearchExpression, SearchExpressionBuilder } from &#x27;./search&#x27;;
+import { SelectExpression, SelectExpressionBuilder } from &#x27;./select&#x27;;
+import {
+  FieldFactory,
+  render,
+  Renderable,
+  RenderableFactory,
+  resolve,
+} from &#x27;./syntax&#x27;;
+
+export class ExpandField&lt;T&gt; implements Renderable {
+  constructor(
+    protected field: any,
+    private values: { [name: string]: any } &#x3D; {},
+  ) {}
+
+  get [Symbol.toStringTag]() {
+    return &#x27;ExpandField&#x27;;
+  }
+
+  toJson() {
+    return {
+      field: this.field.toJson(),
+    };
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
+    options?: ParserOptions;
+  }): string {
+    parser &#x3D; resolve([this.field], parser);
+    const params: { [name: string]: string } &#x3D; [
+      QueryOption.select,
+      QueryOption.expand,
+      QueryOption.filter,
+      QueryOption.search,
+      QueryOption.orderBy,
+      QueryOption.skip,
+      QueryOption.top,
+      QueryOption.count,
+      QueryOption.levels,
+    ]
+      .filter((key) &#x3D;&gt; !Types.isEmpty(this.values[key]))
+      .reduce((acc, key) &#x3D;&gt; {
+        let value: any &#x3D; this.values[key];
+        if (Types.rawType(value).endsWith(&#x27;Expression&#x27;)) {
+          value &#x3D; (value as Expression&lt;T&gt;).render({
+            aliases,
+            prefix,
+            escape,
+            parser,
+            options,
+          });
+        }
+        return Object.assign(acc, { [key]: value });
+      }, {});
+    let expand &#x3D; &#x60;${render(this.field, {
+      aliases,
+      escape,
+      prefix,
+      parser,
+      options,
+    })}&#x60;;
+    if (!Types.isEmpty(params)) {
+      expand &#x3D; &#x60;${expand}(${Object.keys(params)
+        .map((key) &#x3D;&gt; &#x60;$${key}&#x3D;${params[key]}&#x60;)
+        .join(&#x27;;&#x27;)})&#x60;;
+    }
+    return expand;
+  }
+
+  clone() {
+    const values &#x3D; Object.keys(this.values).reduce(
+      (acc, key) &#x3D;&gt;
+        Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
+      {},
+    );
+    return new ExpandField&lt;T&gt;(
+      typeof this.field &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? this.field : this.field.clone(),
+      values,
+    );
+  }
+
+  resolve(parser: any) {
+    return parser;
+  }
+
+  select(
+    opts: (
+      builder: SelectExpressionBuilder&lt;T&gt;,
+      current?: SelectExpression&lt;T&gt;,
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;,
+  ): SelectExpression&lt;T&gt; {
+    return this.option(
+      QueryOption.select,
+      SelectExpression.factory&lt;T&gt;(opts, this.values[QueryOption.select]),
+    );
+  }
+
+  expand(
+    opts: (
+      builder: ExpandExpressionBuilder&lt;T&gt;,
+      current?: ExpandExpression&lt;T&gt;,
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
+  ) {
+    return this.option(
+      QueryOption.expand,
+      ExpandExpression.factory&lt;T&gt;(opts, this.values[QueryOption.expand]),
+    );
+  }
+
+  filter(
+    opts: (
+      builder: FilterExpressionBuilder&lt;T&gt;,
+      current?: FilterExpression&lt;T&gt;,
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
+  ) {
+    return this.option(
+      QueryOption.filter,
+      FilterExpression.factory&lt;T&gt;(opts, this.values[QueryOption.filter]),
+    );
+  }
+
+  search(opts: (builder: SearchExpressionBuilder&lt;T&gt;) &#x3D;&gt; SearchExpression&lt;T&gt;) {
+    return this.option(
+      QueryOption.search,
+      SearchExpression.factory&lt;T&gt;(opts, this.values[QueryOption.search]),
+    );
+  }
+
+  orderBy(
+    opts: (
+      builder: OrderByExpressionBuilder&lt;T&gt;,
+      current?: OrderByExpression&lt;T&gt;,
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
+  ) {
+    return this.option(
+      QueryOption.orderBy,
+      OrderByExpression.factory&lt;T&gt;(opts, this.values[QueryOption.orderBy]),
+    );
+  }
+
+  skip(n: number) {
+    return this.option&lt;number&gt;(QueryOption.skip, n);
+  }
+
+  top(n: number) {
+    return this.option&lt;number&gt;(QueryOption.top, n);
+  }
+
+  levels(n: number | &#x27;max&#x27;) {
+    return this.option&lt;number | &#x27;max&#x27;&gt;(QueryOption.levels, n);
+  }
+
+  count() {
+    return this.option&lt;boolean&gt;(QueryOption.count, true);
+  }
+
+  // Option Handler
+  private option&lt;O&gt;(name: QueryOption, opts?: O) {
+    if (opts !&#x3D;&#x3D; undefined) this.values[name] &#x3D; opts;
+    return this.values[name] as O;
+  }
+}
+
+export type ExpandExpressionBuilder&lt;T&gt; &#x3D; {
+  t: Required&lt;T&gt;;
+  e: () &#x3D;&gt; ExpandExpression&lt;T&gt;;
+};
+export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
+  constructor({
+    children,
+  }: {
+    children?: Renderable[];
+  } &#x3D; {}) {
+    super({ children });
+  }
+
+  get [Symbol.toStringTag]() {
+    return &#x27;ExpandExpression&#x27;;
+  }
+
+  static factory&lt;T&gt;(
+    opts: (
+      builder: ExpandExpressionBuilder&lt;T&gt;,
+      current?: ExpandExpression&lt;T&gt;,
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
+    current?: ExpandExpression&lt;T&gt;,
+  ): ExpandExpression&lt;T&gt; {
+    return opts(
+      {
+        t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
+        e: () &#x3D;&gt; new ExpandExpression&lt;T&gt;(),
+      },
+      current,
+    ) as ExpandExpression&lt;T&gt;;
+  }
+
+  override toJson() {
+    const json &#x3D; super.toJson();
+    return Object.assign(json, {});
+  }
+
+  static fromJson&lt;T&gt;(json: { [name: string]: any }): ExpandExpression&lt;T&gt; {
+    return new ExpandExpression&lt;T&gt;({
+      children: json[&#x27;children&#x27;].map((c: any) &#x3D;&gt; RenderableFactory(c)),
+    });
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser&lt;T&gt;;
+    options?: ParserOptions;
+  } &#x3D; {}): string {
+    return this._children
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix, parser, options }))
+      .join(&#x27;,&#x27;);
+  }
+
+  clone() {
+    return new ExpandExpression&lt;T&gt;({
+      children: this._children.map((c) &#x3D;&gt; c.clone()),
+    });
+  }
+
+  private _add(node: Renderable): ExpandExpression&lt;T&gt; {
+    this._children.push(node);
+    return this;
+  }
+
+  field&lt;F&gt;(
+    field: F,
+    opts?: (e: ExpandField&lt;Unpacked&lt;F&gt;&gt;) &#x3D;&gt; void,
+  ): ExpandExpression&lt;T&gt; {
+    let node &#x3D; new ExpandField&lt;Unpacked&lt;F&gt;&gt;(field);
+    if (opts !&#x3D;&#x3D; undefined) opts(node);
+    return this._add(node);
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'ExpandField.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

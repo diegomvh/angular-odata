@@ -1,0 +1,2382 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ODataEntitySetService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/angular-odata/src/lib/services/entity-set.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Static</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Collection" >Collection</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#Model" >Model</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#attach" >attach</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#attach" >attach</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#attach" >attach</a>
+                            </li>
+                            <li>
+                                <a href="#collection" >collection</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#create" >create</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#destroy" >destroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#entities" >entities</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#entity" >entity</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#fetchAll" >fetchAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#fetchMany" >fetchMany</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#fetchOne" >fetchOne</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#fetchOrCreate" >fetchOrCreate</a>
+                            </li>
+                            <li>
+                                <a href="#model" >model</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#modify" >modify</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#save" >save</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#update" >update</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#callAction" >callAction</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#callFunction" >callFunction</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#fetchNavigationProperty" >fetchNavigationProperty</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#entitySetSchema" >entitySetSchema</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Collection"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>Collection</b></span>
+                        <a href="#Collection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:17</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Model"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>Model</b></span>
+                        <a href="#Model"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attach"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>attach</b></span>
+                        <a href="#attach"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>attach(model: <a href="../undefineds/.html" target="_self">M</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:54</a></code>
+</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>M</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Attach an existing model to this service.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>model</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >M</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The model to attach.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attach"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>attach</b></span>
+                        <a href="#attach"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>attach(model: <a href="../undefineds/.html" target="_self">C</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:55</a></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>C</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>model</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >C</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attach"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>attach</b></span>
+                        <a href="#attach"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>attach(model: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>model</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="collection"></a>
+                    <span class="name">
+                        <span ><b>collection</b></span>
+                        <a href="#collection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>collection(entities?: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;[]</a>, reset?: <a href="../undefineds/.html" target="_self">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="27"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entities</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>reset</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="create"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>create</b></span>
+                        <a href="#create"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>create(attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="106"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:106</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create an entity in the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>attrs</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The attributes for the entity.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ODataOptions" target="_self" >ODataOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The options for the request.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="destroy"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>destroy</b></span>
+                        <a href="#destroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>destroy(key: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="155"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:155</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Delete an entity in the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The entity key.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The options for the request.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="entities"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>entities</b></span>
+                        <a href="#entities"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>entities()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="38"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get the entity set resource for this service.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntitySetResource&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="entity"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>entity</b></span>
+                        <a href="#entity"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>entity(key?: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:46</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get the entity resource for this service.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The entity key.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntityResource&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchAll"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>fetchAll</b></span>
+                        <a href="#fetchAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchAll(options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get all entities from the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ODataOptions" target="_self" >ODataOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The options for the request.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchMany"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>fetchMany</b></span>
+                        <a href="#fetchMany"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchMany(top: <a href="../undefineds/.html" target="_self">number</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="84"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:84</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get entities from the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>top</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The options for the request.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchOne"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>fetchOne</b></span>
+                        <a href="#fetchOne"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchOne(options?: <a href="../undefineds/.html" target="_self"></a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:97</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get an entity from the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The options for the request.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchOrCreate"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>fetchOrCreate</b></span>
+                        <a href="#fetchOrCreate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchOrCreate(key: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, undefined: <a href="../undefineds/.html" target="_self"></a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="173"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:173</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get or create an entity in the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>The entity key.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>attrs</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>The attributes for the entity.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="model"></a>
+                    <span class="name">
+                        <span ><b>model</b></span>
+                        <a href="#model"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>model(entity?: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, reset?: <a href="../undefineds/.html" target="_self">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="19"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:19</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entity</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>reset</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="modify"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>modify</b></span>
+                        <a href="#modify"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>modify(key: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="138"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:138</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Patch an entity in the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The entity key.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>attrs</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The attributes for the entity.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The options for the request.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="save"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>save</b></span>
+                        <a href="#save"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>save(attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, undefined: <a href="../undefineds/.html" target="_self"></a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="195"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:195</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Save an entity in the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>attrs</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>The attributes for the entity.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>update</b></span>
+                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(key: <a href="../classes/Entity.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: <a href="../undefineds/.html" target="_self">Partial&lt;T&gt;</a>, options?: <a href="../undefineds/.html" target="_self"></a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:120</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Update an entity in the entity set.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="../classes/Entity.html" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The entity key.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>attrs</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The attributes for the entity.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The options for the request.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="callAction"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>callAction</b></span>
+                        <a href="#callAction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>callAction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:63</a></code>
+</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>P</li>
+                                    <li>R</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>resource</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataActionResource.html" target="_self" >ODataActionResource&lt;P | R&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>responseType</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataActionOptions&lt;R&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="callFunction"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>callFunction</b></span>
+                        <a href="#callFunction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>callFunction(params: <a href="../undefineds/.html" target="_self">P | null</a>, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:26</a></code>
+</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>P</li>
+                                    <li>R</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >P | null</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>resource</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataFunctionResource&lt;P | R&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>responseType</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../classes/Function.html" target="_self" >ODataFunctionOptions&lt;R&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;R&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchNavigationProperty"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>fetchNavigationProperty</b></span>
+                        <a href="#fetchNavigationProperty"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/.html" target="_self"></a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:100</a></code>
+</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>S</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>resource</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataNavigationPropertyResource.html" target="_self" >ODataNavigationPropertyResource&lt;S&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>responseType</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryArgumentsOptions&lt;S&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Entity.html" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+            <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="entitySetSchema"></a>
+                        <span class="name"><b>entitySetSchema</b><a href="#entitySetSchema"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>entitySetSchema()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:67</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>The schema for the entity set.</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
+import { Observable, throwError } from &#x27;rxjs&#x27;;
+import { catchError } from &#x27;rxjs/operators&#x27;;
+import { ODataCollection } from &#x27;../models/collection&#x27;;
+import { ODataModel } from &#x27;../models/model&#x27;;
+import {
+  EntityKey,
+  ODataEntity,
+  ODataEntityResource,
+  ODataEntitySetResource,
+  ODataOptions,
+} from &#x27;../resources&#x27;;
+import { ODataEntityService } from &#x27;./entity&#x27;;
+
+export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; {
+  static Model?: typeof ODataModel;
+  static Collection?: typeof ODataCollection;
+
+  model(entity?: Partial&lt;T&gt;, reset?: boolean) {
+    const Service &#x3D; this.constructor as typeof ODataEntitySetService;
+    return this.entity().asModel((entity ?? {}) as Partial&lt;T&gt;, {
+      reset,
+      ModelType: Service.Model,
+    });
+  }
+
+  collection(entities?: Partial&lt;T&gt;[], reset?: boolean) {
+    const Service &#x3D; this.constructor as typeof ODataEntitySetService;
+    return this.entities().asCollection((entities ?? []) as Partial&lt;T&gt;[], { 
+      reset,
+      CollectionType: Service.Collection 
+    });
+  }
+
+  /**
+   * Get the entity set resource for this service.
+   */
+  public entities(): ODataEntitySetResource&lt;T&gt; {
+    return this.client.entitySet&lt;T&gt;(this.name, this.apiNameOrEntityType);
+  }
+
+  /**
+   * Get the entity resource for this service.
+   * @param key The entity key.
+   */
+  public entity(key?: EntityKey&lt;T&gt;): ODataEntityResource&lt;T&gt; {
+    return this.entities().entity(key);
+  }
+
+  /**
+   * Attach an existing model to this service.
+   * @param model The model to attach.
+   */
+  public attach&lt;M extends ODataModel&lt;T&gt;&gt;(model: M): void;
+  public attach&lt;C extends ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;&gt;(model: C): void;
+  public attach(model: any): void {
+    if (model instanceof ODataModel) {
+      model.attach(this.entities().entity());
+    } else if (model instanceof ODataCollection) {
+      model.attach(this.entities());
+    }
+  }
+
+  /**
+   * The schema for the entity set.
+   */
+  get entitySetSchema() {
+    return this.api.findEntitySet(this.name);
+  }
+
+  /**
+   * Get all entities from the entity set.
+   * @param options The options for the request.
+   */
+  public fetchAll(options?: ODataOptions) {
+    return this.entities().fetchAll(options);
+  }
+
+  /**
+   * Get entities from the entity set.
+   * @param withCount Get the count of the entities.
+   * @param options The options for the request.
+   */
+  public fetchMany(
+    top: number,
+    options?: ODataOptions &amp; { withCount?: boolean },
+  ) {
+    return this.entities().fetchMany(top, options);
+  }
+
+  /**
+   * Get an entity from the entity set.
+   * @param key The entity key.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
+  public fetchOne(options?: ODataOptions &amp; { etag?: string }) {
+    return this.entities().fetchOne(options);
+  }
+
+  /**
+   * Create an entity in the entity set.
+   * @param attrs The attributes for the entity.
+   * @param options The options for the request.
+   */
+  public create(
+    attrs: Partial&lt;T&gt;,
+    options?: ODataOptions,
+  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
+    return this.entities().create(attrs, options);
+  }
+
+  /**
+   * Update an entity in the entity set.
+   * @param key The entity key.
+   * @param attrs The attributes for the entity.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
+  public update(
+    key: EntityKey&lt;T&gt;,
+    attrs: Partial&lt;T&gt;,
+    options?: ODataOptions &amp; { etag?: string },
+  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
+    const res &#x3D; this.entity(key);
+    if (!res.hasKey())
+      return throwError(() &#x3D;&gt; new Error(&#x27;update: Resource without key&#x27;));
+    return res.update(attrs, options);
+  }
+
+  /**
+   * Patch an entity in the entity set.
+   * @param key The entity key.
+   * @param attrs The attributes for the entity.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
+  public modify(
+    key: EntityKey&lt;T&gt;,
+    attrs: Partial&lt;T&gt;,
+    options?: ODataOptions &amp; { etag?: string },
+  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
+    const res &#x3D; this.entity(key);
+    if (!res.hasKey())
+      return throwError(() &#x3D;&gt; new Error(&#x27;modify: Resource without key&#x27;));
+    return res.modify(attrs, options);
+  }
+
+  /**
+   * Delete an entity in the entity set.
+   * @param key The entity key.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
+  public destroy(
+    key: EntityKey&lt;T&gt;,
+    options?: ODataOptions &amp; { etag?: string },
+  ) {
+    const res &#x3D; this.entity(key);
+    if (!res.hasKey())
+      return throwError(() &#x3D;&gt; new Error(&#x27;destroy: Resource without key&#x27;));
+    return res.destroy(options);
+  }
+
+  //#region Shortcuts
+  /**
+   * Get or create an entity in the entity set.
+   * @param key The entity key.
+   * @param attrs The attributes for the entity.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
+  public fetchOrCreate(
+    key: EntityKey&lt;T&gt;,
+    attrs: Partial&lt;T&gt;,
+    { etag, ...options }: { etag?: string } &amp; ODataOptions &#x3D; {},
+  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
+    return this.entity(key)
+      .fetch({ etag, ...options })
+      .pipe(
+        catchError((error: HttpErrorResponse) &#x3D;&gt; {
+          if (error.status &#x3D;&#x3D;&#x3D; 404) return this.create(attrs, options);
+          else return throwError(() &#x3D;&gt; error);
+        }),
+      );
+  }
+
+  /**
+   * Save an entity in the entity set.
+   * @param attrs The attributes for the entity.
+   * @param method The method to use.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
+  public save(
+    attrs: Partial&lt;T&gt;,
+    {
+      etag,
+      method,
+      ...options
+    }: {
+      etag?: string;
+      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+    } &amp; ODataOptions &#x3D; {},
+  ) {
+    let schema &#x3D; this.structuredTypeSchema;
+    if (method &#x3D;&#x3D;&#x3D; undefined &amp;&amp; schema !&#x3D;&#x3D; undefined &amp;&amp; schema.isCompoundKey())
+      return throwError(
+        () &#x3D;&gt;
+          new Error(
+            &#x27;save: Composite key require a specific method, use create/update/patch&#x27;,
+          ),
+      );
+    let key &#x3D; schema &amp;&amp; schema.resolveKey(attrs);
+    if (method &#x3D;&#x3D;&#x3D; undefined) method &#x3D; key !&#x3D;&#x3D; undefined ? &#x27;update&#x27; : &#x27;create&#x27;;
+    if ((method &#x3D;&#x3D;&#x3D; &#x27;update&#x27; || method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;) &amp;&amp; key &#x3D;&#x3D;&#x3D; undefined)
+      return throwError(
+        () &#x3D;&gt; new Error(&quot;save: Can&#x27;t update/patch entity without key&quot;),
+      );
+    return method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;
+      ? this.create(attrs, options)
+      : method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;
+        ? this.modify(key, attrs, { etag, ...options })
+        : this.update(key, attrs, { etag, ...options });
+  }
+  //#endregion
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'ODataEntitySetService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

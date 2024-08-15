@@ -1,0 +1,1258 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ODataEntitiesAnnotations</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/angular-odata/src/lib/annotations.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../classes/ODataAnnotations.html" target="_self" >ODataAnnotations</a></code>
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#_functions" >_functions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#helper" >helper</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#clone" >clone</a>
+                            </li>
+                            <li>
+                                <a href="#data" >data</a>
+                            </li>
+                            <li>
+                                <a href="#entity" >entity</a>
+                            </li>
+                            <li>
+                                <a href="#function" >function</a>
+                            </li>
+                            <li>
+                                <a href="#union" >union</a>
+                            </li>
+                            <li>
+                                <a href="#attributes" >attributes</a>
+                            </li>
+                            <li>
+                                <a href="#update" >update</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#readLink" >readLink</a>
+                                </li>
+                                <li>
+                                    <a href="#count" >count</a>
+                                </li>
+                                <li>
+                                    <a href="#nextLink" >nextLink</a>
+                                </li>
+                                <li>
+                                    <a href="#deltaLink" >deltaLink</a>
+                                </li>
+                                <li>
+                                    <a href="#top" >top</a>
+                                </li>
+                                <li>
+                                    <a href="#skip" >skip</a>
+                                </li>
+                                <li>
+                                    <a href="#skiptoken" >skiptoken</a>
+                                </li>
+                                <li>
+                                    <a href="#functions" >functions</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_functions"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>_functions</b></span>
+                        <a href="#_functions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="206" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:206</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="helper"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>helper</b></span>
+                        <a href="#helper"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/ODataVersionHelper.html" target="_self" >ODataVersionHelper</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotations.html" target="_self" >ODataAnnotations</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:7</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clone"></a>
+                    <span class="name">
+                        <span ><b>clone</b></span>
+                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clone()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotations.html" target="_self" >ODataAnnotations</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:161</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataEntitiesAnnotations.html" target="_self" >ODataEntitiesAnnotations&lt;any&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="data"></a>
+                    <span class="name">
+                        <span ><b>data</b></span>
+                        <a href="#data"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>data(data: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotations.html" target="_self" >ODataAnnotations</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:169</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="entity"></a>
+                    <span class="name">
+                        <span ><b>entity</b></span>
+                        <a href="#entity"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>entity()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="218"
+                                    class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:218</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntityAnnotations&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="function"></a>
+                    <span class="name">
+                        <span ><b>function</b></span>
+                        <a href="#function"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>function(name: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="214"
+                                    class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:214</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="union"></a>
+                    <span class="name">
+                        <span ><b>union</b></span>
+                        <a href="#union"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>union(other: <a href="../classes/ODataEntitiesAnnotations.html" target="_self">ODataEntitiesAnnotations&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotations.html" target="_self" >ODataAnnotations</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:153</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>other</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataEntitiesAnnotations.html" target="_self" >ODataEntitiesAnnotations&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataEntitiesAnnotations.html" target="_self" >ODataEntitiesAnnotations&lt;any&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attributes"></a>
+                    <span class="name">
+                        <span ><b>attributes</b></span>
+                        <a href="#attributes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>attributes(data: <a href="../undefineds/.html" target="_self">literal type</a>, metadata: <a href="../undefineds/ODataMetadataType.html" target="_self">ODataMetadataType</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotations.html" target="_self" >ODataAnnotations</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:12</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>metadata</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ODataMetadataType" target="_self" >ODataMetadataType</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Partial&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update"></a>
+                    <span class="name">
+                        <span ><b>update</b></span>
+                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>update(data: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotations.html" target="_self" >ODataAnnotations</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:19</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+            <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="readLink"></a>
+                        <span class="name"><b>readLink</b><a href="#readLink"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>readLink()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="173" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:173</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="count"></a>
+                        <span class="name"><b>count</b><a href="#count"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>count()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="177" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:177</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="nextLink"></a>
+                        <span class="name"><b>nextLink</b><a href="#nextLink"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>nextLink()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="181" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:181</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="deltaLink"></a>
+                        <span class="name"><b>deltaLink</b><a href="#deltaLink"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>deltaLink()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="185" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:185</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="top"></a>
+                        <span class="name"><b>top</b><a href="#top"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>top()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="189" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:189</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="skip"></a>
+                        <span class="name"><b>skip</b><a href="#skip"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>skip()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="194" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:194</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="skiptoken"></a>
+                        <span class="name"><b>skiptoken</b><a href="#skiptoken"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>skiptoken()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="199" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:199</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="functions"></a>
+                        <span class="name"><b>functions</b><a href="#functions"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>functions()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="207" class="link-to-prism">projects/angular-odata/src/lib/annotations.ts:207</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataContext, ODataVersionHelper } from &#x27;./helper&#x27;;
+
+import { ODataMetadataType } from &#x27;./types&#x27;;
+
+export abstract class ODataAnnotations&lt;T&gt; {
+  constructor(
+    public helper: ODataVersionHelper,
+    protected annotations: Map&lt;string, any&gt; &#x3D; new Map&lt;string, any&gt;(),
+    protected context?: ODataContext,
+  ) {}
+
+  attributes(
+    data: { [name: string]: any },
+    metadata: ODataMetadataType,
+  ): Partial&lt;T&gt; {
+    return this.helper.attributes(data, metadata) as Partial&lt;T&gt;;
+  }
+
+  update(data: { [name: string]: any }) {
+    this.annotations &#x3D; new Map&lt;string, any&gt;([
+      ...this.annotations,
+      ...this.helper.annotations(data),
+    ]);
+  }
+
+  get entitySet() {
+    return this.context?.entitySet;
+  }
+
+  get type() {
+    return this.helper.type(this.annotations) || this.context?.type;
+  }
+
+  // Method
+  abstract union(other: ODataAnnotations&lt;any&gt;): ODataAnnotations&lt;any&gt;;
+  abstract clone(): ODataAnnotations&lt;any&gt;;
+  abstract data(data: { [name: string]: any }): { [name: string]: any };
+}
+
+export class ODataPropertyAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
+  union(other: ODataPropertyAnnotations&lt;any&gt;): ODataPropertyAnnotations&lt;any&gt; {
+    return new ODataPropertyAnnotations&lt;any&gt;(
+      this.helper,
+      new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context),
+    );
+  }
+
+  clone(): ODataPropertyAnnotations&lt;any&gt; {
+    return new ODataPropertyAnnotations&lt;any&gt;(
+      this.helper,
+      new Map(this.annotations),
+      this.context,
+    );
+  }
+
+  data(data: { [name: string]: any }) {
+    return this.helper.property(data);
+  }
+}
+
+export class ODataEntityAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
+  union(other: ODataEntityAnnotations&lt;any&gt;): ODataEntityAnnotations&lt;any&gt; {
+    return new ODataEntityAnnotations&lt;any&gt;(
+      this.helper,
+      new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context),
+    );
+  }
+
+  clone(): ODataEntityAnnotations&lt;any&gt; {
+    return new ODataEntityAnnotations&lt;any&gt;(
+      this.helper,
+      new Map(this.annotations),
+      this.context,
+    );
+  }
+
+  data(data: { [name: string]: any }) {
+    return this.helper.entity(data);
+  }
+
+  get id() {
+    return this.helper.id(this.annotations);
+  }
+
+  get etag() {
+    return this.helper.etag(this.annotations);
+  }
+
+  get mediaEtag() {
+    return this.helper.mediaEtag(this.annotations);
+  }
+
+  get metadataEtag() {
+    return this.helper.metadataEtag(this.annotations);
+  }
+
+  get readLink() {
+    return this.helper.readLink(this.annotations);
+  }
+
+  get editLink() {
+    return this.helper.editLink(this.annotations);
+  }
+
+  get mediaReadLink() {
+    return this.helper.mediaReadLink(this.annotations);
+  }
+
+  get mediaEditLink() {
+    return this.helper.mediaEditLink(this.annotations);
+  }
+
+  get mediaContentType() {
+    return this.helper.mediaContentType(this.annotations);
+  }
+
+  private _properties?: Map&lt;keyof T, Map&lt;string, any&gt;&gt;;
+  get properties() {
+    if (this._properties &#x3D;&#x3D;&#x3D; undefined) {
+      this._properties &#x3D; this.helper.properties&lt;T&gt;(this.annotations);
+    }
+    return this._properties;
+  }
+
+  property&lt;F&gt;(name: keyof T, type: &#x27;collection&#x27;): ODataEntitiesAnnotations&lt;F&gt;;
+  property&lt;F&gt;(name: keyof T, type: &#x27;single&#x27;): ODataEntityAnnotations&lt;F&gt;;
+  property&lt;F&gt;(
+    name: keyof T,
+    type: &#x27;single&#x27; | &#x27;collection&#x27;,
+  ): ODataEntityAnnotations&lt;F&gt; | ODataEntitiesAnnotations&lt;F&gt; {
+    const props &#x3D; this.properties.get(name);
+    return type &#x3D;&#x3D;&#x3D; &#x27;collection&#x27;
+      ? new ODataEntitiesAnnotations&lt;F&gt;(this.helper, props)
+      : new ODataEntityAnnotations&lt;F&gt;(this.helper, props);
+  }
+
+  private _functions?: { [name: string]: any };
+  get functions() {
+    if (this._functions &#x3D;&#x3D;&#x3D; undefined) {
+      this._functions &#x3D; this.helper.functions(this.annotations);
+    }
+    return this._functions;
+  }
+
+  function(name: string) {
+    return this.functions[name];
+  }
+}
+
+export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
+  union(other: ODataEntitiesAnnotations&lt;any&gt;): ODataEntitiesAnnotations&lt;any&gt; {
+    return new ODataEntitiesAnnotations&lt;any&gt;(
+      this.helper,
+      new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context),
+    );
+  }
+
+  clone(): ODataEntitiesAnnotations&lt;any&gt; {
+    return new ODataEntitiesAnnotations&lt;any&gt;(
+      this.helper,
+      new Map(this.annotations),
+      this.context,
+    );
+  }
+
+  data(data: { [name: string]: any }) {
+    return this.helper.entities(data);
+  }
+
+  get readLink() {
+    return this.helper.readLink(this.annotations);
+  }
+
+  get count() {
+    return this.helper.count(this.annotations);
+  }
+
+  get nextLink() {
+    return this.helper.nextLink(this.annotations);
+  }
+
+  get deltaLink() {
+    return this.helper.deltaLink(this.annotations);
+  }
+
+  get top() {
+    let match &#x3D; (this.nextLink || &#x27;&#x27;).match(/[&amp;?]{1}\$top&#x3D;(\d+)/);
+    return match !&#x3D;&#x3D; null ? Number(match[1]) : undefined;
+  }
+
+  get skip() {
+    let match &#x3D; (this.nextLink || &#x27;&#x27;).match(/[&amp;?]{1}\$skip&#x3D;(\d+)/);
+    return match !&#x3D;&#x3D; null ? Number(match[1]) : undefined;
+  }
+
+  get skiptoken() {
+    let match &#x3D; (this.nextLink || &#x27;&#x27;).match(
+      /[&amp;?]{1}\$skiptoken&#x3D;([\d\w\s&#x27;\-]+)/,
+    );
+    return match !&#x3D;&#x3D; null ? match[1] : undefined;
+  }
+
+  private _functions?: { [name: string]: any };
+  get functions() {
+    if (this._functions &#x3D;&#x3D;&#x3D; undefined) {
+      this._functions &#x3D; this.helper.functions(this.annotations);
+    }
+    return this._functions;
+  }
+
+  function(name: string) {
+    return this.functions[name];
+  }
+
+  entity(): ODataEntityAnnotations&lt;T&gt; {
+    return new ODataEntityAnnotations&lt;T&gt;(this.helper, this.annotations);
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'ODataEntitiesAnnotations.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

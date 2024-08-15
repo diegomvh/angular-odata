@@ -1,0 +1,2880 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-functions">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Functions</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#addBody" title="projects/angular-odata/src/lib/client.ts" ><b>addBody</b>&nbsp;&nbsp;&nbsp;(projects/.../client.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#apigen" title="projects/angular-odata/schematics/apigen/index.ts" ><b>apigen</b>&nbsp;&nbsp;&nbsp;(projects/.../index.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#applyMixins" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>applyMixins</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildAggregate" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildAggregate</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildApply" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildApply</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildExpand" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildExpand</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildFilter" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildFilter</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildGroupBy" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildGroupBy</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildOrderBy" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildOrderBy</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildPathAndQuery" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildPathAndQuery</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildTransforms" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildTransforms</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#buildUrl" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>buildUrl</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#cloneReg" title="projects/angular-odata/src/lib/utils/types.ts" ><b>cloneReg</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#cloneSymbol" title="projects/angular-odata/src/lib/utils/types.ts" ><b>cloneSymbol</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#createSyncLoader" title="projects/angular-odata/src/lib/module.ts" ><b>createSyncLoader</b>&nbsp;&nbsp;&nbsp;(projects/.../module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#encode" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>encode</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#escapeIllegalChars" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>escapeIllegalChars</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#forEach" title="projects/angular-odata/src/lib/utils/objects.ts" ><b>forEach</b>&nbsp;&nbsp;&nbsp;(projects/.../objects.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getRandomInt" title="projects/angular-odata/schematics/random.ts" ><b>getRandomInt</b>&nbsp;&nbsp;&nbsp;(projects/.../random.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getStringCollectionClause" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>getStringCollectionClause</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Model" title="projects/angular-odata/src/lib/models/options.ts" ><b>Model</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ModelField" title="projects/angular-odata/src/lib/models/options.ts" ><b>ModelField</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ngAdd" title="projects/angular-odata/schematics/ng-add/index.ts" ><b>ngAdd</b>&nbsp;&nbsp;&nbsp;(projects/.../index.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#normalizeValue" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>normalizeValue</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#now" title="projects/angular-odata/src/lib/utils/strings.ts" ><b>now</b>&nbsp;&nbsp;&nbsp;(projects/.../strings.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#parseNot" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>parseNot</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#pathSegmentsBuilder" title="projects/angular-odata/src/lib/resources/path/segments.ts" ><b>pathSegmentsBuilder</b>&nbsp;&nbsp;&nbsp;(projects/.../segments.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#provideODataClient" title="projects/angular-odata/src/lib/module.ts" ><b>provideODataClient</b>&nbsp;&nbsp;&nbsp;(projects/.../module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#render" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>render</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#renderPrimitiveValue" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>renderPrimitiveValue</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#resolve" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>resolve</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Unnamed function" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>Unnamed function</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>projects/angular-odata/src/lib/client.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addBody"></a>
+                    <span class="name">
+                        <span ><b>addBody</b></span>
+                        <a href="#addBody"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>addBody(options, body)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/schematics/apigen/index.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apigen"></a>
+                    <span class="name">
+                        <span ><b>apigen</b></span>
+                        <a href="#apigen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>apigen(options: <a href="../interfaces/Schema.html" target="_self">ApiGenSchema</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Schema.html" target="_self" >ApiGenSchema</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/resources/query/expressions/syntax.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="applyMixins"></a>
+                    <span class="name">
+                        <span ><b>applyMixins</b></span>
+                        <a href="#applyMixins"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>applyMixins(derivedCtor: <a href="../undefineds/.html" target="_self">any</a>, constructors)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>derivedCtor</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>constructors</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="encode"></a>
+                    <span class="name">
+                        <span ><b>encode</b></span>
+                        <a href="#encode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>encode(values: <a href="../undefineds/.html" target="_self">any</a>, parser?: <a href="../interfaces/Parser.html" target="_self">Parser</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>values</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>parser</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Parser.html" target="_self" >Parser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ParserOptions.html" target="_self" >ParserOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="render"></a>
+                    <span class="name">
+                        <span ><b>render</b></span>
+                        <a href="#render"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>render(value: <a href="../undefineds/.html" target="_self">any</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, normalize: <a href="../undefineds/.html" target="_self">boolean</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>, prefix: <a href="../undefineds/.html" target="_self">string</a>, parser: <a href="../interfaces/Parser.html" target="_self">Parser&lt;any&gt;</a>, options: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>normalize</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>prefix</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>parser</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Parser.html" target="_self" >Parser&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ParserOptions.html" target="_self" >ParserOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | number | boolean | null</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolve"></a>
+                    <span class="name">
+                        <span ><b>resolve</b></span>
+                        <a href="#resolve"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>resolve(values: <a href="../undefineds/.html" target="_self">any</a>, parser?: <a href="../interfaces/Parser.html" target="_self">Parser</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>values</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>parser</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Parser.html" target="_self" >Parser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/resources/query/builder.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildAggregate"></a>
+                    <span class="name">
+                        <span ><b>buildAggregate</b></span>
+                        <a href="#buildAggregate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildAggregate(aggregate)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>aggregate</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildApply"></a>
+                    <span class="name">
+                        <span ><b>buildApply</b></span>
+                        <a href="#buildApply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildApply(apply: <a href="../undefineds/.html" target="_self">any</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>apply</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildExpand"></a>
+                    <span class="name">
+                        <span ><b>buildExpand</b></span>
+                        <a href="#buildExpand"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildExpand(expands: <a href="../undefineds/Expand.html" target="_self">Expand</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>expands</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >Expand</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildFilter"></a>
+                    <span class="name">
+                        <span ><b>buildFilter</b></span>
+                        <a href="#buildFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildFilter(filters: <a href="../undefineds/Filter.html" target="_self">Filter</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, propPrefix: <a href="../undefineds/.html" target="_self">string</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Filter" target="_self" >Filter</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>propPrefix</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildGroupBy"></a>
+                    <span class="name">
+                        <span ><b>buildGroupBy</b></span>
+                        <a href="#buildGroupBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildGroupBy(groupBy: <a href="../undefineds/GroupByType.html" target="_self">GroupByType</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>groupBy</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#GroupByType" target="_self" >GroupByType</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildOrderBy"></a>
+                    <span class="name">
+                        <span ><b>buildOrderBy</b></span>
+                        <a href="#buildOrderBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildOrderBy(orderBy: <a href="../undefineds/OrderBy.html" target="_self">OrderBy</a>, prefix: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>orderBy</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#OrderBy" target="_self" >OrderBy</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>prefix</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildPathAndQuery"></a>
+                    <span class="name">
+                        <span ><b>buildPathAndQuery</b></span>
+                        <a href="#buildPathAndQuery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildPathAndQuery(__namedParameters: {select: <a href="../undefineds/QueryOptions.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search: <a href="../undefineds/.html" target="_self"></a>, skiptoken: <a href="../undefineds/.html" target="_self"></a>, format: <a href="../undefineds/.html" target="_self"></a>, top: <a href="../undefineds/.html" target="_self"></a>, skip: <a href="../undefineds/.html" target="_self"></a>, filter: <a href="../undefineds/.html" target="_self"></a>, apply: <a href="../undefineds/.html" target="_self"></a>, transform: <a href="../undefineds/.html" target="_self"></a>, orderBy: <a href="../undefineds/.html" target="_self"></a>, key: <a href="../undefineds/.html" target="_self"></a>, count: <a href="../undefineds/.html" target="_self"></a>, expand: <a href="../undefineds/.html" target="_self"></a>, action: <a href="../undefineds/.html" target="_self"></a>, func: <a href="../undefineds/.html" target="_self"></a>, aliases: <a href="../undefineds/.html" target="_self"></a>, escape: <a href="../undefineds/.html" target="_self"></a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>select</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#QueryOptions" target="_self" >Partial&lt;QueryOptions&lt;T&gt;&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>search</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>skiptoken</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>format</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>top</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>skip</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>filter</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>apply</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>transform</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>orderBy</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>count</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>expand</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>action</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>func</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildTransforms"></a>
+                    <span class="name">
+                        <span ><b>buildTransforms</b></span>
+                        <a href="#buildTransforms"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildTransforms(transforms, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>transforms</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildUrl"></a>
+                    <span class="name">
+                        <span ><b>buildUrl</b></span>
+                        <a href="#buildUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildUrl(path: <a href="../undefineds/.html" target="_self">string</a>, params)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="escapeIllegalChars"></a>
+                    <span class="name">
+                        <span ><b>escapeIllegalChars</b></span>
+                        <a href="#escapeIllegalChars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>escapeIllegalChars(string: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>string</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStringCollectionClause"></a>
+                    <span class="name">
+                        <span ><b>getStringCollectionClause</b></span>
+                        <a href="#getStringCollectionClause"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStringCollectionClause(lambdaParameter: <a href="../undefineds/.html" target="_self">string</a>, value: <a href="../undefineds/.html" target="_self">any</a>, collectionOperator: <a href="../undefineds/.html" target="_self">string</a>, propName: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>lambdaParameter</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>collectionOperator</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>propName</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeValue"></a>
+                    <span class="name">
+                        <span ><b>normalizeValue</b></span>
+                        <a href="#normalizeValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>normalizeValue(value: <a href="../undefineds/Value.html" target="_self">Value</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Value" target="_self" >Value</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseNot"></a>
+                    <span class="name">
+                        <span ><b>parseNot</b></span>
+                        <a href="#parseNot"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>parseNot(builtFilters)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>builtFilters</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="renderPrimitiveValue"></a>
+                    <span class="name">
+                        <span ><b>renderPrimitiveValue</b></span>
+                        <a href="#renderPrimitiveValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>renderPrimitiveValue(key: <a href="../undefineds/.html" target="_self">string</a>, val: <a href="../undefineds/.html" target="_self">any</a>, __namedParameters: {aliases: <a href="../classes/Type.html" target="_self">QueryCustomType[]</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>val</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                                            <code><a href="../classes/Type.html" target="_self" >QueryCustomType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Unnamed function"></a>
+                    <span class="name">
+                        <span ><b>Unnamed function</b></span>
+                        <a href="#Unnamed function"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Unnamed function(__namedParameters: {select: <a href="../undefineds/QueryOptions.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search: <a href="../undefineds/.html" target="_self"></a>, skiptoken: <a href="../undefineds/.html" target="_self"></a>, format: <a href="../undefineds/.html" target="_self"></a>, top: <a href="../undefineds/.html" target="_self"></a>, skip: <a href="../undefineds/.html" target="_self"></a>, filter: <a href="../undefineds/.html" target="_self"></a>, transform: <a href="../undefineds/.html" target="_self"></a>, orderBy: <a href="../undefineds/.html" target="_self"></a>, key: <a href="../undefineds/.html" target="_self"></a>, count: <a href="../undefineds/.html" target="_self"></a>, expand: <a href="../undefineds/.html" target="_self"></a>, action: <a href="../undefineds/.html" target="_self"></a>, func: <a href="../undefineds/.html" target="_self"></a>, aliases: <a href="../undefineds/.html" target="_self"></a>, escape: <a href="../undefineds/.html" target="_self"></a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>select</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#QueryOptions" target="_self" >Partial&lt;QueryOptions&lt;T&gt;&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>search</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>skiptoken</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>format</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>top</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>skip</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>filter</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>transform</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>orderBy</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>count</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>expand</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>action</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>func</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>aliases</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/utils/types.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cloneReg"></a>
+                    <span class="name">
+                        <span ><b>cloneReg</b></span>
+                        <a href="#cloneReg"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cloneReg(targe: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>targe</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cloneSymbol"></a>
+                    <span class="name">
+                        <span ><b>cloneSymbol</b></span>
+                        <a href="#cloneSymbol"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cloneSymbol(targe: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>targe</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/module.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createSyncLoader"></a>
+                    <span class="name">
+                        <span ><b>createSyncLoader</b></span>
+                        <a href="#createSyncLoader"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>createSyncLoader(passedConfig: <a href="../interfaces/PassedInitialConfig.html" target="_self">PassedInitialConfig</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>passedConfig</td>
+                                            <td>
+                                                            <code><a href="../interfaces/PassedInitialConfig.html" target="_self" >PassedInitialConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="provideODataClient"></a>
+                    <span class="name">
+                        <span ><b>provideODataClient</b></span>
+                        <a href="#provideODataClient"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>provideODataClient(passedConfig: <a href="../interfaces/PassedInitialConfig.html" target="_self">PassedInitialConfig</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>passedConfig</td>
+                                            <td>
+                                                            <code><a href="../interfaces/PassedInitialConfig.html" target="_self" >PassedInitialConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >EnvironmentProviders</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/utils/objects.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="forEach"></a>
+                    <span class="name">
+                        <span ><b>forEach</b></span>
+                        <a href="#forEach"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>forEach(array, iteratee)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>array</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>iteratee</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/schematics/random.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getRandomInt"></a>
+                    <span class="name">
+                        <span ><b>getRandomInt</b></span>
+                        <a href="#getRandomInt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getRandomInt(max: <a href="../undefineds/.html" target="_self">number</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>max</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/models/options.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Model"></a>
+                    <span class="name">
+                        <span ><b>Model</b></span>
+                        <a href="#Model"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Model(__namedParameters: {cid: <a href="../undefineds/.html" target="_self">string</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cid</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>CID_FIELD_NAME</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ModelField"></a>
+                    <span class="name">
+                        <span ><b>ModelField</b></span>
+                        <a href="#ModelField"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ModelField(__namedParameters: {name: <a href="../undefineds/.html" target="_self"></a>, options: <a href="../undefineds/.html" target="_self">any[]</a>})</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/schematics/ng-add/index.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAdd"></a>
+                    <span class="name">
+                        <span ><b>ngAdd</b></span>
+                        <a href="#ngAdd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAdd()</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Rule</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/utils/strings.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="now"></a>
+                    <span class="name">
+                        <span ><b>now</b></span>
+                        <a href="#now"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>now()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/resources/path/segments.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pathSegmentsBuilder"></a>
+                    <span class="name">
+                        <span ><b>pathSegmentsBuilder</b></span>
+                        <a href="#pathSegmentsBuilder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>pathSegmentsBuilder(segment: <a href="../undefineds/ODataSegment.html" target="_self">ODataSegment</a>, escape: <a href="../undefineds/.html" target="_self">boolean</a>, parser?: <a href="../interfaces/Parser.html" target="_self">Parser</a>, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>segment</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ODataSegment" target="_self" >ODataSegment</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>escape</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>parser</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Parser.html" target="_self" >Parser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ParserOptions.html" target="_self" >ParserOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-functions';
+            var COMPODOC_CURRENT_PAGE_URL = 'functions.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

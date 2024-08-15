@@ -1,0 +1,4752 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ODataQueryOptionsHandler</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/angular-odata/src/lib/resources/query/handlers.ts</code>
+        </p>
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#alias" >alias</a>
+                            </li>
+                            <li>
+                                <a href="#apply" >apply</a>
+                            </li>
+                            <li>
+                                <a href="#apply" >apply</a>
+                            </li>
+                            <li>
+                                <a href="#apply" >apply</a>
+                            </li>
+                            <li>
+                                <a href="#apply" >apply</a>
+                            </li>
+                            <li>
+                                <a href="#binary" >binary</a>
+                            </li>
+                            <li>
+                                <a href="#clear" >clear</a>
+                            </li>
+                            <li>
+                                <a href="#compute" >compute</a>
+                            </li>
+                            <li>
+                                <a href="#compute" >compute</a>
+                            </li>
+                            <li>
+                                <a href="#compute" >compute</a>
+                            </li>
+                            <li>
+                                <a href="#compute" >compute</a>
+                            </li>
+                            <li>
+                                <a href="#duration" >duration</a>
+                            </li>
+                            <li>
+                                <a href="#expand" >expand</a>
+                            </li>
+                            <li>
+                                <a href="#expand" >expand</a>
+                            </li>
+                            <li>
+                                <a href="#expand" >expand</a>
+                            </li>
+                            <li>
+                                <a href="#expand" >expand</a>
+                            </li>
+                            <li>
+                                <a href="#filter" >filter</a>
+                            </li>
+                            <li>
+                                <a href="#filter" >filter</a>
+                            </li>
+                            <li>
+                                <a href="#filter" >filter</a>
+                            </li>
+                            <li>
+                                <a href="#filter" >filter</a>
+                            </li>
+                            <li>
+                                <a href="#format" >format</a>
+                            </li>
+                            <li>
+                                <a href="#format" >format</a>
+                            </li>
+                            <li>
+                                <a href="#format" >format</a>
+                            </li>
+                            <li>
+                                <a href="#fromJson" >fromJson</a>
+                            </li>
+                            <li>
+                                <a href="#keep" >keep</a>
+                            </li>
+                            <li>
+                                <a href="#normalize" >normalize</a>
+                            </li>
+                            <li>
+                                <a href="#orderBy" >orderBy</a>
+                            </li>
+                            <li>
+                                <a href="#orderBy" >orderBy</a>
+                            </li>
+                            <li>
+                                <a href="#orderBy" >orderBy</a>
+                            </li>
+                            <li>
+                                <a href="#orderBy" >orderBy</a>
+                            </li>
+                            <li>
+                                <a href="#paging" >paging</a>
+                            </li>
+                            <li>
+                                <a href="#raw" >raw</a>
+                            </li>
+                            <li>
+                                <a href="#remove" >remove</a>
+                            </li>
+                            <li>
+                                <a href="#removePaging" >removePaging</a>
+                            </li>
+                            <li>
+                                <a href="#restore" >restore</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                <a href="#select" >select</a>
+                            </li>
+                            <li>
+                                <a href="#select" >select</a>
+                            </li>
+                            <li>
+                                <a href="#select" >select</a>
+                            </li>
+                            <li>
+                                <a href="#select" >select</a>
+                            </li>
+                            <li>
+                                <a href="#skip" >skip</a>
+                            </li>
+                            <li>
+                                <a href="#skip" >skip</a>
+                            </li>
+                            <li>
+                                <a href="#skip" >skip</a>
+                            </li>
+                            <li>
+                                <a href="#skiptoken" >skiptoken</a>
+                            </li>
+                            <li>
+                                <a href="#skiptoken" >skiptoken</a>
+                            </li>
+                            <li>
+                                <a href="#skiptoken" >skiptoken</a>
+                            </li>
+                            <li>
+                                <a href="#store" >store</a>
+                            </li>
+                            <li>
+                                <a href="#toJson" >toJson</a>
+                            </li>
+                            <li>
+                                <a href="#top" >top</a>
+                            </li>
+                            <li>
+                                <a href="#top" >top</a>
+                            </li>
+                            <li>
+                                <a href="#top" >top</a>
+                            </li>
+                            <li>
+                                <a href="#toString" >toString</a>
+                            </li>
+                            <li>
+                                <a href="#transform" >transform</a>
+                            </li>
+                            <li>
+                                <a href="#transform" >transform</a>
+                            </li>
+                            <li>
+                                <a href="#transform" >transform</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(options: <a href="../classes/ODataQueryOptions.html" target="_self">ODataQueryOptions&lt;T&gt;</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="228" class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:228</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>options</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/ODataQueryOptions.html" target="_self" >ODataQueryOptions&lt;T&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="alias"></a>
+                    <span class="name">
+                        <span ><b>alias</b></span>
+                        <a href="#alias"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>alias(value: <a href="../undefineds/.html" target="_self">any</a>, name?: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="247"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:247</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create a new odata alias parameter</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The value of the alias</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The name of the alias</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The alias</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apply"></a>
+                    <span class="name">
+                        <span ><b>apply</b></span>
+                        <a href="#apply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>apply(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="363"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:363</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $apply option.
+If opts is given then set te value as new value for $compute.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>string value or builder function for ApplyExpression<T></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ApplyExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apply"></a>
+                    <span class="name">
+                        <span ><b>apply</b></span>
+                        <a href="#apply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>apply(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="369"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:369</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apply"></a>
+                    <span class="name">
+                        <span ><b>apply</b></span>
+                        <a href="#apply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>apply()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="370"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:370</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apply"></a>
+                    <span class="name">
+                        <span ><b>apply</b></span>
+                        <a href="#apply"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>apply(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="371"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:371</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="binary"></a>
+                    <span class="name">
+                        <span ><b>binary</b></span>
+                        <a href="#binary"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>binary(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="265"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:265</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create a binary odata value</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The value to binary</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The binary value</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clear"></a>
+                    <span class="name">
+                        <span ><b>clear</b></span>
+                        <a href="#clear"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clear()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="572"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:572</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Shortcut for clear query.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="compute"></a>
+                    <span class="name">
+                        <span ><b>compute</b></span>
+                        <a href="#compute"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>compute(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="336"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:336</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $compute option.
+If opts is given then set te value as new value for $compute.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>string value or builder function for ComputeExpression<T></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >ComputeExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="compute"></a>
+                    <span class="name">
+                        <span ><b>compute</b></span>
+                        <a href="#compute"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>compute(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="342"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:342</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="compute"></a>
+                    <span class="name">
+                        <span ><b>compute</b></span>
+                        <a href="#compute"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>compute()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="343"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:343</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="compute"></a>
+                    <span class="name">
+                        <span ><b>compute</b></span>
+                        <a href="#compute"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>compute(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="344"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:344</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="duration"></a>
+                    <span class="name">
+                        <span ><b>duration</b></span>
+                        <a href="#duration"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>duration(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="256"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:256</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create a duration odata value</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The value to duration</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The duration value</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expand"></a>
+                    <span class="name">
+                        <span ><b>expand</b></span>
+                        <a href="#expand"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>expand(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="309"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:309</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $expand option.
+If opts is given then set te value as new value for $expand.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Expand<T> value or builder function for ExpandExpression<T></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expand"></a>
+                    <span class="name">
+                        <span ><b>expand</b></span>
+                        <a href="#expand"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>expand(opts: <a href="../undefineds/Expand.html" target="_self">Expand&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="315"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:315</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >Expand&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expand"></a>
+                    <span class="name">
+                        <span ><b>expand</b></span>
+                        <a href="#expand"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>expand()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="316"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:316</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expand"></a>
+                    <span class="name">
+                        <span ><b>expand</b></span>
+                        <a href="#expand"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>expand(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="317"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:317</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filter"></a>
+                    <span class="name">
+                        <span ><b>filter</b></span>
+                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>filter(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="438"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:438</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $filter option.
+If opts is given then set te value as new value for $filter.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Filter<T> value or builder function for FilterExpression<T></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Filter" target="_self" >FilterExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filter"></a>
+                    <span class="name">
+                        <span ><b>filter</b></span>
+                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>filter(opts: <a href="../undefineds/Filter.html" target="_self">Filter&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="444"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:444</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Filter" target="_self" >Filter&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filter"></a>
+                    <span class="name">
+                        <span ><b>filter</b></span>
+                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>filter()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="445"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:445</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filter"></a>
+                    <span class="name">
+                        <span ><b>filter</b></span>
+                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>filter(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="446"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:446</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="format"></a>
+                    <span class="name">
+                        <span ><b>format</b></span>
+                        <a href="#format"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>format(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="390"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:390</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $format option.
+If opts is given then set te value as new value for $format.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>string value for format</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="format"></a>
+                    <span class="name">
+                        <span ><b>format</b></span>
+                        <a href="#format"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>format()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="391"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:391</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="format"></a>
+                    <span class="name">
+                        <span ><b>format</b></span>
+                        <a href="#format"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>format(opts?: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="392"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:392</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fromJson"></a>
+                    <span class="name">
+                        <span ><b>fromJson</b></span>
+                        <a href="#fromJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fromJson(json: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="686"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:686</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>json</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="keep"></a>
+                    <span class="name">
+                        <span ><b>keep</b></span>
+                        <a href="#keep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>keep(...keys: QueryOption[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="522"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:522</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>keys</td>
+                                            <td>
+                                                        <code>QueryOption[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalize"></a>
+                    <span class="name">
+                        <span ><b>normalize</b></span>
+                        <a href="#normalize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>normalize(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="274"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:274</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Normalize the given value to a valid odata value</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The value to normalize</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The normalized value</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="orderBy"></a>
+                    <span class="name">
+                        <span ><b>orderBy</b></span>
+                        <a href="#orderBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>orderBy(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="464"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:464</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $orderby option.
+If opts is given then set te value as new value for $orderby.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>OrderBy<T> value or builder function for OrderByExpression<T></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#OrderBy" target="_self" >OrderByExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="orderBy"></a>
+                    <span class="name">
+                        <span ><b>orderBy</b></span>
+                        <a href="#orderBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>orderBy(opts: <a href="../undefineds/OrderBy.html" target="_self">OrderBy&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="470"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:470</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#OrderBy" target="_self" >OrderBy&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="orderBy"></a>
+                    <span class="name">
+                        <span ><b>orderBy</b></span>
+                        <a href="#orderBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>orderBy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="471"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:471</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="orderBy"></a>
+                    <span class="name">
+                        <span ><b>orderBy</b></span>
+                        <a href="#orderBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>orderBy(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="472"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:472</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="paging"></a>
+                    <span class="name">
+                        <span ><b>paging</b></span>
+                        <a href="#paging"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>paging(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="530"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:530</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Shortcut for set $top, $skip, $skiptoken.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="raw"></a>
+                    <span class="name">
+                        <span ><b>raw</b></span>
+                        <a href="#raw"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>raw(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="236"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:236</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create a raw odata value</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The value to raw</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The raw value</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="remove"></a>
+                    <span class="name">
+                        <span ><b>remove</b></span>
+                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>remove(...keys: QueryOption[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="518"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:518</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>keys</td>
+                                            <td>
+                                                        <code>QueryOption[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removePaging"></a>
+                    <span class="name">
+                        <span ><b>removePaging</b></span>
+                        <a href="#removePaging"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>removePaging()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="565"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:565</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Shortcut for clear pagination by unset $top, $skip, $skiptoken.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="restore"></a>
+                    <span class="name">
+                        <span ><b>restore</b></span>
+                        <a href="#restore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>restore(options: <a href="../objects/OData.html" target="_self">ODataQueryArguments&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="587"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:587</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Restore the given query options to the current query.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryArguments&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The query to be applied.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="412"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:412</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $search option.
+If opts is given then set te value as new value for $search.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>string value or builder function for SearchExpression<T></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >SearchExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="418"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:418</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="419"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:419</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="420"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:420</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="select"></a>
+                    <span class="name">
+                        <span ><b>select</b></span>
+                        <a href="#select"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>select(opts: <a href="../undefineds/.html" target="_self">function</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="283"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:283</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $select option.
+If opts is given then set te value as new value for $select.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Select<T> value or builder function for SelectExpression<T></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >SelectExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="select"></a>
+                    <span class="name">
+                        <span ><b>select</b></span>
+                        <a href="#select"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>select(opts: <a href="../undefineds/Select.html" target="_self">Select&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="289"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:289</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >Select&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="select"></a>
+                    <span class="name">
+                        <span ><b>select</b></span>
+                        <a href="#select"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>select()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="290"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:290</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="select"></a>
+                    <span class="name">
+                        <span ><b>select</b></span>
+                        <a href="#select"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>select(opts?: <a href="../undefineds/.html" target="_self">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="291"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:291</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skip"></a>
+                    <span class="name">
+                        <span ><b>skip</b></span>
+                        <a href="#skip"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skip(opts: <a href="../undefineds/.html" target="_self">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="501"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:501</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $skip option.
+If opts is given then set te value as new value for $skip.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>number value</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skip"></a>
+                    <span class="name">
+                        <span ><b>skip</b></span>
+                        <a href="#skip"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skip()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="502"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:502</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skip"></a>
+                    <span class="name">
+                        <span ><b>skip</b></span>
+                        <a href="#skip"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skip(opts?: <a href="../undefineds/.html" target="_self">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="503"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:503</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skiptoken"></a>
+                    <span class="name">
+                        <span ><b>skiptoken</b></span>
+                        <a href="#skiptoken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skiptoken(opts: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="512"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:512</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $skiptoken option.
+If opts is given then set te value as new value for $skiptoken.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>string value</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skiptoken"></a>
+                    <span class="name">
+                        <span ><b>skiptoken</b></span>
+                        <a href="#skiptoken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skiptoken()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="513"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:513</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skiptoken"></a>
+                    <span class="name">
+                        <span ><b>skiptoken</b></span>
+                        <a href="#skiptoken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skiptoken(opts?: <a href="../undefineds/.html" target="_self">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="514"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:514</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="store"></a>
+                    <span class="name">
+                        <span ><b>store</b></span>
+                        <a href="#store"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>store()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="579"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:579</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Store the query options from the current query.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toJson"></a>
+                    <span class="name">
+                        <span ><b>toJson</b></span>
+                        <a href="#toJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toJson()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="682"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:682</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="top"></a>
+                    <span class="name">
+                        <span ><b>top</b></span>
+                        <a href="#top"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>top(opts: <a href="../undefineds/.html" target="_self">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="490"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:490</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $top option.
+If opts is given then set te value as new value for $top.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>number value</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="top"></a>
+                    <span class="name">
+                        <span ><b>top</b></span>
+                        <a href="#top"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>top()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="491"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:491</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="top"></a>
+                    <span class="name">
+                        <span ><b>top</b></span>
+                        <a href="#top"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>top(opts?: <a href="../undefineds/.html" target="_self">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="492"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:492</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toString"></a>
+                    <span class="name">
+                        <span ><b>toString</b></span>
+                        <a href="#toString"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toString(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="690"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:690</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="transform"></a>
+                    <span class="name">
+                        <span ><b>transform</b></span>
+                        <a href="#transform"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>transform(opts: <a href="../undefineds/Transform.html" target="_self">Transform&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="401"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:401</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build and return a handler for modifying the $transform option.
+If opts is given then set te value as new value for $transform.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Transform" target="_self" >Transform&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>string value for transform</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="transform"></a>
+                    <span class="name">
+                        <span ><b>transform</b></span>
+                        <a href="#transform"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>transform()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="402"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:402</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataQueryOptionHandler.html" target="_self" >ODataQueryOptionHandler&lt;T&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="transform"></a>
+                    <span class="name">
+                        <span ><b>transform</b></span>
+                        <a href="#transform"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>transform(opts?: <a href="../undefineds/Transform.html" target="_self">Transform&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="403"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:403</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>opts</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Transform" target="_self" >Transform&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataStructuredType } from &#x27;../../schema&#x27;;
+import { Parser, QueryOption } from &#x27;../../types&#x27;;
+import { Objects, Types } from &#x27;../../utils&#x27;;
+import {
+  alias,
+  Expand,
+  Filter,
+  OrderBy,
+  Select,
+  Transform,
+  normalizeValue,
+  raw,
+  duration,
+  binary,
+} from &#x27;./builder&#x27;;
+import {
+  ComputeExpression,
+  ComputeExpressionBuilder,
+  FilterExpression,
+  FilterExpressionBuilder,
+  OrderByExpression,
+  OrderByExpressionBuilder,
+  SearchExpression,
+  SearchExpressionBuilder,
+  ExpandExpression,
+  ExpandExpressionBuilder,
+  SelectExpression,
+  SelectExpressionBuilder,
+  ApplyExpression,
+  ApplyExpressionBuilder,
+} from &#x27;./expressions&#x27;;
+import {
+  ODataQueryArguments,
+  ODataQueryOptions,
+  pathAndParamsFromQueryOptions,
+} from &#x27;./options&#x27;;
+
+export class ODataQueryOptionHandler&lt;T&gt; {
+  constructor(
+    private o: Map&lt;QueryOption, any&gt;,
+    private n: QueryOption,
+  ) {}
+
+  /**
+   * The name of the managed odata query option.
+   */
+  get name() {
+    return this.n;
+  }
+
+  /**
+   * Converts the managed odata query option to a json object.
+   * @returns {any}
+   */
+  toJson() {
+    return this.o.get(this.n);
+  }
+
+  /**
+   * Returns a boolean indicating if the managed odata query option is empty.
+   * @returns True if the managed odata query option is empty.
+   */
+  empty() {
+    return Types.isEmpty(this.o.get(this.n));
+  }
+
+  //#region Primitive Value
+  /**
+   * Get or Set the value of the managed odata query option.
+   * @param v The value to set.
+   * @returns
+   */
+  value(v?: any) {
+    if (v !&#x3D;&#x3D; undefined) this.o.set(this.n, v);
+    return this.o.get(this.n);
+  }
+  //#endregion
+
+  //#region Array Value
+  private assertArray(): any[] {
+    if (!Types.isArray(this.o.get(this.n)))
+      this.o.set(this.n, this.o.has(this.n) ? [this.o.get(this.n)] : []);
+    return this.o.get(this.n);
+  }
+
+  /**
+   * Push value to the managed odata query option.
+   * @param value Value to push
+   */
+  push(value: any) {
+    this.assertArray().push(value);
+  }
+
+  /**
+   * Remove value from the managed odata query option.
+   * @param value Value to remove
+   */
+  remove(value: any) {
+    this.o.set(
+      this.n,
+      this.assertArray().filter((v) &#x3D;&gt; v !&#x3D;&#x3D; value),
+    );
+    // If only one and not is array... down to value
+    if (
+      this.o.get(this.n).length &#x3D;&#x3D;&#x3D; 1 &amp;&amp;
+      !Types.isArray(this.o.get(this.n)[0])
+    )
+      this.o.set(this.n, this.o.get(this.n)[0]);
+  }
+
+  /**
+   * Return value at index of the managed odata query option.
+   * @param index Index of the value
+   * @returns The value
+   */
+  at(index: number) {
+    return this.assertArray()[index];
+  }
+
+  some(predicate: (value: any) &#x3D;&gt; boolean) {
+    return this.assertArray().some(predicate);
+  }
+
+  every(predicate: (value: any) &#x3D;&gt; boolean) {
+    return this.assertArray().every(predicate);
+  }
+
+  find(predicate: (value: any) &#x3D;&gt; boolean) {
+    return this.assertArray().find(predicate);
+  }
+  //#endregion
+
+  //#region HashMap Value
+  private assertObject(create: boolean): { [name: string]: any } {
+    if (
+      !Types.isArray(this.o.get(this.n)) &amp;&amp;
+      Types.isPlainObject(this.o.get(this.n))
+    ) {
+      return this.o.get(this.n);
+    }
+    let arr &#x3D; this.assertArray();
+    let obj &#x3D; arr.find((v) &#x3D;&gt; Types.isPlainObject(v));
+    if (!obj &amp;&amp; create) {
+      obj &#x3D; {};
+      arr.push(obj);
+    }
+    return obj;
+  }
+
+  /**
+   * Set the value for path in the managed odata query option.
+   * @param path Path for set the value
+   * @param value Value to set
+   */
+  set(path: string, value: any) {
+    let obj &#x3D; this.assertObject(true);
+    Objects.set(obj, path, value);
+  }
+
+  /**
+   * Get the value for path from the managed odata query option.
+   * @param path The path from get the value
+   * @param def Default if not found
+   * @returns
+   */
+  get(path: string, def?: any): any {
+    let obj &#x3D; this.assertObject(false) || {};
+    return Objects.get(obj, path, def);
+  }
+
+  /**
+   * Unset the value for path in the managed odata query option.
+   * @param path
+   */
+  unset(path: string) {
+    let obj &#x3D; this.assertObject(true);
+    Objects.unset(obj, path);
+
+    if (Types.isArray(this.o.get(this.n))) {
+      this.o.set(
+        this.n,
+        this.o.get(this.n).filter((v: any) &#x3D;&gt; !Types.isEmpty(v)),
+      );
+      if (this.o.get(this.n).length &#x3D;&#x3D;&#x3D; 1)
+        this.o.set(this.n, this.o.get(this.n)[0]);
+    }
+  }
+
+  /**
+   * Test if the managed odata query option has the value.
+   * @param path The path fot test if the value is set
+   * @returns Boolean indicating if the value is set
+   */
+  has(path: string) {
+    let obj &#x3D; this.assertObject(false) || {};
+    return Objects.has(obj, path);
+  }
+
+  /**
+   * Merge values from object into the managed odata query option.
+   * @param values Object to merge
+   * @returns
+   */
+  assign(values: { [attr: string]: any }) {
+    let obj &#x3D; this.assertObject(true);
+    return Objects.merge(obj, values);
+  }
+  //#endregion
+
+  /**
+   * Clear the managed odata query option.
+   */
+  clear() {
+    this.o.delete(this.n);
+  }
+  toString({
+    escape,
+    parser,
+  }: { escape?: boolean; parser?: Parser&lt;T&gt; } &#x3D; {}): string {
+    const [_, params] &#x3D; pathAndParamsFromQueryOptions(
+      new Map&lt;QueryOption, any&gt;([[this.n, this.o.get(this.n)]]),
+      { escape, parser },
+    );
+    return params[&#x60;$${this.n}&#x60;];
+  }
+}
+
+export class ODataQueryOptionsHandler&lt;T&gt; {
+  constructor(protected options: ODataQueryOptions&lt;T&gt;) {}
+
+  /**
+   * Create a raw odata value
+   * @param value The value to raw
+   * @returns The raw value
+   */
+  raw(value: any) {
+    return raw(value);
+  }
+
+  /**
+   * Create a new odata alias parameter
+   * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ParameterAliases
+   * @param value The value of the alias
+   * @param name The name of the alias
+   * @returns The alias
+   */
+  alias(value: any, name?: string) {
+    return alias(value, name);
+  }
+
+  /**
+   * Create a duration odata value
+   * @param value The value to duration
+   * @returns The duration value
+   */
+  duration(value: any) {
+    return duration(value);
+  }
+
+  /**
+   * Create a binary odata value
+   * @param value The value to binary
+   * @returns The binary value
+   */
+  binary(value: any) {
+    return binary(value);
+  }
+
+  /**
+   * Normalize the given value to a valid odata value
+   * @param value The value to normalize
+   * @returns The normalized value
+   */
+  normalize(value: any) {
+    return normalizeValue(value);
+  }
+
+  /**
+   * Build and return a handler for modifying the $select option.
+   * If opts is given then set te value as new value for $select.
+   * @param opts Select&lt;T&gt; value or builder function for SelectExpression&lt;T&gt;
+   */
+  select(
+    opts: (
+      builder: SelectExpressionBuilder&lt;T&gt;,
+      current?: SelectExpression&lt;T&gt;,
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;,
+  ): SelectExpression&lt;T&gt;;
+  select(opts: Select&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
+  select(): ODataQueryOptionHandler&lt;T&gt;;
+  select(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOption.select,
+        SelectExpression.factory(
+          opts,
+          this.options.expression(QueryOption.select),
+        ),
+      );
+    }
+    return this.options.option&lt;Select&lt;T&gt;&gt;(QueryOption.select, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $expand option.
+   * If opts is given then set te value as new value for $expand.
+   * @param opts Expand&lt;T&gt; value or builder function for ExpandExpression&lt;T&gt;
+   */
+  expand(
+    opts: (
+      builder: ExpandExpressionBuilder&lt;T&gt;,
+      current?: ExpandExpression&lt;T&gt;,
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
+  ): ExpandExpression&lt;T&gt;;
+  expand(opts: Expand&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
+  expand(): ODataQueryOptionHandler&lt;T&gt;;
+  expand(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOption.expand,
+        ExpandExpression.factory(
+          opts,
+          this.options.expression(QueryOption.expand),
+        ),
+      );
+    }
+    return this.options.option&lt;Expand&lt;T&gt;&gt;(QueryOption.expand, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $compute option.
+   * If opts is given then set te value as new value for $compute.
+   * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
+   * @param opts string value or builder function for ComputeExpression&lt;T&gt;
+   */
+  compute(
+    opts: (
+      builder: ComputeExpressionBuilder&lt;T&gt;,
+      current?: ComputeExpression&lt;T&gt;,
+    ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
+  ): ComputeExpression&lt;T&gt;;
+  compute(opts: string): ODataQueryOptionHandler&lt;T&gt;;
+  compute(): ODataQueryOptionHandler&lt;T&gt;;
+  compute(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOption.compute,
+        ComputeExpression.factory(
+          opts,
+          this.options.expression(QueryOption.compute),
+        ),
+      );
+    }
+    return this.options.option&lt;string&gt;(QueryOption.compute, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $apply option.
+   * If opts is given then set te value as new value for $compute.
+   * @link http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/odata-data-aggregation-ext-v4.0-cs02.html
+   * @param opts string value or builder function for ApplyExpression&lt;T&gt;
+   */
+  apply(
+    opts: (
+      builder: ApplyExpressionBuilder&lt;T&gt;,
+      current?: ApplyExpression&lt;T&gt;,
+    ) &#x3D;&gt; ApplyExpression&lt;T&gt;,
+  ): ApplyExpression&lt;T&gt;;
+  apply(opts: string): ODataQueryOptionHandler&lt;T&gt;;
+  apply(): ODataQueryOptionHandler&lt;T&gt;;
+  apply(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOption.apply,
+        ApplyExpression.factory(
+          opts,
+          this.options.expression(QueryOption.apply),
+        ),
+      );
+    }
+    return this.options.option&lt;string&gt;(QueryOption.apply, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $format option.
+   * If opts is given then set te value as new value for $format.
+   * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionformat
+   * @param opts string value for format
+   */
+  format(opts: string): ODataQueryOptionHandler&lt;T&gt;;
+  format(): ODataQueryOptionHandler&lt;T&gt;;
+  format(opts?: string): any {
+    return this.options.option&lt;string&gt;(QueryOption.format, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $transform option.
+   * If opts is given then set te value as new value for $transform.
+   * @param opts string value for transform
+   */
+  transform(opts: Transform&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
+  transform(): ODataQueryOptionHandler&lt;T&gt;;
+  transform(opts?: Transform&lt;T&gt;): any {
+    return this.options.option&lt;Transform&lt;T&gt;&gt;(QueryOption.transform, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $search option.
+   * If opts is given then set te value as new value for $search.
+   * @param opts string value or builder function for SearchExpression&lt;T&gt;
+   */
+  search(
+    opts: (
+      builder: SearchExpressionBuilder&lt;T&gt;,
+      current?: SearchExpression&lt;T&gt;,
+    ) &#x3D;&gt; SearchExpression&lt;T&gt;,
+  ): SearchExpression&lt;T&gt;;
+  search(opts: string): ODataQueryOptionHandler&lt;T&gt;;
+  search(): ODataQueryOptionHandler&lt;T&gt;;
+  search(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOption.search,
+        SearchExpression.factory(
+          opts,
+          this.options.expression(QueryOption.search),
+        ),
+      );
+    }
+    return this.options.option&lt;string&gt;(QueryOption.search, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $filter option.
+   * If opts is given then set te value as new value for $filter.
+   * @param opts Filter&lt;T&gt; value or builder function for FilterExpression&lt;T&gt;
+   */
+  filter(
+    opts: (
+      builder: FilterExpressionBuilder&lt;T&gt;,
+      current?: FilterExpression&lt;T&gt;,
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;,
+  ): FilterExpression&lt;T&gt;;
+  filter(opts: Filter&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
+  filter(): ODataQueryOptionHandler&lt;T&gt;;
+  filter(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOption.filter,
+        FilterExpression.factory(
+          opts,
+          this.options.expression(QueryOption.filter),
+        ),
+      );
+    }
+    return this.options.option&lt;Filter&lt;T&gt;&gt;(QueryOption.filter, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $orderby option.
+   * If opts is given then set te value as new value for $orderby.
+   * @param opts OrderBy&lt;T&gt; value or builder function for OrderByExpression&lt;T&gt;
+   */
+  orderBy(
+    opts: (
+      builder: OrderByExpressionBuilder&lt;T&gt;,
+      current?: OrderByExpression&lt;T&gt;,
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
+  ): OrderByExpression&lt;T&gt;;
+  orderBy(opts: OrderBy&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
+  orderBy(): ODataQueryOptionHandler&lt;T&gt;;
+  orderBy(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.option(
+        QueryOption.orderBy,
+        OrderByExpression.factory(
+          opts,
+          this.options.expression(QueryOption.orderBy),
+        ),
+      );
+    }
+    return this.options.option&lt;OrderBy&lt;T&gt;&gt;(QueryOption.orderBy, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $top option.
+   * If opts is given then set te value as new value for $top.
+   * @param opts number value
+   */
+  top(opts: number): ODataQueryOptionHandler&lt;T&gt;;
+  top(): ODataQueryOptionHandler&lt;T&gt;;
+  top(opts?: number): any {
+    return this.options.option&lt;number&gt;(QueryOption.top, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $skip option.
+   * If opts is given then set te value as new value for $skip.
+   * @param opts number value
+   */
+  skip(opts: number): ODataQueryOptionHandler&lt;T&gt;;
+  skip(): ODataQueryOptionHandler&lt;T&gt;;
+  skip(opts?: number): any {
+    return this.options.option&lt;number&gt;(QueryOption.skip, opts);
+  }
+
+  /**
+   * Build and return a handler for modifying the $skiptoken option.
+   * If opts is given then set te value as new value for $skiptoken.
+   * @param opts string value
+   */
+  skiptoken(opts: string): ODataQueryOptionHandler&lt;T&gt;;
+  skiptoken(): ODataQueryOptionHandler&lt;T&gt;;
+  skiptoken(opts?: string): any {
+    return this.options.option&lt;string&gt;(QueryOption.skiptoken, opts);
+  }
+
+  remove(...keys: QueryOption[]) {
+    this.options.remove(...keys);
+  }
+
+  keep(...keys: QueryOption[]) {
+    this.options.keep(...keys);
+  }
+
+  /**
+   * Shortcut for set $top, $skip, $skiptoken.
+   * @param param0 skip or top or skiptoken
+   */
+  paging({
+    skip,
+    skiptoken,
+    top,
+  }: {
+    skip?: number | null;
+    skiptoken?: string | null;
+    top?: number | null;
+  } &#x3D; {}) {
+    if (skiptoken !&#x3D;&#x3D; undefined) {
+      if (skiptoken !&#x3D;&#x3D; null) {
+        this.skiptoken(skiptoken);
+      } else {
+        this.remove(QueryOption.skiptoken);
+      }
+    }
+    if (skip !&#x3D;&#x3D; undefined) {
+      if (skip !&#x3D;&#x3D; null) {
+        this.skip(skip);
+      } else {
+        this.remove(QueryOption.skip);
+      }
+    }
+    if (top !&#x3D;&#x3D; undefined) {
+      if (top !&#x3D;&#x3D; null) {
+        this.top(top);
+      } else {
+        this.remove(QueryOption.top);
+      }
+    }
+  }
+
+  /**
+   * Shortcut for clear pagination by unset $top, $skip, $skiptoken.
+   */
+  removePaging() {
+    this.remove(QueryOption.skip, QueryOption.top, QueryOption.skiptoken);
+  }
+
+  /**
+   * Shortcut for clear query.
+   */
+  clear() {
+    this.options.clear();
+  }
+
+  /**
+   * Store the query options from the current query.
+   */
+  store() {
+    return this.options.toQueryArguments();
+  }
+
+  /**
+   * Restore the given query options to the current query.
+   * @param options The query to be applied.
+   */
+  restore(options: ODataQueryArguments&lt;T&gt;) {
+    if (options.select !&#x3D;&#x3D; undefined) {
+      if (options.select instanceof SelectExpression) {
+        this.options.expression(
+          QueryOption.select,
+          options.select as SelectExpression&lt;T&gt;,
+        );
+      } else if (options.select !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.select, options.select);
+      } else {
+        this.options.remove(QueryOption.select);
+      }
+    }
+    if (options.expand !&#x3D;&#x3D; undefined) {
+      if (options.expand instanceof ExpandExpression) {
+        this.options.expression(
+          QueryOption.expand,
+          options.expand as ExpandExpression&lt;T&gt;,
+        );
+      } else if (options.expand !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.expand, options.expand);
+      } else {
+        this.options.remove(QueryOption.expand);
+      }
+    }
+    if (options.compute !&#x3D;&#x3D; undefined) {
+      if (options.compute instanceof ComputeExpression) {
+        this.options.expression(
+          QueryOption.compute,
+          options.compute as ComputeExpression&lt;T&gt;,
+        );
+      } else if (options.compute !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.compute, options.compute);
+      } else {
+        this.options.remove(QueryOption.compute);
+      }
+    }
+    if (options.apply !&#x3D;&#x3D; undefined) {
+      if (options.apply instanceof ApplyExpression) {
+        this.options.expression(
+          QueryOption.apply,
+          options.apply as ApplyExpression&lt;T&gt;,
+        );
+      } else if (options.apply !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.apply, options.apply);
+      } else {
+        this.options.remove(QueryOption.apply);
+      }
+    }
+    if (options.transform !&#x3D;&#x3D; undefined) {
+      if (options.transform !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.transform, options.transform);
+      } else {
+        this.options.remove(QueryOption.transform);
+      }
+    }
+    if (options.search !&#x3D;&#x3D; undefined) {
+      if (options.search instanceof SearchExpression) {
+        this.options.expression(
+          QueryOption.search,
+          options.search as SearchExpression&lt;T&gt;,
+        );
+      } else if (options.search !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.search, options.search);
+      } else {
+        this.options.remove(QueryOption.search);
+      }
+    }
+    if (options.filter !&#x3D;&#x3D; undefined) {
+      if (options.filter instanceof FilterExpression) {
+        this.options.expression(
+          QueryOption.filter,
+          options.filter as FilterExpression&lt;T&gt;,
+        );
+      } else if (options.filter !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.filter, options.filter);
+      } else {
+        this.options.remove(QueryOption.filter);
+      }
+    }
+    if (options.orderBy !&#x3D;&#x3D; undefined) {
+      if (options.orderBy instanceof OrderByExpression) {
+        this.options.expression(
+          QueryOption.orderBy,
+          options.orderBy as OrderByExpression&lt;T&gt;,
+        );
+      } else if (options.orderBy !&#x3D;&#x3D; null) {
+        this.options.option(QueryOption.orderBy, options.orderBy);
+      } else {
+        this.options.remove(QueryOption.orderBy);
+      }
+    }
+    this.paging(options);
+  }
+
+  toJson() {
+    return this.options.toJson();
+  }
+
+  fromJson(json: { [name: string]: any }) {
+    this.options.fromJson(json);
+  }
+
+  toString({
+    escape,
+    parser,
+  }: { escape?: boolean; parser?: Parser&lt;T&gt; } &#x3D; {}): string {
+    return this.options.toString({ escape, parser });
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'ODataQueryOptionsHandler.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

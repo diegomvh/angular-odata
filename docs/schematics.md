@@ -1,0 +1,3 @@
+## Schematics
+
+--resolveJsonModule
