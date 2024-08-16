@@ -1,4 +1,4 @@
-## Without Schema
+# Schemaless
 
 Import ODataModule into your application module definition and setup the module for the `serviceRootUrl`.
 

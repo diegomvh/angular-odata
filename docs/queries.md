@@ -1,3 +1,5 @@
+# Queries
+
 ## Query Builder
 
 For a deep query customizations the library use `odata-query` and `odata-filter-builder` as a builders.

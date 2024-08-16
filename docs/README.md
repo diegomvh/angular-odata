@@ -6,5 +6,6 @@
   - [Usage](./schema.md#usage)
 - [Schemaless](./schemaless.md)
   - [Usage](./schemaless.md#usage)
-- [Query Builder](./queries.md#query-builder)
+- [Queries](./queries.md#query-builder)
+- [Models](./models.md)
 - [Compodoc](https://diegomvh.github.io/angular-odata/docs/api/)

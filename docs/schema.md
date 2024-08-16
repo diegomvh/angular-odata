@@ -1,4 +1,4 @@
-## With Schema
+# Schema
 
 Use [OData Angular Generator](https://github.com/diegomvh/ODataApiGen) for generate the \<Api\>Config and the \<Api\>Module definition.
 
