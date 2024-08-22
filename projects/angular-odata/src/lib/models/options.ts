@@ -565,7 +565,7 @@ export class ODataModelField<F> {
     parent: ODataModel<any>;
     value?: Partial<F> | { [name: string]: any };
     reset?: boolean;
-  }): ODataModel<F> & ModelInterface<F> {
+  }): ODataModel<F> {
     // Model
     const annots = this.annotationsFactory(
       parent.annots(),
@@ -589,7 +589,7 @@ export class ODataModelField<F> {
       annots,
       reset,
       parent: [parent, this],
-    }) as ODataModel<F> & ModelInterface<F>;
+    }) as ODataModel<F>;
   }
 
   collectionFactory<F>({
@@ -600,7 +600,7 @@ export class ODataModelField<F> {
     parent: ODataModel<any>;
     value?: Partial<F>[] | { [name: string]: any }[];
     reset?: boolean;
-  }): ODataCollection<F, ODataModel<F> & ModelInterface<F>> {
+  }): ODataCollection<F, ODataModel<F>> {
     // Collection Factory
     const annots = this.annotationsFactory(
       parent.annots(),
@@ -617,7 +617,7 @@ export class ODataModelField<F> {
         reset,
         parent: [parent, this],
       },
-    ) as ODataCollection<F, ODataModel<F> & ModelInterface<F>>;
+    ) as ODataCollection<F, ODataModel<F>>;
   }
 }
 

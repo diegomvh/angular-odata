@@ -852,6 +852,7 @@ export class ODataModel<T> {
     }
   }
 
+  /*
   getAttribute<P>(
     name: keyof T,
   ): (P extends (infer U)[] ? ODataCollection<U, ODataModel<U> & ModelInterface<U>> :
@@ -867,6 +868,10 @@ export class ODataModel<T> {
   getAttribute<P>(
     name: keyof T,
   ) {
+  */
+  getAttribute<P>(
+    name: keyof T | string,
+  ): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
     const field = this._meta.findField<P>(name);
     if (!field)
       throw Error(`getAttribute: Can't find attribute ${name as string}`);
