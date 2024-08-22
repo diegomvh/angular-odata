@@ -819,7 +819,7 @@ export class ODataModel<T> {
   }
 
   fetchAttribute<P>(
-    name: keyof T | string,
+    name: keyof T,
     options: ODataQueryArgumentsOptions<P> = {},
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
     const field = this._meta.findField<P>(name);
@@ -852,9 +852,19 @@ export class ODataModel<T> {
     }
   }
 
+  getAttribute<M extends ODataModel<keyof T>>(
+    name: keyof T,
+  ): M | null;
+  getAttribute<C extends ODataCollection<keyof T, ODataModel<keyof T>>>(
+    name: keyof T,
+  ): C | null;
+  getAttribute<P extends T[keyof T]>(
+    name: keyof T, 
+  ): (P extends (infer U)[] ? ODataCollection<U, ODataModel<U> & ModelInterface<U>> : 
+    P extends object ? ODataModel<P> & ModelInterface<P> : P) | null;
   getAttribute<P>(
-    name: keyof T | string,
-  ): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null | undefined {
+    name: keyof T,
+  ) {
     const field = this._meta.findField<P>(name);
     if (!field)
       throw Error(`getAttribute: Can't find attribute ${name as string}`);
@@ -882,7 +892,7 @@ export class ODataModel<T> {
   }
 
   setAttribute<N>(
-    name: keyof T | string,
+    name: keyof T,
     model: ODataModel<N> | ODataCollection<N, ODataModel<N>> | null,
     options?: ODataOptions,
   ): Observable<this> {

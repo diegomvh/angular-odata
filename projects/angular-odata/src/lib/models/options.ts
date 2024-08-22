@@ -262,7 +262,7 @@ export enum ODataModelState {
 }
 
  export type ModelInterface<T> = {
-    [P in keyof T]?: T[P] extends (infer U)[] ? ODataCollection<U, ODataModel<U> & ModelInterface<U>> : 
+    [P in keyof T]: T[P] extends (infer U)[] ? ODataCollection<U, ODataModel<U> & ModelInterface<U>> : 
       T[P] extends object ? ODataModel<T[P]> & ModelInterface<T[P]> :
       T[P];
 };
@@ -565,7 +565,7 @@ export class ODataModelField<F> {
     parent: ODataModel<any>;
     value?: Partial<F> | { [name: string]: any };
     reset?: boolean;
-  }): ODataModel<F> {
+  }): ODataModel<F> & ModelInterface<F> {
     // Model
     const annots = this.annotationsFactory(
       parent.annots(),
@@ -589,7 +589,7 @@ export class ODataModelField<F> {
       annots,
       reset,
       parent: [parent, this],
-    });
+    }) as ODataModel<F> & ModelInterface<F>;
   }
 
   collectionFactory<F>({
@@ -600,7 +600,7 @@ export class ODataModelField<F> {
     parent: ODataModel<any>;
     value?: Partial<F>[] | { [name: string]: any }[];
     reset?: boolean;
-  }): ODataCollection<F, ODataModel<F>> {
+  }): ODataCollection<F, ODataModel<F> & ModelInterface<F>> {
     // Collection Factory
     const annots = this.annotationsFactory(
       parent.annots(),
@@ -617,7 +617,7 @@ export class ODataModelField<F> {
         reset,
         parent: [parent, this],
       },
-    ) as ODataCollection<F, ODataModel<F>>;
+    ) as ODataCollection<F, ODataModel<F> & ModelInterface<F>>;
   }
 }
 
