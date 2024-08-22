@@ -852,16 +852,18 @@ export class ODataModel<T> {
     }
   }
 
-  getAttribute<M extends ODataModel<any>>(
+  getAttribute<P>(
+    name: keyof T,
+  ): (P extends (infer U)[] ? ODataCollection<U, ODataModel<U> & ModelInterface<U>> :
+      P extends ArrayBufferLike ? ArrayBuffer : 
+      P extends Date ? Date : 
+      P extends object ? ODataModel<P> & ModelInterface<P> : P ) | null;  
+  getAttribute<M extends ODataModel<keyof T>>(
     name: keyof T,
   ): M | null;
-  getAttribute<C extends ODataCollection<any, ODataModel<any>>>(
+  getAttribute<C extends ODataCollection<keyof T, ODataModel<keyof T>>>(
     name: keyof T,
   ): C | null;
-  getAttribute<P>(
-    name: keyof T, 
-  ): (P extends (infer U)[] ? ODataCollection<U, ODataModel<U> & ModelInterface<U>> : 
-    P extends object ? ODataModel<P> & ModelInterface<P> : P) | null;
   getAttribute<P>(
     name: keyof T,
   ) {
