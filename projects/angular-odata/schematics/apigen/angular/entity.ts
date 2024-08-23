@@ -16,12 +16,14 @@ export class EntityProperty {
   constructor(protected edmType: CsdlProperty | CsdlNavigationProperty) {}
 
   name() {
-    return this.edmType.Name + (this.edmType.Nullable || this.edmType instanceof CsdlNavigationProperty ? '?' : '');
+    return this.edmType.Name;
   }
 
   type() {
-    const type = toTypescriptType(this.edmType.Type);
-    return type + (this.edmType.Collection ? '[]' : ''); 
+    let type = toTypescriptType(this.edmType.Type);
+    type += (this.edmType.Collection ? '[]' : ''); 
+    type += (this.edmType.Nullable ? ' | null' : ''); 
+    return type;
   }
 }
 
