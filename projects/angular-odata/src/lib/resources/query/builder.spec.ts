@@ -68,7 +68,7 @@ describe('filter', () => {
 
     it('allows "in" operator in negated case', () => {
       const filter = { not: { SomeProp: { in: [1, 2, 3] } } };
-      const expected = '?$filter=not(SomeProp in (1,2,3))';
+      const expected = '?$filter=not (SomeProp in (1,2,3))';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -120,7 +120,7 @@ describe('filter', () => {
         ],
       };
       const expected =
-        "?$filter=((not(startswith(FooProp,'foo'))) and (not(startswith(BarProp,'bar'))) and (startswith(FooBarProp,'foobar')))";
+        "?$filter=((not (startswith(FooProp,'foo'))) and (not (startswith(BarProp,'bar'))) and (startswith(FooBarProp,'foobar')))";
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -138,7 +138,7 @@ describe('filter', () => {
         ],
       };
       const expected =
-        "?$filter=((not(startswith(FooProp,'foo') and startswith(BarProp,'bar'))) and (startswith(FooBarProp,'bar')))";
+        "?$filter=((not (startswith(FooProp,'foo') and startswith(BarProp,'bar'))) and (startswith(FooBarProp,'bar')))";
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -152,7 +152,7 @@ describe('filter', () => {
         ],
       };
       const expected =
-        "?$filter=not((startswith(FooProp,'foo')) and (startswith(BarProp,'bar')) and (FizProp in (1,2,3)))";
+        "?$filter=not ((startswith(FooProp,'foo')) and (startswith(BarProp,'bar')) and (FizProp in (1,2,3)))";
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -170,7 +170,7 @@ describe('filter', () => {
         ],
       };
       const expected =
-        "?$filter=((not((startswith(FooProp,'foo')) and (startswith(BarProp,'bar')) and (FizProp in (1,2,3)))))";
+        "?$filter=((not ((startswith(FooProp,'foo')) and (startswith(BarProp,'bar')) and (FizProp in (1,2,3)))))";
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });

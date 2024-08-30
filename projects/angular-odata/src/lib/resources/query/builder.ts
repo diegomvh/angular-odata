@@ -908,5 +908,5 @@ function buildUrl(path: string, params: { [name: string]: any }): string {
 }
 
 function parseNot(builtFilters: string[]): string {
-  return `not(${builtFilters.join(' and ')})`;
+  return `not (${builtFilters.join(' and ')})`;
 }

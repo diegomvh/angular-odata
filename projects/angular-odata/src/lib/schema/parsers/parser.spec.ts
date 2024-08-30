@@ -17,7 +17,6 @@ import {
 import { ODataApi } from '../../api';
 import { ODataStructuredType } from '..';
 import { Parser } from '../../types';
-import { HttpClientModule } from '@angular/common/http';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -33,7 +32,6 @@ describe('ODataClient', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
         ODataModule.forRoot({ config: TripPinConfig }),
       ],
     });
