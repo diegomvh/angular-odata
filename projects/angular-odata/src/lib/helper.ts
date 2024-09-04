@@ -216,6 +216,10 @@ export const ODataHelper = {
     ODATA_METADATA_ETAG: '@odata.metadataEtag',
     //odata.type: the type of the containing {[name: string]: any} or targeted property if the type of the {[name: string]: any} or targeted property cannot be heuristically determined
     ODATA_TYPE: '@odata.type',
+    //odata.delta
+    ODATA_DELTA: '@odata.delta',
+    //odata.remove
+    ODATA_REMOVE: '@odata.remove',
     //odata.nextLink: the next link of a collection with partial results
     ODATA_NEXTLINK: '@odata.nextLink',
     //odata.deltaLink: the delta link for obtaining changes to the result, if requested
@@ -291,6 +295,8 @@ export const ODataHelper = {
     ODATA_ANNOTATION_PREFIX: 'odata.',
     ODATA_FUNCTION_PREFIX: '',
     ODATA_ID: 'odata.id',
+    ODATA_DELTA: 'odata.delta',
+    ODATA_REMOVE: 'odata.remove',
     ODATA_ETAG: 'odata.etag',
     ODATA_CONTEXT: 'odata.metadata',
     ODATA_NEXTLINK: 'odata.nextLink',
@@ -322,6 +328,8 @@ export const ODataHelper = {
   [VERSION_2_0]: <ODataVersionHelper>{
     ...ODataVersionBaseHelper,
     ODATA_ID: 'id',
+    ODATA_DELTA: 'delta',
+    ODATA_REMOVE: 'remove',
     ODATA_ETAG: 'etag',
     ODATA_ANNOTATION: '__metadata',
     ODATA_NEXTLINK: '__next',
