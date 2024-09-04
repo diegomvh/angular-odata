@@ -180,18 +180,27 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
   pick(
     attrs: { [name: string]: any },
     {
+      include_id = true,
+      include_key = true,
       include_parents = true,
       include_navigation = false,
+      include_computed = false,
       include_etag = true,
     }: {
+      include_id?: boolean;
+      include_key?: boolean;
       include_parents?: boolean;
       include_navigation?: boolean;
+      include_computed?: boolean;
       include_etag?: boolean;
     } = {},
   ): Partial<T> {
     return this.parser.pick(attrs, {
+      include_id,
+      include_key,
       include_etag,
       include_navigation,
+      include_computed,
       include_parents,
       options: this.api.options,
     });

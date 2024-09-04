@@ -317,11 +317,7 @@ export class ODataStructuredTypeFieldParser<T>
   //#endregion
 
   isKey() {
-    return (
-      this.structured
-        .keys({ include_parents: true })
-        ?.find((k) => k.name === this.name) !== undefined
-    );
+    return this.structured.keys({ include_parents: true }).some((k) => k.name === this.name);
   }
 
   hasReferentials() {
@@ -558,9 +554,7 @@ export class ODataStructuredTypeParser<T>
     include_parents: boolean;
   }): ODataEntityTypeKey[] {
     return [
-      ...(include_parents && this.parent !== undefined
-        ? this.parent.keys({ include_parents })
-        : []),
+      ...(include_parents && this.parent !== undefined ? this.parent.keys({ include_parents }) : []),
       ...(this._keys || []),
     ];
   }
@@ -603,28 +597,37 @@ export class ODataStructuredTypeParser<T>
   pick(
     attrs: { [name: string]: any },
     {
+      include_id = true,
+      include_key = true,
       include_parents = true,
       include_navigation = false,
+      include_computed = false,
       include_etag = true,
       options,
     }: {
+      include_id?: boolean;
+      include_key?: boolean;
       include_parents?: boolean;
       include_navigation?: boolean;
+      include_computed?: boolean;
       include_etag?: boolean;
       options?: ParserOptions;
     } = {},
   ): Partial<T> {
-    const parserOptions = options || this.parserOptions;
-    const names = this.fields({ include_parents, include_navigation }).map(
-      (f) => f.name,
-    );
+    const parserOptions = options ?? this.parserOptions;
+    let fields = this.fields({ include_parents, include_navigation });
+    if (!include_key) {
+      fields = fields.filter(f => !f.isKey());
+    }
+    if (!include_computed) {
+      fields = fields.filter(f => !f.annotatedValue<boolean>(COMPUTED));
+    }
     return Object.keys(attrs)
       .filter(
         (key) =>
-          names.indexOf(key) !== -1 ||
-          (key ==
-            ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG &&
-            include_etag),
+          fields.some(f => f.name === key) ||
+          (key == ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG && include_etag) ||
+          (key == ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ID && include_id),
       )
       .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
   }
