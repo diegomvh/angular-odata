@@ -620,7 +620,10 @@ export class ODataStructuredTypeParser<T>
       fields = fields.filter(f => !f.isKey());
     }
     if (!include_computed) {
-      fields = fields.filter(f => !f.annotatedValue<boolean>(COMPUTED));
+      fields = fields.filter(f => 
+        !f.annotatedValue<boolean>(COMPUTED) ||
+        (f.isKey() && include_key)
+      );
     }
     return Object.keys(attrs)
       .filter(
