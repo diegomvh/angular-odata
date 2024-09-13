@@ -60,7 +60,7 @@ export class SelectExpression<T> extends Expression<T> {
     options?: ParserOptions;
   } = {}): string {
     return this._children
-      .map((n) => n.render({ aliases, escape, prefix, parser, options }))
+      .map((n) => typeof n === 'string' ? n : n.render({ aliases, escape, prefix, parser, options }))
       .join(',');
   }
 
