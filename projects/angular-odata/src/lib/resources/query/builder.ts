@@ -117,6 +117,7 @@ export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
   apply: string;
   transform: { [name: string]: any } | { [name: string]: any }[];
+  compute: string; 
   skip: number;
   skiptoken: string;
   key: string | number | { [name: string]: any };
@@ -139,6 +140,7 @@ export default function <T>({
   skip,
   filter,
   transform,
+  compute,
   orderBy,
   key,
   count,
@@ -157,6 +159,7 @@ export default function <T>({
     skip,
     filter,
     transform,
+    compute,
     orderBy,
     key,
     count,
@@ -180,6 +183,7 @@ export function buildPathAndQuery<T>({
   filter,
   apply,
   transform,
+  compute,
   orderBy,
   key,
   count,
@@ -206,6 +210,15 @@ export function buildPathAndQuery<T>({
       : Array.isArray(select)
         ? select.join(',')
         : select;
+  }
+
+  // Compute
+  if (compute) {
+    query.$compute = isRawType(compute) ? 
+      (compute as unknown as QueryCustomType).value
+      : Array.isArray(compute)
+        ? compute.join(',')
+        : compute;
   }
 
   // Search

@@ -2,6 +2,7 @@ import { Parser, ParserOptions, QueryOption } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import { QueryCustomType, Unpacked } from '../builder';
 import { Expression } from './base';
+import { ComputeExpression, ComputeExpressionBuilder } from './compute';
 import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
 import { SearchExpression, SearchExpressionBuilder } from './search';
@@ -50,6 +51,7 @@ export class ExpandField<T> implements Renderable {
       QueryOption.filter,
       QueryOption.search,
       QueryOption.orderBy,
+      QueryOption.compute,
       QueryOption.skip,
       QueryOption.top,
       QueryOption.count,
@@ -152,6 +154,18 @@ export class ExpandField<T> implements Renderable {
     return this.option(
       QueryOption.orderBy,
       OrderByExpression.factory<T>(opts, this.values[QueryOption.orderBy]),
+    );
+  }
+
+  compute(
+    opts: (
+      builder: ComputeExpressionBuilder<T>,
+      current?: ComputeExpression<T>,
+    ) => ComputeExpression<T>,
+  ) {
+    return this.option(
+      QueryOption.compute,
+      ComputeExpression.factory<T>(opts, this.values[QueryOption.compute]),
     );
   }
 

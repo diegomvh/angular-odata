@@ -75,7 +75,7 @@ export class ComputeExpression<T> extends Expression<T> {
     parser?: Parser<T>;
     options?: ParserOptions;
   } = {}): string {
-    let children = this._children.map((n) =>
+    const children = this._children.map((n) =>
       n.render({ aliases, escape, prefix, parser, options }),
     );
     return this.names
