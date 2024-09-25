@@ -30,7 +30,11 @@ export class CsdlEnumType extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = {...super.toJson(), Name: this.Name, Member: this.Member.map((m) => m.toJson())};
+    const json: { [key: string]: any } = {
+      ...super.toJson(),
+      Name: this.Name,
+      Member: this.Member.map((m) => m.toJson()),
+    };
     if (this.UnderlyingType !== undefined) {
       json['UnderlyingType'] = this.UnderlyingType;
     }
@@ -71,7 +75,7 @@ export class CsdlMember extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = {...super.toJson(), Name: this.Name};
+    const json: { [key: string]: any } = { ...super.toJson(), Name: this.Name };
     if (this.Value !== undefined) {
       json['Value'] = this.Value;
     }

@@ -1,5 +1,5 @@
-import { forkJoin, NEVER, Observable, throwError } from "rxjs";
-import { finalize, map } from "rxjs/operators";
+import { forkJoin, NEVER, Observable, throwError } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
 import {
   EntityKey,
   ODataActionOptions,
@@ -13,10 +13,10 @@ import {
   ODataQueryOptionsHandler,
   ODataResource,
   ODataSingletonResource,
-} from "../resources";
-import { ODataStructuredType } from "../schema";
-import { Objects, Strings, Types } from "../utils";
-import { ODataCollection } from "./collection";
+} from '../resources';
+import { ODataStructuredType } from '../schema';
+import { Objects, Strings, Types } from '../utils';
+import { ODataCollection } from './collection';
 import {
   INCLUDE_DEEP,
   ModelOptions,
@@ -27,10 +27,10 @@ import {
   ODataModelEventEmitter,
   ModelFieldOptions,
   ModelInterface,
-} from "./options";
-import { EdmType, ParserOptions } from "../types";
-import { ODataEntityAnnotations } from "../annotations";
-import { ODataEntity } from "../resources/response";
+} from './options';
+import { EdmType, ParserOptions } from '../types';
+import { ODataEntityAnnotations } from '../annotations';
+import { ODataEntity } from '../resources/response';
 
 export class ODataModel<T> {
   // Properties
@@ -76,7 +76,7 @@ export class ODataModel<T> {
           let name = field.name;
           // Prevent collision with reserved keywords
           while (RESERVED_FIELD_NAMES.includes(name)) {
-            name = name + "_";
+            name = name + '_';
           }
           return Object.assign(acc, {
             [name]: {
@@ -259,8 +259,8 @@ export class ODataModel<T> {
     }: { field_mapping?: boolean; resolve?: boolean } = {},
   ): { [name: string]: any } | null | undefined {
     return this._meta.resolveReferential(this, attr, {
-        field_mapping,
-        resolve,
+      field_mapping,
+      resolve,
     });
   }
 
@@ -283,7 +283,7 @@ export class ODataModel<T> {
     method,
     navigation = false,
   }: {
-    method?: "create" | "update" | "modify";
+    method?: 'create' | 'update' | 'modify';
     navigation?: boolean;
   } = {}) {
     return this._meta.validate(this, { method, navigation });
@@ -293,7 +293,7 @@ export class ODataModel<T> {
     method,
     navigation = false,
   }: {
-    method?: "create" | "update" | "modify";
+    method?: 'create' | 'update' | 'modify';
     navigation?: boolean;
   } = {}): boolean {
     this._errors = this.validate({ method, navigation });
@@ -486,16 +486,16 @@ export class ODataModel<T> {
   } = {}): Observable<this> {
     const resource = this.resource();
     if (!resource)
-      return throwError(() => new Error("fetch: Resource is null"));
+      return throwError(() => new Error('fetch: Resource is null'));
 
     let obs$: Observable<ODataEntity<T>>;
     if (resource instanceof ODataEntityResource) {
       obs$ = resource.fetch(options);
     } else if (resource instanceof ODataNavigationPropertyResource) {
-      obs$ = resource.fetch({ responseType: "entity", ...options });
+      obs$ = resource.fetch({ responseType: 'entity', ...options });
     } else {
       obs$ = (resource as ODataPropertyResource<T>).fetch({
-        responseType: "entity",
+        responseType: 'entity',
         ...options,
       });
     }
@@ -511,13 +511,13 @@ export class ODataModel<T> {
     validate = true,
     ...options
   }: ODataOptions & {
-    method?: "create" | "update" | "modify";
+    method?: 'create' | 'update' | 'modify';
     navigation?: boolean;
     validate?: boolean;
     options?: ODataOptions;
   } = {}): Observable<this> {
     const resource = this.resource();
-    if (!resource) return throwError(() => new Error("save: Resource is null"));
+    if (!resource) return throwError(() => new Error('save: Resource is null'));
     if (
       !(
         resource instanceof ODataEntityResource ||
@@ -527,7 +527,7 @@ export class ODataModel<T> {
       return throwError(
         () =>
           new Error(
-            "save: Resource type ODataEntityResource/ODataNavigationPropertyResource needed",
+            'save: Resource type ODataEntityResource/ODataNavigationPropertyResource needed',
           ),
       );
 
@@ -536,37 +536,37 @@ export class ODataModel<T> {
       return throwError(
         () =>
           new Error(
-            "save: Composite key require a specific method, use create/update/modify",
+            'save: Composite key require a specific method, use create/update/modify',
           ),
       );
-    method = method || (!resource.hasKey() ? "create" : "update");
+    method = method || (!resource.hasKey() ? 'create' : 'update');
     if (
       resource instanceof ODataEntityResource &&
-      (method === "update" || method === "modify") &&
+      (method === 'update' || method === 'modify') &&
       !resource.hasKey()
     )
       return throwError(
-        () => new Error("save: Update/Patch require entity key"),
+        () => new Error('save: Update/Patch require entity key'),
       );
     if (
       resource instanceof ODataNavigationPropertyResource ||
-      method === "create"
+      method === 'create'
     )
       resource.clearKey();
 
     if (validate && !this.isValid({ method, navigation })) {
-      return throwError(() => new Error("save: Validation errors"));
+      return throwError(() => new Error('save: Validation errors'));
     }
     const _entity = this.toEntity({
-      changes_only: method === "modify",
+      changes_only: method === 'modify',
       field_mapping: true,
       include_concurrency: true,
       include_navigation: navigation,
     });
     const obs$ =
-      method === "create"
+      method === 'create'
         ? resource.create(_entity as T, options)
-        : method === "modify"
+        : method === 'modify'
           ? resource.modify(_entity as T, {
               etag: this.annots().etag,
               ...options,
@@ -590,7 +590,7 @@ export class ODataModel<T> {
   } = {}) {
     const resource = this.resource();
     if (!resource)
-      return throwError(() => new Error("destroy: Resource is null"));
+      return throwError(() => new Error('destroy: Resource is null'));
 
     if (
       !(
@@ -601,7 +601,7 @@ export class ODataModel<T> {
       return throwError(
         () =>
           new Error(
-            "destroy: Resource type ODataEntityResource/ODataNavigationPropertyResource needed",
+            'destroy: Resource type ODataEntityResource/ODataNavigationPropertyResource needed',
           ),
       );
     if (!resource.hasKey())
@@ -667,12 +667,12 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType:
-      | "property"
-      | "model"
-      | "collection"
-      | "none"
-      | "blob"
-      | "arraybuffer",
+      | 'property'
+      | 'model'
+      | 'collection'
+      | 'none'
+      | 'blob'
+      | 'arraybuffer',
     options: ODataFunctionOptions<R> = {},
   ): Observable<
     | R
@@ -693,21 +693,21 @@ export class ODataModel<T> {
 
     const func = resource.function<P, R>(name).query((q) => q.restore(options));
     switch (responseType) {
-      case "property":
+      case 'property':
         return this._request(
           func.callProperty(params, options),
           (resp) => resp,
         );
-      case "model":
+      case 'model':
         return this._request(func.callModel(params, options), (resp) => resp);
-      case "collection":
+      case 'collection':
         return this._request(
           func.callCollection(params, options),
           (resp) => resp,
         );
-      case "blob":
+      case 'blob':
         return this._request(func.callBlob(params, options), (resp) => resp);
-      case "arraybuffer":
+      case 'arraybuffer':
         return this._request(
           func.callArraybuffer(params, options),
           (resp) => resp,
@@ -724,12 +724,12 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType?:
-      | "property"
-      | "model"
-      | "collection"
-      | "none"
-      | "blob"
-      | "arraybuffer",
+      | 'property'
+      | 'model'
+      | 'collection'
+      | 'none'
+      | 'blob'
+      | 'arraybuffer',
     { ...options }: {} & ODataActionOptions<R> = {},
   ): Observable<
     | R
@@ -750,21 +750,21 @@ export class ODataModel<T> {
 
     const action = resource.action<P, R>(name).query((q) => q.restore(options));
     switch (responseType) {
-      case "property":
+      case 'property':
         return this._request(
           action.callProperty(params, options),
           (resp) => resp,
         );
-      case "model":
+      case 'model':
         return this._request(action.callModel(params, options), (resp) => resp);
-      case "collection":
+      case 'collection':
         return this._request(
           action.callCollection(params, options),
           (resp) => resp,
         );
-      case "blob":
+      case 'blob':
         return this._request(action.callBlob(params, options), (resp) => resp);
-      case "arraybuffer":
+      case 'arraybuffer':
         return this._request(
           action.callArraybuffer(params, options),
           (resp) => resp,
@@ -805,7 +805,7 @@ export class ODataModel<T> {
 
   fetchNavigationProperty<S>(
     name: keyof T | string,
-    responseType: "model" | "collection",
+    responseType: 'model' | 'collection',
     options: ODataQueryArgumentsOptions<S> = {},
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
     const nav = this.navigationProperty<S>(
@@ -813,9 +813,9 @@ export class ODataModel<T> {
     ) as ODataNavigationPropertyResource<S>;
     nav.query((q) => q.restore(options));
     switch (responseType) {
-      case "model":
+      case 'model':
         return nav.fetchModel(options);
-      case "collection":
+      case 'collection':
         return nav.fetchCollection(options);
     }
   }
@@ -968,7 +968,7 @@ export class ODataModel<T> {
 
   //#region Model Identity
   get [Symbol.toStringTag]() {
-    return "Model";
+    return 'Model';
   }
   equals(other: ODataModel<T>): boolean {
     if (this === other) return true;

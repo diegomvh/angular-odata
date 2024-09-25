@@ -11,13 +11,13 @@ export class ApiConfig extends Base {
     return url('./files/api-config');
   }
   public override variables(): { [name: string]: any } {
-    return { 
+    return {
       serviceRootUrl: this.options.serviceRootUrl,
       metadataUrl: this.options.metadata,
       apiConfigName: this.options.name,
       version: this.options.version,
       creation: this.options.creation,
-     };
+    };
   }
   public override name() {
     return strings.classify(this.options.name) + 'Config';

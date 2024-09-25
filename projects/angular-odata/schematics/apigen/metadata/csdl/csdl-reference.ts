@@ -24,12 +24,17 @@ export class CsdlReference extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = {...super.toJson(), Uri: this.Uri};
+    const json: { [key: string]: any } = { ...super.toJson(), Uri: this.Uri };
     if (Array.isArray(this.Include) && this.Include.length > 0) {
       json['Include'] = this.Include.map((i) => i.toJson());
     }
-    if (Array.isArray(this.IncludeAnnotations) && this.IncludeAnnotations.length > 0) {
-      json['IncludeAnnotations'] = this.IncludeAnnotations.map((i) => i.toJson());
+    if (
+      Array.isArray(this.IncludeAnnotations) &&
+      this.IncludeAnnotations.length > 0
+    ) {
+      json['IncludeAnnotations'] = this.IncludeAnnotations.map((i) =>
+        i.toJson(),
+      );
     }
     return json;
   }

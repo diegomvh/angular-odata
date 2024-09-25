@@ -46,7 +46,7 @@ export class CsdlEntityContainer extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = { ...super.toJson() };
+    const json: { [key: string]: any } = { ...super.toJson() };
     if (this.Extend !== undefined) {
       json['Extend'] = this.Extend;
     }
@@ -77,7 +77,9 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     return `${this.schema.Namespace}.${this.Name}`;
   }
 
-  override toConfig(base?: Partial<EntityContainerConfig>): EntityContainerConfig {
+  override toConfig(
+    base?: Partial<EntityContainerConfig>,
+  ): EntityContainerConfig {
     return {
       ...super.toConfig(),
       name: this.Name,

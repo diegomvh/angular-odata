@@ -29,18 +29,18 @@ export const FlagEnumsConfig = {
   flags: true,
   members: FlagEnums,
   fields: {
-    Flag1: {value: FlagEnums.Flag1},
-    Flag2: {value: FlagEnums.Flag2},
-    Flag4: {value: FlagEnums.Flag4},
+    Flag1: { value: FlagEnums.Flag1 },
+    Flag2: { value: FlagEnums.Flag2 },
+    Flag4: { value: FlagEnums.Flag4 },
   },
 } as EnumTypeConfig;
 export const PersonGenderConfig = {
   name: 'PersonGender',
   members: PersonGender,
   fields: {
-    Male: {value: PersonGender.Male},
-    Female: {value: PersonGender.Female},
-    Unknown: {value: PersonGender.Unknown},
+    Male: { value: PersonGender.Male },
+    Female: { value: PersonGender.Female },
+    Unknown: { value: PersonGender.Unknown },
   },
 } as EnumTypeConfig;
 //#endregion

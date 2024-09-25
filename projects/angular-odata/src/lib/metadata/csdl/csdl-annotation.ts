@@ -16,7 +16,7 @@ export class CsdlAnnotable {
   }
 
   toConfig() {
-    const config: {[key: string]: any} = {};
+    const config: { [key: string]: any } = {};
     if (this.Annotation) {
       config['annotations'] = this.Annotation.map((a) => a.toConfig());
     }
@@ -45,7 +45,10 @@ export class CsdlAnnotations extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: { [key: string]: any } = { ...super.toJson(), Target: this.Target };
+    const json: { [key: string]: any } = {
+      ...super.toJson(),
+      Target: this.Target,
+    };
     if (this.Qualifier !== undefined) {
       json['Qualifier'] = this.Qualifier;
     }
@@ -111,7 +114,7 @@ export class CsdlAnnotation {
     if (Array.isArray(this.EnumMember) && this.EnumMember.length > 0) {
       json['EnumMember'] = this.EnumMember.map((m) => m.toJson());
     }
-    return json ;
+    return json;
   }
 
   toConfig(): AnnotationConfig {
@@ -243,7 +246,9 @@ export class CsdlCollection {
     this.String = String?.map((a) => new CsdlString(a));
     this.Record = Record?.map((a) => new CsdlRecord(a));
     this.PropertyPath = PropertyPath?.map((a) => new CsdlPropertyPath(a));
-    this.NavigationPropertyPath = NavigationPropertyPath?.map((a) => new CsdlNavigationPropertyPath(a));
+    this.NavigationPropertyPath = NavigationPropertyPath?.map(
+      (a) => new CsdlNavigationPropertyPath(a),
+    );
   }
 
   toJson() {
@@ -257,8 +262,13 @@ export class CsdlCollection {
     if (Array.isArray(this.PropertyPath) && this.PropertyPath.length > 0) {
       json['PropertyPath'] = this.PropertyPath.map((p) => p.toJson());
     }
-    if (Array.isArray(this.NavigationPropertyPath) && this.NavigationPropertyPath.length > 0) {
-      json['NavigationPropertyPath'] = this.NavigationPropertyPath.map((p) => p.toJson());
+    if (
+      Array.isArray(this.NavigationPropertyPath) &&
+      this.NavigationPropertyPath.length > 0
+    ) {
+      json['NavigationPropertyPath'] = this.NavigationPropertyPath.map((p) =>
+        p.toJson(),
+      );
     }
     return json;
   }
@@ -302,7 +312,7 @@ export class CsdlPropertyValue {
   }
 
   toJson() {
-    const json: { [key: string]: any } = { Name: this.Name, };
+    const json: { [key: string]: any } = { Name: this.Name };
     if (this.String !== undefined) {
       json['String'] = this.String;
     }

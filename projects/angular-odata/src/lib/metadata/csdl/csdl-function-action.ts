@@ -36,9 +36,9 @@ export class CsdlCallable {
   }
 
   toJson() {
-    const json: {[key: string]: any} = {
+    const json: { [key: string]: any } = {
       Name: this.Name,
-    }
+    };
     if (this.ReturnType !== undefined) {
       json['ReturnType'] = this.ReturnType.toJson();
     }
@@ -93,7 +93,7 @@ export class CsdlFunction extends CsdlCallable {
     return {
       ...super.toJson(),
       IsComposable: this.IsComposable,
-    }
+    };
   }
 
   toConfig(base?: Partial<CallableConfig>): CallableConfig {
@@ -131,7 +131,7 @@ export class CsdlAction extends CsdlCallable {
   override toJson() {
     return {
       ...super.toJson(),
-    }
+    };
   }
 
   toConfig(base?: Partial<CallableConfig>): CallableConfig {

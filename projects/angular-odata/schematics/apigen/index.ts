@@ -1,4 +1,4 @@
-import { strings, normalize } from "@angular-devkit/core";
+import { strings, normalize } from '@angular-devkit/core';
 import {
   apply,
   SchematicContext,
@@ -10,23 +10,23 @@ import {
   mergeWith,
   MergeStrategy,
   SchematicsException,
-} from "@angular-devkit/schematics";
+} from '@angular-devkit/schematics';
 import {
   createDefaultPath,
   getWorkspace,
-} from "@schematics/angular/utility/workspace";
-import { parseName } from "@schematics/angular/utility/parse-name";
+} from '@schematics/angular/utility/workspace';
+import { parseName } from '@schematics/angular/utility/parse-name';
 
-import { Schema as ApiGenSchema } from "./schema";
-import { ODataMetadataParser } from "./metadata/parser";
-import { toTypescriptType } from "./utils";
-import { Module } from "./angular/module";
-import { ApiConfig } from "./angular/api-config";
-import { Enum } from "./angular/enum";
-import { Base, Callable, Index, Metadata } from "./angular/base";
-import { Entity } from "./angular/entity";
-import { Service } from "./angular/service";
-import { CsdlAction, CsdlFunction } from "./metadata/csdl/csdl-function-action";
+import { Schema as ApiGenSchema } from './schema';
+import { ODataMetadataParser } from './metadata/parser';
+import { toTypescriptType } from './utils';
+import { Module } from './angular/module';
+import { ApiConfig } from './angular/api-config';
+import { Enum } from './angular/enum';
+import { Base, Callable, Index, Metadata } from './angular/base';
+import { Entity } from './angular/entity';
+import { Service } from './angular/service';
+import { CsdlAction, CsdlFunction } from './metadata/csdl/csdl-function-action';
 
 const utils = {
   toTypescriptType,
@@ -51,7 +51,7 @@ export function apigen(options: ApiGenSchema) {
     options.name = parsedPath.name;
     options.path = parsedPath.path;
 
-    const modulePath = options.path + "/" + strings.dasherize(options.name);
+    const modulePath = options.path + '/' + strings.dasherize(options.name);
 
     return fetch(options.metadata)
       .then((resp) => resp.text())

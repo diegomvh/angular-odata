@@ -260,9 +260,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       map(({ entities, annots }) =>
         entities
           ? this.asCollection(entities, {
-            annots,
-            CollectionType: options?.CollectionType,
-          })
+              annots,
+              CollectionType: options?.CollectionType,
+            })
           : null,
       ),
     );

@@ -25,7 +25,7 @@ export class ODataMetadata {
       return [...acc, ...(s.Function ?? [])];
     }, [] as CsdlFunction[]);
   }
-  
+
   actions() {
     return this.Schemas.reduce((acc, s) => {
       return [...acc, ...(s.Action ?? [])];
@@ -33,10 +33,6 @@ export class ODataMetadata {
   }
 
   static fromJson(json: any): ODataMetadata {
-    return new ODataMetadata(
-      json.Version,
-      json.References,
-      json.Schemas,
-    );
+    return new ODataMetadata(json.Version, json.References, json.Schemas);
   }
 }

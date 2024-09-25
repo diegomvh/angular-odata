@@ -14,10 +14,15 @@ export class ODataMetadata {
   }
 
   toConfig(base?: Partial<ApiConfig>): ApiConfig {
-    return {...base, 
-      version: base?.version ?? this.Version as ODataVersion,
-      schemas: (this.Schemas ?? []).map((ms) => ms.toConfig(base?.schemas?.find(cs => cs.namespace === ms.Namespace))),
-      references: (this.References ?? []).map((mr) => mr.toConfig(base?.references?.find(cs => cs.uri === mr.Uri))),
+    return {
+      ...base,
+      version: base?.version ?? (this.Version as ODataVersion),
+      schemas: (this.Schemas ?? []).map((ms) =>
+        ms.toConfig(base?.schemas?.find((cs) => cs.namespace === ms.Namespace)),
+      ),
+      references: (this.References ?? []).map((mr) =>
+        mr.toConfig(base?.references?.find((cs) => cs.uri === mr.Uri)),
+      ),
     } as ApiConfig;
   }
 
@@ -34,7 +39,7 @@ export class ODataMetadata {
       return [...acc, ...(s.Function ?? [])];
     }, [] as CsdlFunction[]);
   }
-  
+
   actions() {
     return this.Schemas.reduce((acc, s) => {
       return [...acc, ...(s.Action ?? [])];
@@ -42,10 +47,6 @@ export class ODataMetadata {
   }
 
   static fromJson(json: any): ODataMetadata {
-    return new ODataMetadata(
-      json.Version,
-      json.References,
-      json.Schemas,
-    );
+    return new ODataMetadata(json.Version, json.References, json.Schemas);
   }
 }

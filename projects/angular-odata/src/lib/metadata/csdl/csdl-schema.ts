@@ -61,13 +61,16 @@ export class CsdlSchema {
   }
 
   toJson() {
-    const json: {[key: string]: any} = {
+    const json: { [key: string]: any } = {
       Namespace: this.Namespace,
     };
     if (this.Alias !== undefined) {
       json['Alias'] = this.Alias;
     }
-    if (Array.isArray(this.EntityContainer) && this.EntityContainer.length > 0) {
+    if (
+      Array.isArray(this.EntityContainer) &&
+      this.EntityContainer.length > 0
+    ) {
       json['EntityContainer'] = this.EntityContainer.map((a) => a.toJson());
     }
     if (Array.isArray(this.EntityType) && this.EntityType.length > 0) {
@@ -102,16 +105,28 @@ export class CsdlSchema {
       namespace: this.Namespace,
       alias: base?.alias ?? this.Alias,
       annotations: this.Annotations?.map((t) => t.toConfig()),
-      enums: this.EnumType?.map((t) => t.toConfig(base?.enums?.find(cs => cs.name === t.Name))),
+      enums: this.EnumType?.map((t) =>
+        t.toConfig(base?.enums?.find((cs) => cs.name === t.Name)),
+      ),
       entities: [
-        ...(this.ComplexType ?? []).map((t) => t.toConfig(base?.entities?.find(cs => cs.name === t.Name))),
-        ...(this.EntityType ?? []).map((t) => t.toConfig(base?.entities?.find(cs => cs.name === t.Name))),
+        ...(this.ComplexType ?? []).map((t) =>
+          t.toConfig(base?.entities?.find((cs) => cs.name === t.Name)),
+        ),
+        ...(this.EntityType ?? []).map((t) =>
+          t.toConfig(base?.entities?.find((cs) => cs.name === t.Name)),
+        ),
       ],
       callables: [
-        ...(this.Function ?? []).map((t) => t.toConfig(base?.callables?.find(cs => cs.name === t.Name))),
-        ...(this.Action ?? []).map((t) => t.toConfig(base?.callables?.find(cs => cs.name === t.Name))),
+        ...(this.Function ?? []).map((t) =>
+          t.toConfig(base?.callables?.find((cs) => cs.name === t.Name)),
+        ),
+        ...(this.Action ?? []).map((t) =>
+          t.toConfig(base?.callables?.find((cs) => cs.name === t.Name)),
+        ),
       ],
-      containers: this.EntityContainer?.map((t) => t.toConfig(base?.containers?.find(cs => cs.name === t.Name))),
+      containers: this.EntityContainer?.map((t) =>
+        t.toConfig(base?.containers?.find((cs) => cs.name === t.Name)),
+      ),
     } as SchemaConfig;
   }
 }

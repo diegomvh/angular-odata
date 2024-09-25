@@ -8,10 +8,7 @@ import {
   StructuredTypeFieldConfig,
 } from '../../types';
 import { ODataPathSegments } from '../path';
-import {
-  ApplyExpression,
-  ApplyExpressionBuilder,
-} from '../query';
+import { ApplyExpression, ApplyExpressionBuilder } from '../query';
 import { ODataResource } from '../resource';
 import { ODataEntities, ODataEntity } from '../response';
 import { ODataCountResource } from './count';
@@ -321,7 +318,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOption[];
       ModelType?: typeof ODataModel;
     },
-  ): Observable<ODataModel<T> & ModelInterface<T> | null>;
+  ): Observable<(ODataModel<T> & ModelInterface<T>) | null>;
   fetchModel<M extends ODataModel<T>>(
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOption[];
@@ -388,9 +385,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       map(({ entities, annots }) =>
         entities
           ? this.asCollection(entities, {
-            annots,
-            CollectionType: options?.CollectionType,
-          })
+              annots,
+              CollectionType: options?.CollectionType,
+            })
           : null,
       ),
     );

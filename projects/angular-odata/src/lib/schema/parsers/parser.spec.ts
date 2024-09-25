@@ -31,9 +31,7 @@ describe('ODataClient', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        ODataModule.forRoot({ config: TripPinConfig }),
-      ],
+      imports: [ODataModule.forRoot({ config: TripPinConfig })],
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
@@ -45,13 +43,19 @@ describe('ODataClient', () => {
       schemas: [
         {
           namespace: 'ParserTesting',
-          enums: [{ name: 'Color', members: Color, fields: {
-            Red: {value: Color.Red},
-            Yellow: {value: Color.Yellow},
-            Orange: {value: Color.Orange},
-            Green: {value: Color.Green},
-            Black: {value: Color.Black},
-          } }],
+          enums: [
+            {
+              name: 'Color',
+              members: Color,
+              fields: {
+                Red: { value: Color.Red },
+                Yellow: { value: Color.Yellow },
+                Orange: { value: Color.Orange },
+                Green: { value: Color.Green },
+                Black: { value: Color.Black },
+              },
+            },
+          ],
           entities: [
             {
               name: 'Entity',

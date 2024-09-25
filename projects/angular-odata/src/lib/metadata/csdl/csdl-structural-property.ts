@@ -31,7 +31,7 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
       Name: this.Name,
       Type: this.Collection ? `Collection(${this.Type})` : this.Type,
       Nullable: this.Nullable,
-    } as {[key: string]: any};
+    } as { [key: string]: any };
   }
 }
 
@@ -76,7 +76,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = { ...super.toJson() };
+    const json: { [key: string]: any } = { ...super.toJson() };
     if (this.MaxLength !== undefined) {
       json['MaxLength'] = this.MaxLength;
     }
@@ -149,15 +149,20 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = { ...super.toJson() };
+    const json: { [key: string]: any } = { ...super.toJson() };
     if (this.Partner !== undefined) {
       json['Partner'] = this.Partner;
     }
     if (this.ContainsTarget !== undefined) {
       json['ContainsTarget'] = this.ContainsTarget;
     }
-    if (Array.isArray(this.ReferentialConstraints) && this.ReferentialConstraints.length > 0) {
-      json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) => r.toJson());
+    if (
+      Array.isArray(this.ReferentialConstraints) &&
+      this.ReferentialConstraints.length > 0
+    ) {
+      json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) =>
+        r.toJson(),
+      );
     }
     if (this.OnDelete !== undefined) {
       json['OnDelete'] = this.OnDelete;

@@ -60,13 +60,16 @@ export class CsdlSchema {
   }
 
   toJson() {
-    const json: {[key: string]: any} = {
+    const json: { [key: string]: any } = {
       Namespace: this.Namespace,
     };
     if (this.Alias !== undefined) {
       json['Alias'] = this.Alias;
     }
-    if (Array.isArray(this.EntityContainer) && this.EntityContainer.length > 0) {
+    if (
+      Array.isArray(this.EntityContainer) &&
+      this.EntityContainer.length > 0
+    ) {
       json['EntityContainer'] = this.EntityContainer.map((a) => a.toJson());
     }
     if (Array.isArray(this.EntityType) && this.EntityType.length > 0) {

@@ -57,7 +57,9 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
     const func = ODataFunctionResource.factory<P, R>(resource.api, {
       path,
-      outgoingType, bindingType, incomingType,
+      outgoingType,
+      bindingType,
+      incomingType,
       segments: resource.cloneSegments(),
     });
 

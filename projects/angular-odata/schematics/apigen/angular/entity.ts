@@ -21,8 +21,8 @@ export class EntityProperty {
 
   type() {
     let type = toTypescriptType(this.edmType.Type);
-    type += (this.edmType.Collection ? '[]' : ''); 
-    type += (this.edmType.Nullable ? ' | null' : ''); 
+    type += this.edmType.Collection ? '[]' : '';
+    type += this.edmType.Nullable ? ' | null' : '';
     return type;
   }
 }
@@ -40,7 +40,9 @@ export class Entity extends Base {
   }
   public override variables(): { [name: string]: any } {
     return {
-      type: this.name() + (this.edmType instanceof CsdlEntityType ? "EntityType" : "ComplexType"),
+      type:
+        this.name() +
+        (this.edmType instanceof CsdlEntityType ? 'EntityType' : 'ComplexType'),
       baseType: this.edmType.BaseType,
       properties: [
         ...(this.edmType.Property ?? []).map((p) => new EntityProperty(p)),

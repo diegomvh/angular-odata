@@ -43,7 +43,11 @@ export class CsdlTypeDefinition extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = { ...super.toJson(), Name: this.Name, UnderlayingType: this.UnderlayingType };
+    const json: { [key: string]: any } = {
+      ...super.toJson(),
+      Name: this.Name,
+      UnderlayingType: this.UnderlayingType,
+    };
     if (this.MaxLength !== undefined) {
       json['MaxLength'] = this.MaxLength;
     }

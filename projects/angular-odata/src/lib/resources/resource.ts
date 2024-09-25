@@ -36,8 +36,8 @@ import {
 
 export type EntityKey<T> =
   | {
-    readonly [P in keyof T]?: T[P];
-  }
+      readonly [P in keyof T]?: T[P];
+    }
   | QueryCustomType
   | string
   | number;
@@ -122,22 +122,46 @@ export class ODataResource<T> {
 
   //#region Models
   asModel(
-    entity?: Partial<T> | { [name: string]: any }
+    entity?: Partial<T> | { [name: string]: any },
   ): ODataModel<T> & ModelInterface<T>;
   asModel(
     entity: Partial<T> | { [name: string]: any },
-    { reset, annots, ModelType }: { reset?: boolean, annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; },
+    {
+      reset,
+      annots,
+      ModelType,
+    }: {
+      reset?: boolean;
+      annots?: ODataEntityAnnotations<T>;
+      ModelType?: typeof ODataModel;
+    },
   ): ODataModel<T> & ModelInterface<T>;
   asModel<M extends ODataModel<T>>(
     entity?: Partial<T> | { [name: string]: any },
   ): M;
   asModel<M extends ODataModel<T>>(
     entity: Partial<T> | { [name: string]: any },
-    { reset, annots, ModelType }: { reset?: boolean, annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; },
+    {
+      reset,
+      annots,
+      ModelType,
+    }: {
+      reset?: boolean;
+      annots?: ODataEntityAnnotations<T>;
+      ModelType?: typeof ODataModel;
+    },
   ): M;
   asModel(
     entity?: Partial<T> | { [name: string]: any },
-    { reset, annots, ModelType }: { reset?: boolean, annots?: ODataEntityAnnotations<T>; ModelType?: typeof ODataModel; } = {},
+    {
+      reset,
+      annots,
+      ModelType,
+    }: {
+      reset?: boolean;
+      annots?: ODataEntityAnnotations<T>;
+      ModelType?: typeof ODataModel;
+    } = {},
   ) {
     reset ??= annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
@@ -157,18 +181,42 @@ export class ODataResource<T> {
   ): ODataCollection<T, ODataModel<T> & ModelInterface<T>>;
   asCollection(
     entities: Partial<T>[] | { [name: string]: any }[],
-    { reset, annots, CollectionType }: { reset?: boolean, annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; }
+    {
+      reset,
+      annots,
+      CollectionType,
+    }: {
+      reset?: boolean;
+      annots?: ODataEntitiesAnnotations<T>;
+      CollectionType?: typeof ODataCollection;
+    },
   ): ODataCollection<T, ODataModel<T> & ModelInterface<T>>;
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities?: Partial<T>[] | { [name: string]: any }[],
   ): C;
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities: Partial<T>[] | { [name: string]: any }[],
-    { reset, annots, CollectionType }: { reset?: boolean, annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; },
+    {
+      reset,
+      annots,
+      CollectionType,
+    }: {
+      reset?: boolean;
+      annots?: ODataEntitiesAnnotations<T>;
+      CollectionType?: typeof ODataCollection;
+    },
   ): C;
   asCollection(
     entities?: Partial<T>[] | { [name: string]: any }[],
-    { reset, annots, CollectionType }: { reset?: boolean, annots?: ODataEntitiesAnnotations<T>; CollectionType?: typeof ODataCollection; } = {},
+    {
+      reset,
+      annots,
+      CollectionType,
+    }: {
+      reset?: boolean;
+      annots?: ODataEntitiesAnnotations<T>;
+      CollectionType?: typeof ODataCollection;
+    } = {},
   ) {
     reset ??= annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
@@ -464,14 +512,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-      | 'arraybuffer'
-      | 'blob'
-      | 'json'
-      | 'text'
-      | 'value'
-      | 'property'
-      | 'entity'
-      | 'entities';
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
       withCount?: boolean;
       bodyQueryOptions?: QueryOption[];
     } = {},
@@ -483,14 +531,14 @@ export class ODataResource<T> {
     body: any,
     options: ODataOptions & {
       responseType?:
-      | 'arraybuffer'
-      | 'blob'
-      | 'json'
-      | 'text'
-      | 'value'
-      | 'property'
-      | 'entity'
-      | 'entities';
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
       withCount?: boolean;
     } = {},
   ): Observable<any> {
@@ -502,14 +550,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-      | 'arraybuffer'
-      | 'blob'
-      | 'json'
-      | 'text'
-      | 'value'
-      | 'property'
-      | 'entity'
-      | 'entities';
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
       withCount?: boolean;
     } = {},
   ): Observable<any> {
@@ -521,14 +569,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-      | 'arraybuffer'
-      | 'blob'
-      | 'json'
-      | 'text'
-      | 'value'
-      | 'property'
-      | 'entity'
-      | 'entities';
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
       withCount?: boolean;
     } = {},
   ): Observable<any> {
@@ -539,14 +587,14 @@ export class ODataResource<T> {
     options: ODataOptions & {
       etag?: string;
       responseType?:
-      | 'arraybuffer'
-      | 'blob'
-      | 'json'
-      | 'text'
-      | 'value'
-      | 'property'
-      | 'entity'
-      | 'entities';
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
       withCount?: boolean;
     } = {},
   ): Observable<any> {

@@ -56,7 +56,9 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
     const action = ODataActionResource.factory<P, R>(resource.api, {
       path,
-      outgoingType, bindingType, incomingType,
+      outgoingType,
+      bindingType,
+      incomingType,
       segments: resource.cloneSegments(),
     });
 
@@ -130,10 +132,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * @param options Options for the request
    * @returns Observable of the result of the action
    */
-  callProperty(
-    params: P | null,
-    options: ODataOptions = {},
-  ) {
+  callProperty(params: P | null, options: ODataOptions = {}) {
     return this.call(params, { responseType: 'property', ...options }).pipe(
       map(({ property }) => property),
     );
@@ -145,10 +144,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * @param options Options for the request
    * @returns Observable of the result of the action
    */
-  callEntity(
-    params: P | null,
-    options: ODataOptions = {},
-  ) {
+  callEntity(params: P | null, options: ODataOptions = {}) {
     return this.call(params, { responseType: 'entity', ...options }).pipe(
       map(({ entity }) => entity),
     );
@@ -179,10 +175,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * @param options Options for the request
    * @returns Observable of the result of the action
    */
-  callEntities(
-    params: P | null,
-    options: ODataOptions = {},
-  ) {
+  callEntities(params: P | null, options: ODataOptions = {}) {
     return this.call(params, { responseType: 'entities', ...options }).pipe(
       map(({ entities }) => entities),
     );
@@ -202,9 +195,9 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       map(({ entities, annots }) =>
         entities
           ? this.asCollection(entities, {
-            annots,
-            CollectionType: options?.CollectionType,
-          })
+              annots,
+              CollectionType: options?.CollectionType,
+            })
           : null,
       ),
     );

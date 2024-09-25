@@ -46,12 +46,17 @@ export class CsdlStructuredType extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = { ...super.toJson(), Name: this.Name };
+    const json: { [key: string]: any } = { ...super.toJson(), Name: this.Name };
     if (Array.isArray(this.Property) && this.Property.length > 0) {
       json['Property'] = this.Property.map((p) => p.toJson());
     }
-    if (Array.isArray(this.NavigationProperty) && this.NavigationProperty.length > 0) {
-      json['NavigationProperty'] = this.NavigationProperty.map((n) => n.toJson());
+    if (
+      Array.isArray(this.NavigationProperty) &&
+      this.NavigationProperty.length > 0
+    ) {
+      json['NavigationProperty'] = this.NavigationProperty.map((n) =>
+        n.toJson(),
+      );
     }
     if (this.BaseType !== undefined) {
       json['BaseType'] = this.BaseType;
@@ -109,14 +114,16 @@ export class CsdlComplexType extends CsdlStructuredType {
       Annotation,
     });
   }
-  
+
   override toJson() {
     return {
       ...super.toJson(),
     };
   }
 
-  override toConfig(base?: Partial<StructuredTypeConfig>): StructuredTypeConfig {
+  override toConfig(
+    base?: Partial<StructuredTypeConfig>,
+  ): StructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -174,7 +181,7 @@ export class CsdlEntityType extends CsdlStructuredType {
   }
 
   override toJson() {
-    const json: {[key: string]: any} = { ...super.toJson() };
+    const json: { [key: string]: any } = { ...super.toJson() };
     if (this.Key !== undefined) {
       json['Key'] = this.Key.toJson();
     }
@@ -184,7 +191,9 @@ export class CsdlEntityType extends CsdlStructuredType {
     return json;
   }
 
-  override toConfig(base?: Partial<StructuredTypeConfig>): StructuredTypeConfig {
+  override toConfig(
+    base?: Partial<StructuredTypeConfig>,
+  ): StructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
