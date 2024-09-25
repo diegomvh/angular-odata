@@ -259,6 +259,7 @@ export const INCLUDE_DEEP = {
 export enum ODataModelState {
   Added,
   Removed,
+  Changed,
   Unchanged,
 }
 
@@ -625,6 +626,7 @@ export class ODataModelField<F> {
 }
 
 export class ODataModelAttribute<T> {
+  private state: ODataModelState = ODataModelState.Unchanged;
   private value?: T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null;
   private change?: T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null;
   private subscription?: Subscription;
@@ -673,7 +675,7 @@ export class ODataModelAttribute<T> {
     | ODataCollection<T, ODataModel<T>>
     | null
     | undefined {
-    return this.change !== undefined ? this.change : this.value;
+    return this.state === ODataModelState.Changed ? this.change : this.value;
   }
 
   set(
@@ -708,11 +710,12 @@ export class ODataModelAttribute<T> {
           : !Types.isEqual(current, value);
     if (reset) {
       this.value = value;
-      this.change = undefined;
+      this.state = ODataModelState.Unchanged;
     } else if (Types.isEqual(value, this.value)) {
-      this.change = undefined;
+      this.state = ODataModelState.Unchanged;
     } else if (changed) {
       this.change = value;
+      this.state = ODataModelState.Changed;
     }
     if (
       ODataModelOptions.isModel(value) ||
@@ -731,7 +734,7 @@ export class ODataModelAttribute<T> {
   }: { include_navigation?: boolean } = {}): boolean {
     const current = this.get();
     return (
-      this.change !== undefined ||
+      this.state === ODataModelState.Changed ||
       ((ODataModelOptions.isModel(current) ||
         ODataModelOptions.isCollection(current)) &&
         (
@@ -748,7 +751,7 @@ export class ODataModelAttribute<T> {
       this.unlink(
         this.change as ODataModel<T> | ODataCollection<T, ODataModel<T>>,
       );
-    this.change = undefined;
+    this.state = ODataModelState.Unchanged;
     if (
       ODataModelOptions.isModel(this.value) ||
       ODataModelOptions.isCollection(this.value)
@@ -1638,17 +1641,19 @@ export class ODataModelOptions<T> {
         ODataModelOptions.isModel(value)
       ) {
         // Check for reference
-        const referenced = this.resolveReferenced(self, attr);
+        const referenced = this.resolveReferenced(self, attr, {
+          resolve: false,
+        });
         if (value !== null && referenced !== null && referenced !== undefined) {
-            (value as ODataModel<F>).assign(referenced as Partial<F>, {
-              silent: true,
-            });
-          } else if (value !== null && referenced === null) {
-            // New value is null
-            (attr as ODataModelAttribute<F>).set(null);
-          } else if (value === null && referenced !== null) {
-            // New value is undefined
-            (attr as ODataModelAttribute<F>).set(undefined);
+          (value as ODataModel<F>).assign(referenced as Partial<F>, {
+            silent: true,
+          });
+        } else if (value !== null && referenced === null) {
+          // New value is null
+          (attr as ODataModelAttribute<F>).set(null);
+        } else if (value === null && referenced !== null) {
+          // New value is undefined
+          (attr as ODataModelAttribute<F>).set(undefined);
         }
       }
       return value;
@@ -1794,7 +1799,9 @@ export class ODataModelOptions<T> {
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
         const meta = this.api.optionsForType<F>(modelField.type);
-        const ref = meta?.resolveReferential(attr.get(), attr);
+        const ref = meta?.resolveReferential(attr.get(), attr, {
+          resolve: false,
+        });
         if (ref !== null && ref !== undefined) {
           Object.assign(self, ref);
         }
