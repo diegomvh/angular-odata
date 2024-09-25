@@ -1,4 +1,4 @@
-import { strings, normalize } from '@angular-devkit/core';
+import { strings, normalize } from "@angular-devkit/core";
 import {
   apply,
   SchematicContext,
@@ -9,20 +9,24 @@ import {
   template,
   mergeWith,
   MergeStrategy,
-  SchematicsException
-} from '@angular-devkit/schematics';
-import { createDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
-import { parseName } from '@schematics/angular/utility/parse-name';
+  SchematicsException,
+} from "@angular-devkit/schematics";
+import {
+  createDefaultPath,
+  getWorkspace,
+} from "@schematics/angular/utility/workspace";
+import { parseName } from "@schematics/angular/utility/parse-name";
 
-import { Schema as ApiGenSchema } from './schema';
-import { ODataMetadataParser } from './metadata/parser';
-import { toTypescriptType } from './utils';
-import { Module } from './angular/module';
-import { ApiConfig } from './angular/api-config';
-import { Enum } from './angular/enum';
-import { Base, Callable, Index, Metadata } from './angular/base';
-import { Entity } from './angular/entity';
-import { Service } from './angular/service';
+import { Schema as ApiGenSchema } from "./schema";
+import { ODataMetadataParser } from "./metadata/parser";
+import { toTypescriptType } from "./utils";
+import { Module } from "./angular/module";
+import { ApiConfig } from "./angular/api-config";
+import { Enum } from "./angular/enum";
+import { Base, Callable, Index, Metadata } from "./angular/base";
+import { Entity } from "./angular/entity";
+import { Service } from "./angular/service";
+import { CsdlAction, CsdlFunction } from "./metadata/csdl/csdl-function-action";
 
 const utils = {
   toTypescriptType,
@@ -30,7 +34,7 @@ const utils = {
 
 export function apigen(options: ApiGenSchema) {
   return async (tree: Tree, context: SchematicContext) => {
-    const workspace = await getWorkspace(tree)
+    const workspace = await getWorkspace(tree);
     if (!options.project) {
       options.project = workspace.projects.keys().next().value;
     }
@@ -47,7 +51,7 @@ export function apigen(options: ApiGenSchema) {
     options.name = parsedPath.name;
     options.path = parsedPath.path;
 
-    const modulePath = options.path + '/' + strings.dasherize(options.name);
+    const modulePath = options.path + "/" + strings.dasherize(options.name);
 
     return fetch(options.metadata)
       .then((resp) => resp.text())
@@ -107,8 +111,28 @@ export function apigen(options: ApiGenSchema) {
           }
         }
 
-        const functions = meta.functions().map((f) => new Callable(f));
-        const actions = meta.actions().map((a) => new Callable(a));
+        const functions = meta
+          .functions()
+          .reduce((callables: Callable[], f: CsdlFunction) => {
+            const callable = callables.find((c) => c.name() == f.Name);
+            if (callable !== undefined) {
+              callable.addOverload(f);
+            } else {
+              callables.push(new Callable(f));
+            }
+            return callables;
+          }, [] as Callable[]);
+        const actions = meta
+          .actions()
+          .reduce((callables: Callable[], a: CsdlAction) => {
+            const callable = callables.find((c) => c.name() == a.Name);
+            if (callable !== undefined) {
+              callable.addOverload(a);
+            } else {
+              callables.push(new Callable(a));
+            }
+            return callables;
+          }, [] as Callable[]);
         [...sources]
           .filter((s) => s instanceof Service)
           .forEach((s: Service) => {

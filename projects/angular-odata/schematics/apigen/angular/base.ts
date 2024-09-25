@@ -1,27 +1,35 @@
-import { strings } from '@angular-devkit/core';
-import { getRandomName } from '../../random';
-import { Import } from './import';
-import { url, Source } from '@angular-devkit/schematics';
-import { Schema as ApiGenSchema } from '../schema';
+import { strings } from "@angular-devkit/core";
+import { getRandomName } from "../../random";
+import { Import } from "./import";
+import { url, Source } from "@angular-devkit/schematics";
+import { Schema as ApiGenSchema } from "../schema";
 import {
   BINDING_PARAMETER_NAME,
   CsdlCallable,
   CsdlFunction,
   CsdlParameter,
-} from '../metadata/csdl/csdl-function-action';
-import { makeRelativePath, toTypescriptType } from '../utils';
-import { ODataMetadata } from '../metadata';
+} from "../metadata/csdl/csdl-function-action";
+import { makeRelativePath, toTypescriptType } from "../utils";
+import { ODataMetadata } from "../metadata";
 
 export class Callable {
-  constructor(protected callable: CsdlCallable) {}
+  callables: CsdlCallable[] = [];
+  constructor(protected callable: CsdlCallable) {
+    this.callables.push(callable);
+  }
+
+  addOverload(callable: CsdlCallable) {
+    this.callables.push(callable);
+  }
 
   name() {
     return this.callable.Name;
   }
 
   isBound() {
-    return this.callable.IsBound;
+    return this.callable.IsBound ?? false;
   }
+
   bindingParameter() {
     return this.callable.Parameter?.find(
       (p) => p.Name === BINDING_PARAMETER_NAME,
@@ -29,11 +37,38 @@ export class Callable {
   }
 
   parameters() {
-    return (
-      this.callable.Parameter?.filter(
-        (p) => p.Name !== BINDING_PARAMETER_NAME,
-      ) ?? ([] as CsdlParameter[])
+    const parameters = this.callables.reduce(
+      (acc: CsdlParameter[], c: CsdlCallable) => {
+        for (let param of c.Parameter ?? []) {
+          if (acc.some((p) => p.Name === param.Name)) continue;
+          acc.push(param);
+        }
+        return acc;
+      },
+      [] as CsdlParameter[],
     );
+    const names = parameters.map((p) => p.Name);
+    const binding = parameters.find((p) => p.Name === BINDING_PARAMETER_NAME);
+    const inAllCallables = names.filter(
+      (n) =>
+        n !== BINDING_PARAMETER_NAME &&
+        this.callables.every((c) =>
+          (c.Parameter ?? []).some((p) => p.Name === n),
+        ),
+    );
+    const required = parameters.filter(
+      (p) =>
+        p.Name !== BINDING_PARAMETER_NAME && inAllCallables.includes(p.Name),
+    );
+    const optional = parameters.filter(
+      (p) =>
+        p.Name !== BINDING_PARAMETER_NAME && !inAllCallables.includes(p.Name),
+    );
+    return {
+      binding,
+      required,
+      optional,
+    };
   }
 
   returnType() {
@@ -47,25 +82,28 @@ export class Callable {
   resourceFunction() {
     const isFunction = this.callable instanceof CsdlFunction;
     const methodName = strings.camelize(this.callable.Name);
-    const bindingParameter = this.bindingParameter();
+    const { binding, required, optional } = this.parameters();
+    const parameters = [...required, ...optional];
     const bindingType =
-      bindingParameter !== undefined
-        ? toTypescriptType(bindingParameter.Type)
-        : '';
+      binding !== undefined ? toTypescriptType(binding.Type) : "";
     const returnType = this.returnType();
     const retType =
-      returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
-    const bindingMethod = !bindingParameter?.Collection ? 'entity' : 'entities';
-    const baseMethod = isFunction ? 'function' : 'action';
-    const keyParameter = !bindingParameter?.Collection
+      returnType === undefined ? "null" : toTypescriptType(returnType.Type);
+    const bindingMethod = !binding?.Collection ? "entity" : "entities";
+    const baseMethod = isFunction ? "function" : "action";
+    const keyParameter = !binding?.Collection
       ? `key: EntityKey<${bindingType}>`
-      : '';
-    const key = !bindingParameter?.Collection ? `key` : '';
-    const parameters = this.parameters();
+      : "";
+    const key = !binding?.Collection ? `key` : "";
     const parametersType =
       parameters.length === 0
-        ? 'null'
-        : `{${parameters.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}`).join(', ')}}`;
+        ? "null"
+        : `{${parameters
+            .map((p) => {
+              const op = optional.includes(p);
+              return `${p.Name}${op ? "?" : ""}: ${toTypescriptType(p.Type)}`;
+            })
+            .join(", ")}}`;
     return `public ${methodName}(${keyParameter}) {
     return this.${bindingMethod}(${key}).${baseMethod}<${parametersType}, ${retType}>('${this.fullName()}');
   }`;
@@ -73,58 +111,60 @@ export class Callable {
 
   callableFunction() {
     const isFunction = this.callable instanceof CsdlFunction;
-    const bindingParameter = this.bindingParameter();
-    const parameters = this.parameters();
+    const { binding, required, optional } = this.parameters();
+    const parameters = [...required, ...optional];
     const returnType = this.returnType();
 
     const methodResourceName = strings.camelize(this.callable.Name);
     const methodName = strings.classify(this.callable.Name);
     const responseType =
       returnType === undefined
-        ? 'none'
+        ? "none"
         : returnType?.Collection
-          ? 'entities'
-          : returnType?.Type.startsWith('Edm.')
-            ? 'property'
-            : 'entity';
+          ? "entities"
+          : returnType?.Type.startsWith("Edm.")
+            ? "property"
+            : "entity";
     const retType =
-      returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+      returnType === undefined ? "null" : toTypescriptType(returnType.Type);
 
     const bindingType =
-      bindingParameter !== undefined
-        ? toTypescriptType(bindingParameter.Type)
-        : '';
-    const baseMethod = isFunction ? 'callFunction' : 'callAction';
+      binding !== undefined ? toTypescriptType(binding.Type) : "";
+    const baseMethod = isFunction ? "callFunction" : "callAction";
     const parametersCall =
       parameters.length === 0
-        ? 'null'
-        : `{${parameters.map((p) => p.Name).join(', ')}}`;
+        ? "null"
+        : `{${parameters.map((p) => p.Name).join(", ")}}`;
 
     // Method arguments
-    let args = !bindingParameter?.Collection
-      ? [`key: EntityKey<${bindingType}>`]
-      : [];
+    let args = !binding?.Collection ? [`key: EntityKey<${bindingType}>`] : [];
     args = [
       ...args,
-      ...(parameters.length === 0
+      ...(required.length === 0
         ? []
-        : parameters.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}`)),
+        : required.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}`)),
+    ];
+    args = [
+      ...args,
+      ...(optional.length === 0
+        ? []
+        : optional.map((p) => `${p.Name}?: ${toTypescriptType(p.Type)}`)),
     ];
     const optionsType =
-      returnType !== undefined && returnType.Type.startsWith('Edm.')
+      returnType !== undefined && returnType.Type.startsWith("Edm.")
         ? isFunction
-          ? 'ODataOptions & {alias?: boolean}'
-          : 'ODataOptions'
+          ? "ODataOptions & {alias?: boolean}"
+          : "ODataOptions"
         : isFunction
           ? `ODataFunctionOptions<${retType}>`
           : `ODataActionOptions<${retType}>`;
     args.push(`options?: ${optionsType}`);
 
     // Key parameter
-    const key = !bindingParameter?.Collection ? `key` : '';
+    const key = !binding?.Collection ? `key` : "";
 
     // Render
-    return `public call${methodName}(${args.join(', ')}) {
+    return `public call${methodName}(${args.join(", ")}) {
     return this.${baseMethod}(${parametersCall}, this.${methodResourceName}(${key}), '${responseType}', options);
   }`;
   }
@@ -145,7 +185,7 @@ export abstract class Base {
   public path(): string {
     const directory = this.directory();
     const filename = this.fileName();
-    return directory !== '' ? directory + `/${filename}` : filename;
+    return directory !== "" ? directory + `/${filename}` : filename;
   }
 
   public imports(): Import[] {
@@ -202,19 +242,19 @@ export class Index extends Base {
     super(options);
   }
   public override template(): Source {
-    return url('./files/index');
+    return url("./files/index");
   }
   public override variables(): { [name: string]: any } {
     return { ...this.options };
   }
   public override name() {
-    return '';
+    return "";
   }
   public override fileName() {
-    return 'index';
+    return "index";
   }
   public override directory() {
-    return '';
+    return "";
   }
   public override fullName() {
     return this.name();
@@ -225,23 +265,26 @@ export class Index extends Base {
 }
 
 export class Metadata extends Base {
-  constructor(options: ApiGenSchema, private meta: ODataMetadata) {
+  constructor(
+    options: ApiGenSchema,
+    private meta: ODataMetadata,
+  ) {
     super(options);
   }
   public override template(): Source {
-    return url('./files/metadata');
+    return url("./files/metadata");
   }
   public override variables(): { [name: string]: any } {
     return { content: JSON.stringify(this.meta.toJson(), null, 2) };
   }
   public override name() {
-    return '';
+    return "";
   }
   public override fileName() {
-    return 'metadata';
+    return "metadata";
   }
   public override directory() {
-    return '';
+    return "";
   }
   public override fullName() {
     return this.name();

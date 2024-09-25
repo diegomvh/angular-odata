@@ -1,10 +1,10 @@
-import { strings } from '@angular-devkit/core';
-import { Base } from './base';
-import { CsdlEntityContainer } from '../metadata/csdl/csdl-entity-container';
-import { CsdlSingleton } from '../metadata/csdl/csdl-singleton';
-import { CsdlEntitySet } from '../metadata/csdl/csdl-entity-set';
-import { url, Source } from '@angular-devkit/schematics';
-import { Schema as ApiGenSchema } from '../schema';
+import { strings } from "@angular-devkit/core";
+import { Base } from "./base";
+import { CsdlEntityContainer } from "../metadata/csdl/csdl-entity-container";
+import { CsdlSingleton } from "../metadata/csdl/csdl-singleton";
+import { CsdlEntitySet } from "../metadata/csdl/csdl-entity-set";
+import { url, Source } from "@angular-devkit/schematics";
+import { Schema as ApiGenSchema } from "../schema";
 
 export class Service extends Base {
   constructor(
@@ -15,10 +15,10 @@ export class Service extends Base {
   }
   public override template(): Source {
     return this.edmElement instanceof CsdlEntitySet
-      ? url('./files/entityset-service')
+      ? url("./files/entityset-service")
       : this.edmElement instanceof CsdlSingleton
-        ? url('./files/singleton-service')
-        : url('./files/entitycontainer-service');
+        ? url("./files/singleton-service")
+        : url("./files/entitycontainer-service");
   }
   public override variables(): { [name: string]: any } {
     return {
@@ -37,17 +37,17 @@ export class Service extends Base {
       ? this.edmElement.EntityType
       : this.edmElement instanceof CsdlSingleton
         ? this.edmElement.Type
-        : '';
+        : "";
   }
 
   public override name() {
-    return strings.classify(this.edmElement.name()) + 'Service';
+    return strings.classify(this.edmElement.name()) + "Service";
   }
   public override fileName() {
-    return strings.dasherize(this.edmElement.name()) + '.service';
+    return strings.dasherize(this.edmElement.name()) + ".service";
   }
   public override directory() {
-    return this.edmElement.namespace().replace(/\./g, '/');
+    return this.edmElement.namespace().replace(/\./g, "/");
   }
   public override fullName() {
     return this.edmElement.fullName();
@@ -61,12 +61,12 @@ export class Service extends Base {
     }
     for (var call of this.callables ?? []) {
       const ret = call.returnType();
-      if (ret !== undefined && !ret.Type.startsWith('Edm.')) {
+      if (ret !== undefined && !ret.Type.startsWith("Edm.")) {
         imports.push(ret.Type);
       }
-      const params = call.parameters();
-      for (let param of params) {
-        if (!param.Type.startsWith('Edm.')) {
+      const { binding, required, optional } = call.parameters();
+      for (let param of [...required, ...optional]) {
+        if (!param.Type.startsWith("Edm.")) {
           imports.push(param.Type);
         }
       }
