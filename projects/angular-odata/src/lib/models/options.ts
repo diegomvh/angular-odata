@@ -24,7 +24,6 @@ import {
 import {
   ODataEntitySet,
   ODataEnumType,
-  ODataReferential,
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';
