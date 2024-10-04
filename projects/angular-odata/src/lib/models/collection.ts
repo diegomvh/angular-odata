@@ -1264,7 +1264,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   private _compare(
     e1: ODataModelEntry<T, M> | M,
     e2: ODataModelEntry<T, M> | M,
-    by: { field: string | keyof T; order?: 1 | -1 }[],
+    by: { field: string | keyof T; order?: 1 | -1; comparator?: (a: any, b: any) => number }[],
     index: number,
   ): number {
     const m1 = ODataModelOptions.isModel(e1)
@@ -1280,19 +1280,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (value1 == null && value2 != null) result = -1;
     else if (value1 != null && value2 == null) result = 1;
     else if (value1 == null && value2 == null) result = 0;
-    else if (typeof value1 == 'string' || value1 instanceof String) {
-      if (value1.localeCompare && value1 != value2) {
-        return (by[index].order || 1) * value1.localeCompare(value2);
-      }
-    } else {
+    else if ((typeof value1 == 'string' || value1 instanceof String) && value1.localeCompare && value1 != value2)
+      result = value1.localeCompare(value2);
+    else if (value1 == value2)
+      return by.length - 1 > index ? this._compare(e1, e2, by, index + 1) : 0;
+    else if (by[index]!.comparator !== undefined)
+      result = by[index].comparator!(value1 as T, value2 as T);
+    else {
       result = value1 < value2 ? -1 : 1;
     }
 
-    if (value1 == value2) {
-      return by.length - 1 > index ? this._compare(e1, e2, by, index + 1) : 0;
-    }
-
-    return (by[index].order || 1) * result;
+    return (by[index].order ?? 1) * result;
   }
 
   _sortBy: { field: string | keyof T; order?: 1 | -1 }[] | null = null;
@@ -1301,7 +1299,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   sort(
-    by: { field: string | keyof T; order?: 1 | -1 }[],
+    by: { field: string | keyof T; order?: 1 | -1; comparator?: (a: any, b: any) => number }[],
     { silent }: { silent?: boolean } = {},
   ) {
     this._sortBy = by;
