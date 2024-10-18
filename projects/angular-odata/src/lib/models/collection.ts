@@ -33,14 +33,13 @@ import {
 } from '../annotations';
 
 export class ODataCollection<T, M extends ODataModel<T>>
-  implements Iterable<M>
-{
+  implements Iterable<M> {
   static model: typeof ODataModel | null = null;
   _parent:
     | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null,
-      ]
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null,
+    ]
     | null = null;
   _resource:
     | ODataEntitySetResource<T>
@@ -49,16 +48,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     | null = null;
   _resources: {
     parent:
-      | [
-          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-          ODataModelField<any> | null,
-        ]
-      | null;
+    | [
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null,
+    ]
+    | null;
     resource:
-      | ODataEntitySetResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>
-      | null;
+    | ODataEntitySetResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | null;
   }[] = [];
   _annotations!: ODataEntitiesAnnotations<T>;
   _entries: ODataModelEntry<T, M>[] = [];
@@ -117,9 +116,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (resource) {
       this.attach(
         resource as
-          | ODataEntitySetResource<T>
-          | ODataPropertyResource<T>
-          | ODataNavigationPropertyResource<T>,
+        | ODataEntitySetResource<T>
+        | ODataPropertyResource<T>
+        | ODataNavigationPropertyResource<T>,
       );
     }
 
@@ -371,20 +370,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource instanceof ODataEntitySetResource
         ? resource.fetch({ withCount, ...options })
         : resource.fetch({
-            responseType: 'entities',
-            withCount,
-            ...options,
-          });
+          responseType: 'entities',
+          withCount,
+          ...options,
+        });
 
     return this._request(obs$, ({ entities, annots }) => {
       this._annotations = annots;
       return entities !== null
         ? this.assign(entities, {
-            reset: true,
-            add: add ?? true,
-            merge: merge ?? true,
-            remove: remove ?? true,
-          })
+          reset: true,
+          add: add ?? true,
+          merge: merge ?? true,
+          remove: remove ?? true,
+        })
         : [];
     });
   }
@@ -411,11 +410,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._annotations = annots;
       return entities !== null
         ? this.assign(entities, {
-            reset: true,
-            add: add ?? true,
-            merge: merge ?? true,
-            remove: remove ?? true,
-          })
+          reset: true,
+          add: add ?? true,
+          merge: merge ?? true,
+          remove: remove ?? true,
+        })
         : [];
     });
   }
@@ -449,11 +448,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._annotations = annots;
       return entities !== null
         ? this.assign(entities, {
-            reset: true,
-            add: add ?? true,
-            merge: merge ?? true,
-            remove: remove ?? false,
-          })
+          reset: true,
+          add: add ?? true,
+          merge: merge ?? true,
+          remove: remove ?? false,
+        })
         : [];
     });
   }
@@ -484,11 +483,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._annotations = annots;
       return entity !== null
         ? this.assign([entity], {
-            reset: true,
-            add: add ?? true,
-            merge: merge ?? true,
-            remove: remove ?? false,
-          })[0]
+          reset: true,
+          add: add ?? true,
+          merge: merge ?? true,
+          remove: remove ?? false,
+        })[0]
         : null;
     });
   }
@@ -701,8 +700,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._addModel(m, { silent, position, merge, reparent, reset });
     return server
       ? this._request(this._addServer(model), (model) =>
-          _addModel(model, reset ?? true),
-        )
+        _addModel(model, reset ?? true),
+      )
       : of(_addModel(model, reset ?? false));
   }
 
@@ -778,8 +777,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._removeModel(m, { silent, reset });
     return server
       ? this._request(this._removeServer(model), (model) =>
-          _removeModel(model, reset ?? true),
-        )
+        _removeModel(model, reset ?? true),
+      )
       : of(_removeModel(model, reset ?? false));
   }
 
@@ -811,7 +810,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  set(path: string | string[], value: any, {}: {} & ModelFieldOptions) {
+  set(path: string | string[], value: any, { }: {} & ModelFieldOptions) {
     const pathArray = (
       Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)
     ) as any[];
@@ -956,8 +955,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       const model = ODataModelOptions.isModel(obj)
         ? (obj as M)
         : (this.modelFactory(obj as Partial<T> | { [name: string]: any }, {
-            reset,
-          }) as M);
+          reset,
+        }) as M);
       const position = index + offset;
       // Try find entry
       const entry = this._findEntry(model);
@@ -1264,7 +1263,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   private _compare(
     e1: ODataModelEntry<T, M> | M,
     e2: ODataModelEntry<T, M> | M,
-    by: { field: string | keyof T; order?: 1 | -1 }[],
+    by: { field: string | keyof T; order?: 1 | -1; comparator?: (a: any, b: any) => number }[],
     index: number,
   ): number {
     const m1 = ODataModelOptions.isModel(e1)
@@ -1280,19 +1279,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (value1 == null && value2 != null) result = -1;
     else if (value1 != null && value2 == null) result = 1;
     else if (value1 == null && value2 == null) result = 0;
-    else if (typeof value1 == 'string' || value1 instanceof String) {
-      if (value1.localeCompare && value1 != value2) {
-        return (by[index].order || 1) * value1.localeCompare(value2);
-      }
-    } else {
+    else if ((typeof value1 == 'string' || value1 instanceof String) && value1.localeCompare && value1 != value2)
+      result = value1.localeCompare(value2);
+    else if (value1 == value2)
+      return by.length - 1 > index ? this._compare(e1, e2, by, index + 1) : 0;
+    else if (by[index]!.comparator !== undefined)
+      result = by[index].comparator!(value1 as T, value2 as T);
+    else {
       result = value1 < value2 ? -1 : 1;
     }
 
-    if (value1 == value2) {
-      return by.length - 1 > index ? this._compare(e1, e2, by, index + 1) : 0;
-    }
-
-    return (by[index].order || 1) * result;
+    return (by[index].order ?? 1) * result;
   }
 
   _sortBy: { field: string | keyof T; order?: 1 | -1 }[] | null = null;
@@ -1301,7 +1298,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   sort(
-    by: { field: string | keyof T; order?: 1 | -1 }[],
+    by: { field: string | keyof T; order?: 1 | -1; comparator?: (a: any, b: any) => number }[],
     { silent }: { silent?: boolean } = {},
   ) {
     this._sortBy = by;
