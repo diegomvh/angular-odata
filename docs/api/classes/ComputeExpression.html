@@ -1117,7 +1117,7 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
     parser?: Parser&lt;T&gt;;
     options?: ParserOptions;
   } &#x3D; {}): string {
-    let children &#x3D; this._children.map((n) &#x3D;&gt;
+    const children &#x3D; this._children.map((n) &#x3D;&gt;
       n.render({ aliases, escape, prefix, parser, options }),
     );
     return this.names

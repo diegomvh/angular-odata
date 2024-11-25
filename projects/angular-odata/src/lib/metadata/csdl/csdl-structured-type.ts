@@ -1,4 +1,4 @@
-import { StructuredTypeConfig } from '../../types';
+import { ODataStructuredTypeConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import {
   CsdlProperty,
@@ -122,8 +122,8 @@ export class CsdlComplexType extends CsdlStructuredType {
   }
 
   override toConfig(
-    base?: Partial<StructuredTypeConfig>,
-  ): StructuredTypeConfig {
+    base?: Partial<ODataStructuredTypeConfig>,
+  ): ODataStructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -135,7 +135,7 @@ export class CsdlComplexType extends CsdlStructuredType {
         ...(this.Property ?? []).map((t) => t.toConfig()),
         ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
       ].reduce((acc, p) => Object.assign(acc, { [p.name]: p }), {}),
-    } as StructuredTypeConfig;
+    } as ODataStructuredTypeConfig;
   }
 }
 
@@ -192,8 +192,8 @@ export class CsdlEntityType extends CsdlStructuredType {
   }
 
   override toConfig(
-    base?: Partial<StructuredTypeConfig>,
-  ): StructuredTypeConfig {
+    base?: Partial<ODataStructuredTypeConfig>,
+  ): ODataStructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -206,7 +206,7 @@ export class CsdlEntityType extends CsdlStructuredType {
         ...(this.Property ?? []).map((t) => t.toConfig()),
         ...(this.NavigationProperty ?? []).map((t) => t.toConfig()),
       ].reduce((acc, p) => Object.assign(acc, { [p.name]: p }), {}),
-    } as StructuredTypeConfig;
+    } as ODataStructuredTypeConfig;
   }
 }
 

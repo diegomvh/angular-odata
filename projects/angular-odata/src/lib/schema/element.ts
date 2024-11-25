@@ -1,4 +1,4 @@
-import { AnnotationConfig, Parser } from '../types';
+import { ODataAnnotationConfig, Parser } from '../types';
 import { Strings } from '../utils';
 import { ODataAnnotatable } from './annotation';
 import { ODataSchema } from './schema';
@@ -8,7 +8,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
   schema: ODataSchema;
 
   constructor(
-    config: { annotations?: AnnotationConfig[]; name: string },
+    config: { annotations?: ODataAnnotationConfig[]; name: string },
     schema: ODataSchema,
   ) {
     super(config);
@@ -77,7 +77,7 @@ export class ODataParserSchemaElement<
 > extends ODataSchemaElement {
   parser: P;
   constructor(
-    config: { annotations?: AnnotationConfig[]; name: string },
+    config: { annotations?: ODataAnnotationConfig[]; name: string },
     schema: ODataSchema,
     parser: P,
   ) {

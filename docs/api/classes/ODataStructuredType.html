@@ -791,8 +791,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="272"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:272</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="281"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:281</a></div>
                         </td>
                     </tr>
 
@@ -834,8 +834,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="206"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:206</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="215"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:215</a></div>
                         </td>
                     </tr>
 
@@ -925,8 +925,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="226"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:226</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="235"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:235</a></div>
                         </td>
                     </tr>
 
@@ -1095,8 +1095,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="236"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:236</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="245"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:245</a></div>
                         </td>
                     </tr>
 
@@ -1742,8 +1742,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="251"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:251</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="260"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:260</a></div>
                         </td>
                     </tr>
 
@@ -1902,8 +1902,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="264"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:264</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="273"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:273</a></div>
                         </td>
                     </tr>
 
@@ -1977,8 +1977,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="216"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:216</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="225"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:225</a></div>
                         </td>
                     </tr>
 
@@ -2068,8 +2068,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="281"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:281</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="290"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:290</a></div>
                         </td>
                     </tr>
 
@@ -2147,8 +2147,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="291"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:291</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="300"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:300</a></div>
                         </td>
                     </tr>
 
@@ -2820,18 +2820,27 @@ export class ODataStructuredType&lt;T&gt; extends ODataParserSchemaElement&lt;
   pick(
     attrs: { [name: string]: any },
     {
+      include_id &#x3D; true,
+      include_key &#x3D; true,
       include_parents &#x3D; true,
       include_navigation &#x3D; false,
+      include_computed &#x3D; false,
       include_etag &#x3D; true,
     }: {
+      include_id?: boolean;
+      include_key?: boolean;
       include_parents?: boolean;
       include_navigation?: boolean;
+      include_computed?: boolean;
       include_etag?: boolean;
     } &#x3D; {},
   ): Partial&lt;T&gt; {
     return this.parser.pick(attrs, {
+      include_id,
+      include_key,
       include_etag,
       include_navigation,
+      include_computed,
       include_parents,
       options: this.api.options,
     });

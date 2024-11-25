@@ -548,7 +548,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ [key: string]: any; }</a></code>
 
                         </div>
                 </td>
@@ -610,16 +610,27 @@ export class CsdlTypeDefinition extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: { [key: string]: any } &#x3D; {
       ...super.toJson(),
       Name: this.Name,
       UnderlayingType: this.UnderlayingType,
-      MaxLength: this.MaxLength,
-      Precision: this.Precision,
-      Scale: this.Scale,
-      Unicode: this.Unicode,
-      SRID: this.SRID,
     };
+    if (this.MaxLength !&#x3D;&#x3D; undefined) {
+      json[&#x27;MaxLength&#x27;] &#x3D; this.MaxLength;
+    }
+    if (this.Precision !&#x3D;&#x3D; undefined) {
+      json[&#x27;Precision&#x27;] &#x3D; this.Precision;
+    }
+    if (this.Scale !&#x3D;&#x3D; undefined) {
+      json[&#x27;Scale&#x27;] &#x3D; this.Scale;
+    }
+    if (this.Unicode !&#x3D;&#x3D; undefined) {
+      json[&#x27;Unicode&#x27;] &#x3D; this.Unicode;
+    }
+    if (this.SRID !&#x3D;&#x3D; undefined) {
+      json[&#x27;SRID&#x27;] &#x3D; this.SRID;
+    }
+    return json;
   }
 }
 </code></pre>

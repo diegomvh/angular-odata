@@ -1,4 +1,4 @@
-import { CallableConfig, ParameterConfig } from '../../types';
+import { ODataCallableConfig, ODataParameterConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlEntityContainer } from './csdl-entity-container';
 import type { CsdlSchema } from './csdl-schema';
@@ -96,7 +96,7 @@ export class CsdlFunction extends CsdlCallable {
     };
   }
 
-  toConfig(base?: Partial<CallableConfig>): CallableConfig {
+  toConfig(base?: Partial<ODataCallableConfig>): ODataCallableConfig {
     return {
       name: this.Name,
       entitySetPath: this.EntitySetPath,
@@ -104,7 +104,7 @@ export class CsdlFunction extends CsdlCallable {
       composable: this.IsComposable,
       parameters: this.Parameter?.map((p) => p.toConfig()),
       return: this.ReturnType?.toConfig(),
-    } as CallableConfig;
+    } as ODataCallableConfig;
   }
 }
 
@@ -134,14 +134,14 @@ export class CsdlAction extends CsdlCallable {
     };
   }
 
-  toConfig(base?: Partial<CallableConfig>): CallableConfig {
+  toConfig(base?: Partial<ODataCallableConfig>): ODataCallableConfig {
     return {
       name: this.Name,
       entitySetPath: this.EntitySetPath,
       bound: this.IsBound,
       parameters: this.Parameter?.map((p) => p.toConfig()),
       return: this.ReturnType?.toConfig(),
-    } as CallableConfig;
+    } as ODataCallableConfig;
   }
 }
 
@@ -265,7 +265,7 @@ export class CsdlParameter extends CsdlAnnotable {
     };
   }
 
-  override toConfig(): ParameterConfig {
+  override toConfig(): ODataParameterConfig {
     return {
       ...super.toConfig(),
       type: this.Type,

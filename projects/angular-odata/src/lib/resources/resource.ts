@@ -14,7 +14,7 @@ import {
   Parser,
   QueryOption,
   PathSegment,
-  StructuredTypeFieldConfig,
+  ODataStructuredTypeFieldConfig,
 } from '../types';
 import { Objects, Strings, Types } from '../utils';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
@@ -449,7 +449,7 @@ export class ODataResource<T> {
       fields,
     }: {
       type?: string;
-      fields?: { [name: string]: StructuredTypeFieldConfig };
+      fields?: { [name: string]: ODataStructuredTypeFieldConfig };
     } = {},
   ): ODataResource<R> {
     if (type === undefined) {

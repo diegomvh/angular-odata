@@ -1,15 +1,15 @@
 import { Observable, forkJoin, map, of } from 'rxjs';
-import { ApiConfig } from './types';
+import { ODataApiConfig } from './types';
 import { ODataMetadataParser } from './metadata';
 
 export abstract class ODataConfigLoader {
-  abstract loadConfigs(): Observable<ApiConfig[]>;
+  abstract loadConfigs(): Observable<ODataApiConfig[]>;
 }
 
 export class ODataConfigSyncLoader implements ODataConfigLoader {
-  constructor(private readonly passedConfigs: ApiConfig | ApiConfig[]) {}
+  constructor(private readonly passedConfigs: ODataApiConfig | ODataApiConfig[]) {}
 
-  loadConfigs(): Observable<ApiConfig[]> {
+  loadConfigs(): Observable<ODataApiConfig[]> {
     return Array.isArray(this.passedConfigs)
       ? of(this.passedConfigs)
       : of([this.passedConfigs]);
@@ -19,18 +19,18 @@ export class ODataConfigSyncLoader implements ODataConfigLoader {
 export class ODataConfigAsyncLoader implements ODataConfigLoader {
   constructor(
     private readonly configs$:
-      | Observable<ApiConfig>[]
-      | Observable<ApiConfig | ApiConfig[]>,
+      | Observable<ODataApiConfig>[]
+      | Observable<ODataApiConfig | ODataApiConfig[]>,
   ) {}
 
-  loadConfigs(): Observable<ApiConfig[]> {
+  loadConfigs(): Observable<ODataApiConfig[]> {
     return Array.isArray(this.configs$)
       ? forkJoin(this.configs$)
-      : (this.configs$ as Observable<ApiConfig | ApiConfig[]>).pipe(
+      : (this.configs$ as Observable<ODataApiConfig | ODataApiConfig[]>).pipe(
           map((value) =>
             Array.isArray(value)
-              ? (value as ApiConfig[])
-              : ([value] as ApiConfig[]),
+              ? (value as ODataApiConfig[])
+              : ([value] as ODataApiConfig[]),
           ),
         );
   }
@@ -39,10 +39,10 @@ export class ODataConfigAsyncLoader implements ODataConfigLoader {
 export class ODataMetadataLoader implements ODataConfigLoader {
   constructor(
     private readonly sources$: Observable<string | string[]>,
-    private readonly baseConfigs: ApiConfig | ApiConfig[],
+    private readonly baseConfigs: ODataApiConfig | ODataApiConfig[],
   ) {}
 
-  loadConfigs(): Observable<ApiConfig[]> {
+  loadConfigs(): Observable<ODataApiConfig[]> {
     const configs = Array.isArray(this.baseConfigs)
       ? this.baseConfigs
       : [this.baseConfigs];

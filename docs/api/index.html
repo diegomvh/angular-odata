@@ -82,234 +82,38 @@
                <div class="content getting-started">
                    <div class="content-data">
 
-<h1>Angular OData</h1>
-<p><a href="https://github.com/diegomvh/angular-odata/actions?query=workflow%3A%22Node.js+CI%22"><img src="https://github.com/diegomvh/angular-odata/workflows/Node.js%20CI/badge.svg" alt="build" class="img-responsive"></a>
-<a href="http://badge.fury.io/js/angular-odata"><img src="https://badge.fury.io/js/angular-odata.svg" alt="npm version" class="img-responsive"></a></p>
-<p>A fluent API for querying, creating, updating and deleting OData resources in Angular.
-OData service for Angular.</p>
-<p>Please check also my other related project, <a href="https://github.com/diegomvh/ODataApiGen">OData Angular Generator</a></p>
-<h2>Demo:</h2>
-<p>Full examples of the library:</p>
-<ul>
-<li><a href="https://github.com/diegomvh/AngularODataEntity">AngularODataEntity</a></li>
-</ul>
-<h2>Table of contents</h2>
-<ul>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#without-schema">Without Schema</a></li>
-<li><a href="#with-schema">With Schema</a></li>
-<li><a href="#usage">Usage</a></li>
-<li><a href="#odata-version">OData Version</a></li>
-<li><a href="#query-builder">Query Builder</a></li>
-<li><a href="#documentation">Documentation</a></li>
-</ul>
+<h1 align="center">Angular OData</h1>
+
+<p align="center">
+  <em>A fluent API for querying, creating, updating and deleting OData resources in Angular.</em>
+  <br>
+</p>
+
+<p align="center">
+  <a href="CONTRIBUTING.md">Contributing</a>
+  ·
+  <a href="./docs/README.md">Documentation</a>
+  ·
+  <a href="https://github.com/diegomvh/AngularODataEntity">Demo</a>
+  <br>
+  <br>
+</p>
+
+<p align="center">
+  <a href="https://github.com/diegomvh/angular-odata/actions?query=workflow%3A%22Node.js+CI%22">
+    <img src="https://github.com/diegomvh/angular-odata/workflows/Node.js%20CI/badge.svg" alt="CI status" />
+  </a>&nbsp;
+  <a href="http://badge.fury.io/js/angular-odata">
+    <img src="https://badge.fury.io/js/angular-odata.svg" alt="Angular OData on npm" />
+  </a>
+</p>
+
+<hr>
+
 <h2>Installation</h2>
 <p>Install from npm:</p>
-<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h2>Schematics</h2>
-<p>--resolveJsonModule</p>
-<h2>Without Schema</h2>
-<p>Import ODataModule into your application module definition and setup the module for the <code>serviceRootUrl</code>.</p>
-<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { NgModule } from &#39;&#64;angular/core&#39;;
-import { ODataModule } from &#39;angular-odata&#39;;
-
-&#64;NgModule({
-  imports: [
-    ...
-    ODataModule.forRoot({
-      config: {
-        serviceRootUrl: &#39;https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/&#39;
-      }
-    })
-    ...
-  ]
-})
-export class AppModule {}</code></pre></div><h2>With Schema</h2>
-<p>Use <a href="https://github.com/diegomvh/ODataApiGen">OData Angular Generator</a> for generate the &lt;Api&gt;Config and the &lt;Api&gt;Module definition.</p>
-<p>Import ODataModule, &lt;Api&gt;Config and &lt;Api&gt;Module into your application module.
-Setup ODataModule with &lt;Api&gt;Config and import it along with &lt;Api&gt;Module.</p>
-<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { NgModule } from &#39;&#64;angular/core&#39;;
-
-import { ODataModule } from &#39;angular-odata&#39;;
-import { TripPinConfig, TripPinModule } from &#39;./trippin&#39;;
-
-&#64;NgModule({
-  imports: [
-    ...
-    ODataModule.forRoot({ config: TripPinConfig }),
-    TripPinModule
-  ]
-  ...
-})
-export class AppModule {}</code></pre></div><h2>Usage</h2>
-<p>Inject and use the ODataServiceFactory</p>
-<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { Component } from &quot;&#64;angular/core&quot;;
-import { ODataClient, ODATA_ETAG } from &quot;angular-odata&quot;;
-
-&#64;Component({
-  selector: &quot;app-root&quot;,
-  templateUrl: &quot;./app.component.html&quot;,
-  styleUrls: [&quot;./app.component.css&quot;],
-})
-export class AppComponent {
-  title = &quot;TripPin&quot;;
-  constructor(private factory: ODataServiceFactory) {
-    this.queries();
-  }
-
-  queries() {
-    // Use OData Service Factory
-    let airportsService = this.factory.entitySet&lt;Airport&gt;(
-      &#39;Airports&#39;,
-      &#39;Microsoft.OData.SampleService.Models.TripPin.Airport&#39;
-    );
-    let airports = airportsService.entities();
-
-    // Fetch airports
-    airports.fetch().subscribe(({ entities }) =&gt; {
-      console.log(&#39;Airports: &#39;, entities);
-    });
-
-    // Fetch airports with count
-    airports
-      .fetch({ withCount: true })
-      .subscribe(({ entities, annots }) =&gt;
-        console.log(&#39;Airports: &#39;, entities, &#39;Annotations: &#39;, annots)
-      );
-
-    // Fetch all airports
-    airports
-      .fetchAll()
-      .subscribe((airports) =&gt; console.log(&#39;All Airports: &#39;, airports));
-
-    // Fetch airport with key and fetch again from cache
-    airports
-      .entity(&#39;CYYZ&#39;)
-      .fetch()
-      .pipe(
-        switchMap(() =&gt;
-          // From Cache!
-          airports.entity(&#39;CYYZ&#39;).fetch({ fetchPolicy: &#39;cache-first&#39; })
-        )
-      )
-      .subscribe(({ entity, annots }) =&gt;
-        console.log(&#39;Airport: &#39;, entity, &#39;Annotations: &#39;, annots)
-      );
-
-    // Clone airports resource and filter new resource
-    airports
-      .clone()
-      .query((q) =&gt;
-        q.filter(({e, t}) =&gt; e().eq(t.Location.City.CountryRegion, &#39;United States&#39;))
-      )
-      .fetch()
-      .subscribe(({ entities, annots }) =&gt;
-        console.log(
-          &#39;Airports of United States: &#39;,
-          entities,
-          &#39;Annotations: &#39;,
-          annots
-        )
-      );
-
-    // Change query definition of airports resource and fetch again
-    airports.query((q) =&gt;
-      q.filter(({e, t}) =&gt; e().eq(t.Location.City.Region, &#39;California&#39;))
-    );
-    airports
-      .fetch()
-      .subscribe(({ entities, annots }) =&gt;
-        console.log(
-          &#39;Airports in California: &#39;,
-          entities,
-          &#39;Annotations: &#39;,
-          annots
-        )
-      );
-
-    // Store airports resource
-    var json = airports.toJson();
-    // Load airports resource
-    airports = this.odata.fromJson(json) as ODataEntitySetResource&lt;Airport&gt;;
-
-    // Change query definition of airports resource and fetch again
-    airports.query((q) =&gt; q.filter().clear());
-    airports
-      .fetch()
-      .subscribe(({ entities, annots }) =&gt;
-        console.log(&#39;Airports: &#39;, entities, &#39;Annotations: &#39;, annots)
-      );
-
-    let peopleService = this.factory.entitySet&lt;Person&gt;(
-      &#39;People&#39;,
-      &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;
-    );
-    let people = peopleService.entities();
-
-    // Clone people resource and expand and fetch
-    people
-      .clone()
-      .query((q) =&gt;
-        q.expand(({e, t}) =&gt; 
-          e()
-            .field(t.Friends, (f) =&gt; {
-              f.expand(({e, t}) =&gt; e().field(t.Friends));
-            })
-            .field(t.Trips, (f) =&gt; {
-              f.select(({e, t}) =&gt; e().fields(&#39;Name&#39;, &#39;Tags&#39;));
-            })
-      ))
-      .fetch({ withCount: true })
-      .subscribe(({ entities, annots }) =&gt;
-        console.log(
-          &#39;People with Friends and Trips: &#39;,
-          entities,
-          &#39;Annotations: &#39;,
-          annots
-        )
-      );
-
-    // Clone people resource and filter with expressions
-    people
-      .clone()
-      .query((q) =&gt;
-        q.filter(({ e, t }) =&gt;
-          e()
-            .contains(t.Emails, &#39;john&#64;example.com&#39;).or(
-              e().eq(t.UserName, &#39;john&#39;)
-            )
-        )
-      )
-      .fetch()
-      .subscribe(({ entities, annots }) =&gt;
-        console.log(
-          &#39;People with Friends and Trips: &#39;,
-          entities,
-          &#39;Annotations: &#39;,
-          annots
-        )
-      );
-
-    this.odata
-      .batch(&#39;TripPin&#39;)
-      .exec(() =&gt;
-        forkJoin({
-          airports: airports.fetch(),
-          people: people.fetch({ withCount: true }),
-        })
-      )
-      .subscribe();
-  }
-}</code></pre></div><h2>OData Version</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h2>OData Version</h2>
 <p>The library works mainly with OData Version 4, however, it incorporates basic support for versions 3 and 2.</p>
-<h2>Query Builder</h2>
-<p>For a deep query customizations the library use <code>odata-query</code> and <code>odata-filter-builder</code> as a builders.</p>
-<ul>
-<li><a href="https://github.com/techniq/odata-query">OData v4 query builder</a></li>
-<li><a href="https://github.com/bodia-uz/odata-filter-builder">OData Filter Builder</a></li>
-</ul>
-<h2>Documentation</h2>
-<p>The api documentation is generated using compodoc and can be viewed here: <a href="https://diegomvh.github.io/angular-odata/docs/">https://diegomvh.github.io/angular-odata/docs/</a></p>
-<p>Library documentation can be viewed on the wiki here: <a href="https://github.com/diegomvh/angular-odata/wiki">https://github.com/diegomvh/angular-odata/wiki</a></p>
 
 
 

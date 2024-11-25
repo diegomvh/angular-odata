@@ -184,7 +184,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="188" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:188</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="193" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:193</a></div>
                             </td>
                         </tr>
 
@@ -246,7 +246,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="188" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:188</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="193" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:193</a></div>
                         </td>
                     </tr>
 
@@ -272,7 +272,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="187" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:187</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="192" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:192</a></div>
                         </td>
                     </tr>
 
@@ -306,8 +306,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="195"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:195</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="200"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-structured-type.ts:200</a></div>
                         </td>
                     </tr>
 
@@ -380,12 +380,17 @@ export class CsdlStructuredType extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; { ...super.toJson(), Name: this.Name };
+    const json: { [key: string]: any } &#x3D; { ...super.toJson(), Name: this.Name };
     if (Array.isArray(this.Property) &amp;&amp; this.Property.length &gt; 0) {
       json[&#x27;Property&#x27;] &#x3D; this.Property.map((p) &#x3D;&gt; p.toJson());
     }
-    if (Array.isArray(this.NavigationProperty) &amp;&amp; this.NavigationProperty.length &gt; 0) {
-      json[&#x27;NavigationProperty&#x27;] &#x3D; this.NavigationProperty.map((n) &#x3D;&gt; n.toJson());
+    if (
+      Array.isArray(this.NavigationProperty) &amp;&amp;
+      this.NavigationProperty.length &gt; 0
+    ) {
+      json[&#x27;NavigationProperty&#x27;] &#x3D; this.NavigationProperty.map((n) &#x3D;&gt;
+        n.toJson(),
+      );
     }
     if (this.BaseType !&#x3D;&#x3D; undefined) {
       json[&#x27;BaseType&#x27;] &#x3D; this.BaseType;
@@ -443,7 +448,7 @@ export class CsdlComplexType extends CsdlStructuredType {
       Annotation,
     });
   }
-  
+
   override toJson() {
     return {
       ...super.toJson(),
@@ -493,7 +498,7 @@ export class CsdlEntityType extends CsdlStructuredType {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; { ...super.toJson() };
+    const json: { [key: string]: any } &#x3D; { ...super.toJson() };
     if (this.Key !&#x3D;&#x3D; undefined) {
       json[&#x27;Key&#x27;] &#x3D; this.Key.toJson();
     }

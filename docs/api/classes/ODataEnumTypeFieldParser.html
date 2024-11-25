@@ -619,7 +619,8 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
 
 export class ODataEnumTypeParser&lt;E&gt;
   extends ODataAnnotatable
-  implements FieldParser&lt;E&gt; {
+  implements FieldParser&lt;E&gt;
+{
   name: string;
   namespace: string;
   alias?: string;
@@ -652,11 +653,13 @@ export class ODataEnumTypeParser&lt;E&gt;
 
   fields(namesValue?: string | number | number[]): ODataEnumTypeFieldParser[] {
     if (namesValue &#x3D;&#x3D;&#x3D; undefined) return [...this._fields];
-    if (Array.isArray(namesValue)) return [...this._fields.filter((f) &#x3D;&gt; namesValue.includes(f.value))];
+    if (Array.isArray(namesValue))
+      return [...this._fields.filter((f) &#x3D;&gt; namesValue.includes(f.value))];
     if (typeof namesValue &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
       return [
         ...this._fields.filter(
-          (f) &#x3D;&gt; (this.flags &amp;&amp; Boolean((&lt;any&gt;f.value) &amp; (&lt;any&gt;namesValue))) ||
+          (f) &#x3D;&gt;
+            (this.flags &amp;&amp; Boolean((&lt;any&gt;f.value) &amp; (&lt;any&gt;namesValue))) ||
             f.value &#x3D;&#x3D;&#x3D; namesValue,
         ),
       ];
@@ -704,7 +707,7 @@ export class ODataEnumTypeParser&lt;E&gt;
     // string | number -&gt; string
     const parserOptions &#x3D; { ...this.parserOptions, ...options };
     if (this.flags) {
-      let names &#x3D; this.fields(value).map(f &#x3D;&gt; f.name);
+      let names &#x3D; this.fields(value).map((f) &#x3D;&gt; f.name);
       if (names.length &#x3D;&#x3D;&#x3D; 0) names &#x3D; [&#x60;${value}&#x60;];
       return !parserOptions?.stringAsEnum
         ? &#x60;${this.namespace}.${this.name}&#x27;${names.join(&#x27;, &#x27;)}&#x27;&#x60;
@@ -732,16 +735,16 @@ export class ODataEnumTypeParser&lt;E&gt;
   toJsonSchema() {
     return this.flags
       ? {
-        title: this.name,
-        type: JsonType.array,
-        items: {
-          type: JsonType.integer,
-        },
-      }
+          title: this.name,
+          type: JsonType.array,
+          items: {
+            type: JsonType.integer,
+          },
+        }
       : {
-        type: JsonType.integer,
-        enum: this._fields.map((f) &#x3D;&gt; f.value),
-      };
+          type: JsonType.integer,
+          enum: this._fields.map((f) &#x3D;&gt; f.value),
+        };
   }
 
   validate(
@@ -763,14 +766,11 @@ export class ODataEnumTypeParser&lt;E&gt;
   }
 
   unpack(value: string | number): number[] {
-    return this.fields(value).map(f &#x3D;&gt; f.value);
+    return this.fields(value).map((f) &#x3D;&gt; f.value);
   }
 
   pack(value: string | number | number[]): number {
-    return this.fields(value).reduce(
-      (acc, v) &#x3D;&gt; acc | v.value,
-      0,
-    ) as any;
+    return this.fields(value).reduce((acc, v) &#x3D;&gt; acc | v.value, 0) as any;
   }
 }
 </code></pre>

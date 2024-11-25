@@ -184,7 +184,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-reference.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-reference.ts:45</a></div>
                             </td>
                         </tr>
 
@@ -246,7 +246,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-reference.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-reference.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -272,7 +272,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-reference.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-reference.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -306,8 +306,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="46"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-reference.ts:46</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-reference.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -337,34 +337,39 @@
 
 export class CsdlReference extends CsdlAnnotable {
   Uri: string;
-  Includes?: CsdlInclude[];
+  Include?: CsdlInclude[];
   IncludeAnnotations?: CsdlIncludeAnnotations[];
   constructor({
     Uri,
-    Includes,
+    Include,
     IncludeAnnotations,
     Annotation,
   }: {
     Uri: string;
-    Includes?: any[];
+    Include?: any[];
     IncludeAnnotations?: any[];
     Annotation?: any[];
   }) {
     super({ Annotation });
     this.Uri &#x3D; Uri;
-    this.Includes &#x3D; Includes?.map((i) &#x3D;&gt; new CsdlInclude(i));
+    this.Include &#x3D; Include?.map((i) &#x3D;&gt; new CsdlInclude(i));
     this.IncludeAnnotations &#x3D; IncludeAnnotations?.map(
       (i) &#x3D;&gt; new CsdlIncludeAnnotations(i),
     );
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Uri: this.Uri};
-    if (Array.isArray(this.Includes) &amp;&amp; this.Includes.length &gt; 0) {
-      json[&#x27;Includes&#x27;] &#x3D; this.Includes.map((i) &#x3D;&gt; i.toJson());
+    const json: { [key: string]: any } &#x3D; { ...super.toJson(), Uri: this.Uri };
+    if (Array.isArray(this.Include) &amp;&amp; this.Include.length &gt; 0) {
+      json[&#x27;Include&#x27;] &#x3D; this.Include.map((i) &#x3D;&gt; i.toJson());
     }
-    if (Array.isArray(this.IncludeAnnotations) &amp;&amp; this.IncludeAnnotations.length &gt; 0) {
-      json[&#x27;IncludeAnnotations&#x27;] &#x3D; this.IncludeAnnotations.map((i) &#x3D;&gt; i.toJson());
+    if (
+      Array.isArray(this.IncludeAnnotations) &amp;&amp;
+      this.IncludeAnnotations.length &gt; 0
+    ) {
+      json[&#x27;IncludeAnnotations&#x27;] &#x3D; this.IncludeAnnotations.map((i) &#x3D;&gt;
+        i.toJson(),
+      );
     }
     return json;
   }

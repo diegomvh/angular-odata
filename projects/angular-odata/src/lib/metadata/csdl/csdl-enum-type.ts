@@ -1,4 +1,4 @@
-import { EnumTypeConfig, EnumTypeFieldConfig } from '../../types';
+import { EnumTypeConfig, ODataEnumTypeFieldConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlSchema } from './csdl-schema';
 
@@ -98,11 +98,11 @@ export class CsdlMember extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(base?: Partial<EnumTypeFieldConfig>): EnumTypeFieldConfig {
+  override toConfig(base?: Partial<ODataEnumTypeFieldConfig>): ODataEnumTypeFieldConfig {
     const config: { [key: string]: any } = {
       ...super.toConfig(),
       value: this.Value,
     };
-    return config as EnumTypeFieldConfig;
+    return config as ODataEnumTypeFieldConfig;
   }
 }

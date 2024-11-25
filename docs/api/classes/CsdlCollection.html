@@ -189,7 +189,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="209" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:209</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="212" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:212</a></div>
                             </td>
                         </tr>
 
@@ -250,7 +250,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="209" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:209</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="212" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:212</a></div>
                         </td>
                     </tr>
 
@@ -276,7 +276,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="208" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:208</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="211" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:211</a></div>
                         </td>
                     </tr>
 
@@ -302,7 +302,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="207" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:207</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="210" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:210</a></div>
                         </td>
                     </tr>
 
@@ -328,7 +328,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="206" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:206</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="209" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:209</a></div>
                         </td>
                     </tr>
 
@@ -362,8 +362,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="227"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:227</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="232"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-annotation.ts:232</a></div>
                         </td>
                     </tr>
 
@@ -427,7 +427,10 @@ export class CsdlAnnotations extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: { [key: string]: any } &#x3D; { ...super.toJson(), Target: this.Target };
+    const json: { [key: string]: any } &#x3D; {
+      ...super.toJson(),
+      Target: this.Target,
+    };
     if (this.Qualifier !&#x3D;&#x3D; undefined) {
       json[&#x27;Qualifier&#x27;] &#x3D; this.Qualifier;
     }
@@ -612,7 +615,9 @@ export class CsdlCollection {
     this.String &#x3D; String?.map((a) &#x3D;&gt; new CsdlString(a));
     this.Record &#x3D; Record?.map((a) &#x3D;&gt; new CsdlRecord(a));
     this.PropertyPath &#x3D; PropertyPath?.map((a) &#x3D;&gt; new CsdlPropertyPath(a));
-    this.NavigationPropertyPath &#x3D; NavigationPropertyPath?.map((a) &#x3D;&gt; new CsdlNavigationPropertyPath(a));
+    this.NavigationPropertyPath &#x3D; NavigationPropertyPath?.map(
+      (a) &#x3D;&gt; new CsdlNavigationPropertyPath(a),
+    );
   }
 
   toJson() {
@@ -626,8 +631,13 @@ export class CsdlCollection {
     if (Array.isArray(this.PropertyPath) &amp;&amp; this.PropertyPath.length &gt; 0) {
       json[&#x27;PropertyPath&#x27;] &#x3D; this.PropertyPath.map((p) &#x3D;&gt; p.toJson());
     }
-    if (Array.isArray(this.NavigationPropertyPath) &amp;&amp; this.NavigationPropertyPath.length &gt; 0) {
-      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt; p.toJson());
+    if (
+      Array.isArray(this.NavigationPropertyPath) &amp;&amp;
+      this.NavigationPropertyPath.length &gt; 0
+    ) {
+      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt;
+        p.toJson(),
+      );
     }
     return json;
   }
@@ -671,7 +681,7 @@ export class CsdlPropertyValue {
   }
 
   toJson() {
-    const json: { [key: string]: any } &#x3D; { Name: this.Name, };
+    const json: { [key: string]: any } &#x3D; { Name: this.Name };
     if (this.String !&#x3D;&#x3D; undefined) {
       json[&#x27;String&#x27;] &#x3D; this.String;
     }

@@ -232,7 +232,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="185" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:185</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="199" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:199</a></div>
                             </td>
                         </tr>
 
@@ -337,8 +337,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="249"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:249</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="263"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:263</a></div>
                         </td>
                     </tr>
 
@@ -410,7 +410,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:243</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:257</a></code>
 </div>
                         </td>
                     </tr>
@@ -449,8 +449,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="198"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:198</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="212"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:212</a></div>
                         </td>
                     </tr>
 
@@ -536,8 +536,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="254"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:254</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="268"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:268</a></div>
                         </td>
                     </tr>
 
@@ -625,8 +625,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="219"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:219</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:233</a></div>
                         </td>
                     </tr>
 
@@ -706,7 +706,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:225</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:239</a></code>
 </div>
                         </td>
                     </tr>
@@ -784,7 +784,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:214</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:228</a></code>
 </div>
                         </td>
                     </tr>
@@ -986,7 +986,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="194" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:194</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="208" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:208</a></div>
                                 </td>
                             </tr>
 
@@ -1001,6 +1001,7 @@
 import { Objects, Types } from &#x27;../../../utils&#x27;;
 import { QueryCustomType, Unpacked } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
+import { ComputeExpression, ComputeExpressionBuilder } from &#x27;./compute&#x27;;
 import { FilterExpression, FilterExpressionBuilder } from &#x27;./filter&#x27;;
 import { OrderByExpression, OrderByExpressionBuilder } from &#x27;./orderby&#x27;;
 import { SearchExpression, SearchExpressionBuilder } from &#x27;./search&#x27;;
@@ -1049,6 +1050,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
       QueryOption.filter,
       QueryOption.search,
       QueryOption.orderBy,
+      QueryOption.compute,
       QueryOption.skip,
       QueryOption.top,
       QueryOption.count,
@@ -1151,6 +1153,18 @@ export class ExpandField&lt;T&gt; implements Renderable {
     return this.option(
       QueryOption.orderBy,
       OrderByExpression.factory&lt;T&gt;(opts, this.values[QueryOption.orderBy]),
+    );
+  }
+
+  compute(
+    opts: (
+      builder: ComputeExpressionBuilder&lt;T&gt;,
+      current?: ComputeExpression&lt;T&gt;,
+    ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
+  ) {
+    return this.option(
+      QueryOption.compute,
+      ComputeExpression.factory&lt;T&gt;(opts, this.values[QueryOption.compute]),
     );
   }
 

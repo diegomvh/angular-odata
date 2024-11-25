@@ -701,7 +701,7 @@ export class CsdlEntityContainer extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; { ...super.toJson() };
+    const json: { [key: string]: any } &#x3D; { ...super.toJson() };
     if (this.Extend !&#x3D;&#x3D; undefined) {
       json[&#x27;Extend&#x27;] &#x3D; this.Extend;
     }

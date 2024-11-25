@@ -199,7 +199,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:74</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:78</a></div>
                             </td>
                         </tr>
 
@@ -260,7 +260,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:73</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:77</a></div>
                         </td>
                     </tr>
 
@@ -287,7 +287,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:74</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:78</a></div>
                         </td>
                     </tr>
 
@@ -357,8 +357,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="97"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:97</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:101</a></div>
                         </td>
                     </tr>
 
@@ -432,7 +432,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:89</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:93</a></code>
 </div>
                         </td>
                     </tr>
@@ -492,7 +492,11 @@ export class CsdlEnumType extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Name: this.Name, Member: this.Member.map((m) &#x3D;&gt; m.toJson())};
+    const json: { [key: string]: any } &#x3D; {
+      ...super.toJson(),
+      Name: this.Name,
+      Member: this.Member.map((m) &#x3D;&gt; m.toJson()),
+    };
     if (this.UnderlyingType !&#x3D;&#x3D; undefined) {
       json[&#x27;UnderlyingType&#x27;] &#x3D; this.UnderlyingType;
     }
@@ -548,15 +552,18 @@ export class CsdlMember extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Name: this.Name};
-    if (this.Value) {
+    const json: { [key: string]: any } &#x3D; { ...super.toJson(), Name: this.Name };
+    if (this.Value !&#x3D;&#x3D; undefined) {
       json[&#x27;Value&#x27;] &#x3D; this.Value;
     }
     return json;
   }
 
   override toConfig(base?: Partial&lt;EnumTypeFieldConfig&gt;): EnumTypeFieldConfig {
-    const config: {[key: string]: any} &#x3D; {...super.toConfig(), value: this.Value};
+    const config: { [key: string]: any } &#x3D; {
+      ...super.toConfig(),
+      value: this.Value,
+    };
     return config as EnumTypeFieldConfig;
   }
 }

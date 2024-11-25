@@ -427,7 +427,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ [key: string]: any; }</a></code>
 
                         </div>
                 </td>
@@ -477,7 +477,7 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
       Name: this.Name,
       Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type,
       Nullable: this.Nullable,
-    };
+    } as { [key: string]: any };
   }
 }
 
@@ -522,15 +522,26 @@ export class CsdlProperty extends CsdlStructuralProperty {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      MaxLength: this.MaxLength,
-      Precision: this.Precision,
-      Scale: this.Scale,
-      Unicode: this.Unicode,
-      SRID: this.SRID,
-      DefaultValue: this.DefaultValue,
-    };
+    const json: { [key: string]: any } &#x3D; { ...super.toJson() };
+    if (this.MaxLength !&#x3D;&#x3D; undefined) {
+      json[&#x27;MaxLength&#x27;] &#x3D; this.MaxLength;
+    }
+    if (this.Precision !&#x3D;&#x3D; undefined) {
+      json[&#x27;Precision&#x27;] &#x3D; this.Precision;
+    }
+    if (this.Scale !&#x3D;&#x3D; undefined) {
+      json[&#x27;Scale&#x27;] &#x3D; this.Scale;
+    }
+    if (this.Unicode !&#x3D;&#x3D; undefined) {
+      json[&#x27;Unicode&#x27;] &#x3D; this.Unicode;
+    }
+    if (this.SRID !&#x3D;&#x3D; undefined) {
+      json[&#x27;SRID&#x27;] &#x3D; this.SRID;
+    }
+    if (this.DefaultValue !&#x3D;&#x3D; undefined) {
+      json[&#x27;DefaultValue&#x27;] &#x3D; this.DefaultValue;
+    }
+    return json;
   }
 
   override toConfig() {
@@ -584,13 +595,25 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Partner: this.Partner,
-      ContainsTarget: this.ContainsTarget,
-      ReferentialConstraints: this.ReferentialConstraints?.map((r) &#x3D;&gt; r.toJson()),
-      OnDelete: this.OnDelete?.toJson(),
-    };
+    const json: { [key: string]: any } &#x3D; { ...super.toJson() };
+    if (this.Partner !&#x3D;&#x3D; undefined) {
+      json[&#x27;Partner&#x27;] &#x3D; this.Partner;
+    }
+    if (this.ContainsTarget !&#x3D;&#x3D; undefined) {
+      json[&#x27;ContainsTarget&#x27;] &#x3D; this.ContainsTarget;
+    }
+    if (
+      Array.isArray(this.ReferentialConstraints) &amp;&amp;
+      this.ReferentialConstraints.length &gt; 0
+    ) {
+      json[&#x27;ReferentialConstraints&#x27;] &#x3D; this.ReferentialConstraints.map((r) &#x3D;&gt;
+        r.toJson(),
+      );
+    }
+    if (this.OnDelete !&#x3D;&#x3D; undefined) {
+      json[&#x27;OnDelete&#x27;] &#x3D; this.OnDelete;
+    }
+    return json;
   }
 
   override toConfig() {

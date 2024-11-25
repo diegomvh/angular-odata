@@ -1,4 +1,4 @@
-import { StructuredTypeFieldConfig } from '../../types';
+import { ODataStructuredTypeFieldConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
@@ -110,7 +110,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
       navigation: false,
       precision: this.Precision,
       scale: this.Scale,
-    } as StructuredTypeFieldConfig & { name: string };
+    } as ODataStructuredTypeFieldConfig & { name: string };
   }
 }
 
@@ -182,7 +182,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
         property: r.Property,
         referencedProperty: r.ReferencedProperty,
       })),
-    } as StructuredTypeFieldConfig & { name: string };
+    } as ODataStructuredTypeFieldConfig & { name: string };
   }
 }
 

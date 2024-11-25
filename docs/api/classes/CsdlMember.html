@@ -195,7 +195,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:62</a></div>
                             </td>
                         </tr>
 
@@ -256,7 +256,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:57</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -283,7 +283,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -359,7 +359,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:73</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:77</a></code>
 </div>
                         </td>
                     </tr>
@@ -418,8 +418,12 @@ export class CsdlEnumType extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Name: this.Name, Member: this.Member.map((m) &#x3D;&gt; m.toJson())};
-    if (this.UnderlyingType) {
+    const json: { [key: string]: any } &#x3D; {
+      ...super.toJson(),
+      Name: this.Name,
+      Member: this.Member.map((m) &#x3D;&gt; m.toJson()),
+    };
+    if (this.UnderlyingType !&#x3D;&#x3D; undefined) {
       json[&#x27;UnderlyingType&#x27;] &#x3D; this.UnderlyingType;
     }
     if (this.IsFlags !&#x3D;&#x3D; undefined) {
@@ -459,7 +463,7 @@ export class CsdlMember extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Name: this.Name};
+    const json: { [key: string]: any } &#x3D; { ...super.toJson(), Name: this.Name };
     if (this.Value !&#x3D;&#x3D; undefined) {
       json[&#x27;Value&#x27;] &#x3D; this.Value;
     }

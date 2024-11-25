@@ -1,7 +1,7 @@
 import { raw } from '../../resources/query';
 import {
   EnumTypeConfig,
-  EnumTypeFieldConfig,
+  ODataEnumTypeFieldConfig,
   ParserOptions,
   FieldParser,
   JsonType,
@@ -12,7 +12,7 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   name: string;
   value: number;
 
-  constructor(name: string, field: EnumTypeFieldConfig) {
+  constructor(name: string, field: ODataEnumTypeFieldConfig) {
     super(field);
     this.name = name;
     this.value = field.value;

@@ -10,8 +10,8 @@ import {
   NONE_PARSER,
   ParserOptions,
   Parser,
-  StructuredTypeConfig,
-  StructuredTypeFieldConfig,
+  ODataStructuredTypeConfig,
+  ODataStructuredTypeFieldConfig,
   StructuredTypeFieldOptions,
   FieldParser,
   EdmType,
@@ -83,7 +83,7 @@ export class ODataStructuredTypeFieldParser<T>
   constructor(
     name: string,
     structured: ODataStructuredTypeParser<any>,
-    field: StructuredTypeFieldConfig,
+    field: ODataStructuredTypeFieldConfig,
   ) {
     super(field);
     this.name = name;
@@ -375,7 +375,7 @@ export class ODataStructuredTypeParser<T>
   private _fields: ODataStructuredTypeFieldParser<any>[] = [];
   parserOptions?: ParserOptions;
 
-  constructor(config: StructuredTypeConfig, namespace: string, alias?: string) {
+  constructor(config: ODataStructuredTypeConfig, namespace: string, alias?: string) {
     super(config);
     this.name = config.name;
     this.base = config.base;
@@ -384,14 +384,14 @@ export class ODataStructuredTypeParser<T>
     this.alias = alias;
     if (Array.isArray(config.keys))
       this._keys = config.keys.map((key) => new ODataEntityTypeKey(key));
-    Object.entries<StructuredTypeFieldConfig>(
-      (config.fields ?? {}) as { [P in keyof T]: StructuredTypeFieldConfig },
+    Object.entries<ODataStructuredTypeFieldConfig>(
+      (config.fields ?? {}) as { [P in keyof T]: ODataStructuredTypeFieldConfig },
     ).forEach(([name, config]) => this.addField(name, config));
   }
 
   addField<F>(
     name: string,
-    config: StructuredTypeFieldConfig,
+    config: ODataStructuredTypeFieldConfig,
   ): ODataStructuredTypeFieldParser<F> {
     const field = new ODataStructuredTypeFieldParser<F>(name, this, config);
     this._fields.push(field);

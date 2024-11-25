@@ -3,10 +3,10 @@ import { ODataClient } from './client';
 import { EDM_PARSERS } from './schema';
 import { ODataEntitySetService } from './services';
 import {
-  ApiConfig,
-  EntitySetConfig,
+  ODataApiConfig,
+  ODataEntitySetConfig,
   EnumTypeConfig,
-  StructuredTypeConfig,
+  ODataStructuredTypeConfig,
 } from './types';
 
 export const CONFIG_NAME = 'TripPin';
@@ -66,7 +66,7 @@ export const PhotoConfig = {
     },
     Name: { type: 'Edm.String' },
   },
-} as StructuredTypeConfig;
+} as ODataStructuredTypeConfig;
 
 export interface Airline {
   AirlineCode: string;
@@ -89,7 +89,7 @@ export const AirlineEntityConfig = {
     },
     Name: { type: 'Edm.String', nullable: false },
   },
-} as StructuredTypeConfig;
+} as ODataStructuredTypeConfig;
 
 export interface Airport {
   IcaoCode: string;
@@ -118,7 +118,7 @@ export const AirportEntityConfig = {
       annotations: [{ term: 'Org.OData.Core.V1.Immutable', bool: true }],
     },
   },
-} as StructuredTypeConfig;
+} as ODataStructuredTypeConfig;
 
 export interface PlanItem {
   PlanItemId: number;
@@ -151,7 +151,7 @@ export const PlanItemConfig = {
     EndsAt: { type: 'Edm.DateTimeOffset' },
     Duration: { type: 'Edm.String', default: 'M' },
   },
-} as StructuredTypeConfig;
+} as ODataStructuredTypeConfig;
 export interface PublicTransportation extends PlanItem {
   SeatNumber?: string;
 }
@@ -162,7 +162,7 @@ export const PublicTransportationEntityConfig = {
   fields: {
     SeatNumber: { type: 'Edm.String', default: '0' },
   },
-} as StructuredTypeConfig;
+} as ODataStructuredTypeConfig;
 
 export interface Flight extends PublicTransportation {
   FlightNumber: string;
@@ -180,7 +180,7 @@ export const FlightEntityConfig = {
     To: { type: `${NAMESPACE}.Airport`, navigation: true },
     Airline: { type: `${NAMESPACE}.Airline`, navigation: true },
   },
-} as StructuredTypeConfig;
+} as ODataStructuredTypeConfig;
 
 export interface Trip {
   TripId: number;
@@ -229,7 +229,7 @@ export const TripConfig = {
       navigation: true,
     },
   },
-} as StructuredTypeConfig;
+} as ODataStructuredTypeConfig;
 
 export interface Person {
   UserName: string;
@@ -272,7 +272,7 @@ export const PersonConfig = {
     Trips: { type: `${NAMESPACE}.Trip`, collection: true, navigation: true },
     Photo: { type: `${NAMESPACE}.Photo`, navigation: true },
   },
-} as StructuredTypeConfig;
+} as ODataStructuredTypeConfig;
 //#endregion
 
 //#region Services
@@ -286,7 +286,7 @@ export const PeopleConfig = {
   name: 'People',
   entityType: `${NAMESPACE}.Person`,
   service: PeopleService,
-} as EntitySetConfig;
+} as ODataEntitySetConfig;
 //#endregion
 
 export const TripPinConfig = {
@@ -319,4 +319,4 @@ export const TripPinConfig = {
     },
   ],
   parsers: EDM_PARSERS,
-} as ApiConfig;
+} as ODataApiConfig;

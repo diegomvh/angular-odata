@@ -11,14 +11,14 @@ import {
 import { ODataClient } from './client';
 import { ODataConfigLoader, ODataConfigSyncLoader } from './loaders';
 import { ODataServiceFactory } from './services/index';
-import { ApiConfig } from './types';
+import { ODataApiConfig } from './types';
 
 export interface PassedInitialConfig {
-  config?: ApiConfig | ApiConfig[];
+  config?: ODataApiConfig | ODataApiConfig[];
   loader?: Provider;
 }
 
-export const ODATA_CONFIG = new InjectionToken<ApiConfig>('odata.config');
+export const ODATA_CONFIG = new InjectionToken<ODataApiConfig>('odata.config');
 
 export function createSyncLoader(passedConfig: PassedInitialConfig) {
   return new ODataConfigSyncLoader(passedConfig.config!);

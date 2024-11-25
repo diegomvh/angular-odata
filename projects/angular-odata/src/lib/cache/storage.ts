@@ -1,5 +1,5 @@
 import { ODataRequest, ODataResponse } from '../resources';
-import { ODataCache, ODataCacheEntry } from './cache';
+import { ODataBaseCache, ODataCacheEntry } from './cache';
 
 interface ResponseJson {
   body: any | null;
@@ -9,7 +9,7 @@ interface ResponseJson {
   url: string | null;
 }
 
-export class ODataInStorageCache extends ODataCache {
+export class ODataInStorageCache extends ODataBaseCache {
   name: string;
   storage: Storage;
 

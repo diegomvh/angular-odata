@@ -1,4 +1,4 @@
-import { AnnotationConfig } from '../../types';
+import { ODataAnnotationConfig } from '../../types';
 import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlAnnotable {
@@ -55,7 +55,7 @@ export class CsdlAnnotations extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(): AnnotationConfig[] {
+  override toConfig(): ODataAnnotationConfig[] {
     return (this.Annotation ?? []).map((a) => a.toConfig());
   }
 }
@@ -117,13 +117,13 @@ export class CsdlAnnotation {
     return json;
   }
 
-  toConfig(): AnnotationConfig {
+  toConfig(): ODataAnnotationConfig {
     return {
       term: this.Term,
       string: this.String,
       bool: this.Bool,
       int: this.Int,
-    } as AnnotationConfig;
+    } as ODataAnnotationConfig;
   }
 }
 

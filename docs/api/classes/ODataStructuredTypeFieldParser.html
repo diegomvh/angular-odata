@@ -989,8 +989,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="339"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:339</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="337"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:337</a></div>
                         </td>
                     </tr>
 
@@ -1026,8 +1026,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="354"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:354</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="352"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:352</a></div>
                         </td>
                     </tr>
 
@@ -1101,8 +1101,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="327"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:327</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="325"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:325</a></div>
                         </td>
                     </tr>
 
@@ -1138,8 +1138,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="331"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:331</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="329"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:329</a></div>
                         </td>
                     </tr>
 
@@ -1175,8 +1175,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="335"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:335</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="333"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:333</a></div>
                         </td>
                     </tr>
 
@@ -1222,7 +1222,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -1249,8 +1249,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="344"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:344</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="342"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:342</a></div>
                         </td>
                     </tr>
 
@@ -1458,8 +1458,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="348"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:348</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="346"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:346</a></div>
                         </td>
                     </tr>
 
@@ -2222,11 +2222,9 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   //#endregion
 
   isKey() {
-    return (
-      this.structured
-        .keys({ include_parents: true })
-        ?.find((k) &#x3D;&gt; k.name &#x3D;&#x3D;&#x3D; this.name) !&#x3D;&#x3D; undefined
-    );
+    return this.structured
+      .keys({ include_parents: true })
+      .some((k) &#x3D;&gt; k.name &#x3D;&#x3D;&#x3D; this.name);
   }
 
   hasReferentials() {
@@ -2282,11 +2280,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   private _fields: ODataStructuredTypeFieldParser&lt;any&gt;[] &#x3D; [];
   parserOptions?: ParserOptions;
 
-  constructor(
-    config: StructuredTypeConfig,
-    namespace: string,
-    alias?: string,
-  ) {
+  constructor(config: StructuredTypeConfig, namespace: string, alias?: string) {
     super(config);
     this.name &#x3D; config.name;
     this.base &#x3D; config.base;
@@ -2508,28 +2502,44 @@ export class ODataStructuredTypeParser&lt;T&gt;
   pick(
     attrs: { [name: string]: any },
     {
+      include_id &#x3D; true,
+      include_key &#x3D; true,
       include_parents &#x3D; true,
       include_navigation &#x3D; false,
+      include_computed &#x3D; false,
       include_etag &#x3D; true,
       options,
     }: {
+      include_id?: boolean;
+      include_key?: boolean;
       include_parents?: boolean;
       include_navigation?: boolean;
+      include_computed?: boolean;
       include_etag?: boolean;
       options?: ParserOptions;
     } &#x3D; {},
   ): Partial&lt;T&gt; {
-    const parserOptions &#x3D; options || this.parserOptions;
-    const names &#x3D; this.fields({ include_parents, include_navigation }).map(
-      (f) &#x3D;&gt; f.name,
-    );
+    const parserOptions &#x3D; options ?? this.parserOptions;
+    let fields &#x3D; this.fields({ include_parents, include_navigation });
+    if (!include_key) {
+      fields &#x3D; fields.filter((f) &#x3D;&gt; !f.isKey());
+    }
+    if (!include_computed) {
+      fields &#x3D; fields.filter(
+        (f) &#x3D;&gt;
+          !f.annotatedValue&lt;boolean&gt;(COMPUTED) || (f.isKey() &amp;&amp; include_key),
+      );
+    }
     return Object.keys(attrs)
       .filter(
         (key) &#x3D;&gt;
-          names.indexOf(key) !&#x3D;&#x3D; -1 ||
+          fields.some((f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; key) ||
           (key &#x3D;&#x3D;
             ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG &amp;&amp;
-            include_etag),
+            include_etag) ||
+          (key &#x3D;&#x3D;
+            ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ID &amp;&amp;
+            include_id),
       )
       .reduce((acc, key) &#x3D;&gt; Object.assign(acc, { [key]: attrs[key] }), {});
   }

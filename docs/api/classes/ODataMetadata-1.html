@@ -371,8 +371,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/metadata.ts:38</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/metadata.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -410,8 +410,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/metadata.ts:44</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/metadata.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -477,8 +477,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="32"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/metadata.ts:32</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/metadata.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -581,8 +581,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="24"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/metadata.ts:24</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="29"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/metadata.ts:29</a></div>
                         </td>
                     </tr>
 
@@ -624,10 +624,15 @@ export class ODataMetadata {
   }
 
   toConfig(base?: Partial&lt;ApiConfig&gt;): ApiConfig {
-    return {...base, 
-      version: base?.version ?? this.Version as ODataVersion,
-      schemas: (this.Schemas ?? []).map((ms) &#x3D;&gt; ms.toConfig(base?.schemas?.find(cs &#x3D;&gt; cs.namespace &#x3D;&#x3D;&#x3D; ms.Namespace))),
-      references: (this.References ?? []).map((mr) &#x3D;&gt; mr.toConfig(base?.references?.find(cs &#x3D;&gt; cs.uri &#x3D;&#x3D;&#x3D; mr.Uri))),
+    return {
+      ...base,
+      version: base?.version ?? (this.Version as ODataVersion),
+      schemas: (this.Schemas ?? []).map((ms) &#x3D;&gt;
+        ms.toConfig(base?.schemas?.find((cs) &#x3D;&gt; cs.namespace &#x3D;&#x3D;&#x3D; ms.Namespace)),
+      ),
+      references: (this.References ?? []).map((mr) &#x3D;&gt;
+        mr.toConfig(base?.references?.find((cs) &#x3D;&gt; cs.uri &#x3D;&#x3D;&#x3D; mr.Uri)),
+      ),
     } as ApiConfig;
   }
 
@@ -644,7 +649,7 @@ export class ODataMetadata {
       return [...acc, ...(s.Function ?? [])];
     }, [] as CsdlFunction[]);
   }
-  
+
   actions() {
     return this.Schemas.reduce((acc, s) &#x3D;&gt; {
       return [...acc, ...(s.Action ?? [])];
@@ -652,11 +657,7 @@ export class ODataMetadata {
   }
 
   static fromJson(json: any): ODataMetadata {
-    return new ODataMetadata(
-      json.Version,
-      json.References,
-      json.Schemas,
-    );
+    return new ODataMetadata(json.Version, json.References, json.Schemas);
   }
 }
 </code></pre>

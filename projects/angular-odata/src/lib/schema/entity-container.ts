@@ -1,4 +1,4 @@
-import { EntityContainerConfig } from '../types';
+import { ODataEntityContainerConfig } from '../types';
 import { ODataSchemaElement } from './element';
 import { ODataEntitySet } from './entity-set';
 import { ODataSchema } from './schema';
@@ -8,7 +8,7 @@ export class ODataEntityContainer extends ODataSchemaElement {
   entitySets: ODataEntitySet[];
   singletons: ODataSingleton[];
 
-  constructor(config: EntityContainerConfig, schema: ODataSchema) {
+  constructor(config: ODataEntityContainerConfig, schema: ODataSchema) {
     super(config, schema);
     this.entitySets = (config.entitySets ?? []).map(
       (config) => new ODataEntitySet(config, schema),

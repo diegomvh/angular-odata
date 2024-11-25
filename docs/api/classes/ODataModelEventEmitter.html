@@ -648,13 +648,16 @@ export const INCLUDE_DEEP &#x3D; {
 export enum ODataModelState {
   Added,
   Removed,
+  Changed,
   Unchanged,
 }
 
- export type ModelInterface&lt;T&gt; &#x3D; {
-    [P in keyof T]?: T[P] extends (infer U)[] ? ODataCollection&lt;U, ODataModel&lt;U&gt; &amp; ModelInterface&lt;U&gt;&gt; : 
-      T[P] extends object ? ODataModel&lt;T[P]&gt; &amp; ModelInterface&lt;T[P]&gt; :
-      T[P];
+export type ModelInterface&lt;T&gt; &#x3D; {
+  [P in keyof T]: T[P] extends (infer U)[]
+    ? ODataCollection&lt;U, ODataModel&lt;U&gt; &amp; ModelInterface&lt;U&gt;&gt;
+    : T[P] extends object
+      ? ODataModel&lt;T[P]&gt; &amp; ModelInterface&lt;T[P]&gt;
+      : T[P];
 };
 
 export type ModelOptions &#x3D; {
@@ -979,7 +982,7 @@ export class ODataModelField&lt;F&gt; {
       annots,
       reset,
       parent: [parent, this],
-    });
+    }) as ODataModel&lt;F&gt;;
   }
 
   collectionFactory&lt;F&gt;({
@@ -1012,6 +1015,7 @@ export class ODataModelField&lt;F&gt; {
 }
 
 export class ODataModelAttribute&lt;T&gt; {
+  private state: ODataModelState &#x3D; ODataModelState.Unchanged;
   private value?: T | ODataModel&lt;T&gt; | ODataCollection&lt;T, ODataModel&lt;T&gt;&gt; | null;
   private change?: T | ODataModel&lt;T&gt; | ODataCollection&lt;T, ODataModel&lt;T&gt;&gt; | null;
   private subscription?: Subscription;
@@ -1060,7 +1064,7 @@ export class ODataModelAttribute&lt;T&gt; {
     | ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;
     | null
     | undefined {
-    return this.change !&#x3D;&#x3D; undefined ? this.change : this.value;
+    return this.state &#x3D;&#x3D;&#x3D; ODataModelState.Changed ? this.change : this.value;
   }
 
   set(
@@ -1095,11 +1099,12 @@ export class ODataModelAttribute&lt;T&gt; {
           : !Types.isEqual(current, value);
     if (reset) {
       this.value &#x3D; value;
-      this.change &#x3D; undefined;
+      this.state &#x3D; ODataModelState.Unchanged;
     } else if (Types.isEqual(value, this.value)) {
-      this.change &#x3D; undefined;
+      this.state &#x3D; ODataModelState.Unchanged;
     } else if (changed) {
       this.change &#x3D; value;
+      this.state &#x3D; ODataModelState.Changed;
     }
     if (
       ODataModelOptions.isModel(value) ||
@@ -1118,7 +1123,7 @@ export class ODataModelAttribute&lt;T&gt; {
   }: { include_navigation?: boolean } &#x3D; {}): boolean {
     const current &#x3D; this.get();
     return (
-      this.change !&#x3D;&#x3D; undefined ||
+      this.state &#x3D;&#x3D;&#x3D; ODataModelState.Changed ||
       ((ODataModelOptions.isModel(current) ||
         ODataModelOptions.isCollection(current)) &amp;&amp;
         (
@@ -1135,7 +1140,7 @@ export class ODataModelAttribute&lt;T&gt; {
       this.unlink(
         this.change as ODataModel&lt;T&gt; | ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;,
       );
-    this.change &#x3D; undefined;
+    this.state &#x3D; ODataModelState.Unchanged;
     if (
       ODataModelOptions.isModel(this.value) ||
       ODataModelOptions.isCollection(this.value)
@@ -1721,11 +1726,7 @@ export class ODataModelOptions&lt;T&gt; {
   ): boolean {
     return [...self._attributes.values()]
       .filter((attr) &#x3D;&gt; !attr.navigation || include_navigation)
-      .some(
-        (attr) &#x3D;&gt;
-          (!include_navigation || attr.navigation) &amp;&amp;
-          attr.isChanged({ include_navigation }),
-      );
+      .some((attr) &#x3D;&gt; attr.isChanged({ include_navigation }));
   }
 
   hasKey(self: ODataModel&lt;T&gt;) {
@@ -2029,7 +2030,9 @@ export class ODataModelOptions&lt;T&gt; {
         ODataModelOptions.isModel(value)
       ) {
         // Check for reference
-        const referenced &#x3D; this.resolveReferenced(self, attr);
+        const referenced &#x3D; this.resolveReferenced(self, attr, {
+          resolve: false,
+        });
         if (value !&#x3D;&#x3D; null &amp;&amp; referenced !&#x3D;&#x3D; null &amp;&amp; referenced !&#x3D;&#x3D; undefined) {
           (value as ODataModel&lt;F&gt;).assign(referenced as Partial&lt;F&gt;, {
             silent: true,
@@ -2185,7 +2188,9 @@ export class ODataModelOptions&lt;T&gt; {
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
         const meta &#x3D; this.api.optionsForType&lt;F&gt;(modelField.type);
-        const ref &#x3D; meta?.resolveReferential(attr.get(), attr);
+        const ref &#x3D; meta?.resolveReferential(attr.get(), attr, {
+          resolve: false,
+        });
         if (ref !&#x3D;&#x3D; null &amp;&amp; ref !&#x3D;&#x3D; undefined) {
           Object.assign(self, ref);
         }

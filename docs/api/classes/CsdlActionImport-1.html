@@ -412,19 +412,19 @@ export class CsdlCallable {
   }
 
   toJson() {
-    const json: {[key: string]: any} &#x3D; {
+    const json: { [key: string]: any } &#x3D; {
       Name: this.Name,
-    }
-    if (this.ReturnType) {
+    };
+    if (this.ReturnType !&#x3D;&#x3D; undefined) {
       json[&#x27;ReturnType&#x27;] &#x3D; this.ReturnType.toJson();
     }
-    if (this.IsBound) {
+    if (this.IsBound !&#x3D;&#x3D; undefined) {
       json[&#x27;IsBound&#x27;] &#x3D; this.IsBound;
     }
-    if (this.EntitySetPath) {
+    if (this.EntitySetPath !&#x3D;&#x3D; undefined) {
       json[&#x27;EntitySetPath&#x27;] &#x3D; this.EntitySetPath;
     }
-    if (this.Parameter) {
+    if (Array.isArray(this.Parameter) &amp;&amp; this.Parameter.length &gt; 0) {
       json[&#x27;Parameter&#x27;] &#x3D; this.Parameter.map((p) &#x3D;&gt; p.toJson());
     }
     return json;
@@ -469,7 +469,7 @@ export class CsdlFunction extends CsdlCallable {
     return {
       ...super.toJson(),
       IsComposable: this.IsComposable,
-    }
+    };
   }
 
   toConfig(base?: Partial&lt;CallableConfig&gt;): CallableConfig {
@@ -507,7 +507,7 @@ export class CsdlAction extends CsdlCallable {
   override toJson() {
     return {
       ...super.toJson(),
-    }
+    };
   }
 
   toConfig(base?: Partial&lt;CallableConfig&gt;): CallableConfig {

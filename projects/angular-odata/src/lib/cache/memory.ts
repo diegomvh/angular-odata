@@ -1,7 +1,7 @@
 import { ODataRequest, ODataResponse } from '../resources';
-import { ODataCache } from './cache';
+import { ODataBaseCache } from './cache';
 
-export class ODataInMemoryCache extends ODataCache {
+export class ODataInMemoryCache extends ODataBaseCache {
   constructor({ timeout }: { timeout?: number } = {}) {
     super({ timeout });
   }

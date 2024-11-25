@@ -588,8 +588,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="79"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-schema.ts:79</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-schema.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -665,7 +665,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ Namespace: string; Alias: string; EnumType: any; ComplexType: any; EntityType: any; Function: any; Action: any; EntityContainer: any; TypeDefinition: any; Term: any; Annotations: any; }</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ [key: string]: any; }</a></code>
 
                         </div>
                 </td>
@@ -745,19 +745,43 @@ export class CsdlSchema {
   }
 
   toJson() {
-    return {
+    const json: { [key: string]: any } &#x3D; {
       Namespace: this.Namespace,
-      Alias: this.Alias,
-      EnumType: this.EnumType?.map((e) &#x3D;&gt; e.toJson()),
-      ComplexType: this.ComplexType?.map((c) &#x3D;&gt; c.toJson()),
-      EntityType: this.EntityType?.map((e) &#x3D;&gt; e.toJson()),
-      Function: this.Function?.map((f) &#x3D;&gt; f.toJson()),
-      Action: this.Action?.map((a) &#x3D;&gt; a.toJson()),
-      EntityContainer: this.EntityContainer?.map((e) &#x3D;&gt; e.toJson()),
-      TypeDefinition: this.TypeDefinition?.map((t) &#x3D;&gt; t.toJson()),
-      Term: this.Term?.map((t) &#x3D;&gt; t.toJson()),
-      Annotations: this.Annotations?.map((a) &#x3D;&gt; a.toJson()),
+    };
+    if (this.Alias !&#x3D;&#x3D; undefined) {
+      json[&#x27;Alias&#x27;] &#x3D; this.Alias;
     }
+    if (
+      Array.isArray(this.EntityContainer) &amp;&amp;
+      this.EntityContainer.length &gt; 0
+    ) {
+      json[&#x27;EntityContainer&#x27;] &#x3D; this.EntityContainer.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.EntityType) &amp;&amp; this.EntityType.length &gt; 0) {
+      json[&#x27;EntityType&#x27;] &#x3D; this.EntityType.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.ComplexType) &amp;&amp; this.ComplexType.length &gt; 0) {
+      json[&#x27;ComplexType&#x27;] &#x3D; this.ComplexType.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.EnumType) &amp;&amp; this.EnumType.length &gt; 0) {
+      json[&#x27;EnumType&#x27;] &#x3D; this.EnumType.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.TypeDefinition) &amp;&amp; this.TypeDefinition.length &gt; 0) {
+      json[&#x27;TypeDefinition&#x27;] &#x3D; this.TypeDefinition.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.Term) &amp;&amp; this.Term.length &gt; 0) {
+      json[&#x27;Term&#x27;] &#x3D; this.Term.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.Annotations) &amp;&amp; this.Annotations.length &gt; 0) {
+      json[&#x27;Annotations&#x27;] &#x3D; this.Annotations.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.Action) &amp;&amp; this.Action.length &gt; 0) {
+      json[&#x27;Action&#x27;] &#x3D; this.Action.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.Function) &amp;&amp; this.Function.length &gt; 0) {
+      json[&#x27;Function&#x27;] &#x3D; this.Function.map((a) &#x3D;&gt; a.toJson());
+    }
+    return json;
   }
 
   toConfig(base?: Partial&lt;SchemaConfig&gt;): SchemaConfig {
@@ -765,16 +789,28 @@ export class CsdlSchema {
       namespace: this.Namespace,
       alias: base?.alias ?? this.Alias,
       annotations: this.Annotations?.map((t) &#x3D;&gt; t.toConfig()),
-      enums: this.EnumType?.map((t) &#x3D;&gt; t.toConfig(base?.enums?.find(cs &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name))),
+      enums: this.EnumType?.map((t) &#x3D;&gt;
+        t.toConfig(base?.enums?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name)),
+      ),
       entities: [
-        ...(this.ComplexType ?? []).map((t) &#x3D;&gt; t.toConfig(base?.entities?.find(cs &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name))),
-        ...(this.EntityType ?? []).map((t) &#x3D;&gt; t.toConfig(base?.entities?.find(cs &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name))),
+        ...(this.ComplexType ?? []).map((t) &#x3D;&gt;
+          t.toConfig(base?.entities?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name)),
+        ),
+        ...(this.EntityType ?? []).map((t) &#x3D;&gt;
+          t.toConfig(base?.entities?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name)),
+        ),
       ],
       callables: [
-        ...(this.Function ?? []).map((t) &#x3D;&gt; t.toConfig(base?.callables?.find(cs &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name))),
-        ...(this.Action ?? []).map((t) &#x3D;&gt; t.toConfig(base?.callables?.find(cs &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name))),
+        ...(this.Function ?? []).map((t) &#x3D;&gt;
+          t.toConfig(base?.callables?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name)),
+        ),
+        ...(this.Action ?? []).map((t) &#x3D;&gt;
+          t.toConfig(base?.callables?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name)),
+        ),
       ],
-      containers: this.EntityContainer?.map((t) &#x3D;&gt; t.toConfig(base?.containers?.find(cs &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name))),
+      containers: this.EntityContainer?.map((t) &#x3D;&gt;
+        t.toConfig(base?.containers?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name)),
+      ),
     } as SchemaConfig;
   }
 }

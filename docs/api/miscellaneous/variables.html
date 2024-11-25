@@ -3055,6 +3055,10 @@
     ODATA_METADATA_ETAG: &#x27;@odata.metadataEtag&#x27;,
     //odata.type: the type of the containing {[name: string]: any} or targeted property if the type of the {[name: string]: any} or targeted property cannot be heuristically determined
     ODATA_TYPE: &#x27;@odata.type&#x27;,
+    //odata.delta
+    ODATA_DELTA: &#x27;@odata.delta&#x27;,
+    //odata.remove
+    ODATA_REMOVE: &#x27;@odata.remove&#x27;,
     //odata.nextLink: the next link of a collection with partial results
     ODATA_NEXTLINK: &#x27;@odata.nextLink&#x27;,
     //odata.deltaLink: the delta link for obtaining changes to the result, if requested
@@ -3130,6 +3134,8 @@
     ODATA_ANNOTATION_PREFIX: &#x27;odata.&#x27;,
     ODATA_FUNCTION_PREFIX: &#x27;&#x27;,
     ODATA_ID: &#x27;odata.id&#x27;,
+    ODATA_DELTA: &#x27;odata.delta&#x27;,
+    ODATA_REMOVE: &#x27;odata.remove&#x27;,
     ODATA_ETAG: &#x27;odata.etag&#x27;,
     ODATA_CONTEXT: &#x27;odata.metadata&#x27;,
     ODATA_NEXTLINK: &#x27;odata.nextLink&#x27;,
@@ -3161,6 +3167,8 @@
   [VERSION_2_0]: &lt;ODataVersionHelper&gt;{
     ...ODataVersionBaseHelper,
     ODATA_ID: &#x27;id&#x27;,
+    ODATA_DELTA: &#x27;delta&#x27;,
+    ODATA_REMOVE: &#x27;remove&#x27;,
     ODATA_ETAG: &#x27;etag&#x27;,
     ODATA_ANNOTATION: &#x27;__metadata&#x27;,
     ODATA_NEXTLINK: &#x27;__next&#x27;,
@@ -5273,8 +5281,8 @@
   }
   const froma: string[] &#x3D; from.split(&#x27;/&#x27;);
   const toa: string[] &#x3D; to.split(&#x27;/&#x27;);
-  if (froma[0] !&#x3D;&#x3D; toa[0]) { 
-    return froma.map(s &#x3D;&gt; &#x27;..&#x27;).join(&#x27;/&#x27;) + &quot;/&quot; + toa.join(&#x27;/&#x27;);
+  if (froma[0] !&#x3D;&#x3D; toa[0]) {
+    return froma.map((s) &#x3D;&gt; &#x27;..&#x27;).join(&#x27;/&#x27;) + &#x27;/&#x27; + toa.join(&#x27;/&#x27;);
   }
   const shared: string[] &#x3D; [];
   let i &#x3D; 0;
@@ -5283,8 +5291,10 @@
     i++;
   }
   return (
-    Array.from({length: froma.length - shared.length}).fill(&#x27;..&#x27;).join(&#x27;/&#x27;) +
-    to.substring(shared.join(&quot;/&quot;).length + (to.startsWith(&quot;/&quot;) ? 1 : 0))
+    Array.from({ length: froma.length - shared.length })
+      .fill(&#x27;..&#x27;)
+      .join(&#x27;/&#x27;) +
+    to.substring(shared.join(&#x27;/&#x27;).length + (to.startsWith(&#x27;/&#x27;) ? 1 : 0))
   );
 }</code>
                     </td>

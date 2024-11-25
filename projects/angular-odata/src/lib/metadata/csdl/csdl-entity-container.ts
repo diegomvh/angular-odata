@@ -3,7 +3,7 @@ import { CsdlSingleton } from './csdl-singleton';
 import { CsdlFunctionImport, CsdlActionImport } from './csdl-function-action';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlSchema } from './csdl-schema';
-import { EntityContainerConfig } from '../../types';
+import { ODataEntityContainerConfig } from '../../types';
 
 export class CsdlEntityContainer extends CsdlAnnotable {
   public Name: string;
@@ -78,8 +78,8 @@ export class CsdlEntityContainer extends CsdlAnnotable {
   }
 
   override toConfig(
-    base?: Partial<EntityContainerConfig>,
-  ): EntityContainerConfig {
+    base?: Partial<ODataEntityContainerConfig>,
+  ): ODataEntityContainerConfig {
     return {
       ...super.toConfig(),
       name: this.Name,

@@ -1,9 +1,9 @@
 import { CALLABLE_BINDING_PARAMETER } from '../../constants';
 import {
-  CallableConfig,
+  ODataCallableConfig,
   NONE_PARSER,
   ParserOptions,
-  ParameterConfig,
+  ODataParameterConfig,
   Parser,
 } from '../../types';
 import { ODataEnumTypeParser } from './enum-type';
@@ -17,7 +17,7 @@ export class ODataParameterParser<T> {
   nullable?: boolean;
   parserOptions?: ParserOptions;
 
-  constructor(name: string, parameter: ParameterConfig) {
+  constructor(name: string, parameter: ODataParameterConfig) {
     this.name = name;
     this.type = parameter.type;
     this.parser = NONE_PARSER;
@@ -94,14 +94,14 @@ export class ODataCallableParser<R> implements Parser<R> {
   parameters: ODataParameterParser<any>[];
   parserOptions?: ParserOptions;
 
-  constructor(config: CallableConfig, namespace: string, alias?: string) {
+  constructor(config: ODataCallableConfig, namespace: string, alias?: string) {
     this.name = config.name;
     this.namespace = namespace;
     this.alias = alias;
     this.return = config.return;
     this.parser = NONE_PARSER;
     this.parameters = Object.entries(config.parameters || []).map(
-      ([name, p]) => new ODataParameterParser(name, p as ParameterConfig),
+      ([name, p]) => new ODataParameterParser(name, p as ODataParameterConfig),
     );
   }
 

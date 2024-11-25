@@ -2,8 +2,8 @@ import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
 import {
   ParserOptions,
-  StructuredTypeConfig,
-  StructuredTypeFieldConfig,
+  ODataStructuredTypeConfig,
+  ODataStructuredTypeFieldConfig,
 } from '../types';
 import { ODataParserSchemaElement } from './element';
 import {
@@ -24,7 +24,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
   model?: typeof ODataModel;
   collection?: typeof ODataCollection;
 
-  constructor(config: StructuredTypeConfig, schema: ODataSchema) {
+  constructor(config: ODataStructuredTypeConfig, schema: ODataSchema) {
     super(
       config,
       schema,
@@ -125,7 +125,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
 
   addField<F>(
     name: string,
-    config: StructuredTypeFieldConfig,
+    config: ODataStructuredTypeFieldConfig,
   ): ODataStructuredTypeFieldParser<F> {
     return this.parser.addField(name, config);
   }

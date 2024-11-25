@@ -243,7 +243,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -280,7 +280,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -315,12 +315,14 @@ export class EntityProperty {
   constructor(protected edmType: CsdlProperty | CsdlNavigationProperty) {}
 
   name() {
-    return this.edmType.Name + (this.edmType.Nullable || this.edmType instanceof CsdlNavigationProperty ? &#x27;?&#x27; : &#x27;&#x27;);
+    return this.edmType.Name;
   }
 
   type() {
-    const type &#x3D; toTypescriptType(this.edmType.Type);
-    return type + (this.edmType.Collection ? &#x27;[]&#x27; : &#x27;&#x27;); 
+    let type &#x3D; toTypescriptType(this.edmType.Type);
+    type +&#x3D; this.edmType.Collection ? &#x27;[]&#x27; : &#x27;&#x27;;
+    type +&#x3D; this.edmType.Nullable ? &#x27; | null&#x27; : &#x27;&#x27;;
+    return type;
   }
 }
 
@@ -337,7 +339,9 @@ export class Entity extends Base {
   }
   public override variables(): { [name: string]: any } {
     return {
-      type: this.name() + (this.edmType instanceof CsdlEntityType ? &quot;EntityType&quot; : &quot;ComplexType&quot;),
+      type:
+        this.name() +
+        (this.edmType instanceof CsdlEntityType ? &#x27;EntityType&#x27; : &#x27;ComplexType&#x27;),
       baseType: this.edmType.BaseType,
       properties: [
         ...(this.edmType.Property ?? []).map((p) &#x3D;&gt; new EntityProperty(p)),

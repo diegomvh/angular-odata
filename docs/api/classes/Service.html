@@ -346,7 +346,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:190</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:230</a></code>
 </div>
                         </td>
                     </tr>
@@ -385,7 +385,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:175</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:215</a></code>
 </div>
                         </td>
                     </tr>
@@ -420,7 +420,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:171</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:211</a></code>
 </div>
                         </td>
                     </tr>
@@ -824,7 +824,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:191</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:231</a></code>
 </div>
                         </td>
                     </tr>
@@ -899,7 +899,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:195</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:235</a></code>
 </div>
                         </td>
                     </tr>
@@ -974,7 +974,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:186</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:226</a></code>
 </div>
                         </td>
                     </tr>
@@ -1049,7 +1049,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:176</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:216</a></code>
 </div>
                         </td>
                     </tr>
@@ -1124,7 +1124,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:172</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:212</a></code>
 </div>
                         </td>
                     </tr>
@@ -1169,7 +1169,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:151</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:191</a></code>
 </div>
                         </td>
                     </tr>
@@ -1214,7 +1214,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:145</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Base.html#source" target="_self" >Base:185</a></code>
 </div>
                         </td>
                     </tr>
@@ -1307,8 +1307,8 @@ export class Service extends Base {
       if (ret !&#x3D;&#x3D; undefined &amp;&amp; !ret.Type.startsWith(&#x27;Edm.&#x27;)) {
         imports.push(ret.Type);
       }
-      const params &#x3D; call.parameters();
-      for (let param of params) {
+      const { binding, required, optional } &#x3D; call.parameters();
+      for (let param of [...required, ...optional]) {
         if (!param.Type.startsWith(&#x27;Edm.&#x27;)) {
           imports.push(param.Type);
         }

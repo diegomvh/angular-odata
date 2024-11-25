@@ -1,4 +1,4 @@
-import { ReferenceConfig } from '../../types';
+import { ODataReferenceConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 
 export class CsdlReference extends CsdlAnnotable {
@@ -40,13 +40,13 @@ export class CsdlReference extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(base?: Partial<ReferenceConfig>) {
+  override toConfig(base?: Partial<ODataReferenceConfig>) {
     return {
       ...super.toConfig(),
       uri: this.Uri,
       includes: this.Include?.map((i) => i.toConfig()),
       includeAnnotations: this.IncludeAnnotations?.map((i) => i.toConfig()),
-    } as ReferenceConfig;
+    } as ODataReferenceConfig;
   }
 }
 

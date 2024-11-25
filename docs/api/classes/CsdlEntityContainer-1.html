@@ -512,8 +512,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="67"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:67</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -549,8 +549,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="59"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:59</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="68"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -586,8 +586,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:63</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="72"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:72</a></div>
                         </td>
                     </tr>
 
@@ -625,8 +625,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="71"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:71</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -710,7 +710,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ [key: string]: any; }</a></code>
 
                         </div>
                 </td>
@@ -775,14 +775,23 @@ export class CsdlEntityContainer extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Extend: this.Extend,
-      EntitySet: this.EntitySet?.map((e) &#x3D;&gt; e.toJson()),
-      Singleton: this.Singleton?.map((s) &#x3D;&gt; s.toJson()),
-      FunctionImport: this.FunctionImport?.map((f) &#x3D;&gt; f.toJson()),
-      ActionImport: this.ActionImport?.map((a) &#x3D;&gt; a.toJson()),
-    };
+    const json: { [key: string]: any } &#x3D; { ...super.toJson() };
+    if (this.Extend !&#x3D;&#x3D; undefined) {
+      json[&#x27;Extend&#x27;] &#x3D; this.Extend;
+    }
+    if (Array.isArray(this.EntitySet) &amp;&amp; this.EntitySet.length &gt; 0) {
+      json[&#x27;EntitySet&#x27;] &#x3D; this.EntitySet.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.Singleton) &amp;&amp; this.Singleton.length &gt; 0) {
+      json[&#x27;Singleton&#x27;] &#x3D; this.Singleton.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.FunctionImport) &amp;&amp; this.FunctionImport.length &gt; 0) {
+      json[&#x27;FunctionImport&#x27;] &#x3D; this.FunctionImport.map((a) &#x3D;&gt; a.toJson());
+    }
+    if (Array.isArray(this.ActionImport) &amp;&amp; this.ActionImport.length &gt; 0) {
+      json[&#x27;ActionImport&#x27;] &#x3D; this.ActionImport.map((a) &#x3D;&gt; a.toJson());
+    }
+    return json;
   }
 
   name() {
@@ -797,7 +806,9 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     return &#x60;${this.schema.Namespace}.${this.Name}&#x60;;
   }
 
-  override toConfig(base?: Partial&lt;EntityContainerConfig&gt;): EntityContainerConfig {
+  override toConfig(
+    base?: Partial&lt;EntityContainerConfig&gt;,
+  ): EntityContainerConfig {
     return {
       ...super.toConfig(),
       name: this.Name,

@@ -6,7 +6,7 @@ import type { ModelInterface, ODataCollection, ODataModel } from '../../models';
 import {
   PathSegment,
   QueryOption,
-  StructuredTypeFieldConfig,
+  ODataStructuredTypeFieldConfig,
 } from '../../types';
 import { ODataPathSegments } from '../path';
 import {
@@ -59,7 +59,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       fields,
     }: {
       type?: string;
-      fields?: { [name: string]: StructuredTypeFieldConfig };
+      fields?: { [name: string]: ODataStructuredTypeFieldConfig };
     } = {},
   ): ODataEntitySetResource<R> {
     return super.transform<R>(opts, {

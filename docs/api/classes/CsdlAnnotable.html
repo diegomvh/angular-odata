@@ -342,7 +342,10 @@ export class CsdlAnnotations extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: { [key: string]: any } &#x3D; { ...super.toJson(), Target: this.Target };
+    const json: { [key: string]: any } &#x3D; {
+      ...super.toJson(),
+      Target: this.Target,
+    };
     if (this.Qualifier !&#x3D;&#x3D; undefined) {
       json[&#x27;Qualifier&#x27;] &#x3D; this.Qualifier;
     }
@@ -527,7 +530,9 @@ export class CsdlCollection {
     this.String &#x3D; String?.map((a) &#x3D;&gt; new CsdlString(a));
     this.Record &#x3D; Record?.map((a) &#x3D;&gt; new CsdlRecord(a));
     this.PropertyPath &#x3D; PropertyPath?.map((a) &#x3D;&gt; new CsdlPropertyPath(a));
-    this.NavigationPropertyPath &#x3D; NavigationPropertyPath?.map((a) &#x3D;&gt; new CsdlNavigationPropertyPath(a));
+    this.NavigationPropertyPath &#x3D; NavigationPropertyPath?.map(
+      (a) &#x3D;&gt; new CsdlNavigationPropertyPath(a),
+    );
   }
 
   toJson() {
@@ -541,8 +546,13 @@ export class CsdlCollection {
     if (Array.isArray(this.PropertyPath) &amp;&amp; this.PropertyPath.length &gt; 0) {
       json[&#x27;PropertyPath&#x27;] &#x3D; this.PropertyPath.map((p) &#x3D;&gt; p.toJson());
     }
-    if (Array.isArray(this.NavigationPropertyPath) &amp;&amp; this.NavigationPropertyPath.length &gt; 0) {
-      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt; p.toJson());
+    if (
+      Array.isArray(this.NavigationPropertyPath) &amp;&amp;
+      this.NavigationPropertyPath.length &gt; 0
+    ) {
+      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt;
+        p.toJson(),
+      );
     }
     return json;
   }
@@ -586,7 +596,7 @@ export class CsdlPropertyValue {
   }
 
   toJson() {
-    const json: { [key: string]: any } &#x3D; { Name: this.Name, };
+    const json: { [key: string]: any } &#x3D; { Name: this.Name };
     if (this.String !&#x3D;&#x3D; undefined) {
       json[&#x27;String&#x27;] &#x3D; this.String;
     }

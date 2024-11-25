@@ -1,4 +1,4 @@
-import { EntitySetConfig } from '../../types';
+import { ODataEntitySetConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlEntityContainer } from './csdl-entity-container';
 import { CsdlNavigationPropertyBinding } from './csdl-navigation-property-binding';
@@ -67,12 +67,12 @@ export class CsdlEntitySet extends CsdlAnnotable {
     return `${this.container.namespace()}.${this.Name}`;
   }
 
-  override toConfig(): EntitySetConfig {
+  override toConfig(): ODataEntitySetConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
       entityType: this.EntityType,
       service: {},
-    } as EntitySetConfig;
+    } as ODataEntitySetConfig;
   }
 }

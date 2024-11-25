@@ -401,8 +401,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="51"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-singleton.ts:51</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="57"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-singleton.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -438,8 +438,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="43"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-singleton.ts:43</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-singleton.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -475,8 +475,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="47"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-singleton.ts:47</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-singleton.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -530,7 +530,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ [key: string]: any; }</a></code>
 
                         </div>
                 </td>
@@ -579,14 +579,20 @@ export class CsdlSingleton extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: { [key: string]: any } &#x3D; {
       ...super.toJson(),
       Name: this.Name,
       Type: this.Type,
-      NavigationPropertyBindings: this.NavigationPropertyBindings?.map(
-        (n) &#x3D;&gt; n.toJson(),
-      ),
     };
+    if (
+      Array.isArray(this.NavigationPropertyBindings) &amp;&amp;
+      this.NavigationPropertyBindings.length &gt; 0
+    ) {
+      json[&#x27;NavigationPropertyBindings&#x27;] &#x3D; this.NavigationPropertyBindings.map(
+        (n) &#x3D;&gt; n.toJson(),
+      );
+    }
+    return json;
   }
 
   name() {

@@ -432,8 +432,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="51"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:51</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -469,8 +469,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="43"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:43</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="47"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -506,8 +506,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="47"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:47</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-enum-type.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -610,8 +610,12 @@ export class CsdlEnumType extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Name: this.Name, Member: this.Member.map((m) &#x3D;&gt; m.toJson())};
-    if (this.UnderlyingType) {
+    const json: { [key: string]: any } &#x3D; {
+      ...super.toJson(),
+      Name: this.Name,
+      Member: this.Member.map((m) &#x3D;&gt; m.toJson()),
+    };
+    if (this.UnderlyingType !&#x3D;&#x3D; undefined) {
       json[&#x27;UnderlyingType&#x27;] &#x3D; this.UnderlyingType;
     }
     if (this.IsFlags !&#x3D;&#x3D; undefined) {
@@ -651,7 +655,7 @@ export class CsdlMember extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Name: this.Name};
+    const json: { [key: string]: any } &#x3D; { ...super.toJson(), Name: this.Name };
     if (this.Value !&#x3D;&#x3D; undefined) {
       json[&#x27;Value&#x27;] &#x3D; this.Value;
     }

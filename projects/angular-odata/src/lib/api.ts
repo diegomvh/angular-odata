@@ -1,7 +1,6 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { ODataCache, ODataInMemoryCache } from './cache';
 import { DEFAULT_VERSION } from './constants';
 import {
   ModelOptions,
@@ -35,15 +34,15 @@ import {
   ODataStructuredType,
 } from './schema';
 import {
-  ApiConfig,
-  ApiOptions,
+  ODataApiConfig,
   EdmType,
   NONE_PARSER,
   ODataVersion,
   Parser,
   PathSegment,
   QueryOption,
-  SchemaConfig,
+  ODataSchemaConfig,
+  ODataCache,
 } from './types';
 import { ODataMetadata } from './metadata/metadata';
 
@@ -61,7 +60,7 @@ export class ODataApi {
   // Options
   options: ODataApiOptions;
   // Cache
-  cache!: ODataCache;
+  cache?: ODataCache;
   // Error Handler
   errorHandler?: (error: any, caught: Observable<any>) => Observable<never>;
   // Base Parsers
@@ -69,7 +68,7 @@ export class ODataApi {
   // Schemas
   schemas: ODataSchema[];
 
-  constructor(config: ApiConfig) {
+  constructor(config: ODataApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;
     if (this.serviceRootUrl.includes('?'))
       throw new Error(
@@ -86,7 +85,7 @@ export class ODataApi {
       version: this.version,
     });
 
-    this.cache = (config.cache as ODataCache) ?? new ODataInMemoryCache();
+    this.cache = config.cache;
     this.errorHandler = config.errorHandler;
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
@@ -297,7 +296,9 @@ export class ODataApi {
       return res$;
     }
 
-    res$ = this.cache.handleRequest(req, res$);
+    if (this.cache !== undefined) {
+      res$ = this.cache.handleRequest(req, res$);
+    }
 
     switch (options.observe || 'body') {
       case 'body':
@@ -345,7 +346,7 @@ export class ODataApi {
     options: new Map<string, ODataModelOptions<any> | undefined>(),
   };
 
-  public createSchema(config: SchemaConfig) {
+  public createSchema(config: ODataSchemaConfig) {
     const schema = new ODataSchema(config, this);
     schema.configure({
       options: this.options.parserOptions,

@@ -8,11 +8,11 @@ import {
   ODataEnumType,
   ODataStructuredType,
 } from './schema';
-import { ApiConfig, EdmType, Parser } from './types';
+import { ODataApiConfig, EdmType, Parser } from './types';
 
 export class ODataSettings {
   apis: ODataApi[];
-  constructor(configs: ApiConfig[]) {
+  constructor(configs: ODataApiConfig[]) {
     this.apis = configs.map((config) => new ODataApi(config));
     if (this.apis.length > 1) {
       if (this.apis.some((c) => c.name === undefined))

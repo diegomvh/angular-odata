@@ -1,7 +1,7 @@
 import { CsdlAction, CsdlFunction } from './csdl/csdl-function-action';
 import { CsdlReference } from './csdl/csdl-reference';
 import { CsdlSchema } from './csdl/csdl-schema';
-import { ApiConfig, ODataVersion } from '../types';
+import { ODataApiConfig, ODataVersion } from '../types';
 
 export class ODataMetadata {
   Version: string;
@@ -13,7 +13,7 @@ export class ODataMetadata {
     this.Schemas = Schemas?.map((s) => new CsdlSchema(s));
   }
 
-  toConfig(base?: Partial<ApiConfig>): ApiConfig {
+  toConfig(base?: Partial<ODataApiConfig>): ODataApiConfig {
     return {
       ...base,
       version: base?.version ?? (this.Version as ODataVersion),
@@ -23,7 +23,7 @@ export class ODataMetadata {
       references: (this.References ?? []).map((mr) =>
         mr.toConfig(base?.references?.find((cs) => cs.uri === mr.Uri)),
       ),
-    } as ApiConfig;
+    } as ODataApiConfig;
   }
 
   toJson() {

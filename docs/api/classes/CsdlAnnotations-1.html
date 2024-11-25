@@ -369,8 +369,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="55"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:55</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="58"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:58</a></div>
                         </td>
                     </tr>
 
@@ -451,15 +451,15 @@ export class CsdlAnnotable {
   }
 
   toJson() {
-    const json: {[key: string]: any} &#x3D; {};
-    if (this.Annotation) {
+    const json: { [key: string]: any } &#x3D; {};
+    if (Array.isArray(this.Annotation) &amp;&amp; this.Annotation.length &gt; 0) {
       json[&#x27;Annotation&#x27;] &#x3D; this.Annotation.map((a) &#x3D;&gt; a.toJson());
     }
     return json;
   }
 
   toConfig() {
-    const config: {[key: string]: any} &#x3D; {};
+    const config: { [key: string]: any } &#x3D; {};
     if (this.Annotation) {
       config[&#x27;annotations&#x27;] &#x3D; this.Annotation.map((a) &#x3D;&gt; a.toConfig());
     }
@@ -479,16 +479,19 @@ export class CsdlAnnotations extends CsdlAnnotable {
     }: {
       Target: string;
       Qualifier?: string;
-      Annotation: CsdlAnnotation[];
+      Annotation: any[];
     },
   ) {
     super({ Annotation });
     this.Target &#x3D; Target;
     this.Qualifier &#x3D; Qualifier;
   }
-  
+
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Target: this.Target};
+    const json: { [key: string]: any } &#x3D; {
+      ...super.toJson(),
+      Target: this.Target,
+    };
     if (this.Qualifier !&#x3D;&#x3D; undefined) {
       json[&#x27;Qualifier&#x27;] &#x3D; this.Qualifier;
     }
@@ -505,8 +508,8 @@ export class CsdlAnnotation {
   String?: string;
   Bool?: boolean;
   Int?: number;
-  Collection?: any;
-  Record?: any;
+  Collection?: CsdlCollection[];
+  Record?: CsdlRecord[];
   EnumMember?: CsdlEnumMember[];
   constructor({
     Term,
@@ -521,40 +524,40 @@ export class CsdlAnnotation {
     String?: string;
     Bool?: boolean;
     Int?: number;
-    Collection?: any;
-    Record?: any;
+    Collection?: any[];
+    Record?: any[];
     EnumMember?: any[];
   }) {
     this.Term &#x3D; Term;
     this.String &#x3D; String;
     this.Bool &#x3D; Bool;
     this.Int &#x3D; Int;
-    this.Collection &#x3D; Collection;
-    this.Record &#x3D; Record;
+    this.Collection &#x3D; Collection?.map((a) &#x3D;&gt; new CsdlCollection(a));
+    this.Record &#x3D; Record?.map((a) &#x3D;&gt; new CsdlRecord(a));
     this.EnumMember &#x3D; EnumMember?.map((a) &#x3D;&gt; new CsdlEnumMember(a));
   }
-  
+
   toJson() {
-    const json: {[key: string]: any} &#x3D; {Term: this.Term};
-    if (this.String) {
+    const json: { [key: string]: any } &#x3D; { Term: this.Term };
+    if (this.String !&#x3D;&#x3D; undefined) {
       json[&#x27;String&#x27;] &#x3D; this.String;
     }
-    if (this.Bool) {
+    if (this.Bool !&#x3D;&#x3D; undefined) {
       json[&#x27;Bool&#x27;] &#x3D; this.Bool;
     }
-    if (this.Int) {
+    if (this.Int !&#x3D;&#x3D; undefined) {
       json[&#x27;Int&#x27;] &#x3D; this.Int;
     }
-    if (this.Collection) {
-      json[&#x27;Collection&#x27;] &#x3D; this.Collection;
+    if (Array.isArray(this.Collection) &amp;&amp; this.Collection.length &gt; 0) {
+      json[&#x27;Collection&#x27;] &#x3D; this.Collection.map((m) &#x3D;&gt; m.toJson());
     }
-    if (this.Record) {
-      json[&#x27;Record&#x27;] &#x3D; this.Record;
+    if (Array.isArray(this.Record) &amp;&amp; this.Record.length &gt; 0) {
+      json[&#x27;Record&#x27;] &#x3D; this.Record.map((m) &#x3D;&gt; m.toJson());
     }
-    if (this.EnumMember) {
+    if (Array.isArray(this.EnumMember) &amp;&amp; this.EnumMember.length &gt; 0) {
       json[&#x27;EnumMember&#x27;] &#x3D; this.EnumMember.map((m) &#x3D;&gt; m.toJson());
     }
-    return json ;
+    return json;
   }
 
   toConfig(): AnnotationConfig {
@@ -629,38 +632,38 @@ export class CsdlTerm {
   }
 
   toJson() {
-    const json: {[key: string]: any} &#x3D; {Name: this.Name, Type: this.Type};
-    if (this.BaseTerm) {
+    const json: { [key: string]: any } &#x3D; { Name: this.Name, Type: this.Type };
+    if (this.BaseTerm !&#x3D;&#x3D; undefined) {
       json[&#x27;BaseTerm&#x27;] &#x3D; this.BaseTerm;
     }
-    if (this.DefaultValue) {
+    if (this.DefaultValue !&#x3D;&#x3D; undefined) {
       json[&#x27;DefaultValue&#x27;] &#x3D; this.DefaultValue;
     }
-    if (this.AppliesTo) {
+    if (this.AppliesTo !&#x3D;&#x3D; undefined) {
       json[&#x27;AppliesTo&#x27;] &#x3D; this.AppliesTo;
     }
-    if (this.Nullable) {
+    if (this.Nullable !&#x3D;&#x3D; undefined) {
       json[&#x27;Nullable&#x27;] &#x3D; this.Nullable;
     }
-    if (this.MaxLength) {
+    if (this.MaxLength !&#x3D;&#x3D; undefined) {
       json[&#x27;MaxLength&#x27;] &#x3D; this.MaxLength;
     }
-    if (this.Precision) {
+    if (this.Precision !&#x3D;&#x3D; undefined) {
       json[&#x27;Precision&#x27;] &#x3D; this.Precision;
     }
-    if (this.Scale) {
+    if (this.Scale !&#x3D;&#x3D; undefined) {
       json[&#x27;Scale&#x27;] &#x3D; this.Scale;
     }
-    if (this.SRID) {
+    if (this.SRID !&#x3D;&#x3D; undefined) {
       json[&#x27;SRID&#x27;] &#x3D; this.SRID;
     }
-    if (this.String) {
+    if (this.String !&#x3D;&#x3D; undefined) {
       json[&#x27;String&#x27;] &#x3D; this.String;
     }
-    if (this.Bool) {
+    if (this.Bool !&#x3D;&#x3D; undefined) {
       json[&#x27;Bool&#x27;] &#x3D; this.Bool;
     }
-    if (this.Int) {
+    if (this.Int !&#x3D;&#x3D; undefined) {
       json[&#x27;Int&#x27;] &#x3D; this.Int;
     }
     return json;
@@ -668,55 +671,62 @@ export class CsdlTerm {
 }
 
 export class CsdlCollection {
-  Strings: CsdlString[];
-  Records: CsdlRecord[];
-  PropertyPaths: CsdlPropertyPath[];
-  NavigationPropertyPaths: CsdlNavigationPropertyPath[];
+  String: CsdlString[];
+  Record: CsdlRecord[];
+  PropertyPath: CsdlPropertyPath[];
+  NavigationPropertyPath: CsdlNavigationPropertyPath[];
   constructor({
-    Strings,
-    Records,
-    PropertyPaths,
-    NavigationPropertyPaths,
+    String,
+    Record,
+    PropertyPath,
+    NavigationPropertyPath,
   }: {
-    Strings: CsdlString[];
-    Records: CsdlRecord[];
-    PropertyPaths: CsdlPropertyPath[];
-    NavigationPropertyPaths: CsdlNavigationPropertyPath[];
+    String: any[];
+    Record: any[];
+    PropertyPath: any[];
+    NavigationPropertyPath: any[];
   }) {
-    this.Strings &#x3D; Strings;
-    this.Records &#x3D; Records;
-    this.PropertyPaths &#x3D; PropertyPaths;
-    this.NavigationPropertyPaths &#x3D; NavigationPropertyPaths;
+    this.String &#x3D; String?.map((a) &#x3D;&gt; new CsdlString(a));
+    this.Record &#x3D; Record?.map((a) &#x3D;&gt; new CsdlRecord(a));
+    this.PropertyPath &#x3D; PropertyPath?.map((a) &#x3D;&gt; new CsdlPropertyPath(a));
+    this.NavigationPropertyPath &#x3D; NavigationPropertyPath?.map(
+      (a) &#x3D;&gt; new CsdlNavigationPropertyPath(a),
+    );
   }
 
   toJson() {
-    const json: {[key: string]: any} &#x3D; {};
-    if (this.Strings) {
-      json[&#x27;Strings&#x27;] &#x3D; this.Strings.map((s) &#x3D;&gt; s.toJson());
-    } 
-    if (this.Records) {
-      json[&#x27;Records&#x27;] &#x3D; this.Records.map((r) &#x3D;&gt; r.toJson());
+    const json: { [key: string]: any } &#x3D; {};
+    if (Array.isArray(this.String) &amp;&amp; this.String.length &gt; 0) {
+      json[&#x27;String&#x27;] &#x3D; this.String.map((s) &#x3D;&gt; s.toJson());
     }
-    if (this.PropertyPaths) {
-      json[&#x27;PropertyPaths&#x27;] &#x3D; this.PropertyPaths.map((p) &#x3D;&gt; p.toJson());
+    if (Array.isArray(this.Record) &amp;&amp; this.Record.length &gt; 0) {
+      json[&#x27;Record&#x27;] &#x3D; this.Record.map((r) &#x3D;&gt; r.toJson());
     }
-    if (this.NavigationPropertyPaths) {
-      json[&#x27;NavigationPropertyPaths&#x27;] &#x3D; this.NavigationPropertyPaths.map((p) &#x3D;&gt; p.toJson());
+    if (Array.isArray(this.PropertyPath) &amp;&amp; this.PropertyPath.length &gt; 0) {
+      json[&#x27;PropertyPath&#x27;] &#x3D; this.PropertyPath.map((p) &#x3D;&gt; p.toJson());
+    }
+    if (
+      Array.isArray(this.NavigationPropertyPath) &amp;&amp;
+      this.NavigationPropertyPath.length &gt; 0
+    ) {
+      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt;
+        p.toJson(),
+      );
     }
     return json;
   }
 }
 
 export class CsdlRecord {
-  Properties: CsdlPropertyValue[];
-  constructor({ Properties }: { Properties: CsdlPropertyValue[] }) {
-    this.Properties &#x3D; Properties;
+  PropertyValue: CsdlPropertyValue[];
+  constructor({ PropertyValue }: { PropertyValue: any[] }) {
+    this.PropertyValue &#x3D; PropertyValue?.map((a) &#x3D;&gt; new CsdlPropertyValue(a));
   }
 
   toJson() {
-    const json: {[key: string]: any} &#x3D; {};
-    if (this.Properties) {
-      json[&#x27;Properties&#x27;] &#x3D; this.Properties.map((p) &#x3D;&gt; p.toJson());
+    const json: { [key: string]: any } &#x3D; {};
+    if (Array.isArray(this.PropertyValue) &amp;&amp; this.PropertyValue.length &gt; 0) {
+      json[&#x27;PropertyValue&#x27;] &#x3D; this.PropertyValue.map((p) &#x3D;&gt; p.toJson());
     }
     return json;
   }
@@ -745,14 +755,14 @@ export class CsdlPropertyValue {
   }
 
   toJson() {
-    const json: {[key: string]: any} &#x3D; { Name: this.Name, };
-    if (this.String) {
+    const json: { [key: string]: any } &#x3D; { Name: this.Name };
+    if (this.String !&#x3D;&#x3D; undefined) {
       json[&#x27;String&#x27;] &#x3D; this.String;
     }
-    if (this.Date) {
+    if (this.Date !&#x3D;&#x3D; undefined) {
       json[&#x27;Date&#x27;] &#x3D; this.Date;
     }
-    if (this.EnumMember) {
+    if (Array.isArray(this.EnumMember) &amp;&amp; this.EnumMember.length &gt; 0) {
       json[&#x27;EnumMember&#x27;] &#x3D; this.EnumMember.map((m) &#x3D;&gt; m.toJson());
     }
     return json;

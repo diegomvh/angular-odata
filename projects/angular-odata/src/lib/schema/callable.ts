@@ -1,4 +1,4 @@
-import { CallableConfig, ParserOptions } from '../types';
+import { ODataCallableConfig, ParserOptions } from '../types';
 import { ODataParserSchemaElement } from './element';
 import { ODataCallableParser } from './parsers';
 import { ODataSchema } from './schema';
@@ -11,7 +11,7 @@ export class ODataCallable<R> extends ODataParserSchemaElement<
   bound?: boolean;
   composable?: boolean;
 
-  constructor(config: CallableConfig, schema: ODataSchema) {
+  constructor(config: ODataCallableConfig, schema: ODataSchema) {
     super(
       config,
       schema,

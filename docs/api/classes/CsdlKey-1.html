@@ -140,7 +140,7 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#PropertyRefs" >PropertyRefs</a>
+                                <a href="#PropertyRef" >PropertyRef</a>
                             </li>
                         </ul>
                     </td>
@@ -183,7 +183,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="194" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:194</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="214" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:214</a></div>
                             </td>
                         </tr>
 
@@ -229,10 +229,10 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="PropertyRefs"></a>
+                    <a name="PropertyRef"></a>
                     <span class="name">
-                        <span ><b>PropertyRefs</b></span>
-                        <a href="#PropertyRefs"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>PropertyRef</b></span>
+                        <a href="#PropertyRef"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -244,7 +244,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="194" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:194</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="214" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:214</a></div>
                         </td>
                     </tr>
 
@@ -278,8 +278,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="206"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:206</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:226</a></div>
                         </td>
                     </tr>
 
@@ -315,8 +315,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="200"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:200</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:220</a></div>
                         </td>
                     </tr>
 
@@ -325,7 +325,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ PropertyRefs: any; }</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ PropertyRef: any; }</a></code>
 
                         </div>
                 </td>
@@ -390,15 +390,28 @@ export class CsdlStructuredType extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Name: this.Name,
-      Property: this.Property?.map((p) &#x3D;&gt; p.toJson()),
-      NavigationProperty: this.NavigationProperty?.map((n) &#x3D;&gt; n.toJson()),
-      BaseType: this.BaseType,
-      OpenType: this.OpenType,
-      Abstract: this.Abstract,
-    };
+    const json: { [key: string]: any } &#x3D; { ...super.toJson(), Name: this.Name };
+    if (Array.isArray(this.Property) &amp;&amp; this.Property.length &gt; 0) {
+      json[&#x27;Property&#x27;] &#x3D; this.Property.map((p) &#x3D;&gt; p.toJson());
+    }
+    if (
+      Array.isArray(this.NavigationProperty) &amp;&amp;
+      this.NavigationProperty.length &gt; 0
+    ) {
+      json[&#x27;NavigationProperty&#x27;] &#x3D; this.NavigationProperty.map((n) &#x3D;&gt;
+        n.toJson(),
+      );
+    }
+    if (this.BaseType !&#x3D;&#x3D; undefined) {
+      json[&#x27;BaseType&#x27;] &#x3D; this.BaseType;
+    }
+    if (this.OpenType !&#x3D;&#x3D; undefined) {
+      json[&#x27;OpenType&#x27;] &#x3D; this.OpenType;
+    }
+    if (this.Abstract !&#x3D;&#x3D; undefined) {
+      json[&#x27;Abstract&#x27;] &#x3D; this.Abstract;
+    }
+    return json;
   }
 
   name() {
@@ -445,14 +458,16 @@ export class CsdlComplexType extends CsdlStructuredType {
       Annotation,
     });
   }
-  
+
   override toJson() {
     return {
       ...super.toJson(),
     };
   }
 
-  override toConfig(base?: Partial&lt;StructuredTypeConfig&gt;): StructuredTypeConfig {
+  override toConfig(
+    base?: Partial&lt;StructuredTypeConfig&gt;,
+  ): StructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -510,14 +525,19 @@ export class CsdlEntityType extends CsdlStructuredType {
   }
 
   override toJson() {
-    return {
-      ...super.toJson(),
-      Key: this.Key?.toJson(),
-      HasStream: this.HasStream,
-    };
+    const json: { [key: string]: any } &#x3D; { ...super.toJson() };
+    if (this.Key !&#x3D;&#x3D; undefined) {
+      json[&#x27;Key&#x27;] &#x3D; this.Key.toJson();
+    }
+    if (this.HasStream !&#x3D;&#x3D; undefined) {
+      json[&#x27;HasStream&#x27;] &#x3D; this.HasStream;
+    }
+    return json;
   }
 
-  override toConfig(base?: Partial&lt;StructuredTypeConfig&gt;): StructuredTypeConfig {
+  override toConfig(
+    base?: Partial&lt;StructuredTypeConfig&gt;,
+  ): StructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -535,20 +555,20 @@ export class CsdlEntityType extends CsdlStructuredType {
 }
 
 export class CsdlKey {
-  PropertyRefs: CsdlPropertyRef[];
+  PropertyRef: CsdlPropertyRef[];
 
-  constructor({ PropertyRefs }: { PropertyRefs: any[] }) {
-    this.PropertyRefs &#x3D; PropertyRefs?.map((p) &#x3D;&gt; new CsdlPropertyRef(p));
+  constructor({ PropertyRef }: { PropertyRef: any[] }) {
+    this.PropertyRef &#x3D; PropertyRef?.map((p) &#x3D;&gt; new CsdlPropertyRef(p));
   }
 
   toJson() {
     return {
-      PropertyRefs: this.PropertyRefs?.map((p) &#x3D;&gt; p.toJson()),
+      PropertyRef: this.PropertyRef?.map((p) &#x3D;&gt; p.toJson()),
     };
   }
 
   toConfig() {
-    return this.PropertyRefs?.map((t) &#x3D;&gt; t.toConfig());
+    return this.PropertyRef?.map((t) &#x3D;&gt; t.toConfig());
   }
 }
 

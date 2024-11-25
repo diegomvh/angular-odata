@@ -440,8 +440,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="56"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-entity-set.ts:56</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="65"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-entity-set.ts:65</a></div>
                         </td>
                     </tr>
 
@@ -477,8 +477,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="48"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-entity-set.ts:48</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="57"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-entity-set.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -514,8 +514,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-entity-set.ts:52</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/csdl/csdl-entity-set.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -623,9 +623,18 @@ export class CsdlEntitySet extends CsdlAnnotable {
   }
 
   override toJson() {
-    const json: {[key: string]: any} &#x3D; {...super.toJson(), Name: this.Name, EntityType: this.EntityType};
-    if (Array.isArray(this.NavigationPropertyBinding) &amp;&amp; this.NavigationPropertyBinding.length &gt; 0) {
-      json[&#x27;NavigationPropertyBinding&#x27;] &#x3D; this.NavigationPropertyBinding.map((n) &#x3D;&gt; n.toJson());
+    const json: { [key: string]: any } &#x3D; {
+      ...super.toJson(),
+      Name: this.Name,
+      EntityType: this.EntityType,
+    };
+    if (
+      Array.isArray(this.NavigationPropertyBinding) &amp;&amp;
+      this.NavigationPropertyBinding.length &gt; 0
+    ) {
+      json[&#x27;NavigationPropertyBinding&#x27;] &#x3D; this.NavigationPropertyBinding.map(
+        (n) &#x3D;&gt; n.toJson(),
+      );
     }
     if (this.IncludeInServiceDocument !&#x3D;&#x3D; undefined) {
       json[&#x27;IncludeInServiceDocument&#x27;] &#x3D; this.IncludeInServiceDocument;

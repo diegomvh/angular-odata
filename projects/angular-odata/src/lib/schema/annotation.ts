@@ -1,4 +1,4 @@
-import { AnnotationConfig } from '../types';
+import { ODataAnnotationConfig } from '../types';
 
 export class ODataAnnotation {
   term: string;
@@ -8,7 +8,7 @@ export class ODataAnnotation {
   permissions?: string[];
   properties?: string[];
 
-  constructor(annot: AnnotationConfig) {
+  constructor(annot: ODataAnnotationConfig) {
     this.term = annot.term;
     Object.assign(this, annot);
   }
@@ -16,7 +16,7 @@ export class ODataAnnotation {
 
 export class ODataAnnotatable {
   annotations: ODataAnnotation[];
-  constructor(config: { annotations?: AnnotationConfig[] }) {
+  constructor(config: { annotations?: ODataAnnotationConfig[] }) {
     this.annotations = (config.annotations || []).map(
       (annot) => new ODataAnnotation(annot),
     );

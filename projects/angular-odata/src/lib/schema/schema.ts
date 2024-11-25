@@ -1,5 +1,5 @@
 import { ODataApi } from '../api';
-import { ParserOptions, SchemaConfig, StructuredTypeConfig } from '../types';
+import { ParserOptions, ODataSchemaConfig, ODataStructuredTypeConfig } from '../types';
 import { OData } from '../utils/odata';
 import { ODataAnnotatable } from './annotation';
 import { ODataCallable } from './callable';
@@ -18,7 +18,7 @@ export class ODataSchema extends ODataAnnotatable {
   callables: ODataCallable<any>[];
   containers: ODataEntityContainer[];
 
-  constructor(config: SchemaConfig, api: ODataApi) {
+  constructor(config: ODataSchemaConfig, api: ODataApi) {
     super(config);
     this.api = api;
     this.namespace = config.namespace;
@@ -59,7 +59,7 @@ export class ODataSchema extends ODataAnnotatable {
   }
 
   //#region Find for Type
-  public createStructuredType<T>(config: StructuredTypeConfig) {
+  public createStructuredType<T>(config: ODataStructuredTypeConfig) {
     const entity = new ODataStructuredType<T>(config, this);
     entity.configure({ options: this.api.options.parserOptions });
     this.entities.push(entity);

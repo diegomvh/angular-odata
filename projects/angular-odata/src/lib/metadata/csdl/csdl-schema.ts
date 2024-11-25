@@ -4,7 +4,7 @@ import { CsdlEnumType } from './csdl-enum-type';
 import { CsdlEntityType, CsdlComplexType } from './csdl-structured-type';
 import { CsdlFunction, CsdlAction } from './csdl-function-action';
 import { CsdlEntityContainer } from './csdl-entity-container';
-import { SchemaConfig } from '../../types';
+import { ODataSchemaConfig } from '../../types';
 
 export class CsdlSchema {
   Namespace: string;
@@ -100,7 +100,7 @@ export class CsdlSchema {
     return json;
   }
 
-  toConfig(base?: Partial<SchemaConfig>): SchemaConfig {
+  toConfig(base?: Partial<ODataSchemaConfig>): ODataSchemaConfig {
     return {
       namespace: this.Namespace,
       alias: base?.alias ?? this.Alias,
@@ -127,6 +127,6 @@ export class CsdlSchema {
       containers: this.EntityContainer?.map((t) =>
         t.toConfig(base?.containers?.find((cs) => cs.name === t.Name)),
       ),
-    } as SchemaConfig;
+    } as ODataSchemaConfig;
   }
 }

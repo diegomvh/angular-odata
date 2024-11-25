@@ -1,5 +1,5 @@
 import {
-  ApiOptions,
+  ODataApiConfigOptions,
   FetchPolicy,
   ODataMetadataType,
   ODataVersion,
@@ -14,7 +14,7 @@ import {
 
 import { ODataHelper } from './helper';
 
-export class ODataApiOptions implements ApiOptions {
+export class ODataApiOptions implements ODataApiConfigOptions {
   /**
    * Default OData version
    */
@@ -107,7 +107,7 @@ export class ODataApiOptions implements ApiOptions {
     omitNullValues?: boolean;
   };
 
-  constructor(config: ApiOptions) {
+  constructor(config: ODataApiConfigOptions) {
     this.version = config.version || DEFAULT_VERSION;
     this.stringAsEnum = config.stringAsEnum || false;
     this.params = config.params || {};
