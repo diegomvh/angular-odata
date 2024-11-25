@@ -151,7 +151,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
   */
 
-  property<P>(path: string) {
+  property<P>(path: string): ODataPropertyResource<P> {
     return ODataPropertyResource.fromResource<P>(this, path);
   }
 
