@@ -5,7 +5,7 @@ import { ODataEntitySetService } from './services';
 import {
   ODataApiConfig,
   ODataEntitySetConfig,
-  EnumTypeConfig,
+  ODataEnumTypeConfig,
   ODataStructuredTypeConfig,
 } from './types';
 
@@ -33,7 +33,7 @@ export const FlagEnumsConfig = {
     Flag2: { value: FlagEnums.Flag2 },
     Flag4: { value: FlagEnums.Flag4 },
   },
-} as EnumTypeConfig;
+} as ODataEnumTypeConfig;
 export const PersonGenderConfig = {
   name: 'PersonGender',
   members: PersonGender,
@@ -42,7 +42,7 @@ export const PersonGenderConfig = {
     Female: { value: PersonGender.Female },
     Unknown: { value: PersonGender.Unknown },
   },
-} as EnumTypeConfig;
+} as ODataEnumTypeConfig;
 //#endregion
 
 //#region Entities

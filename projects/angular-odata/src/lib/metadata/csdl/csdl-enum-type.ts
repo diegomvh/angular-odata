@@ -1,4 +1,4 @@
-import { EnumTypeConfig, ODataEnumTypeFieldConfig } from '../../types';
+import { ODataEnumTypeConfig, ODataEnumTypeFieldConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlSchema } from './csdl-schema';
 
@@ -57,7 +57,7 @@ export class CsdlEnumType extends CsdlAnnotable {
     return `${this.schema.Namespace}.${this.Name}`;
   }
 
-  override toConfig(base?: Partial<EnumTypeConfig>): EnumTypeConfig {
+  override toConfig(base?: Partial<ODataEnumTypeConfig>): ODataEnumTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -69,7 +69,7 @@ export class CsdlEnumType extends CsdlAnnotable {
         {},
       ),
       flags: this.IsFlags,
-    } as EnumTypeConfig;
+    } as ODataEnumTypeConfig;
   }
 }
 

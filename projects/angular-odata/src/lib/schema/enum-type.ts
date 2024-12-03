@@ -1,4 +1,4 @@
-import { EnumTypeConfig, ParserOptions } from '../types';
+import { ODataEnumTypeConfig, ParserOptions } from '../types';
 import { ODataParserSchemaElement } from './element';
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 import { ODataSchema } from './schema';
@@ -8,7 +8,7 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
   ODataEnumTypeParser<E>
 > {
   members: { [name: string]: number } | { [value: number]: string };
-  constructor(config: EnumTypeConfig, schema: ODataSchema) {
+  constructor(config: ODataEnumTypeConfig, schema: ODataSchema) {
     super(
       config,
       schema,

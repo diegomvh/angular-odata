@@ -1,6 +1,6 @@
 import { raw } from '../../resources/query';
 import {
-  EnumTypeConfig,
+  ODataEnumTypeConfig,
   ODataEnumTypeFieldConfig,
   ParserOptions,
   FieldParser,
@@ -35,7 +35,7 @@ export class ODataEnumTypeParser<E>
   private _fields: ODataEnumTypeFieldParser[];
   parserOptions?: ParserOptions;
 
-  constructor(config: EnumTypeConfig, namespace: string, alias?: string) {
+  constructor(config: ODataEnumTypeConfig, namespace: string, alias?: string) {
     super(config);
     this.name = config.name;
     this.namespace = namespace;

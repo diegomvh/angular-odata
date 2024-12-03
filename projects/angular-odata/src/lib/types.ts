@@ -173,6 +173,7 @@ export interface ODataCache {
   put<T>(key: string, payload: T, ...opts: any[]): void;
   get<T>(key: string, ...opts: any[]): T | undefined;
   handleRequest(req: any, res$: Observable<any>): Observable<any>;
+  flush(): void;
 }
 
 export interface ODataApiConfigOptions {
@@ -237,7 +238,7 @@ export type ODataReferenceConfig = {
   uri: string;
   includes?: string;
   annotations?: ODataAnnotationConfig[];
-  enums?: EnumTypeConfig[];
+  enums?: ODataEnumTypeConfig[];
   entities?: ODataStructuredTypeConfig[];
   callables?: ODataCallableConfig[];
   containers?: ODataEntityContainerConfig[];
@@ -246,7 +247,7 @@ export type ODataSchemaConfig = {
   namespace: string;
   alias?: string;
   annotations?: ODataAnnotationConfig[];
-  enums?: EnumTypeConfig[];
+  enums?: ODataEnumTypeConfig[];
   entities?: ODataStructuredTypeConfig[];
   callables?: ODataCallableConfig[];
   containers?: ODataEntityContainerConfig[];
@@ -264,7 +265,7 @@ export type ODataEnumTypeFieldConfig = {
   annotations?: ODataAnnotationConfig[];
 };
 
-export type EnumTypeConfig = {
+export type ODataEnumTypeConfig = {
   name: string;
   flags?: boolean;
   annotations?: ODataAnnotationConfig[];
