@@ -28,7 +28,7 @@ export class ComputeExpression<T> extends Expression<T> {
     this.names = names || [];
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'ComputeExpression';
   }
 

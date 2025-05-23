@@ -205,7 +205,7 @@ export class ExpandExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'ExpandExpression';
   }
 

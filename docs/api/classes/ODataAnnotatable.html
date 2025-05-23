@@ -204,7 +204,7 @@
                                                         <td>config</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -314,7 +314,7 @@
                                         <tr>
                                                 <td>term</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >string | RegExp</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >string | RegExp</a></code>
                                             </td>
 
                                             <td>
@@ -331,7 +331,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >T | undefined</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >T | undefined</a></code>
 
                         </div>
                             <div class="io-description">
@@ -389,7 +389,7 @@
                                         <tr>
                                                 <td>predicate</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >function</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >function</a></code>
                                             </td>
 
                                             <td>
@@ -406,7 +406,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -427,7 +427,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AnnotationConfig } from &#x27;../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataAnnotationConfig } from &#x27;../types&#x27;;
 
 export class ODataAnnotation {
   term: string;
@@ -437,7 +437,7 @@ export class ODataAnnotation {
   permissions?: string[];
   properties?: string[];
 
-  constructor(annot: AnnotationConfig) {
+  constructor(annot: ODataAnnotationConfig) {
     this.term &#x3D; annot.term;
     Object.assign(this, annot);
   }
@@ -445,7 +445,7 @@ export class ODataAnnotation {
 
 export class ODataAnnotatable {
   annotations: ODataAnnotation[];
-  constructor(config: { annotations?: AnnotationConfig[] }) {
+  constructor(config: { annotations?: ODataAnnotationConfig[] }) {
     this.annotations &#x3D; (config.annotations || []).map(
       (annot) &#x3D;&gt; new ODataAnnotation(annot),
     );
@@ -544,7 +544,6 @@ export class ODataAnnotatable {
        <script src="../js/libs/es6-shim.min.js"></script>
        <script src="../js/libs/EventDispatcher.js"></script>
        <script src="../js/libs/promise.min.js"></script>
-       <script src="../js/libs/zepto.min.js"></script>
 
        <script src="../js/compodoc.js"></script>
 

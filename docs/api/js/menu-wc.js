@@ -74,13 +74,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/ODataModule.html" data-type="entity-link" >ODataModule</a>
                                 <li class="chapter inner">
                                     <div class="simple menu-toggler" data-bs-toggle="collapse" ${ isNormalMode ?
-                                        'data-bs-target="#injectables-links-module-ODataModule-9d32aaaf34414e455a8f1500625f01a02c54024235496741303e9ba7a2fb32b831ec60b036624ab916f2d71c14a6772a49226eb5aaf5a7ed62fbea36e68aa5ba"' : 'data-bs-target="#xs-injectables-links-module-ODataModule-9d32aaaf34414e455a8f1500625f01a02c54024235496741303e9ba7a2fb32b831ec60b036624ab916f2d71c14a6772a49226eb5aaf5a7ed62fbea36e68aa5ba"' }>
+                                        'data-bs-target="#injectables-links-module-ODataModule-033cbfa33fc2f30de4f328a5c453b90fd85481b0e5e7bfd0e00a97fba280c5ea0e60f5f5015776a0248092529859b00301a3c30e2e7bbed1bf133362f114ec57"' : 'data-bs-target="#xs-injectables-links-module-ODataModule-033cbfa33fc2f30de4f328a5c453b90fd85481b0e5e7bfd0e00a97fba280c5ea0e60f5f5015776a0248092529859b00301a3c30e2e7bbed1bf133362f114ec57"' }>
                                         <span class="icon ion-md-arrow-round-down"></span>
                                         <span>Injectables</span>
                                         <span class="icon ion-ios-arrow-down"></span>
                                     </div>
-                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-ODataModule-9d32aaaf34414e455a8f1500625f01a02c54024235496741303e9ba7a2fb32b831ec60b036624ab916f2d71c14a6772a49226eb5aaf5a7ed62fbea36e68aa5ba"' :
-                                        'id="xs-injectables-links-module-ODataModule-9d32aaaf34414e455a8f1500625f01a02c54024235496741303e9ba7a2fb32b831ec60b036624ab916f2d71c14a6772a49226eb5aaf5a7ed62fbea36e68aa5ba"' }>
+                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-ODataModule-033cbfa33fc2f30de4f328a5c453b90fd85481b0e5e7bfd0e00a97fba280c5ea0e60f5f5015776a0248092529859b00301a3c30e2e7bbed1bf133362f114ec57"' :
+                                        'id="xs-injectables-links-module-ODataModule-033cbfa33fc2f30de4f328a5c453b90fd85481b0e5e7bfd0e00a97fba280c5ea0e60f5f5015776a0248092529859b00301a3c30e2e7bbed1bf133362f114ec57"' }>
                                         <li class="link">
                                             <a href="injectables/ODataClient.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >ODataClient</a>
                                         </li>
@@ -461,6 +461,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataApiOptions.html" data-type="entity-link" >ODataApiOptions</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataBaseCache.html" data-type="entity-link" >ODataBaseCache</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataBaseService.html" data-type="entity-link" >ODataBaseService</a>
                             </li>
                             <li class="link">
@@ -468,9 +471,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/ODataBatchResource.html" data-type="entity-link" >ODataBatchResource</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/ODataCache.html" data-type="entity-link" >ODataCache</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataCallable.html" data-type="entity-link" >ODataCallable</a>
@@ -718,13 +718,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? ' id="interfaces-links"' : 'id="xs-interfaces-links"' }>
                             <li class="link">
-                                <a href="interfaces/ApiOptions.html" data-type="entity-link" >ApiOptions</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/Cache.html" data-type="entity-link" >Cache</a>
-                            </li>
-                            <li class="link">
                                 <a href="interfaces/FieldParser.html" data-type="entity-link" >FieldParser</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/ODataApiConfigOptions.html" data-type="entity-link" >ODataApiConfigOptions</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/ODataCache.html" data-type="entity-link" >ODataCache</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/ODataCacheEntry.html" data-type="entity-link" >ODataCacheEntry</a>

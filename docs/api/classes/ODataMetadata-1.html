@@ -220,7 +220,7 @@
                                                         <td>Version</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -232,7 +232,7 @@
                                                         <td>References</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any[]</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >any[]</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -244,7 +244,7 @@
                                                         <td>Schemas</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any[]</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >any[]</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -279,7 +279,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlReference[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >CsdlReference[]</a></code>
 
                     </td>
                 </tr>
@@ -331,7 +331,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
 
                     </td>
                 </tr>
@@ -381,7 +381,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -434,7 +434,7 @@
                                         <tr>
                                                 <td>json</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
                                             </td>
 
                                             <td>
@@ -487,7 +487,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
 
                         </div>
                 </td>
@@ -507,7 +507,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toConfig(base?: <a href="../classes/ApiConfig.html" target="_self">Partial&lt;ApiConfig&gt;</a>)</code>
+<code>toConfig(base?: <a href="../objects/OData.html" target="_self">Partial&lt;ODataApiConfig&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -538,7 +538,7 @@
                                         <tr>
                                                 <td>base</td>
                                             <td>
-                                                            <code><a href="../classes/ApiConfig.html" target="_self" >Partial&lt;ApiConfig&gt;</a></code>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >Partial&lt;ODataApiConfig&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -551,7 +551,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ApiConfig.html" target="_self" >ApiConfig</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataApiConfig" target="_self" >ODataApiConfig</a></code>
 
                         </div>
                             <div class="io-description">
@@ -611,7 +611,7 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlAction, CsdlFunction } from &#x27;./csdl/csdl-function-action&#x27;;
 import { CsdlReference } from &#x27;./csdl/csdl-reference&#x27;;
 import { CsdlSchema } from &#x27;./csdl/csdl-schema&#x27;;
-import { ApiConfig, ODataVersion } from &#x27;../types&#x27;;
+import { ODataApiConfig, ODataVersion } from &#x27;../types&#x27;;
 
 export class ODataMetadata {
   Version: string;
@@ -623,7 +623,7 @@ export class ODataMetadata {
     this.Schemas &#x3D; Schemas?.map((s) &#x3D;&gt; new CsdlSchema(s));
   }
 
-  toConfig(base?: Partial&lt;ApiConfig&gt;): ApiConfig {
+  toConfig(base?: Partial&lt;ODataApiConfig&gt;): ODataApiConfig {
     return {
       ...base,
       version: base?.version ?? (this.Version as ODataVersion),
@@ -633,7 +633,7 @@ export class ODataMetadata {
       references: (this.References ?? []).map((mr) &#x3D;&gt;
         mr.toConfig(base?.references?.find((cs) &#x3D;&gt; cs.uri &#x3D;&#x3D;&#x3D; mr.Uri)),
       ),
-    } as ApiConfig;
+    } as ODataApiConfig;
   }
 
   toJson() {
@@ -726,7 +726,6 @@ export class ODataMetadata {
        <script src="../js/libs/es6-shim.min.js"></script>
        <script src="../js/libs/EventDispatcher.js"></script>
        <script src="../js/libs/promise.min.js"></script>
-       <script src="../js/libs/zepto.min.js"></script>
 
        <script src="../js/compodoc.js"></script>
 

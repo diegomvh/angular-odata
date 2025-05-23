@@ -33,7 +33,7 @@ export class GroupByTransformations<T> extends Expression<T> {
     this.aliases = aliases || [];
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'GroupByTransformations';
   }
 
@@ -148,7 +148,7 @@ export class ApplyExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'ApplyExpression';
   }
 

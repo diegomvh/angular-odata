@@ -228,14 +228,14 @@ import {
 import { ODataClient } from &#x27;./client&#x27;;
 import { ODataConfigLoader, ODataConfigSyncLoader } from &#x27;./loaders&#x27;;
 import { ODataServiceFactory } from &#x27;./services/index&#x27;;
-import { ApiConfig } from &#x27;./types&#x27;;
+import { ODataApiConfig } from &#x27;./types&#x27;;
 
 export interface PassedInitialConfig {
-  config?: ApiConfig | ApiConfig[];
+  config?: ODataApiConfig | ODataApiConfig[];
   loader?: Provider;
 }
 
-export const ODATA_CONFIG &#x3D; new InjectionToken&lt;ApiConfig&gt;(&#x27;odata.config&#x27;);
+export const ODATA_CONFIG &#x3D; new InjectionToken&lt;ODataApiConfig&gt;(&#x27;odata.config&#x27;);
 
 export function createSyncLoader(passedConfig: PassedInitialConfig) {
   return new ODataConfigSyncLoader(passedConfig.config!);
@@ -358,7 +358,6 @@ export class ODataModule {
        <script src="../js/libs/es6-shim.min.js"></script>
        <script src="../js/libs/EventDispatcher.js"></script>
        <script src="../js/libs/promise.min.js"></script>
-       <script src="../js/libs/zepto.min.js"></script>
 
        <script src="../js/compodoc.js"></script>
 

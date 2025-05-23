@@ -252,7 +252,7 @@
                                                 <tr>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -288,7 +288,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
@@ -315,7 +315,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
 
                     </td>
                 </tr>
@@ -341,7 +341,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
 
                     </td>
                 </tr>
@@ -368,7 +368,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlNavigationProperty[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >CsdlNavigationProperty[]</a></code>
 
                     </td>
                 </tr>
@@ -395,7 +395,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
@@ -422,7 +422,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlProperty[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >CsdlProperty[]</a></code>
 
                     </td>
                 </tr>
@@ -449,7 +449,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlAnnotation[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >CsdlAnnotation[]</a></code>
 
                     </td>
                 </tr>
@@ -506,7 +506,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
 
                         </div>
                 </td>
@@ -543,7 +543,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
 
                         </div>
                 </td>
@@ -580,7 +580,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
 
                         </div>
                 </td>
@@ -625,7 +625,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ [key: string]: any; }</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >{ [key: string]: any; }</a></code>
 
                         </div>
                 </td>
@@ -642,7 +642,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { StructuredTypeConfig } from &#x27;../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataStructuredTypeConfig } from &#x27;../../types&#x27;;
 import { CsdlAnnotable } from &#x27;./csdl-annotation&#x27;;
 import {
   CsdlProperty,
@@ -766,8 +766,8 @@ export class CsdlComplexType extends CsdlStructuredType {
   }
 
   override toConfig(
-    base?: Partial&lt;StructuredTypeConfig&gt;,
-  ): StructuredTypeConfig {
+    base?: Partial&lt;ODataStructuredTypeConfig&gt;,
+  ): ODataStructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -779,7 +779,7 @@ export class CsdlComplexType extends CsdlStructuredType {
         ...(this.Property ?? []).map((t) &#x3D;&gt; t.toConfig()),
         ...(this.NavigationProperty ?? []).map((t) &#x3D;&gt; t.toConfig()),
       ].reduce((acc, p) &#x3D;&gt; Object.assign(acc, { [p.name]: p }), {}),
-    } as StructuredTypeConfig;
+    } as ODataStructuredTypeConfig;
   }
 }
 
@@ -836,8 +836,8 @@ export class CsdlEntityType extends CsdlStructuredType {
   }
 
   override toConfig(
-    base?: Partial&lt;StructuredTypeConfig&gt;,
-  ): StructuredTypeConfig {
+    base?: Partial&lt;ODataStructuredTypeConfig&gt;,
+  ): ODataStructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -850,7 +850,7 @@ export class CsdlEntityType extends CsdlStructuredType {
         ...(this.Property ?? []).map((t) &#x3D;&gt; t.toConfig()),
         ...(this.NavigationProperty ?? []).map((t) &#x3D;&gt; t.toConfig()),
       ].reduce((acc, p) &#x3D;&gt; Object.assign(acc, { [p.name]: p }), {}),
-    } as StructuredTypeConfig;
+    } as ODataStructuredTypeConfig;
   }
 }
 
@@ -961,7 +961,6 @@ export class CsdlPropertyRef {
        <script src="../js/libs/es6-shim.min.js"></script>
        <script src="../js/libs/EventDispatcher.js"></script>
        <script src="../js/libs/promise.min.js"></script>
-       <script src="../js/libs/zepto.min.js"></script>
 
        <script src="../js/compodoc.js"></script>
 

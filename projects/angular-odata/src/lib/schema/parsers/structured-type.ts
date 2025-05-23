@@ -375,7 +375,11 @@ export class ODataStructuredTypeParser<T>
   private _fields: ODataStructuredTypeFieldParser<any>[] = [];
   parserOptions?: ParserOptions;
 
-  constructor(config: ODataStructuredTypeConfig, namespace: string, alias?: string) {
+  constructor(
+    config: ODataStructuredTypeConfig,
+    namespace: string,
+    alias?: string,
+  ) {
     super(config);
     this.name = config.name;
     this.base = config.base;
@@ -385,7 +389,9 @@ export class ODataStructuredTypeParser<T>
     if (Array.isArray(config.keys))
       this._keys = config.keys.map((key) => new ODataEntityTypeKey(key));
     Object.entries<ODataStructuredTypeFieldConfig>(
-      (config.fields ?? {}) as { [P in keyof T]: ODataStructuredTypeFieldConfig },
+      (config.fields ?? {}) as {
+        [P in keyof T]: ODataStructuredTypeFieldConfig;
+      },
     ).forEach(([name, config]) => this.addField(name, config));
   }
 

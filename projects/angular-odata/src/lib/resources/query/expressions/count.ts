@@ -118,7 +118,7 @@ export class CountExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'CountExpression';
   }
 

@@ -98,7 +98,9 @@ export class CsdlMember extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(base?: Partial<ODataEnumTypeFieldConfig>): ODataEnumTypeFieldConfig {
+  override toConfig(
+    base?: Partial<ODataEnumTypeFieldConfig>,
+  ): ODataEnumTypeFieldConfig {
     const config: { [key: string]: any } = {
       ...super.toConfig(),
       value: this.Value,

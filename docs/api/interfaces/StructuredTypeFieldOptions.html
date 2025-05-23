@@ -177,7 +177,7 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>field:         <code><a href="../miscellaneous/typealiases.html#StructuredTypeFieldConfig" target="_self" >StructuredTypeFieldConfig</a></code>
+                                        <code>field:         <code><a href="../miscellaneous/typealiases.html#ODataStructuredTypeFieldConfig" target="_self" >ODataStructuredTypeFieldConfig</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -185,7 +185,7 @@
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#StructuredTypeFieldConfig" target="_self" >StructuredTypeFieldConfig</a></code>
+                                            <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#ODataStructuredTypeFieldConfig" target="_self" >ODataStructuredTypeFieldConfig</a></code>
 
                                         </td>
                                     </tr>
@@ -202,7 +202,6 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
-import { ODataMetadata } from &#x27;./metadata&#x27;;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
 export type FetchPolicy &#x3D;
@@ -324,7 +323,63 @@ export enum JsonType {
   null &#x3D; &#x27;null&#x27;,
 }
 
-export interface ApiOptions {
+export interface ParserOptions {
+  version?: ODataVersion;
+  exponentialDecimals?: boolean;
+  metadata?: ODataMetadataType;
+  ieee754Compatible?: boolean;
+  streaming?: boolean;
+  stringAsEnum?: boolean;
+  deleteRefBy?: &#x27;path&#x27; | &#x27;id&#x27;;
+  nonParenthesisForEmptyParameterFunction?: boolean;
+}
+
+export interface ResponseOptions extends ParserOptions {
+  cacheability?: CacheCacheability;
+  maxAge?: number;
+}
+
+export interface StructuredTypeFieldOptions extends ParserOptions {
+  field: ODataStructuredTypeFieldConfig;
+}
+
+export interface Parser&lt;T&gt; {
+  // Deserialize value/s from request body.
+  deserialize(
+    value: any,
+    options?: ParserOptions | StructuredTypeFieldOptions,
+  ): T;
+  // Serialize value/s for request body.
+  serialize(
+    value: any,
+    options?: ParserOptions | StructuredTypeFieldOptions,
+  ): any;
+  //Encode value/s for URL parameter or query-string.
+  encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
+}
+
+export interface FieldParser&lt;T&gt; extends Parser&lt;T&gt; {
+  nullable?: boolean;
+  default?: any;
+  maxLength?: number;
+  precision?: number;
+  scale?: number | &#x27;variable&#x27;;
+}
+
+export const NONE_PARSER &#x3D; {
+  deserialize: (value: any) &#x3D;&gt; value,
+  serialize: (value: any) &#x3D;&gt; value,
+  encode: (value: any) &#x3D;&gt; value,
+} as Parser&lt;any&gt;;
+
+export interface ODataCache {
+  put&lt;T&gt;(key: string, payload: T, ...opts: any[]): void;
+  get&lt;T&gt;(key: string, ...opts: any[]): T | undefined;
+  handleRequest(req: any, res$: Observable&lt;any&gt;): Observable&lt;any&gt;;
+  flush(): void;
+}
+
+export interface ODataApiConfigOptions {
   version?: ODataVersion;
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
@@ -359,76 +414,22 @@ export interface ApiOptions {
   relativeUrls?: boolean;
 }
 
-export interface ParserOptions {
-  version?: ODataVersion;
-  exponentialDecimals?: boolean;
-  metadata?: ODataMetadataType;
-  ieee754Compatible?: boolean;
-  streaming?: boolean;
-  stringAsEnum?: boolean;
-  deleteRefBy?: &#x27;path&#x27; | &#x27;id&#x27;;
-  nonParenthesisForEmptyParameterFunction?: boolean;
-}
-
-export interface ResponseOptions extends ParserOptions {
-  cacheability?: CacheCacheability;
-  maxAge?: number;
-}
-
-export interface StructuredTypeFieldOptions extends ParserOptions {
-  field: StructuredTypeFieldConfig;
-}
-
-export interface Parser&lt;T&gt; {
-  // Deserialize value/s from request body.
-  deserialize(
-    value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
-  ): T;
-  // Serialize value/s for request body.
-  serialize(
-    value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
-  ): any;
-  //Encode value/s for URL parameter or query-string.
-  encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
-}
-
-export interface FieldParser&lt;T&gt; extends Parser&lt;T&gt; {
-  nullable?: boolean;
-  default?: any;
-  maxLength?: number;
-  precision?: number;
-  scale?: number | &#x27;variable&#x27;;
-}
-
-export const NONE_PARSER &#x3D; {
-  deserialize: (value: any) &#x3D;&gt; value,
-  serialize: (value: any) &#x3D;&gt; value,
-  encode: (value: any) &#x3D;&gt; value,
-} as Parser&lt;any&gt;;
-
-export interface Cache {
-  put&lt;T&gt;(key: string, payload: T, ...opts: any[]): void;
-  get&lt;T&gt;(key: string, ...opts: any[]): T | undefined;
-}
-
 //#region Configs
-export type ApiConfig &#x3D; {
+export type ODataApiConfig &#x3D; {
   serviceRootUrl: string;
   metadataUrl?: string;
   name?: string;
   version?: ODataVersion;
   default?: boolean;
   creation?: Date;
-  cache?: Cache;
+  cache?: ODataCache;
   errorHandler?: (error: any, caught: Observable&lt;any&gt;) &#x3D;&gt; Observable&lt;never&gt;;
-  options?: ApiOptions;
+  options?: ODataApiConfigOptions;
   parsers?: { [type: string]: Parser&lt;any&gt; };
-  schemas?: SchemaConfig[];
-  references?: ReferenceConfig[];
+  schemas?: ODataSchemaConfig[];
+  references?: ODataReferenceConfig[];
 };
-export type AnnotationConfig &#x3D; {
+export type ODataAnnotationConfig &#x3D; {
   term: string;
   string?: string;
   bool?: boolean;
@@ -436,46 +437,46 @@ export type AnnotationConfig &#x3D; {
   permissions?: string[];
   properties?: string[];
 };
-export type ReferenceConfig &#x3D; {
+export type ODataReferenceConfig &#x3D; {
   uri: string;
   includes?: string;
-  annotations?: AnnotationConfig[];
-  enums?: EnumTypeConfig[];
-  entities?: StructuredTypeConfig[];
-  callables?: CallableConfig[];
-  containers?: EntityContainerConfig[];
+  annotations?: ODataAnnotationConfig[];
+  enums?: ODataEnumTypeConfig[];
+  entities?: ODataStructuredTypeConfig[];
+  callables?: ODataCallableConfig[];
+  containers?: ODataEntityContainerConfig[];
 };
-export type SchemaConfig &#x3D; {
+export type ODataSchemaConfig &#x3D; {
   namespace: string;
   alias?: string;
-  annotations?: AnnotationConfig[];
-  enums?: EnumTypeConfig[];
-  entities?: StructuredTypeConfig[];
-  callables?: CallableConfig[];
-  containers?: EntityContainerConfig[];
+  annotations?: ODataAnnotationConfig[];
+  enums?: ODataEnumTypeConfig[];
+  entities?: ODataStructuredTypeConfig[];
+  callables?: ODataCallableConfig[];
+  containers?: ODataEntityContainerConfig[];
 };
 
-export type EntityContainerConfig &#x3D; {
+export type ODataEntityContainerConfig &#x3D; {
   name: string;
-  annotations?: AnnotationConfig[];
-  entitySets?: EntitySetConfig[];
-  singletons?: SingletonConfig[];
+  annotations?: ODataAnnotationConfig[];
+  entitySets?: ODataEntitySetConfig[];
+  singletons?: ODataSingletonConfig[];
 };
 
-export type EnumTypeFieldConfig &#x3D; {
+export type ODataEnumTypeFieldConfig &#x3D; {
   value: number;
-  annotations?: AnnotationConfig[];
+  annotations?: ODataAnnotationConfig[];
 };
 
-export type EnumTypeConfig &#x3D; {
+export type ODataEnumTypeConfig &#x3D; {
   name: string;
   flags?: boolean;
-  annotations?: AnnotationConfig[];
+  annotations?: ODataAnnotationConfig[];
   members: { [name: string]: number } | { [value: number]: string };
-  fields: { [member: string]: EnumTypeFieldConfig };
+  fields: { [member: string]: ODataEnumTypeFieldConfig };
 };
 
-export type StructuredTypeFieldConfig &#x3D; {
+export type ODataStructuredTypeFieldConfig &#x3D; {
   type: string;
   default?: any;
   maxLength?: number;
@@ -484,51 +485,51 @@ export type StructuredTypeFieldConfig &#x3D; {
   nullable?: boolean;
   navigation?: boolean;
   precision?: number;
-  annotations?: AnnotationConfig[];
+  annotations?: ODataAnnotationConfig[];
   scale?: number | &#x27;variable&#x27;;
   referentials?: { property: string; referencedProperty: string }[];
   referential?: string;
   referenced?: string;
 };
 
-export type StructuredTypeConfig &#x3D; {
+export type ODataStructuredTypeConfig &#x3D; {
   name: string;
   base?: string;
   open?: boolean;
   model?: { new (...params: any[]): any };
   collection?: { new (...params: any[]): any };
-  annotations?: AnnotationConfig[];
+  annotations?: ODataAnnotationConfig[];
   keys?: { name: string; alias?: string }[];
-  fields?: { [name: string]: StructuredTypeFieldConfig };
+  fields?: { [name: string]: ODataStructuredTypeFieldConfig };
 };
 
-export type ParameterConfig &#x3D; {
+export type ODataParameterConfig &#x3D; {
   type: string;
   nullable?: boolean;
   collection?: boolean;
 };
 
-export type CallableConfig &#x3D; {
+export type ODataCallableConfig &#x3D; {
   name: string;
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
-  parameters?: { [name: string]: ParameterConfig };
+  parameters?: { [name: string]: ODataParameterConfig };
   return?: { type: string; collection?: boolean };
 };
 
-export type EntitySetConfig &#x3D; {
+export type ODataEntitySetConfig &#x3D; {
   name: string;
   entityType: string;
   service: { new (...params: any[]): any };
-  annotations?: AnnotationConfig[];
+  annotations?: ODataAnnotationConfig[];
 };
 
-export type SingletonConfig &#x3D; {
+export type ODataSingletonConfig &#x3D; {
   name: string;
   type: string;
   service: { new (...params: any[]): any };
-  annotations?: AnnotationConfig[];
+  annotations?: ODataAnnotationConfig[];
 };
 //#endregion
 </code></pre>
@@ -596,7 +597,6 @@ export type SingletonConfig &#x3D; {
        <script src="../js/libs/es6-shim.min.js"></script>
        <script src="../js/libs/EventDispatcher.js"></script>
        <script src="../js/libs/promise.min.js"></script>
-       <script src="../js/libs/zepto.min.js"></script>
 
        <script src="../js/compodoc.js"></script>
 

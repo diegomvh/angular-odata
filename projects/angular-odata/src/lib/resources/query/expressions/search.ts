@@ -70,7 +70,7 @@ export class SearchExpression<T> extends Expression<T> {
     this._negated = negated || false;
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'SearchExpression';
   }
 

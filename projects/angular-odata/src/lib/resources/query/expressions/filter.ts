@@ -39,7 +39,7 @@ export class FilterExpression<F> extends Expression<F> {
     this._negated = negated || false;
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'FilterExpression';
   }
 

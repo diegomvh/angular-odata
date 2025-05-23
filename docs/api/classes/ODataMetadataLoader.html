@@ -167,12 +167,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(sources$: <a href="../undefineds/.html" target="_self">Observable&lt;string | []&gt;</a>, baseConfigs: <a href="../classes/ApiConfig.html" target="_self">ApiConfig | ApiConfig[]</a>)</code>
+<code>constructor(sources$: <a href="../undefineds/.html" target="_self">Observable&lt;string | []&gt;</a>, baseConfigs: <a href="../objects/OData.html" target="_self">ODataApiConfig | ODataApiConfig[]</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:41</a></div>
                             </td>
                         </tr>
 
@@ -193,7 +193,7 @@
                                                         <td>sources$</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >Observable&lt;string | []&gt;</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >Observable&lt;string | []&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -205,7 +205,7 @@
                                                         <td>baseConfigs</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../classes/ApiConfig.html" target="_self" >ApiConfig | ApiConfig[]</a></code>
+                                                                        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataApiConfig | ODataApiConfig[]</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -248,8 +248,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="45"
-                                    class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:45</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="47"
+                                    class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -258,7 +258,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ApiConfig.html" target="_self" >Observable&lt;ApiConfig[]&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataApiConfig[]&gt;</a></code>
 
                         </div>
                 </td>
@@ -276,17 +276,19 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable, forkJoin, map, of } from &#x27;rxjs&#x27;;
-import { ApiConfig } from &#x27;./types&#x27;;
+import { ODataApiConfig } from &#x27;./types&#x27;;
 import { ODataMetadataParser } from &#x27;./metadata&#x27;;
 
 export abstract class ODataConfigLoader {
-  abstract loadConfigs(): Observable&lt;ApiConfig[]&gt;;
+  abstract loadConfigs(): Observable&lt;ODataApiConfig[]&gt;;
 }
 
 export class ODataConfigSyncLoader implements ODataConfigLoader {
-  constructor(private readonly passedConfigs: ApiConfig | ApiConfig[]) {}
+  constructor(
+    private readonly passedConfigs: ODataApiConfig | ODataApiConfig[],
+  ) {}
 
-  loadConfigs(): Observable&lt;ApiConfig[]&gt; {
+  loadConfigs(): Observable&lt;ODataApiConfig[]&gt; {
     return Array.isArray(this.passedConfigs)
       ? of(this.passedConfigs)
       : of([this.passedConfigs]);
@@ -296,18 +298,18 @@ export class ODataConfigSyncLoader implements ODataConfigLoader {
 export class ODataConfigAsyncLoader implements ODataConfigLoader {
   constructor(
     private readonly configs$:
-      | Observable&lt;ApiConfig&gt;[]
-      | Observable&lt;ApiConfig | ApiConfig[]&gt;,
+      | Observable&lt;ODataApiConfig&gt;[]
+      | Observable&lt;ODataApiConfig | ODataApiConfig[]&gt;,
   ) {}
 
-  loadConfigs(): Observable&lt;ApiConfig[]&gt; {
+  loadConfigs(): Observable&lt;ODataApiConfig[]&gt; {
     return Array.isArray(this.configs$)
       ? forkJoin(this.configs$)
-      : (this.configs$ as Observable&lt;ApiConfig | ApiConfig[]&gt;).pipe(
+      : (this.configs$ as Observable&lt;ODataApiConfig | ODataApiConfig[]&gt;).pipe(
           map((value) &#x3D;&gt;
             Array.isArray(value)
-              ? (value as ApiConfig[])
-              : ([value] as ApiConfig[]),
+              ? (value as ODataApiConfig[])
+              : ([value] as ODataApiConfig[]),
           ),
         );
   }
@@ -316,10 +318,10 @@ export class ODataConfigAsyncLoader implements ODataConfigLoader {
 export class ODataMetadataLoader implements ODataConfigLoader {
   constructor(
     private readonly sources$: Observable&lt;string | string[]&gt;,
-    private readonly baseConfigs: ApiConfig | ApiConfig[],
+    private readonly baseConfigs: ODataApiConfig | ODataApiConfig[],
   ) {}
 
-  loadConfigs(): Observable&lt;ApiConfig[]&gt; {
+  loadConfigs(): Observable&lt;ODataApiConfig[]&gt; {
     const configs &#x3D; Array.isArray(this.baseConfigs)
       ? this.baseConfigs
       : [this.baseConfigs];
@@ -398,7 +400,6 @@ export class ODataMetadataLoader implements ODataConfigLoader {
        <script src="../js/libs/es6-shim.min.js"></script>
        <script src="../js/libs/EventDispatcher.js"></script>
        <script src="../js/libs/promise.min.js"></script>
-       <script src="../js/libs/zepto.min.js"></script>
 
        <script src="../js/compodoc.js"></script>
 

@@ -70,7 +70,7 @@ export class OrderByExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'OrderByExpression';
   }
 

@@ -1,5 +1,9 @@
 import { ODataApi } from '../api';
-import { ParserOptions, ODataSchemaConfig, ODataStructuredTypeConfig } from '../types';
+import {
+  ParserOptions,
+  ODataSchemaConfig,
+  ODataStructuredTypeConfig,
+} from '../types';
 import { OData } from '../utils/odata';
 import { ODataAnnotatable } from './annotation';
 import { ODataCallable } from './callable';

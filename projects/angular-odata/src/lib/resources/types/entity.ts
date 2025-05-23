@@ -45,7 +45,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const entity = this.clone();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
-      ODataResource.resolveKey(
+      ODataResource.resolveKey<T>(
         value,
         this.api.findStructuredType<T>(types[index]),
       ),

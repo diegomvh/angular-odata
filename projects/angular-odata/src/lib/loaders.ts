@@ -7,7 +7,9 @@ export abstract class ODataConfigLoader {
 }
 
 export class ODataConfigSyncLoader implements ODataConfigLoader {
-  constructor(private readonly passedConfigs: ODataApiConfig | ODataApiConfig[]) {}
+  constructor(
+    private readonly passedConfigs: ODataApiConfig | ODataApiConfig[],
+  ) {}
 
   loadConfigs(): Observable<ODataApiConfig[]> {
     return Array.isArray(this.passedConfigs)

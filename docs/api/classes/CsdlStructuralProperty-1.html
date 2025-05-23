@@ -221,7 +221,7 @@
                                                 <tr>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html#" target="_self" >literal type</a></code>
+                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >literal type</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -256,7 +256,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
@@ -282,7 +282,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
 
                     </td>
                 </tr>
@@ -309,7 +309,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >boolean</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >boolean</a></code>
 
                     </td>
                 </tr>
@@ -335,7 +335,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >string</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
 
                     </td>
                 </tr>
@@ -362,7 +362,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >CsdlAnnotation[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >CsdlAnnotation[]</a></code>
 
                     </td>
                 </tr>
@@ -427,7 +427,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#" target="_self" >{ [key: string]: any; }</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >{ [key: string]: any; }</a></code>
 
                         </div>
                 </td>
@@ -444,7 +444,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { StructuredTypeFieldConfig } from &#x27;../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataStructuredTypeFieldConfig } from &#x27;../../types&#x27;;
 import { CsdlAnnotable } from &#x27;./csdl-annotation&#x27;;
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
@@ -556,7 +556,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
       navigation: false,
       precision: this.Precision,
       scale: this.Scale,
-    } as StructuredTypeFieldConfig &amp; { name: string };
+    } as ODataStructuredTypeFieldConfig &amp; { name: string };
   }
 }
 
@@ -628,7 +628,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
         property: r.Property,
         referencedProperty: r.ReferencedProperty,
       })),
-    } as StructuredTypeFieldConfig &amp; { name: string };
+    } as ODataStructuredTypeFieldConfig &amp; { name: string };
   }
 }
 
@@ -734,7 +734,6 @@ export class CsdlOnDelete {
        <script src="../js/libs/es6-shim.min.js"></script>
        <script src="../js/libs/EventDispatcher.js"></script>
        <script src="../js/libs/promise.min.js"></script>
-       <script src="../js/libs/zepto.min.js"></script>
 
        <script src="../js/compodoc.js"></script>
 

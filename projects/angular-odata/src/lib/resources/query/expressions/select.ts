@@ -16,7 +16,7 @@ export class SelectExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag]() {
     return 'SelectExpression';
   }
 
