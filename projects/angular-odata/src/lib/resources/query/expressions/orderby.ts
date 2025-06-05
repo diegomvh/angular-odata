@@ -51,6 +51,7 @@ export class OrderByField implements Renderable {
       this.order,
     );
   }
+
   resolve(parser: any) {
     return parser;
   }
@@ -137,5 +138,9 @@ export class OrderByExpression<T> extends Expression<T> {
 
   descending(field: any) {
     return this._add(new OrderByField(field, 'desc'));
+  }
+
+  combine(expression: OrderByExpression<T>): OrderByExpression<T> {
+    return this._add(expression);
   }
 }

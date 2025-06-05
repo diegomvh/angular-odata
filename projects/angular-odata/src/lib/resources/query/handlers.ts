@@ -679,6 +679,116 @@ export class ODataQueryOptionsHandler<T> {
     this.paging(options);
   }
 
+  /**
+   * Combine the given query options with the current query. 
+   * @param options The query to be combined. 
+   */
+  combine(options: ODataQueryArguments<T>) {
+    if (options.select !== undefined) {
+      if (options.select instanceof SelectExpression) {
+        const current = this.options.expression(QueryOption.select) as SelectExpression<T>;
+        if (current === undefined) {
+          this.options.expression(
+            QueryOption.select,
+            options.select as SelectExpression<T>,
+          );
+        } else {
+          current.combine(options.select as SelectExpression<T>);
+        }
+      } else if (options.select !== null) {
+        const current = this.options.option(QueryOption.select);
+        if (current === undefined) {
+          this.options.option(QueryOption.select, options.select);
+        } else {
+          this.options.option(QueryOption.select, [current, options.select]);
+        }
+      } else {
+        this.options.remove(QueryOption.select);
+      }
+    }
+    if (options.expand !== undefined) {
+      if (options.expand instanceof ExpandExpression) {
+        const current = this.options.expression(QueryOption.expand) as ExpandExpression<T>;
+        if (current === undefined) {
+          this.options.expression(
+            QueryOption.expand,
+            options.expand as ExpandExpression<T>,
+          );
+        } else {
+          current.combine(options.expand as ExpandExpression<T>);
+        }
+      } else if (options.expand !== null) {
+        const current = this.options.option(QueryOption.expand);
+        if (current === undefined) {
+          this.options.option(QueryOption.expand, options.expand);
+        } 
+      } else {
+        this.options.remove(QueryOption.expand);
+      }
+    }
+    if (options.search !== undefined) {
+      if (options.search instanceof SearchExpression) {
+        const current = this.options.expression(QueryOption.search) as SearchExpression<T>;
+        if (current === undefined) {
+          this.options.expression(
+            QueryOption.search,
+            options.search as SearchExpression<T>,
+          );
+        } else {
+          current.combine(options.search as SearchExpression<T>);
+        }
+      } else if (options.search !== null) {
+        const current = this.options.option(QueryOption.search);
+        if (current === undefined) {
+          this.options.option(QueryOption.search, options.search);
+        }
+      } else {
+        this.options.remove(QueryOption.search);
+      }
+    }
+    if (options.filter !== undefined) {
+      if (options.filter instanceof FilterExpression) {
+        const current = this.options.expression(QueryOption.filter) as FilterExpression<T>;
+        if (current === undefined) {
+          this.options.expression(
+            QueryOption.filter,
+            options.filter as FilterExpression<T>,
+          );
+        } else {
+          current.combine(options.filter as FilterExpression<T>);
+        }
+      } else if (options.filter !== null) {
+        const current = this.options.option(QueryOption.filter);
+        if (current === undefined) {
+          this.options.option(QueryOption.filter, options.filter);
+        }
+      } else {
+        this.options.remove(QueryOption.filter);
+      }
+    }
+    if (options.orderBy !== undefined) {
+      if (options.orderBy instanceof OrderByExpression) {
+        const current = this.options.expression(QueryOption.orderBy) as OrderByExpression<T>;
+        if (current === undefined) {
+          this.options.expression(
+            QueryOption.orderBy,
+            options.orderBy as OrderByExpression<T>,
+          );
+        } else {
+          current.combine(options.orderBy as OrderByExpression<T>);
+        }
+      } else if (options.orderBy !== null) {
+        const current = this.options.option(QueryOption.filter);
+        if (current === undefined) {
+          this.options.option(QueryOption.orderBy, options.orderBy);
+        }
+      } else {
+        this.options.remove(QueryOption.orderBy);
+      }
+    }
+    this.paging(options);
+  }
+
   toJson() {
     return this.options.toJson();
   }

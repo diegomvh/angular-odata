@@ -34,7 +34,7 @@ export abstract class Expression<T> implements Renderable {
   abstract clone(): Expression<T>;
 
   children() {
-    return this._children;
+    return [...this._children];
   }
 
   length() {
@@ -47,6 +47,7 @@ export abstract class Expression<T> implements Renderable {
       children: this._children.map((c) => c.toJson()),
     };
   }
+
   resolve(parser: any) {
     return parser;
   }

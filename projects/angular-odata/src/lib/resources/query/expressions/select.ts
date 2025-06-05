@@ -87,4 +87,8 @@ export class SelectExpression<T> extends Expression<T> {
     fields.forEach((f) => this._add(f));
     return this;
   }
+
+  combine(expression: SelectExpression<T>): SelectExpression<T> {
+    return this._add(expression);
+  }
 }

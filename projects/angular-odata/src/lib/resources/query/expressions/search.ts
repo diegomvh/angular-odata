@@ -180,6 +180,7 @@ export class SearchExpression<T> extends Expression<T> {
       negated: json['negated'],
     });
   }
+
   connector() {
     return this._connector;
   }
@@ -208,5 +209,9 @@ export class SearchExpression<T> extends Expression<T> {
 
   term(value: any) {
     return this._add(new SearchTerm(value));
+  }
+
+  combine(expression: SearchExpression<T>, connector: SearchConnector = 'AND'): SearchExpression<T> {
+    return this._add(expression, connector);
   }
 }

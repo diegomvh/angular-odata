@@ -273,4 +273,8 @@ export class ExpandExpression<T> extends Expression<T> {
     if (opts !== undefined) opts(node);
     return this._add(node);
   }
+
+  combine(expression: ExpandExpression<T>): ExpandExpression<T> {
+    return this._add(expression);
+  }
 }
