@@ -125,7 +125,7 @@ export class CountExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: CountExpressionBuilder<T>,
-      current?: CountExpression<T>,
+      current: CountExpression<T>,
     ) => CountExpression<T>,
     current?: CountExpression<T>,
   ): CountExpression<T> {
@@ -134,7 +134,7 @@ export class CountExpression<T> extends Expression<T> {
         t: FieldFactory<Required<T>>(),
         e: () => new CountExpression<T>(),
       },
-      current,
+      current ?? new CountExpression<T>(),
     ) as CountExpression<T>;
   }
 

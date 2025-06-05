@@ -78,7 +78,7 @@ export class OrderByExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: OrderByExpressionBuilder<T>,
-      current?: OrderByExpression<T>,
+      current: OrderByExpression<T>,
     ) => OrderByExpression<T>,
     current?: OrderByExpression<T>,
   ): OrderByExpression<T> {
@@ -87,7 +87,7 @@ export class OrderByExpression<T> extends Expression<T> {
         t: FieldFactory<Required<T>>(),
         e: () => new OrderByExpression<T>(),
       },
-      current,
+      current ?? new OrderByExpression<T>(),
     ) as OrderByExpression<T>;
   }
 

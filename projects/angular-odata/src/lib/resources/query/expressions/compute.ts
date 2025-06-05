@@ -25,7 +25,7 @@ export class ComputeExpression<T> extends Expression<T> {
     names?: string[];
   } = {}) {
     super({ children });
-    this.names = names || [];
+    this.names = names ?? [];
   }
 
   override get [Symbol.toStringTag]() {
@@ -35,7 +35,7 @@ export class ComputeExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: ComputeExpressionBuilder<T>,
-      current?: ComputeExpression<T>,
+      current: ComputeExpression<T>,
     ) => ComputeExpression<T>,
     current?: ComputeExpression<T>,
   ): ComputeExpression<T> {
@@ -44,7 +44,7 @@ export class ComputeExpression<T> extends Expression<T> {
         t: FieldFactory<Required<T>>(),
         e: () => new ComputeExpression<T>(),
       },
-      current,
+      current ?? new ComputeExpression<T>(),
     ) as ComputeExpression<T>;
   }
 

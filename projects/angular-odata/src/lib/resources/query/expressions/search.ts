@@ -66,8 +66,8 @@ export class SearchExpression<T> extends Expression<T> {
     negated?: boolean;
   } = {}) {
     super({ children });
-    this._connector = connector || 'AND';
-    this._negated = negated || false;
+    this._connector = connector ?? 'AND';
+    this._negated = negated ?? false;
   }
 
   override get [Symbol.toStringTag]() {
@@ -77,7 +77,7 @@ export class SearchExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: SearchExpressionBuilder<T>,
-      current?: SearchExpression<T>,
+      current: SearchExpression<T>,
     ) => SearchExpression<T>,
     current?: SearchExpression<T>,
   ): SearchExpression<T> {
@@ -86,7 +86,7 @@ export class SearchExpression<T> extends Expression<T> {
         e: (connector: SearchConnector = 'AND') =>
           new SearchExpression<T>({ connector }),
       },
-      current,
+      current ?? new SearchExpression<T>(),
     ) as SearchExpression<T>;
   }
 

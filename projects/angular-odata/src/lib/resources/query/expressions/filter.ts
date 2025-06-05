@@ -35,8 +35,8 @@ export class FilterExpression<F> extends Expression<F> {
     negated?: boolean;
   } = {}) {
     super({ children });
-    this._connector = connector || 'and';
-    this._negated = negated || false;
+    this._connector = connector ?? 'and';
+    this._negated = negated ?? false;
   }
 
   override get [Symbol.toStringTag]() {
@@ -46,7 +46,7 @@ export class FilterExpression<F> extends Expression<F> {
   static factory<T>(
     opts: (
       builder: FilterExpressionBuilder<T>,
-      current?: FilterExpression<T>,
+      current: FilterExpression<T>,
     ) => FilterExpression<T>,
     current?: FilterExpression<T>,
   ): FilterExpression<T> {
@@ -58,7 +58,7 @@ export class FilterExpression<F> extends Expression<F> {
         o: operators as ODataOperators<T>,
         f: functions as ODataFunctions<T>,
       },
-      current,
+      current ?? new FilterExpression<T>(),
     ) as FilterExpression<T>;
   }
 

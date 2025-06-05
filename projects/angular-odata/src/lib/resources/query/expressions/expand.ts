@@ -148,7 +148,7 @@ export class ExpandField<T> implements Renderable {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder<T>,
-      current?: OrderByExpression<T>,
+      current: OrderByExpression<T>,
     ) => OrderByExpression<T>,
   ) {
     return this.option(
@@ -160,7 +160,7 @@ export class ExpandField<T> implements Renderable {
   compute(
     opts: (
       builder: ComputeExpressionBuilder<T>,
-      current?: ComputeExpression<T>,
+      current: ComputeExpression<T>,
     ) => ComputeExpression<T>,
   ) {
     return this.option(
@@ -212,7 +212,7 @@ export class ExpandExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: ExpandExpressionBuilder<T>,
-      current?: ExpandExpression<T>,
+      current: ExpandExpression<T>,
     ) => ExpandExpression<T>,
     current?: ExpandExpression<T>,
   ): ExpandExpression<T> {
@@ -221,7 +221,7 @@ export class ExpandExpression<T> extends Expression<T> {
         t: FieldFactory<Required<T>>(),
         e: () => new ExpandExpression<T>(),
       },
-      current,
+      current ?? new ExpandExpression<T>(),
     ) as ExpandExpression<T>;
   }
 

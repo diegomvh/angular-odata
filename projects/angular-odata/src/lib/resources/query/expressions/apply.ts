@@ -29,8 +29,8 @@ export class GroupByTransformations<T> extends Expression<T> {
     aliases?: string[];
   } = {}) {
     super({ children });
-    this.methods = methods || [];
-    this.aliases = aliases || [];
+    this.methods = methods ?? [];
+    this.aliases = aliases ?? [];
   }
 
   override get [Symbol.toStringTag]() {
@@ -155,7 +155,7 @@ export class ApplyExpression<T> extends Expression<T> {
   static factory<T>(
     opts: (
       builder: ApplyExpressionBuilder<T>,
-      current?: ApplyExpression<T>,
+      current: ApplyExpression<T>,
     ) => ApplyExpression<T>,
     current?: ApplyExpression<T>,
   ): ApplyExpression<T> {
@@ -164,7 +164,7 @@ export class ApplyExpression<T> extends Expression<T> {
         t: FieldFactory<Required<T>>(),
         e: () => new ApplyExpression<T>(),
       },
-      current,
+      current ?? new ApplyExpression<T>(),
     ) as ApplyExpression<T>;
   }
 
@@ -337,7 +337,7 @@ export class ApplyExpression<T> extends Expression<T> {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder<T>,
-      current?: OrderByExpression<T>
+      current: OrderByExpression<T>
     ) => OrderByExpression<T>,
     current?: OrderByExpression<T>
   ) {
@@ -346,7 +346,7 @@ export class ApplyExpression<T> extends Expression<T> {
         t: FieldFactory<Required<T>>(),
         e: () => new OrderByExpression<T>(),
       },
-      current
+      current ?? new OrderByExpression<T>()
     ) as OrderByExpression<T>;
     return this._add(transformations.orderby(exp));
   }
