@@ -1,5 +1,4 @@
-import { ODataStructuredType } from '../../schema';
-import { Parser, QueryOption } from '../../types';
+import { Parser, ParserOptions, QueryOption } from '../../types';
 import { Objects, Types } from '../../utils';
 import {
   alias,
@@ -680,8 +679,8 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Combine the given query options with the current query. 
-   * @param options The query to be combined. 
+   * Combine the given query options with the current query.
+   * @param options The query to be combined.
    */
   combine(options: ODataQueryArguments<T>) {
     if (options.select !== undefined) {
@@ -721,7 +720,7 @@ export class ODataQueryOptionsHandler<T> {
         const current = this.options.option(QueryOption.expand);
         if (current === undefined) {
           this.options.option(QueryOption.expand, options.expand);
-        } 
+        }
       } else {
         this.options.remove(QueryOption.expand);
       }
@@ -802,5 +801,21 @@ export class ODataQueryOptionsHandler<T> {
     parser,
   }: { escape?: boolean; parser?: Parser<T> } = {}): string {
     return this.options.toString({ escape, parser });
+  }
+
+  pathAndParams({
+    escape,
+    parser,
+    options,
+  }: {
+    escape?: boolean;
+    parser?: Parser<T>;
+    options?: ParserOptions;
+  } = {}): [string, { [name: string]: any }] {
+    return this.options.pathAndParams({
+      escape,
+      parser,
+      options,
+    });
   }
 }
