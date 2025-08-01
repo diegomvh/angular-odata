@@ -899,7 +899,7 @@
                                             </td>
 
                                             <td>
-                                                    <code>&quot;and&quot;</code>
+                                                    <code>&#x27;and&#x27;</code>
                                             </td>
 
                                         </tr>
@@ -3296,10 +3296,12 @@ export class FilterExpression&lt;F&gt; extends Expression&lt;F&gt; {
     return this._add(syntax.isof(left, type));
   }
 
-  combine(exp: FilterExpression&lt;F&gt;, connector: FilterConnector &#x3D; &quot;and&quot;): FilterExpression&lt;F&gt; {
+  combine(
+    exp: FilterExpression&lt;F&gt;,
+    connector: FilterConnector &#x3D; &#x27;and&#x27;,
+  ): FilterExpression&lt;F&gt; {
     return this._add(exp, connector);
   }
-
 }
 </code></pre>
     </div>

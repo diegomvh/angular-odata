@@ -1924,8 +1924,8 @@ If opts is given then set te value as new value for $format.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="795"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:795</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="805"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:805</a></div>
                         </td>
                     </tr>
 
@@ -2451,8 +2451,8 @@ If opts is given then set te value as new value for $orderby.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="806"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:806</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="816"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:816</a></div>
                         </td>
                     </tr>
 
@@ -3658,8 +3658,8 @@ If opts is given then set te value as new value for $skiptoken.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="791"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:791</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="801"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:801</a></div>
                         </td>
                     </tr>
 
@@ -3874,8 +3874,8 @@ If opts is given then set te value as new value for $top.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="799"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:799</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="809"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/handlers.ts:809</a></div>
                         </td>
                     </tr>
 
@@ -4800,7 +4800,9 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   combine(options: ODataQueryArguments&lt;T&gt;) {
     if (options.select !&#x3D;&#x3D; undefined) {
       if (options.select instanceof SelectExpression) {
-        const current &#x3D; this.options.expression(QueryOption.select) as SelectExpression&lt;T&gt;;
+        const current &#x3D; this.options.expression(
+          QueryOption.select,
+        ) as SelectExpression&lt;T&gt;;
         if (current &#x3D;&#x3D;&#x3D; undefined) {
           this.options.expression(
             QueryOption.select,
@@ -4822,7 +4824,9 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     }
     if (options.expand !&#x3D;&#x3D; undefined) {
       if (options.expand instanceof ExpandExpression) {
-        const current &#x3D; this.options.expression(QueryOption.expand) as ExpandExpression&lt;T&gt;;
+        const current &#x3D; this.options.expression(
+          QueryOption.expand,
+        ) as ExpandExpression&lt;T&gt;;
         if (current &#x3D;&#x3D;&#x3D; undefined) {
           this.options.expression(
             QueryOption.expand,
@@ -4842,7 +4846,9 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     }
     if (options.search !&#x3D;&#x3D; undefined) {
       if (options.search instanceof SearchExpression) {
-        const current &#x3D; this.options.expression(QueryOption.search) as SearchExpression&lt;T&gt;;
+        const current &#x3D; this.options.expression(
+          QueryOption.search,
+        ) as SearchExpression&lt;T&gt;;
         if (current &#x3D;&#x3D;&#x3D; undefined) {
           this.options.expression(
             QueryOption.search,
@@ -4862,7 +4868,9 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     }
     if (options.filter !&#x3D;&#x3D; undefined) {
       if (options.filter instanceof FilterExpression) {
-        const current &#x3D; this.options.expression(QueryOption.filter) as FilterExpression&lt;T&gt;;
+        const current &#x3D; this.options.expression(
+          QueryOption.filter,
+        ) as FilterExpression&lt;T&gt;;
         if (current &#x3D;&#x3D;&#x3D; undefined) {
           this.options.expression(
             QueryOption.filter,
@@ -4882,7 +4890,9 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     }
     if (options.orderBy !&#x3D;&#x3D; undefined) {
       if (options.orderBy instanceof OrderByExpression) {
-        const current &#x3D; this.options.expression(QueryOption.orderBy) as OrderByExpression&lt;T&gt;;
+        const current &#x3D; this.options.expression(
+          QueryOption.orderBy,
+        ) as OrderByExpression&lt;T&gt;;
         if (current &#x3D;&#x3D;&#x3D; undefined) {
           this.options.expression(
             QueryOption.orderBy,

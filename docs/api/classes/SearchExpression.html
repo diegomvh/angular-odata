@@ -1642,7 +1642,10 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return this._add(new SearchTerm(value));
   }
 
-  combine(expression: SearchExpression&lt;T&gt;, connector: SearchConnector &#x3D; &#x27;AND&#x27;): SearchExpression&lt;T&gt; {
+  combine(
+    expression: SearchExpression&lt;T&gt;,
+    connector: SearchConnector &#x3D; &#x27;AND&#x27;,
+  ): SearchExpression&lt;T&gt; {
     return this._add(expression, connector);
   }
 }
