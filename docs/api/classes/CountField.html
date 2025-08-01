@@ -785,7 +785,7 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: CountExpressionBuilder&lt;T&gt;,
-      current?: CountExpression&lt;T&gt;,
+      current: CountExpression&lt;T&gt;,
     ) &#x3D;&gt; CountExpression&lt;T&gt;,
     current?: CountExpression&lt;T&gt;,
   ): CountExpression&lt;T&gt; {
@@ -794,7 +794,7 @@ export class CountExpression&lt;T&gt; extends Expression&lt;T&gt; {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new CountExpression&lt;T&gt;(),
       },
-      current,
+      current ?? new CountExpression&lt;T&gt;(),
     ) as CountExpression&lt;T&gt;;
   }
 

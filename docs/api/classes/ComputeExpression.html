@@ -956,7 +956,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:50</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:51</a></code>
 </div>
                         </td>
                     </tr>
@@ -1067,7 +1067,7 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
     names?: string[];
   } &#x3D; {}) {
     super({ children });
-    this.names &#x3D; names || [];
+    this.names &#x3D; names ?? [];
   }
 
   override get [Symbol.toStringTag]() {
@@ -1077,7 +1077,7 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: ComputeExpressionBuilder&lt;T&gt;,
-      current?: ComputeExpression&lt;T&gt;,
+      current: ComputeExpression&lt;T&gt;,
     ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
     current?: ComputeExpression&lt;T&gt;,
   ): ComputeExpression&lt;T&gt; {
@@ -1086,7 +1086,7 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new ComputeExpression&lt;T&gt;(),
       },
-      current,
+      current ?? new ComputeExpression&lt;T&gt;(),
     ) as ComputeExpression&lt;T&gt;;
   }
 

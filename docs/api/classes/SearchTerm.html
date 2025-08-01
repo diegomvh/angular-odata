@@ -551,8 +551,8 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
     negated?: boolean;
   } &#x3D; {}) {
     super({ children });
-    this._connector &#x3D; connector || &#x27;AND&#x27;;
-    this._negated &#x3D; negated || false;
+    this._connector &#x3D; connector ?? &#x27;AND&#x27;;
+    this._negated &#x3D; negated ?? false;
   }
 
   override get [Symbol.toStringTag]() {
@@ -562,7 +562,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: SearchExpressionBuilder&lt;T&gt;,
-      current?: SearchExpression&lt;T&gt;,
+      current: SearchExpression&lt;T&gt;,
     ) &#x3D;&gt; SearchExpression&lt;T&gt;,
     current?: SearchExpression&lt;T&gt;,
   ): SearchExpression&lt;T&gt; {
@@ -571,7 +571,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
         e: (connector: SearchConnector &#x3D; &#x27;AND&#x27;) &#x3D;&gt;
           new SearchExpression&lt;T&gt;({ connector }),
       },
-      current,
+      current ?? new SearchExpression&lt;T&gt;(),
     ) as SearchExpression&lt;T&gt;;
   }
 
@@ -665,6 +665,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
       negated: json[&#x27;negated&#x27;],
     });
   }
+
   connector() {
     return this._connector;
   }
@@ -693,6 +694,10 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   term(value: any) {
     return this._add(new SearchTerm(value));
+  }
+
+  combine(expression: SearchExpression&lt;T&gt;, connector: SearchConnector &#x3D; &#x27;AND&#x27;): SearchExpression&lt;T&gt; {
+    return this._add(expression, connector);
   }
 }
 </code></pre>

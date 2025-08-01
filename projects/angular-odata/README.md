@@ -1,63 +1,39 @@
-# AngularOdata
+<h1 align="center">Angular OData</h1>
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+<p align="center">
+  <em>A fluent API for querying, creating, updating and deleting OData resources in Angular.</em>
+  <br>
+</p>
 
-## Code scaffolding
+<p align="center">
+  <a href="CONTRIBUTING.md">Contributing</a>
+  ·
+  <a href="./docs/README.md">Documentation</a>
+  ·
+  <a href="https://github.com/diegomvh/AngularODataEntity">Demo</a>
+  <br>
+  <br>
+</p>
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+<p align="center">
+  <a href="https://github.com/diegomvh/angular-odata/actions?query=workflow%3A%22Node.js+CI%22">
+    <img src="https://github.com/diegomvh/angular-odata/workflows/Node.js%20CI/badge.svg" alt="CI status" />
+  </a>&nbsp;
+  <a href="http://badge.fury.io/js/angular-odata">
+    <img src="https://badge.fury.io/js/angular-odata.svg" alt="Angular OData on npm" />
+  </a>
+</p>
 
-```bash
-ng generate component component-name
-```
+<hr>
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Installation
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the library, run:
-
-```bash
-ng build angular-odata
-```
-
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
-
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/angular-odata
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Install from npm:
 
 ```bash
-ng test
+npm i angular-odata
 ```
 
-## Running end-to-end tests
+## OData Version
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The library works mainly with OData Version 4, however, it incorporates basic support for versions 3 and 2.

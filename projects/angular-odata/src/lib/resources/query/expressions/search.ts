@@ -211,7 +211,10 @@ export class SearchExpression<T> extends Expression<T> {
     return this._add(new SearchTerm(value));
   }
 
-  combine(expression: SearchExpression<T>, connector: SearchConnector = 'AND'): SearchExpression<T> {
+  combine(
+    expression: SearchExpression<T>,
+    connector: SearchConnector = 'AND',
+  ): SearchExpression<T> {
     return this._add(expression, connector);
   }
 }

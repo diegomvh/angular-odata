@@ -169,6 +169,9 @@
                                 <a href="#clone" >clone</a>
                             </li>
                             <li>
+                                <a href="#combine" >combine</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Static</span>
                                 <a href="#factory" >factory</a>
                             </li>
@@ -423,6 +426,73 @@
                             <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
 
                         </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="combine"></a>
+                    <span class="name">
+                        <span ><b>combine</b></span>
+                        <a href="#combine"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>combine(expression: <a href="../undefineds/Expand.html" target="_self">ExpandExpression&lt;T&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="277"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:277</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>expression</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -913,7 +983,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:50</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:51</a></code>
 </div>
                         </td>
                     </tr>
@@ -1147,7 +1217,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;,
+      current: OrderByExpression&lt;T&gt;,
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
   ) {
     return this.option(
@@ -1159,7 +1229,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
   compute(
     opts: (
       builder: ComputeExpressionBuilder&lt;T&gt;,
-      current?: ComputeExpression&lt;T&gt;,
+      current: ComputeExpression&lt;T&gt;,
     ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
   ) {
     return this.option(
@@ -1211,7 +1281,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
-      current?: ExpandExpression&lt;T&gt;,
+      current: ExpandExpression&lt;T&gt;,
     ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
     current?: ExpandExpression&lt;T&gt;,
   ): ExpandExpression&lt;T&gt; {
@@ -1220,7 +1290,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new ExpandExpression&lt;T&gt;(),
       },
-      current,
+      current ?? new ExpandExpression&lt;T&gt;(),
     ) as ExpandExpression&lt;T&gt;;
   }
 
@@ -1271,6 +1341,10 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
     let node &#x3D; new ExpandField&lt;Unpacked&lt;F&gt;&gt;(field);
     if (opts !&#x3D;&#x3D; undefined) opts(node);
     return this._add(node);
+  }
+
+  combine(expression: ExpandExpression&lt;T&gt;): ExpandExpression&lt;T&gt; {
+    return this._add(expression);
   }
 }
 </code></pre>

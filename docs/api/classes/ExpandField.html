@@ -1408,7 +1408,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;,
+      current: OrderByExpression&lt;T&gt;,
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
   ) {
     return this.option(
@@ -1420,7 +1420,7 @@ export class ExpandField&lt;T&gt; implements Renderable {
   compute(
     opts: (
       builder: ComputeExpressionBuilder&lt;T&gt;,
-      current?: ComputeExpression&lt;T&gt;,
+      current: ComputeExpression&lt;T&gt;,
     ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
   ) {
     return this.option(
@@ -1472,7 +1472,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: ExpandExpressionBuilder&lt;T&gt;,
-      current?: ExpandExpression&lt;T&gt;,
+      current: ExpandExpression&lt;T&gt;,
     ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
     current?: ExpandExpression&lt;T&gt;,
   ): ExpandExpression&lt;T&gt; {
@@ -1481,7 +1481,7 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new ExpandExpression&lt;T&gt;(),
       },
-      current,
+      current ?? new ExpandExpression&lt;T&gt;(),
     ) as ExpandExpression&lt;T&gt;;
   }
 
@@ -1532,6 +1532,10 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
     let node &#x3D; new ExpandField&lt;Unpacked&lt;F&gt;&gt;(field);
     if (opts !&#x3D;&#x3D; undefined) opts(node);
     return this._add(node);
+  }
+
+  combine(expression: ExpandExpression&lt;T&gt;): ExpandExpression&lt;T&gt; {
+    return this._add(expression);
   }
 }
 </code></pre>

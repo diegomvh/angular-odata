@@ -1390,7 +1390,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:50</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:51</a></code>
 </div>
                         </td>
                     </tr>
@@ -1505,8 +1505,8 @@ export class GroupByTransformations&lt;T&gt; extends Expression&lt;T&gt; {
     aliases?: string[];
   } &#x3D; {}) {
     super({ children });
-    this.methods &#x3D; methods || [];
-    this.aliases &#x3D; aliases || [];
+    this.methods &#x3D; methods ?? [];
+    this.aliases &#x3D; aliases ?? [];
   }
 
   override get [Symbol.toStringTag]() {
@@ -1631,7 +1631,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: ApplyExpressionBuilder&lt;T&gt;,
-      current?: ApplyExpression&lt;T&gt;,
+      current: ApplyExpression&lt;T&gt;,
     ) &#x3D;&gt; ApplyExpression&lt;T&gt;,
     current?: ApplyExpression&lt;T&gt;,
   ): ApplyExpression&lt;T&gt; {
@@ -1640,7 +1640,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new ApplyExpression&lt;T&gt;(),
       },
-      current,
+      current ?? new ApplyExpression&lt;T&gt;(),
     ) as ApplyExpression&lt;T&gt;;
   }
 
@@ -1813,7 +1813,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;
+      current: OrderByExpression&lt;T&gt;
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
     current?: OrderByExpression&lt;T&gt;
   ) {
@@ -1822,7 +1822,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new OrderByExpression&lt;T&gt;(),
       },
-      current
+      current ?? new OrderByExpression&lt;T&gt;()
     ) as OrderByExpression&lt;T&gt;;
     return this._add(transformations.orderby(exp));
   }

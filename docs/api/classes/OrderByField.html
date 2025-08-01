@@ -374,8 +374,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="54"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:54</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -548,6 +548,7 @@ export class OrderByField implements Renderable {
       this.order,
     );
   }
+
   resolve(parser: any) {
     return parser;
   }
@@ -574,7 +575,7 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
   static factory&lt;T&gt;(
     opts: (
       builder: OrderByExpressionBuilder&lt;T&gt;,
-      current?: OrderByExpression&lt;T&gt;,
+      current: OrderByExpression&lt;T&gt;,
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
     current?: OrderByExpression&lt;T&gt;,
   ): OrderByExpression&lt;T&gt; {
@@ -583,7 +584,7 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new OrderByExpression&lt;T&gt;(),
       },
-      current,
+      current ?? new OrderByExpression&lt;T&gt;(),
     ) as OrderByExpression&lt;T&gt;;
   }
 
@@ -634,6 +635,10 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
 
   descending(field: any) {
     return this._add(new OrderByField(field, &#x27;desc&#x27;));
+  }
+
+  combine(expression: OrderByExpression&lt;T&gt;): OrderByExpression&lt;T&gt; {
+    return this._add(expression);
   }
 }
 </code></pre>

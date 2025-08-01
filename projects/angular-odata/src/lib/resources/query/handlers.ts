@@ -685,7 +685,9 @@ export class ODataQueryOptionsHandler<T> {
   combine(options: ODataQueryArguments<T>) {
     if (options.select !== undefined) {
       if (options.select instanceof SelectExpression) {
-        const current = this.options.expression(QueryOption.select) as SelectExpression<T>;
+        const current = this.options.expression(
+          QueryOption.select,
+        ) as SelectExpression<T>;
         if (current === undefined) {
           this.options.expression(
             QueryOption.select,
@@ -707,7 +709,9 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (options.expand !== undefined) {
       if (options.expand instanceof ExpandExpression) {
-        const current = this.options.expression(QueryOption.expand) as ExpandExpression<T>;
+        const current = this.options.expression(
+          QueryOption.expand,
+        ) as ExpandExpression<T>;
         if (current === undefined) {
           this.options.expression(
             QueryOption.expand,
@@ -727,7 +731,9 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (options.search !== undefined) {
       if (options.search instanceof SearchExpression) {
-        const current = this.options.expression(QueryOption.search) as SearchExpression<T>;
+        const current = this.options.expression(
+          QueryOption.search,
+        ) as SearchExpression<T>;
         if (current === undefined) {
           this.options.expression(
             QueryOption.search,
@@ -747,7 +753,9 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (options.filter !== undefined) {
       if (options.filter instanceof FilterExpression) {
-        const current = this.options.expression(QueryOption.filter) as FilterExpression<T>;
+        const current = this.options.expression(
+          QueryOption.filter,
+        ) as FilterExpression<T>;
         if (current === undefined) {
           this.options.expression(
             QueryOption.filter,
@@ -767,7 +775,9 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (options.orderBy !== undefined) {
       if (options.orderBy instanceof OrderByExpression) {
-        const current = this.options.expression(QueryOption.orderBy) as OrderByExpression<T>;
+        const current = this.options.expression(
+          QueryOption.orderBy,
+        ) as OrderByExpression<T>;
         if (current === undefined) {
           this.options.expression(
             QueryOption.orderBy,

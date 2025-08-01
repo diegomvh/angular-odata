@@ -285,8 +285,10 @@ export class FilterExpression<F> extends Expression<F> {
     return this._add(syntax.isof(left, type));
   }
 
-  combine(exp: FilterExpression<F>, connector: FilterConnector = "and"): FilterExpression<F> {
+  combine(
+    exp: FilterExpression<F>,
+    connector: FilterConnector = 'and',
+  ): FilterExpression<F> {
     return this._add(exp, connector);
   }
-
 }
