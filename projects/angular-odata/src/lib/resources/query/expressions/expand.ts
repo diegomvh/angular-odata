@@ -105,7 +105,7 @@ export class ExpandField<T> implements Renderable {
   select(
     opts: (
       builder: SelectExpressionBuilder<T>,
-      current?: SelectExpression<T>,
+      current: SelectExpression<T>,
     ) => SelectExpression<T>,
   ): SelectExpression<T> {
     return this.option(
@@ -117,7 +117,7 @@ export class ExpandField<T> implements Renderable {
   expand(
     opts: (
       builder: ExpandExpressionBuilder<T>,
-      current?: ExpandExpression<T>,
+      current: ExpandExpression<T>,
     ) => ExpandExpression<T>,
   ) {
     return this.option(
@@ -129,7 +129,7 @@ export class ExpandField<T> implements Renderable {
   filter(
     opts: (
       builder: FilterExpressionBuilder<T>,
-      current?: FilterExpression<T>,
+      current: FilterExpression<T>,
     ) => FilterExpression<T>,
   ) {
     return this.option(
@@ -138,7 +138,11 @@ export class ExpandField<T> implements Renderable {
     );
   }
 
-  search(opts: (builder: SearchExpressionBuilder<T>) => SearchExpression<T>) {
+  search(
+    opts: (
+      builder: SearchExpressionBuilder<T>,
+      current: SearchExpression<T>,
+    ) => SearchExpression<T>) {
     return this.option(
       QueryOption.search,
       SearchExpression.factory<T>(opts, this.values[QueryOption.search]),
@@ -269,9 +273,18 @@ export class ExpandExpression<T> extends Expression<T> {
     field: F,
     opts?: (e: ExpandField<Unpacked<F>>) => void,
   ): ExpandExpression<T> {
-    let node = new ExpandField<Unpacked<F>>(field);
+    // Find ExpandField by fieldKey or create a new one if not found
+    let fieldKey = (<any>field).toString();
+    let node = this._children.find(
+      (n) => n.toString() === fieldKey,
+    ) as ExpandField<Unpacked<F>> | undefined;
+    if (node === undefined) {
+      // If not found, create a new ExpandField
+      node = new ExpandField<Unpacked<F>>(field);
+      this._add(node);
+    }
     if (opts !== undefined) opts(node);
-    return this._add(node);
+    return this;
   }
 
   combine(expression: ExpandExpression<T>): ExpandExpression<T> {

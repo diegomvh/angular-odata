@@ -282,7 +282,7 @@ export class ODataQueryOptionsHandler<T> {
   select(
     opts: (
       builder: SelectExpressionBuilder<T>,
-      current?: SelectExpression<T>,
+      current: SelectExpression<T>,
     ) => SelectExpression<T>,
   ): SelectExpression<T>;
   select(opts: Select<T>): ODataQueryOptionHandler<T>;
@@ -308,7 +308,7 @@ export class ODataQueryOptionsHandler<T> {
   expand(
     opts: (
       builder: ExpandExpressionBuilder<T>,
-      current?: ExpandExpression<T>,
+      current: ExpandExpression<T>,
     ) => ExpandExpression<T>,
   ): ExpandExpression<T>;
   expand(opts: Expand<T>): ODataQueryOptionHandler<T>;
@@ -335,7 +335,7 @@ export class ODataQueryOptionsHandler<T> {
   compute(
     opts: (
       builder: ComputeExpressionBuilder<T>,
-      current?: ComputeExpression<T>,
+      current: ComputeExpression<T>,
     ) => ComputeExpression<T>,
   ): ComputeExpression<T>;
   compute(opts: string): ODataQueryOptionHandler<T>;
@@ -362,7 +362,7 @@ export class ODataQueryOptionsHandler<T> {
   apply(
     opts: (
       builder: ApplyExpressionBuilder<T>,
-      current?: ApplyExpression<T>,
+      current: ApplyExpression<T>,
     ) => ApplyExpression<T>,
   ): ApplyExpression<T>;
   apply(opts: string): ODataQueryOptionHandler<T>;
@@ -411,7 +411,7 @@ export class ODataQueryOptionsHandler<T> {
   search(
     opts: (
       builder: SearchExpressionBuilder<T>,
-      current?: SearchExpression<T>,
+      current: SearchExpression<T>,
     ) => SearchExpression<T>,
   ): SearchExpression<T>;
   search(opts: string): ODataQueryOptionHandler<T>;
@@ -437,7 +437,7 @@ export class ODataQueryOptionsHandler<T> {
   filter(
     opts: (
       builder: FilterExpressionBuilder<T>,
-      current?: FilterExpression<T>,
+      current: FilterExpression<T>,
     ) => FilterExpression<T>,
   ): FilterExpression<T>;
   filter(opts: Filter<T>): ODataQueryOptionHandler<T>;
@@ -463,7 +463,7 @@ export class ODataQueryOptionsHandler<T> {
   orderBy(
     opts: (
       builder: OrderByExpressionBuilder<T>,
-      current?: OrderByExpression<T>,
+      current: OrderByExpression<T>,
     ) => OrderByExpression<T>,
   ): OrderByExpression<T>;
   orderBy(opts: OrderBy<T>): ODataQueryOptionHandler<T>;

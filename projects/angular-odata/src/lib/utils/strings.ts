@@ -20,4 +20,15 @@ export const Strings = {
       .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
       .join(' ');
   },
+
+  hashCode(text: string): number {
+    if (!text || text.length === 0) {
+      return 0;
+    }
+    let hash = 0;
+    for (let i = 0; i < text.length; i++) {
+      hash = Math.imul(hash, 31) + text.charCodeAt(i);
+    }
+    return hash;
+  }
 };

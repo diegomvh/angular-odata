@@ -31,6 +31,7 @@ export interface Renderable {
   toJson(): any;
   clone(): any;
   resolve(parser: any): any;
+  toString(): any;
 }
 
 export const FieldFactory = <T extends object>(
@@ -70,6 +71,8 @@ export const FieldFactory = <T extends object>(
           $type: 'Field',
           names: names,
         });
+      } else if (key === 'toString') {
+        return () => names.join('.');
       } else if (key === 'resolve') {
         return (parser: any) =>
           names.reduce(

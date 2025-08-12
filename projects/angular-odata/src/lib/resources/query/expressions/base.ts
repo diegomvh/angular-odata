@@ -51,4 +51,14 @@ export abstract class Expression<T> implements Renderable {
   resolve(parser: any) {
     return parser;
   }
+
+  toString() {
+    return this.render({
+      aliases: [],
+      escape: true,
+      prefix: '',
+      parser: undefined,
+      options: {},
+    });
+  }
 }
