@@ -330,10 +330,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   clone<C extends ODataCollection<T, M>>() {
     return new (<typeof ODataCollection>this.constructor)(
-      this.toEntities(INCLUDE_DEEP),
+      this.toEntities(INCLUDE_DEEP) as Partial<T>[],
       {
-        resource: this.resource(),
-        annots: this.annots(),
+        resource: this.resource()?.clone(),
+        annots: this.annots().clone(),
       },
     ) as C;
   }

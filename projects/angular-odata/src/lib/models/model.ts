@@ -456,12 +456,12 @@ export class ODataModel<T> {
     }) as this;
   }
 
-  clone<M extends ODataModel<T>>() {
+  clone<M extends ODataModel<T>>(): M {
     return new (<typeof ODataModel>this.constructor)(
-      this.toEntity(INCLUDE_DEEP),
+      this.toEntity(INCLUDE_DEEP) as Partial<T>,
       {
-        resource: this.resource() as ODataResource<T>,
-        annots: this.annots(),
+        resource: this.resource()?.clone(),
+        annots: this.annots().clone(),
       },
     ) as M;
   }
