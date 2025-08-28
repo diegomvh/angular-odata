@@ -115,15 +115,12 @@ export class ODataResponse<T> extends HttpResponse<T> {
           .find((p) => p.startsWith(APPLICATION_JSON)) as string;
         this._options.setFeatures(features);
       }
-      const headerKey = Http.resolveHeaderKey(
-        this.headers,
-        ODATA_VERSION_HEADERS,
-      );
+      const headerKey = Http.resolveHeaderKey(this.headers, ODATA_VERSION_HEADERS);
       if (headerKey) {
-        const version = (this.headers.get(headerKey) || '').replace(
-          /\;/g,
-          '',
-        ) as '2.0' | '3.0' | '4.0';
+        const version = (this.headers.get(headerKey) || '').replace(/\;/g, '') as
+          | '2.0'
+          | '3.0'
+          | '4.0';
         this._options.setVersion(version);
       }
 
@@ -149,9 +146,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
   get payload() {
     if (this._payload === undefined) {
       this._payload =
-        this.body && this.options.version === '2.0'
-          ? (<any>this.body)['d']
-          : this.body;
+        this.body && this.options.version === '2.0' ? (<any>this.body)['d'] : this.body;
     }
     return this._payload;
   }
@@ -192,11 +187,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
   entity(): ODataEntity<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataEntityAnnotations<T>(
-      options.helper,
-      this.annotations,
-      this.context,
-    );
+    const annots = new ODataEntityAnnotations<T>(options.helper, this.annotations, this.context);
     const data = payload ? annots.data(payload) : null;
     let entity = (
       data !== null && Types.isPlainObject(data)
@@ -204,8 +195,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
         : data
     ) as T | null;
 
-    if (entity !== null)
-      entity = this.resource.deserialize(entity, options) as T;
+    if (entity !== null) entity = this.resource.deserialize(entity, options) as T;
     return { entity, annots };
   }
 
@@ -216,14 +206,9 @@ export class ODataResponse<T> extends HttpResponse<T> {
   entities(): ODataEntities<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataEntitiesAnnotations<T>(
-      options.helper,
-      this.annotations,
-      this.context,
-    );
+    const annots = new ODataEntitiesAnnotations<T>(options.helper, this.annotations, this.context);
     let entities = payload ? annots.data(payload) : null;
-    if (entities !== null)
-      entities = this.resource.deserialize(entities, options) as T[];
+    if (entities !== null) entities = this.resource.deserialize(entities, options) as T[];
     return { entities, annots };
   }
 
@@ -234,23 +219,15 @@ export class ODataResponse<T> extends HttpResponse<T> {
   property(): ODataProperty<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataPropertyAnnotations<T>(
-      options.helper,
-      this.annotations,
-      this.context,
-    );
+    const annots = new ODataPropertyAnnotations<T>(options.helper, this.annotations, this.context);
     const data = payload ? (annots.data(payload) as T) : null;
     let property = (
       data !== null && Types.isPlainObject(data)
-        ? options.helper.attributes(
-            data as { [name: string]: any },
-            this.api.options.stripMetadata,
-          )
+        ? options.helper.attributes(data as { [name: string]: any }, this.api.options.stripMetadata)
         : data
     ) as T | null;
 
-    if (property !== null)
-      property = this.resource.deserialize(property, options) as T;
+    if (property !== null) property = this.resource.deserialize(property, options) as T;
     return { property, annots };
   }
 

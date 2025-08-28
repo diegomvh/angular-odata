@@ -1,11 +1,6 @@
 import { Observable } from 'rxjs';
 import { ODataApi } from '../api';
-import {
-  DEFAULT_VERSION,
-  PARAM_SEPARATOR,
-  QUERY_SEPARATOR,
-  VALUE_SEPARATOR,
-} from '../constants';
+import { DEFAULT_VERSION, PARAM_SEPARATOR, QUERY_SEPARATOR, VALUE_SEPARATOR } from '../constants';
 import { ODataHelper } from '../helper';
 import { ModelInterface, ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
@@ -18,21 +13,10 @@ import {
 } from '../types';
 import { Objects, Strings, Types } from '../utils';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
-import {
-  isQueryCustomType,
-  ODataQueryOptions,
-  ODataQueryOptionsHandler,
-} from './query';
-import {
-  ApplyExpression,
-  ApplyExpressionBuilder,
-  QueryCustomType,
-} from './query';
+import { isQueryCustomType, ODataQueryOptions, ODataQueryOptionsHandler } from './query';
+import { ApplyExpression, ApplyExpressionBuilder, QueryCustomType } from './query';
 import { ODataOptions } from './types';
-import {
-  ODataEntitiesAnnotations,
-  ODataEntityAnnotations,
-} from '../annotations';
+import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
 
 export type EntityKey<T> =
   | {
@@ -121,9 +105,7 @@ export class ODataResource<T> {
   }
 
   //#region Models
-  asModel(
-    entity?: Partial<T> | { [name: string]: any },
-  ): ODataModel<T> & ModelInterface<T>;
+  asModel(entity?: Partial<T> | { [name: string]: any }): ODataModel<T> & ModelInterface<T>;
   asModel(
     entity: Partial<T> | { [name: string]: any },
     {
@@ -136,9 +118,7 @@ export class ODataResource<T> {
       ModelType?: typeof ODataModel;
     },
   ): ODataModel<T> & ModelInterface<T>;
-  asModel<M extends ODataModel<T>>(
-    entity?: Partial<T> | { [name: string]: any },
-  ): M;
+  asModel<M extends ODataModel<T>>(entity?: Partial<T> | { [name: string]: any }): M;
   asModel<M extends ODataModel<T>>(
     entity: Partial<T> | { [name: string]: any },
     {
@@ -222,8 +202,7 @@ export class ODataResource<T> {
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for collection`);
-    if (CollectionType === undefined)
-      CollectionType = this.api.collectionForType(type);
+    if (CollectionType === undefined) CollectionType = this.api.collectionForType(type);
     let entitySet = annots?.entitySet;
     if (entitySet !== undefined) {
       resource = this.api.entitySet<T>(entitySet);
@@ -279,8 +258,7 @@ export class ODataResource<T> {
     },
   ): [string, { [name: string]: any }] {
     const type = this.outgoingType();
-    const parser =
-      type !== undefined ? this.api.parserForType<T>(type) : undefined;
+    const parser = type !== undefined ? this.api.parserForType<T>(type) : undefined;
     const [spath, sparams] = this.pathSegments.pathAndParams({
       escape,
       parser,
@@ -356,9 +334,7 @@ export class ODataResource<T> {
       const parser = this.__parser(value, options, resourceType, bindingType);
       return parser !== undefined ? parser.deserialize(value, options) : value;
     };
-    return Array.isArray(value)
-      ? value.map((v) => _d(v, options))
-      : _d(value, options);
+    return Array.isArray(value) ? value.map((v) => _d(v, options)) : _d(value, options);
   }
 
   serialize(value: any, options?: ParserOptions): any {
@@ -368,9 +344,7 @@ export class ODataResource<T> {
       const parser = this.__parser(value, options, resourceType, bindingType);
       return parser !== undefined ? parser.serialize(value, options) : value;
     };
-    return Array.isArray(value)
-      ? value.map((v) => _s(v, options))
-      : _s(value, options);
+    return Array.isArray(value) ? value.map((v) => _s(v, options)) : _s(value, options);
   }
 
   encode(value: any, options?: ParserOptions): any {
@@ -380,9 +354,7 @@ export class ODataResource<T> {
       const parser = this.__parser(value, options, resourceType, bindingType);
       return parser !== undefined ? parser.encode(value, options) : value;
     };
-    return Array.isArray(value)
-      ? value.map((v) => _e(v, options))
-      : _e(value, options);
+    return Array.isArray(value) ? value.map((v) => _e(v, options)) : _e(value, options);
   }
 
   toJson() {
@@ -412,9 +384,7 @@ export class ODataResource<T> {
    * @param f Function context for handle the segments
    * @returns ODataActionResource
    */
-  segment(
-    f: (q: ODataPathSegmentsHandler<T>, s?: ODataStructuredType<T>) => void,
-  ) {
+  segment(f: (q: ODataPathSegmentsHandler<T>, s?: ODataStructuredType<T>) => void) {
     const type = this.outgoingType();
     f(
       new ODataPathSegmentsHandler<T>(this.pathSegments),
@@ -428,9 +398,7 @@ export class ODataResource<T> {
    * Create an object handler for mutate the query options of the resource
    * @param f Function context for handle the query options
    */
-  query(
-    f: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void,
-  ) {
+  query(f: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void) {
     const type = this.outgoingType();
     f(
       new ODataQueryOptionsHandler<T>(this.queryOptions),
@@ -440,10 +408,7 @@ export class ODataResource<T> {
   }
 
   transform<R>(
-    opts: (
-      builder: ApplyExpressionBuilder<T>,
-      current?: ApplyExpression<T>,
-    ) => ApplyExpression<T>,
+    opts: (builder: ApplyExpressionBuilder<T>, current?: ApplyExpression<T>) => ApplyExpression<T>,
     {
       type,
       fields,
@@ -462,8 +427,7 @@ export class ODataResource<T> {
       // Resolve Schema
       let schema = this.api.findSchema(type);
       if (schema === undefined) {
-        const namespace =
-          type.substring(0, type.lastIndexOf('.')) ?? this.api.name!;
+        const namespace = type.substring(0, type.lastIndexOf('.')) ?? this.api.name!;
         schema = this.api.createSchema({ namespace });
       }
       const name = type.substring(type.lastIndexOf('.'));
@@ -486,10 +450,7 @@ export class ODataResource<T> {
     });
   }
 
-  static resolveKey<T>(
-    value: any,
-    schema?: ODataStructuredType<T>,
-  ): EntityKey<T> | undefined {
+  static resolveKey<T>(value: any, schema?: ODataStructuredType<T>): EntityKey<T> | undefined {
     if (isQueryCustomType(value)) {
       return value;
     } else if (Types.isPlainObject(value)) {
@@ -502,8 +463,7 @@ export class ODataResource<T> {
 
   protected resolveKey(value: any): EntityKey<T> | undefined {
     const type = this.outgoingType();
-    const structured =
-      type !== undefined ? this.api.structuredType<T>(type) : undefined;
+    const structured = type !== undefined ? this.api.structuredType<T>(type) : undefined;
     return ODataResource.resolveKey<T>(value, structured);
   }
   //#endregion

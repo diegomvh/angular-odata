@@ -23,10 +23,7 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   }
 }
 
-export class ODataEnumTypeParser<E>
-  extends ODataAnnotatable
-  implements FieldParser<E>
-{
+export class ODataEnumTypeParser<E> extends ODataAnnotatable implements FieldParser<E> {
   name: string;
   namespace: string;
   alias?: string;
@@ -65,8 +62,7 @@ export class ODataEnumTypeParser<E>
       return [
         ...this._fields.filter(
           (f) =>
-            (this.flags && Boolean((<any>f.value) & (<any>namesValue))) ||
-            f.value === namesValue,
+            (this.flags && Boolean((<any>f.value) & (<any>namesValue))) || f.value === namesValue,
         ),
       ];
     }
@@ -78,9 +74,7 @@ export class ODataEnumTypeParser<E>
   }
 
   field(nameValue: string | number) {
-    const field = this.fields().find(
-      (f) => f.name === nameValue || f.value === nameValue,
-    );
+    const field = this.fields().find((f) => f.name === nameValue || f.value === nameValue);
     //Throw error if not found
     //if (field === undefined)
     //  throw new Error(`${this.name} has no field for ${nameValue}`);
@@ -108,33 +102,29 @@ export class ODataEnumTypeParser<E>
   }
 
   // Serialize
-  serialize(value: number, options?: ParserOptions): string | undefined {
+  serialize(value: E, options?: ParserOptions): string | undefined {
     // Enum are string | number
     // string | number -> string
     const parserOptions = { ...this.parserOptions, ...options };
     if (this.flags) {
-      let names = this.fields(value).map((f) => f.name);
+      let names = this.fields(value as number).map((f) => f.name);
       if (names.length === 0) names = [`${value}`];
       return !parserOptions?.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
-      let name = this.field(value)?.name;
+      let name = this.field(value as number)?.name;
       if (name === undefined) name = `${value}`;
-      return !parserOptions?.stringAsEnum
-        ? `${this.namespace}.${this.name}'${name}'`
-        : name;
+      return !parserOptions?.stringAsEnum ? `${this.namespace}.${this.name}'${name}'` : name;
     }
   }
 
   //Encode
-  encode(value: number, options?: ParserOptions): any {
+  encode(value: E, options?: ParserOptions): any {
     const parserOptions = { ...this.parserOptions, ...options };
     const serialized = this.serialize(value, parserOptions);
     if (serialized === undefined) return undefined;
-    return parserOptions?.stringAsEnum
-      ? raw(`'${serialized}'`)
-      : raw(serialized);
+    return parserOptions?.stringAsEnum ? raw(`'${serialized}'`) : raw(serialized);
   }
 
   // Json Schema

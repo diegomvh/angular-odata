@@ -181,15 +181,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>ceiling(left: <a href="../undefineds/.html" target="_self">T | string</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>ceiling(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="422"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:422</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="425"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:425</a></div>
                         </td>
                     </tr>
 
@@ -213,7 +213,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T | string</a></code>
+                                                        <code>T | string</code>
                                             </td>
 
                                             <td>
@@ -266,15 +266,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>floor(left: <a href="../undefineds/.html" target="_self">T | string</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>floor(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="425"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:425</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="428"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:428</a></div>
                         </td>
                     </tr>
 
@@ -298,7 +298,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T | string</a></code>
+                                                        <code>T | string</code>
                                             </td>
 
                                             <td>
@@ -351,15 +351,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>round(left: <a href="../undefineds/.html" target="_self">T | string</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>round(left: T | string, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="428"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:428</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="431"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:431</a></div>
                         </td>
                     </tr>
 
@@ -383,7 +383,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T | string</a></code>
+                                                        <code>T | string</code>
                                             </td>
 
                                             <td>
@@ -466,6 +466,7 @@ export interface Renderable {
   toJson(): any;
   clone(): any;
   resolve(parser: any): any;
+  toString(): any;
 }
 
 export const FieldFactory &#x3D; &lt;T extends object&gt;(
@@ -505,6 +506,8 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
           $type: &#x27;Field&#x27;,
           names: names,
         });
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;toString&#x27;) {
+        return () &#x3D;&gt; names.join(&#x27;.&#x27;);
       } else if (key &#x3D;&#x3D;&#x3D; &#x27;resolve&#x27;) {
         return (parser: any) &#x3D;&gt;
           names.reduce(

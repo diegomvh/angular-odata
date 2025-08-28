@@ -178,15 +178,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>group(value: <a href="../undefineds/.html" target="_self">any</a>)</code>
+<code>group(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="669"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:669</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="672"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:672</a></div>
                         </td>
                     </tr>
 
@@ -209,7 +209,7 @@
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -245,15 +245,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>rollup(values: <a href="../undefineds/.html" target="_self">any</a>)</code>
+<code>rollup(...values: any)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="672"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:672</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="675"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:675</a></div>
                         </td>
                     </tr>
 
@@ -276,7 +276,7 @@
                                         <tr>
                                                 <td>values</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -342,6 +342,7 @@ export interface Renderable {
   toJson(): any;
   clone(): any;
   resolve(parser: any): any;
+  toString(): any;
 }
 
 export const FieldFactory &#x3D; &lt;T extends object&gt;(
@@ -381,6 +382,8 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
           $type: &#x27;Field&#x27;,
           names: names,
         });
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;toString&#x27;) {
+        return () &#x3D;&gt; names.join(&#x27;.&#x27;);
       } else if (key &#x3D;&#x3D;&#x3D; &#x27;resolve&#x27;) {
         return (parser: any) &#x3D;&gt;
           names.reduce(

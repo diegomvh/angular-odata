@@ -7,18 +7,11 @@ import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
 import { ODataEntities, ODataEntity } from '../response';
 import { ODataEntityResource } from './entity';
-import {
-  ODataEntitiesOptions,
-  ODataEntityOptions,
-  ODataOptions,
-} from './options';
+import { ODataEntitiesOptions, ODataEntityOptions, ODataOptions } from './options';
 
 export class ODataReferenceResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<P>(
-    api: ODataApi,
-    { segments }: { segments: ODataPathSegments },
-  ) {
+  static factory<P>(api: ODataApi, { segments }: { segments: ODataPathSegments }) {
     segments.add(PathSegment.reference, $REF);
     return new ODataReferenceResource<P>(api, { segments });
   }
@@ -33,20 +26,14 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     target: ODataEntityResource<any>,
     options?: ODataOptions,
   ): Observable<any> {
-    return super.post(
-      { [ODATA_ID]: target.endpointUrl({ params: false }) },
-      options,
-    );
+    return super.post({ [ODATA_ID]: target.endpointUrl({ params: false }) }, options);
   }
 
   protected override put(
     target: ODataEntityResource<any>,
     options?: ODataOptions,
   ): Observable<any> {
-    return super.put(
-      { [ODATA_ID]: target.endpointUrl({ params: false }) },
-      options,
-    );
+    return super.put({ [ODATA_ID]: target.endpointUrl({ params: false }) }, options);
   }
 
   protected override delete({
@@ -71,10 +58,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns Observable of the response
    */
-  add(
-    target: ODataEntityResource<any>,
-    options?: ODataOptions,
-  ): Observable<any> {
+  add(target: ODataEntityResource<any>, options?: ODataOptions): Observable<any> {
     return this.post(target, options);
   }
 
@@ -84,10 +68,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns Observable of the response
    */
-  remove(
-    target?: ODataEntityResource<any>,
-    options?: ODataOptions,
-  ): Observable<any> {
+  remove(target?: ODataEntityResource<any>, options?: ODataOptions): Observable<any> {
     return this.delete({ target, ...options });
   }
   //#region
@@ -99,10 +80,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns Observable of the response
    */
-  set(
-    target: ODataEntityResource<any>,
-    options?: ODataOptions,
-  ): Observable<any> {
+  set(target: ODataEntityResource<any>, options?: ODataOptions): Observable<any> {
     return this.put(target, options);
   }
 
@@ -151,9 +129,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOption[];
     } = {},
   ): Observable<T | null> {
-    return this.fetch({ responseType: 'entity', ...options }).pipe(
-      map(({ entity }) => entity),
-    );
+    return this.fetch({ responseType: 'entity', ...options }).pipe(map(({ entity }) => entity));
   }
 
   /**

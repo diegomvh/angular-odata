@@ -178,15 +178,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>all(left: <a href="../undefineds/.html" target="_self">T</a>, right: <a href="../undefineds/.html" target="_self">any</a>, alias?: <a href="../undefineds/.html" target="_self">string</a>)</code>
+<code>all(left: T, right: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1016"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:1016</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1019"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:1019</a></div>
                         </td>
                     </tr>
 
@@ -209,7 +209,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T</a></code>
+                                                        <code>T</code>
                                             </td>
 
                                             <td>
@@ -221,7 +221,7 @@
                                         <tr>
                                                 <td>right</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -233,7 +233,7 @@
                                         <tr>
                                                 <td>alias</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
 
                                             <td>
@@ -269,15 +269,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>any(left: <a href="../undefineds/.html" target="_self">T</a>, right: <a href="../undefineds/.html" target="_self">any</a>, alias?: <a href="../undefineds/.html" target="_self">string</a>)</code>
+<code>any(left: T, right: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1012"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:1012</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1015"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:1015</a></div>
                         </td>
                     </tr>
 
@@ -300,7 +300,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T</a></code>
+                                                        <code>T</code>
                                             </td>
 
                                             <td>
@@ -312,7 +312,7 @@
                                         <tr>
                                                 <td>right</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -324,7 +324,7 @@
                                         <tr>
                                                 <td>alias</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
 
                                             <td>
@@ -390,6 +390,7 @@ export interface Renderable {
   toJson(): any;
   clone(): any;
   resolve(parser: any): any;
+  toString(): any;
 }
 
 export const FieldFactory &#x3D; &lt;T extends object&gt;(
@@ -429,6 +430,8 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
           $type: &#x27;Field&#x27;,
           names: names,
         });
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;toString&#x27;) {
+        return () &#x3D;&gt; names.join(&#x27;.&#x27;);
       } else if (key &#x3D;&#x3D;&#x3D; &#x27;resolve&#x27;) {
         return (parser: any) &#x3D;&gt;
           names.reduce(

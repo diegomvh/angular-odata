@@ -45,10 +45,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const entity = this.clone();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
-      ODataResource.resolveKey<T>(
-        value,
-        this.api.findStructuredType<T>(types[index]),
-      ),
+      ODataResource.resolveKey<T>(value, this.api.findStructuredType<T>(types[index])),
     );
     entity.segment((s) => s.keys(keys));
     return entity;
@@ -79,15 +76,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   cast<C>(type: string) {
     const thisType = this.incomingType();
-    const baseSchema =
-      thisType !== undefined ? this.api.structuredType(thisType) : undefined;
+    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
     // Downcast
     const castSchema = baseSchema?.findChildSchema((s) => s.type() === type);
-    if (
-      castSchema !== undefined &&
-      baseSchema !== undefined &&
-      !castSchema.isSubtypeOf(baseSchema)
-    )
+    if (castSchema !== undefined && baseSchema !== undefined && !castSchema.isSubtypeOf(baseSchema))
       throw new Error(`cast: Cannot cast to ${type}`);
     const segments = this.cloneSegments();
     segments.add(PathSegment.type, type).incomingType(type);
@@ -98,24 +90,15 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   //#region Requests
-  protected override post(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<any> {
+  protected override post(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override put(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<any> {
+  protected override put(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override patch(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<any> {
+  protected override patch(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
@@ -133,24 +116,15 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
-  create(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
+  create(attrs: Partial<T>, options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.post(attrs, options);
   }
 
-  update(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
+  update(attrs: Partial<T>, options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.put(attrs, options);
   }
 
-  modify(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
+  modify(attrs: Partial<T>, options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.patch(attrs, options);
   }
 
@@ -163,8 +137,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOption[];
     },
   ): Observable<ODataEntity<T>> {
-    if (!this.hasKey())
-      return throwError(() => new Error('fetch: Entity resource without key'));
+    if (!this.hasKey()) return throwError(() => new Error('fetch: Entity resource without key'));
     return this.get(options);
   }
 
@@ -196,9 +169,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   ) {
     return this.fetch(options).pipe(
       map(({ entity, annots }) =>
-        entity
-          ? this.asModel(entity, { annots, ModelType: options?.ModelType })
-          : null,
+        entity ? this.asModel(entity, { annots, ModelType: options?.ModelType }) : null,
       ),
     );
   }

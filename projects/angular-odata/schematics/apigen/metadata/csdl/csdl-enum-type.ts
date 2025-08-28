@@ -60,15 +60,7 @@ export class CsdlEnumType extends CsdlAnnotable {
 export class CsdlMember extends CsdlAnnotable {
   Name: string;
   Value?: number;
-  constructor({
-    Name,
-    Value,
-    Annotation,
-  }: {
-    Name: string;
-    Value?: number;
-    Annotation?: any[];
-  }) {
+  constructor({ Name, Value, Annotation }: { Name: string; Value?: number; Annotation?: any[] }) {
     super({ Annotation });
     this.Name = Name;
     this.Value = Value;

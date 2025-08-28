@@ -33,17 +33,13 @@ describe('OData search builder', () => {
   describe('base condition', () => {
     describe('as factory function', () => {
       it('field', () => {
-        const compare1 = ExpandExpression.factory<Person>(({ e, t }) =>
-          e().field(t.Car),
-        );
+        const compare1 = ExpandExpression.factory<Person>(({ e, t }) => e().field(t.Car));
 
         expect(compare1.render()).toBe('Car');
       });
 
       it('navigation', () => {
-        const compare1 = ExpandExpression.factory<Person>(({ e, t }) =>
-          e().field(t.Car?.Model),
-        );
+        const compare1 = ExpandExpression.factory<Person>(({ e, t }) => e().field(t.Car?.Model));
 
         expect(compare1.render()).toBe('Car/Model');
       });
@@ -61,9 +57,7 @@ describe('OData search builder', () => {
           }),
         );
 
-        expect(compare1.render()).toBe(
-          'Car($expand=Model;$filter=Year eq 2000;$skip=1)',
-        );
+        expect(compare1.render()).toBe('Car($expand=Model;$filter=Year eq 2000;$skip=1)');
       });
 
       it('navigation', () => {
@@ -75,9 +69,7 @@ describe('OData search builder', () => {
           }),
         );
 
-        expect(compare1.render()).toBe(
-          "Car/Model($filter=Name in ('BMW','Audi');$skip=1;$top=1)",
-        );
+        expect(compare1.render()).toBe("Car/Model($filter=Name in ('BMW','Audi');$skip=1;$top=1)");
       });
     });
   });

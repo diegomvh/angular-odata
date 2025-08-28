@@ -34,11 +34,7 @@ export const Http = {
     ...values: (
       | HttpParams
       | {
-          [param: string]:
-            | string
-            | number
-            | boolean
-            | ReadonlyArray<string | number | boolean>;
+          [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
         }
     )[]
   ): HttpParams {
@@ -64,17 +60,11 @@ export const Http = {
   },
 
   // Split Params
-  splitHttpParams(
-    params: HttpParams,
-    keys: string[],
-  ): [HttpParams, HttpParams] {
+  splitHttpParams(params: HttpParams, keys: string[]): [HttpParams, HttpParams] {
     let other = new HttpParams();
     params.keys().forEach((key) => {
       if (keys.includes(key)) {
-        other = (params.getAll(key) || []).reduce(
-          (acc, v) => acc.append(key, v),
-          other,
-        );
+        other = (params.getAll(key) || []).reduce((acc, v) => acc.append(key, v), other);
         params = params.delete(key);
       }
     });
@@ -121,8 +111,7 @@ export const Http = {
     const contentTypeParts: string[] = contentType.split(';');
     if (contentTypeParts.length === 2) {
       const boundary: string = contentType.split(';')[1].trim();
-      const boundaryDelimiter: string =
-        BOUNDARY_PREFIX_SUFFIX + boundary.split('=')[1];
+      const boundaryDelimiter: string = BOUNDARY_PREFIX_SUFFIX + boundary.split('=')[1];
       return boundaryDelimiter;
     } else {
       return '';

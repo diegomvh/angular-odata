@@ -36,18 +36,13 @@ export class ODataMediaResource extends ODataResource<any> {
     return super.get(options);
   }
 
-  protected override put(
-    data: ArrayBuffer | Blob,
-    options: ODataOptions = {},
-  ): Observable<any> {
+  protected override put(data: ArrayBuffer | Blob, options: ODataOptions = {}): Observable<any> {
     return super.put(data, options);
   }
   //#endregion
 
   //#region Shortcuts
-  fetch(
-    options: { responseType: 'arraybuffer' } & ODataOptions,
-  ): Observable<ArrayBuffer>;
+  fetch(options: { responseType: 'arraybuffer' } & ODataOptions): Observable<ArrayBuffer>;
   fetch(options: { responseType: 'blob' } & ODataOptions): Observable<Blob>;
   fetch(options: { responseType: any } & ODataOptions): Observable<any> {
     return this.get(options);
@@ -61,10 +56,7 @@ export class ODataMediaResource extends ODataResource<any> {
     return this.fetch({ responseType: 'blob', ...options });
   }
 
-  upload(
-    data: ArrayBuffer | Blob,
-    options: ODataOptions = {},
-  ): Observable<any> {
+  upload(data: ArrayBuffer | Blob, options: ODataOptions = {}): Observable<any> {
     return this.put(data, options);
   }
 

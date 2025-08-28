@@ -44,9 +44,7 @@ export class CsdlEntitySet extends CsdlAnnotable {
       Array.isArray(this.NavigationPropertyBinding) &&
       this.NavigationPropertyBinding.length > 0
     ) {
-      json['NavigationPropertyBinding'] = this.NavigationPropertyBinding.map(
-        (n) => n.toJson(),
-      );
+      json['NavigationPropertyBinding'] = this.NavigationPropertyBinding.map((n) => n.toJson());
     }
     if (this.IncludeInServiceDocument !== undefined) {
       json['IncludeInServiceDocument'] = this.IncludeInServiceDocument;

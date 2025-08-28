@@ -36,10 +36,7 @@ export type AggregateType =
 
 export type OrderBy<T> = OrderByType<T> | OrderByType<T>[];
 export type OrderByType<T> = string | OrderByObject<T>;
-export type OrderByObject<T> =
-  | keyof T
-  | [keyof T | string, 'asc' | 'desc']
-  | NestedOrderBy<T>;
+export type OrderByObject<T> = keyof T | [keyof T | string, 'asc' | 'desc'] | NestedOrderBy<T>;
 export type NestedOrderBy<T> = {
   [P in keyof T]?: T[P] extends Array<infer E> ? OrderBy<E> : OrderBy<T[P]>;
 };
@@ -105,13 +102,10 @@ export const binary = (value: string): QueryCustomType => ({
   value,
 });
 export const isQueryCustomType = (value: any) =>
-  typeof value === 'object' &&
-  'type' in value &&
-  value.type in QueryCustomTypes;
+  typeof value === 'object' && 'type' in value && value.type in QueryCustomTypes;
 
 export const isRawType = (value: any) =>
-  isQueryCustomType(value) &&
-  (value as QueryCustomType).type === QueryCustomTypes.Raw;
+  isQueryCustomType(value) && (value as QueryCustomType).type === QueryCustomTypes.Raw;
 
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
@@ -353,22 +347,19 @@ function buildFilter(
   }: { aliases?: QueryCustomType[]; propPrefix?: string; escape?: boolean },
 ): string {
   return (
-    (Array.isArray(filters) ? filters : [filters]).reduce(
-      (acc: string[], filter) => {
-        if (filter) {
-          const builtFilter = buildFilterCore(filter, {
-            aliases,
-            propPrefix,
-            escape,
-          });
-          if (builtFilter) {
-            acc.push(builtFilter);
-          }
+    (Array.isArray(filters) ? filters : [filters]).reduce((acc: string[], filter) => {
+      if (filter) {
+        const builtFilter = buildFilterCore(filter, {
+          aliases,
+          propPrefix,
+          escape,
+        });
+        if (builtFilter) {
+          acc.push(builtFilter);
         }
-        return acc;
-      },
-      [],
-    ) as string[]
+      }
+      return acc;
+    }, []) as string[]
   ).join(' and ');
 
   function buildFilterCore(
@@ -387,191 +378,175 @@ function buildFilter(
       // Use raw filter string
       filterExpr = filter;
     } else if (filter && typeof filter === 'object') {
-      const filtersArray = Object.keys(filter).reduce(
-        (result: any[], filterKey) => {
-          const value = (filter as any)[filterKey];
-          let propName = '';
-          if (propPrefix) {
-            if (filterKey === ITEM_ROOT) {
-              propName = propPrefix;
-            } else if (INDEXOF_REGEX.test(filterKey)) {
-              propName = filterKey.replace(INDEXOF_REGEX, (_, $1) =>
-                $1.trim() === ITEM_ROOT
-                  ? `(${propPrefix})`
-                  : `(${propPrefix}/${$1.trim()})`,
-              );
-            } else if (FUNCTION_REGEX.test(filterKey)) {
-              propName = filterKey.replace(FUNCTION_REGEX, (_, $1) =>
-                $1.trim() === ITEM_ROOT
-                  ? `(${propPrefix})`
-                  : `(${propPrefix}/${$1.trim()})`,
-              );
-            } else {
-              propName = `${propPrefix}/${filterKey}`;
-            }
+      const filtersArray = Object.keys(filter).reduce((result: any[], filterKey) => {
+        const value = (filter as any)[filterKey];
+        let propName = '';
+        if (propPrefix) {
+          if (filterKey === ITEM_ROOT) {
+            propName = propPrefix;
+          } else if (INDEXOF_REGEX.test(filterKey)) {
+            propName = filterKey.replace(INDEXOF_REGEX, (_, $1) =>
+              $1.trim() === ITEM_ROOT ? `(${propPrefix})` : `(${propPrefix}/${$1.trim()})`,
+            );
+          } else if (FUNCTION_REGEX.test(filterKey)) {
+            propName = filterKey.replace(FUNCTION_REGEX, (_, $1) =>
+              $1.trim() === ITEM_ROOT ? `(${propPrefix})` : `(${propPrefix}/${$1.trim()})`,
+            );
           } else {
-            propName = filterKey;
+            propName = `${propPrefix}/${filterKey}`;
           }
+        } else {
+          propName = filterKey;
+        }
 
-          if (filterKey === ITEM_ROOT && Array.isArray(value)) {
-            return result.concat(
-              value.map((arrayValue: any) =>
-                renderPrimitiveValue(propName, arrayValue, { escape, aliases }),
-              ),
-            );
-          }
+        if (filterKey === ITEM_ROOT && Array.isArray(value)) {
+          return result.concat(
+            value.map((arrayValue: any) =>
+              renderPrimitiveValue(propName, arrayValue, { escape, aliases }),
+            ),
+          );
+        }
 
-          if (
-            ['number', 'string', 'boolean'].indexOf(typeof value) !== -1 ||
-            value instanceof Date ||
-            value === null
-          ) {
-            // Simple key/value handled as equals operator
-            result.push(
-              renderPrimitiveValue(propName, value, { aliases, escape }),
-            );
-          } else if (Array.isArray(value)) {
-            const op = filterKey;
-            const builtFilters = value
-              .map((v) => buildFilter(v, { aliases, propPrefix, escape }))
-              .filter((f) => f)
-              .map((f) =>
-                LOGICAL_OPERATORS.indexOf(op) !== -1 ? `(${f})` : f,
-              );
-            if (builtFilters.length) {
-              if (LOGICAL_OPERATORS.indexOf(op) !== -1) {
-                if (builtFilters.length) {
-                  if (op === 'not') {
-                    result.push(parseNot(builtFilters as string[]));
-                  } else {
-                    result.push(`(${builtFilters.join(` ${op} `)})`);
-                  }
+        if (
+          ['number', 'string', 'boolean'].indexOf(typeof value) !== -1 ||
+          value instanceof Date ||
+          value === null
+        ) {
+          // Simple key/value handled as equals operator
+          result.push(renderPrimitiveValue(propName, value, { aliases, escape }));
+        } else if (Array.isArray(value)) {
+          const op = filterKey;
+          const builtFilters = value
+            .map((v) => buildFilter(v, { aliases, propPrefix, escape }))
+            .filter((f) => f)
+            .map((f) => (LOGICAL_OPERATORS.indexOf(op) !== -1 ? `(${f})` : f));
+          if (builtFilters.length) {
+            if (LOGICAL_OPERATORS.indexOf(op) !== -1) {
+              if (builtFilters.length) {
+                if (op === 'not') {
+                  result.push(parseNot(builtFilters as string[]));
+                } else {
+                  result.push(`(${builtFilters.join(` ${op} `)})`);
                 }
-              } else {
-                result.push(builtFilters.join(` ${op} `));
               }
-            }
-          } else if (LOGICAL_OPERATORS.indexOf(propName) !== -1) {
-            const op = propName;
-            const builtFilters = Object.keys(value).map((valueKey) =>
-              buildFilterCore(
-                { [valueKey]: value[valueKey] },
-                { aliases, escape },
-              ),
-            );
-            if (builtFilters.length) {
-              if (op === 'not') {
-                result.push(parseNot(builtFilters as string[]));
-              } else {
-                result.push(`${builtFilters.join(` ${op} `)}`);
-              }
-            }
-          } else if (typeof value === 'object') {
-            if ('type' in value) {
-              result.push(
-                renderPrimitiveValue(propName, value, { aliases, escape }),
-              );
             } else {
-              const operators = Object.keys(value);
-              operators.forEach((op) => {
-                if (COMPARISON_OPERATORS.indexOf(op) !== -1) {
+              result.push(builtFilters.join(` ${op} `));
+            }
+          }
+        } else if (LOGICAL_OPERATORS.indexOf(propName) !== -1) {
+          const op = propName;
+          const builtFilters = Object.keys(value).map((valueKey) =>
+            buildFilterCore({ [valueKey]: value[valueKey] }, { aliases, escape }),
+          );
+          if (builtFilters.length) {
+            if (op === 'not') {
+              result.push(parseNot(builtFilters as string[]));
+            } else {
+              result.push(`${builtFilters.join(` ${op} `)}`);
+            }
+          }
+        } else if (typeof value === 'object') {
+          if ('type' in value) {
+            result.push(renderPrimitiveValue(propName, value, { aliases, escape }));
+          } else {
+            const operators = Object.keys(value);
+            operators.forEach((op) => {
+              if (COMPARISON_OPERATORS.indexOf(op) !== -1) {
+                result.push(
+                  `${propName} ${op} ${normalizeValue(value[op], {
+                    aliases,
+                    escape,
+                  })}`,
+                );
+              } else if (LOGICAL_OPERATORS.indexOf(op) !== -1) {
+                if (Array.isArray(value[op])) {
                   result.push(
-                    `${propName} ${op} ${normalizeValue(value[op], {
-                      aliases,
-                      escape,
-                    })}`,
-                  );
-                } else if (LOGICAL_OPERATORS.indexOf(op) !== -1) {
-                  if (Array.isArray(value[op])) {
-                    result.push(
-                      value[op]
-                        .map(
-                          (v: any) =>
-                            '(' +
-                            buildFilterCore(v, {
-                              aliases,
-                              propPrefix: propName,
-                              escape,
-                            }) +
-                            ')',
-                        )
-                        .join(` ${op} `),
-                    );
-                  } else {
-                    result.push(
-                      '(' +
-                        buildFilterCore(value[op], {
-                          aliases,
-                          propPrefix: propName,
-                          escape,
-                        }) +
-                        ')',
-                    );
-                  }
-                } else if (COLLECTION_OPERATORS.indexOf(op) !== -1) {
-                  const collectionClause = buildCollectionClause(
-                    filterKey.toLowerCase(),
-                    value[op],
-                    op,
-                    propName,
-                  );
-                  if (collectionClause) {
-                    result.push(collectionClause);
-                  }
-                } else if (op === 'has') {
-                  result.push(
-                    `${propName} ${op} ${normalizeValue(value[op], {
-                      aliases,
-                      escape,
-                    })}`,
-                  );
-                } else if (op === 'in') {
-                  const resultingValues = Array.isArray(value[op])
-                    ? value[op]
-                    : value[op].value.map((typedValue: any) => ({
-                        type: value[op].type,
-                        value: typedValue,
-                      }));
-
-                  result.push(
-                    propName +
-                      ' in (' +
-                      resultingValues
-                        .map((v: any) => normalizeValue(v, { aliases, escape }))
-                        .join(',') +
-                      ')',
-                  );
-                } else if (BOOLEAN_FUNCTIONS.indexOf(op) !== -1) {
-                  // Simple boolean functions (startswith, endswith, contains)
-                  result.push(
-                    `${op}(${propName},${normalizeValue(value[op], {
-                      aliases,
-                      escape,
-                    })})`,
+                    value[op]
+                      .map(
+                        (v: any) =>
+                          '(' +
+                          buildFilterCore(v, {
+                            aliases,
+                            propPrefix: propName,
+                            escape,
+                          }) +
+                          ')',
+                      )
+                      .join(` ${op} `),
                   );
                 } else {
-                  // Nested property
-                  const filter = buildFilterCore(value, {
-                    aliases,
-                    propPrefix: propName,
-                    escape,
-                  });
-                  if (filter) {
-                    result.push(filter);
-                  }
+                  result.push(
+                    '(' +
+                      buildFilterCore(value[op], {
+                        aliases,
+                        propPrefix: propName,
+                        escape,
+                      }) +
+                      ')',
+                  );
                 }
-              });
-            }
-          } else if (value === undefined) {
-            // Ignore/omit filter if value is `undefined`
-          } else {
-            throw new Error(`Unexpected value type: ${value}`);
-          }
+              } else if (COLLECTION_OPERATORS.indexOf(op) !== -1) {
+                const collectionClause = buildCollectionClause(
+                  filterKey.toLowerCase(),
+                  value[op],
+                  op,
+                  propName,
+                );
+                if (collectionClause) {
+                  result.push(collectionClause);
+                }
+              } else if (op === 'has') {
+                result.push(
+                  `${propName} ${op} ${normalizeValue(value[op], {
+                    aliases,
+                    escape,
+                  })}`,
+                );
+              } else if (op === 'in') {
+                const resultingValues = Array.isArray(value[op])
+                  ? value[op]
+                  : value[op].value.map((typedValue: any) => ({
+                      type: value[op].type,
+                      value: typedValue,
+                    }));
 
-          return result;
-        },
-        [],
-      );
+                result.push(
+                  propName +
+                    ' in (' +
+                    resultingValues
+                      .map((v: any) => normalizeValue(v, { aliases, escape }))
+                      .join(',') +
+                    ')',
+                );
+              } else if (BOOLEAN_FUNCTIONS.indexOf(op) !== -1) {
+                // Simple boolean functions (startswith, endswith, contains)
+                result.push(
+                  `${op}(${propName},${normalizeValue(value[op], {
+                    aliases,
+                    escape,
+                  })})`,
+                );
+              } else {
+                // Nested property
+                const filter = buildFilterCore(value, {
+                  aliases,
+                  propPrefix: propName,
+                  escape,
+                });
+                if (filter) {
+                  result.push(filter);
+                }
+              }
+            });
+          }
+        } else if (value === undefined) {
+          // Ignore/omit filter if value is `undefined`
+        } else {
+          throw new Error(`Unexpected value type: ${value}`);
+        }
+
+        return result;
+      }, []);
 
       filterExpr = filtersArray.join(' and ');
     } /* else {
@@ -611,9 +586,7 @@ function buildFilter(
         propPrefix: lambdaParameter,
         escape,
       });
-      clause = `${propName}/${op}(${
-        filter ? `${lambdaParameter}:${filter}` : ''
-      })`;
+      clause = `${propName}/${op}(${filter ? `${lambdaParameter}:${filter}` : ''})`;
     }
     return clause;
   }
@@ -645,10 +618,7 @@ function escapeIllegalChars(string: string) {
 
 export function normalizeValue(
   value: Value,
-  {
-    aliases,
-    escape = false,
-  }: { aliases?: QueryCustomType[]; escape?: boolean } = {},
+  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean } = {},
 ): any {
   if (typeof value === 'string') {
     return escape ? `'${escapeIllegalChars(value)}'` : `'${value}'`;
@@ -657,9 +627,7 @@ export function normalizeValue(
   } else if (typeof value === 'number') {
     return value;
   } else if (Array.isArray(value)) {
-    return `[${value
-      .map((d) => normalizeValue(d, { aliases, escape }))
-      .join(',')}]`;
+    return `[${value.map((d) => normalizeValue(d, { aliases, escape })).join(',')}]`;
   } else if (value === null) {
     return value;
   } else if (typeof value === 'object') {
@@ -682,10 +650,7 @@ export function normalizeValue(
       default:
         return Object.entries(value)
           .filter(([, v]) => v !== undefined)
-          .map(
-            ([k, v]) =>
-              `${k}=${normalizeValue(v as Value, { aliases, escape })}`,
-          )
+          .map(([k, v]) => `${k}=${normalizeValue(v as Value, { aliases, escape })}`)
           .join(',');
     }
   }
@@ -694,10 +659,7 @@ export function normalizeValue(
 
 function buildExpand<T>(
   expands: Expand<T>,
-  {
-    aliases,
-    escape = false,
-  }: { aliases?: QueryCustomType[]; escape?: boolean },
+  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean },
 ): string {
   if (isRawType(expands)) {
     return (expands as QueryCustomType).value;
@@ -731,11 +693,7 @@ function buildExpand<T>(
   } else if (typeof expands === 'object') {
     const expandKeys = Object.keys(expands);
 
-    if (
-      expandKeys.some(
-        (key) => SUPPORTED_EXPAND_PROPERTIES.indexOf(key.toLowerCase()) !== -1,
-      )
-    ) {
+    if (expandKeys.some((key) => SUPPORTED_EXPAND_PROPERTIES.indexOf(key.toLowerCase()) !== -1)) {
       return expandKeys
         .map((key) => {
           let value;
@@ -747,23 +705,20 @@ function buildExpand<T>(
               });
               break;
             case 'orderBy':
-              value = buildOrderBy(
-                (expands as NestedExpandOptions<any>)[key] as OrderBy<T>,
-              );
+              value = buildOrderBy((expands as NestedExpandOptions<any>)[key] as OrderBy<T>);
               break;
             case 'levels':
             case 'count':
             case 'top':
             case 'skip':
               value = `${(expands as NestedExpandOptions<any>)[key]}`;
-              if (isRawType(value))
-                value = (value as unknown as QueryCustomType).value;
+              if (isRawType(value)) value = (value as unknown as QueryCustomType).value;
               break;
             default:
-              value = buildExpand(
-                (expands as NestedExpandOptions<any>)[key] as Expand<T>,
-                { aliases, escape },
-              );
+              value = buildExpand((expands as NestedExpandOptions<any>)[key] as Expand<T>, {
+                aliases,
+                escape,
+              });
           }
           return `$${key.toLowerCase()}=${value}`;
         })
@@ -772,9 +727,7 @@ function buildExpand<T>(
       return expandKeys
         .map((key) => {
           const builtExpand = buildExpand(
-            (expands as NestedExpandOptions<any>)[
-              key
-            ] as NestedExpandOptions<any>,
+            (expands as NestedExpandOptions<any>)[key] as NestedExpandOptions<any>,
             { aliases, escape },
           );
           return builtExpand ? `${key}(${builtExpand})` : key;
@@ -787,46 +740,38 @@ function buildExpand<T>(
 
 function buildTransforms<T>(
   transforms: Transform<T> | Transform<T>[],
-  {
-    aliases,
-    escape = false,
-  }: { aliases?: QueryCustomType[]; escape?: boolean },
+  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean },
 ) {
   // Wrap single object an array for simplified processing
   const transformsArray = Array.isArray(transforms) ? transforms : [transforms];
 
-  const transformsResult = transformsArray.reduce(
-    (result: string[], transform) => {
-      const { aggregate, filter, groupBy, ...rest } = transform;
+  const transformsResult = transformsArray.reduce((result: string[], transform) => {
+    const { aggregate, filter, groupBy, ...rest } = transform;
 
-      // TODO: support as many of the following:
-      //   topcount, topsum, toppercent,
-      //   bottomsum, bottomcount, bottompercent,
-      //   identity, concat, expand, search, compute, isdefined
-      const unsupportedKeys = Object.keys(rest);
-      if (unsupportedKeys.length) {
-        throw new Error(`Unsupported transform(s): ${unsupportedKeys}`);
-      }
+    // TODO: support as many of the following:
+    //   topcount, topsum, toppercent,
+    //   bottomsum, bottomcount, bottompercent,
+    //   identity, concat, expand, search, compute, isdefined
+    const unsupportedKeys = Object.keys(rest);
+    if (unsupportedKeys.length) {
+      throw new Error(`Unsupported transform(s): ${unsupportedKeys}`);
+    }
 
-      if (aggregate) {
-        result.push(`aggregate(${buildAggregate(aggregate)})`);
+    if (aggregate) {
+      result.push(`aggregate(${buildAggregate(aggregate)})`);
+    }
+    if (filter) {
+      const builtFilter = buildFilter(filter, { aliases, escape });
+      if (builtFilter) {
+        result.push(`filter(${buildFilter(builtFilter, { aliases, escape })})`);
       }
-      if (filter) {
-        const builtFilter = buildFilter(filter, { aliases, escape });
-        if (builtFilter) {
-          result.push(
-            `filter(${buildFilter(builtFilter, { aliases, escape })})`,
-          );
-        }
-      }
-      if (groupBy) {
-        result.push(`groupby(${buildGroupBy(groupBy, { aliases, escape })})`);
-      }
+    }
+    if (groupBy) {
+      result.push(`groupby(${buildGroupBy(groupBy, { aliases, escape })})`);
+    }
 
-      return result;
-    },
-    [],
-  );
+    return result;
+  }, []);
 
   return transformsResult.join('/') || undefined;
 }
@@ -858,10 +803,7 @@ function buildAggregate(aggregate: AggregateType | AggregateType[]) {
 
 function buildGroupBy<T>(
   groupBy: GroupByType<T>,
-  {
-    aliases,
-    escape = false,
-  }: { aliases?: QueryCustomType[]; escape?: boolean },
+  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean },
 ) {
   if (!groupBy.properties) {
     throw new Error(`'properties' property required for groupBy`);
@@ -882,9 +824,7 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
   } else if (Array.isArray(orderBy)) {
     return (orderBy as OrderByObject<T>[])
       .map((value) =>
-        Array.isArray(value) &&
-        value.length === 2 &&
-        ['asc', 'desc'].indexOf(value[1]) !== -1
+        Array.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1
           ? value.join(' ')
           : value,
       )
@@ -901,22 +841,15 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
 
 function buildApply(
   apply: any,
-  {
-    aliases,
-    escape = false,
-  }: { aliases?: QueryCustomType[]; escape?: boolean },
+  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean },
 ) {
   const applyArray = Array.isArray(apply) ? apply : [apply];
-  return applyArray
-    .map((v) => normalizeValue(v, { aliases, escape }))
-    .join('/');
+  return applyArray.map((v) => normalizeValue(v, { aliases, escape })).join('/');
 }
 
 function buildUrl(path: string, params: { [name: string]: any }): string {
   // This can be refactored using URL API. But IE does not support it.
-  const queries: string[] = Object.entries(params).map(
-    ([key, value]) => `${key}=${value}`,
-  );
+  const queries: string[] = Object.entries(params).map(([key, value]) => `${key}=${value}`);
   return queries.length ? `${path}?${queries.join('&')}` : path;
 }
 

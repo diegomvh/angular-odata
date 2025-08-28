@@ -6,11 +6,7 @@ import {
   ParserOptions,
   QueryOption,
 } from './types';
-import {
-  DEFAULT_FETCH_POLICY,
-  DEFAULT_STRIP_METADATA,
-  DEFAULT_VERSION,
-} from './constants';
+import { DEFAULT_FETCH_POLICY, DEFAULT_STRIP_METADATA, DEFAULT_VERSION } from './constants';
 
 import { ODataHelper } from './helper';
 
@@ -131,8 +127,7 @@ export class ODataApiOptions implements ODataApiConfigOptions {
       version: this.version,
       stringAsEnum: this.stringAsEnum,
       deleteRefBy: this.deleteRefBy,
-      nonParenthesisForEmptyParameterFunction:
-        this.nonParenthesisForEmptyParameterFunction,
+      nonParenthesisForEmptyParameterFunction: this.nonParenthesisForEmptyParameterFunction,
       ...this.accept,
     };
   }

@@ -9,11 +9,7 @@ export type ODataOptions = {
   params?:
     | HttpParams
     | {
-        [param: string]:
-          | string
-          | number
-          | boolean
-          | ReadonlyArray<string | number | boolean>;
+        [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
       };
   reportProgress?: boolean;
   withCredentials?: boolean;
@@ -27,8 +23,7 @@ export type ODataEntitiesOptions = ODataOptions & {
   withCount?: boolean;
 };
 export type ODataPropertyOptions = ODataOptions & { responseType?: 'property' };
-export type ODataQueryArgumentsOptions<T> = ODataOptions &
-  ODataQueryArguments<T>;
+export type ODataQueryArgumentsOptions<T> = ODataOptions & ODataQueryArguments<T>;
 export type ODataActionOptions<T> = ODataQueryArgumentsOptions<T>;
 export type ODataFunctionOptions<T> = ODataQueryArgumentsOptions<T> & {
   alias?: boolean;

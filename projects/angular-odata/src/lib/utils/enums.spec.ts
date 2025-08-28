@@ -89,44 +89,28 @@ describe('Enums', () => {
 
   it('should return all values for flag enum', () => {
     expect(Enums.toValues(EnumFlags, EnumFlags[EnumFlags.Mask4])).toEqual([16]);
-    expect(
-      Enums.toValues(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask6),
-    ).toEqual([8, 64]);
+    expect(Enums.toValues(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask6)).toEqual([8, 64]);
     expect(Enums.toValues(EnumFlags, 'Mask1, Mask2, Mask3')).toEqual([2, 4, 8]);
-    expect(Enums.toValues(EnumFlags, ['Mask1', 'Mask2', 'Mask3'])).toEqual([
-      2, 4, 8,
+    expect(Enums.toValues(EnumFlags, ['Mask1', 'Mask2', 'Mask3'])).toEqual([2, 4, 8]);
+    expect(Enums.toValues(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask7 | EnumFlags.Mask9)).toEqual([
+      8, 128, 512,
     ]);
-    expect(
-      Enums.toValues(
-        EnumFlags,
-        EnumFlags.Mask3 | EnumFlags.Mask7 | EnumFlags.Mask9,
-      ),
-    ).toEqual([8, 128, 512]);
   });
 
   it('should return all names for flag enum', () => {
-    expect(Enums.toNames(EnumFlags, EnumFlags[EnumFlags.Mask4])).toEqual([
-      'Mask4',
-    ]);
-    expect(Enums.toNames(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask6)).toEqual(
-      ['Mask3', 'Mask6'],
-    );
-    expect(Enums.toNames(EnumFlags, 'Mask1, Mask2, Mask3')).toEqual([
-      'Mask1',
-      'Mask2',
-      'Mask3',
-    ]);
+    expect(Enums.toNames(EnumFlags, EnumFlags[EnumFlags.Mask4])).toEqual(['Mask4']);
+    expect(Enums.toNames(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask6)).toEqual(['Mask3', 'Mask6']);
+    expect(Enums.toNames(EnumFlags, 'Mask1, Mask2, Mask3')).toEqual(['Mask1', 'Mask2', 'Mask3']);
     expect(Enums.toNames(EnumFlags, ['Mask1', 'Mask2', 'Mask3'])).toEqual([
       'Mask1',
       'Mask2',
       'Mask3',
     ]);
-    expect(
-      Enums.toNames(
-        EnumFlags,
-        EnumFlags.Mask3 | EnumFlags.Mask7 | EnumFlags.Mask9,
-      ),
-    ).toEqual(['Mask3', 'Mask7', 'Mask9']);
+    expect(Enums.toNames(EnumFlags, EnumFlags.Mask3 | EnumFlags.Mask7 | EnumFlags.Mask9)).toEqual([
+      'Mask3',
+      'Mask7',
+      'Mask9',
+    ]);
   });
 
   it('should return Undefined type enums for wrong value input', () => {

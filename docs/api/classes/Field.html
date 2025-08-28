@@ -119,7 +119,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/schematics/apigen/metadata/parser.ts</code>
+            <code>projects/angular-odata/src/lib/metadata/parser.ts</code>
         </p>
 
 
@@ -166,12 +166,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(name: <a href="../undefineds/.html" target="_self">string</a>, fieldType: <a href="../undefineds/FieldType.html" target="_self">FieldType</a>)</code>
+<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, fieldType: <a href="../undefineds/FieldType.html" target="_self">FieldType</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/parser.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:12</a></div>
                             </td>
                         </tr>
 
@@ -192,7 +192,7 @@
                                                         <td>name</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -246,7 +246,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/parser.ts:15</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:15</a></div>
                         </td>
                     </tr>
 
@@ -267,13 +267,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/schematics/apigen/metadata/parser.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -292,11 +292,11 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { JSDOM } from &#x27;jsdom&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlReference } from &#x27;./csdl/csdl-reference&#x27;;
 
+import { CsdlSchema } from &#x27;./csdl/csdl-schema&#x27;;
+import { VERSION_4_0 } from &#x27;../constants&#x27;;
 import { ODataMetadata } from &#x27;./metadata&#x27;;
-
-const VERSION_4_0: string &#x3D; &#x27;4.0&#x27;;
 
 enum FieldType {
   ATTRIBUTE,
@@ -402,12 +402,12 @@ export class ODataMetadataParser {
 
   public readonly document: Document;
 
-  constructor(source: string) {
+  constructor(xml: string) {
     try {
-      this.document &#x3D; new JSDOM(source, {
-        contentType: &#x27;text/xml&#x27;,
-      }).window.document;
-      this.checkVersion();
+      const parser: DOMParser &#x3D; new DOMParser();
+      this.document &#x3D; parser.parseFromString(xml, &#x27;text/xml&#x27;);
+
+      this.checkVersion(document);
     } catch (error) {
       throw new Error(&#x27;Unable to parse metadata, &#x27; + error);
     }
@@ -455,9 +455,9 @@ export class ODataMetadataParser {
     return new ODataMetadata(version, references, schemas);
   }
 
-  protected checkVersion() {
+  protected checkVersion(document: Document) {
     // check version
-    const attributes: NamedNodeMap &#x3D; this.document.documentElement.attributes;
+    const attributes: NamedNodeMap &#x3D; document.documentElement.attributes;
     if (!attributes) {
       throw new Error(&#x27;OData version is not specified in the metadata&#x27;);
     }

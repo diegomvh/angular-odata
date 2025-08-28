@@ -1,9 +1,5 @@
 import { ODataApi } from '../api';
-import {
-  ParserOptions,
-  ODataSchemaConfig,
-  ODataStructuredTypeConfig,
-} from '../types';
+import { ParserOptions, ODataSchemaConfig, ODataStructuredTypeConfig } from '../types';
 import { OData } from '../utils/odata';
 import { ODataAnnotatable } from './annotation';
 import { ODataCallable } from './callable';
@@ -27,12 +23,8 @@ export class ODataSchema extends ODataAnnotatable {
     this.api = api;
     this.namespace = config.namespace;
     this.alias = config.alias;
-    this.enums = (config.enums ?? []).map(
-      (config) => new ODataEnumType(config, this),
-    );
-    this.entities = (config.entities ?? []).map(
-      (config) => new ODataStructuredType(config, this),
-    );
+    this.enums = (config.enums ?? []).map((config) => new ODataEnumType(config, this));
+    this.entities = (config.entities ?? []).map((config) => new ODataStructuredType(config, this));
     this.callables = OData.mergeCallableParameters(config.callables ?? []).map(
       (config) => new ODataCallable(config, this),
     );
@@ -42,10 +34,7 @@ export class ODataSchema extends ODataAnnotatable {
   }
 
   isNamespaceOf(type: string) {
-    return (
-      type.startsWith(this.namespace) ??
-      (this.alias && type.startsWith(this.alias))
-    );
+    return type.startsWith(this.namespace) ?? (this.alias && type.startsWith(this.alias));
   }
 
   get entitySets() {

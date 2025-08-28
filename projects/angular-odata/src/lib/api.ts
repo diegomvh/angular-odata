@@ -2,12 +2,7 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DEFAULT_VERSION } from './constants';
-import {
-  ModelOptions,
-  ODataCollection,
-  ODataModel,
-  ODataModelOptions,
-} from './models';
+import { ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
 import { ODataApiOptions } from './options';
 import { ODataOptions, ODataResource, ODataSegment } from './resources';
 import {
@@ -89,9 +84,7 @@ export class ODataApi {
     this.errorHandler = config.errorHandler;
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
-    this.schemas = (config.schemas ?? []).map(
-      (schema) => new ODataSchema(schema, this),
-    );
+    this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
   }
 
   configure(
@@ -110,9 +103,7 @@ export class ODataApi {
   populate(metadata: ODataMetadata) {
     const config = metadata.toConfig();
     this.version = config.version ?? DEFAULT_VERSION;
-    const schemas = (config.schemas ?? []).map(
-      (schema) => new ODataSchema(schema, this),
-    );
+    const schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
     this.schemas = [...this.schemas, ...schemas];
     schemas.forEach((schema) => {
       schema.configure({
@@ -133,10 +124,7 @@ export class ODataApi {
     | ODataEntitySetResource<E>
     | ODataNavigationPropertyResource<E>
     | ODataSingletonResource<E>;
-  fromJson(json: {
-    segments: ODataSegment[];
-    options: { [name: string]: any };
-  }) {
+  fromJson(json: { segments: ODataSegment[]; options: { [name: string]: any } }) {
     const segments = ODataPathSegments.fromJson(json.segments);
     const query = ODataQueryOptions.fromJson<any>(json.options);
     switch (segments.last()?.name as PathSegment) {
@@ -268,9 +256,7 @@ export class ODataApi {
       headers: options.headers,
       params: options.params,
       responseType: options.responseType,
-      observe: (options.observe === 'events' ? 'events' : 'response') as
-        | 'events'
-        | 'response',
+      observe: (options.observe === 'events' ? 'events' : 'response') as 'events' | 'response',
       withCount: options.withCount,
       bodyQueryOptions: options.bodyQueryOptions,
       reportProgress: options.reportProgress,
@@ -283,14 +269,11 @@ export class ODataApi {
 
     res$ = res$.pipe(
       map((res: HttpEvent<any>) =>
-        res.type === HttpEventType.Response
-          ? ODataResponse.fromHttpResponse<any>(req, res)
-          : res,
+        res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res,
       ),
     );
 
-    if (this.errorHandler !== undefined)
-      res$ = res$.pipe(catchError(this.errorHandler));
+    if (this.errorHandler !== undefined) res$ = res$.pipe(catchError(this.errorHandler));
 
     if (options.observe === 'events') {
       return res$;
@@ -320,9 +303,7 @@ export class ODataApi {
         return res$;
       default:
         // Guard against new future observe types being added.
-        throw new Error(
-          `Unreachable: unhandled observe type ${options.observe}}`,
-        );
+        throw new Error(`Unreachable: unhandled observe type ${options.observe}}`);
     }
   }
 
@@ -359,9 +340,7 @@ export class ODataApi {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
     if (schemas.length === 0) return undefined;
     if (schemas.length === 1) return schemas[0];
-    return schemas
-      .sort((s1, s2) => s1.namespace.length - s2.namespace.length)
-      .pop();
+    return schemas.sort((s1, s2) => s1.namespace.length - s2.namespace.length).pop();
   }
 
   //#region EnumTypes
@@ -383,17 +362,14 @@ export class ODataApi {
   //#region StructuredTypes
   public findStructuredType<T>(value: string) {
     if (this.memo.structuredTypes.has(value)) {
-      return this.memo.structuredTypes.get(value) as
-        | ODataStructuredType<T>
-        | undefined;
+      return this.memo.structuredTypes.get(value) as ODataStructuredType<T> | undefined;
     }
     const structuredTypes = this.schemas.reduce(
       (acc, schema) => [...acc, ...schema.entities],
       <ODataStructuredType<T>[]>[],
     );
     let structuredType = structuredTypes.find((e) => e.type() === value);
-    structuredType =
-      structuredType ?? structuredTypes.find((e) => e.name === value);
+    structuredType = structuredType ?? structuredTypes.find((e) => e.name === value);
     this.memo.structuredTypes.set(value, structuredType);
     return structuredType;
   }
@@ -407,9 +383,7 @@ export class ODataApi {
     }
 
     const bindingStructuredType =
-      bindingType !== undefined
-        ? this.findStructuredType<any>(bindingType)
-        : undefined;
+      bindingType !== undefined ? this.findStructuredType<any>(bindingType) : undefined;
     const callables = this.schemas.reduce(
       (acc, schema) => [...acc, ...schema.callables],
       <ODataCallable<R>[]>[],
@@ -511,8 +485,7 @@ export class ODataApi {
     let Model = this.findModel(type);
     if (Model === undefined) {
       const structured = this.findStructuredType<any>(type);
-      if (structured === undefined)
-        throw Error(`No structured type for ${type}`);
+      if (structured === undefined) throw Error(`No structured type for ${type}`);
       Model = this.createModel(structured);
     }
     return Model;
@@ -522,10 +495,7 @@ export class ODataApi {
     return this.findStructuredType<any>(type)?.collection;
   }
 
-  public createCollection(
-    structured: ODataStructuredType<any>,
-    model?: typeof ODataModel<any>,
-  ) {
+  public createCollection(structured: ODataStructuredType<any>, model?: typeof ODataModel<any>) {
     if (structured.collection !== undefined) return structured.collection;
     if (model === undefined) model = this.createModel(structured);
     const Collection = class extends ODataCollection<any, ODataModel<any>> {
@@ -539,8 +509,7 @@ export class ODataApi {
     let Collection = this.findCollection(type);
     if (Collection === undefined) {
       const structured = this.findStructuredType<any>(type);
-      if (structured === undefined)
-        throw Error(`No structured type for ${type}`);
+      if (structured === undefined) throw Error(`No structured type for ${type}`);
       const Model = this.modelForType(type);
       Collection = this.createCollection(structured, Model);
     }
@@ -552,10 +521,7 @@ export class ODataApi {
       return this.memo.entitySets.get(entityType) as ODataEntitySet | undefined;
     }
     const entitySet = this.schemas
-      .reduce(
-        (acc, schema) => [...acc, ...schema.entitySets],
-        <ODataEntitySet[]>[],
-      )
+      .reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
       .find((e) => e.entityType === entityType);
     this.memo.entitySets.set(entityType, entitySet);
     return entitySet;

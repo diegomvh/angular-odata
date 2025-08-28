@@ -142,17 +142,11 @@ export interface StructuredTypeFieldOptions extends ParserOptions {
 
 export interface Parser<T> {
   // Deserialize value/s from request body.
-  deserialize(
-    value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
-  ): T;
+  deserialize(value: any, options?: ParserOptions | StructuredTypeFieldOptions): T | T[];
   // Serialize value/s for request body.
-  serialize(
-    value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
-  ): any;
+  serialize(value: T, options?: ParserOptions | StructuredTypeFieldOptions): any;
   //Encode value/s for URL parameter or query-string.
-  encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
+  encode(value: T, options?: ParserOptions | StructuredTypeFieldOptions): any;
 }
 
 export interface FieldParser<T> extends Parser<T> {

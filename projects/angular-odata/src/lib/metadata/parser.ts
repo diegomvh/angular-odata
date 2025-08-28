@@ -50,12 +50,10 @@ export class ODataMetadataParser {
   private static readonly TAG_ENUM_MEMBER = 'EnumMember';
   private static readonly TAG_PROPERTY_VALUE = 'PropertyValue';
   private static readonly TAG_PROPERTY_PATH = 'PropertyPath';
-  private static readonly TAG_NAVIGATION_PROPERTY_PATH =
-    'NavigationPropertyPath';
+  private static readonly TAG_NAVIGATION_PROPERTY_PATH = 'NavigationPropertyPath';
   private static readonly TAG_FUNCTION_IMPORT = 'FunctionImport';
   private static readonly TAG_ACTION_IMPORT = 'ActionImport';
-  private static readonly TAG_NAVIGATION_PROPERTY_BINDING =
-    'NavigationPropertyBinding';
+  private static readonly TAG_NAVIGATION_PROPERTY_BINDING = 'NavigationPropertyBinding';
   private static readonly TAG_TYPE_DEFINITION = 'TypeDefinition';
 
   // ATTRIBUTES
@@ -97,8 +95,7 @@ export class ODataMetadataParser {
   private static readonly ATTRIBUTE_FUNCTION = 'Function';
   private static readonly ATTRIBUTE_ACTION = 'Action';
   private static readonly ATTRIBUTE_ENTITY_SET = 'EntitySet';
-  private static readonly ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT =
-    'IncludeInServiceDocument';
+  private static readonly ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT = 'IncludeInServiceDocument';
   private static readonly ATTRIBUTE_ABSTRACT = 'Abstract';
   private static readonly ATTRIBUTE_UNDERLYING_TYPE = 'UnderlyingType';
   private static readonly ATTRIBUTE_IS_FLAGS = 'IsFlags';
@@ -136,27 +133,22 @@ export class ODataMetadataParser {
       ],
     );
 
-    const dataServices: Element =
-      this.document.documentElement.getElementsByTagName(
-        ODataMetadataParser.TAG_DATA_SERVICES,
-      )[0];
-    const schemas = this.getObjects(
-      dataServices,
-      ODataMetadataParser.TAG_SCHEMA,
-      [
-        new Field(ODataMetadataParser.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
-        new Field(ODataMetadataParser.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
-        new Field(ODataMetadataParser.TAG_ENUM_TYPE, FieldType.TAG),
-        new Field(ODataMetadataParser.TAG_COMPLEX_TYPE, FieldType.TAG),
-        new Field(ODataMetadataParser.TAG_ENTITY_TYPE, FieldType.TAG),
-        new Field(ODataMetadataParser.TAG_FUNCTION, FieldType.TAG),
-        new Field(ODataMetadataParser.TAG_ACTION, FieldType.TAG),
-        new Field(ODataMetadataParser.TAG_ENTITY_CONTAINER, FieldType.TAG),
-        new Field(ODataMetadataParser.TAG_TYPE_DEFINITION, FieldType.TAG),
-        new Field(ODataMetadataParser.TAG_TERM, FieldType.TAG),
-        new Field(ODataMetadataParser.TAG_ANNOTATIONS, FieldType.TAG),
-      ],
-    );
+    const dataServices: Element = this.document.documentElement.getElementsByTagName(
+      ODataMetadataParser.TAG_DATA_SERVICES,
+    )[0];
+    const schemas = this.getObjects(dataServices, ODataMetadataParser.TAG_SCHEMA, [
+      new Field(ODataMetadataParser.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
+      new Field(ODataMetadataParser.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
+      new Field(ODataMetadataParser.TAG_ENUM_TYPE, FieldType.TAG),
+      new Field(ODataMetadataParser.TAG_COMPLEX_TYPE, FieldType.TAG),
+      new Field(ODataMetadataParser.TAG_ENTITY_TYPE, FieldType.TAG),
+      new Field(ODataMetadataParser.TAG_FUNCTION, FieldType.TAG),
+      new Field(ODataMetadataParser.TAG_ACTION, FieldType.TAG),
+      new Field(ODataMetadataParser.TAG_ENTITY_CONTAINER, FieldType.TAG),
+      new Field(ODataMetadataParser.TAG_TYPE_DEFINITION, FieldType.TAG),
+      new Field(ODataMetadataParser.TAG_TERM, FieldType.TAG),
+      new Field(ODataMetadataParser.TAG_ANNOTATIONS, FieldType.TAG),
+    ]);
 
     return new ODataMetadata(version, references, schemas);
   }
@@ -177,11 +169,7 @@ export class ODataMetadataParser {
     }
   }
 
-  protected getObjects(
-    parentElement: Element,
-    tag: string,
-    fieldNames: Field[],
-  ): any[] {
+  protected getObjects(parentElement: Element, tag: string, fieldNames: Field[]): any[] {
     let objects: any[] = [];
 
     const children: HTMLCollection = parentElement.children;
@@ -193,11 +181,7 @@ export class ODataMetadataParser {
       }
 
       const attributes: NamedNodeMap = element.attributes;
-      const fieldValues: any = this.getFieldValues(
-        fieldNames,
-        attributes,
-        element,
-      );
+      const fieldValues: any = this.getFieldValues(fieldNames, attributes, element);
       fieldValues['TextContent'] = element.textContent;
       switch (tag) {
         case ODataMetadataParser.TAG_REFERENCE:
@@ -242,11 +226,7 @@ export class ODataMetadataParser {
     return objects;
   }
 
-  protected getObject(
-    parentElement: Element,
-    tag: string,
-    fieldNames: Field[],
-  ): any {
+  protected getObject(parentElement: Element, tag: string, fieldNames: Field[]): any {
     let object: any;
 
     const children: HTMLCollection = parentElement.children;
@@ -262,11 +242,7 @@ export class ODataMetadataParser {
 
     if (element !== undefined && element !== null) {
       const attributes: NamedNodeMap = element.attributes;
-      const fieldValues: any = this.getFieldValues(
-        fieldNames,
-        attributes,
-        element,
-      );
+      const fieldValues: any = this.getFieldValues(fieldNames, attributes, element);
       fieldValues['TextContent'] = element.textContent;
       switch (tag) {
         case ODataMetadataParser.TAG_KEY:
@@ -292,10 +268,7 @@ export class ODataMetadataParser {
       if (field.fieldType === FieldType.TAG) {
         fieldValues[field.name] = this.getFieldValueByTag(field, element);
       } else if (field.fieldType === FieldType.ATTRIBUTE) {
-        fieldValues[field.name] = this.getFieldValueByAttribute(
-          field,
-          attributes,
-        );
+        fieldValues[field.name] = this.getFieldValueByAttribute(field, attributes);
       } else {
         throw new Error('Unknown field type: ' + field.fieldType);
       }
@@ -304,10 +277,7 @@ export class ODataMetadataParser {
     return fieldValues;
   }
 
-  protected getFieldValueByAttribute(
-    field: Field,
-    attributes: NamedNodeMap,
-  ): any {
+  protected getFieldValueByAttribute(field: Field, attributes: NamedNodeMap): any {
     switch (field.name) {
       case ODataMetadataParser.ATTRIBUTE_VERSION:
       case ODataMetadataParser.ATTRIBUTE_URI:
@@ -350,20 +320,14 @@ export class ODataMetadataParser {
       case ODataMetadataParser.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT:
       case ODataMetadataParser.ATTRIBUTE_ABSTRACT:
       case ODataMetadataParser.ATTRIBUTE_IS_FLAGS:
-        return this.propertyValueToBoolean(
-          this.getAttributeValue(attributes, field.name),
-        );
+        return this.propertyValueToBoolean(this.getAttributeValue(attributes, field.name));
       case ODataMetadataParser.ATTRIBUTE_VALUE:
       case ODataMetadataParser.ATTRIBUTE_MAX_LENGTH:
       case ODataMetadataParser.ATTRIBUTE_PRECISION:
       case ODataMetadataParser.ATTRIBUTE_SCALE:
-        return this.propertyValueToNumber(
-          this.getAttributeValue(attributes, field.name),
-        );
+        return this.propertyValueToNumber(this.getAttributeValue(attributes, field.name));
       case ODataMetadataParser.ATTRIBUTE_DATE:
-        return this.propertyValueToDate(
-          this.getAttributeValue(attributes, field.name),
-        );
+        return this.propertyValueToDate(this.getAttributeValue(attributes, field.name));
       default:
         throw new Error('Unknwon attribute:' + field.name);
     }
@@ -373,55 +337,25 @@ export class ODataMetadataParser {
     switch (field.name) {
       case ODataMetadataParser.TAG_INCLUDE:
         return this.getObjects(element, field.name, [
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_NAMESPACE,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
         ]);
       case ODataMetadataParser.TAG_INCLUDE_ANNOTATIONS:
         return this.getObjects(element, field.name, [
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_TERM_NAMESPACE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_QUALIFIER,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_TARGET_NAMESPACE,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_TERM_NAMESPACE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_TARGET_NAMESPACE, FieldType.ATTRIBUTE),
         ]);
       case ODataMetadataParser.TAG_TERM:
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_BASE_TERM,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_DEFAULT_VALUE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_APPLIES_TO,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_NULLABLE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_MAX_LENGTH,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_PRECISION,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_BASE_TERM, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_APPLIES_TO, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_STRING, FieldType.ATTRIBUTE),
@@ -432,10 +366,7 @@ export class ODataMetadataParser {
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_TARGET, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_QUALIFIER,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
         ]);
       case ODataMetadataParser.TAG_ANNOTATION:
         return this.getObjects(element, field.name, [
@@ -452,10 +383,7 @@ export class ODataMetadataParser {
           new Field(ODataMetadataParser.TAG_STRING, FieldType.TAG),
           new Field(ODataMetadataParser.TAG_RECORD, FieldType.TAG),
           new Field(ODataMetadataParser.TAG_PROPERTY_PATH, FieldType.TAG),
-          new Field(
-            ODataMetadataParser.TAG_NAVIGATION_PROPERTY_PATH,
-            FieldType.TAG,
-          ),
+          new Field(ODataMetadataParser.TAG_NAVIGATION_PROPERTY_PATH, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_RECORD:
         return this.getObjects(element, field.name, [
@@ -467,10 +395,7 @@ export class ODataMetadataParser {
         return this.getObjects(element, field.name, []);
       case ODataMetadataParser.TAG_PROPERTY_VALUE:
         return this.getObjects(element, field.name, [
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_PROPERTY,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_PROPERTY, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_STRING, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_DATE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_ENUM_MEMBER, FieldType.TAG),
@@ -487,14 +412,8 @@ export class ODataMetadataParser {
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_MEMBER, FieldType.TAG),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_UNDERLYING_TYPE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_IS_FLAGS,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_UNDERLYING_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_IS_FLAGS, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_COMPLEX_TYPE:
@@ -502,18 +421,9 @@ export class ODataMetadataParser {
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_PROPERTY, FieldType.TAG),
           new Field(ODataMetadataParser.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_BASE_TYPE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_OPEN_TYPE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_ABSTRACT,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_ENTITY_TYPE:
@@ -522,40 +432,19 @@ export class ODataMetadataParser {
           new Field(ODataMetadataParser.TAG_KEY, FieldType.TAG),
           new Field(ODataMetadataParser.TAG_PROPERTY, FieldType.TAG),
           new Field(ODataMetadataParser.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_BASE_TYPE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_OPEN_TYPE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_ABSTRACT,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_HAS_STREAM,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_HAS_STREAM, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_FUNCTION:
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_RETURN_TYPE, FieldType.TAG),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_IS_BOUND,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_ENTITY_SET_PATH,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_IS_COMPOSABLE,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_ENTITY_SET_PATH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_IS_COMPOSABLE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_PARAMETER, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_MEMBER:
@@ -568,25 +457,13 @@ export class ODataMetadataParser {
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_NULLABLE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_MAX_LENGTH,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_PRECISION,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_DEFAULT_VALUE,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_KEY:
@@ -602,32 +479,17 @@ export class ODataMetadataParser {
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_NULLABLE,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_PARTNER, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_CONTAINS_TARGET,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.TAG_REFERENTIAL_CONSTRAINT,
-            FieldType.TAG,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_CONTAINS_TARGET, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.TAG_REFERENTIAL_CONSTRAINT, FieldType.TAG),
           new Field(ODataMetadataParser.TAG_ON_DELETE, FieldType.TAG),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_REFERENTIAL_CONSTRAINT:
         return this.getObjects(element, field.name, [
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_PROPERTY,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_REFERENCED_PROPERTY,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_PROPERTY, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_REFERENCED_PROPERTY, FieldType.ATTRIBUTE),
         ]);
       case ODataMetadataParser.TAG_ON_DELETE:
         return this.getObject(element, field.name, [
@@ -637,18 +499,9 @@ export class ODataMetadataParser {
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_NULLABLE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_MAX_LENGTH,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_PRECISION,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
@@ -656,18 +509,9 @@ export class ODataMetadataParser {
       case ODataMetadataParser.TAG_RETURN_TYPE:
         return this.getObject(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_NULLABLE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_MAX_LENGTH,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_PRECISION,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
         ]);
@@ -675,14 +519,8 @@ export class ODataMetadataParser {
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_RETURN_TYPE, FieldType.TAG),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_IS_BOUND,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_ENTITY_SET_PATH,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_ENTITY_SET_PATH, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_PARAMETER, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_ENTITY_CONTAINER:
@@ -698,54 +536,30 @@ export class ODataMetadataParser {
       case ODataMetadataParser.TAG_ENTITY_SET:
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_ENTITY_TYPE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.TAG_NAVIGATION_PROPERTY_BINDING,
-            FieldType.TAG,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_ENTITY_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.TAG_NAVIGATION_PROPERTY_BINDING, FieldType.TAG),
+          new Field(ODataMetadataParser.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_SINGLETON:
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.TAG_NAVIGATION_PROPERTY_BINDING,
-            FieldType.TAG,
-          ),
+          new Field(ODataMetadataParser.TAG_NAVIGATION_PROPERTY_BINDING, FieldType.TAG),
           new Field(ODataMetadataParser.TAG_ANNOTATION, FieldType.TAG),
         ]);
       case ODataMetadataParser.TAG_FUNCTION_IMPORT:
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_FUNCTION,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_ENTITY_SET,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_FUNCTION, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT, FieldType.ATTRIBUTE),
         ]);
       case ODataMetadataParser.TAG_ACTION_IMPORT:
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_ACTION, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_ENTITY_SET,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE),
         ]);
       case ODataMetadataParser.TAG_NAVIGATION_PROPERTY_BINDING:
         return this.getObjects(element, field.name, [
@@ -755,18 +569,9 @@ export class ODataMetadataParser {
       case ODataMetadataParser.TAG_TYPE_DEFINITION:
         return this.getObjects(element, field.name, [
           new Field(ODataMetadataParser.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_UNDERLYING_TYPE,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_MAX_LENGTH,
-            FieldType.ATTRIBUTE,
-          ),
-          new Field(
-            ODataMetadataParser.ATTRIBUTE_PRECISION,
-            FieldType.ATTRIBUTE,
-          ),
+          new Field(ODataMetadataParser.ATTRIBUTE_UNDERLYING_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadataParser.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
           new Field(ODataMetadataParser.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
@@ -779,9 +584,7 @@ export class ODataMetadataParser {
 
   protected getAttributeValue(attributes: NamedNodeMap, attributeName: string) {
     const attribute: Attr | null = attributes.getNamedItem(attributeName);
-    return attribute !== null && attribute.nodeValue
-      ? attribute.nodeValue
-      : undefined;
+    return attribute !== null && attribute.nodeValue ? attribute.nodeValue : undefined;
   }
 
   protected propertyValueToNumber(attributeValue?: string) {

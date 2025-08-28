@@ -31,38 +31,29 @@ export class Callable {
   }
 
   bindingParameter() {
-    return this.callable.Parameter?.find(
-      (p) => p.Name === BINDING_PARAMETER_NAME,
-    );
+    return this.callable.Parameter?.find((p) => p.Name === BINDING_PARAMETER_NAME);
   }
 
   parameters() {
-    const parameters = this.callables.reduce(
-      (acc: CsdlParameter[], c: CsdlCallable) => {
-        for (let param of c.Parameter ?? []) {
-          if (acc.some((p) => p.Name === param.Name)) continue;
-          acc.push(param);
-        }
-        return acc;
-      },
-      [] as CsdlParameter[],
-    );
+    const parameters = this.callables.reduce((acc: CsdlParameter[], c: CsdlCallable) => {
+      for (let param of c.Parameter ?? []) {
+        if (acc.some((p) => p.Name === param.Name)) continue;
+        acc.push(param);
+      }
+      return acc;
+    }, [] as CsdlParameter[]);
     const names = parameters.map((p) => p.Name);
     const binding = parameters.find((p) => p.Name === BINDING_PARAMETER_NAME);
     const inAllCallables = names.filter(
       (n) =>
         n !== BINDING_PARAMETER_NAME &&
-        this.callables.every((c) =>
-          (c.Parameter ?? []).some((p) => p.Name === n),
-        ),
+        this.callables.every((c) => (c.Parameter ?? []).some((p) => p.Name === n)),
     );
     const required = parameters.filter(
-      (p) =>
-        p.Name !== BINDING_PARAMETER_NAME && inAllCallables.includes(p.Name),
+      (p) => p.Name !== BINDING_PARAMETER_NAME && inAllCallables.includes(p.Name),
     );
     const optional = parameters.filter(
-      (p) =>
-        p.Name !== BINDING_PARAMETER_NAME && !inAllCallables.includes(p.Name),
+      (p) => p.Name !== BINDING_PARAMETER_NAME && !inAllCallables.includes(p.Name),
     );
     return {
       binding,
@@ -84,16 +75,12 @@ export class Callable {
     const methodName = strings.camelize(this.callable.Name);
     const { binding, required, optional } = this.parameters();
     const parameters = [...required, ...optional];
-    const bindingType =
-      binding !== undefined ? toTypescriptType(binding.Type) : '';
+    const bindingType = binding !== undefined ? toTypescriptType(binding.Type) : '';
     const returnType = this.returnType();
-    const retType =
-      returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
     const bindingMethod = !binding?.Collection ? 'entity' : 'entities';
     const baseMethod = isFunction ? 'function' : 'action';
-    const keyParameter = !binding?.Collection
-      ? `key: EntityKey<${bindingType}>`
-      : '';
+    const keyParameter = !binding?.Collection ? `key: EntityKey<${bindingType}>` : '';
     const key = !binding?.Collection ? `key` : '';
     const parametersType =
       parameters.length === 0
@@ -125,16 +112,12 @@ export class Callable {
           : returnType?.Type.startsWith('Edm.')
             ? 'property'
             : 'entity';
-    const retType =
-      returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
 
-    const bindingType =
-      binding !== undefined ? toTypescriptType(binding.Type) : '';
+    const bindingType = binding !== undefined ? toTypescriptType(binding.Type) : '';
     const baseMethod = isFunction ? 'callFunction' : 'callAction';
     const parametersCall =
-      parameters.length === 0
-        ? 'null'
-        : `{${parameters.map((p) => p.Name).join(', ')}}`;
+      parameters.length === 0 ? 'null' : `{${parameters.map((p) => p.Name).join(', ')}}`;
 
     // Method arguments
     let args = !binding?.Collection ? [`key: EntityKey<${bindingType}>`] : [];

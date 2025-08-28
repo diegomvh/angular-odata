@@ -61,9 +61,7 @@ export class SelectExpression<T> extends Expression<T> {
   } = {}): string {
     return this._children
       .map((n) =>
-        typeof n === 'string'
-          ? n
-          : n.render({ aliases, escape, prefix, parser, options }),
+        typeof n === 'string' ? n : n.render({ aliases, escape, prefix, parser, options }),
       )
       .join(',');
   }

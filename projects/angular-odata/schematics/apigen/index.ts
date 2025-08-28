@@ -11,10 +11,7 @@ import {
   MergeStrategy,
   SchematicsException,
 } from '@angular-devkit/schematics';
-import {
-  createDefaultPath,
-  getWorkspace,
-} from '@schematics/angular/utility/workspace';
+import { createDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import { parseName } from '@schematics/angular/utility/parse-name';
 
 import { Schema as ApiGenSchema } from './schema';
@@ -58,10 +55,7 @@ export function apigen(options: ApiGenSchema) {
       .then((data) => new ODataMetadataParser(data).metadata())
       .then((meta) => {
         options.creation = new Date();
-        options.serviceRootUrl = options.metadata.substring(
-          0,
-          options.metadata.length - 9,
-        );
+        options.serviceRootUrl = options.metadata.substring(0, options.metadata.length - 9);
         options.version = meta.Version;
         const metadata = new Metadata(options, meta);
         const module = new Module(options);
@@ -111,42 +105,32 @@ export function apigen(options: ApiGenSchema) {
           }
         }
 
-        const functions = meta
-          .functions()
-          .reduce((callables: Callable[], f: CsdlFunction) => {
-            const callable = callables.find((c) => c.name() == f.Name);
-            if (callable !== undefined) {
-              callable.addOverload(f);
-            } else {
-              callables.push(new Callable(f));
-            }
-            return callables;
-          }, [] as Callable[]);
-        const actions = meta
-          .actions()
-          .reduce((callables: Callable[], a: CsdlAction) => {
-            const callable = callables.find((c) => c.name() == a.Name);
-            if (callable !== undefined) {
-              callable.addOverload(a);
-            } else {
-              callables.push(new Callable(a));
-            }
-            return callables;
-          }, [] as Callable[]);
+        const functions = meta.functions().reduce((callables: Callable[], f: CsdlFunction) => {
+          const callable = callables.find((c) => c.name() == f.Name);
+          if (callable !== undefined) {
+            callable.addOverload(f);
+          } else {
+            callables.push(new Callable(f));
+          }
+          return callables;
+        }, [] as Callable[]);
+        const actions = meta.actions().reduce((callables: Callable[], a: CsdlAction) => {
+          const callable = callables.find((c) => c.name() == a.Name);
+          if (callable !== undefined) {
+            callable.addOverload(a);
+          } else {
+            callables.push(new Callable(a));
+          }
+          return callables;
+        }, [] as Callable[]);
         [...sources]
           .filter((s) => s instanceof Service)
           .forEach((s: Service) => {
             s.addCallables(
-              functions.filter(
-                (f) =>
-                  f.isBound() && f.bindingParameter()?.Type === s.entityType(),
-              ),
+              functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === s.entityType()),
             );
             s.addCallables(
-              actions.filter(
-                (f) =>
-                  f.isBound() && f.bindingParameter()?.Type === s.entityType(),
-              ),
+              actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === s.entityType()),
             );
           });
         [...sources].forEach((s) => {
@@ -173,10 +157,7 @@ export function apigen(options: ApiGenSchema) {
                 move(normalize(`${modulePath}/${s.directory()}`)),
               ]),
             )
-            .reduce(
-              (rules, s) => [...rules, mergeWith(s, MergeStrategy.Overwrite)],
-              [] as Rule[],
-            ),
+            .reduce((rules, s) => [...rules, mergeWith(s, MergeStrategy.Overwrite)], [] as Rule[]),
         );
       });
   };

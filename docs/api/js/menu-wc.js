@@ -74,13 +74,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/ODataModule.html" data-type="entity-link" >ODataModule</a>
                                 <li class="chapter inner">
                                     <div class="simple menu-toggler" data-bs-toggle="collapse" ${ isNormalMode ?
-                                        'data-bs-target="#injectables-links-module-ODataModule-033cbfa33fc2f30de4f328a5c453b90fd85481b0e5e7bfd0e00a97fba280c5ea0e60f5f5015776a0248092529859b00301a3c30e2e7bbed1bf133362f114ec57"' : 'data-bs-target="#xs-injectables-links-module-ODataModule-033cbfa33fc2f30de4f328a5c453b90fd85481b0e5e7bfd0e00a97fba280c5ea0e60f5f5015776a0248092529859b00301a3c30e2e7bbed1bf133362f114ec57"' }>
+                                        'data-bs-target="#injectables-links-module-ODataModule-162105d63fbd1f4877906866aa9c22d506b3523c4e60e95b994325e229eea9b916e708819e0c090bf232a92735e36668ff0be99fa5651cc149a93e4beb71827a"' : 'data-bs-target="#xs-injectables-links-module-ODataModule-162105d63fbd1f4877906866aa9c22d506b3523c4e60e95b994325e229eea9b916e708819e0c090bf232a92735e36668ff0be99fa5651cc149a93e4beb71827a"' }>
                                         <span class="icon ion-md-arrow-round-down"></span>
                                         <span>Injectables</span>
                                         <span class="icon ion-ios-arrow-down"></span>
                                     </div>
-                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-ODataModule-033cbfa33fc2f30de4f328a5c453b90fd85481b0e5e7bfd0e00a97fba280c5ea0e60f5f5015776a0248092529859b00301a3c30e2e7bbed1bf133362f114ec57"' :
-                                        'id="xs-injectables-links-module-ODataModule-033cbfa33fc2f30de4f328a5c453b90fd85481b0e5e7bfd0e00a97fba280c5ea0e60f5f5015776a0248092529859b00301a3c30e2e7bbed1bf133362f114ec57"' }>
+                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-ODataModule-162105d63fbd1f4877906866aa9c22d506b3523c4e60e95b994325e229eea9b916e708819e0c090bf232a92735e36668ff0be99fa5651cc149a93e4beb71827a"' :
+                                        'id="xs-injectables-links-module-ODataModule-162105d63fbd1f4877906866aa9c22d506b3523c4e60e95b994325e229eea9b916e708819e0c090bf232a92735e36668ff0be99fa5651cc149a93e4beb71827a"' }>
                                         <li class="link">
                                             <a href="injectables/ODataClient.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >ODataClient</a>
                                         </li>
@@ -104,9 +104,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/Aggregate.html" data-type="entity-link" >Aggregate</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ApiConfig.html" data-type="entity-link" >ApiConfig</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/ApplyExpression.html" data-type="entity-link" >ApplyExpression</a>
                             </li>
                             <li class="link">
@@ -114,12 +111,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/ArithmeticOperators.html" data-type="entity-link" >ArithmeticOperators</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/Base.html" data-type="entity-link" >Base</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/Callable.html" data-type="entity-link" >Callable</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CollectionFunctions.html" data-type="entity-link" >CollectionFunctions</a>
@@ -140,250 +131,121 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/CsdlAction.html" data-type="entity-link" >CsdlAction</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlAction-1.html" data-type="entity-link" >CsdlAction</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlActionImport.html" data-type="entity-link" >CsdlActionImport</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlActionImport-1.html" data-type="entity-link" >CsdlActionImport</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlAnnotable.html" data-type="entity-link" >CsdlAnnotable</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlAnnotable-1.html" data-type="entity-link" >CsdlAnnotable</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlAnnotation.html" data-type="entity-link" >CsdlAnnotation</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlAnnotation-1.html" data-type="entity-link" >CsdlAnnotation</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlAnnotations.html" data-type="entity-link" >CsdlAnnotations</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlAnnotations-1.html" data-type="entity-link" >CsdlAnnotations</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlCallable.html" data-type="entity-link" >CsdlCallable</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlCallable-1.html" data-type="entity-link" >CsdlCallable</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlCollection.html" data-type="entity-link" >CsdlCollection</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlCollection-1.html" data-type="entity-link" >CsdlCollection</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlComplexType.html" data-type="entity-link" >CsdlComplexType</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlComplexType-1.html" data-type="entity-link" >CsdlComplexType</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlEntityContainer.html" data-type="entity-link" >CsdlEntityContainer</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlEntityContainer-1.html" data-type="entity-link" >CsdlEntityContainer</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlEntitySet.html" data-type="entity-link" >CsdlEntitySet</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlEntitySet-1.html" data-type="entity-link" >CsdlEntitySet</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlEntityType.html" data-type="entity-link" >CsdlEntityType</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlEntityType-1.html" data-type="entity-link" >CsdlEntityType</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlEnumMember.html" data-type="entity-link" >CsdlEnumMember</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlEnumMember-1.html" data-type="entity-link" >CsdlEnumMember</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlEnumType.html" data-type="entity-link" >CsdlEnumType</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlEnumType-1.html" data-type="entity-link" >CsdlEnumType</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlFunction.html" data-type="entity-link" >CsdlFunction</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlFunction-1.html" data-type="entity-link" >CsdlFunction</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlFunctionImport.html" data-type="entity-link" >CsdlFunctionImport</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlFunctionImport-1.html" data-type="entity-link" >CsdlFunctionImport</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlInclude.html" data-type="entity-link" >CsdlInclude</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlInclude-1.html" data-type="entity-link" >CsdlInclude</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlIncludeAnnotations.html" data-type="entity-link" >CsdlIncludeAnnotations</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlIncludeAnnotations-1.html" data-type="entity-link" >CsdlIncludeAnnotations</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlKey.html" data-type="entity-link" >CsdlKey</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlKey-1.html" data-type="entity-link" >CsdlKey</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlMember.html" data-type="entity-link" >CsdlMember</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlMember-1.html" data-type="entity-link" >CsdlMember</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlNavigationProperty.html" data-type="entity-link" >CsdlNavigationProperty</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlNavigationProperty-1.html" data-type="entity-link" >CsdlNavigationProperty</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlNavigationPropertyBinding.html" data-type="entity-link" >CsdlNavigationPropertyBinding</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlNavigationPropertyBinding-1.html" data-type="entity-link" >CsdlNavigationPropertyBinding</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlNavigationPropertyPath.html" data-type="entity-link" >CsdlNavigationPropertyPath</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlNavigationPropertyPath-1.html" data-type="entity-link" >CsdlNavigationPropertyPath</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlOnDelete.html" data-type="entity-link" >CsdlOnDelete</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlOnDelete-1.html" data-type="entity-link" >CsdlOnDelete</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlParameter.html" data-type="entity-link" >CsdlParameter</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlParameter-1.html" data-type="entity-link" >CsdlParameter</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlProperty.html" data-type="entity-link" >CsdlProperty</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlProperty-1.html" data-type="entity-link" >CsdlProperty</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlPropertyPath.html" data-type="entity-link" >CsdlPropertyPath</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlPropertyPath-1.html" data-type="entity-link" >CsdlPropertyPath</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlPropertyRef.html" data-type="entity-link" >CsdlPropertyRef</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlPropertyRef-1.html" data-type="entity-link" >CsdlPropertyRef</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlPropertyValue.html" data-type="entity-link" >CsdlPropertyValue</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlPropertyValue-1.html" data-type="entity-link" >CsdlPropertyValue</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlRecord.html" data-type="entity-link" >CsdlRecord</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlRecord-1.html" data-type="entity-link" >CsdlRecord</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlReference.html" data-type="entity-link" >CsdlReference</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlReference-1.html" data-type="entity-link" >CsdlReference</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlReferentialConstraint.html" data-type="entity-link" >CsdlReferentialConstraint</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlReferentialConstraint-1.html" data-type="entity-link" >CsdlReferentialConstraint</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlReturnType.html" data-type="entity-link" >CsdlReturnType</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlReturnType-1.html" data-type="entity-link" >CsdlReturnType</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlSchema.html" data-type="entity-link" >CsdlSchema</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlSchema-1.html" data-type="entity-link" >CsdlSchema</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlSingleton.html" data-type="entity-link" >CsdlSingleton</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlSingleton-1.html" data-type="entity-link" >CsdlSingleton</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlString.html" data-type="entity-link" >CsdlString</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlString-1.html" data-type="entity-link" >CsdlString</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlStructuralProperty.html" data-type="entity-link" >CsdlStructuralProperty</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlStructuralProperty-1.html" data-type="entity-link" >CsdlStructuralProperty</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlStructuredType.html" data-type="entity-link" >CsdlStructuredType</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlStructuredType-1.html" data-type="entity-link" >CsdlStructuredType</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/CsdlTerm.html" data-type="entity-link" >CsdlTerm</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/CsdlTerm-1.html" data-type="entity-link" >CsdlTerm</a>
                             </li>
                             <li class="link">
                                 <a href="classes/CsdlTypeDefinition.html" data-type="entity-link" >CsdlTypeDefinition</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CsdlTypeDefinition-1.html" data-type="entity-link" >CsdlTypeDefinition</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/DateAndTimeFunctions.html" data-type="entity-link" >DateAndTimeFunctions</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/Entity.html" data-type="entity-link" >Entity</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/EntityProperty.html" data-type="entity-link" >EntityProperty</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/Enum.html" data-type="entity-link" >Enum</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/EnumValue.html" data-type="entity-link" >EnumValue</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ExpandExpression.html" data-type="entity-link" >ExpandExpression</a>
@@ -396,9 +258,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/Field.html" data-type="entity-link" >Field</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/Field-1.html" data-type="entity-link" >Field</a>
                             </li>
                             <li class="link">
                                 <a href="classes/FilterExpression.html" data-type="entity-link" >FilterExpression</a>
@@ -422,12 +281,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/GroupingOperators.html" data-type="entity-link" >GroupingOperators</a>
                             </li>
                             <li class="link">
-                                <a href="classes/Import.html" data-type="entity-link" >Import</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/Index.html" data-type="entity-link" >Index</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/Lambda.html" data-type="entity-link" >Lambda</a>
                             </li>
                             <li class="link">
@@ -435,12 +288,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/LogicalOperators.html" data-type="entity-link" >LogicalOperators</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/Metadata.html" data-type="entity-link" >Metadata</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/Module.html" data-type="entity-link" >Module</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataActionResource.html" data-type="entity-link" >ODataActionResource</a>
@@ -545,16 +392,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataMetadata.html" data-type="entity-link" >ODataMetadata</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataMetadata-1.html" data-type="entity-link" >ODataMetadata</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/ODataMetadataLoader.html" data-type="entity-link" >ODataMetadataLoader</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataMetadataParser.html" data-type="entity-link" >ODataMetadataParser</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/ODataMetadataParser-1.html" data-type="entity-link" >ODataMetadataParser</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataMetadataResource.html" data-type="entity-link" >ODataMetadataResource</a>
@@ -677,9 +518,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/SelectExpression.html" data-type="entity-link" >SelectExpression</a>
                             </li>
                             <li class="link">
-                                <a href="classes/Service.html" data-type="entity-link" >Service</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/StringAndCollectionFunctions.html" data-type="entity-link" >StringAndCollectionFunctions</a>
                             </li>
                             <li class="link">
@@ -749,9 +587,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/ResponseOptions.html" data-type="entity-link" >ResponseOptions</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/Schema.html" data-type="entity-link" >Schema</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/StructuredTypeFieldOptions.html" data-type="entity-link" >StructuredTypeFieldOptions</a>

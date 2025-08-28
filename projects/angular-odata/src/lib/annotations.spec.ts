@@ -23,8 +23,7 @@ describe('ODataEntitiesAnnotations', () => {
       const actual = instance.skiptoken;
 
       // Then
-      const expected =
-        'RFNwdAoAAQAAAAAAAAAAFAAAAHoO-P3xtNOT90O-DRY2LSZF_AFWAAAAAQIAAAA';
+      const expected = 'RFNwdAoAAQAAAAAAAAAAFAAAAHoO-P3xtNOT90O-DRY2LSZF_AFWAAAAAQIAAAA';
       expect(actual).toBe(expected);
     });
   });

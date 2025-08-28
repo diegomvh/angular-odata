@@ -8,15 +8,15 @@ import {
   FlagEnums,
 } from '../../trippin.spec';
 import { ODataClient } from '../../client';
-import { ODataModule } from '../../module';
+import { provideODataClient } from '../../module';
 import { ODataEnumTypeParser } from './enum-type';
-import {
-  ODataStructuredTypeParser,
-  ODataStructuredTypeFieldParser,
-} from './structured-type';
+import { ODataStructuredTypeParser, ODataStructuredTypeFieldParser } from './structured-type';
 import { ODataApi } from '../../api';
 import { ODataStructuredType } from '..';
 import { Parser } from '../../types';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -31,7 +31,12 @@ describe('ODataClient', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ODataModule.forRoot({ config: TripPinConfig })],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideODataClient({ config: TripPinConfig }),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
@@ -164,40 +169,28 @@ describe('ODataClient', () => {
 
   it('should deserialize enum', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
-    const field = schema.field(
-      'Gender',
-    ) as ODataStructuredTypeFieldParser<PersonGender>;
+    const field = schema.field('Gender') as ODataStructuredTypeFieldParser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
-    expect(field.deserialize('Female', schema.api.options)).toEqual(
-      PersonGender.Female,
-    );
+    expect(field.deserialize('Female', schema.api.options)).toEqual(PersonGender.Female);
   });
 
   it('should serialize flags', () => {
-    const parser = client.parserForType(
-      `${NAMESPACE}.FlagEnums`,
-    ) as ODataEnumTypeParser<FlagEnums>;
+    const parser = client.parserForType(`${NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
     expect(parser.serialize(<FlagEnums>3)).toEqual('Flag1, Flag2');
     expect(parser.serialize(<FlagEnums>0)).toEqual('0');
-    expect(parser.serialize(FlagEnums.Flag1 | FlagEnums.Flag4)).toEqual(
-      'Flag1, Flag4',
-    );
+    expect(parser.serialize(FlagEnums.Flag1 | FlagEnums.Flag4)).toEqual('Flag1, Flag4');
   });
 
   it('should deserialize flags', () => {
-    const parser = client.parserForType(
-      `${NAMESPACE}.FlagEnums`,
-    ) as ODataEnumTypeParser<FlagEnums>;
+    const parser = client.parserForType(`${NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
     expect(parser.deserialize('Flag4')).toEqual(FlagEnums.Flag4);
     expect(parser.deserialize('0')).toEqual(<FlagEnums>0);
   });
 
   it('should pack flags', () => {
-    const parser = client.parserForType(
-      `${NAMESPACE}.FlagEnums`,
-    ) as ODataEnumTypeParser<FlagEnums>;
+    const parser = client.parserForType(`${NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
     expect(parser.unpack(FlagEnums.Flag1 | FlagEnums.Flag2)).toEqual([
       FlagEnums.Flag1,
@@ -260,10 +253,7 @@ describe('ODataClient', () => {
       ),
     ).toEqual({
       UserName: ['required'],
-      Friends: [
-        { UserName: ['required'], LastName: ['required'] },
-        { UserName: ['required'] },
-      ],
+      Friends: [{ UserName: ['required'], LastName: ['required'] }, { UserName: ['required'] }],
     });
   });
 
@@ -382,9 +372,7 @@ describe('ODataClient', () => {
       enumeration: 'Yellow',
       point: { type: 'point', coordinates: [142.1, 64.1] },
     };
-    const parser = api.parserForType<any>(
-      'ParserTesting.Entity',
-    ) as Parser<any>;
+    const parser = api.parserForType<any>('ParserTesting.Entity') as Parser<any>;
     const result = parser.deserialize(primitives, api.options);
     expect(parser.serialize(result, api.options)).toEqual(primitives);
   });
@@ -400,9 +388,7 @@ describe('ODataClient', () => {
         },
       ],
     };
-    const parser = api.findCallable<any>(
-      'ParserTesting.TestingAction',
-    ) as Parser<any>;
+    const parser = api.findCallable<any>('ParserTesting.TestingAction') as Parser<any>;
     const result = parser.serialize(parameters, api.options);
     expect(result).toEqual({
       Notes: 'asdf',

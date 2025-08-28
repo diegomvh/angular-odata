@@ -4,9 +4,7 @@ import { Objects } from './objects';
 
 export const OData = {
   // Merge callables parameters
-  mergeCallableParameters(
-    callables: ODataCallableConfig[],
-  ): ODataCallableConfig[] {
+  mergeCallableParameters(callables: ODataCallableConfig[]): ODataCallableConfig[] {
     const areEqual = (a: ODataCallableConfig, b: ODataCallableConfig) =>
       a.name === b.name &&
       Objects.equal(
@@ -18,10 +16,7 @@ export const OData = {
         config = callables
           .filter((c) => areEqual(c, config))
           .reduce((acc, c) => {
-            acc.parameters = Object.assign(
-              acc.parameters || {},
-              c.parameters || {},
-            );
+            acc.parameters = Object.assign(acc.parameters || {}, c.parameters || {});
             return acc;
           }, config);
         return [...acc, config];

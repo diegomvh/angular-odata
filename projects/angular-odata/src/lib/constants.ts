@@ -18,10 +18,7 @@ export const HTTP11 = 'HTTP/1.1';
 export const ACCEPT = 'Accept';
 export const PREFER = 'Prefer';
 export const CACHE_CONTROL = 'Cache-Control';
-export const CACHE_CONTROL_HEADERS = [
-  CACHE_CONTROL,
-  CACHE_CONTROL.toLowerCase(),
-];
+export const CACHE_CONTROL_HEADERS = [CACHE_CONTROL, CACHE_CONTROL.toLowerCase()];
 export const ODATA_VERSION = 'OData-Version';
 export const ODATA_VERSION_HEADERS = [
   ODATA_VERSION,
@@ -29,20 +26,11 @@ export const ODATA_VERSION_HEADERS = [
   'dataserviceversion',
 ];
 export const LOCATION_HEADER = 'Location';
-export const LOCATION_HEADERS = [
-  LOCATION_HEADER,
-  LOCATION_HEADER.toLowerCase(),
-];
+export const LOCATION_HEADERS = [LOCATION_HEADER, LOCATION_HEADER.toLowerCase()];
 export const ODATA_ENTITYID = 'OData-EntityId';
-export const ODATA_ENTITYID_HEADERS = [
-  ODATA_ENTITYID,
-  ODATA_ENTITYID.toLowerCase(),
-];
+export const ODATA_ENTITYID_HEADERS = [ODATA_ENTITYID, ODATA_ENTITYID.toLowerCase()];
 export const PREFERENCE_APPLIED = 'Preference-Applied';
-export const PREFERENCE_APPLIED_HEADERS = [
-  PREFERENCE_APPLIED,
-  PREFERENCE_APPLIED.toLowerCase(),
-];
+export const PREFERENCE_APPLIED_HEADERS = [PREFERENCE_APPLIED, PREFERENCE_APPLIED.toLowerCase()];
 export const ETAG_HEADER = 'ETag';
 export const ETAG_HEADERS = [ETAG_HEADER, ETAG_HEADER.toLowerCase()];
 

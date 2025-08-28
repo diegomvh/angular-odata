@@ -3,17 +3,10 @@ import { ODataParserSchemaElement } from './element';
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataEnumType<E> extends ODataParserSchemaElement<
-  E,
-  ODataEnumTypeParser<E>
-> {
+export class ODataEnumType<E> extends ODataParserSchemaElement<E, ODataEnumTypeParser<E>> {
   members: { [name: string]: number } | { [value: number]: string };
   constructor(config: ODataEnumTypeConfig, schema: ODataSchema) {
-    super(
-      config,
-      schema,
-      new ODataEnumTypeParser<E>(config, schema.namespace, schema.alias),
-    );
+    super(config, schema, new ODataEnumTypeParser<E>(config, schema.namespace, schema.alias));
     this.members = config.members;
   }
 
@@ -63,7 +56,7 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
    * @param options Options for serialization
    * @returns Serialized value
    */
-  serialize(value: number, options?: ParserOptions): any {
+  serialize(value: E, options?: ParserOptions): any {
     return this.parser.serialize(value, options);
   }
 
@@ -73,7 +66,7 @@ export class ODataEnumType<E> extends ODataParserSchemaElement<
    * @param options Options for encoding
    * @returns Encoded value
    */
-  encode(value: number, options?: ParserOptions): any {
+  encode(value: E, options?: ParserOptions): any {
     return this.parser.encode(value, options);
   }
 

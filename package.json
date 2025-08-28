@@ -38,34 +38,44 @@
     "release": "cp README.md projects/angular-odata/README.md && npm run docs && npm run publish",
     "prettier": "prettier --write \"projects/angular-odata/**/*.ts\""
   },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
   "dependencies": {
-    "@angular/common": "^19.2.0",
-    "@angular/compiler": "^19.2.0",
-    "@angular/core": "^19.2.0",
-    "@angular/forms": "^19.2.0",
-    "@angular/platform-browser": "^19.2.0",
-    "@angular/platform-browser-dynamic": "^19.2.0",
-    "@angular/router": "^19.2.0",
+    "@angular/common": "^20.2.0",
+    "@angular/compiler": "^20.2.0",
+    "@angular/core": "^20.2.0",
+    "@angular/forms": "^20.2.0",
+    "@angular/platform-browser": "^20.2.0",
+    "@angular/router": "^20.2.0",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.2.13",
-    "@angular/cli": "^19.2.13",
-    "@angular/compiler-cli": "^19.2.0",
+    "@angular/build": "^20.2.1",
+    "@angular/cli": "^20.2.1",
+    "@angular/compiler-cli": "^20.2.0",
     "@compodoc/compodoc": "^1.1.26",
     "@types/jasmine": "~5.1.0",
     "@types/jsdom": "^21.1.7",
-    "jasmine-core": "~5.6.0",
+    "jasmine-core": "~5.9.0",
     "jsdom": "^26.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "ng-packagr": "^19.2.0",
-    "prettier": "^3.5.3",
-    "typescript": "~5.7.2"
+    "ng-packagr": "^20.2.0",
+    "prettier": "^3.6.2",
+    "typescript": "~5.9.2"
   }
 }

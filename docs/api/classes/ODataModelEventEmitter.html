@@ -128,7 +128,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../miscellaneous/enumerations.html" target="_self" >EventEmitter</a></code>
+                        <code>EventEmitter</code>
             </p>
 
 
@@ -186,7 +186,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+<code>constructor(undefined: literal type)</code>
                     </td>
                 </tr>
                         <tr>
@@ -211,7 +211,7 @@
                                                 <tr>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >literal type</a></code>
+                                                                    <code>literal type</code>
                                                         </td>
                                                   
                                                     <td>
@@ -307,7 +307,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>trigger(type: <a href="../objects/OData.html" target="_self">ODataModelEventType | string</a>, undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+<code>trigger(type: <a href="../objects/OData.html" target="_self">ODataModelEventType | string</a>, undefined: literal type)</code>
                 </td>
             </tr>
 
@@ -352,7 +352,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >literal type</a></code>
+                                                        <code>literal type</code>
                                             </td>
 
                                             <td>
@@ -368,7 +368,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >void</a></code>
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                         </div>
                             <div class="io-description">
@@ -911,7 +911,7 @@ export class ODataModelField&lt;F&gt; {
       : this.default;
   }
 
-  deserialize(value: any, options?: ParserOptions): F {
+  deserialize(value: any, options?: ParserOptions): F | F[] {
     const parserOptions &#x3D; options ?? this.parserOptions;
     return this.parser.deserialize(value, parserOptions);
   }

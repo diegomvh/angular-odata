@@ -175,15 +175,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>case(left: <a href="../undefineds/.html" target="_self">T | string</a>, right: <a href="../undefineds/.html" target="_self">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>case(left: T | string, right: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="462"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:462</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="465"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:465</a></div>
                         </td>
                     </tr>
 
@@ -207,7 +207,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T | string</a></code>
+                                                        <code>T | string</code>
                                             </td>
 
                                             <td>
@@ -221,7 +221,7 @@
                                         <tr>
                                                 <td>right</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -304,6 +304,7 @@ export interface Renderable {
   toJson(): any;
   clone(): any;
   resolve(parser: any): any;
+  toString(): any;
 }
 
 export const FieldFactory &#x3D; &lt;T extends object&gt;(
@@ -343,6 +344,8 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
           $type: &#x27;Field&#x27;,
           names: names,
         });
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;toString&#x27;) {
+        return () &#x3D;&gt; names.join(&#x27;.&#x27;);
       } else if (key &#x3D;&#x3D;&#x3D; &#x27;resolve&#x27;) {
         return (parser: any) &#x3D;&gt;
           names.reduce(

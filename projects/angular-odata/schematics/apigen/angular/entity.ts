@@ -1,15 +1,9 @@
 import { strings } from '@angular-devkit/core';
 import { Base } from './base';
-import {
-  CsdlComplexType,
-  CsdlEntityType,
-} from '../metadata/csdl/csdl-structured-type';
+import { CsdlComplexType, CsdlEntityType } from '../metadata/csdl/csdl-structured-type';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
-import {
-  CsdlNavigationProperty,
-  CsdlProperty,
-} from '../metadata/csdl/csdl-structural-property';
+import { CsdlNavigationProperty, CsdlProperty } from '../metadata/csdl/csdl-structural-property';
 import { toTypescriptType } from '../utils';
 
 export class EntityProperty {
@@ -40,15 +34,11 @@ export class Entity extends Base {
   }
   public override variables(): { [name: string]: any } {
     return {
-      type:
-        this.name() +
-        (this.edmType instanceof CsdlEntityType ? 'EntityType' : 'ComplexType'),
+      type: this.name() + (this.edmType instanceof CsdlEntityType ? 'EntityType' : 'ComplexType'),
       baseType: this.edmType.BaseType,
       properties: [
         ...(this.edmType.Property ?? []).map((p) => new EntityProperty(p)),
-        ...(this.edmType.NavigationProperty ?? []).map(
-          (p) => new EntityProperty(p),
-        ),
+        ...(this.edmType.NavigationProperty ?? []).map((p) => new EntityProperty(p)),
       ],
     };
   }

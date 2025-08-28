@@ -39,9 +39,7 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     this.Extend = Extend;
     this.EntitySet = EntitySet?.map((e) => new CsdlEntitySet(this, e));
     this.Singleton = Singleton?.map((s) => new CsdlSingleton(this, s));
-    this.FunctionImport = FunctionImport?.map(
-      (f) => new CsdlFunctionImport(this, f),
-    );
+    this.FunctionImport = FunctionImport?.map((f) => new CsdlFunctionImport(this, f));
     this.ActionImport = ActionImport?.map((a) => new CsdlActionImport(this, a));
   }
 
@@ -77,9 +75,7 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     return `${this.schema.Namespace}.${this.Name}`;
   }
 
-  override toConfig(
-    base?: Partial<ODataEntityContainerConfig>,
-  ): ODataEntityContainerConfig {
+  override toConfig(base?: Partial<ODataEntityContainerConfig>): ODataEntityContainerConfig {
     return {
       ...super.toConfig(),
       name: this.Name,

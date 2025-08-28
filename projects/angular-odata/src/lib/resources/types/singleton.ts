@@ -48,10 +48,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     const singleton = this.clone();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
-      ODataResource.resolveKey<T>(
-        value,
-        this.api.findStructuredType<T>(types[index]),
-      ),
+      ODataResource.resolveKey<T>(value, this.api.findStructuredType<T>(types[index])),
     );
     singleton.segment((s) => s.keys(keys));
     return singleton;
@@ -74,24 +71,15 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   //#region Requests
-  protected override post(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<any> {
+  protected override post(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override put(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<any> {
+  protected override put(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override patch(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<any> {
+  protected override patch(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
@@ -115,10 +103,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    * @param options The options for the request.
    * @returns The created entity with the annotations.
    */
-  create(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
+  create(attrs: Partial<T>, options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.post(attrs, options);
   }
 
@@ -128,10 +113,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    * @param options The options for the request.
    * @returns The updated entity with the annotations.
    */
-  update(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
+  update(attrs: Partial<T>, options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.put(attrs, options);
   }
 
@@ -141,10 +123,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    * @param options The options for the request.
    * @returns The modified entity with the annotations.
    */
-  modify(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
+  modify(attrs: Partial<T>, options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.patch(attrs, options);
   }
 
@@ -208,9 +187,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   ) {
     return this.fetch(options).pipe(
       map(({ entity, annots }) =>
-        entity
-          ? this.asModel(entity, { annots, ModelType: options?.ModelType })
-          : null,
+        entity ? this.asModel(entity, { annots, ModelType: options?.ModelType }) : null,
       ),
     );
   }

@@ -1,8 +1,5 @@
 import { CsdlAnnotable } from './csdl-annotation';
-import {
-  CsdlProperty,
-  CsdlNavigationProperty,
-} from './csdl-structural-property';
+import { CsdlProperty, CsdlNavigationProperty } from './csdl-structural-property';
 import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlStructuredType extends CsdlAnnotable {
@@ -36,9 +33,7 @@ export class CsdlStructuredType extends CsdlAnnotable {
     super({ Annotation });
     this.Name = Name;
     this.Property = Property?.map((p) => new CsdlProperty(p));
-    this.NavigationProperty = NavigationProperty?.map(
-      (n) => new CsdlNavigationProperty(n),
-    );
+    this.NavigationProperty = NavigationProperty?.map((n) => new CsdlNavigationProperty(n));
     this.BaseType = BaseType;
     this.OpenType = OpenType;
     this.Abstract = Abstract;
@@ -49,13 +44,8 @@ export class CsdlStructuredType extends CsdlAnnotable {
     if (Array.isArray(this.Property) && this.Property.length > 0) {
       json['Property'] = this.Property.map((p) => p.toJson());
     }
-    if (
-      Array.isArray(this.NavigationProperty) &&
-      this.NavigationProperty.length > 0
-    ) {
-      json['NavigationProperty'] = this.NavigationProperty.map((n) =>
-        n.toJson(),
-      );
+    if (Array.isArray(this.NavigationProperty) && this.NavigationProperty.length > 0) {
+      json['NavigationProperty'] = this.NavigationProperty.map((n) => n.toJson());
     }
     if (this.BaseType !== undefined) {
       json['BaseType'] = this.BaseType;

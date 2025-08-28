@@ -28,13 +28,8 @@ describe('filter', () => {
     });
 
     it('should allow passing filter as an array of objects and strings', () => {
-      const filter = [
-        { SomeProp: 1 },
-        { AnotherProp: 2 },
-        "startswith(Name, 'R')",
-      ];
-      const expected =
-        "?$filter=SomeProp eq 1 and AnotherProp eq 2 and startswith(Name, 'R')";
+      const filter = [{ SomeProp: 1 }, { AnotherProp: 2 }, "startswith(Name, 'R')"];
+      const expected = "?$filter=SomeProp eq 1 and AnotherProp eq 2 and startswith(Name, 'R')";
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -103,8 +98,7 @@ describe('filter', () => {
           },
         },
       };
-      const expected =
-        '?$filter=(SomeProp/NestedProp1 eq 1 and SomeProp/NestedProp2 eq 2)';
+      const expected = '?$filter=(SomeProp/NestedProp1 eq 1 and SomeProp/NestedProp2 eq 2)';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -193,8 +187,7 @@ describe('filter', () => {
       const filter = {
         and: [{ SomeProp: 1 }, { or: [{ AnotherProp: 2 }, { ThirdProp: 3 }] }],
       };
-      const expected =
-        '?$filter=((SomeProp eq 1) and (((AnotherProp eq 2) or (ThirdProp eq 3))))';
+      const expected = '?$filter=((SomeProp eq 1) and (((AnotherProp eq 2) or (ThirdProp eq 3))))';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -581,8 +574,7 @@ describe('filter', () => {
           },
         },
       };
-      const expected =
-        "?$filter=Tasks/any(tasks:contains(toupper(tasks/searchProp),'foo'))";
+      const expected = "?$filter=Tasks/any(tasks:contains(toupper(tasks/searchProp),'foo'))";
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -597,8 +589,7 @@ describe('filter', () => {
           },
         },
       };
-      const expected =
-        "?$filter=Tasks/any(tasks:indexof(toupper(tasks/searchProp),'foo') eq -1)";
+      const expected = "?$filter=Tasks/any(tasks:indexof(toupper(tasks/searchProp),'foo') eq -1)";
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -646,8 +637,7 @@ describe('filter', () => {
           eq: raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'),
         },
       };
-      const expected =
-        '?$filter=someProp eq cd5977c2-4a64-42de-b2fc-7fe4707c65cd';
+      const expected = '?$filter=someProp eq cd5977c2-4a64-42de-b2fc-7fe4707c65cd';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -656,8 +646,7 @@ describe('filter', () => {
       const filter = {
         someProp: raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'),
       };
-      const expected =
-        '?$filter=someProp eq cd5977c2-4a64-42de-b2fc-7fe4707c65cd';
+      const expected = '?$filter=someProp eq cd5977c2-4a64-42de-b2fc-7fe4707c65cd';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -780,8 +769,7 @@ describe('transform', () => {
         },
       },
     ];
-    const expected =
-      '?$apply=aggregate(Amount with sum as Total,Id with countdistinct as Count)';
+    const expected = '?$apply=aggregate(Amount with sum as Total,Id with countdistinct as Count)';
     const actual = buildQuery({ transform });
     expect(actual).toEqual(expected);
   });
@@ -805,8 +793,7 @@ describe('transform', () => {
         ],
       },
     ];
-    const expected =
-      '?$apply=aggregate(Amount with sum as Total,Amount with max as Max)';
+    const expected = '?$apply=aggregate(Amount with sum as Total,Amount with max as Max)';
     const actual = buildQuery({ transform });
     expect(actual).toEqual(expected);
   });
@@ -917,8 +904,7 @@ describe('transform', () => {
         },
       },
     ];
-    const expected =
-      '?$apply=groupby((SomeProp),aggregate(Id with countdistinct as Total))';
+    const expected = '?$apply=groupby((SomeProp),aggregate(Id with countdistinct as Total))';
     const actual = buildQuery({ transform });
     expect(actual).toEqual(expected);
   });
@@ -1070,8 +1056,7 @@ describe('orderBy', () => {
         },
       },
     };
-    const expected =
-      '?$expand=Memberships($orderby=Group/Name,Group/Description)';
+    const expected = '?$expand=Memberships($orderby=Group/Name,Group/Description)';
     const actual = buildQuery(query);
     expect(actual).toEqual(expected);
   });
@@ -1275,10 +1260,7 @@ describe('expand', () => {
 
   it('should allow multiple nested expands with objects', () => {
     type Bar = { Friends: { Photos: any }; One: { Two: any } };
-    const expand: Expand<Bar> = [
-      { Friends: { expand: 'Photos' } },
-      { One: { expand: 'Two' } },
-    ];
+    const expand: Expand<Bar> = [{ Friends: { expand: 'Photos' } }, { One: { expand: 'Two' } }];
     const expected = '?$expand=Friends($expand=Photos),One($expand=Two)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
@@ -1286,12 +1268,8 @@ describe('expand', () => {
 
   it('should allow multiple expands mixing objects and strings', () => {
     type Bar = { Friends: { Photos: any }; One: { Two: any } };
-    const expand: Expand<Bar> = [
-      { Friends: { expand: 'Photos' } },
-      'Foo/Bar/Baz',
-    ];
-    const expected =
-      '?$expand=Friends($expand=Photos),Foo($expand=Bar($expand=Baz))';
+    const expand: Expand<Bar> = [{ Friends: { expand: 'Photos' } }, 'Foo/Bar/Baz'];
+    const expected = '?$expand=Friends($expand=Photos),Foo($expand=Bar($expand=Baz))';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
@@ -1413,8 +1391,7 @@ describe('function', () => {
     const func = {
       Test: { SomeCollection: someCollection },
     };
-    const expected =
-      "/Test(SomeCollection=@SomeCollection)?@SomeCollection=['Sean','Jason']";
+    const expected = "/Test(SomeCollection=@SomeCollection)?@SomeCollection=['Sean','Jason']";
     const actual = buildQuery({ func, aliases: [someCollection] });
     expect(actual).toEqual(expected);
   });

@@ -181,15 +181,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>geoDistance(left: <a href="../undefineds/.html" target="_self">T</a>, right: <a href="../undefineds/.html" target="_self">string</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>geoDistance(left: T, right: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="450"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:450</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="453"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:453</a></div>
                         </td>
                     </tr>
 
@@ -213,7 +213,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T</a></code>
+                                                        <code>T</code>
                                             </td>
 
                                             <td>
@@ -227,7 +227,7 @@
                                         <tr>
                                                 <td>right</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
 
                                             <td>
@@ -280,15 +280,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>geoIntersects(left: <a href="../undefineds/.html" target="_self">T</a>, right: <a href="../undefineds/.html" target="_self">string</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>geoIntersects(left: T, right: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="453"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:453</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="456"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:456</a></div>
                         </td>
                     </tr>
 
@@ -312,7 +312,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T</a></code>
+                                                        <code>T</code>
                                             </td>
 
                                             <td>
@@ -326,7 +326,7 @@
                                         <tr>
                                                 <td>right</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
 
                                             <td>
@@ -379,15 +379,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>geoLength(left: <a href="../undefineds/.html" target="_self">T</a>, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
+<code>geoLength(left: T, normalize: <a href="../undefineds/Normalize.html" target="_self">Normalize</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="456"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:456</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="459"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:459</a></div>
                         </td>
                     </tr>
 
@@ -411,7 +411,7 @@
                                         <tr>
                                                 <td>left</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >T</a></code>
+                                                        <code>T</code>
                                             </td>
 
                                             <td>
@@ -494,6 +494,7 @@ export interface Renderable {
   toJson(): any;
   clone(): any;
   resolve(parser: any): any;
+  toString(): any;
 }
 
 export const FieldFactory &#x3D; &lt;T extends object&gt;(
@@ -533,6 +534,8 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
           $type: &#x27;Field&#x27;,
           names: names,
         });
+      } else if (key &#x3D;&#x3D;&#x3D; &#x27;toString&#x27;) {
+        return () &#x3D;&gt; names.join(&#x27;.&#x27;);
       } else if (key &#x3D;&#x3D;&#x3D; &#x27;resolve&#x27;) {
         return (parser: any) &#x3D;&gt;
           names.reduce(

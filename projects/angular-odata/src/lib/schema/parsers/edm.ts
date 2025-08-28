@@ -10,14 +10,10 @@ const EdmParser = <T>(
   _e: (v: any, o: StructuredTypeFieldOptions) => any,
 ): FieldParser<T | T[]> => ({
   deserialize(value: any, options: StructuredTypeFieldOptions): T | T[] {
-    return Array.isArray(value)
-      ? value.map((v) => _d(v, options))
-      : _d(value, options);
+    return Array.isArray(value) ? value.map((v) => _d(v, options)) : _d(value, options);
   },
   serialize(value: any, options: StructuredTypeFieldOptions): any {
-    return Array.isArray(value)
-      ? value.map((v) => _s(v, options))
-      : _s(value, options);
+    return Array.isArray(value) ? value.map((v) => _s(v, options)) : _s(value, options);
   },
   encode(value: any, options: StructuredTypeFieldOptions): any {
     return Array.isArray(value)

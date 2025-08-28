@@ -71,9 +71,7 @@ export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
       let headers = this.request.headers;
       res = [
         ...res,
-        ...headers
-          .keys()
-          .map((key) => `${key}: ${(headers.getAll(key) || []).join(',')}`),
+        ...headers.keys().map((key) => `${key}: ${(headers.getAll(key) || []).join(',')}`),
       ];
     }
 
@@ -90,9 +88,7 @@ export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
     let res: { [name: string]: any } = {
       id: this.id,
       method: this.request.method,
-      url: relativeUrls
-        ? this.request.pathWithParams
-        : this.request.urlWithParams,
+      url: relativeUrls ? this.request.pathWithParams : this.request.urlWithParams,
       //'atomicityGroup': this.group
       //"dependsOn": ["g1", "g2", "r2"]
     };
@@ -158,8 +154,7 @@ export class ODataBatchResource extends ODataResource<any> {
     const current = this.api.requester;
     // Switch to the batch requester
     this.api.requester = (req: ODataRequest<any>): Observable<any> => {
-      if (req.api !== this.api)
-        throw new Error('Batch Request are for the same api.');
+      if (req.api !== this.api) throw new Error('Batch Request are for the same api.');
       if (req.observe === 'events')
         throw new Error("Batch Request does not allows observe == 'events'.");
       this._requests.push(new ODataBatchRequest<any>(req));
@@ -168,9 +163,7 @@ export class ODataBatchResource extends ODataResource<any> {
     return current;
   }
 
-  private restoreRequester(
-    handler: ((req: ODataRequest<any>) => Observable<any>) | undefined,
-  ) {
+  private restoreRequester(handler: ((req: ODataRequest<any>) => Observable<any>) | undefined) {
     this.api.requester = handler;
   }
 
@@ -204,10 +197,7 @@ export class ODataBatchResource extends ODataResource<any> {
     });
     return this.api
       .request<object>('POST', this, {
-        body: ODataBatchResource.buildJsonBody(
-          this._requests,
-          this.api.options,
-        ),
+        body: ODataBatchResource.buildJsonBody(this._requests, this.api.options),
         responseType: 'json',
         observe: 'response',
         headers: headers,
@@ -232,9 +222,7 @@ export class ODataBatchResource extends ODataResource<any> {
       );
   }
 
-  private sendLegacy(
-    options?: ODataOptions,
-  ): Observable<ODataResponse<string>> {
+  private sendLegacy(options?: ODataOptions): Observable<ODataResponse<string>> {
     const bound = Strings.uniqueId({ prefix: BATCH_PREFIX });
     const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
@@ -243,11 +231,7 @@ export class ODataBatchResource extends ODataResource<any> {
     });
     return this.api
       .request<ODataResponse<string>>('POST', this, {
-        body: ODataBatchResource.buildLegacyBody(
-          bound,
-          this._requests,
-          this.api.options,
-        ),
+        body: ODataBatchResource.buildLegacyBody(bound, this._requests, this.api.options),
         responseType: 'text',
         observe: 'response',
         headers: headers,
@@ -277,10 +261,7 @@ export class ODataBatchResource extends ODataResource<any> {
    * @param options The options of the batch request
    * @returns The result of execute the context
    */
-  exec<R>(
-    ctx: (batch: this) => R,
-    options?: ODataOptions,
-  ): Observable<[R, ODataResponse<string>]> {
+  exec<R>(ctx: (batch: this) => R, options?: ODataOptions): Observable<[R, ODataResponse<string>]> {
     let result = this.add(ctx);
     return this.send(options).pipe(map((response) => [result, response]));
   }
@@ -309,9 +290,7 @@ export class ODataBatchResource extends ODataResource<any> {
     for (const request of requests) {
       // if method is GET and there is a changeset boundary open then close it
       if (request.request.method === 'GET' && changesetBoundary !== null) {
-        res.push(
-          `${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`,
-        );
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         changesetBoundary = null;
       }
 
@@ -324,9 +303,7 @@ export class ODataBatchResource extends ODataResource<any> {
       if (request.request.method !== 'GET') {
         if (changesetBoundary === null) {
           changesetBoundary = Strings.uniqueId({ prefix: CHANGESET_PREFIX });
-          res.push(
-            `${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}`,
-          );
+          res.push(`${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}`);
           res.push(NEWLINE);
         }
         res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}`);
@@ -345,22 +322,15 @@ export class ODataBatchResource extends ODataResource<any> {
 
     if (res.length) {
       if (changesetBoundary !== null) {
-        res.push(
-          `${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`,
-        );
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         changesetBoundary = null;
       }
-      res.push(
-        `${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}`,
-      );
+      res.push(`${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
     }
     return res.join(NEWLINE);
   }
 
-  static buildJsonBody(
-    requests: ODataBatchRequest<any>[],
-    options: ODataApiOptions,
-  ): Object {
+  static buildJsonBody(requests: ODataBatchRequest<any>[], options: ODataApiOptions): Object {
     return {
       requests: requests.map((request) => request.toJson(options)),
     };
@@ -447,10 +417,7 @@ export class ODataBatchResource extends ODataResource<any> {
         }
 
         const batchBodyLineParts: string[] = batchBodyLine.split(': ');
-        headers = headers.append(
-          batchBodyLineParts[0].trim(),
-          batchBodyLineParts[1].trim(),
-        );
+        headers = headers.append(batchBodyLineParts[0].trim(), batchBodyLineParts[1].trim());
       }
 
       let body: string | { error: any; text: string } = '';
@@ -501,8 +468,7 @@ export class ODataBatchResource extends ODataResource<any> {
     requests: ODataBatchRequest<any>[],
     response: ODataResponse<any>,
   ): HttpResponseBase[] {
-    const responses: Object[] =
-      (response.body ? response.body : {})['responses'] ?? [];
+    const responses: Object[] = (response.body ? response.body : {})['responses'] ?? [];
 
     return responses.map((response: any, index: number) => {
       let request = requests[index].request;

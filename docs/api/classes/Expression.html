@@ -181,6 +181,9 @@
                             <li>
                                 <a href="#toJson" >toJson</a>
                             </li>
+                            <li>
+                                <a href="#toString" >toString</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -213,7 +216,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+<code>constructor(undefined: literal type)</code>
                     </td>
                 </tr>
                         <tr>
@@ -238,7 +241,7 @@
                                                 <tr>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/enumerations.html" target="_self" >literal type</a></code>
+                                                                    <code>literal type</code>
                                                         </td>
                                                   
                                                     <td>
@@ -324,7 +327,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >{}</a></code>
+                            <b>Returns : </b>    <code>{}</code>
 
                         </div>
                 </td>
@@ -400,7 +403,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                         </div>
                 </td>
@@ -422,7 +425,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>render(undefined: <a href="../undefineds/.html" target="_self">literal type</a>)</code>
+                    <code>render(undefined: literal type)</code>
                 </td>
             </tr>
 
@@ -452,7 +455,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >literal type</a></code>
+                                                        <code>literal type</code>
                                             </td>
 
                                             <td>
@@ -465,7 +468,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >string</a></code>
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                         </div>
                             <div class="io-description">
@@ -488,7 +491,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>resolve(parser: <a href="../undefineds/.html" target="_self">any</a>)</code>
+<code>resolve(parser: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
                 </td>
             </tr>
 
@@ -519,7 +522,7 @@
                                         <tr>
                                                 <td>parser</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -532,7 +535,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >any</a></code>
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -572,7 +575,44 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html" target="_self" >{ $type: any; children: any; }</a></code>
+                            <b>Returns : </b>    <code>{ $type: any; children: any; }</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toString"></a>
+                    <span class="name">
+                        <span ><b>toString</b></span>
+                        <a href="#toString"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toString()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                         </div>
                 </td>
@@ -668,6 +708,16 @@ export abstract class Expression&lt;T&gt; implements Renderable {
 
   resolve(parser: any) {
     return parser;
+  }
+
+  toString() {
+    return this.render({
+      aliases: [],
+      escape: true,
+      prefix: &#x27;&#x27;,
+      parser: undefined,
+      options: {},
+    });
   }
 }
 </code></pre>

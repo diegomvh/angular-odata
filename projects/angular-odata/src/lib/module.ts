@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import {
   EnvironmentProviders,
   InjectionToken,
@@ -25,9 +24,7 @@ export function createSyncLoader(passedConfig: PassedInitialConfig) {
 }
 
 // Standalone version
-export function provideODataClient(
-  passedConfig: PassedInitialConfig,
-): EnvironmentProviders {
+export function provideODataClient(passedConfig: PassedInitialConfig): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: ODATA_CONFIG, useValue: passedConfig },
     passedConfig?.loader ?? {
@@ -42,13 +39,11 @@ export function provideODataClient(
 
 // Module version
 @NgModule({
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
   providers: [ODataClient, ODataServiceFactory],
 })
 export class ODataModule {
-  static forRoot(
-    passedConfig: PassedInitialConfig,
-  ): ModuleWithProviders<ODataModule> {
+  static forRoot(passedConfig: PassedInitialConfig): ModuleWithProviders<ODataModule> {
     return {
       ngModule: ODataModule,
       providers: [

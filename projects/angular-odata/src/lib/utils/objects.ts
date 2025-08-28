@@ -12,9 +12,7 @@ function forEach(array: any[], iteratee: (value: any, index: number) => void) {
 export const Objects = {
   set(obj: { [attr: string]: any }, path: string, value: any) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
-    const pathArray = (
-      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
-    ) as any[];
+    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
     pathArray.reduce((acc, key, i) => {
       if (acc[key] === undefined) acc[key] = {};
@@ -25,20 +23,14 @@ export const Objects = {
 
   get(obj: { [attr: string]: any }, path: string, def?: any): any {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
-    const pathArray = (
-      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
-    ) as any[];
+    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
     // Find value if exist return otherwise return undefined value;
-    return (
-      pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj) || def
-    );
+    return pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj) || def;
   },
 
   unset(obj: { [attr: string]: any }, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
-    const pathArray = (
-      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
-    ) as any[];
+    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
     pathArray.reduce((acc, key, i) => {
       if (i === pathArray.length - 1) delete acc[key];
@@ -48,9 +40,7 @@ export const Objects = {
 
   has(obj: { [attr: string]: any }, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
-    const pathArray = (
-      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
-    ) as any[];
+    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
     return !!pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj);
   },
@@ -82,20 +72,14 @@ export const Objects = {
       const val1 = object1[key];
       const val2 = object2[key];
       const areObjects = Types.isPlainObject(val1) && Types.isPlainObject(val2);
-      if (
-        (areObjects && !Objects.equal(val1, val2)) ||
-        (!areObjects && val1 !== val2)
-      ) {
+      if ((areObjects && !Objects.equal(val1, val2)) || (!areObjects && val1 !== val2)) {
         return false;
       }
     }
     return true;
   },
 
-  difference(
-    object1: { [attr: string]: any },
-    object2: { [attr: string]: any },
-  ) {
+  difference(object1: { [attr: string]: any }, object2: { [attr: string]: any }) {
     if (!object2 || !Types.isPlainObject(object2)) {
       return object1;
     }
@@ -164,8 +148,7 @@ export const Objects = {
     if (type !== 'Map' && type !== 'Object') {
       return undefined;
     }
-    const values =
-      type === 'Map' ? Array.from(key.values()) : Object.values(key);
+    const values = type === 'Map' ? Array.from(key.values()) : Object.values(key);
     if (values.length === 1 && single) {
       // Single primitive key value
       key = values[0];

@@ -33,10 +33,7 @@ export class ODataInStorageCache extends ODataBaseCache {
    * Store the cache in the storage
    */
   store() {
-    this.storage.setItem(
-      this.name,
-      JSON.stringify(Array.from(this.entries.entries())),
-    );
+    this.storage.setItem(this.name, JSON.stringify(Array.from(this.entries.entries())));
   }
 
   /**

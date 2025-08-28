@@ -1,10 +1,6 @@
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
-import {
-  ParserOptions,
-  ODataStructuredTypeConfig,
-  ODataStructuredTypeFieldConfig,
-} from '../types';
+import { ParserOptions, ODataStructuredTypeConfig, ODataStructuredTypeFieldConfig } from '../types';
 import { ODataParserSchemaElement } from './element';
 import {
   JsonSchemaOptions,
@@ -25,11 +21,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
   collection?: typeof ODataCollection;
 
   constructor(config: ODataStructuredTypeConfig, schema: ODataSchema) {
-    super(
-      config,
-      schema,
-      new ODataStructuredTypeParser(config, schema.namespace, schema.alias),
-    );
+    super(config, schema, new ODataStructuredTypeParser(config, schema.namespace, schema.alias));
     this.base = config.base;
     this.model = config.model as typeof ODataModel;
     this.collection = config.collection as typeof ODataCollection;
@@ -37,9 +29,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
 
   configure({ options }: { options: ParserOptions }) {
     if (this.base) {
-      const parent = this.api.findStructuredType(
-        this.base,
-      ) as ODataStructuredType<any>;
+      const parent = this.api.findStructuredType(this.base) as ODataStructuredType<any>;
       parent.children.push(this);
       this.parent = parent;
     }
@@ -69,8 +59,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
    */
   override isSubtypeOf(schema: ODataStructuredType<any>): boolean {
     return (
-      super.isSubtypeOf(schema) ||
-      (this.parent !== undefined && this.parent.isSubtypeOf(schema))
+      super.isSubtypeOf(schema) || (this.parent !== undefined && this.parent.isSubtypeOf(schema))
     );
   }
 
@@ -80,10 +69,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
    * @returns True if the callable is type of the given type
    */
   override isSupertypeOf(schema: ODataStructuredType<any>): boolean {
-    return (
-      super.isSupertypeOf(schema) ||
-      this.children.some((c) => c.isSupertypeOf(schema))
-    );
+    return super.isSupertypeOf(schema) || this.children.some((c) => c.isSupertypeOf(schema));
   }
 
   /**
@@ -163,9 +149,8 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
   findParentSchemaForField<E>(field: ODataStructuredTypeFieldParser<any>) {
     return this.findParentSchema(
       (p) =>
-        p
-          .fields({ include_parents: false, include_navigation: true })
-          .find((f) => f === field) !== undefined,
+        p.fields({ include_parents: false, include_navigation: true }).find((f) => f === field) !==
+        undefined,
     ) as ODataStructuredType<E>;
   }
 

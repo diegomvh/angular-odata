@@ -140,13 +140,8 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     if (this.ContainsTarget !== undefined) {
       json['ContainsTarget'] = this.ContainsTarget;
     }
-    if (
-      Array.isArray(this.ReferentialConstraints) &&
-      this.ReferentialConstraints.length > 0
-    ) {
-      json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) =>
-        r.toJson(),
-      );
+    if (Array.isArray(this.ReferentialConstraints) && this.ReferentialConstraints.length > 0) {
+      json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) => r.toJson());
     }
     if (this.OnDelete !== undefined) {
       json['OnDelete'] = this.OnDelete;
@@ -159,13 +154,7 @@ export class CsdlReferentialConstraint {
   Property: string;
   ReferencedProperty: string;
 
-  constructor({
-    Property,
-    ReferencedProperty,
-  }: {
-    Property: string;
-    ReferencedProperty: string;
-  }) {
+  constructor({ Property, ReferencedProperty }: { Property: string; ReferencedProperty: string }) {
     this.Property = Property;
     this.ReferencedProperty = ReferencedProperty;
   }
