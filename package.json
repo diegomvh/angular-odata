@@ -27,7 +27,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng test angular-odata && ng build angular-odata --configuration production",
+    "build": "ng test angular-odata --watch=false --browsers=ChromeHeadless && ng build angular-odata --configuration production",
     "schematics": "cd projects/angular-odata && npm run build && npm run postbuild",
     "link": "npm link angular-odata",
     "test": "ng test --watch=false --browsers=ChromeHeadless",
