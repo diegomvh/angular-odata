@@ -30,7 +30,7 @@
     "build": "ng test angular-odata && ng build angular-odata --configuration production",
     "schematics": "cd projects/angular-odata && npm run build && npm run postbuild",
     "link": "npm link angular-odata",
-    "test": "ng test",
+    "test": "ng test --watch=false --browsers=ChromeHeadless",
     "watch": "ng build --watch --configuration development",
     "docs": "compodoc -p projects/angular-odata/tsconfig.lib.json -d docs/api --disableGraph --disableCoverage",
     "versioning": "npm version 0.131.0 --allow-same-version && cd projects/angular-odata && npm version 0.131.0 --allow-same-version && cd ../..",
