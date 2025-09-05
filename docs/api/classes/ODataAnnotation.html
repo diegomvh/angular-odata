@@ -421,9 +421,7 @@ export class ODataAnnotation {
 export class ODataAnnotatable {
   annotations: ODataAnnotation[];
   constructor(config: { annotations?: ODataAnnotationConfig[] }) {
-    this.annotations &#x3D; (config.annotations || []).map(
-      (annot) &#x3D;&gt; new ODataAnnotation(annot),
-    );
+    this.annotations &#x3D; (config.annotations || []).map((annot) &#x3D;&gt; new ODataAnnotation(annot));
   }
 
   /**

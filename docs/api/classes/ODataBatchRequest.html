@@ -355,8 +355,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="122"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:122</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="118"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:118</a></div>
                         </td>
                     </tr>
 
@@ -422,8 +422,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="112"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:112</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -489,8 +489,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="89"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:89</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="87"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:87</a></div>
                         </td>
                     </tr>
 
@@ -731,9 +731,7 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;HttpResponseBase&gt; 
       let headers &#x3D; this.request.headers;
       res &#x3D; [
         ...res,
-        ...headers
-          .keys()
-          .map((key) &#x3D;&gt; &#x60;${key}: ${(headers.getAll(key) || []).join(&#x27;,&#x27;)}&#x60;),
+        ...headers.keys().map((key) &#x3D;&gt; &#x60;${key}: ${(headers.getAll(key) || []).join(&#x27;,&#x27;)}&#x60;),
       ];
     }
 
@@ -750,9 +748,7 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;HttpResponseBase&gt; 
     let res: { [name: string]: any } &#x3D; {
       id: this.id,
       method: this.request.method,
-      url: relativeUrls
-        ? this.request.pathWithParams
-        : this.request.urlWithParams,
+      url: relativeUrls ? this.request.pathWithParams : this.request.urlWithParams,
       //&#x27;atomicityGroup&#x27;: this.group
       //&quot;dependsOn&quot;: [&quot;g1&quot;, &quot;g2&quot;, &quot;r2&quot;]
     };
@@ -818,8 +814,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     const current &#x3D; this.api.requester;
     // Switch to the batch requester
     this.api.requester &#x3D; (req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; &#x3D;&gt; {
-      if (req.api !&#x3D;&#x3D; this.api)
-        throw new Error(&#x27;Batch Request are for the same api.&#x27;);
+      if (req.api !&#x3D;&#x3D; this.api) throw new Error(&#x27;Batch Request are for the same api.&#x27;);
       if (req.observe &#x3D;&#x3D;&#x3D; &#x27;events&#x27;)
         throw new Error(&quot;Batch Request does not allows observe &#x3D;&#x3D; &#x27;events&#x27;.&quot;);
       this._requests.push(new ODataBatchRequest&lt;any&gt;(req));
@@ -828,9 +823,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     return current;
   }
 
-  private restoreRequester(
-    handler: ((req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;) | undefined,
-  ) {
+  private restoreRequester(handler: ((req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;) | undefined) {
     this.api.requester &#x3D; handler;
   }
 
@@ -864,10 +857,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     });
     return this.api
       .request&lt;object&gt;(&#x27;POST&#x27;, this, {
-        body: ODataBatchResource.buildJsonBody(
-          this._requests,
-          this.api.options,
-        ),
+        body: ODataBatchResource.buildJsonBody(this._requests, this.api.options),
         responseType: &#x27;json&#x27;,
         observe: &#x27;response&#x27;,
         headers: headers,
@@ -892,9 +882,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       );
   }
 
-  private sendLegacy(
-    options?: ODataOptions,
-  ): Observable&lt;ODataResponse&lt;string&gt;&gt; {
+  private sendLegacy(options?: ODataOptions): Observable&lt;ODataResponse&lt;string&gt;&gt; {
     const bound &#x3D; Strings.uniqueId({ prefix: BATCH_PREFIX });
     const headers &#x3D; Http.mergeHttpHeaders((options &amp;&amp; options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
@@ -903,11 +891,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     });
     return this.api
       .request&lt;ODataResponse&lt;string&gt;&gt;(&#x27;POST&#x27;, this, {
-        body: ODataBatchResource.buildLegacyBody(
-          bound,
-          this._requests,
-          this.api.options,
-        ),
+        body: ODataBatchResource.buildLegacyBody(bound, this._requests, this.api.options),
         responseType: &#x27;text&#x27;,
         observe: &#x27;response&#x27;,
         headers: headers,
@@ -937,10 +921,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
    * @param options The options of the batch request
    * @returns The result of execute the context
    */
-  exec&lt;R&gt;(
-    ctx: (batch: this) &#x3D;&gt; R,
-    options?: ODataOptions,
-  ): Observable&lt;[R, ODataResponse&lt;string&gt;]&gt; {
+  exec&lt;R&gt;(ctx: (batch: this) &#x3D;&gt; R, options?: ODataOptions): Observable&lt;[R, ODataResponse&lt;string&gt;]&gt; {
     let result &#x3D; this.add(ctx);
     return this.send(options).pipe(map((response) &#x3D;&gt; [result, response]));
   }
@@ -969,9 +950,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     for (const request of requests) {
       // if method is GET and there is a changeset boundary open then close it
       if (request.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; &amp;&amp; changesetBoundary !&#x3D;&#x3D; null) {
-        res.push(
-          &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;,
-        );
+        res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;);
         changesetBoundary &#x3D; null;
       }
 
@@ -984,9 +963,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       if (request.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
         if (changesetBoundary &#x3D;&#x3D;&#x3D; null) {
           changesetBoundary &#x3D; Strings.uniqueId({ prefix: CHANGESET_PREFIX });
-          res.push(
-            &#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;,
-          );
+          res.push(&#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;);
           res.push(NEWLINE);
         }
         res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}&#x60;);
@@ -1005,22 +982,15 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
 
     if (res.length) {
       if (changesetBoundary !&#x3D;&#x3D; null) {
-        res.push(
-          &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;,
-        );
+        res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;);
         changesetBoundary &#x3D; null;
       }
-      res.push(
-        &#x60;${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;,
-      );
+      res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;);
     }
     return res.join(NEWLINE);
   }
 
-  static buildJsonBody(
-    requests: ODataBatchRequest&lt;any&gt;[],
-    options: ODataApiOptions,
-  ): Object {
+  static buildJsonBody(requests: ODataBatchRequest&lt;any&gt;[], options: ODataApiOptions): Object {
     return {
       requests: requests.map((request) &#x3D;&gt; request.toJson(options)),
     };
@@ -1107,10 +1077,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
         }
 
         const batchBodyLineParts: string[] &#x3D; batchBodyLine.split(&#x27;: &#x27;);
-        headers &#x3D; headers.append(
-          batchBodyLineParts[0].trim(),
-          batchBodyLineParts[1].trim(),
-        );
+        headers &#x3D; headers.append(batchBodyLineParts[0].trim(), batchBodyLineParts[1].trim());
       }
 
       let body: string | { error: any; text: string } &#x3D; &#x27;&#x27;;
@@ -1161,8 +1128,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     requests: ODataBatchRequest&lt;any&gt;[],
     response: ODataResponse&lt;any&gt;,
   ): HttpResponseBase[] {
-    const responses: Object[] &#x3D;
-      (response.body ? response.body : {})[&#x27;responses&#x27;] ?? [];
+    const responses: Object[] &#x3D; (response.body ? response.body : {})[&#x27;responses&#x27;] ?? [];
 
     return responses.map((response: any, index: number) &#x3D;&gt; {
       let request &#x3D; requests[index].request;

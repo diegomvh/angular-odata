@@ -647,8 +647,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="77"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:77</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -1010,19 +1010,14 @@ export class ODataParameterParser&lt;T&gt; {
   }
 
   structuredType() {
-    if (!this.isStructuredType())
-      throw new Error(&#x27;Field are not StrucuturedType&#x27;);
+    if (!this.isStructuredType()) throw new Error(&#x27;Field are not StrucuturedType&#x27;);
     return this.parser as ODataStructuredTypeParser&lt;T&gt;;
   }
 
   field&lt;F&gt;(name: string) {
     if (this.isStructuredType())
-      return (this.parser as ODataStructuredTypeParser&lt;T&gt;).field&lt;F&gt;(
-        name as keyof T,
-      );
-    throw new Error(
-      &#x60;The field ${this.name} is not related to a StructuredType&#x60;,
-    );
+      return (this.parser as ODataStructuredTypeParser&lt;T&gt;).field&lt;F&gt;(name as keyof T);
+    throw new Error(&#x60;The field ${this.name} is not related to a StructuredType&#x60;);
   }
 }
 
@@ -1096,8 +1091,7 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
   }) {
     this.parserOptions &#x3D; options;
-    if (this.return)
-      this.parser &#x3D; parserForType(this.return.type) ?? NONE_PARSER;
+    if (this.return) this.parser &#x3D; parserForType(this.return.type) ?? NONE_PARSER;
     this.parameters.forEach((p) &#x3D;&gt; p.configure({ options, parserForType }));
   }
 

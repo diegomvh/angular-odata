@@ -844,7 +844,7 @@ Titleize is meant for creating pretty output.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:39</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:37</a></code>
 </div>
                         </td>
                     </tr>
@@ -933,7 +933,7 @@ Titleize is meant for creating pretty output.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:30</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:28</a></code>
 </div>
                         </td>
                     </tr>
@@ -1010,12 +1010,8 @@ export class ODataEntityContainer extends ODataSchemaElement {
 
   constructor(config: ODataEntityContainerConfig, schema: ODataSchema) {
     super(config, schema);
-    this.entitySets &#x3D; (config.entitySets ?? []).map(
-      (config) &#x3D;&gt; new ODataEntitySet(config, schema),
-    );
-    this.singletons &#x3D; (config.singletons ?? []).map(
-      (config) &#x3D;&gt; new ODataSingleton(config, schema),
-    );
+    this.entitySets &#x3D; (config.entitySets ?? []).map((config) &#x3D;&gt; new ODataEntitySet(config, schema));
+    this.singletons &#x3D; (config.singletons ?? []).map((config) &#x3D;&gt; new ODataSingleton(config, schema));
   }
 }
 </code></pre>

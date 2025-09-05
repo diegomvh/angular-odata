@@ -653,13 +653,8 @@ export class CsdlCollection {
     if (Array.isArray(this.PropertyPath) &amp;&amp; this.PropertyPath.length &gt; 0) {
       json[&#x27;PropertyPath&#x27;] &#x3D; this.PropertyPath.map((p) &#x3D;&gt; p.toJson());
     }
-    if (
-      Array.isArray(this.NavigationPropertyPath) &amp;&amp;
-      this.NavigationPropertyPath.length &gt; 0
-    ) {
-      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt;
-        p.toJson(),
-      );
+    if (Array.isArray(this.NavigationPropertyPath) &amp;&amp; this.NavigationPropertyPath.length &gt; 0) {
+      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt; p.toJson());
     }
     return json;
   }

@@ -191,7 +191,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:79</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:72</a></div>
                             </td>
                         </tr>
 
@@ -253,7 +253,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:71</a></div>
                         </td>
                     </tr>
 
@@ -280,7 +280,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:79</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:72</a></div>
                         </td>
                     </tr>
 
@@ -306,7 +306,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:77</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:70</a></div>
                         </td>
                     </tr>
 
@@ -340,8 +340,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="102"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:102</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -377,8 +377,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="94"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:94</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="87"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:87</a></div>
                         </td>
                     </tr>
 
@@ -425,9 +425,7 @@ export class CsdlReference extends CsdlAnnotable {
     super({ Annotation });
     this.Uri &#x3D; Uri;
     this.Include &#x3D; Include?.map((i) &#x3D;&gt; new CsdlInclude(i));
-    this.IncludeAnnotations &#x3D; IncludeAnnotations?.map(
-      (i) &#x3D;&gt; new CsdlIncludeAnnotations(i),
-    );
+    this.IncludeAnnotations &#x3D; IncludeAnnotations?.map((i) &#x3D;&gt; new CsdlIncludeAnnotations(i));
   }
 
   override toJson() {
@@ -435,13 +433,8 @@ export class CsdlReference extends CsdlAnnotable {
     if (Array.isArray(this.Include) &amp;&amp; this.Include.length &gt; 0) {
       json[&#x27;Include&#x27;] &#x3D; this.Include.map((i) &#x3D;&gt; i.toJson());
     }
-    if (
-      Array.isArray(this.IncludeAnnotations) &amp;&amp;
-      this.IncludeAnnotations.length &gt; 0
-    ) {
-      json[&#x27;IncludeAnnotations&#x27;] &#x3D; this.IncludeAnnotations.map((i) &#x3D;&gt;
-        i.toJson(),
-      );
+    if (Array.isArray(this.IncludeAnnotations) &amp;&amp; this.IncludeAnnotations.length &gt; 0) {
+      json[&#x27;IncludeAnnotations&#x27;] &#x3D; this.IncludeAnnotations.map((i) &#x3D;&gt; i.toJson());
     }
     return json;
   }

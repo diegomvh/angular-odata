@@ -588,8 +588,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="103"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-schema.ts:103</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="96"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-schema.ts:96</a></div>
                         </td>
                     </tr>
 
@@ -655,8 +655,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-schema.ts:63</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="59"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-schema.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -734,12 +734,8 @@ export class CsdlSchema {
     this.EntityType &#x3D; EntityType?.map((e) &#x3D;&gt; new CsdlEntityType(this, e));
     this.Function &#x3D; Function?.map((f) &#x3D;&gt; new CsdlFunction(this, f));
     this.Action &#x3D; Action?.map((a) &#x3D;&gt; new CsdlAction(this, a));
-    this.EntityContainer &#x3D; EntityContainer?.map(
-      (e) &#x3D;&gt; new CsdlEntityContainer(this, e),
-    );
-    this.TypeDefinition &#x3D; TypeDefinition?.map(
-      (t) &#x3D;&gt; new CsdlTypeDefinition(this, t),
-    );
+    this.EntityContainer &#x3D; EntityContainer?.map((e) &#x3D;&gt; new CsdlEntityContainer(this, e));
+    this.TypeDefinition &#x3D; TypeDefinition?.map((t) &#x3D;&gt; new CsdlTypeDefinition(this, t));
     this.Term &#x3D; Term?.map((t) &#x3D;&gt; new CsdlTerm(this, t));
     this.Annotations &#x3D; Annotations?.map((a) &#x3D;&gt; new CsdlAnnotations(this, a));
   }
@@ -751,10 +747,7 @@ export class CsdlSchema {
     if (this.Alias !&#x3D;&#x3D; undefined) {
       json[&#x27;Alias&#x27;] &#x3D; this.Alias;
     }
-    if (
-      Array.isArray(this.EntityContainer) &amp;&amp;
-      this.EntityContainer.length &gt; 0
-    ) {
+    if (Array.isArray(this.EntityContainer) &amp;&amp; this.EntityContainer.length &gt; 0) {
       json[&#x27;EntityContainer&#x27;] &#x3D; this.EntityContainer.map((a) &#x3D;&gt; a.toJson());
     }
     if (Array.isArray(this.EntityType) &amp;&amp; this.EntityType.length &gt; 0) {
@@ -789,9 +782,7 @@ export class CsdlSchema {
       namespace: this.Namespace,
       alias: base?.alias ?? this.Alias,
       annotations: this.Annotations?.map((t) &#x3D;&gt; t.toConfig()),
-      enums: this.EnumType?.map((t) &#x3D;&gt;
-        t.toConfig(base?.enums?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name)),
-      ),
+      enums: this.EnumType?.map((t) &#x3D;&gt; t.toConfig(base?.enums?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name))),
       entities: [
         ...(this.ComplexType ?? []).map((t) &#x3D;&gt;
           t.toConfig(base?.entities?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name)),

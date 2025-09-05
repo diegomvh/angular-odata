@@ -163,8 +163,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="48"
-                                    class="link-to-prism">projects/angular-odata/src/lib/module.ts:48</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">projects/angular-odata/src/lib/module.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -241,9 +241,7 @@ export function createSyncLoader(passedConfig: PassedInitialConfig) {
 }
 
 // Standalone version
-export function provideODataClient(
-  passedConfig: PassedInitialConfig,
-): EnvironmentProviders {
+export function provideODataClient(passedConfig: PassedInitialConfig): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: ODATA_CONFIG, useValue: passedConfig },
     passedConfig?.loader ?? {
@@ -262,9 +260,7 @@ export function provideODataClient(
   providers: [ODataClient, ODataServiceFactory],
 })
 export class ODataModule {
-  static forRoot(
-    passedConfig: PassedInitialConfig,
-  ): ModuleWithProviders&lt;ODataModule&gt; {
+  static forRoot(passedConfig: PassedInitialConfig): ModuleWithProviders&lt;ODataModule&gt; {
     return {
       ngModule: ODataModule,
       providers: [

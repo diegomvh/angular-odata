@@ -213,7 +213,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:75</a></div>
                             </td>
                         </tr>
 
@@ -299,7 +299,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:75</a></div>
                         </td>
                     </tr>
 
@@ -827,7 +827,7 @@ Titleize is meant for creating pretty output.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:39</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:37</a></code>
 </div>
                         </td>
                     </tr>
@@ -916,7 +916,7 @@ Titleize is meant for creating pretty output.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:30</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:28</a></code>
 </div>
                         </td>
                     </tr>
@@ -1054,10 +1054,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
   }
 }
 
-export class ODataParserSchemaElement&lt;
-  E,
-  P extends Parser&lt;E&gt;,
-&gt; extends ODataSchemaElement {
+export class ODataParserSchemaElement&lt;E, P extends Parser&lt;E&gt;&gt; extends ODataSchemaElement {
   parser: P;
   constructor(
     config: { annotations?: ODataAnnotationConfig[]; name: string },

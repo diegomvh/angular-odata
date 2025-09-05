@@ -394,7 +394,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:43</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:36</a></code>
 </div>
                         </td>
                     </tr>
@@ -469,7 +469,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:27</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:25</a></code>
 </div>
                         </td>
                     </tr>
@@ -517,9 +517,7 @@ export class CsdlReference extends CsdlAnnotable {
     super({ Annotation });
     this.Uri &#x3D; Uri;
     this.Include &#x3D; Include?.map((i) &#x3D;&gt; new CsdlInclude(i));
-    this.IncludeAnnotations &#x3D; IncludeAnnotations?.map(
-      (i) &#x3D;&gt; new CsdlIncludeAnnotations(i),
-    );
+    this.IncludeAnnotations &#x3D; IncludeAnnotations?.map((i) &#x3D;&gt; new CsdlIncludeAnnotations(i));
   }
 
   override toJson() {
@@ -527,13 +525,8 @@ export class CsdlReference extends CsdlAnnotable {
     if (Array.isArray(this.Include) &amp;&amp; this.Include.length &gt; 0) {
       json[&#x27;Include&#x27;] &#x3D; this.Include.map((i) &#x3D;&gt; i.toJson());
     }
-    if (
-      Array.isArray(this.IncludeAnnotations) &amp;&amp;
-      this.IncludeAnnotations.length &gt; 0
-    ) {
-      json[&#x27;IncludeAnnotations&#x27;] &#x3D; this.IncludeAnnotations.map((i) &#x3D;&gt;
-        i.toJson(),
-      );
+    if (Array.isArray(this.IncludeAnnotations) &amp;&amp; this.IncludeAnnotations.length &gt; 0) {
+      json[&#x27;IncludeAnnotations&#x27;] &#x3D; this.IncludeAnnotations.map((i) &#x3D;&gt; i.toJson());
     }
     return json;
   }

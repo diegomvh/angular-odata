@@ -325,7 +325,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="169" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:169</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="164" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:164</a></div>
                         </td>
                     </tr>
 
@@ -353,7 +353,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="159" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:159</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="154" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:154</a></div>
                         </td>
                     </tr>
 
@@ -409,7 +409,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="148" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:148</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="145" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:145</a></div>
                         </td>
                     </tr>
 
@@ -497,8 +497,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="216"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:216</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="206"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:206</a></div>
                         </td>
                     </tr>
 
@@ -539,8 +539,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="192"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:192</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:187</a></div>
                         </td>
                     </tr>
 
@@ -759,8 +759,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="234"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:234</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="219"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:219</a></div>
                         </td>
                     </tr>
 
@@ -838,8 +838,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="261"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:261</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="238"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:238</a></div>
                         </td>
                     </tr>
 
@@ -908,7 +908,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="149" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:149</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="146" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:146</a></div>
                                 </td>
                             </tr>
 
@@ -930,7 +930,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="160" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:160</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="155" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:155</a></div>
                                 </td>
                             </tr>
 
@@ -952,7 +952,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="170" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:170</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">projects/angular-odata/src/lib/resources/response.ts:165</a></div>
                                 </td>
                             </tr>
 
@@ -1080,15 +1080,12 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
           .find((p) &#x3D;&gt; p.startsWith(APPLICATION_JSON)) as string;
         this._options.setFeatures(features);
       }
-      const headerKey &#x3D; Http.resolveHeaderKey(
-        this.headers,
-        ODATA_VERSION_HEADERS,
-      );
+      const headerKey &#x3D; Http.resolveHeaderKey(this.headers, ODATA_VERSION_HEADERS);
       if (headerKey) {
-        const version &#x3D; (this.headers.get(headerKey) || &#x27;&#x27;).replace(
-          /\;/g,
-          &#x27;&#x27;,
-        ) as &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
+        const version &#x3D; (this.headers.get(headerKey) || &#x27;&#x27;).replace(/\;/g, &#x27;&#x27;) as
+          | &#x27;2.0&#x27;
+          | &#x27;3.0&#x27;
+          | &#x27;4.0&#x27;;
         this._options.setVersion(version);
       }
 
@@ -1114,9 +1111,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   get payload() {
     if (this._payload &#x3D;&#x3D;&#x3D; undefined) {
       this._payload &#x3D;
-        this.body &amp;&amp; this.options.version &#x3D;&#x3D;&#x3D; &#x27;2.0&#x27;
-          ? (&lt;any&gt;this.body)[&#x27;d&#x27;]
-          : this.body;
+        this.body &amp;&amp; this.options.version &#x3D;&#x3D;&#x3D; &#x27;2.0&#x27; ? (&lt;any&gt;this.body)[&#x27;d&#x27;] : this.body;
     }
     return this._payload;
   }
@@ -1157,11 +1152,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   entity(): ODataEntity&lt;T&gt; {
     const options &#x3D; this.options;
     const payload &#x3D; this.payload;
-    const annots &#x3D; new ODataEntityAnnotations&lt;T&gt;(
-      options.helper,
-      this.annotations,
-      this.context,
-    );
+    const annots &#x3D; new ODataEntityAnnotations&lt;T&gt;(options.helper, this.annotations, this.context);
     const data &#x3D; payload ? annots.data(payload) : null;
     let entity &#x3D; (
       data !&#x3D;&#x3D; null &amp;&amp; Types.isPlainObject(data)
@@ -1169,8 +1160,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
         : data
     ) as T | null;
 
-    if (entity !&#x3D;&#x3D; null)
-      entity &#x3D; this.resource.deserialize(entity, options) as T;
+    if (entity !&#x3D;&#x3D; null) entity &#x3D; this.resource.deserialize(entity, options) as T;
     return { entity, annots };
   }
 
@@ -1181,14 +1171,9 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   entities(): ODataEntities&lt;T&gt; {
     const options &#x3D; this.options;
     const payload &#x3D; this.payload;
-    const annots &#x3D; new ODataEntitiesAnnotations&lt;T&gt;(
-      options.helper,
-      this.annotations,
-      this.context,
-    );
+    const annots &#x3D; new ODataEntitiesAnnotations&lt;T&gt;(options.helper, this.annotations, this.context);
     let entities &#x3D; payload ? annots.data(payload) : null;
-    if (entities !&#x3D;&#x3D; null)
-      entities &#x3D; this.resource.deserialize(entities, options) as T[];
+    if (entities !&#x3D;&#x3D; null) entities &#x3D; this.resource.deserialize(entities, options) as T[];
     return { entities, annots };
   }
 
@@ -1199,23 +1184,15 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   property(): ODataProperty&lt;T&gt; {
     const options &#x3D; this.options;
     const payload &#x3D; this.payload;
-    const annots &#x3D; new ODataPropertyAnnotations&lt;T&gt;(
-      options.helper,
-      this.annotations,
-      this.context,
-    );
+    const annots &#x3D; new ODataPropertyAnnotations&lt;T&gt;(options.helper, this.annotations, this.context);
     const data &#x3D; payload ? (annots.data(payload) as T) : null;
     let property &#x3D; (
       data !&#x3D;&#x3D; null &amp;&amp; Types.isPlainObject(data)
-        ? options.helper.attributes(
-            data as { [name: string]: any },
-            this.api.options.stripMetadata,
-          )
+        ? options.helper.attributes(data as { [name: string]: any }, this.api.options.stripMetadata)
         : data
     ) as T | null;
 
-    if (property !&#x3D;&#x3D; null)
-      property &#x3D; this.resource.deserialize(property, options) as T;
+    if (property !&#x3D;&#x3D; null) property &#x3D; this.resource.deserialize(property, options) as T;
     return { property, annots };
   }
 

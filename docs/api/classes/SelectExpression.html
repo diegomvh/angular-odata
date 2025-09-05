@@ -346,8 +346,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="77"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:77</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:75</a></div>
                         </td>
                     </tr>
 
@@ -419,7 +419,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:71</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:69</a></code>
 </div>
                         </td>
                     </tr>
@@ -456,8 +456,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="91"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:91</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="89"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:89</a></div>
                         </td>
                     </tr>
 
@@ -612,8 +612,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="82"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:82</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -679,8 +679,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="86"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:86</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="84"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:84</a></div>
                         </td>
                     </tr>
 
@@ -1226,9 +1226,7 @@ export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
   } &#x3D; {}): string {
     return this._children
       .map((n) &#x3D;&gt;
-        typeof n &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
-          ? n
-          : n.render({ aliases, escape, prefix, parser, options }),
+        typeof n &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? n : n.render({ aliases, escape, prefix, parser, options }),
       )
       .join(&#x27;,&#x27;);
   }

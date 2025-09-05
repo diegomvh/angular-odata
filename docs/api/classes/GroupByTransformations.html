@@ -416,8 +416,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="95"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:95</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -507,8 +507,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="106"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:106</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="102"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:102</a></div>
                         </td>
                     </tr>
 
@@ -598,8 +598,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="126"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:126</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:122</a></div>
                         </td>
                     </tr>
 
@@ -683,7 +683,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:85</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:83</a></code>
 </div>
                         </td>
                     </tr>
@@ -720,8 +720,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="133"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:133</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="129"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:129</a></div>
                         </td>
                     </tr>
 
@@ -787,8 +787,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="129"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:129</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="125"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:125</a></div>
                         </td>
                     </tr>
 
@@ -943,8 +943,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="122"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:122</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="118"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:118</a></div>
                         </td>
                     </tr>
 
@@ -1022,8 +1022,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="118"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:118</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:114</a></div>
                         </td>
                     </tr>
 
@@ -1177,8 +1177,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="114"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:114</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="110"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/apply.ts:110</a></div>
                         </td>
                     </tr>
 
@@ -1591,9 +1591,7 @@ export class GroupByTransformations&lt;T&gt; extends Expression&lt;T&gt; {
     options?: ParserOptions;
   } &#x3D; {}): string {
     const children &#x3D; this._children.map((n) &#x3D;&gt;
-      typeof n !&#x3D;&#x3D; &#x27;string&#x27;
-        ? n.render({ aliases, escape, prefix, parser, options })
-        : n,
+      typeof n !&#x3D;&#x3D; &#x27;string&#x27; ? n.render({ aliases, escape, prefix, parser, options }) : n,
     );
     return &#x60;aggregate(${children
       .map((child, index) &#x3D;&gt;
@@ -1606,9 +1604,7 @@ export class GroupByTransformations&lt;T&gt; extends Expression&lt;T&gt; {
 
   clone() {
     return new GroupByTransformations&lt;T&gt;({
-      children: this._children.map((c) &#x3D;&gt;
-        typeof c !&#x3D;&#x3D; &#x27;string&#x27; ? c.clone() : c,
-      ),
+      children: this._children.map((c) &#x3D;&gt; (typeof c !&#x3D;&#x3D; &#x27;string&#x27; ? c.clone() : c)),
       methods: this.methods,
       aliases: this.aliases,
     });
@@ -1675,10 +1671,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   static factory&lt;T&gt;(
-    opts: (
-      builder: ApplyExpressionBuilder&lt;T&gt;,
-      current: ApplyExpression&lt;T&gt;,
-    ) &#x3D;&gt; ApplyExpression&lt;T&gt;,
+    opts: (builder: ApplyExpressionBuilder&lt;T&gt;, current: ApplyExpression&lt;T&gt;) &#x3D;&gt; ApplyExpression&lt;T&gt;,
     current?: ApplyExpression&lt;T&gt;,
   ): ApplyExpression&lt;T&gt; {
     return opts(
@@ -1730,11 +1723,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return this;
   }
 
-  aggregate(
-    value: any,
-    method: AggregateMethod,
-    alias: string,
-  ): ApplyExpression&lt;T&gt; {
+  aggregate(value: any, method: AggregateMethod, alias: string): ApplyExpression&lt;T&gt; {
     return this._add(syntax.aggregate(value, method, alias));
   }
 
@@ -1831,8 +1820,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
   ): ApplyExpression&lt;T&gt; {
     let properties &#x3D; props({ rollup: (e: any) &#x3D;&gt; syntax.rollup(e) });
     properties &#x3D; Array.isArray(properties) ? properties : [properties];
-    const transformations &#x3D;
-      opts !&#x3D;&#x3D; undefined ? opts(new GroupByTransformations()) : undefined;
+    const transformations &#x3D; opts !&#x3D;&#x3D; undefined ? opts(new GroupByTransformations()) : undefined;
     return this._add(syntax.groupby(properties, transformations));
   }
 
@@ -1849,8 +1837,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
       t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
       o: operators as ODataOperators&lt;T&gt;,
       f: functions as ODataFunctions&lt;T&gt;,
-      e: (connector: FilterConnector &#x3D; &#x27;and&#x27;) &#x3D;&gt;
-        new FilterExpression&lt;T&gt;({ connector }),
+      e: (connector: FilterConnector &#x3D; &#x27;and&#x27;) &#x3D;&gt; new FilterExpression&lt;T&gt;({ connector }),
     }) as FilterExpression&lt;T&gt;;
     return this._add(transformations.filter(exp));
   }
@@ -1898,8 +1885,7 @@ export class ApplyExpression&lt;T&gt; extends Expression&lt;T&gt; {
       t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
       o: operators as ODataOperators&lt;T&gt;,
       f: functions as ODataFunctions&lt;T&gt;,
-      e: (connector: SearchConnector &#x3D; &#x27;AND&#x27;) &#x3D;&gt;
-        new SearchExpression&lt;T&gt;({ connector }),
+      e: (connector: SearchConnector &#x3D; &#x27;AND&#x27;) &#x3D;&gt; new SearchExpression&lt;T&gt;({ connector }),
     }) as SearchExpression&lt;T&gt;;
     return this._add(transformations.search(exp));
   }

@@ -192,7 +192,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="296" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:296</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="291" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:291</a></div>
                             </td>
                         </tr>
 
@@ -254,7 +254,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="295" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:295</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="290" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:290</a></div>
                         </td>
                     </tr>
 
@@ -281,7 +281,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="296" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:296</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="291" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:291</a></div>
                         </td>
                     </tr>
 
@@ -307,7 +307,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="293" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:293</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="288" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:288</a></div>
                         </td>
                     </tr>
 
@@ -334,7 +334,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="294" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:294</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="289" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:289</a></div>
                         </td>
                     </tr>
 
@@ -368,8 +368,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="314"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:314</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="309"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:309</a></div>
                         </td>
                     </tr>
 
@@ -659,13 +659,8 @@ export class CsdlCollection {
     if (Array.isArray(this.PropertyPath) &amp;&amp; this.PropertyPath.length &gt; 0) {
       json[&#x27;PropertyPath&#x27;] &#x3D; this.PropertyPath.map((p) &#x3D;&gt; p.toJson());
     }
-    if (
-      Array.isArray(this.NavigationPropertyPath) &amp;&amp;
-      this.NavigationPropertyPath.length &gt; 0
-    ) {
-      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt;
-        p.toJson(),
-      );
+    if (Array.isArray(this.NavigationPropertyPath) &amp;&amp; this.NavigationPropertyPath.length &gt; 0) {
+      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt; p.toJson());
     }
     return json;
   }

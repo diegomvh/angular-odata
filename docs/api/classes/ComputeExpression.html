@@ -371,8 +371,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="93"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:93</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -456,7 +456,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:86</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:84</a></code>
 </div>
                         </td>
                     </tr>
@@ -582,8 +582,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="99"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:99</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:97</a></div>
                         </td>
                     </tr>
 
@@ -1166,9 +1166,7 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
     const children &#x3D; this._children.map((n) &#x3D;&gt;
       n.render({ aliases, escape, prefix, parser, options }),
     );
-    return this.names
-      .map((name, index) &#x3D;&gt; &#x60;${children[index]} as ${name}&#x60;)
-      .join(&#x27;,&#x27;);
+    return this.names.map((name, index) &#x3D;&gt; &#x60;${children[index]} as ${name}&#x60;).join(&#x27;,&#x27;);
   }
 
   clone() {

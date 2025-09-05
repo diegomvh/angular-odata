@@ -272,9 +272,7 @@ export function createSyncLoader(passedConfig: PassedInitialConfig) {
 }
 
 // Standalone version
-export function provideODataClient(
-  passedConfig: PassedInitialConfig,
-): EnvironmentProviders {
+export function provideODataClient(passedConfig: PassedInitialConfig): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: ODATA_CONFIG, useValue: passedConfig },
     passedConfig?.loader ?? {
@@ -293,9 +291,7 @@ export function provideODataClient(
   providers: [ODataClient, ODataServiceFactory],
 })
 export class ODataModule {
-  static forRoot(
-    passedConfig: PassedInitialConfig,
-  ): ModuleWithProviders&lt;ODataModule&gt; {
+  static forRoot(passedConfig: PassedInitialConfig): ModuleWithProviders&lt;ODataModule&gt; {
     return {
       ngModule: ODataModule,
       providers: [

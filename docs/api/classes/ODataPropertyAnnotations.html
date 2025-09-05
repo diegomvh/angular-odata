@@ -261,7 +261,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:49</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:46</a></code>
 </div>
                         </td>
                     </tr>
@@ -304,7 +304,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:57</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:50</a></code>
 </div>
                         </td>
                     </tr>
@@ -377,7 +377,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:41</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:38</a></code>
 </div>
                         </td>
                     </tr>
@@ -535,7 +535,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:19</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:16</a></code>
 </div>
                         </td>
                     </tr>
@@ -603,10 +603,7 @@ export abstract class ODataAnnotations&lt;T&gt; {
     protected context?: ODataContext,
   ) {}
 
-  attributes(
-    data: { [name: string]: any },
-    metadata: ODataMetadataType,
-  ): Partial&lt;T&gt; {
+  attributes(data: { [name: string]: any }, metadata: ODataMetadataType): Partial&lt;T&gt; {
     return this.helper.attributes(data, metadata) as Partial&lt;T&gt;;
   }
 
@@ -641,11 +638,7 @@ export class ODataPropertyAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
   }
 
   clone(): ODataPropertyAnnotations&lt;any&gt; {
-    return new ODataPropertyAnnotations&lt;any&gt;(
-      this.helper,
-      new Map(this.annotations),
-      this.context,
-    );
+    return new ODataPropertyAnnotations&lt;any&gt;(this.helper, new Map(this.annotations), this.context);
   }
 
   data(data: { [name: string]: any }) {
@@ -663,11 +656,7 @@ export class ODataEntityAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
   }
 
   clone(): ODataEntityAnnotations&lt;any&gt; {
-    return new ODataEntityAnnotations&lt;any&gt;(
-      this.helper,
-      new Map(this.annotations),
-      this.context,
-    );
+    return new ODataEntityAnnotations&lt;any&gt;(this.helper, new Map(this.annotations), this.context);
   }
 
   data(data: { [name: string]: any }) {
@@ -753,11 +742,7 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
   }
 
   clone(): ODataEntitiesAnnotations&lt;any&gt; {
-    return new ODataEntitiesAnnotations&lt;any&gt;(
-      this.helper,
-      new Map(this.annotations),
-      this.context,
-    );
+    return new ODataEntitiesAnnotations&lt;any&gt;(this.helper, new Map(this.annotations), this.context);
   }
 
   data(data: { [name: string]: any }) {
@@ -791,9 +776,7 @@ export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt;
   }
 
   get skiptoken() {
-    let match &#x3D; (this.nextLink || &#x27;&#x27;).match(
-      /[&amp;?]{1}\$skiptoken&#x3D;([\d\w\s&#x27;\-]+)/,
-    );
+    let match &#x3D; (this.nextLink || &#x27;&#x27;).match(/[&amp;?]{1}\$skiptoken&#x3D;([\d\w\s&#x27;\-]+)/);
     return match !&#x3D;&#x3D; null ? match[1] : undefined;
   }
 

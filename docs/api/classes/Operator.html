@@ -199,7 +199,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="470" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:470</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="443" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:443</a></div>
                             </td>
                         </tr>
 
@@ -287,8 +287,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="552"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:552</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="522"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:522</a></div>
                         </td>
                     </tr>
 
@@ -326,8 +326,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="492"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:492</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="463"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:463</a></div>
                         </td>
                     </tr>
 
@@ -401,8 +401,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="500"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:500</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="471"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:471</a></div>
                         </td>
                     </tr>
 
@@ -467,8 +467,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="559"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:559</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="529"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:529</a></div>
                         </td>
                     </tr>
 
@@ -534,8 +534,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="481"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:481</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="454"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:454</a></div>
                         </td>
                     </tr>
 
@@ -577,7 +577,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="477" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:477</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="450" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:450</a></div>
                                 </td>
                             </tr>
 
@@ -624,9 +624,7 @@ export interface Renderable {
   toString(): any;
 }
 
-export const FieldFactory &#x3D; &lt;T extends object&gt;(
-  names: (string | Renderable)[] &#x3D; [],
-): any &#x3D;&gt;
+export const FieldFactory &#x3D; &lt;T extends object&gt;(names: (string | Renderable)[] &#x3D; []): any &#x3D;&gt;
   new Proxy({ _names: names } as T, {
     get(target: T, key: string | symbol) {
       let names &#x3D; (target as any)[&#x27;_names&#x27;] as (string | Renderable)[];
@@ -667,9 +665,7 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
         return (parser: any) &#x3D;&gt;
           names.reduce(
             (acc: any, name: string | Renderable) &#x3D;&gt;
-              typeof name &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
-                ? acc?.field(name)
-                : name?.resolve(parser),
+              typeof name &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? acc?.field(name) : name?.resolve(parser),
             parser,
           );
       } else {
@@ -678,10 +674,7 @@ export const FieldFactory &#x3D; &lt;T extends object&gt;(
     },
 
     has(target: T, key: string): any {
-      return (
-        [&#x27;toJson&#x27;, &#x27;isField&#x27;, &#x27;clone&#x27;, &#x27;render&#x27;, &#x27;resolve&#x27;].includes(key) ||
-        key in target
-      );
+      return [&#x27;toJson&#x27;, &#x27;isField&#x27;, &#x27;clone&#x27;, &#x27;render&#x27;, &#x27;resolve&#x27;].includes(key) || key in target;
     },
   });
 
@@ -735,8 +728,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
       Object.defineProperty(
         derivedCtor.prototype,
         name,
-        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null),
+        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) || Object.create(null),
       );
     });
   });
@@ -784,9 +776,7 @@ export function render(
 
 export function resolve(values: any, parser?: Parser&lt;any&gt;) {
   if (parser !&#x3D;&#x3D; undefined) {
-    let fields &#x3D; values.filter(
-      (v: any) &#x3D;&gt; Types.isObject(v) &amp;&amp; &#x27;isField&#x27; in v &amp;&amp; v.isField(),
-    );
+    let fields &#x3D; values.filter((v: any) &#x3D;&gt; Types.isObject(v) &amp;&amp; &#x27;isField&#x27; in v &amp;&amp; v.isField());
     if (fields.length &#x3D;&#x3D;&#x3D; 1 &amp;&amp; Types.isObject(parser) &amp;&amp; &#x27;field&#x27; in parser) {
       return fields[0].resolve(parser);
     }
@@ -794,11 +784,7 @@ export function resolve(values: any, parser?: Parser&lt;any&gt;) {
   return parser;
 }
 
-export function encode(
-  values: any,
-  parser?: Parser&lt;any&gt;,
-  options?: ParserOptions,
-) {
+export function encode(values: any, parser?: Parser&lt;any&gt;, options?: ParserOptions) {
   if (parser !&#x3D;&#x3D; undefined) {
     return values.map((v: any) &#x3D;&gt; {
       if (Types.isArray(v)) return encode(v, parser, options);
@@ -829,9 +815,7 @@ export class Function&lt;T&gt; implements Renderable {
     return {
       $type: Types.rawType(this),
       name: this.name,
-      values: this.values.map((v) &#x3D;&gt;
-        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v,
-      ),
+      values: this.values.map((v) &#x3D;&gt; (Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v)),
       normalize: this.normalize,
     };
   }
@@ -924,12 +908,7 @@ export class StringAndCollectionFunctions&lt;T&gt; {
     return new Function&lt;T&gt;(&#x27;startswith&#x27;, [left, right], normalize);
   }
 
-  subString(
-    left: any,
-    right: number,
-    length?: number,
-    normalize: Normalize &#x3D; &#x27;none&#x27;,
-  ) {
+  subString(left: any, right: number, length?: number, normalize: Normalize &#x3D; &#x27;none&#x27;) {
     let values &#x3D; [left, right];
     if (length !&#x3D;&#x3D; undefined) {
       values.push(length);
@@ -948,11 +927,7 @@ export class CollectionFunctions&lt;T&gt; {
 }
 
 export class StringFunctions&lt;T&gt; {
-  matchesPattern(
-    left: any | string,
-    pattern: string,
-    normalize: Normalize &#x3D; &#x27;none&#x27;,
-  ) {
+  matchesPattern(left: any | string, pattern: string, normalize: Normalize &#x3D; &#x27;none&#x27;) {
     return new Function&lt;T&gt;(&#x27;matchesPattern&#x27;, [left, pattern], normalize);
   }
   toLower(left: any, normalize: Normalize &#x3D; &#x27;none&#x27;) {
@@ -1026,9 +1001,7 @@ export class ArithmeticFunctions&lt;T&gt; {
 export class TypeFunctions&lt;T&gt; {
   cast&lt;N&gt;(left: T | string, type?: string): N {
     return FieldFactory&lt;Required&lt;N&gt;&gt;([
-      type !&#x3D;&#x3D; undefined
-        ? new Type&lt;T&gt;(&#x27;cast&#x27;, type, left)
-        : new Type&lt;T&gt;(&#x27;cast&#x27;, left as string),
+      type !&#x3D;&#x3D; undefined ? new Type&lt;T&gt;(&#x27;cast&#x27;, type, left) : new Type&lt;T&gt;(&#x27;cast&#x27;, left as string),
     ]);
   }
 
@@ -1072,9 +1045,7 @@ export class Operator&lt;T&gt; implements Renderable {
     return {
       $type: Types.rawType(this),
       op: this.op,
-      values: this.values.map((v) &#x3D;&gt;
-        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v,
-      ),
+      values: this.values.map((v) &#x3D;&gt; (Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v)),
       normalize: this.normalize,
     };
   }
@@ -1120,8 +1091,7 @@ export class Operator&lt;T&gt; implements Renderable {
                 escape,
                 prefix,
                 parser,
-                normalize:
-                  this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;right&#x27;,
+                normalize: this.normalize &#x3D;&#x3D;&#x3D; &#x27;all&#x27; || this.normalize &#x3D;&#x3D;&#x3D; &#x27;right&#x27;,
                 options,
               }),
             )
@@ -1267,12 +1237,7 @@ export class GroupingOperators&lt;T&gt; {
   }
 }
 
-export type AggregateMethod &#x3D;
-  | &#x27;sum&#x27;
-  | &#x27;min&#x27;
-  | &#x27;max&#x27;
-  | &#x27;average&#x27;
-  | &#x27;countdistinct&#x27;; //, or with custom aggregation methods;
+export type AggregateMethod &#x3D; &#x27;sum&#x27; | &#x27;min&#x27; | &#x27;max&#x27; | &#x27;average&#x27; | &#x27;countdistinct&#x27;; //, or with custom aggregation methods;
 
 export class Aggregate&lt;T&gt; implements Renderable {
   constructor(
@@ -1295,11 +1260,7 @@ export class Aggregate&lt;T&gt; implements Renderable {
   }
 
   static fromJson&lt;T&gt;(json: { [name: string]: any }): Aggregate&lt;T&gt; {
-    return new Aggregate&lt;T&gt;(
-      RenderableFactory(json[&#x27;value&#x27;]),
-      json[&#x27;method&#x27;],
-      json[&#x27;alias&#x27;],
-    );
+    return new Aggregate&lt;T&gt;(RenderableFactory(json[&#x27;value&#x27;]), json[&#x27;method&#x27;], json[&#x27;alias&#x27;]);
   }
 
   render({
@@ -1395,10 +1356,7 @@ export class GroupBy&lt;T&gt; implements Renderable {
   }
 
   clone() {
-    return new GroupBy(
-      Objects.clone(this.properties),
-      Objects.clone(this.transformations),
-    );
+    return new GroupBy(Objects.clone(this.properties), Objects.clone(this.transformations));
   }
   resolve(parser: any) {
     return parser;
@@ -1431,11 +1389,7 @@ export class Transformations&lt;T&gt; {
     return new Function&lt;T&gt;(&#x27;bottomsum&#x27;, [value, field], normalize);
   }
 
-  bottomPercent(
-    value: number,
-    field: Renderable,
-    normalize: Normalize &#x3D; &#x27;none&#x27;,
-  ) {
+  bottomPercent(value: number, field: Renderable, normalize: Normalize &#x3D; &#x27;none&#x27;) {
     return new Function&lt;T&gt;(&#x27;bottompercent&#x27;, [value, field], normalize);
   }
 
@@ -1482,11 +1436,7 @@ export class Type&lt;T&gt; implements Renderable {
   }
 
   static fromJson&lt;T&gt;(json: { [name: string]: any }): Type&lt;T&gt; {
-    return new Type&lt;T&gt;(
-      json[&#x27;name&#x27;],
-      json[&#x27;type&#x27;],
-      RenderableFactory(json[&#x27;value&#x27;]),
-    );
+    return new Type&lt;T&gt;(json[&#x27;name&#x27;], json[&#x27;type&#x27;], RenderableFactory(json[&#x27;value&#x27;]));
   }
 
   render({
@@ -1509,9 +1459,7 @@ export class Type&lt;T&gt; implements Renderable {
 
       value &#x3D; render(left, { aliases, escape, prefix, parser, options });
     }
-    return value
-      ? &#x60;${this.name}(${value}, &#x27;${this.type}&#x27;)&#x60;
-      : &#x60;${this.name}(&#x27;${this.type}&#x27;)&#x60;;
+    return value ? &#x60;${this.name}(${value}, &#x27;${this.type}&#x27;)&#x60; : &#x60;${this.name}(&#x27;${this.type}&#x27;)&#x60;;
   }
 
   clone() {
@@ -1520,8 +1468,7 @@ export class Type&lt;T&gt; implements Renderable {
 
   resolve(parser: any) {
     parser &#x3D;
-      parser instanceof ODataStructuredTypeFieldParser &amp;&amp;
-      parser.isStructuredType()
+      parser instanceof ODataStructuredTypeFieldParser &amp;&amp; parser.isStructuredType()
         ? parser.structuredType()
         : parser;
     return parser?.findChildParser((p: any) &#x3D;&gt; p.isTypeOf(this.type));
@@ -1543,9 +1490,7 @@ export class Lambda&lt;T&gt; implements Renderable {
     return {
       $type: Types.rawType(this),
       op: this.op,
-      values: this.values.map((v) &#x3D;&gt;
-        Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v,
-      ),
+      values: this.values.map((v) &#x3D;&gt; (Types.isObject(v) &amp;&amp; &#x27;toJson&#x27; in v ? v.toJson() : v)),
       alias: this.alias,
     };
   }
@@ -1653,19 +1598,14 @@ export class ODataTransformations&lt;T&gt; {}
 export interface ODataTransformations&lt;T&gt; extends Transformations&lt;T&gt; {}
 
 applyMixins(ODataTransformations, [Transformations]);
-export const transformations: ODataTransformations&lt;any&gt; &#x3D;
-  new ODataTransformations&lt;any&gt;();
+export const transformations: ODataTransformations&lt;any&gt; &#x3D; new ODataTransformations&lt;any&gt;();
 
 export class ODataSyntax&lt;T&gt; {}
 export interface ODataSyntax&lt;T&gt;
   extends ODataOperators&lt;T&gt;,
     ODataFunctions&lt;T&gt;,
     ODataTransformations&lt;T&gt; {}
-applyMixins(ODataSyntax, [
-  ODataOperators,
-  ODataFunctions,
-  ODataTransformations,
-]);
+applyMixins(ODataSyntax, [ODataOperators, ODataFunctions, ODataTransformations]);
 
 export const syntax: ODataSyntax&lt;any&gt; &#x3D; new ODataSyntax&lt;any&gt;();
 </code></pre>

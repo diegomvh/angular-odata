@@ -438,7 +438,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:39</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:37</a></code>
 </div>
                         </td>
                     </tr>
@@ -527,7 +527,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:30</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:28</a></code>
 </div>
                         </td>
                     </tr>
@@ -617,10 +617,7 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   }
 }
 
-export class ODataEnumTypeParser&lt;E&gt;
-  extends ODataAnnotatable
-  implements FieldParser&lt;E&gt;
-{
+export class ODataEnumTypeParser&lt;E&gt; extends ODataAnnotatable implements FieldParser&lt;E&gt; {
   name: string;
   namespace: string;
   alias?: string;
@@ -659,8 +656,7 @@ export class ODataEnumTypeParser&lt;E&gt;
       return [
         ...this._fields.filter(
           (f) &#x3D;&gt;
-            (this.flags &amp;&amp; Boolean((&lt;any&gt;f.value) &amp; (&lt;any&gt;namesValue))) ||
-            f.value &#x3D;&#x3D;&#x3D; namesValue,
+            (this.flags &amp;&amp; Boolean((&lt;any&gt;f.value) &amp; (&lt;any&gt;namesValue))) || f.value &#x3D;&#x3D;&#x3D; namesValue,
         ),
       ];
     }
@@ -672,9 +668,7 @@ export class ODataEnumTypeParser&lt;E&gt;
   }
 
   field(nameValue: string | number) {
-    const field &#x3D; this.fields().find(
-      (f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; nameValue || f.value &#x3D;&#x3D;&#x3D; nameValue,
-    );
+    const field &#x3D; this.fields().find((f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; nameValue || f.value &#x3D;&#x3D;&#x3D; nameValue);
     //Throw error if not found
     //if (field &#x3D;&#x3D;&#x3D; undefined)
     //  throw new Error(&#x60;${this.name} has no field for ${nameValue}&#x60;);
@@ -715,9 +709,7 @@ export class ODataEnumTypeParser&lt;E&gt;
     } else {
       let name &#x3D; this.field(value as number)?.name;
       if (name &#x3D;&#x3D;&#x3D; undefined) name &#x3D; &#x60;${value}&#x60;;
-      return !parserOptions?.stringAsEnum
-        ? &#x60;${this.namespace}.${this.name}&#x27;${name}&#x27;&#x60;
-        : name;
+      return !parserOptions?.stringAsEnum ? &#x60;${this.namespace}.${this.name}&#x27;${name}&#x27;&#x60; : name;
     }
   }
 
@@ -726,9 +718,7 @@ export class ODataEnumTypeParser&lt;E&gt;
     const parserOptions &#x3D; { ...this.parserOptions, ...options };
     const serialized &#x3D; this.serialize(value, parserOptions);
     if (serialized &#x3D;&#x3D;&#x3D; undefined) return undefined;
-    return parserOptions?.stringAsEnum
-      ? raw(&#x60;&#x27;${serialized}&#x27;&#x60;)
-      : raw(serialized);
+    return parserOptions?.stringAsEnum ? raw(&#x60;&#x27;${serialized}&#x27;&#x60;) : raw(serialized);
   }
 
   // Json Schema

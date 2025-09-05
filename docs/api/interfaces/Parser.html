@@ -269,8 +269,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="155"
-                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:155</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="149"
+                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:149</a></div>
                         </td>
                     </tr>
 
@@ -348,8 +348,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="150"
-                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:150</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="147"
+                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:147</a></div>
                         </td>
                     </tr>
 
@@ -557,15 +557,9 @@ export interface StructuredTypeFieldOptions extends ParserOptions {
 
 export interface Parser&lt;T&gt; {
   // Deserialize value/s from request body.
-  deserialize(
-    value: any,
-    options?: ParserOptions | StructuredTypeFieldOptions,
-  ): T | T[];
+  deserialize(value: any, options?: ParserOptions | StructuredTypeFieldOptions): T | T[];
   // Serialize value/s for request body.
-  serialize(
-    value: T,
-    options?: ParserOptions | StructuredTypeFieldOptions,
-  ): any;
+  serialize(value: T, options?: ParserOptions | StructuredTypeFieldOptions): any;
   //Encode value/s for URL parameter or query-string.
   encode(value: T, options?: ParserOptions | StructuredTypeFieldOptions): any;
 }

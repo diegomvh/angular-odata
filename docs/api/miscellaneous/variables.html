@@ -962,10 +962,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>[
-  CACHE_CONTROL,
-  CACHE_CONTROL.toLowerCase(),
-]</code>
+                        <i>Default value : </i><code>[CACHE_CONTROL, CACHE_CONTROL.toLowerCase()]</code>
                     </td>
                 </tr>
 
@@ -1539,10 +1536,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>[
-  LOCATION_HEADER,
-  LOCATION_HEADER.toLowerCase(),
-]</code>
+                        <i>Default value : </i><code>[LOCATION_HEADER, LOCATION_HEADER.toLowerCase()]</code>
                     </td>
                 </tr>
 
@@ -1764,10 +1758,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>[
-  ODATA_ENTITYID,
-  ODATA_ENTITYID.toLowerCase(),
-]</code>
+                        <i>Default value : </i><code>[ODATA_ENTITYID, ODATA_ENTITYID.toLowerCase()]</code>
                     </td>
                 </tr>
 
@@ -2045,10 +2036,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>[
-  PREFERENCE_APPLIED,
-  PREFERENCE_APPLIED.toLowerCase(),
-]</code>
+                        <i>Default value : </i><code>[PREFERENCE_APPLIED, PREFERENCE_APPLIED.toLowerCase()]</code>
                     </td>
                 </tr>
 
@@ -2488,9 +2476,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(value: any) &#x3D;&gt;
-  typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp;
-  &#x27;type&#x27; in value &amp;&amp;
-  value.type in QueryCustomTypes</code>
+  typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; &#x27;type&#x27; in value &amp;&amp; value.type in QueryCustomTypes</code>
                     </td>
                 </tr>
 
@@ -2511,8 +2497,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(value: any) &#x3D;&gt;
-  isQueryCustomType(value) &amp;&amp;
-  (value as QueryCustomType).type &#x3D;&#x3D;&#x3D; QueryCustomTypes.Raw</code>
+  isQueryCustomType(value) &amp;&amp; (value as QueryCustomType).type &#x3D;&#x3D;&#x3D; QueryCustomTypes.Raw</code>
                     </td>
                 </tr>
 
@@ -2785,9 +2770,7 @@
   //   Arrays.zip([1, 2, 3, 4, 5, 6], [&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;d&#x27;, &#x27;e&#x27;, &#x27;f&#x27;])
   //   &#x3D;&gt; [[1, &#x27;a&#x27;], [2, &#x27;b&#x27;], [3, &#x27;c&#x27;], [4, &#x27;d&#x27;], [5, &#x27;e&#x27;], [6, &#x27;f&#x27;]]
   zip: (...arrays: any[][]) &#x3D;&gt; {
-    return arrays[0].map((_: any, i: number) &#x3D;&gt;
-      arrays.map((array: any[]) &#x3D;&gt; array[i]),
-    );
+    return arrays[0].map((_: any, i: number) &#x3D;&gt; arrays.map((array: any[]) &#x3D;&gt; array[i]));
   },
 }</code>
                     </td>
@@ -3038,9 +3021,7 @@
     context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       const str &#x3D;
-        annots instanceof Map
-          ? annots.get(this.ODATA_CONTEXT)
-          : annots[this.ODATA_CONTEXT];
+        annots instanceof Map ? annots.get(this.ODATA_CONTEXT) : annots[this.ODATA_CONTEXT];
       if (typeof str &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
         let index &#x3D; str.indexOf(&#x27;$metadata&#x27;);
         ctx.serviceRootUrl &#x3D; str.substring(0, index);
@@ -3092,9 +3073,7 @@
     context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       const str &#x3D;
-        annots instanceof Map
-          ? annots.get(this.ODATA_CONTEXT)
-          : annots[this.ODATA_CONTEXT];
+        annots instanceof Map ? annots.get(this.ODATA_CONTEXT) : annots[this.ODATA_CONTEXT];
       if (typeof str &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
         let index &#x3D; str.indexOf(&#x27;$metadata&#x27;);
         ctx.serviceRootUrl &#x3D; str.substring(0, index);
@@ -3179,10 +3158,7 @@
     [...annots.keys()]
       .filter((key) &#x3D;&gt; key.startsWith(this.ODATA_FUNCTION_PREFIX))
       .forEach((key) &#x3D;&gt;
-        funcs.set(
-          key.substring(this.ODATA_FUNCTION_PREFIX.length),
-          annots.get(key),
-        ),
+        funcs.set(key.substring(this.ODATA_FUNCTION_PREFIX.length), annots.get(key)),
       );
     return funcs;
   },
@@ -3193,34 +3169,23 @@
       .forEach((key) &#x3D;&gt; {
         let name &#x3D; key.substring(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
         let prop &#x3D; props.has(name) ? props.get(name)! : new Map&lt;string, any&gt;();
-        prop.set(
-          key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)),
-          annots.get(key),
-        );
+        prop.set(key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)), annots.get(key));
         props.set(name, prop);
       });
     return props;
   },
   id(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
-    return annots instanceof Map
-      ? annots.get(this.ODATA_ID)
-      : annots[this.ODATA_ID];
+    return annots instanceof Map ? annots.get(this.ODATA_ID) : annots[this.ODATA_ID];
   },
   etag(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
-    return annots instanceof Map
-      ? annots.get(this.ODATA_ETAG)
-      : annots[this.ODATA_ETAG];
+    return annots instanceof Map ? annots.get(this.ODATA_ETAG) : annots[this.ODATA_ETAG];
   },
   type(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
-    let type &#x3D;
-      annots instanceof Map
-        ? annots.get(this.ODATA_TYPE)
-        : annots[this.ODATA_TYPE];
+    let type &#x3D; annots instanceof Map ? annots.get(this.ODATA_TYPE) : annots[this.ODATA_TYPE];
     if (!type) return undefined;
     type &#x3D; type.substring(1);
     const matches &#x3D; COLLECTION.exec(type);
-    if (matches)
-      return matches[1].indexOf(&#x27;.&#x27;) &#x3D;&#x3D;&#x3D; -1 ? &#x60;Edm.${matches[1]}&#x60; : matches[1];
+    if (matches) return matches[1].indexOf(&#x27;.&#x27;) &#x3D;&#x3D;&#x3D; -1 ? &#x60;Edm.${matches[1]}&#x60; : matches[1];
     return type;
   },
   mediaEtag(annots: Map&lt;string, any&gt;) {
@@ -3234,9 +3199,7 @@
       : undefined;
   },
   count(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_COUNT)
-      ? Number(annots.get(this.ODATA_COUNT))
-      : undefined;
+    return annots.has(this.ODATA_COUNT) ? Number(annots.get(this.ODATA_COUNT)) : undefined;
   },
   annotations(value: { [name: string]: any }) {
     const annots &#x3D; new Map&lt;string, any&gt;();
@@ -3440,19 +3403,14 @@
     }
     let duration: Duration &#x3D; {};
     duration.sign &#x3D; matches[1] &#x3D;&#x3D;&#x3D; &#x27;-&#x27; ? -1 : 1;
-    return [
-      &#x27;years&#x27;,
-      &#x27;months&#x27;,
-      &#x27;weeks&#x27;,
-      &#x27;days&#x27;,
-      &#x27;hours&#x27;,
-      &#x27;minutes&#x27;,
-      &#x27;seconds&#x27;,
-    ].reduce((acc: any, name, index) &#x3D;&gt; {
-      const v &#x3D; parseFloat(matches[index + 2]);
-      if (!Number.isNaN(v)) acc[name] &#x3D; v;
-      return acc;
-    }, duration) as Duration;
+    return [&#x27;years&#x27;, &#x27;months&#x27;, &#x27;weeks&#x27;, &#x27;days&#x27;, &#x27;hours&#x27;, &#x27;minutes&#x27;, &#x27;seconds&#x27;].reduce(
+      (acc: any, name, index) &#x3D;&gt; {
+        const v &#x3D; parseFloat(matches[index + 2]);
+        if (!Number.isNaN(v)) acc[name] &#x3D; v;
+        return acc;
+      },
+      duration,
+    ) as Duration;
   },
   toString(v: Duration): string {
     return [
@@ -3606,14 +3564,10 @@
   _e: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; any,
 ): FieldParser&lt;T | T[]&gt; &#x3D;&gt; ({
   deserialize(value: any, options: StructuredTypeFieldOptions): T | T[] {
-    return Array.isArray(value)
-      ? value.map((v) &#x3D;&gt; _d(v, options))
-      : _d(value, options);
+    return Array.isArray(value) ? value.map((v) &#x3D;&gt; _d(v, options)) : _d(value, options);
   },
   serialize(value: any, options: StructuredTypeFieldOptions): any {
-    return Array.isArray(value)
-      ? value.map((v) &#x3D;&gt; _s(v, options))
-      : _s(value, options);
+    return Array.isArray(value) ? value.map((v) &#x3D;&gt; _s(v, options)) : _s(value, options);
   },
   encode(value: any, options: StructuredTypeFieldOptions): any {
     return Array.isArray(value)
@@ -3760,10 +3714,7 @@
     return Object.values&lt;number&gt;(enums).filter((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
   },
 
-  toValue&lt;E extends { [name: string]: any }&gt;(
-    enums: E,
-    value: any,
-  ): number | undefined {
+  toValue&lt;E extends { [name: string]: any }&gt;(enums: E, value: any): number | undefined {
     if (value in enums) return typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? enums[value] : value;
     return undefined;
   },
@@ -3781,10 +3732,7 @@
     return [];
   },
 
-  toName&lt;E extends { [name: string]: any }&gt;(
-    enums: E,
-    value: any,
-  ): string | undefined {
+  toName&lt;E extends { [name: string]: any }&gt;(enums: E, value: any): string | undefined {
     if (value in enums) return typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? enums[value] : value;
     return undefined;
   },
@@ -3814,9 +3762,7 @@
       value &#x3D; value.split(&#x27;,&#x27;).map((o) &#x3D;&gt; o.trim());
     }
     if (Array.isArray(value) &amp;&amp; value.every((v) &#x3D;&gt; v in enums)) {
-      return value
-        .filter((v) &#x3D;&gt; enums[v])
-        .map((v) &#x3D;&gt; this.toName(enums, v) as string);
+      return value.filter((v) &#x3D;&gt; enums[v]).map((v) &#x3D;&gt; this.toName(enums, v) as string);
     }
     return [];
   },
@@ -3843,9 +3789,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>&lt;T extends object&gt;(
-  names: (string | Renderable)[] &#x3D; [],
-): any &#x3D;&gt;
+                        <i>Default value : </i><code>&lt;T extends object&gt;(names: (string | Renderable)[] &#x3D; []): any &#x3D;&gt;
   new Proxy({ _names: names } as T, {
     get(target: T, key: string | symbol) {
       let names &#x3D; (target as any)[&#x27;_names&#x27;] as (string | Renderable)[];
@@ -3886,9 +3830,7 @@
         return (parser: any) &#x3D;&gt;
           names.reduce(
             (acc: any, name: string | Renderable) &#x3D;&gt;
-              typeof name &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
-                ? acc?.field(name)
-                : name?.resolve(parser),
+              typeof name &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? acc?.field(name) : name?.resolve(parser),
             parser,
           );
       } else {
@@ -3897,10 +3839,7 @@
     },
 
     has(target: T, key: string): any {
-      return (
-        [&#x27;toJson&#x27;, &#x27;isField&#x27;, &#x27;clone&#x27;, &#x27;render&#x27;, &#x27;resolve&#x27;].includes(key) ||
-        key in target
-      );
+      return [&#x27;toJson&#x27;, &#x27;isField&#x27;, &#x27;clone&#x27;, &#x27;render&#x27;, &#x27;resolve&#x27;].includes(key) || key in target;
     },
   })</code>
                     </td>
@@ -4119,10 +4058,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
-  uniqueId({
-    prefix,
-    suffix,
-  }: { prefix?: string; suffix?: string } &#x3D; {}): string {
+  uniqueId({ prefix, suffix }: { prefix?: string; suffix?: string } &#x3D; {}): string {
     return (prefix ? prefix : &#x27;&#x27;) + now().toString(36) + (suffix ? suffix : &#x27;&#x27;);
   },
 
@@ -4143,7 +4079,7 @@
       hash &#x3D; Math.imul(hash, 31) + text.charCodeAt(i);
     }
     return hash;
-  }
+  },
 }</code>
                     </td>
                 </tr>
@@ -4204,11 +4140,7 @@
     ...values: (
       | HttpParams
       | {
-          [param: string]:
-            | string
-            | number
-            | boolean
-            | ReadonlyArray&lt;string | number | boolean&gt;;
+          [param: string]: string | number | boolean | ReadonlyArray&lt;string | number | boolean&gt;;
         }
     )[]
   ): HttpParams {
@@ -4234,17 +4166,11 @@
   },
 
   // Split Params
-  splitHttpParams(
-    params: HttpParams,
-    keys: string[],
-  ): [HttpParams, HttpParams] {
+  splitHttpParams(params: HttpParams, keys: string[]): [HttpParams, HttpParams] {
     let other &#x3D; new HttpParams();
     params.keys().forEach((key) &#x3D;&gt; {
       if (keys.includes(key)) {
-        other &#x3D; (params.getAll(key) || []).reduce(
-          (acc, v) &#x3D;&gt; acc.append(key, v),
-          other,
-        );
+        other &#x3D; (params.getAll(key) || []).reduce((acc, v) &#x3D;&gt; acc.append(key, v), other);
         params &#x3D; params.delete(key);
       }
     });
@@ -4291,8 +4217,7 @@
     const contentTypeParts: string[] &#x3D; contentType.split(&#x27;;&#x27;);
     if (contentTypeParts.length &#x3D;&#x3D;&#x3D; 2) {
       const boundary: string &#x3D; contentType.split(&#x27;;&#x27;)[1].trim();
-      const boundaryDelimiter: string &#x3D;
-        BOUNDARY_PREFIX_SUFFIX + boundary.split(&#x27;&#x3D;&#x27;)[1];
+      const boundaryDelimiter: string &#x3D; BOUNDARY_PREFIX_SUFFIX + boundary.split(&#x27;&#x3D;&#x27;)[1];
       return boundaryDelimiter;
     } else {
       return &#x27;&#x27;;
@@ -4365,9 +4290,7 @@
                         <i>Default value : </i><code>{
   set(obj: { [attr: string]: any }, path: string, value: any) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
-    const pathArray &#x3D; (
-      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
-    ) as any[];
+    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
     pathArray.reduce((acc, key, i) &#x3D;&gt; {
       if (acc[key] &#x3D;&#x3D;&#x3D; undefined) acc[key] &#x3D; {};
@@ -4378,20 +4301,14 @@
 
   get(obj: { [attr: string]: any }, path: string, def?: any): any {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
-    const pathArray &#x3D; (
-      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
-    ) as any[];
+    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
     // Find value if exist return otherwise return undefined value;
-    return (
-      pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj) || def
-    );
+    return pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj) || def;
   },
 
   unset(obj: { [attr: string]: any }, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
-    const pathArray &#x3D; (
-      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
-    ) as any[];
+    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
     pathArray.reduce((acc, key, i) &#x3D;&gt; {
       if (i &#x3D;&#x3D;&#x3D; pathArray.length - 1) delete acc[key];
@@ -4401,9 +4318,7 @@
 
   has(obj: { [attr: string]: any }, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
-    const pathArray &#x3D; (
-      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
-    ) as any[];
+    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
     return !!pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj);
   },
@@ -4435,20 +4350,14 @@
       const val1 &#x3D; object1[key];
       const val2 &#x3D; object2[key];
       const areObjects &#x3D; Types.isPlainObject(val1) &amp;&amp; Types.isPlainObject(val2);
-      if (
-        (areObjects &amp;&amp; !Objects.equal(val1, val2)) ||
-        (!areObjects &amp;&amp; val1 !&#x3D;&#x3D; val2)
-      ) {
+      if ((areObjects &amp;&amp; !Objects.equal(val1, val2)) || (!areObjects &amp;&amp; val1 !&#x3D;&#x3D; val2)) {
         return false;
       }
     }
     return true;
   },
 
-  difference(
-    object1: { [attr: string]: any },
-    object2: { [attr: string]: any },
-  ) {
+  difference(object1: { [attr: string]: any }, object2: { [attr: string]: any }) {
     if (!object2 || !Types.isPlainObject(object2)) {
       return object1;
     }
@@ -4517,8 +4426,7 @@
     if (type !&#x3D;&#x3D; &#x27;Map&#x27; &amp;&amp; type !&#x3D;&#x3D; &#x27;Object&#x27;) {
       return undefined;
     }
-    const values &#x3D;
-      type &#x3D;&#x3D;&#x3D; &#x27;Map&#x27; ? Array.from(key.values()) : Object.values(key);
+    const values &#x3D; type &#x3D;&#x3D;&#x3D; &#x27;Map&#x27; ? Array.from(key.values()) : Object.values(key);
     if (values.length &#x3D;&#x3D;&#x3D; 1 &amp;&amp; single) {
       // Single primitive key value
       key &#x3D; values[0];
@@ -4623,9 +4531,7 @@
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
   // Merge callables parameters
-  mergeCallableParameters(
-    callables: ODataCallableConfig[],
-  ): ODataCallableConfig[] {
+  mergeCallableParameters(callables: ODataCallableConfig[]): ODataCallableConfig[] {
     const areEqual &#x3D; (a: ODataCallableConfig, b: ODataCallableConfig) &#x3D;&gt;
       a.name &#x3D;&#x3D;&#x3D; b.name &amp;&amp;
       Objects.equal(
@@ -4637,10 +4543,7 @@
         config &#x3D; callables
           .filter((c) &#x3D;&gt; areEqual(c, config))
           .reduce((acc, c) &#x3D;&gt; {
-            acc.parameters &#x3D; Object.assign(
-              acc.parameters || {},
-              c.parameters || {},
-            );
+            acc.parameters &#x3D; Object.assign(acc.parameters || {}, c.parameters || {});
             return acc;
           }, config);
         return [...acc, config];
@@ -4724,8 +4627,7 @@
       let value &#x3D; values.get(key);
       if (
         Types.rawType(value).endsWith(&#x27;Expression&#x27;) ||
-        (Types.isArray(value) &amp;&amp;
-          value.some((v: any) &#x3D;&gt; Types.rawType(v).endsWith(&#x27;Expression&#x27;)))
+        (Types.isArray(value) &amp;&amp; value.some((v: any) &#x3D;&gt; Types.rawType(v).endsWith(&#x27;Expression&#x27;)))
       ) {
         value &#x3D; Types.isArray(value)
           ? value.map((v: Expression&lt;T&gt;) &#x3D;&gt;
@@ -4782,12 +4684,7 @@
 ): [string, { [name: string]: any }] &#x3D;&gt; {
   const result &#x3D; segments.reduce(
     (acc, segment) &#x3D;&gt; {
-      const [path, params] &#x3D; pathSegmentsBuilder(
-        segment,
-        escape,
-        parser,
-        options,
-      );
+      const [path, params] &#x3D; pathSegmentsBuilder(segment, escape, parser, options);
       acc.paths.push(path);
       acc.params &#x3D; Object.assign(acc.params, params);
       return acc;
@@ -4886,8 +4783,7 @@
       (Types.isMap(value) &amp;&amp; !value.size) ||
       (Types.isArray(value) &amp;&amp; !value.length) ||
       (Types.isFunction(value.isEmpty) &amp;&amp; value.isEmpty()) ||
-      (Types.isArray(value) &amp;&amp;
-        (value as any[]).every((v) &#x3D;&gt; Types.isEmpty(v))) ||
+      (Types.isArray(value) &amp;&amp; (value as any[]).every((v) &#x3D;&gt; Types.isEmpty(v))) ||
       (Types.isPlainObject(value) &amp;&amp;
         !Object.keys(value).filter((k) &#x3D;&gt; value.hasOwnProperty(k)).length)
     );
@@ -4934,8 +4830,7 @@
     }
 
     function areObjectsEqual() {
-      if (Object.keys(value1).length !&#x3D;&#x3D; Object.keys(value2).length)
-        return false;
+      if (Object.keys(value1).length !&#x3D;&#x3D; Object.keys(value2).length) return false;
 
       // Check each item in the object
       for (let key in value1) {

@@ -187,7 +187,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="233" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:233</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="219" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:219</a></div>
                             </td>
                         </tr>
 
@@ -249,7 +249,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="233" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:233</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="219" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:219</a></div>
                         </td>
                     </tr>
 
@@ -275,7 +275,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="232" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:232</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="218" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:218</a></div>
                         </td>
                     </tr>
 
@@ -309,8 +309,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="247"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:247</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:233</a></div>
                         </td>
                     </tr>
 
@@ -346,8 +346,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="240"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:240</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structured-type.ts:226</a></div>
                         </td>
                     </tr>
 
@@ -375,10 +375,7 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataStructuredTypeConfig } from &#x27;../../types&#x27;;
 import { CsdlAnnotable } from &#x27;./csdl-annotation&#x27;;
-import {
-  CsdlProperty,
-  CsdlNavigationProperty,
-} from &#x27;./csdl-structural-property&#x27;;
+import { CsdlProperty, CsdlNavigationProperty } from &#x27;./csdl-structural-property&#x27;;
 import type { CsdlSchema } from &#x27;./csdl-schema&#x27;;
 
 export class CsdlStructuredType extends CsdlAnnotable {
@@ -412,9 +409,7 @@ export class CsdlStructuredType extends CsdlAnnotable {
     super({ Annotation });
     this.Name &#x3D; Name;
     this.Property &#x3D; Property?.map((p) &#x3D;&gt; new CsdlProperty(p));
-    this.NavigationProperty &#x3D; NavigationProperty?.map(
-      (n) &#x3D;&gt; new CsdlNavigationProperty(n),
-    );
+    this.NavigationProperty &#x3D; NavigationProperty?.map((n) &#x3D;&gt; new CsdlNavigationProperty(n));
     this.BaseType &#x3D; BaseType;
     this.OpenType &#x3D; OpenType;
     this.Abstract &#x3D; Abstract;
@@ -425,13 +420,8 @@ export class CsdlStructuredType extends CsdlAnnotable {
     if (Array.isArray(this.Property) &amp;&amp; this.Property.length &gt; 0) {
       json[&#x27;Property&#x27;] &#x3D; this.Property.map((p) &#x3D;&gt; p.toJson());
     }
-    if (
-      Array.isArray(this.NavigationProperty) &amp;&amp;
-      this.NavigationProperty.length &gt; 0
-    ) {
-      json[&#x27;NavigationProperty&#x27;] &#x3D; this.NavigationProperty.map((n) &#x3D;&gt;
-        n.toJson(),
-      );
+    if (Array.isArray(this.NavigationProperty) &amp;&amp; this.NavigationProperty.length &gt; 0) {
+      json[&#x27;NavigationProperty&#x27;] &#x3D; this.NavigationProperty.map((n) &#x3D;&gt; n.toJson());
     }
     if (this.BaseType !&#x3D;&#x3D; undefined) {
       json[&#x27;BaseType&#x27;] &#x3D; this.BaseType;
@@ -496,9 +486,7 @@ export class CsdlComplexType extends CsdlStructuredType {
     };
   }
 
-  override toConfig(
-    base?: Partial&lt;ODataStructuredTypeConfig&gt;,
-  ): ODataStructuredTypeConfig {
+  override toConfig(base?: Partial&lt;ODataStructuredTypeConfig&gt;): ODataStructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,
@@ -566,9 +554,7 @@ export class CsdlEntityType extends CsdlStructuredType {
     return json;
   }
 
-  override toConfig(
-    base?: Partial&lt;ODataStructuredTypeConfig&gt;,
-  ): ODataStructuredTypeConfig {
+  override toConfig(base?: Partial&lt;ODataStructuredTypeConfig&gt;): ODataStructuredTypeConfig {
     return {
       ...super.toConfig(),
       name: this.Name,

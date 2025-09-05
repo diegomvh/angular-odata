@@ -568,17 +568,13 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
   ): SearchExpression&lt;T&gt; {
     return opts(
       {
-        e: (connector: SearchConnector &#x3D; &#x27;AND&#x27;) &#x3D;&gt;
-          new SearchExpression&lt;T&gt;({ connector }),
+        e: (connector: SearchConnector &#x3D; &#x27;AND&#x27;) &#x3D;&gt; new SearchExpression&lt;T&gt;({ connector }),
       },
       current ?? new SearchExpression&lt;T&gt;(),
     ) as SearchExpression&lt;T&gt;;
   }
 
-  private _add(
-    node: Renderable,
-    connector?: SearchConnector,
-  ): SearchExpression&lt;T&gt; {
+  private _add(node: Renderable, connector?: SearchConnector): SearchExpression&lt;T&gt; {
     if (connector !&#x3D;&#x3D; undefined &amp;&amp; this._connector !&#x3D;&#x3D; connector) {
       let children: Renderable[] &#x3D; [];
       if (this._children.length &gt; 0) {
@@ -615,9 +611,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
       this._children &#x3D; [...this._children, ...node.children()];
     } else {
       this._children.push(
-        node instanceof SearchExpression &amp;&amp; !node.negated()
-          ? syntax.group(node)
-          : node,
+        node instanceof SearchExpression &amp;&amp; !node.negated() ? syntax.group(node) : node,
       );
     }
     return this;

@@ -187,7 +187,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:55</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:48</a></div>
                             </td>
                         </tr>
 
@@ -249,7 +249,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:55</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -275,7 +275,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -309,8 +309,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="68"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:68</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -346,8 +346,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="61"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:61</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-reference.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -394,9 +394,7 @@ export class CsdlReference extends CsdlAnnotable {
     super({ Annotation });
     this.Uri &#x3D; Uri;
     this.Include &#x3D; Include?.map((i) &#x3D;&gt; new CsdlInclude(i));
-    this.IncludeAnnotations &#x3D; IncludeAnnotations?.map(
-      (i) &#x3D;&gt; new CsdlIncludeAnnotations(i),
-    );
+    this.IncludeAnnotations &#x3D; IncludeAnnotations?.map((i) &#x3D;&gt; new CsdlIncludeAnnotations(i));
   }
 
   override toJson() {
@@ -404,13 +402,8 @@ export class CsdlReference extends CsdlAnnotable {
     if (Array.isArray(this.Include) &amp;&amp; this.Include.length &gt; 0) {
       json[&#x27;Include&#x27;] &#x3D; this.Include.map((i) &#x3D;&gt; i.toJson());
     }
-    if (
-      Array.isArray(this.IncludeAnnotations) &amp;&amp;
-      this.IncludeAnnotations.length &gt; 0
-    ) {
-      json[&#x27;IncludeAnnotations&#x27;] &#x3D; this.IncludeAnnotations.map((i) &#x3D;&gt;
-        i.toJson(),
-      );
+    if (Array.isArray(this.IncludeAnnotations) &amp;&amp; this.IncludeAnnotations.length &gt; 0) {
+      json[&#x27;IncludeAnnotations&#x27;] &#x3D; this.IncludeAnnotations.map((i) &#x3D;&gt; i.toJson());
     }
     return json;
   }

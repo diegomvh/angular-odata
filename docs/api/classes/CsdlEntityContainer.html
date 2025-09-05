@@ -512,8 +512,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="76"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:76</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="74"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:74</a></div>
                         </td>
                     </tr>
 
@@ -549,8 +549,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="68"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:68</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="66"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -586,8 +586,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="72"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:72</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-entity-container.ts:70</a></div>
                         </td>
                     </tr>
 
@@ -631,7 +631,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:80</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:78</a></code>
 </div>
                         </td>
                     </tr>
@@ -706,7 +706,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:48</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:46</a></code>
 </div>
                         </td>
                     </tr>
@@ -774,9 +774,7 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     this.Extend &#x3D; Extend;
     this.EntitySet &#x3D; EntitySet?.map((e) &#x3D;&gt; new CsdlEntitySet(this, e));
     this.Singleton &#x3D; Singleton?.map((s) &#x3D;&gt; new CsdlSingleton(this, s));
-    this.FunctionImport &#x3D; FunctionImport?.map(
-      (f) &#x3D;&gt; new CsdlFunctionImport(this, f),
-    );
+    this.FunctionImport &#x3D; FunctionImport?.map((f) &#x3D;&gt; new CsdlFunctionImport(this, f));
     this.ActionImport &#x3D; ActionImport?.map((a) &#x3D;&gt; new CsdlActionImport(this, a));
   }
 
@@ -812,9 +810,7 @@ export class CsdlEntityContainer extends CsdlAnnotable {
     return &#x60;${this.schema.Namespace}.${this.Name}&#x60;;
   }
 
-  override toConfig(
-    base?: Partial&lt;ODataEntityContainerConfig&gt;,
-  ): ODataEntityContainerConfig {
+  override toConfig(base?: Partial&lt;ODataEntityContainerConfig&gt;): ODataEntityContainerConfig {
     return {
       ...super.toConfig(),
       name: this.Name,

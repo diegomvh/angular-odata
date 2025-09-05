@@ -180,7 +180,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="356" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:356</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="351" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:351</a></div>
                             </td>
                         </tr>
 
@@ -241,7 +241,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="356" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:356</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="351" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:351</a></div>
                         </td>
                     </tr>
 
@@ -275,8 +275,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="361"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:361</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="356"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:356</a></div>
                         </td>
                     </tr>
 
@@ -566,13 +566,8 @@ export class CsdlCollection {
     if (Array.isArray(this.PropertyPath) &amp;&amp; this.PropertyPath.length &gt; 0) {
       json[&#x27;PropertyPath&#x27;] &#x3D; this.PropertyPath.map((p) &#x3D;&gt; p.toJson());
     }
-    if (
-      Array.isArray(this.NavigationPropertyPath) &amp;&amp;
-      this.NavigationPropertyPath.length &gt; 0
-    ) {
-      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt;
-        p.toJson(),
-      );
+    if (Array.isArray(this.NavigationPropertyPath) &amp;&amp; this.NavigationPropertyPath.length &gt; 0) {
+      json[&#x27;NavigationPropertyPath&#x27;] &#x3D; this.NavigationPropertyPath.map((p) &#x3D;&gt; p.toJson());
     }
     return json;
   }

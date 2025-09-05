@@ -363,7 +363,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:101</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:93</a></code>
 </div>
                         </td>
                     </tr>
@@ -438,7 +438,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:93</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:85</a></code>
 </div>
                         </td>
                     </tr>
@@ -543,15 +543,7 @@ export class CsdlEnumType extends CsdlAnnotable {
 export class CsdlMember extends CsdlAnnotable {
   Name: string;
   Value?: number;
-  constructor({
-    Name,
-    Value,
-    Annotation,
-  }: {
-    Name: string;
-    Value?: number;
-    Annotation?: any[];
-  }) {
+  constructor({ Name, Value, Annotation }: { Name: string; Value?: number; Annotation?: any[] }) {
     super({ Annotation });
     this.Name &#x3D; Name;
     this.Value &#x3D; Value;
@@ -565,9 +557,7 @@ export class CsdlMember extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(
-    base?: Partial&lt;ODataEnumTypeFieldConfig&gt;,
-  ): ODataEnumTypeFieldConfig {
+  override toConfig(base?: Partial&lt;ODataEnumTypeFieldConfig&gt;): ODataEnumTypeFieldConfig {
     const config: { [key: string]: any } &#x3D; {
       ...super.toConfig(),
       value: this.Value,

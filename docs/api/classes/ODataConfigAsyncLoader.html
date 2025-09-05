@@ -172,7 +172,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:21</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -236,8 +236,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="28"
-                                    class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:28</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="24"
+                                    class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:24</a></div>
                         </td>
                     </tr>
 
@@ -272,14 +272,10 @@ export abstract class ODataConfigLoader {
 }
 
 export class ODataConfigSyncLoader implements ODataConfigLoader {
-  constructor(
-    private readonly passedConfigs: ODataApiConfig | ODataApiConfig[],
-  ) {}
+  constructor(private readonly passedConfigs: ODataApiConfig | ODataApiConfig[]) {}
 
   loadConfigs(): Observable&lt;ODataApiConfig[]&gt; {
-    return Array.isArray(this.passedConfigs)
-      ? of(this.passedConfigs)
-      : of([this.passedConfigs]);
+    return Array.isArray(this.passedConfigs) ? of(this.passedConfigs) : of([this.passedConfigs]);
   }
 }
 
@@ -295,9 +291,7 @@ export class ODataConfigAsyncLoader implements ODataConfigLoader {
       ? forkJoin(this.configs$)
       : (this.configs$ as Observable&lt;ODataApiConfig | ODataApiConfig[]&gt;).pipe(
           map((value) &#x3D;&gt;
-            Array.isArray(value)
-              ? (value as ODataApiConfig[])
-              : ([value] as ODataApiConfig[]),
+            Array.isArray(value) ? (value as ODataApiConfig[]) : ([value] as ODataApiConfig[]),
           ),
         );
   }
@@ -310,9 +304,7 @@ export class ODataMetadataLoader implements ODataConfigLoader {
   ) {}
 
   loadConfigs(): Observable&lt;ODataApiConfig[]&gt; {
-    const configs &#x3D; Array.isArray(this.baseConfigs)
-      ? this.baseConfigs
-      : [this.baseConfigs];
+    const configs &#x3D; Array.isArray(this.baseConfigs) ? this.baseConfigs : [this.baseConfigs];
     return this.sources$.pipe(
       map((source) &#x3D;&gt;
         (Array.isArray(source) ? source : [source]).map((m, i) &#x3D;&gt;

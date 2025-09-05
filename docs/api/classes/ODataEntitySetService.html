@@ -661,8 +661,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="106"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:106</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -753,8 +753,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="155"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:155</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="147"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:147</a></div>
                         </td>
                     </tr>
 
@@ -1132,8 +1132,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="97"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:97</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:94</a></div>
                         </td>
                     </tr>
 
@@ -1204,8 +1204,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="173"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:173</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="161"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:161</a></div>
                         </td>
                     </tr>
 
@@ -1395,8 +1395,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="138"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:138</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="131"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:131</a></div>
                         </td>
                     </tr>
 
@@ -1502,8 +1502,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="195"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:195</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="183"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:183</a></div>
                         </td>
                     </tr>
 
@@ -1596,8 +1596,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="120"
-                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:120</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:114</a></div>
                         </td>
                     </tr>
 
@@ -2152,10 +2152,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * @param withCount Get the count of the entities.
    * @param options The options for the request.
    */
-  public fetchMany(
-    top: number,
-    options?: ODataOptions &amp; { withCount?: boolean },
-  ) {
+  public fetchMany(top: number, options?: ODataOptions &amp; { withCount?: boolean }) {
     return this.entities().fetchMany(top, options);
   }
 
@@ -2174,10 +2171,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * @param attrs The attributes for the entity.
    * @param options The options for the request.
    */
-  public create(
-    attrs: Partial&lt;T&gt;,
-    options?: ODataOptions,
-  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
+  public create(attrs: Partial&lt;T&gt;, options?: ODataOptions): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return this.entities().create(attrs, options);
   }
 
@@ -2194,8 +2188,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     options?: ODataOptions &amp; { etag?: string },
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity(key);
-    if (!res.hasKey())
-      return throwError(() &#x3D;&gt; new Error(&#x27;update: Resource without key&#x27;));
+    if (!res.hasKey()) return throwError(() &#x3D;&gt; new Error(&#x27;update: Resource without key&#x27;));
     return res.update(attrs, options);
   }
 
@@ -2212,8 +2205,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     options?: ODataOptions &amp; { etag?: string },
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity(key);
-    if (!res.hasKey())
-      return throwError(() &#x3D;&gt; new Error(&#x27;modify: Resource without key&#x27;));
+    if (!res.hasKey()) return throwError(() &#x3D;&gt; new Error(&#x27;modify: Resource without key&#x27;));
     return res.modify(attrs, options);
   }
 
@@ -2223,13 +2215,9 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * @param etag The etag for the entity.
    * @param options The options for the request.
    */
-  public destroy(
-    key: EntityKey&lt;T&gt;,
-    options?: ODataOptions &amp; { etag?: string },
-  ) {
+  public destroy(key: EntityKey&lt;T&gt;, options?: ODataOptions &amp; { etag?: string }) {
     const res &#x3D; this.entity(key);
-    if (!res.hasKey())
-      return throwError(() &#x3D;&gt; new Error(&#x27;destroy: Resource without key&#x27;));
+    if (!res.hasKey()) return throwError(() &#x3D;&gt; new Error(&#x27;destroy: Resource without key&#x27;));
     return res.destroy(options);
   }
 
@@ -2277,17 +2265,12 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     let schema &#x3D; this.structuredTypeSchema;
     if (method &#x3D;&#x3D;&#x3D; undefined &amp;&amp; schema !&#x3D;&#x3D; undefined &amp;&amp; schema.isCompoundKey())
       return throwError(
-        () &#x3D;&gt;
-          new Error(
-            &#x27;save: Composite key require a specific method, use create/update/patch&#x27;,
-          ),
+        () &#x3D;&gt; new Error(&#x27;save: Composite key require a specific method, use create/update/patch&#x27;),
       );
     let key &#x3D; schema &amp;&amp; schema.resolveKey(attrs);
     if (method &#x3D;&#x3D;&#x3D; undefined) method &#x3D; key !&#x3D;&#x3D; undefined ? &#x27;update&#x27; : &#x27;create&#x27;;
     if ((method &#x3D;&#x3D;&#x3D; &#x27;update&#x27; || method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;) &amp;&amp; key &#x3D;&#x3D;&#x3D; undefined)
-      return throwError(
-        () &#x3D;&gt; new Error(&quot;save: Can&#x27;t update/patch entity without key&quot;),
-      );
+      return throwError(() &#x3D;&gt; new Error(&quot;save: Can&#x27;t update/patch entity without key&quot;));
     return method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;
       ? this.create(attrs, options)
       : method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;
