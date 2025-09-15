@@ -1,4 +1,30 @@
-import buildQuery, { Expand, OrderBy, alias, raw, binary } from './builder';
+import buildQuery, {
+  alias,
+  binary,
+  Expand,
+  type ExpandOptions,
+  type Filter,
+  OrderBy,
+  type QueryOptions,
+  raw,
+  type Select,
+  type Transform,
+} from './builder';
+import type { Person } from '../../trippin.spec';
+
+interface SomeEntity {
+  Id?: number;
+  SomeProp?: number;
+  AnotherProp?: number;
+  SomeNames?: string[];
+  FooProp?: string;
+  BarProp?: string;
+  FooBarProp?: string;
+  FizProp?: number;
+  DateProp?: Date;
+  foo?: string;
+  bar?: string;
+}
 
 it('should return an empty string by default', () => {
   expect(buildQuery()).toEqual('');
@@ -7,42 +33,46 @@ it('should return an empty string by default', () => {
 describe('filter', () => {
   describe('comparison operators', () => {
     it('should handle basic filter without operator', () => {
-      const filter = { SomeProp: 1 };
+      const filter: Filter<SomeEntity> = { SomeProp: 1 };
       const expected = '?$filter=SomeProp eq 1';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should handle filter with operator', () => {
-      const filter = { SomeProp: { lt: 5 } };
+      const filter: Filter<SomeEntity> = { SomeProp: { lt: 5 } };
       const expected = '?$filter=SomeProp lt 5';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should allow passing filter as string and use verbatim', () => {
-      const filter = 'SomeProp eq 1 and AnotherProp eq 2';
+      const filter: Filter<SomeEntity> = 'SomeProp eq 1 and AnotherProp eq 2';
       const expected = '?$filter=SomeProp eq 1 and AnotherProp eq 2';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should allow passing filter as an array of objects and strings', () => {
-      const filter = [{ SomeProp: 1 }, { AnotherProp: 2 }, "startswith(Name, 'R')"];
+      const filter: Filter<SomeEntity> = [
+        { SomeProp: 1 },
+        { AnotherProp: 2 },
+        "startswith(Name, 'R')",
+      ];
       const expected = "?$filter=SomeProp eq 1 and AnotherProp eq 2 and startswith(Name, 'R')";
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should allow "in" operator', () => {
-      const filter = { SomeProp: { in: [1, 2, 3] } };
+      const filter: Filter<SomeEntity> = { SomeProp: { in: [1, 2, 3] } };
       const expected = '?$filter=SomeProp in (1,2,3)';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should allow "in" operator in combination with other conditions', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         SomeNames: {
           contains: 'Bob',
           in: ['Peter Newman', 'Bob Ross', 'Bobby Parker', 'Mike Bobson'],
@@ -55,42 +85,42 @@ describe('filter', () => {
     });
 
     it('allows "in" operator when using in an array', () => {
-      const filter = [{ SomeProp: { in: [1, 2, 3] }, AnotherProp: 4 }];
+      const filter: Filter<SomeEntity> = [{ SomeProp: { in: [1, 2, 3] }, AnotherProp: 4 }];
       const expected = '?$filter=SomeProp in (1,2,3) and AnotherProp eq 4';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('allows "in" operator in negated case', () => {
-      const filter = { not: { SomeProp: { in: [1, 2, 3] } } };
+      const filter: Filter<SomeEntity> = { not: { SomeProp: { in: [1, 2, 3] } } };
       const expected = '?$filter=not (SomeProp in (1,2,3))';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should ignore/omit filter if set to undefined', () => {
-      const filter = { IgnoreProp: undefined };
+      const filter: Filter<SomeEntity> = { IgnoreProp: undefined };
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should check for null (and not be omitted/ignored)', () => {
-      const filter = { SomeProp: null };
+      const filter: Filter<SomeEntity> = { SomeProp: null };
       const expected = '?$filter=SomeProp eq null';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should support nested properties', () => {
-      const filter = { SomeProp: { Value: 1 } };
+      const filter: Filter<SomeEntity> = { SomeProp: { Value: 1 } };
       const expected = '?$filter=SomeProp/Value eq 1';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should handle nested properties on the same property (explicit "and")', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         SomeProp: {
           and: {
             NestedProp1: 1,
@@ -106,7 +136,7 @@ describe('filter', () => {
 
   describe('logical operators', () => {
     it('should handle simple logical operators (not) as an object', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         and: [
           { not: { FooProp: { startswith: 'foo' } } },
           { not: { BarProp: { startswith: 'bar' } } },
@@ -120,7 +150,7 @@ describe('filter', () => {
     });
 
     it('should handle logical operators (not) as an object', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         and: [
           {
             not: {
@@ -138,7 +168,7 @@ describe('filter', () => {
     });
 
     it('should handle simple logical operators (not) as an array', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         not: [
           { FooProp: { startswith: 'foo' } },
           { BarProp: { startswith: 'bar' } },
@@ -152,7 +182,7 @@ describe('filter', () => {
     });
 
     it('should handle logical operators (not) as an array', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         or: [
           {
             not: [
@@ -170,21 +200,21 @@ describe('filter', () => {
     });
 
     it('should handle simple logical operators (and, or, etc) as an array', () => {
-      const filter = { and: [{ SomeProp: 1 }, { AnotherProp: 2 }] };
+      const filter: Filter<SomeEntity> = { and: [{ SomeProp: 1 }, { AnotherProp: 2 }] };
       const expected = '?$filter=((SomeProp eq 1) and (AnotherProp eq 2))';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should handle simple logical operators (and, or, etc) as an object (no parens)', () => {
-      const filter = { and: { SomeProp: 1, AnotherProp: 2 } };
+      const filter: Filter<SomeEntity> = { and: { SomeProp: 1, AnotherProp: 2 } };
       const expected = '?$filter=SomeProp eq 1 and AnotherProp eq 2';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should handle nested logical operators', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         and: [{ SomeProp: 1 }, { or: [{ AnotherProp: 2 }, { ThirdProp: 3 }] }],
       };
       const expected = '?$filter=((SomeProp eq 1) and (((AnotherProp eq 2) or (ThirdProp eq 3))))';
@@ -193,63 +223,63 @@ describe('filter', () => {
     });
 
     it('should handle logical operators with a single filter', () => {
-      const filter = { and: [{ SomeProp: 1 }] };
+      const filter: Filter<SomeEntity> = { and: [{ SomeProp: 1 }] };
       const expected = '?$filter=((SomeProp eq 1))';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should ignore implied logical operator with no filters', () => {
-      const filter: any[] = [];
+      const filter: Filter<SomeEntity> = [];
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should ignore implied logical operator with undefined filters', () => {
-      const filter = [undefined];
+      const filter: Filter<SomeEntity> = [undefined];
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should ignore implied logical operator with null filters', () => {
-      const filter = [null];
+      const filter: Filter<SomeEntity> = [null];
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should ignore implied logical operator with empty object filters', () => {
-      const filter = [{}];
+      const filter: Filter<SomeEntity> = [{}];
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should omit/ignore logical operators with no filters', () => {
-      const filter = { and: [] };
+      const filter: Filter<SomeEntity> = { and: [] };
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should omit/ignore undefined filters', () => {
-      const filter = { and: [undefined] };
+      const filter: Filter<SomeEntity> = { and: [undefined] };
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should omit/ignore null filters', () => {
-      const filter = { and: [null] };
+      const filter: Filter<SomeEntity> = { and: [null] };
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('should omit/ignore empty object filters', () => {
-      const filter = { and: [{}] };
+      const filter: Filter<SomeEntity> = { and: [{}] };
       const expected = '';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
@@ -258,7 +288,7 @@ describe('filter', () => {
     it('should handle implied logical operator on a single property', () => {
       const startDate = new Date(Date.UTC(2017, 0, 1));
       const endDate = new Date(Date.UTC(2017, 2, 1));
-      const filter = { DateProp: { ge: startDate, le: endDate } };
+      const filter: Filter<SomeEntity> = { DateProp: { ge: startDate, le: endDate } };
       const expected =
         '?$filter=DateProp ge 2017-01-01T00:00:00.000Z and DateProp le 2017-03-01T00:00:00.000Z';
       const actual = buildQuery({ filter });
@@ -268,7 +298,7 @@ describe('filter', () => {
     it('should handle implied logical operator on a single property using alises', () => {
       const start = alias(new Date(Date.UTC(2017, 0, 1)), 'start');
       const end = alias(new Date(Date.UTC(2017, 2, 1)), 'end');
-      const filter = { DateProp: { ge: start, le: end } };
+      const filter: Filter<SomeEntity> = { DateProp: { ge: start, le: end } };
       let expected =
         '?$filter=DateProp ge @start and DateProp le @end&@start=2017-01-01T00:00:00.000Z&@end=2017-03-01T00:00:00.000Z';
       let actual = buildQuery({ filter, aliases: [start, end] });
@@ -281,7 +311,7 @@ describe('filter', () => {
     });
 
     it('should handle nested logical operators', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         or: [
           { Prop1: 1 },
           {
@@ -298,7 +328,7 @@ describe('filter', () => {
     });
 
     it('should handle nested properties using "/" selectors', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Prop1: {
           NestedProp1: 1,
         },
@@ -319,7 +349,7 @@ describe('filter', () => {
     });
 
     it('should handle nested properties using objects', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Prop1: {
           NestedProp1: 1,
         },
@@ -352,7 +382,7 @@ describe('filter', () => {
     });
 
     it('should handle more stuff jason stadler throws at it - not working', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Prop1: {
           NestedProp1: 1,
         },
@@ -375,7 +405,7 @@ describe('filter', () => {
     });
 
     it('should handle nested logical operators and nested properties using "/" selectors', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Prop1: {
           NestedProp1: 1,
         },
@@ -396,7 +426,7 @@ describe('filter', () => {
     });
 
     it('should handle nested logical operators and deeply nested properties on same property using objects (expanded)', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Prop1: {
           NestedProp1: 1,
         },
@@ -431,7 +461,7 @@ describe('filter', () => {
 
   describe('collection operators', () => {
     it('should generate empty collection operator with an empty object of filters', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Tasks: {
           any: {},
         },
@@ -442,7 +472,7 @@ describe('filter', () => {
     });
 
     it('should generate empty collection operator with an empty array of filters', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Tasks: {
           any: [],
         },
@@ -453,7 +483,7 @@ describe('filter', () => {
     });
 
     it('should ignore collection operator with null filters', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Tasks: {
           any: null,
         },
@@ -464,7 +494,7 @@ describe('filter', () => {
     });
 
     it('should handle collection operator with object as implied `and`', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Tasks: {
           any: {
             AssignedGroupId: 1234,
@@ -479,7 +509,7 @@ describe('filter', () => {
     });
 
     it('should handle collection operator with array of objects as implied `and`', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Tasks: {
           any: [{ AssignedGroupId: 1234 }, { StatusId: 300 }],
         },
@@ -491,7 +521,7 @@ describe('filter', () => {
     });
 
     it('should handle collection operator with nested collection operator', () => {
-      const filter = {
+      const filter: Filter<SomeEntity> = {
         Tasks: {
           any: {
             SubTasks: {
@@ -625,7 +655,7 @@ describe('filter', () => {
     });
 
     it('should handle a Date', () => {
-      const filter = { DateProp: new Date(Date.UTC(2017, 2, 30, 7, 30)) };
+      const filter: Filter<SomeEntity> = { DateProp: new Date(Date.UTC(2017, 2, 30, 7, 30)) };
       const expected = '?$filter=DateProp eq 2017-03-30T07:30:00.000Z';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
@@ -741,7 +771,7 @@ describe('search', () => {
 
 describe('transform', () => {
   it('simple aggregation as object', () => {
-    const transform = {
+    const transform: Transform<{ Amount: number }> = {
       aggregate: {
         Amount: {
           with: 'sum',
@@ -755,7 +785,7 @@ describe('transform', () => {
   });
 
   it('multiple aggregations with different properties as object', () => {
-    const transform = [
+    const transform: Transform<{ Id: number; Amount: number }>[] = [
       {
         aggregate: {
           Amount: {
@@ -775,7 +805,7 @@ describe('transform', () => {
   });
 
   it('multiple aggregations with same property as array', () => {
-    const transform = [
+    const transform: Transform<{ Amount: number }> = [
       {
         aggregate: [
           {
@@ -799,7 +829,7 @@ describe('transform', () => {
   });
 
   it('custom aggregation as string', () => {
-    const transform = {
+    const transform: Transform<{ Forecast: number }> = {
       aggregate: 'Forecast',
     };
     const expected = '?$apply=aggregate(Forecast)';
@@ -808,7 +838,7 @@ describe('transform', () => {
   });
 
   it('multiple aggregations with same property as array', () => {
-    const transform = [
+    const transform: Transform<{ Forecast: number; Amount: number }>[] = [
       {
         aggregate: [
           'Forecast',
@@ -827,7 +857,7 @@ describe('transform', () => {
   });
 
   it('simple filter', () => {
-    const transform = [
+    const transform: Transform<SomeEntity>[] = [
       {
         filter: {
           PropName: 1,
@@ -840,28 +870,28 @@ describe('transform', () => {
   });
 
   it('should omit/ignore undefined filters', () => {
-    const transform = { filter: undefined };
+    const transform: Transform<SomeEntity> = { filter: undefined };
     const expected = '';
     const actual = buildQuery({ transform });
     expect(actual).toEqual(expected);
   });
 
   it('should omit/ignore null filters', () => {
-    const transform = { filter: null };
+    const transform: Transform<SomeEntity> = { filter: null };
     const expected = '';
     const actual = buildQuery({ transform });
     expect(actual).toEqual(expected);
   });
 
   it('should omit/ignore empty object filters', () => {
-    const transform = { filter: {} };
+    const transform: Transform<SomeEntity> = { filter: {} };
     const expected = '';
     const actual = buildQuery({ transform });
     expect(actual).toEqual(expected);
   });
 
   it('simple groupby', () => {
-    const transform = [
+    const transform: Transform<SomeEntity>[] = [
       {
         groupBy: {
           properties: ['SomeProp'],
@@ -874,7 +904,7 @@ describe('transform', () => {
   });
 
   it('groupby with multiple columns', () => {
-    const transform = [
+    const transform: Transform<SomeEntity>[] = [
       {
         groupBy: {
           properties: ['SomeProp', 'AnotherProp'],
@@ -887,7 +917,7 @@ describe('transform', () => {
   });
 
   it('groupby with aggregation', () => {
-    const transform = [
+    const transform: Transform<SomeEntity>[] = [
       {
         groupBy: {
           properties: ['SomeProp'],
@@ -910,7 +940,7 @@ describe('transform', () => {
   });
 
   it('group by with filter before as object', () => {
-    const transform = {
+    const transform: Transform<SomeEntity> = {
       filter: {
         PropName: 1,
       },
@@ -933,7 +963,7 @@ describe('transform', () => {
   });
 
   it('group by with filter before and after as array', () => {
-    const transform = [
+    const transform: Transform<SomeEntity>[] = [
       {
         filter: {
           PropName: 1,
@@ -969,7 +999,7 @@ describe('transform', () => {
 
 describe('select', () => {
   it('should support passing an array of strings', () => {
-    const select = ['foo', 'bar'];
+    const select: Select<SomeEntity> = ['foo', 'bar'];
     const expected = '?$select=foo,bar';
     const actual = buildQuery({ select });
     expect(actual).toEqual(expected);
@@ -987,14 +1017,14 @@ describe('select', () => {
 
 describe('orderBy', () => {
   it('should support passing an array of strings', () => {
-    const orderBy = ['foo', 'bar'];
+    const orderBy: OrderBy<SomeEntity> = ['foo', 'bar'];
     const expected = '?$orderby=foo,bar';
     const actual = buildQuery({ orderBy });
     expect(actual).toEqual(expected);
   });
 
   it('should support passing a string and use verbatim', () => {
-    const orderBy = 'foo,bar';
+    const orderBy: OrderBy<SomeEntity> = 'foo,bar';
     const expected = '?$orderby=foo,bar';
     const actual = buildQuery({ orderBy });
     expect(actual).toEqual(expected);
@@ -1036,7 +1066,7 @@ describe('orderBy', () => {
   });
 
   it('should support ordering a nested property within an expand', () => {
-    const query = {
+    const query: ExpandOptions<{ Memberships: any }> = {
       expand: {
         Memberships: {
           orderBy: 'Group/Name',
@@ -1049,7 +1079,7 @@ describe('orderBy', () => {
   });
 
   it('should support ordering multiple nested property within an expand', () => {
-    const query = {
+    const query: ExpandOptions<{ Memberships: any }> = {
       expand: {
         Memberships: {
           orderBy: ['Group/Name', 'Group/Description'],
@@ -1071,7 +1101,7 @@ describe('key', () => {
   });
 
   it('should support key as object', () => {
-    const key = { Id: 1 };
+    const key: QueryOptions<SomeEntity>['key'] = { Id: 1 };
     const expected = '(Id=1)';
     const actual = buildQuery({ key });
     expect(actual).toEqual(expected);
@@ -1095,7 +1125,7 @@ describe('key', () => {
   it('should support key with expand', () => {
     type Bar = { Foo: any };
     const key = 1;
-    const expand = ['Foo'] as Expand<Bar>;
+    const expand: Expand<Bar> = ['Foo'];
     const expected = '(1)?$expand=Foo';
     const actual = buildQuery<Bar>({ key, expand });
     expect(actual).toEqual(expected);
@@ -1111,21 +1141,21 @@ describe('key', () => {
 
 describe('count', () => {
   it('should support include counts', () => {
-    const count = true;
+    const count: QueryOptions<SomeEntity>['count'] = true;
     const expected = '?$count=true';
     const actual = buildQuery({ count });
     expect(actual).toEqual(expected);
   });
 
   it('should query for only count', () => {
-    const count = {};
+    const count: QueryOptions<SomeEntity>['count'] = {};
     const expected = '/$count';
     const actual = buildQuery({ count });
     expect(actual).toEqual(expected);
   });
 
   it('should query for only count with filter', () => {
-    const count = { PropName: 1 };
+    const count: QueryOptions<SomeEntity>['count'] = { PropName: 1 };
     const expected = '/$count?$filter=PropName eq 1';
     const actual = buildQuery({ count });
     expect(actual).toEqual(expected);
@@ -1133,7 +1163,7 @@ describe('count', () => {
 
   it('should allow groupby when querying for only count', () => {
     const count = {};
-    const transform = [
+    const transform: Transform<SomeEntity>[] = [
       {
         filter: {
           PropName: 1,
@@ -1217,42 +1247,45 @@ describe('expand', () => {
 
   it('should support multiple expands as an array', () => {
     type Bar = { Foo: any; Bar: any };
-    const expand = ['Foo', 'Bar'] as Expand<Bar>;
+    const expand: Expand<Bar> = ['Foo', 'Bar'];
     const expected = '?$expand=Foo,Bar';
     const actual = buildQuery<Bar>({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow nested expands with slash seperator', () => {
-    const expand = 'Friends/Photos';
+    const expand: Expand<SomeEntity> = 'Friends/Photos';
     const expected = '?$expand=Friends($expand=Photos)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should support multiple nested expands with slash seperator as an array', () => {
-    const expand = ['Foo/Bar/Baz', 'One/Two'];
+    const expand: Expand<SomeEntity> = ['Foo/Bar/Baz', 'One/Two'];
     const expected = '?$expand=Foo($expand=Bar($expand=Baz)),One($expand=Two)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow nested expands with objects', () => {
-    const expand = { Friends: { expand: 'Photos' } };
+    const expand: Expand<Person> = { Friends: { expand: 'Photos' } };
     const expected = '?$expand=Friends($expand=Photos)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow multiple expands with objects and orderBy', () => {
-    const expand = { Friends: {}, Values: { orderBy: 'Two' } };
+    const expand: Expand<Person & { Values: string[] }> = {
+      Friends: {},
+      Values: { orderBy: 'Two' },
+    };
     const expected = '?$expand=Friends,Values($orderby=Two)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow multiple expands with objects and top', () => {
-    const expand = { Friends: {}, Values: { top: 3 } };
+    const expand: Expand<Person & { Values: string[] }> = { Friends: {}, Values: { top: 3 } };
     const expected = '?$expand=Friends,Values($top=3)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
@@ -1275,42 +1308,42 @@ describe('expand', () => {
   });
 
   it('should allow expand with select', () => {
-    const expand = { Friends: { select: 'Name' } };
-    const expected = '?$expand=Friends($select=Name)';
+    const expand: Expand<Person> = { Friends: { select: 'FirstName' } };
+    const expected = '?$expand=Friends($select=FirstName)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow expand with top', () => {
-    const expand = { Friends: { top: 10 } };
+    const expand: Expand<Person> = { Friends: { top: 10 } };
     const expected = '?$expand=Friends($top=10)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow expand with select and top', () => {
-    const expand = { Friends: { select: 'Name', top: 10 } };
-    const expected = '?$expand=Friends($select=Name;$top=10)';
+    const expand: Expand<Person> = { Friends: { select: 'FirstName', top: 10 } };
+    const expected = '?$expand=Friends($select=FirstName;$top=10)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow expand with select as array and top', () => {
-    const expand = { Friends: { select: ['Name', 'Age'], top: 10 } };
-    const expected = '?$expand=Friends($select=Name,Age;$top=10)';
+    const expand: Expand<Person> = { Friends: { select: ['FirstName', 'UserName', 'Age'], top: 10 } };
+    const expected = '?$expand=Friends($select=FirstName,UserName,Age;$top=10)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow expand with filter', () => {
-    const expand = { Trips: { filter: { Name: 'Trip in US' } } };
+    const expand: Expand<Person> = { Trips: { filter: { Name: 'Trip in US' } } };
     const expected = "?$expand=Trips($filter=Name eq 'Trip in US')";
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
   });
 
   it('should allow expand with orderby', () => {
-    const expand = { Products: { orderBy: 'ReleaseDate asc' } };
+    const expand: Expand<{Products: any}> = { Products: { orderBy: 'ReleaseDate asc' } };
     const expected = '?$expand=Products($orderby=ReleaseDate asc)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
