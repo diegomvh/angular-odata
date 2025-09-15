@@ -15,27 +15,29 @@ const SUPPORTED_EXPAND_PROPERTIES = [
 const FUNCTION_REGEX = /\((.*)\)/;
 const INDEXOF_REGEX = /(?!indexof)\((\w+)\)/;
 
-export type Unpacked<T> = T extends (infer U)[] ? U : T;
+export type LooseUnion<U> = U | (U extends string ? Record<never, never> & string : never);
+export type ObjectValues<T> = T[keyof T];
+export type Unpacked<T> = NonNullable<T> extends (infer U)[] ? U : NonNullable<T>;
 export type Select<T> = SelectType<T> | SelectType<T>[];
-export type SelectType<T> = string | keyof T;
-export type Filter<T> = FilterType | FilterType[];
-export type FilterType = string | { [name: string]: any };
+export type SelectType<T> = LooseUnion<keyof T>;
+export type Filter<T> = FilterType<T> | FilterType<T>[];
+export type FilterType<T> = string | Record<string | keyof T, any>;
 
-export enum StandardAggregateMethods {
-  sum = 'sum',
-  min = 'min',
-  max = 'max',
-  average = 'average',
-  countdistinct = 'countdistinct',
-}
-export type AggregateType =
-  | string
-  | { [propertyName: string]: { with: StandardAggregateMethods; as: string } };
+export const StandardAggregateMethods = {
+  sum: 'sum',
+  min: 'min',
+  max: 'max',
+  average: 'average',
+  countdistinct: 'countdistinct'
+} as const;
+export type StandardAggregateMethods = ObjectValues<typeof StandardAggregateMethods>;
+export type AggregateType<T> =
+  string | Record<string | keyof T, { with: StandardAggregateMethods; as: string }>;
 
 // OrderBy
 
 export type OrderBy<T> = OrderByType<T> | OrderByType<T>[];
-export type OrderByType<T> = string | OrderByObject<T>;
+export type OrderByType<T> = LooseUnion<OrderByObject<T>>;
 export type OrderByObject<T> = keyof T | [keyof T | string, 'asc' | 'desc'] | NestedOrderBy<T>;
 export type NestedOrderBy<T> = {
   [P in keyof T]?: T[P] extends Array<infer E> ? OrderBy<E> : OrderBy<T[P]>;
@@ -43,7 +45,7 @@ export type NestedOrderBy<T> = {
 
 // Expand
 export type Expand<T> = ExpandType<T> | ExpandType<T>[];
-export type ExpandType<T> = string | ExpandObject<T>;
+export type ExpandType<T> = LooseUnion<ExpandObject<T>>;
 export type ExpandObject<T> = keyof T | NestedExpandOptions<T>;
 export type NestedExpandOptions<T> = {
   [P in keyof T]?: ExpandOptions<Unpacked<T[P]>>;
@@ -60,21 +62,22 @@ export type ExpandOptions<T> = {
 };
 
 export type Transform<T> = {
-  aggregate?: AggregateType | Array<AggregateType>;
-  filter?: Filter<T>;
+  aggregate?: AggregateType<T> | Array<AggregateType<T>>;
+  filter?: Filter<T> | null;
   groupBy?: GroupByType<T>;
 };
 export type GroupByType<T> = {
-  properties: Array<keyof T>;
+  properties: Array<LooseUnion<keyof T>>;
   transform?: Transform<T>;
 };
 
-export enum QueryCustomTypes {
-  Raw,
-  Alias,
-  Duration,
-  Binary,
-}
+export const QueryCustomTypes = {
+  Raw: 'Raw',
+  Alias: 'Alias',
+  Duration: 'Duration',
+  Binary: 'Binary'
+} as const;
+export type QueryCustomTypes = ObjectValues<typeof QueryCustomTypes>;
 
 export type QueryCustomType = {
   type: QueryCustomTypes;
@@ -110,11 +113,11 @@ export const isRawType = (value: any) =>
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
   apply: string;
-  transform: { [name: string]: any } | { [name: string]: any }[];
+  transform: Transform<T> | Transform<T>[];
   compute: string;
   skip: number;
   skiptoken: string;
-  key: string | number | { [name: string]: any };
+  key: string | number | Record<string | keyof T, any>;
   count: boolean | Filter<T>;
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
@@ -785,7 +788,7 @@ function buildTransforms<T>(
   return transformsResult.join('/') || undefined;
 }
 
-function buildAggregate(aggregate: AggregateType | AggregateType[]) {
+function buildAggregate<T>(aggregate: AggregateType<T> | AggregateType<T>[]) {
   // Wrap single object in an array for simplified processing
   const aggregateArray = Array.isArray(aggregate) ? aggregate : [aggregate];
 
