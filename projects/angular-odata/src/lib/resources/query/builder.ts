@@ -598,11 +598,9 @@ function getStringCollectionClause(
   collectionOperator: string,
   propName: string,
 ) {
-  let clause = '';
   const conditionOperator = collectionOperator == 'all' ? 'ne' : 'eq';
-  clause = `${propName}/${collectionOperator}(${lambdaParameter}: ${lambdaParameter} ${conditionOperator} '${value}')`;
 
-  return clause;
+  return `${propName}/${collectionOperator}(${lambdaParameter}: ${lambdaParameter} ${conditionOperator} '${value}')`;
 }
 
 function escapeIllegalChars(string: string) {
@@ -746,28 +744,39 @@ function buildTransforms<T>(
   const transformsArray = Array.isArray(transforms) ? transforms : [transforms];
 
   const transformsResult = transformsArray.reduce((result: string[], transform) => {
-    const { aggregate, filter, groupBy, ...rest } = transform;
-
-    // TODO: support as many of the following:
-    //   topcount, topsum, toppercent,
-    //   bottomsum, bottomcount, bottompercent,
-    //   identity, concat, expand, search, compute, isdefined
-    const unsupportedKeys = Object.keys(rest);
-    if (unsupportedKeys.length) {
-      throw new Error(`Unsupported transform(s): ${unsupportedKeys}`);
-    }
-
-    if (aggregate) {
-      result.push(`aggregate(${buildAggregate(aggregate)})`);
-    }
-    if (filter) {
-      const builtFilter = buildFilter(filter, { aliases, escape });
-      if (builtFilter) {
-        result.push(`filter(${buildFilter(builtFilter, { aliases, escape })})`);
+    for (const key of Object.keys(transform) as Array<keyof Transform<T>>) {
+      switch (key) {
+        // TODO: support as many of the following:
+        //   topcount, topsum, toppercent,
+        //   bottomsum, bottomcount, bottompercent,
+        //   identity, concat, expand, search, compute, isdefined
+        case 'aggregate': {
+          const aggregate = transform[key];
+          if (aggregate) {
+            result.push(`aggregate(${buildAggregate(aggregate)})`);
+          }
+          break;
+        }
+        case 'filter': {
+          const filter = transform[key];
+          if (filter) {
+            const builtFilter = buildFilter(filter, { aliases, escape });
+            if (builtFilter) {
+              result.push(`filter(${builtFilter})`);
+            }
+          }
+          break;
+        }
+        case 'groupBy': {
+          const groupBy = transform[key];
+          if (groupBy) {
+            result.push(`groupby(${buildGroupBy(groupBy, { aliases, escape })})`);
+          }
+          break;
+        }
+        default:
+          throw new Error(`Unsupported transform(s): ${key}`);
       }
-    }
-    if (groupBy) {
-      result.push(`groupby(${buildGroupBy(groupBy, { aliases, escape })})`);
     }
 
     return result;
