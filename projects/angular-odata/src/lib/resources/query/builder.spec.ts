@@ -997,7 +997,7 @@ describe('transform', () => {
   });
 
   it('respect order of operations', () => {
-    const transform = {
+    const transform: Transform<SomeEntity> = {
       filter: {
         PropName: 1,
       },
