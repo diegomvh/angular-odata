@@ -184,6 +184,9 @@
                             <a href="#JsonSchemaSelect" title="projects/angular-odata/src/lib/schema/parsers/structured-type.ts" ><b>JsonSchemaSelect</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
+                            <a href="#LooseUnion" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>LooseUnion</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#ModelFieldOptions" title="projects/angular-odata/src/lib/models/options.ts" ><b>ModelFieldOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
                         </li>
                         <li>
@@ -200,6 +203,9 @@
                         </li>
                         <li>
                             <a href="#Normalize" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>Normalize</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ObjectValues" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>ObjectValues</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
                             <a href="#ODataActionOptions" title="projects/angular-odata/src/lib/resources/types/options.ts" ><b>ODataActionOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
@@ -310,6 +316,9 @@
                             <a href="#QueryCustomType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>QueryCustomType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
+                            <a href="#QueryCustomTypes" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>QueryCustomTypes</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#QueryOptions" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>QueryOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -326,6 +335,9 @@
                         </li>
                         <li>
                             <a href="#SelectType" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>SelectType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#StandardAggregateMethods" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>StandardAggregateMethods</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
                             <a href="#Transform" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>Transform</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -389,7 +401,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | literal type</code>
+                    <code>    <code>string | Record&lt;string |  | literal type&gt;</code>
 </code>
                 </td>
             </tr>
@@ -453,7 +465,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | ExpandObject&lt;T&gt;</code>
+                    <code>    <code>LooseUnion&lt;ExpandObject&lt;T&gt;&gt;</code>
 </code>
                 </td>
             </tr>
@@ -469,7 +481,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>        <code><a href="../classes/Type.html" target="_self" >FilterType | FilterType[]</a></code>
+                    <code>        <code><a href="../classes/Type.html" target="_self" >FilterType&lt;T&gt; | FilterType&lt;T&gt;[]</a></code>
 </code>
                 </td>
             </tr>
@@ -485,7 +497,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | literal type</code>
+                    <code>    <code>string | Record&lt;string |  | any&gt;</code>
 </code>
                 </td>
             </tr>
@@ -502,6 +514,22 @@
             <tr>
                 <td class="col-md-4">
                     <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LooseUnion"></a>
+                    <span class="name "><b>LooseUnion</b><a href="#LooseUnion"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>U | </code>
 </code>
                 </td>
             </tr>
@@ -534,6 +562,22 @@
             <tr>
                 <td class="col-md-4">
                     <code>    <code></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ObjectValues"></a>
+                    <span class="name "><b>ObjectValues</b><a href="#ObjectValues"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>T</code>
 </code>
                 </td>
             </tr>
@@ -581,7 +625,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | OrderByObject&lt;T&gt;</code>
+                    <code>    <code>LooseUnion&lt;OrderByObject&lt;T&gt;&gt;</code>
 </code>
                 </td>
             </tr>
@@ -598,6 +642,22 @@
             <tr>
                 <td class="col-md-4">
                     <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="QueryCustomTypes"></a>
+                    <span class="name "><b>QueryCustomTypes</b><a href="#QueryCustomTypes"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ObjectValues&lt;&gt;</code>
 </code>
                 </td>
             </tr>
@@ -645,7 +705,23 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | </code>
+                    <code>        <code><a href="../miscellaneous/typealiases.html#LooseUnion" target="_self" >LooseUnion&lt;T&gt;</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="StandardAggregateMethods"></a>
+                    <span class="name "><b>StandardAggregateMethods</b><a href="#StandardAggregateMethods"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ObjectValues&lt;&gt;</code>
 </code>
                 </td>
             </tr>

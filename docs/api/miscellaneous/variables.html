@@ -430,6 +430,9 @@
                             <a href="#QUERY_SEPARATOR" title="projects/angular-odata/src/lib/constants.ts" ><b>QUERY_SEPARATOR</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#QueryCustomTypes" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>QueryCustomTypes</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#raw" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>raw</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -443,6 +446,9 @@
                         </li>
                         <li>
                             <a href="#RETRY_AFTER_HEADERS" title="projects/angular-odata/src/lib/constants.ts" ><b>RETRY_AFTER_HEADERS</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#StandardAggregateMethods" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>StandardAggregateMethods</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
                             <a href="#Strings" title="projects/angular-odata/src/lib/utils/strings.ts" ><b>Strings</b>&nbsp;&nbsp;&nbsp;(projects/.../strings.ts)</a>
@@ -2560,6 +2566,31 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="QueryCustomTypes"></a>
+                    <span class="name">
+                        <span ><b>QueryCustomTypes</b></span>
+                        <a href="#QueryCustomTypes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  Raw: &#x27;Raw&#x27;,
+  Alias: &#x27;Alias&#x27;,
+  Duration: &#x27;Duration&#x27;,
+  Binary: &#x27;Binary&#x27;
+} as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="raw"></a>
                     <span class="name">
                         <span ><b>raw</b></span>
@@ -2573,6 +2604,32 @@
   type: QueryCustomTypes.Raw,
   value,
 })</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="StandardAggregateMethods"></a>
+                    <span class="name">
+                        <span ><b>StandardAggregateMethods</b></span>
+                        <a href="#StandardAggregateMethods"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  sum: &#x27;sum&#x27;,
+  min: &#x27;min&#x27;,
+  max: &#x27;max&#x27;,
+  average: &#x27;average&#x27;,
+  countdistinct: &#x27;countdistinct&#x27;
+} as const</code>
                     </td>
                 </tr>
 
