@@ -110,7 +110,7 @@ export class ODataMetadataParser {
       const parser: DOMParser = new DOMParser();
       this.document = parser.parseFromString(xml, 'text/xml');
 
-      this.checkVersion(document);
+      this.checkVersion(this.document);
     } catch (error) {
       throw new Error('Unable to parse metadata, ' + error);
     }
@@ -153,9 +153,9 @@ export class ODataMetadataParser {
     return new ODataMetadata(version, references, schemas);
   }
 
-  protected checkVersion(document: Document) {
+  protected checkVersion(doc: Document) {
     // check version
-    const attributes: NamedNodeMap = document.documentElement.attributes;
+    const attributes: NamedNodeMap = doc.documentElement.attributes;
     if (!attributes) {
       throw new Error('OData version is not specified in the metadata');
     }
