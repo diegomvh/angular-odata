@@ -1,4 +1,4 @@
-import { ODataStructuredTypeConfig } from '../../types';
+import type { ODataStructuredTypeConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import { CsdlProperty, CsdlNavigationProperty } from './csdl-structural-property';
 import type { CsdlSchema } from './csdl-schema';

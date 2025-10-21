@@ -5,7 +5,7 @@ import {
   ODataPropertyAnnotations,
 } from '../annotations';
 import { Types } from '../utils/types';
-import { ODataResource } from './resource';
+import type { ODataResource } from './resource';
 import {
   APPLICATION_JSON,
   ODATA_VERSION_HEADERS,
@@ -16,10 +16,10 @@ import {
   ODATA_ENTITYID_HEADERS,
   PREFERENCE_APPLIED,
 } from '../constants';
-import { ODataApi } from '../api';
-import { ODataRequest } from './request';
+import type { ODataApi } from '../api';
+import type { ODataRequest } from './request';
 import { Http } from '../utils/http';
-import { ODataContext } from '../helper';
+import type { ODataContext } from '../helper';
 import { ODataResponseOptions } from './options';
 
 export type ODataEntity<T> = {

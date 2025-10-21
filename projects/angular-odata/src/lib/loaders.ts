@@ -1,5 +1,5 @@
 import { Observable, forkJoin, map, of } from 'rxjs';
-import { ODataApiConfig } from './types';
+import type { ODataApiConfig } from './types';
 import { ODataMetadataParser } from './metadata';
 
 export abstract class ODataConfigLoader {

@@ -4,7 +4,7 @@ import { CsdlEnumType } from './csdl-enum-type';
 import { CsdlEntityType, CsdlComplexType } from './csdl-structured-type';
 import { CsdlFunction, CsdlAction } from './csdl-function-action';
 import { CsdlEntityContainer } from './csdl-entity-container';
-import { ODataSchemaConfig } from '../../types';
+import type { ODataSchemaConfig } from '../../types';
 
 export class CsdlSchema {
   Namespace: string;

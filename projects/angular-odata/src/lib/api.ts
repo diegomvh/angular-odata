@@ -4,7 +4,7 @@ import { catchError, map } from 'rxjs/operators';
 import { DEFAULT_VERSION } from './constants';
 import { ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
 import { ODataApiOptions } from './options';
-import { ODataOptions, ODataResource, ODataSegment } from './resources';
+import type { ODataOptions, ODataResource, ODataSegment } from './resources';
 import {
   ODataQueryOptions,
   ODataPathSegments,
@@ -39,7 +39,7 @@ import {
   ODataSchemaConfig,
   ODataCache,
 } from './types';
-import { ODataMetadata } from './metadata/metadata';
+import type { ODataMetadata } from './metadata/metadata';
 
 /**
  * Api abstraction for consuming OData services.

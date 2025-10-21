@@ -1,4 +1,4 @@
-import { ODataAnnotationConfig } from '../../types';
+import type { ODataAnnotationConfig } from '../../types';
 import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlAnnotable {

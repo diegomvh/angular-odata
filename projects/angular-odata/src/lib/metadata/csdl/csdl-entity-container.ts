@@ -3,7 +3,7 @@ import { CsdlSingleton } from './csdl-singleton';
 import { CsdlFunctionImport, CsdlActionImport } from './csdl-function-action';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlSchema } from './csdl-schema';
-import { ODataEntityContainerConfig } from '../../types';
+import type { ODataEntityContainerConfig } from '../../types';
 
 export class CsdlEntityContainer extends CsdlAnnotable {
   public Name: string;

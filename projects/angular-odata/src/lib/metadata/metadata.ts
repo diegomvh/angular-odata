@@ -1,7 +1,7 @@
-import { CsdlAction, CsdlFunction } from './csdl/csdl-function-action';
+import type { CsdlAction, CsdlFunction } from './csdl/csdl-function-action';
 import { CsdlReference } from './csdl/csdl-reference';
 import { CsdlSchema } from './csdl/csdl-schema';
-import { ODataApiConfig, ODataVersion } from '../types';
+import type { ODataApiConfig, ODataVersion } from '../types';
 
 export class ODataMetadata {
   Version: string;

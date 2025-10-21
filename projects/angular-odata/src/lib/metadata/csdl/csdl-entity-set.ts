@@ -1,4 +1,4 @@
-import { ODataEntitySetConfig } from '../../types';
+import type { ODataEntitySetConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlEntityContainer } from './csdl-entity-container';
 import { CsdlNavigationPropertyBinding } from './csdl-navigation-property-binding';

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 export type ODataVersion = '2.0' | '3.0' | '4.0';
 export type FetchPolicy =

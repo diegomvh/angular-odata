@@ -1,4 +1,4 @@
-import { ODataReferenceConfig } from '../../types';
+import type { ODataReferenceConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 
 export class CsdlReference extends CsdlAnnotable {

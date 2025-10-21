@@ -1,7 +1,7 @@
 import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from '../constants';
-import { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
+import type { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
 import { ODataCache, PathSegment } from '../types';
 
 /**

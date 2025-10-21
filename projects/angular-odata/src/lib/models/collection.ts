@@ -13,9 +13,9 @@ import {
   ODataQueryOptionsHandler,
   ODataResource,
 } from '../resources';
-import { ODataStructuredType } from '../schema/structured-type';
+import type { ODataStructuredType } from '../schema/structured-type';
 import { Types } from '../utils/types';
-import { ODataModel } from './model';
+import type { ODataModel } from './model';
 import {
   INCLUDE_DEEP,
   ModelFieldOptions,

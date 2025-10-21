@@ -1,9 +1,9 @@
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { ODataApi } from './api';
-import { ODataCollection, ODataModel } from './models';
-import { ODataRequest } from './resources';
-import { ODataCallable, ODataEntitySet, ODataEnumType, ODataStructuredType } from './schema';
-import { ODataApiConfig, EdmType, Parser } from './types';
+import type { ODataCollection, ODataModel } from './models';
+import type { ODataRequest } from './resources';
+import type { ODataCallable, ODataEntitySet, ODataEnumType, ODataStructuredType } from './schema';
+import type { ODataApiConfig, EdmType, Parser } from './types';
 
 export class ODataSettings {
   apis: ODataApi[];

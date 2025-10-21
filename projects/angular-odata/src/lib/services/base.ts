@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs';
-import { ODataClient } from '../client';
-import {
+import type { Observable } from 'rxjs';
+import type { ODataClient } from '../client';
+import type {
   ODataActionOptions,
   ODataActionResource,
   ODataEntities,

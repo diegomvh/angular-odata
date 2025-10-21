@@ -1,6 +1,3 @@
-import { CsdlReference } from './csdl/csdl-reference';
-
-import { CsdlSchema } from './csdl/csdl-schema';
 import { VERSION_4_0 } from '../constants';
 import { ODataMetadata } from './metadata';
 

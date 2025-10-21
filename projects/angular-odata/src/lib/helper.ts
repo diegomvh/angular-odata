@@ -1,5 +1,5 @@
 import { VERSION_3_0, VERSION_2_0, VERSION_4_0, $COUNT, $INLINECOUNT } from './constants';
-import { ODataMetadataType } from './types';
+import type { ODataMetadataType } from './types';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
 export const PROPERTY = /([\w\d\-_]+)\(([\'\w\d\-_=]+)\)/;

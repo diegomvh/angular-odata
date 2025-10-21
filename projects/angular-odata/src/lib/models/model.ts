@@ -14,7 +14,7 @@ import {
   ODataResource,
   ODataSingletonResource,
 } from '../resources';
-import { ODataStructuredType } from '../schema';
+import type { ODataStructuredType } from '../schema';
 import { Objects, Strings, Types } from '../utils';
 import { ODataCollection } from './collection';
 import {
@@ -28,9 +28,9 @@ import {
   ModelFieldOptions,
   ModelInterface,
 } from './options';
-import { EdmType, ParserOptions } from '../types';
-import { ODataEntityAnnotations } from '../annotations';
-import { ODataEntity } from '../resources/response';
+import type { EdmType, ParserOptions } from '../types';
+import type { ODataEntityAnnotations } from '../annotations';
+import type { ODataEntity } from '../resources/response';
 
 export class ODataModel<T> {
   // Properties

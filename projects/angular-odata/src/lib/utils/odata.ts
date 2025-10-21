@@ -1,5 +1,5 @@
 import { CALLABLE_BINDING_PARAMETER } from '../constants';
-import { ODataCallableConfig } from '../types';
+import type { ODataCallableConfig } from '../types';
 import { Objects } from './objects';
 
 export const OData = {

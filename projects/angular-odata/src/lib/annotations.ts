@@ -1,6 +1,6 @@
-import { ODataContext, ODataVersionHelper } from './helper';
+import type { ODataContext, ODataVersionHelper } from './helper';
 
-import { ODataMetadataType } from './types';
+import type { ODataMetadataType } from './types';
 
 export abstract class ODataAnnotations<T> {
   constructor(

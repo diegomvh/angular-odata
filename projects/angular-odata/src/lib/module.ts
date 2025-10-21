@@ -10,7 +10,7 @@ import {
 import { ODataClient } from './client';
 import { ODataConfigLoader, ODataConfigSyncLoader } from './loaders';
 import { ODataServiceFactory } from './services/index';
-import { ODataApiConfig } from './types';
+import type { ODataApiConfig } from './types';
 
 export interface PassedInitialConfig {
   config?: ODataApiConfig | ODataApiConfig[];

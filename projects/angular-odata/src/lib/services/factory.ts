@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ODataClient } from '../client';
 import { ODataEntitySetService } from './entity-set';
 import { ODataSingletonService } from './singleton';
-import { ODataCollection, ODataModel } from '../models';
+import type { ODataCollection, ODataModel } from '../models';
 
 @Injectable()
 export class ODataServiceFactory {

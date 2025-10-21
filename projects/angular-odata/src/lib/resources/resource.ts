@@ -1,22 +1,21 @@
-import { Observable } from 'rxjs';
-import { ODataApi } from '../api';
+import type { Observable } from 'rxjs';
+import type { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
+import type { ODataApi } from '../api';
 import { DEFAULT_VERSION, PARAM_SEPARATOR, QUERY_SEPARATOR, VALUE_SEPARATOR } from '../constants';
 import { ODataHelper } from '../helper';
-import { ModelInterface, ODataCollection, ODataModel } from '../models';
+import type { ModelInterface, ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
-import {
-  ParserOptions,
-  Parser,
-  QueryOption,
-  PathSegment,
+import type {
   ODataStructuredTypeFieldConfig,
+  Parser,
+  ParserOptions,
+  QueryOption,
 } from '../types';
+import { PathSegment } from '../types';
 import { Objects, Strings, Types } from '../utils';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
-import { isQueryCustomType, ODataQueryOptions, ODataQueryOptionsHandler } from './query';
-import { ApplyExpression, ApplyExpressionBuilder, QueryCustomType } from './query';
-import { ODataOptions } from './types';
-import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
+import { ApplyExpression, ApplyExpressionBuilder, isQueryCustomType, ODataQueryOptions, ODataQueryOptionsHandler, QueryCustomType } from './query';
+import type { ODataOptions } from './types';
 
 export type EntityKey<T> =
   | {

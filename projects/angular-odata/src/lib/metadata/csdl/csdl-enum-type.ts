@@ -1,4 +1,4 @@
-import { ODataEnumTypeConfig, ODataEnumTypeFieldConfig } from '../../types';
+import type { ODataEnumTypeConfig, ODataEnumTypeFieldConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlSchema } from './csdl-schema';
 

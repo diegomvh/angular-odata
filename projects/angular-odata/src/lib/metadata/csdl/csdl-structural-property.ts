@@ -1,4 +1,4 @@
-import { ODataStructuredTypeFieldConfig } from '../../types';
+import type { ODataStructuredTypeFieldConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {

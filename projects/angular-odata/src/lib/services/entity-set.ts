@@ -1,9 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
-import {
+import type {
   EntityKey,
   ODataEntity,
   ODataEntityResource,
@@ -53,7 +53,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    */
   public attach<M extends ODataModel<T>>(model: M): void;
   public attach<C extends ODataCollection<T, ODataModel<T>>>(model: C): void;
-  public attach(model: any): void {
+  public attach(model: ODataModel<T> | ODataCollection<T, ODataModel<T>>): void {
     if (model instanceof ODataModel) {
       model.attach(this.entities().entity());
     } else if (model instanceof ODataCollection) {

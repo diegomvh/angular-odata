@@ -21,7 +21,7 @@ import {
   ODataNavigationPropertyResource,
   ODataPropertyResource,
 } from '../resources';
-import {
+import type {
   ODataEntitySet,
   ODataEnumType,
   ODataStructuredType,

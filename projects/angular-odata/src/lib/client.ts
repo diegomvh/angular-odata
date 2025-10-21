@@ -1,10 +1,10 @@
 import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ODataApi } from './api';
+import type { ODataApi } from './api';
 import { ODataConfigLoader } from './loaders';
-import { ODataCollection, ODataModel } from './models/index';
-import {
+import type { ODataCollection, ODataModel } from './models/index';
+import type {
   ODataActionResource,
   ODataBatchResource,
   ODataEntityResource,
@@ -14,11 +14,11 @@ import {
   ODataNavigationPropertyResource,
   ODataOptions,
   ODataRequest,
-  ODataResource,
   ODataResponse,
   ODataSegment,
   ODataSingletonResource,
 } from './resources/index';
+import { ODataResource } from './resources/index';
 import { ODataSettings } from './settings';
 
 function addBody<T>(
