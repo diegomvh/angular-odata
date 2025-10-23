@@ -23,6 +23,8 @@ import { Enum } from './angular/enum';
 import { Base, Callable, Index, Metadata } from './angular/base';
 import { Entity } from './angular/entity';
 import { Service } from './angular/service';
+import { Collection } from './angular/collection';
+import { Model } from './angular/model';
 import { CsdlAction, CsdlFunction } from './metadata/csdl/csdl-function-action';
 
 const utils = {
@@ -33,7 +35,7 @@ export function apigen(options: ApiGenSchema) {
   return async (tree: Tree, context: SchematicContext) => {
     const workspace = await getWorkspace(tree);
     if (!options.project) {
-      options.project = workspace.projects.keys().next().value;
+      options.project = workspace.projects.keys().next().value ?? "";
     }
     const project = workspace.projects.get(options.project);
     if (!project) {
@@ -77,12 +79,28 @@ export function apigen(options: ApiGenSchema) {
             const entity = new Entity(options, entityType);
             index.addDependency(entity);
             sources.push(entity);
+            if (options.models) {
+              const model = new Model(options, entityType, entity);
+              index.addDependency(model);
+              sources.push(model);
+              const collection = new Collection(options, entityType, entity, model);
+              index.addDependency(collection);
+              sources.push(collection);
+            }
           }
           // Complex
           for (let complexType of s.ComplexType ?? []) {
             const entity = new Entity(options, complexType);
             index.addDependency(entity);
             sources.push(entity);
+            if (options.models) {
+              const model = new Model(options, complexType, entity);
+              index.addDependency(model);
+              sources.push(model);
+              const collection = new Collection(options, complexType, entity, model);
+              index.addDependency(collection);
+              sources.push(collection);
+            }
           }
           // Container
           for (let entityContainer of s.EntityContainer ?? []) {
@@ -131,6 +149,26 @@ export function apigen(options: ApiGenSchema) {
             );
             s.addCallables(
               actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === s.entityType()),
+            );
+          });
+        [...sources]
+          .filter((s) => s instanceof Model)
+          .forEach((m: Model) => {
+            m.addCallables(
+              functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === m.entityType()),
+            );
+            m.addCallables(
+              actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === m.entityType()),
+            );
+          });
+        [...sources]
+          .filter((s) => s instanceof Collection)
+          .forEach((c: Collection) => {
+            c.addCallables(
+              functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === c.entityType()),
+            );
+            c.addCallables(
+              actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === c.entityType()),
             );
           });
         [...sources].forEach((s) => {
