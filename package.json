@@ -36,6 +36,7 @@
     "versioning": "npm version 0.140.1 --allow-same-version && cd projects/angular-odata && npm version 0.140.1 --allow-same-version && cd ../..",
     "publish": "npm run build && npm run schematics && npm publish dist/angular-odata/",
     "release": "cp README.md projects/angular-odata/README.md && npm run docs && npm run publish",
+    "trippin": "ng generate angular-odata:apigen --name=TripPin --metadata='https://services.odata.org/V4/TripPinServiceRW/$metadata'",
     "prettier": "prettier --write \"projects/angular-odata/**/*.ts\""
   },
   "prettier": {
@@ -57,6 +58,7 @@
     "@angular/forms": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
+    "@schematics/angular": "^20.3.7",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

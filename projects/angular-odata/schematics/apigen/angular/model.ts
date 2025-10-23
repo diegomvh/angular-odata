@@ -11,7 +11,7 @@ export class ModelField {
   constructor(protected edmType: CsdlProperty | CsdlNavigationProperty) {}
 
   name() {
-    return this.edmType.Name;
+    return this.edmType.Name + (this.edmType.Nullable ? '?' : '!');
   }
 
   type() {
@@ -22,19 +22,54 @@ export class ModelField {
   }
 
   resource() {
-    return "";
+    const resourceName = `$$${this.edmType.Name}`;
+    if (this.edmType instanceof CsdlNavigationProperty) { 
+      const nav = this.edmType as CsdlNavigationProperty;
+      return `public ${resourceName}() {
+    return this.navigationProperty<${this.type()}>('${this.edmType.Name}');
+  }`
+    }
+    else {
+      return `public ${resourceName}() {
+    return this.property<${this.type()}>('${this.edmType.Name}');
+  }`
+    }
   }
 
   getter() {
-    return "";
+    const getterName = `$${this.edmType.Name}`;
+    if (this.edmType instanceof CsdlNavigationProperty) { 
+      const nav = this.edmType as CsdlNavigationProperty;
+      return "";
+    } else {
+      return `public ${getterName}() {
+    return this.getAttribute<${this.type()}>('${this.edmType.Name}') as ${this.type()};
+  }`
+    }
   }
 
   setter() {
-    return "";
+    const setterName = `${this.edmType.Name}$$`;
+    if (this.edmType instanceof CsdlNavigationProperty) { 
+      const nav = this.edmType as CsdlNavigationProperty;
+      return "";
+    } else {
+      return `public ${setterName}(model: ${this.type()} | null, options?: ODataOptions) {
+    return this.setReference<${this.type()}>('${this.edmType.Name}', model, options);
+  }`
+    }
   }
 
   fetch() {
-    return "";
+    const fetchName = `${this.edmType.Name}$`;
+    if (this.edmType instanceof CsdlNavigationProperty) { 
+      const nav = this.edmType as CsdlNavigationProperty;
+      return "";
+    } else {
+      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${this.type()}>) {
+    return this.fetchAttribute<${this.type()}>('${this.edmType.Name}', options) as Observable<${this.type()}>;
+  }`
+    }
   }
 }
 
