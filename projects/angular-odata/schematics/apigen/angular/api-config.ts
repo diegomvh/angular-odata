@@ -2,10 +2,11 @@ import { strings } from '@angular-devkit/core';
 import { Base } from './base';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
+import { Package } from './package';
 
 export class ApiConfig extends Base {
-  constructor(options: ApiGenSchema) {
-    super(options);
+  constructor(pkg: Package, options: ApiGenSchema) {
+    super(pkg, options);
   }
   public override template(): Source {
     return url('./files/api-config');

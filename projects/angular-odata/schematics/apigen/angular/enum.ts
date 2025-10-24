@@ -4,6 +4,7 @@ import { Base } from './base';
 import { Import } from './import';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
+import { Package } from './package';
 
 export class EnumValue {
   constructor(private edmType: CsdlMember) {}
@@ -16,10 +17,11 @@ export class EnumValue {
 }
 export class Enum extends Base {
   constructor(
+    pkg: Package,
     options: ApiGenSchema,
     protected edmType: CsdlEnumType,
   ) {
-    super(options);
+    super(pkg, options);
   }
   public override template(): Source {
     return url('./files/enum');

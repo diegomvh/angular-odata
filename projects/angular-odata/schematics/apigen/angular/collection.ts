@@ -5,15 +5,17 @@ import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Model } from './model';
 import { Entity } from './entity';
+import { Package } from './package';
 
 export class Collection extends Base {
   constructor(
+    pkg: Package,
     options: ApiGenSchema,
     protected edmType: CsdlEntityType | CsdlComplexType,
     protected entity: Entity,
     protected model: Model
   ) {
-    super(options);
+    super(pkg, options);
   }
 
   public entityType() {

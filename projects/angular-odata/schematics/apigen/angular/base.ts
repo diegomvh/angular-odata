@@ -11,6 +11,7 @@ import {
 } from '../metadata/csdl/csdl-function-action';
 import { makeRelativePath, toTypescriptType } from '../utils';
 import { ODataMetadata } from '../metadata';
+import { Package } from './package';
 
 export class Callable {
   callables: CsdlCallable[] = [];
@@ -154,7 +155,9 @@ export class Callable {
 }
 
 export abstract class Base {
-  constructor(protected options: ApiGenSchema) {}
+  constructor(
+    protected pkg: Package,
+    protected options: ApiGenSchema) {}
 
   public abstract name(): string;
   public abstract fileName(): string;
@@ -218,11 +221,15 @@ export abstract class Base {
   public addCallables(callables: Callable[]) {
     callables.forEach((r) => this.addCallable(r));
   }
+
+  public getPackage() {
+    return this.pkg;
+  }
 }
 
 export class Index extends Base {
-  constructor(options: ApiGenSchema) {
-    super(options);
+  constructor(pkg: Package, options: ApiGenSchema) {
+    super(pkg, options);
   }
   public override template(): Source {
     return url('./files/index');
@@ -249,10 +256,11 @@ export class Index extends Base {
 
 export class Metadata extends Base {
   constructor(
+    pkg: Package,
     options: ApiGenSchema,
     private meta: ODataMetadata,
   ) {
-    super(options);
+    super(pkg, options);
   }
   public override template(): Source {
     return url('./files/metadata');
@@ -274,5 +282,17 @@ export class Metadata extends Base {
   }
   public override importTypes(): string[] {
     return [];
+  }
+
+  findEnumType(fullName: string) {
+    return this.meta.findEnumType(fullName);
+  }
+
+  findEntityType(fullName: string) {
+    return this.meta.findEntityType(fullName);
+  }
+  
+  findComplexType(fullName: string) {
+    return this.meta.findComplexType(fullName);
   }
 }

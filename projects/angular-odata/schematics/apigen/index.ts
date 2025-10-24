@@ -26,6 +26,7 @@ import { Service } from './angular/service';
 import { Collection } from './angular/collection';
 import { Model } from './angular/model';
 import { CsdlAction, CsdlFunction } from './metadata/csdl/csdl-function-action';
+import { Package } from './angular/package';
 
 const utils = {
   toTypescriptType,
@@ -59,126 +60,10 @@ export function apigen(options: ApiGenSchema) {
         options.creation = new Date();
         options.serviceRootUrl = options.metadata.substring(0, options.metadata.length - 9);
         options.version = meta.Version;
-        const metadata = new Metadata(options, meta);
-        const module = new Module(options);
-        const config = new ApiConfig(options);
-        const index = new Index(options);
-        index.addDependency(module);
-        index.addDependency(config);
-        const sources: Base[] = [metadata, index, module, config];
-        for (let s of meta.Schemas) {
-          const namespace = s.Namespace;
-          // Enum
-          for (const enumType of s.EnumType ?? []) {
-            const enu = new Enum(options, enumType);
-            index.addDependency(enu);
-            sources.push(enu);
-          }
-          // Entity
-          for (let entityType of s.EntityType ?? []) {
-            const entity = new Entity(options, entityType);
-            index.addDependency(entity);
-            sources.push(entity);
-            if (options.models) {
-              const model = new Model(options, entityType, entity);
-              index.addDependency(model);
-              sources.push(model);
-              const collection = new Collection(options, entityType, entity, model);
-              index.addDependency(collection);
-              sources.push(collection);
-            }
-          }
-          // Complex
-          for (let complexType of s.ComplexType ?? []) {
-            const entity = new Entity(options, complexType);
-            index.addDependency(entity);
-            sources.push(entity);
-            if (options.models) {
-              const model = new Model(options, complexType, entity);
-              index.addDependency(model);
-              sources.push(model);
-              const collection = new Collection(options, complexType, entity, model);
-              index.addDependency(collection);
-              sources.push(collection);
-            }
-          }
-          // Container
-          for (let entityContainer of s.EntityContainer ?? []) {
-            const service = new Service(options, entityContainer);
-            module.addService(service);
-            index.addDependency(service);
-            sources.push(service);
-            for (let entitySet of entityContainer.EntitySet ?? []) {
-              const service = new Service(options, entitySet);
-              module.addService(service);
-              index.addDependency(service);
-              sources.push(service);
-            }
-            for (let singleton of entityContainer.Singleton ?? []) {
-              const service = new Service(options, singleton);
-              module.addService(service);
-              index.addDependency(service);
-              sources.push(service);
-            }
-          }
-        }
-
-        const functions = meta.functions().reduce((callables: Callable[], f: CsdlFunction) => {
-          const callable = callables.find((c) => c.name() == f.Name);
-          if (callable !== undefined) {
-            callable.addOverload(f);
-          } else {
-            callables.push(new Callable(f));
-          }
-          return callables;
-        }, [] as Callable[]);
-        const actions = meta.actions().reduce((callables: Callable[], a: CsdlAction) => {
-          const callable = callables.find((c) => c.name() == a.Name);
-          if (callable !== undefined) {
-            callable.addOverload(a);
-          } else {
-            callables.push(new Callable(a));
-          }
-          return callables;
-        }, [] as Callable[]);
-        [...sources]
-          .filter((s) => s instanceof Service)
-          .forEach((s: Service) => {
-            s.addCallables(
-              functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === s.entityType()),
-            );
-            s.addCallables(
-              actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === s.entityType()),
-            );
-          });
-        [...sources]
-          .filter((s) => s instanceof Model)
-          .forEach((m: Model) => {
-            m.addCallables(
-              functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === m.entityType()),
-            );
-            m.addCallables(
-              actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === m.entityType()),
-            );
-          });
-        [...sources]
-          .filter((s) => s instanceof Collection)
-          .forEach((c: Collection) => {
-            c.addCallables(
-              functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === c.entityType()),
-            );
-            c.addCallables(
-              actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === c.entityType()),
-            );
-          });
-        [...sources].forEach((s) => {
-          for (let t of s.importTypes()) {
-            s.addDependencies(sources.filter((s) => s.fullName() === t));
-          }
-          s.cleanImportedNames();
-        });
+        const pkg = new Package(options, meta);
+        pkg.resolveImports();
         return chain(
-          sources
+          pkg.sources()
             .map((s) =>
               apply(s.template(), [
                 template({

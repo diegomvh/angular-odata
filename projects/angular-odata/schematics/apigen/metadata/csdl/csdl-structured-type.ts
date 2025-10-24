@@ -32,8 +32,8 @@ export class CsdlStructuredType extends CsdlAnnotable {
   ) {
     super({ Annotation });
     this.Name = Name;
-    this.Property = Property?.map((p) => new CsdlProperty(p));
-    this.NavigationProperty = NavigationProperty?.map((n) => new CsdlNavigationProperty(n));
+    this.Property = Property?.map((p) => new CsdlProperty(this, p));
+    this.NavigationProperty = NavigationProperty?.map((n) => new CsdlNavigationProperty(this, n));
     this.BaseType = BaseType;
     this.OpenType = OpenType;
     this.Abstract = Abstract;

@@ -1,4 +1,5 @@
 import { CsdlAnnotable } from './csdl-annotation';
+import { CsdlStructuredType } from './csdl-structured-type';
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   Name: string;
@@ -6,7 +7,9 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   Collection: boolean;
   Nullable?: boolean;
 
-  constructor({
+  constructor(
+    protected type: CsdlStructuredType,
+    {
     Name,
     Type,
     Nullable,
@@ -32,6 +35,10 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
       Nullable: this.Nullable,
     } as { [key: string]: any };
   }
+
+  isEdmType(): boolean {
+    return this.Type.startsWith('Edm.');
+  }
 }
 
 export class CsdlProperty extends CsdlStructuralProperty {
@@ -42,7 +49,9 @@ export class CsdlProperty extends CsdlStructuralProperty {
   SRID?: string;
   DefaultValue?: string;
 
-  constructor({
+  constructor(
+    protected type: CsdlStructuredType,
+    {
     Name,
     Type,
     Nullable,
@@ -65,7 +74,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
     DefaultValue?: string;
     Annotation?: any[];
   }) {
-    super({ Name, Type, Nullable, Annotation });
+    super(type, { Name, Type, Nullable, Annotation });
     this.MaxLength = MaxLength;
     this.Precision = Precision;
     this.Scale = Scale;
@@ -104,7 +113,9 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
   public ReferentialConstraints?: CsdlReferentialConstraint[];
   public OnDelete?: CsdlOnDelete;
 
-  constructor({
+  constructor(
+    protected type: CsdlStructuredType,
+    {
     Name,
     Type,
     Nullable,
@@ -123,7 +134,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     OnDelete?: any;
     Annotation?: any[];
   }) {
-    super({ Name, Type, Nullable, Annotation });
+    super(type, { Name, Type, Nullable, Annotation });
     this.Partner = Partner;
     this.ContainsTarget = ContainsTarget;
     this.ReferentialConstraints = ReferentialConstraints?.map(

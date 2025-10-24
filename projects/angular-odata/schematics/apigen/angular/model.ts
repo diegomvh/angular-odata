@@ -6,18 +6,39 @@ import { Schema as ApiGenSchema } from '../schema';
 import { CsdlNavigationProperty, CsdlProperty } from '../metadata/csdl/csdl-structural-property';
 import { toTypescriptType } from '../utils';
 import { Entity } from './entity';
+import { Package } from './package';
 
 export class ModelField {
-  constructor(protected edmType: CsdlProperty | CsdlNavigationProperty) {}
+  constructor(protected model: Model, protected edmType: CsdlProperty | CsdlNavigationProperty) {}
 
   name() {
-    return this.edmType.Name + (this.edmType.Nullable ? '?' : '!');
+    const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.Nullable);
+    const name = this.edmType.Name;
+    return name + (!required ? '?' : '');
   }
 
   type() {
-    let type = toTypescriptType(this.edmType.Type);
-    type += this.edmType.Collection ? '[]' : '';
-    type += this.edmType.Nullable ? ' | null' : '';
+    const pkg = this.model.getPackage();
+    const enumType = pkg.findEnum(this.edmType.Type);
+    const entityType = pkg.findEntity(this.edmType.Type);
+    let type = "any";
+    if (enumType !== undefined)
+    {
+      type = enumType.importedName!;
+      type += this.edmType.Collection ? '[]' : '';
+    } else if (entityType !== undefined) {
+      if (this.edmType.Collection) {
+        const collection = pkg.findCollection(this.edmType.Type);
+        const model = pkg.findModel(this.edmType.Type);
+        type = `${collection!.importedName}<${entityType!.importedName}, ${model!.importedName}<${entityType!.importedName}>>`;
+      } else {
+        const model = pkg.findModel(this.edmType.Type);
+        type = `${model!.importedName}<${entityType!.importedName}>`;
+      }
+    } else {
+      type = toTypescriptType(this.edmType.Type);
+      type += this.edmType.Collection ? '[]' : '';
+    }
     return type;
   }
 
@@ -75,11 +96,12 @@ export class ModelField {
 
 export class Model extends Base {
   constructor(
+    pkg: Package,
     options: ApiGenSchema,
     protected edmType: CsdlEntityType | CsdlComplexType,
     protected entity: Entity
   ) {
-    super(options);
+    super(pkg, options);
   }
 
   public entityType() {
@@ -95,8 +117,8 @@ export class Model extends Base {
       baseType: this.edmType.BaseType ? this.edmType.BaseType + 'Model' : null,
       entity: this.entity,
       fields: [
-        ...(this.edmType.Property ?? []).map((p) => new ModelField(p)),
-        ...(this.edmType.NavigationProperty ?? []).map((p) => new ModelField(p)),
+        ...(this.edmType.Property ?? []).map((p) => new ModelField(this, p)),
+        ...(this.edmType.NavigationProperty ?? []).map((p) => new ModelField(this, p)),
       ],
       actions: [], // To be implemented
       functions: [], // To be implemented
