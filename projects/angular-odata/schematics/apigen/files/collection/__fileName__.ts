@@ -13,8 +13,8 @@ import {
 import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 export class <%= classify(name) %><E extends <%= entity.name() %>, M extends <%= model.name() %><E>> extends <% if (baseType) { %><%= toTypescriptType(baseType) %><E, M><% } else { %>ODataCollection<E, M><% } %> {
-  <% for (let action of actions) { %><%= action %>
-  <% } %>
-  <% for (let func of functions) { %><%= func %>
-  <% } %>
+  <% for (let cal of callables) { %>
+  // <%= cal.name() %>
+  <%= cal.callableMethod() %>
+<% } %>
 }

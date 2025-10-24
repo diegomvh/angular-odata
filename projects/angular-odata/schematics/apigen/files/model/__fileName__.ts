@@ -19,15 +19,12 @@ import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 export class <%= classify(name) %><E extends <%= entity.name() %>> extends <% if (baseType) { %><%= toTypescriptType(baseType) %><E><% } else { %>ODataModel<E><% } %> {
   <% for (let field of fields) { %>@ModelField()
   <%= field.name() %>: <%= field.type() %>;
-  <%= field.resource() %>
-  <%= field.getter() %>
-  <%= field.setter() %>
-  <%= field.fetch() %>
+  <%= field.resource() %><%= field.getter() %><%= field.setter() %><%= field.fetch() %>
   <% } %>
-  <% for (let action of actions) { %><%= action %>
-  <% } %>
-  <% for (let func of functions) { %><%= func %>
-  <% } %>
+  <% for (let cal of callables) { %>
+  // <%= cal.name() %>
+  <%= cal.callableMethod() %>
+<% } %>
   <% for (let nav of navigations) { %><%= nav %>
   <% } %>
 }

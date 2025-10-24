@@ -152,6 +152,63 @@ export class Callable {
     return this.${baseMethod}(${parametersCall}, this.${methodResourceName}(${key}), '${responseType}', options);
   }`;
   }
+
+  callableMethod() {
+    const isFunction = this.callable instanceof CsdlFunction;
+    const { binding, required, optional } = this.parameters();
+    const parameters = [...required, ...optional];
+    const returnType = this.returnType();
+    const callableNamespaceQualifiedName = this.callable.IsBound ? this.callable.fullName() : this.callable.Name;
+
+    const methodName = strings.camelize(this.callable.Name);
+    const responseType =
+      returnType === undefined
+        ? 'none'
+        : returnType?.Collection
+          ? 'collection'
+          : returnType?.Type.startsWith('Edm.')
+            ? 'property'
+            : 'model';
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+
+    const baseMethod = isFunction ? 'callFunction' : 'callAction';
+    const parametersCall =
+      parameters.length === 0 ? 'null' : `{${parameters.map((p) => p.Name).join(', ')}}`;
+
+    // Method arguments
+    let args: string[] = [];
+    args = [
+      ...args,
+      ...(required.length === 0
+        ? []
+        : required.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}`)),
+    ];
+    args = [
+      ...args,
+      ...(optional.length === 0
+        ? []
+        : optional.map((p) => `${p.Name}?: ${toTypescriptType(p.Type)}`)),
+    ];
+    const optionsType =
+      returnType !== undefined && returnType.Type.startsWith('Edm.')
+        ? isFunction
+          ? 'ODataOptions & {alias?: boolean}'
+          : 'ODataOptions'
+        : isFunction
+          ? `ODataFunctionOptions<${retType}>`
+          : `ODataActionOptions<${retType}>`;
+    const fargs = [...args, `options?: ${optionsType}`];
+
+    let types = 'null';
+    if (parameters.length > 0) {
+      types = `{${args.join(', ')}}`; 
+    }
+
+    // Render
+    return `public ${methodName}(${fargs.join(', ')}) {
+    return this.${baseMethod}<${types}, ${retType}>('${callableNamespaceQualifiedName}', ${parametersCall}, '${responseType}', options);
+  }`;
+  }
 }
 
 export abstract class Base {

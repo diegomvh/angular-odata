@@ -26,7 +26,8 @@ export class ModelField {
     {
       type = enumType.importedName!;
       type += this.edmType.Collection ? '[]' : '';
-    } else if (entityType !== undefined) {
+    } 
+    else if (entityType !== undefined) {
       if (this.edmType.Collection) {
         const collection = pkg.findCollection(this.edmType.Type);
         const model = pkg.findModel(this.edmType.Type);
@@ -38,59 +39,79 @@ export class ModelField {
     } else {
       type = toTypescriptType(this.edmType.Type);
       type += this.edmType.Collection ? '[]' : '';
-    }
+    } 
     return type;
   }
 
   resource() {
+    const pkg = this.model.getPackage();
     const resourceName = `$$${this.edmType.Name}`;
     if (this.edmType instanceof CsdlNavigationProperty) { 
-      const nav = this.edmType as CsdlNavigationProperty;
+      const entity = pkg.findEntity(this.edmType.Type);
       return `public ${resourceName}() {
-    return this.navigationProperty<${this.type()}>('${this.edmType.Name}');
-  }`
+    return this.navigationProperty<${entity?.importedName}>('${this.edmType.Name}');
+  }
+  `
     }
     else {
       return `public ${resourceName}() {
     return this.property<${this.type()}>('${this.edmType.Name}');
-  }`
+  }
+  `
     }
   }
 
   getter() {
+    const pkg = this.model.getPackage();
     const getterName = `$${this.edmType.Name}`;
     if (this.edmType instanceof CsdlNavigationProperty) { 
-      const nav = this.edmType as CsdlNavigationProperty;
-      return "";
+      const entity = pkg.findEntity(this.edmType.Type);
+      return `public ${getterName}() {
+    return this.getAttribute<${entity?.importedName}>('${this.edmType.Name}') as ${entity?.importedName};
+  }
+  `
     } else {
       return `public ${getterName}() {
     return this.getAttribute<${this.type()}>('${this.edmType.Name}') as ${this.type()};
-  }`
+  }
+  `
     }
   }
 
   setter() {
+    const pkg = this.model.getPackage();
     const setterName = `${this.edmType.Name}$$`;
     if (this.edmType instanceof CsdlNavigationProperty) { 
-      const nav = this.edmType as CsdlNavigationProperty;
-      return "";
-    } else {
+      const entity = pkg.findEntity(this.edmType.Type);
       return `public ${setterName}(model: ${this.type()} | null, options?: ODataOptions) {
-    return this.setReference<${this.type()}>('${this.edmType.Name}', model, options);
-  }`
+    return this.setReference<${entity?.importedName}>('${this.edmType.Name}', model, options);
+  }
+  `
+    } else {
+      return `
+  `;
     }
   }
 
   fetch() {
+    const pkg = this.model.getPackage();
     const fetchName = `${this.edmType.Name}$`;
     if (this.edmType instanceof CsdlNavigationProperty) { 
-      const nav = this.edmType as CsdlNavigationProperty;
-      return "";
+      const entity = pkg.findEntity(this.edmType.Type);
+      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName}>) {
+    return this.fetchAttribute<${entity?.importedName}>('${this.edmType.Name}', options) as Observable<${entity?.importedName}>;
+  }
+`
     } else {
       return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${this.type()}>) {
     return this.fetchAttribute<${this.type()}>('${this.edmType.Name}', options) as Observable<${this.type()}>;
-  }`
+  }
+`
     }
+  }
+
+  isGeoSpatial(): boolean {
+    return this.edmType.Type.startsWith('Edm.Geography') || this.edmType.Type.startsWith('Edm.Geometry');
   }
 }
 
@@ -120,9 +141,8 @@ export class Model extends Base {
         ...(this.edmType.Property ?? []).map((p) => new ModelField(this, p)),
         ...(this.edmType.NavigationProperty ?? []).map((p) => new ModelField(this, p)),
       ],
-      actions: [], // To be implemented
-      functions: [], // To be implemented
-      navigations: [], // To be implemented
+      callables: this.callables ?? [],
+      navigations: [],
     };
   }
   public override name() {

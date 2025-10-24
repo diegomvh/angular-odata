@@ -169,11 +169,11 @@ export class Package {
   }
 
   findModel(fullName: string): Model | undefined {
-    return this.models.find((m) => m.fullName() === fullName);
+    return this.models.find((m) => m.entityType() === fullName);
   }
 
   findCollection(fullName: string): Collection | undefined {
-    return this.collections.find((c) => c.fullName() === fullName);
+    return this.collections.find((c) => c.entityType() === fullName);
   }
 
 }

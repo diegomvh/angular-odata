@@ -31,7 +31,7 @@ export class Collection extends Base {
       baseType: this.edmType.BaseType ? this.edmType.BaseType + 'Collection' : null,
       entity: this.entity,
       model: this.model,
-      actions: [],
+      callables: this.callables ?? [],
       functions: [],
     };
   }
