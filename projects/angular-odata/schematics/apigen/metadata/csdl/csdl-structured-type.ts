@@ -70,6 +70,18 @@ export class CsdlStructuredType extends CsdlAnnotable {
   fullName() {
     return `${this.schema.Namespace}.${this.Name}`;
   }
+
+  findNavigationPropertyType(propertyName: string, findEntityType: (fullName: string) => CsdlEntityType | undefined): CsdlNavigationProperty | undefined {
+    let nav: CsdlNavigationProperty | undefined;
+    let structured: CsdlStructuredType = this;
+    while (true) {
+      nav = structured.NavigationProperty?.find((n) => n.Name === propertyName);
+      if (nav) return nav;
+      if (!structured.BaseType) break;
+      structured = findEntityType(structured.BaseType) as CsdlStructuredType;
+    }
+    throw new Error(`Navigation property '${propertyName}' not found on type '${this.fullName()}' or its base types.`);
+  }
 }
 
 export class CsdlComplexType extends CsdlStructuredType {

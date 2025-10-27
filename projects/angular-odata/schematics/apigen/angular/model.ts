@@ -7,9 +7,10 @@ import { CsdlNavigationProperty, CsdlProperty } from '../metadata/csdl/csdl-stru
 import { toTypescriptType } from '../utils';
 import { Entity } from './entity';
 import { Package } from './package';
+import { CsdlNavigationPropertyBinding } from '../metadata/csdl/csdl-navigation-property-binding';
 
 export class ModelField {
-  constructor(protected model: Model, protected edmType: CsdlProperty | CsdlNavigationProperty) {}
+  constructor(protected model: Model, protected edmType: CsdlProperty | CsdlNavigationProperty) { }
 
   name() {
     const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.Nullable);
@@ -22,11 +23,10 @@ export class ModelField {
     const enumType = pkg.findEnum(this.edmType.Type);
     const entityType = pkg.findEntity(this.edmType.Type);
     let type = "any";
-    if (enumType !== undefined)
-    {
+    if (enumType !== undefined) {
       type = enumType.importedName!;
       type += this.edmType.Collection ? '[]' : '';
-    } 
+    }
     else if (entityType !== undefined) {
       if (this.edmType.Collection) {
         const collection = pkg.findCollection(this.edmType.Type);
@@ -39,14 +39,14 @@ export class ModelField {
     } else {
       type = toTypescriptType(this.edmType.Type);
       type += this.edmType.Collection ? '[]' : '';
-    } 
+    }
     return type;
   }
 
   resource() {
     const pkg = this.model.getPackage();
     const resourceName = `$$${this.edmType.Name}`;
-    if (this.edmType instanceof CsdlNavigationProperty) { 
+    if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
       return `public ${resourceName}() {
     return this.navigationProperty<${entity?.importedName}>('${this.edmType.Name}');
@@ -64,7 +64,7 @@ export class ModelField {
   getter() {
     const pkg = this.model.getPackage();
     const getterName = `$${this.edmType.Name}`;
-    if (this.edmType instanceof CsdlNavigationProperty) { 
+    if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
       return `public ${getterName}() {
     return this.getAttribute<${entity?.importedName}>('${this.edmType.Name}') as ${entity?.importedName};
@@ -81,7 +81,7 @@ export class ModelField {
   setter() {
     const pkg = this.model.getPackage();
     const setterName = `${this.edmType.Name}$$`;
-    if (this.edmType instanceof CsdlNavigationProperty) { 
+    if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
       return `public ${setterName}(model: ${this.type()} | null, options?: ODataOptions) {
     return this.setReference<${entity?.importedName}>('${this.edmType.Name}', model, options);
@@ -96,7 +96,7 @@ export class ModelField {
   fetch() {
     const pkg = this.model.getPackage();
     const fetchName = `${this.edmType.Name}$`;
-    if (this.edmType instanceof CsdlNavigationProperty) { 
+    if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
       return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName}>) {
     return this.fetchAttribute<${entity?.importedName}>('${this.edmType.Name}', options) as Observable<${entity?.importedName}>;
@@ -142,7 +142,7 @@ export class Model extends Base {
         ...(this.edmType.NavigationProperty ?? []).map((p) => new ModelField(this, p)),
       ],
       callables: this.callables ?? [],
-      navigations: [],
+      navigations: this.navitations(),
     };
   }
   public override name() {
@@ -160,6 +160,7 @@ export class Model extends Base {
     return this.edmType.fullName() + "Model";
   }
   public override importTypes(): string[] {
+    const pkg = this.getPackage();
     const imports = [
       this.entity.fullName()
     ];
@@ -177,6 +178,73 @@ export class Model extends Base {
         imports.push(prop.Type);
       }
     }
+    for (let callable of this.callables ?? []) {
+      imports.push(...callable.importTypes());
+    }
+    const service = pkg.findEntitySet(this.edmType.fullName());
+    if (service) {
+      imports.push(...(service.NavigationPropertyBinding ?? []).map(b => b.entityType()));
+      imports.push(...(service.NavigationPropertyBinding ?? [])
+        .map(b => b.resolvePropertyType((fullName: string) => pkg.findEntityType(fullName)))
+        .filter(e => e)
+        .map(e => e!.fullName())
+      );
+    }
     return imports;
+  }
+
+  public navitations(): string[] {
+    const pkg = this.getPackage();
+    const service = pkg.findEntitySet(this.edmType.fullName());
+    if (service) {
+      const navigations: string[] = [];
+      let properties: CsdlNavigationProperty[] = [];
+      let entity: CsdlEntityType | CsdlComplexType | undefined = this.edmType;
+      while (entity) {
+        properties = [...properties, ...(this.edmType.NavigationProperty ?? [])];
+        if (!entity.BaseType) {
+          break;
+        }
+        entity = this.getPackage().findEntityType(entity.BaseType);
+      }
+      let bindings = service.NavigationPropertyBinding?.filter(binding =>
+        properties.every(p => {
+          const nav = binding.resolveNavigationPropertyType((fullName: string) => pkg.findEntityType(fullName));
+          return p.Name !== nav?.Name;
+        })
+      );
+      return this.renderNavigationPropertyBindings(bindings);
+    }
+    return [];
+  }
+
+  renderNavigationPropertyBindings(bindings: CsdlNavigationPropertyBinding[] | undefined): string[] {
+    const pkg = this.getPackage();
+    let result: string[] = [];
+    let casts: string[] = [];
+    for (let binding of bindings ?? []) {
+      const nav = binding.resolveNavigationPropertyType((fullName: string) => pkg.findEntityType(fullName));
+      const isCollection = nav ? nav.Collection : false;
+      const navEntity = nav ? pkg.findEntityType(nav.Type) : undefined;
+      const bindingEntity = pkg.findEntityType(binding.entityType());
+      const propertyEntity = binding.resolvePropertyType((fullName: string) => pkg.findEntityType(fullName));
+
+      const entity = pkg.findEntity(navEntity?.fullName() || '');
+      if (propertyEntity && bindingEntity && false) {
+
+      }
+      else {
+        const returnType = isCollection ? `ODataCollection<${entity?.importedName}, ODataModel<${entity?.importedName}>>` : `ODataModel<${entity?.importedName}>`;
+        var responseType = isCollection ? "collection" : "model";
+        var methodName = `as${propertyEntity?.Name}` + nav?.Name.substring(0, 1).toUpperCase() + nav?.Name.substring(1);
+        var castEntity = pkg.findEntity(propertyEntity?.fullName() || '');
+
+        // Navigation
+        result.push(`public ${methodName}(options?: ODataQueryArgumentsOptions<${entity?.importedName}>) {
+    return this.fetchNavigationProperty<${entity?.importedName}>('${binding.Path}', '${responseType}', options) as Observable<${returnType}>;
+  }`);
+      }
+    }
+    return result;
   }
 }

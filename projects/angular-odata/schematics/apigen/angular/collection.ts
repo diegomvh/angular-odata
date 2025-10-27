@@ -66,6 +66,9 @@ export class Collection extends Base {
         imports.push(prop.Type);
       }
     }
+    for (let callable of this.callables ?? []) {
+      imports.push(...callable.importTypes());
+    }
     return imports;
   }
 }

@@ -53,6 +53,13 @@ export class CsdlCallable {
     return json;
   }
 
+  bindingParameter() {
+    if (this.IsBound && Array.isArray(this.Parameter) && this.Parameter.length > 0) {
+      return this.Parameter.find((p) => p.Name === BINDING_PARAMETER_NAME);
+    }
+    return undefined;
+  }
+
   name() {
     return `${this.Name}`;
   }

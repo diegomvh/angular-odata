@@ -1,3 +1,5 @@
+import { CsdlEntityContainer } from './csdl/csdl-entity-container';
+import { CsdlEntitySet } from './csdl/csdl-entity-set';
 import { CsdlEnumType } from './csdl/csdl-enum-type';
 import { CsdlAction, CsdlFunction } from './csdl/csdl-function-action';
 import { CsdlReference } from './csdl/csdl-reference';
@@ -56,6 +58,14 @@ export class ODataMetadata {
     }, [] as CsdlComplexType[]);
   }
 
+  entitySets(): CsdlEntitySet[] {
+    return this.Schemas.reduce((acc, s) => {
+      return [...acc, ...(s.EntityContainer ?? [])];
+    }, [] as CsdlEntityContainer[]).reduce((acc, ec) => {
+      return [...acc, ...(ec.EntitySet ?? [])];
+    }, [] as CsdlEntitySet[]);
+  }
+
   findEnumType(fullName: string): CsdlEnumType | undefined {
     return this.enumTypes().find((et) => et.fullName() === fullName);
   }
@@ -66,5 +76,9 @@ export class ODataMetadata {
 
   findComplexType(fullName: string): CsdlComplexType | undefined {
     return this.complexTypes()?.find((ct) => ct.fullName() === fullName);
+  }
+
+  findEntitySet(fullName: string): CsdlEntitySet | undefined {
+    return this.entitySets()?.find((ct) => ct.EntityType === fullName);
   }
 }

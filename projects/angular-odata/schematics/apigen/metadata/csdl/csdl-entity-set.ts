@@ -29,7 +29,7 @@ export class CsdlEntitySet extends CsdlAnnotable {
     this.Name = Name;
     this.EntityType = EntityType;
     this.NavigationPropertyBinding = NavigationPropertyBinding?.map(
-      (n) => new CsdlNavigationPropertyBinding(n),
+      (n) => new CsdlNavigationPropertyBinding(this, n),
     );
     this.IncludeInServiceDocument = IncludeInServiceDocument;
   }

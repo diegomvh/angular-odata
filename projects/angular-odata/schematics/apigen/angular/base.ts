@@ -31,6 +31,24 @@ export class Callable {
     return this.callable.IsBound ?? false;
   }
 
+  importTypes() {
+    const imports: string[] = [];
+    for (let c of this.callables) {
+      if (c.ReturnType && !c.ReturnType.Type.startsWith('Edm.')) {
+        imports.push(c.ReturnType.Type);
+      }
+      if (c.bindingParameter() && !c.bindingParameter()!.Type.startsWith('Edm.')) {
+        imports.push(c.bindingParameter()!.Type);
+      }
+      for (let p of c.Parameter ?? []) {
+        if (!p.Type.startsWith('Edm.')) {
+          imports.push(p.Type);
+        }
+      }
+    }
+    return imports;
+  }
+
   bindingParameter() {
     return this.callable.Parameter?.find((p) => p.Name === BINDING_PARAMETER_NAME);
   }
@@ -155,7 +173,7 @@ export class Callable {
 
   callableMethod() {
     const isFunction = this.callable instanceof CsdlFunction;
-    const { binding, required, optional } = this.parameters();
+    const { required, optional } = this.parameters();
     const parameters = [...required, ...optional];
     const returnType = this.returnType();
     const callableNamespaceQualifiedName = this.callable.IsBound ? this.callable.fullName() : this.callable.Name;
@@ -351,5 +369,9 @@ export class Metadata extends Base {
   
   findComplexType(fullName: string) {
     return this.meta.findComplexType(fullName);
+  }
+
+  findEntitySet(fullName: string) {
+    return this.meta.findEntitySet(fullName);
   }
 }

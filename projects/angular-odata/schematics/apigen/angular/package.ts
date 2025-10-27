@@ -9,6 +9,10 @@ import { Model } from './model';
 import { Collection } from './collection';
 import { Service } from './service';
 import { CsdlAction, CsdlFunction } from '../metadata/csdl/csdl-function-action';
+import { CsdlEnumMember } from '../metadata/csdl/csdl-annotation';
+import { CsdlEnumType } from '../metadata/csdl/csdl-enum-type';
+import { CsdlComplexType, CsdlEntityType } from '../metadata/csdl/csdl-structured-type';
+import { CsdlEntitySet } from '../metadata/csdl/csdl-entity-set';
 
 export class Package {
   metadata: Metadata;
@@ -164,8 +168,24 @@ export class Package {
     return this.enums.find((e) => e.fullName() === fullName);
   }
 
+  findEnumType(fullName: string): CsdlEnumType | undefined {
+    return this.metadata.findEnumType(fullName);
+  }
+
   findEntity(fullName: string): Entity | undefined {
     return this.entities.find((e) => e.fullName() === fullName);
+  }
+
+  findEntityType(fullName: string): CsdlEntityType | undefined {
+    return this.metadata.findEntityType(fullName);
+  }
+
+  findEntitySet(fullName: string): CsdlEntitySet | undefined {
+    return this.metadata.findEntitySet(fullName);
+  }
+
+  findComplexType(fullName: string): CsdlComplexType | undefined {
+    return this.metadata.findComplexType(fullName);
   }
 
   findModel(fullName: string): Model | undefined {

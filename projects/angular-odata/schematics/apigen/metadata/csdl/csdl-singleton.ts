@@ -25,7 +25,7 @@ export class CsdlSingleton extends CsdlAnnotable {
     this.Name = Name;
     this.Type = Type;
     this.NavigationPropertyBindings = NavigationPropertyBindings?.map(
-      (n) => new CsdlNavigationPropertyBinding(n),
+      (n) => new CsdlNavigationPropertyBinding(this, n),
     );
   }
 
