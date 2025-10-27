@@ -30,7 +30,7 @@ import {
 import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
-  static model: typeof ODataModel | null = null;
+  static model: typeof ODataModel<any> | null = null;
   _parent:
     | [ODataModel<any> | ODataCollection<any, ODataModel<any>>, ODataModelField<any> | null]
     | null = null;

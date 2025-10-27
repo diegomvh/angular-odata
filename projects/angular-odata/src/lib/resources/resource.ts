@@ -127,7 +127,7 @@ export class ODataResource<T> {
     }: {
       reset?: boolean;
       annots?: ODataEntityAnnotations<T>;
-      ModelType?: typeof ODataModel;
+      ModelType?: typeof ODataModel<T>;
     },
   ): M;
   asModel(
@@ -139,14 +139,14 @@ export class ODataResource<T> {
     }: {
       reset?: boolean;
       annots?: ODataEntityAnnotations<T>;
-      ModelType?: typeof ODataModel;
+      ModelType?: typeof ODataModel<any>;
     } = {},
   ) {
     reset ??= annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for model`);
-    if (ModelType === undefined) ModelType = this.api.modelForType(type);
+    if (ModelType === undefined) ModelType = this.api.modelForType<T>(type);
     let entitySet = annots?.entitySet;
     if (entitySet !== undefined) {
       resource = this.api.entitySet<T>(entitySet).entity(entity as Partial<T>);
@@ -182,7 +182,7 @@ export class ODataResource<T> {
     }: {
       reset?: boolean;
       annots?: ODataEntitiesAnnotations<T>;
-      CollectionType?: typeof ODataCollection;
+      CollectionType?: typeof ODataCollection<T, M>;
     },
   ): C;
   asCollection(
@@ -194,14 +194,14 @@ export class ODataResource<T> {
     }: {
       reset?: boolean;
       annots?: ODataEntitiesAnnotations<T>;
-      CollectionType?: typeof ODataCollection;
+      CollectionType?: typeof ODataCollection<any, ODataModel<any>>;
     } = {},
   ) {
     reset ??= annots !== undefined;
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type ?? this.incomingType();
     if (type === undefined) throw Error(`No type for collection`);
-    if (CollectionType === undefined) CollectionType = this.api.collectionForType(type);
+    if (CollectionType === undefined) CollectionType = this.api.collectionForType<T>(type);
     let entitySet = annots?.entitySet;
     if (entitySet !== undefined) {
       resource = this.api.entitySet<T>(entitySet);

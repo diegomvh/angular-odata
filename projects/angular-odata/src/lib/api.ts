@@ -62,6 +62,8 @@ export class ODataApi {
   parsers: Map<string, Parser<any>>;
   // Schemas
   schemas: ODataSchema[];
+  models: { [type: string]: typeof ODataModel<any> } = {};
+  collections: { [type: string]: typeof ODataCollection<any, ODataModel<any>> } = {};
 
   constructor(config: ODataApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;
@@ -85,6 +87,8 @@ export class ODataApi {
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
     this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
+    this.models = (config.models ?? {}) as {[type: string]: typeof ODataModel<any>};
+    this.collections = (config.collections ?? {}) as {[type: string]: typeof ODataCollection<any, ODataModel<any>>};
   }
 
   configure(
@@ -458,11 +462,11 @@ export class ODataApi {
   }
   //#endregion
 
-  public findModel(type: string) {
-    return this.findStructuredType<any>(type)?.model;
+  public findModel<T>(type: string) {
+    return (this.models[type] ?? this.findStructuredType<any>(type)?.model) as typeof ODataModel<T> | undefined;
   }
 
-  public createModel(structured: ODataStructuredType<any>) {
+  public createModel<T>(structured: ODataStructuredType<T>) {
     if (structured.model !== undefined) return structured.model;
     // Build Ad-hoc model
     const Model = class extends ODataModel<any> {} as typeof ODataModel;
@@ -478,40 +482,40 @@ export class ODataApi {
     }
     // Store New Model for next time
     structured.model = Model;
-    return Model;
+    return Model as typeof ODataModel<T>;
   }
 
-  public modelForType(type: string) {
-    let Model = this.findModel(type);
+  public modelForType<T>(type: string) {
+    let Model = this.findModel<T>(type);
     if (Model === undefined) {
-      const structured = this.findStructuredType<any>(type);
+      const structured = this.findStructuredType<T>(type);
       if (structured === undefined) throw Error(`No structured type for ${type}`);
-      Model = this.createModel(structured);
+      Model = this.createModel<T>(structured);
     }
     return Model;
   }
 
-  public findCollection(type: string) {
-    return this.findStructuredType<any>(type)?.collection;
+  public findCollection<T>(type: string) {
+    return (this.collections[type] ?? this.findStructuredType<any>(type)?.collection) as typeof ODataCollection<T, ODataModel<T>> | undefined;
   }
 
-  public createCollection(structured: ODataStructuredType<any>, model?: typeof ODataModel<any>) {
+  public createCollection<T>(structured: ODataStructuredType<T>, model?: typeof ODataModel<T>) {
     if (structured.collection !== undefined) return structured.collection;
     if (model === undefined) model = this.createModel(structured);
-    const Collection = class extends ODataCollection<any, ODataModel<any>> {
+    const Collection = class extends ODataCollection<T, ODataModel<T>> {
       static override model = model!;
     } as typeof ODataCollection;
     structured.collection = Collection;
-    return Collection;
+    return Collection as typeof ODataCollection<T, ODataModel<T>>;
   }
 
-  public collectionForType(type: string) {
-    let Collection = this.findCollection(type);
+  public collectionForType<T>(type: string) {
+    let Collection = this.findCollection<T>(type);
     if (Collection === undefined) {
-      const structured = this.findStructuredType<any>(type);
+      const structured = this.findStructuredType<T>(type);
       if (structured === undefined) throw Error(`No structured type for ${type}`);
-      const Model = this.modelForType(type);
-      Collection = this.createCollection(structured, Model);
+      const Model = this.modelForType<T>(type);
+      Collection = this.createCollection<T>(structured, Model) as typeof ODataCollection<T, ODataModel<T>>;
     }
     return Collection;
   }

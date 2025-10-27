@@ -219,6 +219,8 @@ export type ODataApiConfig = {
   parsers?: { [type: string]: Parser<any> };
   schemas?: ODataSchemaConfig[];
   references?: ODataReferenceConfig[];
+  models?: {[type: string]: { new (...params: any[]): any }};
+  collections?: {[type: string]: { new (...params: any[]): any }};
 };
 export type ODataAnnotationConfig = {
   term: string;

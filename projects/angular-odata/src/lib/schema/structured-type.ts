@@ -17,14 +17,14 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
   base?: string;
   parent?: ODataStructuredType<any>;
   children: ODataStructuredType<any>[] = [];
-  model?: typeof ODataModel;
-  collection?: typeof ODataCollection;
+  model?: typeof ODataModel<any>;
+  collection?: typeof ODataCollection<any, ODataModel<any>>;
 
   constructor(config: ODataStructuredTypeConfig, schema: ODataSchema) {
     super(config, schema, new ODataStructuredTypeParser(config, schema.namespace, schema.alias));
     this.base = config.base;
-    this.model = config.model as typeof ODataModel;
-    this.collection = config.collection as typeof ODataCollection;
+    this.model = config.model as typeof ODataModel<any>;
+    this.collection = config.collection as typeof ODataCollection<any, ODataModel<any>>;
   }
 
   configure({ options }: { options: ParserOptions }) {
