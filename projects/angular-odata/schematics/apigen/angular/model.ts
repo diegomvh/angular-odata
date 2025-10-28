@@ -140,10 +140,9 @@ export class Model extends Base {
       type: this.name() + 'Model',
       baseType: this.edmType.BaseType ? this.edmType.BaseType + 'Model' : null,
       entity: this.entity,
-      fields: [
-        ...(this.edmType.Property ?? []).map((p) => new ModelField(this, p)),
-        ...(this.edmType.NavigationProperty ?? []).map((p) => new ModelField(this, p)),
-      ],
+      fields: this.fields(),
+      hasGeoFields: this.hasGeoFields(),
+      geoFields: this.geoFields(),
       callables: this.callables ?? [],
       navigations: this.navitations(),
     };
@@ -199,6 +198,11 @@ export class Model extends Base {
         .map(b => b.resolvePropertyType((fullName: string) => pkg.findEntityType(fullName)))
         .filter(e => e)
         .map(e => e!.fullName())
+      );
+      imports.push(...(service.NavigationPropertyBinding ?? [])
+        .map(b => b.resolveNavigationPropertyType((fullName: string) => pkg.findEntityType(fullName)))
+        .filter(e => e)
+        .map(e => e!.Type)
       );
     }
     return imports;
@@ -257,5 +261,17 @@ export class Model extends Base {
       }
     }
     return result;
+  }
+  public fields(): ModelField[] {
+    return [
+        ...(this.edmType.Property ?? []).map((p) => new ModelField(this, p)),
+        ...(this.edmType.NavigationProperty ?? []).map((p) => new ModelField(this, p)),
+      ];
+  }
+  public geoFields(): ModelField[] {
+    return this.fields().filter((p) => p.isGeoSpatial());
+  }
+  public hasGeoFields(): boolean {
+    return this.geoFields().length > 0;
   }
 }

@@ -12,7 +12,8 @@ import {
   ODataFunctionOptions,
   ODataActionOptions,
   Duration,
-} from 'angular-odata';<% for (let imp of imports) { %>
+} from 'angular-odata';
+<% if (hasGeoFields) { %>import { <% for (let f of geoFields) { %><%= f.type() %>,<% } %> } from 'geojson';<% } %><% for (let imp of imports) { %>
 import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 @Model()

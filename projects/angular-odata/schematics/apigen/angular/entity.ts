@@ -34,6 +34,10 @@ export class EntityProperty {
     }
     return type;
   }
+
+  isGeoSpatial(): boolean {
+    return this.edmType.Type.startsWith('Edm.Geography') || this.edmType.Type.startsWith('Edm.Geometry');
+  }
 }
 
 export class Entity extends Base {
@@ -52,10 +56,9 @@ export class Entity extends Base {
     return {
       type: this.name() + (this.edmType instanceof CsdlEntityType ? 'EntityType' : 'ComplexType'),
       baseType: this.edmType.BaseType,
-      properties: [
-        ...(this.edmType.Property ?? []).map((p) => new EntityProperty(this, p)),
-        ...(this.edmType.NavigationProperty ?? []).map((p) => new EntityProperty(this, p)),
-      ],
+      properties: this.properties(),
+      geoProperties: this.geoProperties(),
+      hasGeoProperties: this.hasGeoProperties(),
     };
   }
   public override name() {
@@ -89,5 +92,17 @@ export class Entity extends Base {
       }
     }
     return imports;
+  }
+  public properties(): EntityProperty[] {
+    return [
+      ...(this.edmType.Property ?? []).map((p) => new EntityProperty(this, p)),
+      ...(this.edmType.NavigationProperty ?? []).map((p) => new EntityProperty(this, p)),
+    ];
+  }
+  public geoProperties(): EntityProperty[] {
+    return this.properties().filter((p) => p.isGeoSpatial());
+  }
+  public hasGeoProperties(): boolean {
+    return this.geoProperties().length > 0;
   }
 }
