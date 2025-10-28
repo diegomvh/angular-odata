@@ -15,7 +15,7 @@ export class ModelField {
   name() {
     const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.Nullable);
     const name = this.edmType.Name;
-    return name + (!required ? '?' : '');
+    return name + (!required ? '?' : '!');
   }
 
   type() {
@@ -39,6 +39,9 @@ export class ModelField {
     } else {
       type = toTypescriptType(this.edmType.Type);
       type += this.edmType.Collection ? '[]' : '';
+    }
+    if (this.edmType.Nullable && !this.edmType.Collection) {
+      type += ' | null';
     }
     return type;
   }
@@ -171,11 +174,19 @@ export class Model extends Base {
     for (let prop of this.edmType?.Property ?? []) {
       if (!prop.Type.startsWith('Edm.')) {
         imports.push(prop.Type);
+        imports.push(prop.Type + 'Model');
+        if (prop.Collection) {
+          imports.push(prop.Type + 'Collection');
+        }
       }
     }
     for (let prop of this.edmType?.NavigationProperty ?? []) {
       if (!prop.Type.startsWith('Edm.')) {
         imports.push(prop.Type);
+        imports.push(prop.Type + 'Model');
+        if (prop.Collection) {
+          imports.push(prop.Type + 'Collection');
+        }
       }
     }
     for (let callable of this.callables ?? []) {

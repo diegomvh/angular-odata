@@ -55,15 +55,24 @@ export class Collection extends Base {
     if (this.edmType.BaseType) {
       imports.push(this.edmType.BaseType);
       imports.push(this.edmType.BaseType + 'Collection');
+      imports.push(this.edmType.BaseType + 'Model');
     }
     for (let prop of this.edmType?.Property ?? []) {
       if (!prop.Type.startsWith('Edm.')) {
         imports.push(prop.Type);
+        imports.push(prop.Type + 'Model');
+        if (prop.Collection) {
+          imports.push(prop.Type + 'Collection');
+        }
       }
     }
     for (let prop of this.edmType?.NavigationProperty ?? []) {
       if (!prop.Type.startsWith('Edm.')) {
         imports.push(prop.Type);
+        imports.push(prop.Type + 'Model');
+        if (prop.Collection) {
+          imports.push(prop.Type + 'Collection');
+        }
       }
     }
     for (let callable of this.callables ?? []) {

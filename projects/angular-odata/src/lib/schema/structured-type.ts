@@ -38,14 +38,7 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
       parserForType: (t: string) => this.api.parserForType(t),
     });
     if (this.model !== undefined) {
-      this.model.meta = this.api.optionsForType<T>(this.type(), {
-        config: this.model.options,
-        structuredType: this,
-      })!;
-      if (this.model.meta !== undefined) {
-        // Configure
-        this.model.meta.configure({ options });
-      }
+      this.api.configureModel<T>(this, this.model);
       if (this.collection !== undefined) {
         this.collection.model = this.model;
       }
