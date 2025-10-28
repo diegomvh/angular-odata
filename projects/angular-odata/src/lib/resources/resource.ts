@@ -114,7 +114,7 @@ export class ODataResource<T> {
     }: {
       reset?: boolean;
       annots?: ODataEntityAnnotations<T>;
-      ModelType?: typeof ODataModel;
+      ModelType?: typeof ODataModel<any>;
     },
   ): ODataModel<T> & ModelInterface<T>;
   asModel<M extends ODataModel<T>>(entity?: Partial<T> | { [name: string]: any }): M;
@@ -127,7 +127,7 @@ export class ODataResource<T> {
     }: {
       reset?: boolean;
       annots?: ODataEntityAnnotations<T>;
-      ModelType?: typeof ODataModel<T>;
+      ModelType?: typeof ODataModel<any>;
     },
   ): M;
   asModel(
@@ -167,7 +167,7 @@ export class ODataResource<T> {
     }: {
       reset?: boolean;
       annots?: ODataEntitiesAnnotations<T>;
-      CollectionType?: typeof ODataCollection;
+      CollectionType?: typeof ODataCollection<any, ODataModel<any>>;
     },
   ): ODataCollection<T, ODataModel<T> & ModelInterface<T>>;
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
@@ -182,7 +182,7 @@ export class ODataResource<T> {
     }: {
       reset?: boolean;
       annots?: ODataEntitiesAnnotations<T>;
-      CollectionType?: typeof ODataCollection<T, M>;
+      CollectionType?: typeof ODataCollection<any, ODataModel<any>>;
     },
   ): C;
   asCollection(

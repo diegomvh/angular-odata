@@ -13,11 +13,11 @@ import type {
 import { ODataEntityService } from './entity';
 
 export class ODataEntitySetService<T> extends ODataEntityService<T> {
-  static Model?: typeof ODataModel;
-  static Collection?: typeof ODataCollection;
+  static Model?: typeof ODataModel<any>;
+  static Collection?: typeof ODataCollection<any, ODataModel<any>>;
 
   model(entity?: Partial<T>, reset?: boolean) {
-    const Service = this.constructor as typeof ODataEntitySetService;
+    const Service = this.constructor as typeof ODataEntitySetService<T>;
     return this.entity().asModel((entity ?? {}) as Partial<T>, {
       reset,
       ModelType: Service.Model,
@@ -25,7 +25,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   }
 
   collection(entities?: Partial<T>[], reset?: boolean) {
-    const Service = this.constructor as typeof ODataEntitySetService;
+    const Service = this.constructor as typeof ODataEntitySetService<T>;
     return this.entities().asCollection((entities ?? []) as Partial<T>[], {
       reset,
       CollectionType: Service.Collection,
