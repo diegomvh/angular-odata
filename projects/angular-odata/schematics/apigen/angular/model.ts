@@ -15,7 +15,7 @@ export class ModelField {
   name() {
     const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.Nullable);
     const name = this.edmType.Name;
-    return name + (!required ? '?' : '!');
+    return name + (!required ? '?' : '');
   }
 
   type() {

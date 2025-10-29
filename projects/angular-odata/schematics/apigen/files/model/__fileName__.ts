@@ -19,7 +19,7 @@ import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 @Model()
 export class <%= classify(name) %><E extends <%= entity.name() %>> extends <% if (baseType) { %><%= toTypescriptType(baseType) %><E><% } else { %>ODataModel<E><% } %> {
   <% for (let field of fields) { %>@ModelField()
-  <%= field.name() %>: <%= field.type() %>;
+  declare <%= field.name() %>: <%= field.type() %>;
   <%= field.resource() %><%= field.getter() %><%= field.setter() %><%= field.fetch() %>
   <% } %>
   <% for (let cal of callables) { %>
