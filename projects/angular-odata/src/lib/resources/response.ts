@@ -37,6 +37,14 @@ export type ODataProperty<T> = {
   annots: ODataPropertyAnnotations<T>;
 };
 
+export type ODataResponseJson<T> = {
+  body: T | null;
+  headers: { [name: string]: string | string[] };
+  status: number;
+  statusText: string;
+  url: string | null;
+}
+
 /**
  * OData Response
  */
@@ -72,13 +80,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
 
   static fromJson<T>(
     req: ODataRequest<T>,
-    json: {
-      body: T | null;
-      headers: { [name: string]: string | string[] };
-      status: number;
-      statusText: string;
-      url: string | null;
-    },
+    json: ODataResponseJson<T>
   ) {
     return new ODataResponse<T>({
       api: req.api,
@@ -91,7 +93,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
   }
 
-  toJson() {
+  toJson(): ODataResponseJson<T>
+  {
     return {
       body: this.body,
       headers: this.headers
