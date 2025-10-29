@@ -4269,7 +4269,7 @@ import {
   ODataResource,
   ODataSingletonResource,
 } from &#x27;../resources&#x27;;
-import { ODataStructuredType } from &#x27;../schema&#x27;;
+import type { ODataStructuredType } from &#x27;../schema&#x27;;
 import { Objects, Strings, Types } from &#x27;../utils&#x27;;
 import { ODataCollection } from &#x27;./collection&#x27;;
 import {
@@ -4283,9 +4283,9 @@ import {
   ModelFieldOptions,
   ModelInterface,
 } from &#x27;./options&#x27;;
-import { EdmType, ParserOptions } from &#x27;../types&#x27;;
-import { ODataEntityAnnotations } from &#x27;../annotations&#x27;;
-import { ODataEntity } from &#x27;../resources/response&#x27;;
+import type { EdmType, ParserOptions } from &#x27;../types&#x27;;
+import type { ODataEntityAnnotations } from &#x27;../annotations&#x27;;
+import type { ODataEntity } from &#x27;../resources/response&#x27;;
 
 export class ODataModel&lt;T&gt; {
   // Properties

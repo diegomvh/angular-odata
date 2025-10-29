@@ -171,7 +171,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:9</a></div>
                             </td>
                         </tr>
 
@@ -246,7 +246,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:15</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:12</a></div>
                         </td>
                     </tr>
 
@@ -273,7 +273,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/metadata/parser.ts:11</a></div>
                         </td>
                     </tr>
 
@@ -292,10 +292,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlReference } from &#x27;./csdl/csdl-reference&#x27;;
-
-import { CsdlSchema } from &#x27;./csdl/csdl-schema&#x27;;
-import { VERSION_4_0 } from &#x27;../constants&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { VERSION_4_0 } from &#x27;../constants&#x27;;
 import { ODataMetadata } from &#x27;./metadata&#x27;;
 
 enum FieldType {
@@ -404,7 +401,7 @@ export class ODataMetadataParser {
       const parser: DOMParser &#x3D; new DOMParser();
       this.document &#x3D; parser.parseFromString(xml, &#x27;text/xml&#x27;);
 
-      this.checkVersion(document);
+      this.checkVersion(this.document);
     } catch (error) {
       throw new Error(&#x27;Unable to parse metadata, &#x27; + error);
     }
@@ -447,9 +444,9 @@ export class ODataMetadataParser {
     return new ODataMetadata(version, references, schemas);
   }
 
-  protected checkVersion(document: Document) {
+  protected checkVersion(doc: Document) {
     // check version
-    const attributes: NamedNodeMap &#x3D; document.documentElement.attributes;
+    const attributes: NamedNodeMap &#x3D; doc.documentElement.attributes;
     if (!attributes) {
       throw new Error(&#x27;OData version is not specified in the metadata&#x27;);
     }

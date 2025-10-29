@@ -243,7 +243,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:6</a></div>
                             </td>
                         </tr>
 
@@ -304,7 +304,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:5</a></div>
                         </td>
                     </tr>
 
@@ -330,7 +330,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:6</a></div>
                         </td>
                     </tr>
 
@@ -438,7 +438,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:51</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:43</a></code>
 </div>
                         </td>
                     </tr>
@@ -483,7 +483,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:76</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:68</a></code>
 </div>
                         </td>
                     </tr>
@@ -564,7 +564,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:61</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:53</a></code>
 </div>
                         </td>
                     </tr>
@@ -654,8 +654,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="42"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:42</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -693,8 +693,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="35"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:35</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="27"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/storage.ts:27</a></div>
                         </td>
                     </tr>
 
@@ -1729,16 +1729,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataRequest, ODataResponse, ODataResponseJson } from &#x27;../resources&#x27;;
 import { ODataBaseCache, ODataCacheEntry } from &#x27;./cache&#x27;;
-
-interface ResponseJson {
-  body: any | null;
-  headers: { [name: string]: string | string[] };
-  status: number;
-  statusText: string;
-  url: string | null;
-}
 
 export class ODataInStorageCache extends ODataBaseCache {
   name: string;
@@ -1792,7 +1784,7 @@ export class ODataInStorageCache extends ODataBaseCache {
   putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
     const scope &#x3D; this.scope(req);
     const tags &#x3D; this.tags(res);
-    this.put&lt;ResponseJson&gt;(req.cacheKey, res.toJson(), {
+    this.put&lt;ODataResponseJson&lt;any&gt;&gt;(req.cacheKey, res.toJson(), {
       timeout: res.options.maxAge,
       scope,
       tags,
@@ -1806,7 +1798,7 @@ export class ODataInStorageCache extends ODataBaseCache {
    */
   getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
     const scope &#x3D; this.scope(req);
-    const data &#x3D; this.get&lt;ResponseJson&gt;(req.cacheKey, { scope });
+    const data &#x3D; this.get&lt;ODataResponseJson&lt;any&gt;&gt;(req.cacheKey, { scope });
 
     return data !&#x3D;&#x3D; undefined ? ODataResponse.fromJson(req, data) : undefined;
   }

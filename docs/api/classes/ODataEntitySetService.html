@@ -286,6 +286,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ODataModel.html" target="_self" >&lt;any | ODataModel&lt;any&gt;&gt;</a></code>
+
+                    </td>
+                </tr>
                     <tr>
                         <td class="col-md-4">
                                 <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:17</a></div>
@@ -308,6 +314,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>&lt;any&gt;</code>
+
+                    </td>
+                </tr>
                     <tr>
                         <td class="col-md-4">
                                 <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:16</a></div>
@@ -506,7 +518,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>attach(model: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                    <code>attach(model: <a href="../objects/OData.html" target="_self">ODataModel&lt;T&gt; | ODataCollection&lt;T | ODataModel&lt;T&gt;&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -537,7 +549,7 @@
                                         <tr>
                                                 <td>model</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModel&lt;T&gt; | ODataCollection&lt;T | ODataModel&lt;T&gt;&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -2069,12 +2081,12 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
 import { Observable, throwError } from &#x27;rxjs&#x27;;
 import { catchError } from &#x27;rxjs/operators&#x27;;
 import { ODataCollection } from &#x27;../models/collection&#x27;;
 import { ODataModel } from &#x27;../models/model&#x27;;
-import {
+import type {
   EntityKey,
   ODataEntity,
   ODataEntityResource,
@@ -2084,11 +2096,11 @@ import {
 import { ODataEntityService } from &#x27;./entity&#x27;;
 
 export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; {
-  static Model?: typeof ODataModel;
-  static Collection?: typeof ODataCollection;
+  static Model?: typeof ODataModel&lt;any&gt;;
+  static Collection?: typeof ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;;
 
   model(entity?: Partial&lt;T&gt;, reset?: boolean) {
-    const Service &#x3D; this.constructor as typeof ODataEntitySetService;
+    const Service &#x3D; this.constructor as typeof ODataEntitySetService&lt;T&gt;;
     return this.entity().asModel((entity ?? {}) as Partial&lt;T&gt;, {
       reset,
       ModelType: Service.Model,
@@ -2096,7 +2108,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   }
 
   collection(entities?: Partial&lt;T&gt;[], reset?: boolean) {
-    const Service &#x3D; this.constructor as typeof ODataEntitySetService;
+    const Service &#x3D; this.constructor as typeof ODataEntitySetService&lt;T&gt;;
     return this.entities().asCollection((entities ?? []) as Partial&lt;T&gt;[], {
       reset,
       CollectionType: Service.Collection,
@@ -2124,7 +2136,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public attach&lt;M extends ODataModel&lt;T&gt;&gt;(model: M): void;
   public attach&lt;C extends ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;&gt;(model: C): void;
-  public attach(model: any): void {
+  public attach(model: ODataModel&lt;T&gt; | ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;): void {
     if (model instanceof ODataModel) {
       model.attach(this.entities().entity());
     } else if (model instanceof ODataCollection) {

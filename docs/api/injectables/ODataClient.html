@@ -13408,10 +13408,10 @@ Where value is: string type or an string name or an instance of resource.</p>
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpClient, HttpEvent, HttpParams } from &#x27;@angular/common/http&#x27;;
 import { Injectable } from &#x27;@angular/core&#x27;;
 import { Observable } from &#x27;rxjs&#x27;;
-import { ODataApi } from &#x27;./api&#x27;;
+import type { ODataApi } from &#x27;./api&#x27;;
 import { ODataConfigLoader } from &#x27;./loaders&#x27;;
-import { ODataCollection, ODataModel } from &#x27;./models/index&#x27;;
-import {
+import type { ODataCollection, ODataModel } from &#x27;./models/index&#x27;;
+import type {
   ODataActionResource,
   ODataBatchResource,
   ODataEntityResource,
@@ -13421,11 +13421,11 @@ import {
   ODataNavigationPropertyResource,
   ODataOptions,
   ODataRequest,
-  ODataResource,
   ODataResponse,
   ODataSegment,
   ODataSingletonResource,
 } from &#x27;./resources/index&#x27;;
+import { ODataResource } from &#x27;./resources/index&#x27;;
 import { ODataSettings } from &#x27;./settings&#x27;;
 
 function addBody&lt;T&gt;(

@@ -831,7 +831,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { Observable } from &#x27;rxjs&#x27;;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
 export type FetchPolicy &#x3D;
@@ -1052,6 +1052,8 @@ export type ODataApiConfig &#x3D; {
   parsers?: { [type: string]: Parser&lt;any&gt; };
   schemas?: ODataSchemaConfig[];
   references?: ODataReferenceConfig[];
+  models?: {[type: string]: { new (...params: any[]): any }};
+  collections?: {[type: string]: { new (...params: any[]): any }};
 };
 export type ODataAnnotationConfig &#x3D; {
   term: string;

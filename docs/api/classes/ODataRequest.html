@@ -1222,8 +1222,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpContext, HttpHeaders, HttpParams } from &#x27;@angular/common/http&#x27;;
-import { ODataApi } from &#x27;../api&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { HttpContext, HttpHeaders, HttpParams } from &#x27;@angular/common/http&#x27;;
+import type { ODataApi } from &#x27;../api&#x27;;
 import {
   $BATCH,
   $QUERY,
@@ -1235,10 +1235,10 @@ import {
   PREFER,
   TEXT_PLAIN,
 } from &#x27;../constants&#x27;;
-import { FetchPolicy, ParserOptions, QueryOption } from &#x27;../types&#x27;;
+import type { FetchPolicy, ParserOptions, QueryOption } from &#x27;../types&#x27;;
 import { Http, Types } from &#x27;../utils&#x27;;
-import { ODataResource } from &#x27;./resource&#x27;;
-import { ODataOptions } from &#x27;./types&#x27;;
+import type { ODataResource } from &#x27;./resource&#x27;;
+import type { ODataOptions } from &#x27;./types&#x27;;
 
 export class ODataRequest&lt;T&gt; {
   readonly api: ODataApi;
