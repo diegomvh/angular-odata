@@ -1,9 +1,4 @@
-import {
-  COMPUTED,
-  DEFAULT_VERSION,
-  DESCRIPTION,
-  LONG_DESCRIPTION,
-} from '../../constants';
+import { COMPUTED, DEFAULT_VERSION, DESCRIPTION, LONG_DESCRIPTION } from '../../constants';
 import { ODataHelper } from '../../helper';
 import { raw } from '../../resources/query';
 import {
@@ -24,10 +19,7 @@ import { ODataEnumTypeParser } from './enum-type';
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;
 type JsonSchemaCustom<T> = {
-  [P in keyof T]?: (
-    schema: any,
-    field: ODataStructuredTypeFieldParser<T[P]>,
-  ) => any;
+  [P in keyof T]?: (schema: any, field: ODataStructuredTypeFieldParser<T[P]>) => any;
 };
 type JsonSchemaExpand<T> = { [P in keyof T]?: JsonSchemaOptions<T[P]> };
 type JsonSchemaRequired<T> = { [P in keyof T]?: boolean };
@@ -50,22 +42,13 @@ export class ODataEntityTypeKey {
 export class ODataReferential {
   property: string;
   referencedProperty: string;
-  constructor({
-    property,
-    referencedProperty,
-  }: {
-    property: string;
-    referencedProperty: string;
-  }) {
+  constructor({ property, referencedProperty }: { property: string; referencedProperty: string }) {
     this.property = property;
     this.referencedProperty = referencedProperty;
   }
 }
 
-export class ODataStructuredTypeFieldParser<T>
-  extends ODataAnnotatable
-  implements FieldParser<T>
-{
+export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implements FieldParser<T> {
   name: string;
   private structured: ODataStructuredTypeParser<any>;
   type: string | EdmType;
@@ -111,29 +94,20 @@ export class ODataStructuredTypeFieldParser<T>
       method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
     } = {},
-  ):
-    | { [name: string]: any }
-    | { [name: string]: any }[]
-    | string[]
-    | undefined {
+  ): { [name: string]: any } | { [name: string]: any }[] | string[] | undefined {
     let errors;
     if (this.collection && Array.isArray(value)) {
       errors = value.map((v) => this.validate(v, { method, navigation })) as {
         [name: string]: any[];
       }[];
     } else if (
-      (this.isStructuredType() &&
-        typeof value === 'object' &&
-        value !== null) ||
+      (this.isStructuredType() && typeof value === 'object' && value !== null) ||
       (this.navigation && value !== undefined)
     ) {
       errors =
         this.structuredType().validate(value, { method, navigation }) ||
         ({} as { [name: string]: any[] });
-    } else if (
-      this.isEnumType() &&
-      (typeof value === 'string' || typeof value === 'number')
-    ) {
+    } else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
       errors = this.enumType().validate(value, { method, navigation });
     } else {
       // IsEdmType
@@ -158,24 +132,18 @@ export class ODataStructuredTypeFieldParser<T>
   }
 
   //#region Deserialize
-  private parse(
-    parser: ODataStructuredTypeParser<T>,
-    value: any,
-    options?: ParserOptions,
-  ): any {
+  private parse(parser: ODataStructuredTypeParser<T>, value: any, options?: ParserOptions): any {
     const type =
       options !== undefined && Types.isPlainObject(value)
         ? ODataHelper[options?.version || DEFAULT_VERSION].type(value)
         : undefined;
     if (type !== undefined) {
-      return parser
-        .childParser((c) => c.isTypeOf(type))
-        .deserialize(value, options);
+      return parser.childParser((c) => c.isTypeOf(type)).deserialize(value, options);
     }
     return parser.deserialize(value, options);
   }
 
-  deserialize(value: any, options?: ParserOptions): T {
+  deserialize(value: any, options?: ParserOptions): T | T[] {
     const parserOptions = { ...this.parserOptions, ...options };
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
@@ -191,19 +159,13 @@ export class ODataStructuredTypeFieldParser<T>
   //#endregion
 
   //#region Serialize
-  private toJson(
-    parser: ODataStructuredTypeParser<T>,
-    value: any,
-    options?: ParserOptions,
-  ): any {
+  private toJson(parser: ODataStructuredTypeParser<T>, value: any, options?: ParserOptions): any {
     const type =
       options !== undefined && Types.isPlainObject(value)
         ? ODataHelper[options?.version || DEFAULT_VERSION].type(value)
         : undefined;
     if (type !== undefined) {
-      return parser
-        .childParser((c) => c.isTypeOf(type))
-        .serialize(value, options);
+      return parser.childParser((c) => c.isTypeOf(type)).serialize(value, options);
     }
     return parser.serialize(value, options);
   }
@@ -317,9 +279,7 @@ export class ODataStructuredTypeFieldParser<T>
   //#endregion
 
   isKey() {
-    return this.structured
-      .keys({ include_parents: true })
-      .some((k) => k.name === this.name);
+    return this.structured.keys({ include_parents: true }).some((k) => k.name === this.name);
   }
 
   hasReferentials() {
@@ -344,26 +304,18 @@ export class ODataStructuredTypeFieldParser<T>
   }
 
   structuredType() {
-    if (!this.isStructuredType())
-      throw new Error('Field are not StrucuturedType');
+    if (!this.isStructuredType()) throw new Error('Field are not StrucuturedType');
     return this.parser as ODataStructuredTypeParser<T>;
   }
 
   field<F>(name: string) {
     if (this.isStructuredType())
-      return (this.parser as ODataStructuredTypeParser<T>).field<F>(
-        name as keyof T,
-      );
-    throw new Error(
-      `The field ${this.name} is not related to a StructuredType`,
-    );
+      return (this.parser as ODataStructuredTypeParser<T>).field<F>(name as keyof T);
+    throw new Error(`The field ${this.name} is not related to a StructuredType`);
   }
 }
 
-export class ODataStructuredTypeParser<T>
-  extends ODataAnnotatable
-  implements Parser<T>
-{
+export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Parser<T> {
   name: string;
   namespace: string;
   open: boolean;
@@ -375,11 +327,7 @@ export class ODataStructuredTypeParser<T>
   private _fields: ODataStructuredTypeFieldParser<any>[] = [];
   parserOptions?: ParserOptions;
 
-  constructor(
-    config: ODataStructuredTypeConfig,
-    namespace: string,
-    alias?: string,
-  ) {
+  constructor(config: ODataStructuredTypeConfig, namespace: string, alias?: string) {
     super(config);
     this.name = config.name;
     this.base = config.base;
@@ -427,9 +375,7 @@ export class ODataStructuredTypeParser<T>
   }
 
   isSupertypeOf(type: string): boolean {
-    return (
-      this.isTypeOf(type) || this.children.some((c) => c.isSupertypeOf(type))
-    );
+    return this.isTypeOf(type) || this.children.some((c) => c.isSupertypeOf(type));
   }
 
   isOpenType() {
@@ -448,9 +394,7 @@ export class ODataStructuredTypeParser<T>
     return match;
   }
 
-  childParser(
-    predicate: (p: ODataStructuredTypeParser<any>) => boolean,
-  ): Parser<any> {
+  childParser(predicate: (p: ODataStructuredTypeParser<any>) => boolean): Parser<any> {
     return this.findChildParser(predicate) || NONE_PARSER;
   }
 
@@ -460,12 +404,7 @@ export class ODataStructuredTypeParser<T>
     const fields = this.fields({
       include_navigation: true,
       include_parents: true,
-    }).filter(
-      (f) =>
-        f.name in value &&
-        value[f.name] !== undefined &&
-        value[f.name] !== null,
-    );
+    }).filter((f) => f.name in value && value[f.name] !== undefined && value[f.name] !== null);
     return {
       ...value,
       ...fields.reduce(
@@ -486,9 +425,7 @@ export class ODataStructuredTypeParser<T>
       include_parents: true,
     }).filter(
       (f) =>
-        f.name in value &&
-        (value as any)[f.name] !== undefined &&
-        (value as any)[f.name] !== null,
+        f.name in value && (value as any)[f.name] !== undefined && (value as any)[f.name] !== null,
     );
     return {
       ...value,
@@ -541,9 +478,7 @@ export class ODataStructuredTypeParser<T>
       ...(include_parents && this.parent !== undefined
         ? this.parent.fields({ include_parents, include_navigation })
         : []),
-      ...this._fields.filter(
-        (field) => include_navigation || !field.navigation,
-      ),
+      ...this._fields.filter((field) => include_navigation || !field.navigation),
     ];
   }
 
@@ -552,11 +487,7 @@ export class ODataStructuredTypeParser<T>
    * @param include_parents Include the parent fields
    * @returns The keys of the structured type
    */
-  keys({
-    include_parents,
-  }: {
-    include_parents: boolean;
-  }): ODataEntityTypeKey[] {
+  keys({ include_parents }: { include_parents: boolean }): ODataEntityTypeKey[] {
     return [
       ...(include_parents && this.parent !== undefined
         ? this.parent.keys({ include_parents })
@@ -566,10 +497,7 @@ export class ODataStructuredTypeParser<T>
   }
 
   isEntityType(): boolean {
-    return (
-      this._keys !== undefined ||
-      (this.parent !== undefined && this.parent.isEntityType())
-    );
+    return this._keys !== undefined || (this.parent !== undefined && this.parent.isEntityType());
   }
 
   isComplexType(): boolean {
@@ -587,8 +515,7 @@ export class ODataStructuredTypeParser<T>
       include_navigation: true,
     }).find((field: ODataStructuredTypeFieldParser<F>) => field.name === name);
     //Throw error if not found
-    if (field === undefined)
-      throw new Error(`${this.name} has no field named ${String(name)}`);
+    if (field === undefined) throw new Error(`${this.name} has no field named ${String(name)}`);
     return field;
   }
 
@@ -627,30 +554,23 @@ export class ODataStructuredTypeParser<T>
     }
     if (!include_computed) {
       fields = fields.filter(
-        (f) =>
-          !f.annotatedValue<boolean>(COMPUTED) || (f.isKey() && include_key),
+        (f) => !f.annotatedValue<boolean>(COMPUTED) || (f.isKey() && include_key),
       );
     }
     return Object.keys(attrs)
       .filter(
         (key) =>
           fields.some((f) => f.name === key) ||
-          (key ==
-            ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG &&
+          (key == ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG &&
             include_etag) ||
-          (key ==
-            ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ID &&
-            include_id),
+          (key == ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ID && include_id),
       )
       .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
   }
 
   resolveKey(
     value: any,
-    {
-      resolve = true,
-      single = true,
-    }: { resolve?: boolean; single?: boolean } = {},
+    { resolve = true, single = true }: { resolve?: boolean; single?: boolean } = {},
   ): any {
     const keyTypes = this.keys({ include_parents: true });
     const key = new Map<string, any>();
@@ -665,9 +585,7 @@ export class ODataStructuredTypeParser<T>
           .find((f: ODataStructuredTypeFieldParser<any>) => f.name === name);
         if (field !== undefined) {
           v = Types.isPlainObject(v) ? v[field.name] : v;
-          structured = field.isStructuredType()
-            ? field.structuredType()
-            : undefined;
+          structured = field.isStructuredType() ? field.structuredType() : undefined;
         }
       }
       if (field !== undefined && v !== undefined) {
@@ -675,9 +593,7 @@ export class ODataStructuredTypeParser<T>
       }
     }
     if (key.size === 0) return undefined;
-    return resolve
-      ? Objects.resolveKey(key, { single })
-      : Object.fromEntries(key);
+    return resolve ? Objects.resolveKey(key, { single }) : Object.fromEntries(key);
   }
 
   defaults(): { [name: string]: any } {
@@ -687,9 +603,7 @@ export class ODataStructuredTypeParser<T>
     }).filter((f) => f.default !== undefined || f.isStructuredType());
     return {
       ...fields.reduce((acc, f) => {
-        let value: any = f.isStructuredType()
-          ? f.structuredType().defaults()
-          : f.default;
+        let value: any = f.isStructuredType() ? f.structuredType().defaults() : f.default;
         return Types.isEmpty(value) ? acc : { ...acc, [f.name]: value };
       }, {}),
     };

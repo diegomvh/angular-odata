@@ -1,9 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
-import {
+import type {
   EntityKey,
   ODataEntity,
   ODataEntityResource,
@@ -13,11 +13,11 @@ import {
 import { ODataEntityService } from './entity';
 
 export class ODataEntitySetService<T> extends ODataEntityService<T> {
-  static Model?: typeof ODataModel;
-  static Collection?: typeof ODataCollection;
+  static Model?: typeof ODataModel<any>;
+  static Collection?: typeof ODataCollection<any, ODataModel<any>>;
 
   model(entity?: Partial<T>, reset?: boolean) {
-    const Service = this.constructor as typeof ODataEntitySetService;
+    const Service = this.constructor as typeof ODataEntitySetService<T>;
     return this.entity().asModel((entity ?? {}) as Partial<T>, {
       reset,
       ModelType: Service.Model,
@@ -25,7 +25,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   }
 
   collection(entities?: Partial<T>[], reset?: boolean) {
-    const Service = this.constructor as typeof ODataEntitySetService;
+    const Service = this.constructor as typeof ODataEntitySetService<T>;
     return this.entities().asCollection((entities ?? []) as Partial<T>[], {
       reset,
       CollectionType: Service.Collection,
@@ -53,7 +53,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    */
   public attach<M extends ODataModel<T>>(model: M): void;
   public attach<C extends ODataCollection<T, ODataModel<T>>>(model: C): void;
-  public attach(model: any): void {
+  public attach(model: ODataModel<T> | ODataCollection<T, ODataModel<T>>): void {
     if (model instanceof ODataModel) {
       model.attach(this.entities().entity());
     } else if (model instanceof ODataCollection) {
@@ -81,10 +81,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * @param withCount Get the count of the entities.
    * @param options The options for the request.
    */
-  public fetchMany(
-    top: number,
-    options?: ODataOptions & { withCount?: boolean },
-  ) {
+  public fetchMany(top: number, options?: ODataOptions & { withCount?: boolean }) {
     return this.entities().fetchMany(top, options);
   }
 
@@ -103,10 +100,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * @param attrs The attributes for the entity.
    * @param options The options for the request.
    */
-  public create(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
+  public create(attrs: Partial<T>, options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.entities().create(attrs, options);
   }
 
@@ -123,8 +117,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     options?: ODataOptions & { etag?: string },
   ): Observable<ODataEntity<T>> {
     const res = this.entity(key);
-    if (!res.hasKey())
-      return throwError(() => new Error('update: Resource without key'));
+    if (!res.hasKey()) return throwError(() => new Error('update: Resource without key'));
     return res.update(attrs, options);
   }
 
@@ -141,8 +134,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     options?: ODataOptions & { etag?: string },
   ): Observable<ODataEntity<T>> {
     const res = this.entity(key);
-    if (!res.hasKey())
-      return throwError(() => new Error('modify: Resource without key'));
+    if (!res.hasKey()) return throwError(() => new Error('modify: Resource without key'));
     return res.modify(attrs, options);
   }
 
@@ -152,13 +144,9 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * @param etag The etag for the entity.
    * @param options The options for the request.
    */
-  public destroy(
-    key: EntityKey<T>,
-    options?: ODataOptions & { etag?: string },
-  ) {
+  public destroy(key: EntityKey<T>, options?: ODataOptions & { etag?: string }) {
     const res = this.entity(key);
-    if (!res.hasKey())
-      return throwError(() => new Error('destroy: Resource without key'));
+    if (!res.hasKey()) return throwError(() => new Error('destroy: Resource without key'));
     return res.destroy(options);
   }
 
@@ -206,17 +194,12 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     let schema = this.structuredTypeSchema;
     if (method === undefined && schema !== undefined && schema.isCompoundKey())
       return throwError(
-        () =>
-          new Error(
-            'save: Composite key require a specific method, use create/update/patch',
-          ),
+        () => new Error('save: Composite key require a specific method, use create/update/patch'),
       );
     let key = schema && schema.resolveKey(attrs);
     if (method === undefined) method = key !== undefined ? 'update' : 'create';
     if ((method === 'update' || method === 'modify') && key === undefined)
-      return throwError(
-        () => new Error("save: Can't update/patch entity without key"),
-      );
+      return throwError(() => new Error("save: Can't update/patch entity without key"));
     return method === 'create'
       ? this.create(attrs, options)
       : method === 'modify'

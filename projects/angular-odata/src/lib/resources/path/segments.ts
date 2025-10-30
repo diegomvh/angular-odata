@@ -32,10 +32,7 @@ function pathSegmentsBuilder(
       path = path.slice(1);
     }
     // HACK: Remove parenthesis
-    if (
-      path.endsWith('()') &&
-      options?.nonParenthesisForEmptyParameterFunction
-    ) {
+    if (path.endsWith('()') && options?.nonParenthesisForEmptyParameterFunction) {
       path = path.substring(0, path.length - 2);
     }
 
@@ -46,9 +43,7 @@ function pathSegmentsBuilder(
     // HACK: Check guid string
     if (
       typeof key === 'string' &&
-      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
-        key,
-      )
+      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)
     ) {
       key = raw(key);
     }
@@ -71,12 +66,7 @@ export const pathAndParamsFromSegments = (
 ): [string, { [name: string]: any }] => {
   const result = segments.reduce(
     (acc, segment) => {
-      const [path, params] = pathSegmentsBuilder(
-        segment,
-        escape,
-        parser,
-        options,
-      );
+      const [path, params] = pathSegmentsBuilder(segment, escape, parser, options);
       acc.paths.push(path);
       acc.params = Object.assign(acc.params, params);
       return acc;
@@ -182,11 +172,9 @@ export class ODataPathSegments {
     if (key)
       segments = segments.filter(
         (s) =>
-          [
-            PathSegment.entitySet,
-            PathSegment.navigationProperty,
-            PathSegment.property,
-          ].indexOf(s.name) !== -1,
+          [PathSegment.entitySet, PathSegment.navigationProperty, PathSegment.property].indexOf(
+            s.name,
+          ) !== -1,
       );
     return segments.map((s) => new SegmentHandler(s));
   }
@@ -209,8 +197,7 @@ export class ODataPathSegments {
 
   get(name: string) {
     let segment = this.find((s) => s.name === name);
-    if (segment === undefined)
-      throw Error(`No Segment for name ${name} was found`);
+    if (segment === undefined) throw Error(`No Segment for name ${name} was found`);
     return new SegmentHandler(segment);
   }
 }

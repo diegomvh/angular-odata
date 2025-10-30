@@ -49,12 +49,8 @@ export class CsdlSchema {
     this.EntityType = EntityType?.map((e) => new CsdlEntityType(this, e));
     this.Function = Function?.map((f) => new CsdlFunction(this, f));
     this.Action = Action?.map((a) => new CsdlAction(this, a));
-    this.EntityContainer = EntityContainer?.map(
-      (e) => new CsdlEntityContainer(this, e),
-    );
-    this.TypeDefinition = TypeDefinition?.map(
-      (t) => new CsdlTypeDefinition(this, t),
-    );
+    this.EntityContainer = EntityContainer?.map((e) => new CsdlEntityContainer(this, e));
+    this.TypeDefinition = TypeDefinition?.map((t) => new CsdlTypeDefinition(this, t));
     this.Term = Term?.map((t) => new CsdlTerm(this, t));
     this.Annotations = Annotations?.map((a) => new CsdlAnnotations(this, a));
   }
@@ -66,10 +62,7 @@ export class CsdlSchema {
     if (this.Alias !== undefined) {
       json['Alias'] = this.Alias;
     }
-    if (
-      Array.isArray(this.EntityContainer) &&
-      this.EntityContainer.length > 0
-    ) {
+    if (Array.isArray(this.EntityContainer) && this.EntityContainer.length > 0) {
       json['EntityContainer'] = this.EntityContainer.map((a) => a.toJson());
     }
     if (Array.isArray(this.EntityType) && this.EntityType.length > 0) {

@@ -1,17 +1,11 @@
-import {
+import type {
   CacheCacheability,
   ODataMetadataType,
   ODataVersion,
   ParserOptions,
   ResponseOptions,
 } from '../types';
-import {
-  DEFAULT_VERSION,
-  MAX_AGE,
-  VERSION_2_0,
-  VERSION_3_0,
-  VERSION_4_0,
-} from '../constants';
+import { DEFAULT_VERSION, MAX_AGE, VERSION_2_0, VERSION_3_0, VERSION_4_0 } from '../constants';
 
 import { ODataHelper } from '../helper';
 
@@ -79,9 +73,7 @@ export class ODataResponseOptions implements ResponseOptions {
         let maxAge = Number(directive.split('=')[1]);
         if (!Number.isNaN(maxAge)) this.maxAge = maxAge;
       }
-      if (
-        ['public', 'private', 'no-cache', 'no-store'].indexOf(directive) !== -1
-      ) {
+      if (['public', 'private', 'no-cache', 'no-store'].indexOf(directive) !== -1) {
         this.cacheability = directive as CacheCacheability;
       }
     });

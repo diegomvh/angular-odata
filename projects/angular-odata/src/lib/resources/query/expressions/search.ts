@@ -83,17 +83,13 @@ export class SearchExpression<T> extends Expression<T> {
   ): SearchExpression<T> {
     return opts(
       {
-        e: (connector: SearchConnector = 'AND') =>
-          new SearchExpression<T>({ connector }),
+        e: (connector: SearchConnector = 'AND') => new SearchExpression<T>({ connector }),
       },
       current ?? new SearchExpression<T>(),
     ) as SearchExpression<T>;
   }
 
-  private _add(
-    node: Renderable,
-    connector?: SearchConnector,
-  ): SearchExpression<T> {
+  private _add(node: Renderable, connector?: SearchConnector): SearchExpression<T> {
     if (connector !== undefined && this._connector !== connector) {
       let children: Renderable[] = [];
       if (this._children.length > 0) {
@@ -130,9 +126,7 @@ export class SearchExpression<T> extends Expression<T> {
       this._children = [...this._children, ...node.children()];
     } else {
       this._children.push(
-        node instanceof SearchExpression && !node.negated()
-          ? syntax.group(node)
-          : node,
+        node instanceof SearchExpression && !node.negated() ? syntax.group(node) : node,
       );
     }
     return this;

@@ -1,4 +1,5 @@
 import { CsdlAnnotable } from './csdl-annotation';
+import { CsdlStructuredType } from './csdl-structured-type';
 
 export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   Name: string;
@@ -6,17 +7,20 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   Collection: boolean;
   Nullable?: boolean;
 
-  constructor({
-    Name,
-    Type,
-    Nullable,
-    Annotation,
-  }: {
-    Name: string;
-    Type: string;
-    Nullable?: boolean;
-    Annotation?: any[];
-  }) {
+  constructor(
+    protected type: CsdlStructuredType,
+    {
+      Name,
+      Type,
+      Nullable,
+      Annotation,
+    }: {
+      Name: string;
+      Type: string;
+      Nullable?: boolean;
+      Annotation?: any[];
+    },
+  ) {
     super({ Annotation });
     this.Name = Name;
     this.Nullable = Nullable;
@@ -32,6 +36,10 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
       Nullable: this.Nullable,
     } as { [key: string]: any };
   }
+
+  isEdmType(): boolean {
+    return this.Type.startsWith('Edm.');
+  }
 }
 
 export class CsdlProperty extends CsdlStructuralProperty {
@@ -42,30 +50,33 @@ export class CsdlProperty extends CsdlStructuralProperty {
   SRID?: string;
   DefaultValue?: string;
 
-  constructor({
-    Name,
-    Type,
-    Nullable,
-    MaxLength,
-    Precision,
-    Scale,
-    Unicode,
-    SRID,
-    DefaultValue,
-    Annotation,
-  }: {
-    Name: string;
-    Type: string;
-    Nullable?: boolean;
-    MaxLength?: number;
-    Precision?: number;
-    Scale?: number;
-    Unicode?: boolean;
-    SRID?: string;
-    DefaultValue?: string;
-    Annotation?: any[];
-  }) {
-    super({ Name, Type, Nullable, Annotation });
+  constructor(
+    protected type: CsdlStructuredType,
+    {
+      Name,
+      Type,
+      Nullable,
+      MaxLength,
+      Precision,
+      Scale,
+      Unicode,
+      SRID,
+      DefaultValue,
+      Annotation,
+    }: {
+      Name: string;
+      Type: string;
+      Nullable?: boolean;
+      MaxLength?: number;
+      Precision?: number;
+      Scale?: number;
+      Unicode?: boolean;
+      SRID?: string;
+      DefaultValue?: string;
+      Annotation?: any[];
+    },
+  ) {
+    super(type, { Name, Type, Nullable, Annotation });
     this.MaxLength = MaxLength;
     this.Precision = Precision;
     this.Scale = Scale;
@@ -104,26 +115,29 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
   public ReferentialConstraints?: CsdlReferentialConstraint[];
   public OnDelete?: CsdlOnDelete;
 
-  constructor({
-    Name,
-    Type,
-    Nullable,
-    Partner,
-    ContainsTarget,
-    ReferentialConstraints,
-    OnDelete,
-    Annotation,
-  }: {
-    Name: string;
-    Type: string;
-    Nullable?: boolean;
-    Partner?: string;
-    ContainsTarget?: boolean;
-    ReferentialConstraints?: any[];
-    OnDelete?: any;
-    Annotation?: any[];
-  }) {
-    super({ Name, Type, Nullable, Annotation });
+  constructor(
+    protected type: CsdlStructuredType,
+    {
+      Name,
+      Type,
+      Nullable,
+      Partner,
+      ContainsTarget,
+      ReferentialConstraints,
+      OnDelete,
+      Annotation,
+    }: {
+      Name: string;
+      Type: string;
+      Nullable?: boolean;
+      Partner?: string;
+      ContainsTarget?: boolean;
+      ReferentialConstraints?: any[];
+      OnDelete?: any;
+      Annotation?: any[];
+    },
+  ) {
+    super(type, { Name, Type, Nullable, Annotation });
     this.Partner = Partner;
     this.ContainsTarget = ContainsTarget;
     this.ReferentialConstraints = ReferentialConstraints?.map(
@@ -140,13 +154,8 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     if (this.ContainsTarget !== undefined) {
       json['ContainsTarget'] = this.ContainsTarget;
     }
-    if (
-      Array.isArray(this.ReferentialConstraints) &&
-      this.ReferentialConstraints.length > 0
-    ) {
-      json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) =>
-        r.toJson(),
-      );
+    if (Array.isArray(this.ReferentialConstraints) && this.ReferentialConstraints.length > 0) {
+      json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) => r.toJson());
     }
     if (this.OnDelete !== undefined) {
       json['OnDelete'] = this.OnDelete;
@@ -159,13 +168,7 @@ export class CsdlReferentialConstraint {
   Property: string;
   ReferencedProperty: string;
 
-  constructor({
-    Property,
-    ReferencedProperty,
-  }: {
-    Property: string;
-    ReferencedProperty: string;
-  }) {
+  constructor({ Property, ReferencedProperty }: { Property: string; ReferencedProperty: string }) {
     this.Property = Property;
     this.ReferencedProperty = ReferencedProperty;
   }

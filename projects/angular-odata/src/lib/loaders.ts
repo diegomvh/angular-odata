@@ -1,5 +1,5 @@
 import { Observable, forkJoin, map, of } from 'rxjs';
-import { ODataApiConfig } from './types';
+import type { ODataApiConfig } from './types';
 import { ODataMetadataParser } from './metadata';
 
 export abstract class ODataConfigLoader {
@@ -7,14 +7,10 @@ export abstract class ODataConfigLoader {
 }
 
 export class ODataConfigSyncLoader implements ODataConfigLoader {
-  constructor(
-    private readonly passedConfigs: ODataApiConfig | ODataApiConfig[],
-  ) {}
+  constructor(private readonly passedConfigs: ODataApiConfig | ODataApiConfig[]) {}
 
   loadConfigs(): Observable<ODataApiConfig[]> {
-    return Array.isArray(this.passedConfigs)
-      ? of(this.passedConfigs)
-      : of([this.passedConfigs]);
+    return Array.isArray(this.passedConfigs) ? of(this.passedConfigs) : of([this.passedConfigs]);
   }
 }
 
@@ -30,9 +26,7 @@ export class ODataConfigAsyncLoader implements ODataConfigLoader {
       ? forkJoin(this.configs$)
       : (this.configs$ as Observable<ODataApiConfig | ODataApiConfig[]>).pipe(
           map((value) =>
-            Array.isArray(value)
-              ? (value as ODataApiConfig[])
-              : ([value] as ODataApiConfig[]),
+            Array.isArray(value) ? (value as ODataApiConfig[]) : ([value] as ODataApiConfig[]),
           ),
         );
   }
@@ -45,9 +39,7 @@ export class ODataMetadataLoader implements ODataConfigLoader {
   ) {}
 
   loadConfigs(): Observable<ODataApiConfig[]> {
-    const configs = Array.isArray(this.baseConfigs)
-      ? this.baseConfigs
-      : [this.baseConfigs];
+    const configs = Array.isArray(this.baseConfigs) ? this.baseConfigs : [this.baseConfigs];
     return this.sources$.pipe(
       map((source) =>
         (Array.isArray(source) ? source : [source]).map((m, i) =>

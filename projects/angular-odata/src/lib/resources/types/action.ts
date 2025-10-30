@@ -93,18 +93,9 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * @param params Parameters to be sent to the action
    * @param options Options for the request
    */
-  call(
-    params: P | null,
-    options?: ODataEntityOptions,
-  ): Observable<ODataEntity<R>>;
-  call(
-    params: P | null,
-    options?: ODataEntitiesOptions,
-  ): Observable<ODataEntities<R>>;
-  call(
-    params: P | null,
-    options?: ODataPropertyOptions,
-  ): Observable<ODataProperty<R>>;
+  call(params: P | null, options?: ODataEntityOptions): Observable<ODataEntity<R>>;
+  call(params: P | null, options?: ODataEntitiesOptions): Observable<ODataEntities<R>>;
+  call(params: P | null, options?: ODataPropertyOptions): Observable<ODataProperty<R>>;
   call(
     params: P | null,
     options?: { alias?: boolean; responseType?: 'blob' } & ODataOptions,
@@ -119,9 +110,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   ): Observable<null>;
   call(
     params: P | null,
-    options: ODataEntityOptions &
-      ODataEntitiesOptions &
-      ODataPropertyOptions = {},
+    options: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions = {},
   ): Observable<any> {
     return this.clone().post(params, options);
   }
@@ -156,15 +145,10 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * @param options Options for the request
    * @returns Observable of the result of the action
    */
-  callModel(
-    params: P | null,
-    options: ODataOptions & { ModelType?: typeof ODataModel } = {},
-  ) {
+  callModel(params: P | null, options: ODataOptions & { ModelType?: typeof ODataModel } = {}) {
     return this.call(params, { responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
-        entity
-          ? this.asModel(entity, { annots, ModelType: options?.ModelType })
-          : null,
+        entity ? this.asModel(entity, { annots, ModelType: options?.ModelType }) : null,
       ),
     );
   }
@@ -215,10 +199,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     });
   }
 
-  callBlob(
-    params: P | null,
-    { alias, ...options }: { alias?: boolean } & ODataOptions = {},
-  ) {
+  callBlob(params: P | null, { alias, ...options }: { alias?: boolean } & ODataOptions = {}) {
     return this.call(params, { responseType: 'blob', alias, ...options });
   }
 }

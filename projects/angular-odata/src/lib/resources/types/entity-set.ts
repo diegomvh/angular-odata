@@ -3,17 +3,9 @@ import { EMPTY } from 'rxjs';
 import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import type { ModelInterface, ODataCollection, ODataModel } from '../../models';
-import {
-  PathSegment,
-  QueryOption,
-  ODataStructuredTypeFieldConfig,
-} from '../../types';
+import { PathSegment, QueryOption, ODataStructuredTypeFieldConfig } from '../../types';
 import { ODataPathSegments } from '../path';
-import {
-  ApplyExpression,
-  ApplyExpressionBuilder,
-  ODataQueryOptions,
-} from '../query';
+import { ApplyExpression, ApplyExpressionBuilder, ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
@@ -50,10 +42,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   override transform<R>(
-    opts: (
-      builder: ApplyExpressionBuilder<T>,
-      current?: ApplyExpression<T>,
-    ) => ApplyExpression<T>,
+    opts: (builder: ApplyExpressionBuilder<T>, current?: ApplyExpression<T>) => ApplyExpression<T>,
     {
       type,
       fields,
@@ -97,14 +86,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   cast<C>(type: string) {
     const thisType = this.incomingType();
-    const baseSchema =
-      thisType !== undefined ? this.api.structuredType(thisType) : undefined;
+    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
     const castSchema = this.api.findStructuredType<C>(type);
-    if (
-      castSchema !== undefined &&
-      baseSchema !== undefined &&
-      !castSchema.isSubtypeOf(baseSchema)
-    )
+    if (castSchema !== undefined && baseSchema !== undefined && !castSchema.isSubtypeOf(baseSchema))
       throw new Error(`cast: Cannot cast to ${type}`);
     const segments = this.cloneSegments();
     segments.add(PathSegment.type, type).incomingType(type);
@@ -115,10 +99,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   //#region Requests
-  protected override post(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<any> {
+  protected override post(attrs: Partial<T>, options?: ODataOptions): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
@@ -133,10 +114,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
-  create(
-    attrs: Partial<T>,
-    options?: ODataOptions,
-  ): Observable<ODataEntity<T>> {
+  create(attrs: Partial<T>, options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.post(attrs, options);
   }
 
@@ -169,9 +147,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       return res.fetch(options);
     };
     return fetch().pipe(
-      expand(({ annots }) =>
-        annots.skip || annots.skiptoken ? fetch(annots) : EMPTY,
-      ),
+      expand(({ annots }) => (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
       map(({ entities, annots }) => ({ entities: entities ?? [], annots })),
       reduce((acc, { entities, annots }) => ({
         entities: [...(acc.entities ?? []), ...(entities ?? [])],
@@ -199,9 +175,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       return res.fetch(options);
     };
     return fetch({ top }).pipe(
-      expand(({ annots }) =>
-        annots.skip || annots.skiptoken ? fetch(annots) : EMPTY,
-      ),
+      expand(({ annots }) => (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
       map(({ entities, annots }) => ({ entities: entities ?? [], annots })),
       reduce((acc, { entities, annots }) => ({
         entities: [...(acc.entities ?? []), ...(entities ?? [])],

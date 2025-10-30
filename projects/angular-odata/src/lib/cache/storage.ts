@@ -1,13 +1,5 @@
-import { ODataRequest, ODataResponse } from '../resources';
+import { ODataRequest, ODataResponse, ODataResponseJson } from '../resources';
 import { ODataBaseCache, ODataCacheEntry } from './cache';
-
-interface ResponseJson {
-  body: any | null;
-  headers: { [name: string]: string | string[] };
-  status: number;
-  statusText: string;
-  url: string | null;
-}
 
 export class ODataInStorageCache extends ODataBaseCache {
   name: string;
@@ -33,10 +25,7 @@ export class ODataInStorageCache extends ODataBaseCache {
    * Store the cache in the storage
    */
   store() {
-    this.storage.setItem(
-      this.name,
-      JSON.stringify(Array.from(this.entries.entries())),
-    );
+    this.storage.setItem(this.name, JSON.stringify(Array.from(this.entries.entries())));
   }
 
   /**
@@ -64,7 +53,7 @@ export class ODataInStorageCache extends ODataBaseCache {
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     const scope = this.scope(req);
     const tags = this.tags(res);
-    this.put<ResponseJson>(req.cacheKey, res.toJson(), {
+    this.put<ODataResponseJson<any>>(req.cacheKey, res.toJson(), {
       timeout: res.options.maxAge,
       scope,
       tags,
@@ -78,7 +67,7 @@ export class ODataInStorageCache extends ODataBaseCache {
    */
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
     const scope = this.scope(req);
-    const data = this.get<ResponseJson>(req.cacheKey, { scope });
+    const data = this.get<ODataResponseJson<any>>(req.cacheKey, { scope });
 
     return data !== undefined ? ODataResponse.fromJson(req, data) : undefined;
   }

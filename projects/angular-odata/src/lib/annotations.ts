@@ -1,6 +1,6 @@
-import { ODataContext, ODataVersionHelper } from './helper';
+import type { ODataContext, ODataVersionHelper } from './helper';
 
-import { ODataMetadataType } from './types';
+import type { ODataMetadataType } from './types';
 
 export abstract class ODataAnnotations<T> {
   constructor(
@@ -9,10 +9,7 @@ export abstract class ODataAnnotations<T> {
     protected context?: ODataContext,
   ) {}
 
-  attributes(
-    data: { [name: string]: any },
-    metadata: ODataMetadataType,
-  ): Partial<T> {
+  attributes(data: { [name: string]: any }, metadata: ODataMetadataType): Partial<T> {
     return this.helper.attributes(data, metadata) as Partial<T>;
   }
 
@@ -47,11 +44,7 @@ export class ODataPropertyAnnotations<T> extends ODataAnnotations<T> {
   }
 
   clone(): ODataPropertyAnnotations<any> {
-    return new ODataPropertyAnnotations<any>(
-      this.helper,
-      new Map(this.annotations),
-      this.context,
-    );
+    return new ODataPropertyAnnotations<any>(this.helper, new Map(this.annotations), this.context);
   }
 
   data(data: { [name: string]: any }) {
@@ -69,11 +62,7 @@ export class ODataEntityAnnotations<T> extends ODataAnnotations<T> {
   }
 
   clone(): ODataEntityAnnotations<any> {
-    return new ODataEntityAnnotations<any>(
-      this.helper,
-      new Map(this.annotations),
-      this.context,
-    );
+    return new ODataEntityAnnotations<any>(this.helper, new Map(this.annotations), this.context);
   }
 
   data(data: { [name: string]: any }) {
@@ -159,11 +148,7 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
   }
 
   clone(): ODataEntitiesAnnotations<any> {
-    return new ODataEntitiesAnnotations<any>(
-      this.helper,
-      new Map(this.annotations),
-      this.context,
-    );
+    return new ODataEntitiesAnnotations<any>(this.helper, new Map(this.annotations), this.context);
   }
 
   data(data: { [name: string]: any }) {
@@ -197,9 +182,7 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
   }
 
   get skiptoken() {
-    let match = (this.nextLink || '').match(
-      /[&?]{1}\$skiptoken=([\d\w\s'\-]+)/,
-    );
+    let match = (this.nextLink || '').match(/[&?]{1}\$skiptoken=([\d\w\s'\-]+)/);
     return match !== null ? match[1] : undefined;
   }
 

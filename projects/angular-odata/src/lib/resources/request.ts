@@ -1,5 +1,5 @@
-import { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
-import { ODataApi } from '../api';
+import type { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
+import type { ODataApi } from '../api';
 import {
   $BATCH,
   $QUERY,
@@ -11,10 +11,10 @@ import {
   PREFER,
   TEXT_PLAIN,
 } from '../constants';
-import { FetchPolicy, ParserOptions, QueryOption } from '../types';
+import type { FetchPolicy, ParserOptions, QueryOption } from '../types';
 import { Http, Types } from '../utils';
-import { ODataResource } from './resource';
-import { ODataOptions } from './types';
+import type { ODataResource } from './resource';
+import type { ODataOptions } from './types';
 
 export class ODataRequest<T> {
   readonly api: ODataApi;
@@ -58,11 +58,7 @@ export class ODataRequest<T> {
     params?:
       | HttpParams
       | {
-          [param: string]:
-            | string
-            | number
-            | boolean
-            | ReadonlyArray<string | number | boolean>;
+          [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
         };
     responseType?:
       | 'arraybuffer'
@@ -91,13 +87,10 @@ export class ODataRequest<T> {
 
     // The Body
     this._body = init.body !== undefined ? init.body : null;
-    if (this._body !== null)
-      this._body = this.resource.serialize(this._body, init.parserOptions);
+    if (this._body !== null) this._body = this.resource.serialize(this._body, init.parserOptions);
 
     this.withCredentials =
-      init.withCredentials === undefined
-        ? this.api.options.withCredentials
-        : init.withCredentials;
+      init.withCredentials === undefined ? this.api.options.withCredentials : init.withCredentials;
     this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
     this.bodyQueryOptions = [
       ...(this.api.options.bodyQueryOptions || []),
@@ -105,23 +98,15 @@ export class ODataRequest<T> {
     ];
 
     // The Path and Params from resource
-    const [resourcePath, resourceParams] = this.resource.pathAndParams(
-      init.parserOptions,
-    );
+    const [resourcePath, resourceParams] = this.resource.pathAndParams(init.parserOptions);
     this._path = resourcePath;
 
     //#region Headers
     const customHeaders: { [name: string]: string | string[] } = {};
     if (typeof init.etag === 'string') {
-      if (
-        this.api.options.etag.ifMatch &&
-        ['PUT', 'PATCH', 'DELETE'].indexOf(this._method) !== -1
-      )
+      if (this.api.options.etag.ifMatch && ['PUT', 'PATCH', 'DELETE'].indexOf(this._method) !== -1)
         customHeaders[IF_MATCH_HEADER] = init.etag;
-      else if (
-        this.api.options.etag.ifNoneMatch &&
-        ['GET'].indexOf(this._method) !== -1
-      )
+      else if (this.api.options.etag.ifNoneMatch && ['GET'].indexOf(this._method) !== -1)
         customHeaders[IF_NONE_MATCH_HEADER] = init.etag;
     }
 
@@ -131,17 +116,13 @@ export class ODataRequest<T> {
       accept.push(`odata.metadata=${this.api.options.accept?.metadata}`);
     // IEEE754
     if (this.api.options.accept?.ieee754Compatible !== undefined)
-      accept.push(
-        `IEEE754Compatible=${this.api.options.accept?.ieee754Compatible}`,
-      );
+      accept.push(`IEEE754Compatible=${this.api.options.accept?.ieee754Compatible}`);
     // streaming
     if (this.api.options.accept?.streaming !== undefined)
       accept.push(`streaming=${this.api.options.accept?.streaming}`);
     // ExponentialDecimals
     if (this.api.options.accept?.exponentialDecimals !== undefined)
-      accept.push(
-        `ExponentialDecimals=${this.api.options.accept?.exponentialDecimals}`,
-      );
+      accept.push(`ExponentialDecimals=${this.api.options.accept?.exponentialDecimals}`);
     if (accept.length > 0)
       customHeaders[ACCEPT] = [
         `${APPLICATION_JSON};${accept.join(';')}`,
@@ -157,30 +138,19 @@ export class ODataRequest<T> {
     )
       prefer.push(`return=${this.api.options.prefer?.return}`);
     // MaxPageSize
-    if (
-      this.api.options.prefer?.maxPageSize !== undefined &&
-      ['GET'].indexOf(this._method) !== -1
-    )
+    if (this.api.options.prefer?.maxPageSize !== undefined && ['GET'].indexOf(this._method) !== -1)
       prefer.push(`odata.maxpagesize=${this.api.options.prefer?.maxPageSize}`);
     // Annotations
     if (
       this.api.options.prefer?.includeAnnotations !== undefined &&
       ['GET'].indexOf(this._method) !== -1
     )
-      prefer.push(
-        `odata.include-annotations=${this.api.options.prefer?.includeAnnotations}`,
-      );
+      prefer.push(`odata.include-annotations=${this.api.options.prefer?.includeAnnotations}`);
     // Omit Null Values
-    if (
-      this.api.options.prefer?.omitNullValues === true &&
-      ['GET'].indexOf(this._method) !== -1
-    )
+    if (this.api.options.prefer?.omitNullValues === true && ['GET'].indexOf(this._method) !== -1)
       prefer.push(`omit-values=nulls`);
     // Continue on Error
-    if (
-      this.api.options.prefer?.continueOnError === true &&
-      ['POST'].indexOf(this._method) !== -1
-    )
+    if (this.api.options.prefer?.continueOnError === true && ['POST'].indexOf(this._method) !== -1)
       prefer.push(`odata.continue-on-error`);
     if (prefer.length > 0) customHeaders[PREFER] = prefer;
     this._headers = Http.mergeHttpHeaders(
@@ -192,10 +162,7 @@ export class ODataRequest<T> {
 
     //#region Params
     const customParams: { [name: string]: string | string[] } = {};
-    if (
-      ['POST', 'PUT', 'PATCH'].indexOf(this._method) !== -1 &&
-      '$select' in resourceParams
-    ) {
+    if (['POST', 'PUT', 'PATCH'].indexOf(this._method) !== -1 && '$select' in resourceParams) {
       customParams['$select'] = resourceParams['$select'];
     }
     if (['POST'].indexOf(this._method) !== -1 && '$expand' in resourceParams) {
@@ -205,21 +172,11 @@ export class ODataRequest<T> {
       Object.assign(customParams, resourceParams);
     }
 
-    const params = Http.mergeHttpParams(
-      this.api.options.params,
-      customParams,
-      init.params || {},
-    );
+    const params = Http.mergeHttpParams(this.api.options.params, customParams, init.params || {});
 
     this._params =
       this._responseType === 'entity'
-        ? Http.withoutHttpParams(params, [
-            '$filter',
-            '$orderby',
-            '$count',
-            '$skip',
-            '$top',
-          ])
+        ? Http.withoutHttpParams(params, ['$filter', '$orderby', '$count', '$skip', '$top'])
         : params;
     //#endregion
   }
@@ -317,9 +274,7 @@ export class ODataRequest<T> {
   }
 
   get pathWithParams() {
-    return this.params.keys().length > 0
-      ? `${this.path}?${this.params}`
-      : this.path;
+    return this.params.keys().length > 0 ? `${this.path}?${this.params}` : this.path;
   }
 
   get url() {
@@ -331,9 +286,7 @@ export class ODataRequest<T> {
   }
 
   get cacheKey() {
-    return this._params.keys().length > 0
-      ? `${this._path}?${this._params}`
-      : this._path;
+    return this._params.keys().length > 0 ? `${this._path}?${this._params}` : this._path;
   }
 
   isQueryBody() {

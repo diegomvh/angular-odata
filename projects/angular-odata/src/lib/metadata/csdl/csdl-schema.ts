@@ -4,7 +4,7 @@ import { CsdlEnumType } from './csdl-enum-type';
 import { CsdlEntityType, CsdlComplexType } from './csdl-structured-type';
 import { CsdlFunction, CsdlAction } from './csdl-function-action';
 import { CsdlEntityContainer } from './csdl-entity-container';
-import { ODataSchemaConfig } from '../../types';
+import type { ODataSchemaConfig } from '../../types';
 
 export class CsdlSchema {
   Namespace: string;
@@ -50,12 +50,8 @@ export class CsdlSchema {
     this.EntityType = EntityType?.map((e) => new CsdlEntityType(this, e));
     this.Function = Function?.map((f) => new CsdlFunction(this, f));
     this.Action = Action?.map((a) => new CsdlAction(this, a));
-    this.EntityContainer = EntityContainer?.map(
-      (e) => new CsdlEntityContainer(this, e),
-    );
-    this.TypeDefinition = TypeDefinition?.map(
-      (t) => new CsdlTypeDefinition(this, t),
-    );
+    this.EntityContainer = EntityContainer?.map((e) => new CsdlEntityContainer(this, e));
+    this.TypeDefinition = TypeDefinition?.map((t) => new CsdlTypeDefinition(this, t));
     this.Term = Term?.map((t) => new CsdlTerm(this, t));
     this.Annotations = Annotations?.map((a) => new CsdlAnnotations(this, a));
   }
@@ -67,10 +63,7 @@ export class CsdlSchema {
     if (this.Alias !== undefined) {
       json['Alias'] = this.Alias;
     }
-    if (
-      Array.isArray(this.EntityContainer) &&
-      this.EntityContainer.length > 0
-    ) {
+    if (Array.isArray(this.EntityContainer) && this.EntityContainer.length > 0) {
       json['EntityContainer'] = this.EntityContainer.map((a) => a.toJson());
     }
     if (Array.isArray(this.EntityType) && this.EntityType.length > 0) {
@@ -105,9 +98,7 @@ export class CsdlSchema {
       namespace: this.Namespace,
       alias: base?.alias ?? this.Alias,
       annotations: this.Annotations?.map((t) => t.toConfig()),
-      enums: this.EnumType?.map((t) =>
-        t.toConfig(base?.enums?.find((cs) => cs.name === t.Name)),
-      ),
+      enums: this.EnumType?.map((t) => t.toConfig(base?.enums?.find((cs) => cs.name === t.Name))),
       entities: [
         ...(this.ComplexType ?? []).map((t) =>
           t.toConfig(base?.entities?.find((cs) => cs.name === t.Name)),

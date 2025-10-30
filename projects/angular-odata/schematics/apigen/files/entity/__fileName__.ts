@@ -1,4 +1,5 @@
-import { Duration } from 'angular-odata';<% for (let imp of imports) { %>
+import { Duration } from 'angular-odata';
+<% if (hasGeoProperties) { %>import { <% for (let p of geoProperties) { %><%= p.type() %>,<% } %> } from 'geojson';<% } %><% for (let imp of imports) { %>
 import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 export const <%= type %> = '<%= fullName %>';

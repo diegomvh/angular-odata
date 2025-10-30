@@ -25,7 +25,7 @@ export class CsdlSingleton extends CsdlAnnotable {
     this.Name = Name;
     this.Type = Type;
     this.NavigationPropertyBindings = NavigationPropertyBindings?.map(
-      (n) => new CsdlNavigationPropertyBinding(n),
+      (n) => new CsdlNavigationPropertyBinding(this, n),
     );
   }
 
@@ -39,9 +39,7 @@ export class CsdlSingleton extends CsdlAnnotable {
       Array.isArray(this.NavigationPropertyBindings) &&
       this.NavigationPropertyBindings.length > 0
     ) {
-      json['NavigationPropertyBindings'] = this.NavigationPropertyBindings.map(
-        (n) => n.toJson(),
-      );
+      json['NavigationPropertyBindings'] = this.NavigationPropertyBindings.map((n) => n.toJson());
     }
     return json;
   }

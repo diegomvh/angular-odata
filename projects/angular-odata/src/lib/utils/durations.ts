@@ -23,19 +23,14 @@ export const Durations = {
     }
     let duration: Duration = {};
     duration.sign = matches[1] === '-' ? -1 : 1;
-    return [
-      'years',
-      'months',
-      'weeks',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-    ].reduce((acc: any, name, index) => {
-      const v = parseFloat(matches[index + 2]);
-      if (!Number.isNaN(v)) acc[name] = v;
-      return acc;
-    }, duration) as Duration;
+    return ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].reduce(
+      (acc: any, name, index) => {
+        const v = parseFloat(matches[index + 2]);
+        if (!Number.isNaN(v)) acc[name] = v;
+        return acc;
+      },
+      duration,
+    ) as Duration;
   },
   toString(v: Duration): string {
     return [

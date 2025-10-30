@@ -11,6 +11,7 @@ import {
 } from '../metadata/csdl/csdl-function-action';
 import { makeRelativePath, toTypescriptType } from '../utils';
 import { ODataMetadata } from '../metadata';
+import { Package } from './package';
 
 export class Callable {
   callables: CsdlCallable[] = [];
@@ -30,39 +31,48 @@ export class Callable {
     return this.callable.IsBound ?? false;
   }
 
+  importTypes() {
+    const imports: string[] = [];
+    for (let c of this.callables) {
+      if (c.ReturnType && !c.ReturnType.Type.startsWith('Edm.')) {
+        imports.push(c.ReturnType.Type);
+      }
+      if (c.bindingParameter() && !c.bindingParameter()!.Type.startsWith('Edm.')) {
+        imports.push(c.bindingParameter()!.Type);
+      }
+      for (let p of c.Parameter ?? []) {
+        if (!p.Type.startsWith('Edm.')) {
+          imports.push(p.Type);
+        }
+      }
+    }
+    return imports;
+  }
+
   bindingParameter() {
-    return this.callable.Parameter?.find(
-      (p) => p.Name === BINDING_PARAMETER_NAME,
-    );
+    return this.callable.Parameter?.find((p) => p.Name === BINDING_PARAMETER_NAME);
   }
 
   parameters() {
-    const parameters = this.callables.reduce(
-      (acc: CsdlParameter[], c: CsdlCallable) => {
-        for (let param of c.Parameter ?? []) {
-          if (acc.some((p) => p.Name === param.Name)) continue;
-          acc.push(param);
-        }
-        return acc;
-      },
-      [] as CsdlParameter[],
-    );
+    const parameters = this.callables.reduce((acc: CsdlParameter[], c: CsdlCallable) => {
+      for (let param of c.Parameter ?? []) {
+        if (acc.some((p) => p.Name === param.Name)) continue;
+        acc.push(param);
+      }
+      return acc;
+    }, [] as CsdlParameter[]);
     const names = parameters.map((p) => p.Name);
     const binding = parameters.find((p) => p.Name === BINDING_PARAMETER_NAME);
     const inAllCallables = names.filter(
       (n) =>
         n !== BINDING_PARAMETER_NAME &&
-        this.callables.every((c) =>
-          (c.Parameter ?? []).some((p) => p.Name === n),
-        ),
+        this.callables.every((c) => (c.Parameter ?? []).some((p) => p.Name === n)),
     );
     const required = parameters.filter(
-      (p) =>
-        p.Name !== BINDING_PARAMETER_NAME && inAllCallables.includes(p.Name),
+      (p) => p.Name !== BINDING_PARAMETER_NAME && inAllCallables.includes(p.Name),
     );
     const optional = parameters.filter(
-      (p) =>
-        p.Name !== BINDING_PARAMETER_NAME && !inAllCallables.includes(p.Name),
+      (p) => p.Name !== BINDING_PARAMETER_NAME && !inAllCallables.includes(p.Name),
     );
     return {
       binding,
@@ -84,16 +94,12 @@ export class Callable {
     const methodName = strings.camelize(this.callable.Name);
     const { binding, required, optional } = this.parameters();
     const parameters = [...required, ...optional];
-    const bindingType =
-      binding !== undefined ? toTypescriptType(binding.Type) : '';
+    const bindingType = binding !== undefined ? toTypescriptType(binding.Type) : '';
     const returnType = this.returnType();
-    const retType =
-      returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
     const bindingMethod = !binding?.Collection ? 'entity' : 'entities';
     const baseMethod = isFunction ? 'function' : 'action';
-    const keyParameter = !binding?.Collection
-      ? `key: EntityKey<${bindingType}>`
-      : '';
+    const keyParameter = !binding?.Collection ? `key: EntityKey<${bindingType}>` : '';
     const key = !binding?.Collection ? `key` : '';
     const parametersType =
       parameters.length === 0
@@ -125,16 +131,12 @@ export class Callable {
           : returnType?.Type.startsWith('Edm.')
             ? 'property'
             : 'entity';
-    const retType =
-      returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
 
-    const bindingType =
-      binding !== undefined ? toTypescriptType(binding.Type) : '';
+    const bindingType = binding !== undefined ? toTypescriptType(binding.Type) : '';
     const baseMethod = isFunction ? 'callFunction' : 'callAction';
     const parametersCall =
-      parameters.length === 0
-        ? 'null'
-        : `{${parameters.map((p) => p.Name).join(', ')}}`;
+      parameters.length === 0 ? 'null' : `{${parameters.map((p) => p.Name).join(', ')}}`;
 
     // Method arguments
     let args = !binding?.Collection ? [`key: EntityKey<${bindingType}>`] : [];
@@ -168,10 +170,72 @@ export class Callable {
     return this.${baseMethod}(${parametersCall}, this.${methodResourceName}(${key}), '${responseType}', options);
   }`;
   }
+
+  callableMethod() {
+    const isFunction = this.callable instanceof CsdlFunction;
+    const { required, optional } = this.parameters();
+    const parameters = [...required, ...optional];
+    const returnType = this.returnType();
+    const callableNamespaceQualifiedName = this.callable.IsBound
+      ? this.callable.fullName()
+      : this.callable.Name;
+
+    const methodName = strings.camelize(this.callable.Name);
+    const responseType =
+      returnType === undefined
+        ? 'none'
+        : returnType?.Collection
+          ? 'collection'
+          : returnType?.Type.startsWith('Edm.')
+            ? 'property'
+            : 'model';
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+
+    const baseMethod = isFunction ? 'callFunction' : 'callAction';
+    const parametersCall =
+      parameters.length === 0 ? 'null' : `{${parameters.map((p) => p.Name).join(', ')}}`;
+
+    // Method arguments
+    let args: string[] = [];
+    args = [
+      ...args,
+      ...(required.length === 0
+        ? []
+        : required.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}`)),
+    ];
+    args = [
+      ...args,
+      ...(optional.length === 0
+        ? []
+        : optional.map((p) => `${p.Name}?: ${toTypescriptType(p.Type)}`)),
+    ];
+    const optionsType =
+      returnType !== undefined && returnType.Type.startsWith('Edm.')
+        ? isFunction
+          ? 'ODataOptions & {alias?: boolean}'
+          : 'ODataOptions'
+        : isFunction
+          ? `ODataFunctionOptions<${retType}>`
+          : `ODataActionOptions<${retType}>`;
+    const fargs = [...args, `options?: ${optionsType}`];
+
+    let types = 'null';
+    if (parameters.length > 0) {
+      types = `{${args.join(', ')}}`;
+    }
+
+    // Render
+    return `public ${methodName}(${fargs.join(', ')}) {
+    return this.${baseMethod}<${types}, ${retType}>('${callableNamespaceQualifiedName}', ${parametersCall}, '${responseType}', options);
+  }`;
+  }
 }
 
 export abstract class Base {
-  constructor(protected options: ApiGenSchema) {}
+  constructor(
+    protected pkg: Package,
+    protected options: ApiGenSchema,
+  ) {}
 
   public abstract name(): string;
   public abstract fileName(): string;
@@ -235,11 +299,15 @@ export abstract class Base {
   public addCallables(callables: Callable[]) {
     callables.forEach((r) => this.addCallable(r));
   }
+
+  public getPackage() {
+    return this.pkg;
+  }
 }
 
 export class Index extends Base {
-  constructor(options: ApiGenSchema) {
-    super(options);
+  constructor(pkg: Package, options: ApiGenSchema) {
+    super(pkg, options);
   }
   public override template(): Source {
     return url('./files/index');
@@ -266,10 +334,11 @@ export class Index extends Base {
 
 export class Metadata extends Base {
   constructor(
+    pkg: Package,
     options: ApiGenSchema,
     private meta: ODataMetadata,
   ) {
-    super(options);
+    super(pkg, options);
   }
   public override template(): Source {
     return url('./files/metadata');
@@ -291,5 +360,21 @@ export class Metadata extends Base {
   }
   public override importTypes(): string[] {
     return [];
+  }
+
+  findEnumType(fullName: string) {
+    return this.meta.findEnumType(fullName);
+  }
+
+  findEntityType(fullName: string) {
+    return this.meta.findEntityType(fullName);
+  }
+
+  findComplexType(fullName: string) {
+    return this.meta.findComplexType(fullName);
+  }
+
+  findEntitySet(fullName: string) {
+    return this.meta.findEntitySet(fullName);
   }
 }

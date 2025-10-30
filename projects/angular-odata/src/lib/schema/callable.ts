@@ -3,20 +3,13 @@ import { ODataParserSchemaElement } from './element';
 import { ODataCallableParser } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataCallable<R> extends ODataParserSchemaElement<
-  R,
-  ODataCallableParser<R>
-> {
+export class ODataCallable<R> extends ODataParserSchemaElement<R, ODataCallableParser<R>> {
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
 
   constructor(config: ODataCallableConfig, schema: ODataSchema) {
-    super(
-      config,
-      schema,
-      new ODataCallableParser(config, schema.namespace, schema.alias),
-    );
+    super(config, schema, new ODataCallableParser(config, schema.namespace, schema.alias));
     this.entitySetPath = config.entitySetPath;
     this.bound = config.bound;
     this.composable = config.composable;

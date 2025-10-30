@@ -1,6 +1,10 @@
+import { CsdlEntityContainer } from './csdl/csdl-entity-container';
+import { CsdlEntitySet } from './csdl/csdl-entity-set';
+import { CsdlEnumType } from './csdl/csdl-enum-type';
 import { CsdlAction, CsdlFunction } from './csdl/csdl-function-action';
 import { CsdlReference } from './csdl/csdl-reference';
 import { CsdlSchema } from './csdl/csdl-schema';
+import { CsdlComplexType, CsdlEntityType } from './csdl/csdl-structured-type';
 
 export class ODataMetadata {
   Version: string;
@@ -20,6 +24,10 @@ export class ODataMetadata {
     };
   }
 
+  static fromJson(json: any): ODataMetadata {
+    return new ODataMetadata(json.Version, json.References, json.Schemas);
+  }
+
   functions() {
     return this.Schemas.reduce((acc, s) => {
       return [...acc, ...(s.Function ?? [])];
@@ -32,7 +40,45 @@ export class ODataMetadata {
     }, [] as CsdlAction[]);
   }
 
-  static fromJson(json: any): ODataMetadata {
-    return new ODataMetadata(json.Version, json.References, json.Schemas);
+  enumTypes(): CsdlEnumType[] {
+    return this.Schemas.reduce((acc, s) => {
+      return [...acc, ...(s.EnumType ?? [])];
+    }, [] as CsdlEnumType[]);
+  }
+
+  entityTypes(): CsdlEntityType[] {
+    return this.Schemas.reduce((acc, s) => {
+      return [...acc, ...(s.EntityType ?? [])];
+    }, [] as CsdlEntityType[]);
+  }
+
+  complexTypes(): CsdlComplexType[] {
+    return this.Schemas.reduce((acc, s) => {
+      return [...acc, ...(s.ComplexType ?? [])];
+    }, [] as CsdlComplexType[]);
+  }
+
+  entitySets(): CsdlEntitySet[] {
+    return this.Schemas.reduce((acc, s) => {
+      return [...acc, ...(s.EntityContainer ?? [])];
+    }, [] as CsdlEntityContainer[]).reduce((acc, ec) => {
+      return [...acc, ...(ec.EntitySet ?? [])];
+    }, [] as CsdlEntitySet[]);
+  }
+
+  findEnumType(fullName: string): CsdlEnumType | undefined {
+    return this.enumTypes().find((et) => et.fullName() === fullName);
+  }
+
+  findEntityType(fullName: string): CsdlEntityType | undefined {
+    return this.entityTypes()?.find((et) => et.fullName() === fullName);
+  }
+
+  findComplexType(fullName: string): CsdlComplexType | undefined {
+    return this.complexTypes()?.find((ct) => ct.fullName() === fullName);
+  }
+
+  findEntitySet(fullName: string): CsdlEntitySet | undefined {
+    return this.entitySets()?.find((ct) => ct.EntityType === fullName);
   }
 }

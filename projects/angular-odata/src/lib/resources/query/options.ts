@@ -71,8 +71,7 @@ export const pathAndParamsFromQueryOptions = <T>(
       let value = values.get(key);
       if (
         Types.rawType(value).endsWith('Expression') ||
-        (Types.isArray(value) &&
-          value.some((v: any) => Types.rawType(v).endsWith('Expression')))
+        (Types.isArray(value) && value.some((v: any) => Types.rawType(v).endsWith('Expression')))
       ) {
         value = Types.isArray(value)
           ? value.map((v: Expression<T>) =>
@@ -117,10 +116,7 @@ export class ODataQueryOptions<T> {
     });
   }
 
-  toString({
-    escape,
-    parser,
-  }: { escape?: boolean; parser?: Parser<T> } = {}): string {
+  toString({ escape, parser }: { escape?: boolean; parser?: Parser<T> } = {}): string {
     const [path, params] = this.pathAndParams({ escape, parser });
     return (
       path +

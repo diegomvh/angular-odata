@@ -1,38 +1,56 @@
 import { strings } from '@angular-devkit/core';
 import { Base } from './base';
-import {
-  CsdlComplexType,
-  CsdlEntityType,
-} from '../metadata/csdl/csdl-structured-type';
+import { CsdlComplexType, CsdlEntityType } from '../metadata/csdl/csdl-structured-type';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
-import {
-  CsdlNavigationProperty,
-  CsdlProperty,
-} from '../metadata/csdl/csdl-structural-property';
+import { CsdlNavigationProperty, CsdlProperty } from '../metadata/csdl/csdl-structural-property';
 import { toTypescriptType } from '../utils';
+import { Package } from './package';
 
 export class EntityProperty {
-  constructor(protected edmType: CsdlProperty | CsdlNavigationProperty) {}
+  constructor(
+    protected entity: Entity,
+    protected edmType: CsdlProperty | CsdlNavigationProperty,
+  ) {}
 
   name() {
-    return this.edmType.Name;
+    const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.Nullable);
+    const name = this.edmType.Name;
+    return name + (!required ? '?' : '');
   }
 
   type() {
-    let type = toTypescriptType(this.edmType.Type);
-    type += this.edmType.Collection ? '[]' : '';
-    type += this.edmType.Nullable ? ' | null' : '';
+    const pkg = this.entity.getPackage();
+    const enumType = pkg.findEnum(this.edmType.Type);
+    const entityType = pkg.findEntity(this.edmType.Type);
+    let type = 'any';
+    if (enumType !== undefined) {
+      type = enumType.importedName!;
+      type += this.edmType.Collection ? '[]' : '';
+    } else if (entityType !== undefined) {
+      type = entityType.importedName!;
+      type += this.edmType.Collection ? '[]' : '';
+    } else {
+      type = toTypescriptType(this.edmType.Type);
+      type += this.edmType.Collection ? '[]' : '';
+    }
     return type;
+  }
+
+  isGeoSpatial(): boolean {
+    return (
+      this.edmType.Type.startsWith('Edm.Geography') || this.edmType.Type.startsWith('Edm.Geometry')
+    );
   }
 }
 
 export class Entity extends Base {
   constructor(
+    pkg: Package,
     options: ApiGenSchema,
     protected edmType: CsdlEntityType | CsdlComplexType,
   ) {
-    super(options);
+    super(pkg, options);
   }
 
   public override template(): Source {
@@ -40,16 +58,11 @@ export class Entity extends Base {
   }
   public override variables(): { [name: string]: any } {
     return {
-      type:
-        this.name() +
-        (this.edmType instanceof CsdlEntityType ? 'EntityType' : 'ComplexType'),
+      type: this.name() + (this.edmType instanceof CsdlEntityType ? 'EntityType' : 'ComplexType'),
       baseType: this.edmType.BaseType,
-      properties: [
-        ...(this.edmType.Property ?? []).map((p) => new EntityProperty(p)),
-        ...(this.edmType.NavigationProperty ?? []).map(
-          (p) => new EntityProperty(p),
-        ),
-      ],
+      properties: this.properties(),
+      geoProperties: this.geoProperties(),
+      hasGeoProperties: this.hasGeoProperties(),
     };
   }
   public override name() {
@@ -73,15 +86,27 @@ export class Entity extends Base {
       imports.push(this.edmType.BaseType);
     }
     for (let prop of this.edmType?.Property ?? []) {
-      if (!prop.Type.startsWith('Edm.')) {
+      if (!prop.isEdmType()) {
         imports.push(prop.Type);
       }
     }
     for (let prop of this.edmType?.NavigationProperty ?? []) {
-      if (!prop.Type.startsWith('Edm.')) {
+      if (!prop.isEdmType()) {
         imports.push(prop.Type);
       }
     }
     return imports;
+  }
+  public properties(): EntityProperty[] {
+    return [
+      ...(this.edmType.Property ?? []).map((p) => new EntityProperty(this, p)),
+      ...(this.edmType.NavigationProperty ?? []).map((p) => new EntityProperty(this, p)),
+    ];
+  }
+  public geoProperties(): EntityProperty[] {
+    return this.properties().filter((p) => p.isGeoSpatial());
+  }
+  public hasGeoProperties(): boolean {
+    return this.geoProperties().length > 0;
   }
 }

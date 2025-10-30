@@ -3,11 +3,15 @@ import { Base } from './base';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Service } from './service';
+import { Package } from './package';
 
 export class Module extends Base {
   services: Service[] = [];
-  constructor(options: ApiGenSchema) {
-    super(options);
+  constructor(
+    protected pkg: Package,
+    options: ApiGenSchema,
+  ) {
+    super(pkg, options);
   }
   public override template(): Source {
     return url('./files/module');

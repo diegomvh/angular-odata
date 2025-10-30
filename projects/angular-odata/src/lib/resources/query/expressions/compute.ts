@@ -78,9 +78,7 @@ export class ComputeExpression<T> extends Expression<T> {
     const children = this._children.map((n) =>
       n.render({ aliases, escape, prefix, parser, options }),
     );
-    return this.names
-      .map((name, index) => `${children[index]} as ${name}`)
-      .join(',');
+    return this.names.map((name, index) => `${children[index]} as ${name}`).join(',');
   }
 
   clone() {

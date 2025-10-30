@@ -33,17 +33,13 @@ describe('OData orderBy builder', () => {
   describe('base condition', () => {
     describe('as factory function', () => {
       it('asc', () => {
-        const compare1 = OrderByExpression.factory<Person>(({ e, t }) =>
-          e().ascending(t.Age),
-        );
+        const compare1 = OrderByExpression.factory<Person>(({ e, t }) => e().ascending(t.Age));
 
         expect(compare1.render()).toBe('Age asc');
       });
 
       it('desc', () => {
-        const compare1 = OrderByExpression.factory<Person>(({ e, t }) =>
-          e().descending(t.Age),
-        );
+        const compare1 = OrderByExpression.factory<Person>(({ e, t }) => e().descending(t.Age));
 
         expect(compare1.render()).toBe('Age desc');
       });

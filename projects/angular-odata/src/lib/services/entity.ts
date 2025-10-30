@@ -1,5 +1,5 @@
-import { ODataModel } from '../models/model';
-import { EntityKey, ODataResource } from '../resources';
+import type { ODataModel } from '../models/model';
+import type { EntityKey, ODataResource } from '../resources';
 import { ODataBaseService } from './base';
 
 export abstract class ODataEntityService<T> extends ODataBaseService {

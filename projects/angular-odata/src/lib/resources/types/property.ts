@@ -2,11 +2,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { expand, map, reduce } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import type { ModelInterface, ODataCollection, ODataModel } from '../../models';
-import {
-  PathSegment,
-  QueryOption,
-  ODataStructuredTypeFieldConfig,
-} from '../../types';
+import { PathSegment, QueryOption, ODataStructuredTypeFieldConfig } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ApplyExpression, ApplyExpressionBuilder } from '../query';
 import { ODataResource } from '../resource';
@@ -48,17 +44,12 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   static fromResource<N>(resource: ODataResource<any>, path: string) {
     const baseType = resource.outgoingType();
     let baseSchema =
-      baseType !== undefined
-        ? resource.api.structuredType<any>(baseType)
-        : undefined;
+      baseType !== undefined ? resource.api.structuredType<any>(baseType) : undefined;
     let fieldType: string | undefined;
     if (baseSchema !== undefined) {
       const field = baseSchema.field<N>(path);
       fieldType = field?.type;
-      baseSchema =
-        field !== undefined
-          ? baseSchema.findParentSchemaForField<N>(field)
-          : undefined;
+      baseSchema = field !== undefined ? baseSchema.findParentSchemaForField<N>(field) : undefined;
     }
 
     const property = ODataPropertyResource.factory<N>(resource.api, {
@@ -82,10 +73,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   override transform<R>(
-    opts: (
-      builder: ApplyExpressionBuilder<T>,
-      current?: ApplyExpression<T>,
-    ) => ApplyExpression<T>,
+    opts: (builder: ApplyExpressionBuilder<T>, current?: ApplyExpression<T>) => ApplyExpression<T>,
     {
       type,
       fields,
@@ -112,10 +100,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     const property = this.clone();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
-      ODataResource.resolveKey<T>(
-        value,
-        this.api.findStructuredType<T>(types[index]),
-      ),
+      ODataResource.resolveKey<T>(value, this.api.findStructuredType<T>(types[index])),
     );
     property.segment((s) => s.keys(keys));
     return property;
@@ -173,9 +158,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   fetch(options?: ODataEntitiesOptions): Observable<ODataEntities<T>>;
   fetch(options?: ODataPropertyOptions): Observable<ODataProperty<T>>;
   fetch(
-    options: ODataEntityOptions &
-      ODataEntitiesOptions &
-      ODataPropertyOptions = {},
+    options: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions = {},
   ): Observable<any> {
     return this.get(options);
   }
@@ -197,9 +180,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @returns The entity
    */
   fetchEntity(options: ODataOptions = {}): Observable<T | null> {
-    return this.fetch({ responseType: 'entity', ...options }).pipe(
-      map(({ entity }) => entity),
-    );
+    return this.fetch({ responseType: 'entity', ...options }).pipe(map(({ entity }) => entity));
   }
 
   /**
@@ -226,9 +207,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   ) {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
-        entity
-          ? this.asModel(entity, { annots, ModelType: options?.ModelType })
-          : null,
+        entity ? this.asModel(entity, { annots, ModelType: options?.ModelType }) : null,
       ),
     );
   }
@@ -238,9 +217,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns The entities
    */
-  fetchEntities(
-    options: ODataOptions & { withCount?: boolean } = {},
-  ): Observable<T[] | null> {
+  fetchEntities(options: ODataOptions & { withCount?: boolean } = {}): Observable<T[] | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities }) => entities),
     );
@@ -318,9 +295,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       return res.fetch({ responseType: 'entities', ...options });
     };
     return fetch({ top }).pipe(
-      expand(({ annots }) =>
-        annots.skip || annots.skiptoken ? fetch(annots) : EMPTY,
-      ),
+      expand(({ annots }) => (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
       map(({ entities, annots }) => ({ entities: entities || [], annots })),
       reduce((acc, { entities, annots }) => ({
         entities: [...(acc.entities || []), ...(entities || [])],
@@ -354,9 +329,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       return res.fetch({ responseType: 'entities', ...options });
     };
     return fetch().pipe(
-      expand(({ annots }) =>
-        annots.skip || annots.skiptoken ? fetch(annots) : EMPTY,
-      ),
+      expand(({ annots }) => (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
       map(({ entities, annots }) => ({ entities: entities || [], annots })),
       reduce((acc, { entities, annots }) => ({
         entities: [...(acc.entities || []), ...(entities || [])],

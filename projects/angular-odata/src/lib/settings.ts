@@ -1,14 +1,9 @@
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { ODataApi } from './api';
-import { ODataCollection, ODataModel } from './models';
-import { ODataRequest } from './resources';
-import {
-  ODataCallable,
-  ODataEntitySet,
-  ODataEnumType,
-  ODataStructuredType,
-} from './schema';
-import { ODataApiConfig, EdmType, Parser } from './types';
+import type { ODataCollection, ODataModel } from './models';
+import type { ODataRequest } from './resources';
+import type { ODataCallable, ODataEntitySet, ODataEnumType, ODataStructuredType } from './schema';
+import type { ODataApiConfig, EdmType, Parser } from './types';
 
 export class ODataSettings {
   apis: ODataApi[];
@@ -24,9 +19,7 @@ export class ODataSettings {
     if (this.apis.every((c) => !c.default)) this.apis[0].default = true;
   }
 
-  configure(settings: {
-    requester?: (request: ODataRequest<any>) => Observable<any>;
-  }) {
+  configure(settings: { requester?: (request: ODataRequest<any>) => Observable<any> }) {
     this.apis.forEach((api) => api.configure(settings));
   }
 
@@ -62,54 +55,36 @@ export class ODataSettings {
 
   //#region Configs shortcuts
   public enumTypeForType<T>(type: string) {
-    let values = this.apis
-      .map((api) => api.findEnumType<T>(type))
-      .filter((e) => e);
+    let values = this.apis.map((api) => api.findEnumType<T>(type)).filter((e) => e);
     if (values.length === 0) throw Error(`No Enum for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
+    if (values.length > 1) throw Error('Multiple APIs: More than one value was found');
     return values[0] as ODataEnumType<T>;
   }
 
   public structuredTypeForType<T>(type: string) {
-    let values = this.apis
-      .map((api) => api.findStructuredType<T>(type))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No Structured for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
+    let values = this.apis.map((api) => api.findStructuredType<T>(type)).filter((e) => e);
+    if (values.length === 0) throw Error(`No Structured for type ${type} was found`);
+    if (values.length > 1) throw Error('Multiple APIs: More than one value was found');
     return values[0] as ODataStructuredType<T>;
   }
 
   public callableForType<T>(type: string, bindingType?: string) {
-    let values = this.apis
-      .map((api) => api.findCallable<T>(type, bindingType))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No Callable for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
+    let values = this.apis.map((api) => api.findCallable<T>(type, bindingType)).filter((e) => e);
+    if (values.length === 0) throw Error(`No Callable for type ${type} was found`);
+    if (values.length > 1) throw Error('Multiple APIs: More than one value was found');
     return values[0] as ODataCallable<T>;
   }
 
   public entitySetForType(type: string) {
-    let values = this.apis
-      .map((api) => api.findEntitySet(type))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No EntitySet for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
+    let values = this.apis.map((api) => api.findEntitySet(type)).filter((e) => e);
+    if (values.length === 0) throw Error(`No EntitySet for type ${type} was found`);
+    if (values.length > 1) throw Error('Multiple APIs: More than one value was found');
     return values[0] as ODataEntitySet;
   }
 
   public parserForType<T>(type: string | EdmType) {
-    let values = this.apis
-      .map((api) => api.parserForType<T>(type))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No Parser for type ${type} was found`);
+    let values = this.apis.map((api) => api.parserForType<T>(type)).filter((e) => e);
+    if (values.length === 0) throw Error(`No Parser for type ${type} was found`);
     if (!type.startsWith('Edm.') && values.length > 1)
       throw Error('Multiple APIs: More than one value was found');
     return values[0] as Parser<T>;
@@ -118,19 +93,14 @@ export class ODataSettings {
   public modelForType(type: string) {
     let values = this.apis.map((api) => api.findModel(type)).filter((e) => e);
     if (values.length === 0) throw Error(`No Model for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
+    if (values.length > 1) throw Error('Multiple APIs: More than one value was found');
     return values[0] as typeof ODataModel;
   }
 
   public collectionForType(type: string) {
-    let values = this.apis
-      .map((api) => api.findCollection(type))
-      .filter((e) => e);
-    if (values.length === 0)
-      throw Error(`No Collection for type ${type} was found`);
-    if (values.length > 1)
-      throw Error('Multiple APIs: More than one value was found');
+    let values = this.apis.map((api) => api.findCollection(type)).filter((e) => e);
+    if (values.length === 0) throw Error(`No Collection for type ${type} was found`);
+    if (values.length > 1) throw Error('Multiple APIs: More than one value was found');
     return values[0] as typeof ODataCollection;
   }
   //#endregion

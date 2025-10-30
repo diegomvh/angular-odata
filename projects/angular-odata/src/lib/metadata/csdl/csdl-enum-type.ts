@@ -1,4 +1,4 @@
-import { ODataEnumTypeConfig, ODataEnumTypeFieldConfig } from '../../types';
+import type { ODataEnumTypeConfig, ODataEnumTypeFieldConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlSchema } from './csdl-schema';
 
@@ -76,15 +76,7 @@ export class CsdlEnumType extends CsdlAnnotable {
 export class CsdlMember extends CsdlAnnotable {
   Name: string;
   Value?: number;
-  constructor({
-    Name,
-    Value,
-    Annotation,
-  }: {
-    Name: string;
-    Value?: number;
-    Annotation?: any[];
-  }) {
+  constructor({ Name, Value, Annotation }: { Name: string; Value?: number; Annotation?: any[] }) {
     super({ Annotation });
     this.Name = Name;
     this.Value = Value;
@@ -98,9 +90,7 @@ export class CsdlMember extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(
-    base?: Partial<ODataEnumTypeFieldConfig>,
-  ): ODataEnumTypeFieldConfig {
+  override toConfig(base?: Partial<ODataEnumTypeFieldConfig>): ODataEnumTypeFieldConfig {
     const config: { [key: string]: any } = {
       ...super.toConfig(),
       value: this.Value,

@@ -1,4 +1,4 @@
-import { ODataCallableConfig, ODataParameterConfig } from '../../types';
+import type { ODataCallableConfig, ODataParameterConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlEntityContainer } from './csdl-entity-container';
 import type { CsdlSchema } from './csdl-schema';

@@ -5,13 +5,15 @@ import { CsdlSingleton } from '../metadata/csdl/csdl-singleton';
 import { CsdlEntitySet } from '../metadata/csdl/csdl-entity-set';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
+import { Package } from './package';
 
 export class Service extends Base {
   constructor(
+    pkg: Package,
     options: ApiGenSchema,
     protected edmElement: CsdlEntitySet | CsdlEntityContainer | CsdlSingleton,
   ) {
-    super(options);
+    super(pkg, options);
   }
   public override template(): Source {
     return this.edmElement instanceof CsdlEntitySet

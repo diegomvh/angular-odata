@@ -69,9 +69,7 @@ export class GroupByTransformations<T> extends Expression<T> {
     options?: ParserOptions;
   } = {}): string {
     const children = this._children.map((n) =>
-      typeof n !== 'string'
-        ? n.render({ aliases, escape, prefix, parser, options })
-        : n,
+      typeof n !== 'string' ? n.render({ aliases, escape, prefix, parser, options }) : n,
     );
     return `aggregate(${children
       .map((child, index) =>
@@ -84,9 +82,7 @@ export class GroupByTransformations<T> extends Expression<T> {
 
   clone() {
     return new GroupByTransformations<T>({
-      children: this._children.map((c) =>
-        typeof c !== 'string' ? c.clone() : c,
-      ),
+      children: this._children.map((c) => (typeof c !== 'string' ? c.clone() : c)),
       methods: this.methods,
       aliases: this.aliases,
     });
@@ -153,10 +149,7 @@ export class ApplyExpression<T> extends Expression<T> {
   }
 
   static factory<T>(
-    opts: (
-      builder: ApplyExpressionBuilder<T>,
-      current: ApplyExpression<T>,
-    ) => ApplyExpression<T>,
+    opts: (builder: ApplyExpressionBuilder<T>, current: ApplyExpression<T>) => ApplyExpression<T>,
     current?: ApplyExpression<T>,
   ): ApplyExpression<T> {
     return opts(
@@ -208,11 +201,7 @@ export class ApplyExpression<T> extends Expression<T> {
     return this;
   }
 
-  aggregate(
-    value: any,
-    method: AggregateMethod,
-    alias: string,
-  ): ApplyExpression<T> {
+  aggregate(value: any, method: AggregateMethod, alias: string): ApplyExpression<T> {
     return this._add(syntax.aggregate(value, method, alias));
   }
 
@@ -309,8 +298,7 @@ export class ApplyExpression<T> extends Expression<T> {
   ): ApplyExpression<T> {
     let properties = props({ rollup: (e: any) => syntax.rollup(e) });
     properties = Array.isArray(properties) ? properties : [properties];
-    const transformations =
-      opts !== undefined ? opts(new GroupByTransformations()) : undefined;
+    const transformations = opts !== undefined ? opts(new GroupByTransformations()) : undefined;
     return this._add(syntax.groupby(properties, transformations));
   }
 
@@ -327,8 +315,7 @@ export class ApplyExpression<T> extends Expression<T> {
       t: FieldFactory<Required<T>>(),
       o: operators as ODataOperators<T>,
       f: functions as ODataFunctions<T>,
-      e: (connector: FilterConnector = 'and') =>
-        new FilterExpression<T>({ connector }),
+      e: (connector: FilterConnector = 'and') => new FilterExpression<T>({ connector }),
     }) as FilterExpression<T>;
     return this._add(transformations.filter(exp));
   }
@@ -376,8 +363,7 @@ export class ApplyExpression<T> extends Expression<T> {
       t: FieldFactory<Required<T>>(),
       o: operators as ODataOperators<T>,
       f: functions as ODataFunctions<T>,
-      e: (connector: SearchConnector = 'AND') =>
-        new SearchExpression<T>({ connector }),
+      e: (connector: SearchConnector = 'AND') => new SearchExpression<T>({ connector }),
     }) as SearchExpression<T>;
     return this._add(transformations.search(exp));
   }

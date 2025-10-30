@@ -92,19 +92,13 @@ describe('ODataQueryOptions', () => {
     expect(queryOptions.toString()).toEqual('');
     //
     queryOptions.option(QueryOption.search, 'value');
-    expect(queryOptions.toString()).toEqual(
-      '$search=' + encodeURIComponent('value'),
-    );
+    expect(queryOptions.toString()).toEqual('$search=' + encodeURIComponent('value'));
     //
     queryOptions.option(QueryOption.search, ['value']);
-    expect(queryOptions.toString()).toEqual(
-      '$search=' + encodeURIComponent('value'),
-    );
+    expect(queryOptions.toString()).toEqual('$search=' + encodeURIComponent('value'));
     //
     queryOptions.option(QueryOption.search, 'null');
-    expect(queryOptions.toString()).toEqual(
-      '$search=' + encodeURIComponent('null'),
-    );
+    expect(queryOptions.toString()).toEqual('$search=' + encodeURIComponent('null'));
   });
 
   it('test skip', () => {
@@ -217,8 +211,6 @@ describe('ODataQueryOptions', () => {
     handler.unset('bar.gt');
     expect(queryOptions.toString()).toEqual('');
     handler.assign({ foo: 1, bar: 2, fooBar: { lt: 4 } });
-    expect(queryOptions.toString()).toEqual(
-      '$filter=bar eq 2 and foo eq 1 and fooBar lt 4',
-    );
+    expect(queryOptions.toString()).toEqual('$filter=bar eq 2 and foo eq 1 and fooBar lt 4');
   });
 });

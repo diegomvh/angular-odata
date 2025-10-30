@@ -1,10 +1,10 @@
 import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ODataApi } from './api';
+import type { ODataApi } from './api';
 import { ODataConfigLoader } from './loaders';
-import { ODataCollection, ODataModel } from './models/index';
-import {
+import type { ODataCollection, ODataModel } from './models/index';
+import type {
   ODataActionResource,
   ODataBatchResource,
   ODataEntityResource,
@@ -14,11 +14,11 @@ import {
   ODataNavigationPropertyResource,
   ODataOptions,
   ODataRequest,
-  ODataResource,
   ODataResponse,
   ODataSegment,
   ODataSingletonResource,
 } from './resources/index';
+import { ODataResource } from './resources/index';
 import { ODataSettings } from './settings';
 
 function addBody<T>(
@@ -75,12 +75,9 @@ export class ODataClient {
    */
   apiFor(value?: ODataResource<any> | string): ODataApi {
     let api: ODataApi | undefined = undefined;
-    if (value instanceof ODataResource)
-      api = this.settings!.findApiForTypes(value.types());
+    if (value instanceof ODataResource) api = this.settings!.findApiForTypes(value.types());
     else if (typeof value === 'string')
-      api =
-        this.settings!.findApiByName(value) ||
-        this.settings!.findApiForType(value);
+      api = this.settings!.findApiByName(value) || this.settings!.findApiForType(value);
     return api ?? this.settings!.defaultApi();
   }
 
@@ -203,10 +200,7 @@ export class ODataClient {
    * @param apiNameOrType The name of the API or the type of the entity set.
    * @returns The entity set resource.
    */
-  entitySet<T>(
-    path: string,
-    apiNameOrType?: string,
-  ): ODataEntitySetResource<T> {
+  entitySet<T>(path: string, apiNameOrType?: string): ODataEntitySetResource<T> {
     return this.apiFor(apiNameOrType).entitySet<T>(path);
   }
 
@@ -216,10 +210,7 @@ export class ODataClient {
    * @param apiNameOrType The name of the API or the type of the entity.
    * @returns The unbound action resource.
    */
-  action<P, R>(
-    path: string,
-    apiNameOrType?: string,
-  ): ODataActionResource<P, R> {
+  action<P, R>(path: string, apiNameOrType?: string): ODataActionResource<P, R> {
     return this.apiFor(apiNameOrType).action<P, R>(path);
   }
 
@@ -229,10 +220,7 @@ export class ODataClient {
    * @param apiNameOrType The name of the API or the type of the callable.
    * @returns The unbound function resource.
    */
-  function<P, R>(
-    path: string,
-    apiNameOrType?: string,
-  ): ODataFunctionResource<P, R> {
+  function<P, R>(path: string, apiNameOrType?: string): ODataFunctionResource<P, R> {
     return this.apiFor(apiNameOrType).function<P, R>(path);
   }
   //#endregion
@@ -792,10 +780,7 @@ export class ODataClient {
     return this.request<any>('HEAD', resource, options as any);
   }
 
-  jsonp(
-    resource: ODataResource<any>,
-    callbackParam: string,
-  ): Observable<Object>;
+  jsonp(resource: ODataResource<any>, callbackParam: string): Observable<Object>;
 
   jsonp<T>(resource: ODataResource<any>, callbackParam: string): Observable<T>;
 

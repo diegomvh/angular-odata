@@ -33,7 +33,7 @@ export class ODataParameterParser<T> {
   }
 
   //Encode
-  encode(value: any, options?: ParserOptions): string {
+  encode(value: any, options?: ParserOptions): any {
     const parserOptions = { ...this.parserOptions, ...options };
     return Array.isArray(value)
       ? value.map((v) => this.parser.encode(v, parserOptions))
@@ -69,19 +69,14 @@ export class ODataParameterParser<T> {
   }
 
   structuredType() {
-    if (!this.isStructuredType())
-      throw new Error('Field are not StrucuturedType');
+    if (!this.isStructuredType()) throw new Error('Field are not StrucuturedType');
     return this.parser as ODataStructuredTypeParser<T>;
   }
 
   field<F>(name: string) {
     if (this.isStructuredType())
-      return (this.parser as ODataStructuredTypeParser<T>).field<F>(
-        name as keyof T,
-      );
-    throw new Error(
-      `The field ${this.name} is not related to a StructuredType`,
-    );
+      return (this.parser as ODataStructuredTypeParser<T>).field<F>(name as keyof T);
+    throw new Error(`The field ${this.name} is not related to a StructuredType`);
   }
 }
 
@@ -155,8 +150,7 @@ export class ODataCallableParser<R> implements Parser<R> {
     parserForType: (type: string) => Parser<any>;
   }) {
     this.parserOptions = options;
-    if (this.return)
-      this.parser = parserForType(this.return.type) ?? NONE_PARSER;
+    if (this.return) this.parser = parserForType(this.return.type) ?? NONE_PARSER;
     this.parameters.forEach((p) => p.configure({ options, parserForType }));
   }
 

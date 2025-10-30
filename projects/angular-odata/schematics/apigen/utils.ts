@@ -2,10 +2,7 @@ import { strings, normalize } from '@angular-devkit/core';
 
 export const toTypescriptType = (type: string, geo: boolean = true) => {
   if (type == null) return 'any';
-  if (
-    geo &&
-    (type.startsWith('Edm.Geography') || type.startsWith('Edm.Geometry'))
-  ) {
+  if (geo && (type.startsWith('Edm.Geography') || type.startsWith('Edm.Geometry'))) {
     switch (type) {
       case 'Edm.Geography': //Abstract base type for all Geography types
       case 'Edm.GeographyPoint': //A point in a round-earth coordinate system
@@ -92,7 +89,6 @@ export const makeRelativePath = (from: string, to: string) => {
   return (
     Array.from({ length: froma.length - shared.length })
       .fill('..')
-      .join('/') +
-    to.substring(shared.join('/').length + (to.startsWith('/') ? 1 : 0))
+      .join('/') + to.substring(shared.join('/').length + (to.startsWith('/') ? 1 : 0))
   );
 };

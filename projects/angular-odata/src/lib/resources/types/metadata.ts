@@ -38,9 +38,7 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   //#region Shortcuts
   fetch(options?: ODataOptions): Observable<ODataMetadata> {
-    return this.get(options).pipe(
-      map((body: any) => new ODataMetadataParser(body).metadata()),
-    );
+    return this.get(options).pipe(map((body: any) => new ODataMetadataParser(body).metadata()));
   }
   //#endregion
 }

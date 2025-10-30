@@ -71,10 +71,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
   }
 }
 
-export class ODataParserSchemaElement<
-  E,
-  P extends Parser<E>,
-> extends ODataSchemaElement {
+export class ODataParserSchemaElement<E, P extends Parser<E>> extends ODataSchemaElement {
   parser: P;
   constructor(
     config: { annotations?: ODataAnnotationConfig[]; name: string },

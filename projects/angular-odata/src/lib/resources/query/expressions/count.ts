@@ -3,13 +3,7 @@ import { Objects, Types } from '../../../utils';
 import { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FilterExpression, FilterExpressionBuilder } from './filter';
-import {
-  render,
-  FieldFactory,
-  Renderable,
-  RenderableFactory,
-  resolve,
-} from './syntax';
+import { render, FieldFactory, Renderable, RenderableFactory, resolve } from './syntax';
 
 export class CountField<T> implements Renderable {
   constructor(
@@ -40,10 +34,7 @@ export class CountField<T> implements Renderable {
     parser?: Parser<T>;
     options?: ParserOptions;
   }): string {
-    const params: { [name: string]: string } = [
-      QueryOption.filter,
-      QueryOption.search,
-    ]
+    const params: { [name: string]: string } = [QueryOption.filter, QueryOption.search]
       .filter((key) => !Types.isEmpty(this.values[key]))
       .reduce((acc, key) => {
         let value: any = this.values[key];
@@ -87,8 +78,7 @@ export class CountField<T> implements Renderable {
 
   clone() {
     const values = Object.keys(this.values).reduce(
-      (acc, key) =>
-        Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
+      (acc, key) => Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
       {},
     );
     return new CountField<T>(this.field.clone(), values);
@@ -123,10 +113,7 @@ export class CountExpression<T> extends Expression<T> {
   }
 
   static factory<T>(
-    opts: (
-      builder: CountExpressionBuilder<T>,
-      current: CountExpression<T>,
-    ) => CountExpression<T>,
+    opts: (builder: CountExpressionBuilder<T>, current: CountExpression<T>) => CountExpression<T>,
     current?: CountExpression<T>,
   ): CountExpression<T> {
     return opts(

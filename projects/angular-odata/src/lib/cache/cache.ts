@@ -1,7 +1,7 @@
 import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from '../constants';
-import { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
+import type { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
 import { ODataCache, PathSegment } from '../types';
 
 /**
@@ -39,8 +39,7 @@ export abstract class ODataBaseCache implements ODataCache {
     const segments = req.resource.cloneSegments();
     return segments.segments({ key: true }).reduce(
       (acc, s) => {
-        if (s.name === PathSegment.entitySet)
-          acc = [...acc, s.path() as string];
+        if (s.name === PathSegment.entitySet) acc = [...acc, s.path() as string];
         return acc;
       },
       ['request'],
@@ -56,11 +55,7 @@ export abstract class ODataBaseCache implements ODataCache {
     const tags = [];
     const context = res.context;
     if (context.entitySet) {
-      tags.push(
-        context.key
-          ? `${context.entitySet}(${context.key})`
-          : context.entitySet,
-      );
+      tags.push(context.key ? `${context.entitySet}(${context.key})` : context.entitySet);
     }
     if (context.type) tags.push(context.type);
     return tags;
@@ -105,11 +100,7 @@ export abstract class ODataBaseCache implements ODataCache {
   put<T>(
     name: string,
     payload: T,
-    {
-      timeout,
-      scope,
-      tags,
-    }: { timeout?: number; scope?: string[]; tags?: string[] } = {},
+    { timeout, scope, tags }: { timeout?: number; scope?: string[]; tags?: string[] } = {},
   ) {
     const entry = this.buildEntry<T>(payload, { timeout, tags });
     const key = this.buildKey([...(scope || []), name]);
@@ -123,12 +114,10 @@ export abstract class ODataBaseCache implements ODataCache {
    * @param scope The scope of the entry
    * @returns The payload of the entry
    */
-  get<T>(name: string, { scope }: { scope?: string[] } = {}): T {
+  get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
     const key = this.buildKey([...(scope || []), name]);
     const entry = this.entries.get(key);
-    return entry !== undefined && !this.isExpired(entry)
-      ? entry.payload
-      : undefined;
+    return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
   }
 
   /**
@@ -202,15 +191,10 @@ export abstract class ODataBaseCache implements ODataCache {
         return throwError(() => new Error('No Cached'));
       }
     }
-    if (
-      policy === 'cache-first' ||
-      policy === 'cache-and-network' ||
-      policy === 'network-only'
-    ) {
+    if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
       res$ = res$.pipe(
         tap((res: ODataResponse<any>) => {
-          if (res.options.cacheability !== 'no-store')
-            this.putResponse(req, res);
+          if (res.options.cacheability !== 'no-store') this.putResponse(req, res);
         }),
       );
     }
@@ -226,9 +210,7 @@ export abstract class ODataBaseCache implements ODataCache {
     res$: Observable<ODataResponse<any>>,
   ): Observable<ODataResponse<any>> {
     const requests = req.isBatch()
-      ? (req.resource as ODataBatchResource)
-          .requests()
-          .filter((r) => r.isMutate())
+      ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
       : [req];
     for (var r of requests) {
       const scope = this.scope(r);

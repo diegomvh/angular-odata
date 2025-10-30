@@ -1,4 +1,4 @@
-import { ODataAnnotationConfig } from '../../types';
+import type { ODataAnnotationConfig } from '../../types';
 import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlAnnotable {
@@ -262,13 +262,8 @@ export class CsdlCollection {
     if (Array.isArray(this.PropertyPath) && this.PropertyPath.length > 0) {
       json['PropertyPath'] = this.PropertyPath.map((p) => p.toJson());
     }
-    if (
-      Array.isArray(this.NavigationPropertyPath) &&
-      this.NavigationPropertyPath.length > 0
-    ) {
-      json['NavigationPropertyPath'] = this.NavigationPropertyPath.map((p) =>
-        p.toJson(),
-      );
+    if (Array.isArray(this.NavigationPropertyPath) && this.NavigationPropertyPath.length > 0) {
+      json['NavigationPropertyPath'] = this.NavigationPropertyPath.map((p) => p.toJson());
     }
     return json;
   }

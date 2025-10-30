@@ -7,13 +7,7 @@ import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
 import { SearchExpression, SearchExpressionBuilder } from './search';
 import { SelectExpression, SelectExpressionBuilder } from './select';
-import {
-  FieldFactory,
-  render,
-  Renderable,
-  RenderableFactory,
-  resolve,
-} from './syntax';
+import { FieldFactory, render, Renderable, RenderableFactory, resolve } from './syntax';
 
 export class ExpandField<T> implements Renderable {
   constructor(
@@ -88,8 +82,7 @@ export class ExpandField<T> implements Renderable {
 
   clone() {
     const values = Object.keys(this.values).reduce(
-      (acc, key) =>
-        Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
+      (acc, key) => Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
       {},
     );
     return new ExpandField<T>(
@@ -142,7 +135,8 @@ export class ExpandField<T> implements Renderable {
     opts: (
       builder: SearchExpressionBuilder<T>,
       current: SearchExpression<T>,
-    ) => SearchExpression<T>) {
+    ) => SearchExpression<T>,
+  ) {
     return this.option(
       QueryOption.search,
       SearchExpression.factory<T>(opts, this.values[QueryOption.search]),
@@ -269,15 +263,12 @@ export class ExpandExpression<T> extends Expression<T> {
     return this;
   }
 
-  field<F>(
-    field: F,
-    opts?: (e: ExpandField<Unpacked<F>>) => void,
-  ): ExpandExpression<T> {
+  field<F>(field: F, opts?: (e: ExpandField<Unpacked<F>>) => void): ExpandExpression<T> {
     // Find ExpandField by fieldKey or create a new one if not found
     let fieldKey = (<any>field).toString();
-    let node = this._children.find(
-      (n) => n.toString() === fieldKey,
-    ) as ExpandField<Unpacked<F>> | undefined;
+    let node = this._children.find((n) => n.toString() === fieldKey) as
+      | ExpandField<Unpacked<F>>
+      | undefined;
     if (node === undefined) {
       // If not found, create a new ExpandField
       node = new ExpandField<Unpacked<F>>(field);

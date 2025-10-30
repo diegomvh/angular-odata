@@ -18,9 +18,7 @@ export class CsdlReference extends CsdlAnnotable {
     super({ Annotation });
     this.Uri = Uri;
     this.Include = Include?.map((i) => new CsdlInclude(i));
-    this.IncludeAnnotations = IncludeAnnotations?.map(
-      (i) => new CsdlIncludeAnnotations(i),
-    );
+    this.IncludeAnnotations = IncludeAnnotations?.map((i) => new CsdlIncludeAnnotations(i));
   }
 
   override toJson() {
@@ -28,13 +26,8 @@ export class CsdlReference extends CsdlAnnotable {
     if (Array.isArray(this.Include) && this.Include.length > 0) {
       json['Include'] = this.Include.map((i) => i.toJson());
     }
-    if (
-      Array.isArray(this.IncludeAnnotations) &&
-      this.IncludeAnnotations.length > 0
-    ) {
-      json['IncludeAnnotations'] = this.IncludeAnnotations.map((i) =>
-        i.toJson(),
-      );
+    if (Array.isArray(this.IncludeAnnotations) && this.IncludeAnnotations.length > 0) {
+      json['IncludeAnnotations'] = this.IncludeAnnotations.map((i) => i.toJson());
     }
     return json;
   }

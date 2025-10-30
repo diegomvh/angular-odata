@@ -33,9 +33,7 @@ describe('OData search builder', () => {
   describe('base condition', () => {
     describe('as factory function', () => {
       it('term', () => {
-        const compare1 = SearchExpression.factory<Person>(({ e }) =>
-          e().term('John'),
-        );
+        const compare1 = SearchExpression.factory<Person>(({ e }) => e().term('John'));
 
         expect(compare1.render()).toBe('John');
       });

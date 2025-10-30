@@ -34,9 +34,7 @@ export interface Renderable {
   toString(): any;
 }
 
-export const FieldFactory = <T extends object>(
-  names: (string | Renderable)[] = [],
-): any =>
+export const FieldFactory = <T extends object>(names: (string | Renderable)[] = []): any =>
   new Proxy({ _names: names } as T, {
     get(target: T, key: string | symbol) {
       let names = (target as any)['_names'] as (string | Renderable)[];
@@ -77,9 +75,7 @@ export const FieldFactory = <T extends object>(
         return (parser: any) =>
           names.reduce(
             (acc: any, name: string | Renderable) =>
-              typeof name === 'string'
-                ? acc?.field(name)
-                : name?.resolve(parser),
+              typeof name === 'string' ? acc?.field(name) : name?.resolve(parser),
             parser,
           );
       } else {
@@ -88,10 +84,7 @@ export const FieldFactory = <T extends object>(
     },
 
     has(target: T, key: string): any {
-      return (
-        ['toJson', 'isField', 'clone', 'render', 'resolve'].includes(key) ||
-        key in target
-      );
+      return ['toJson', 'isField', 'clone', 'render', 'resolve'].includes(key) || key in target;
     },
   });
 
@@ -145,8 +138,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
       Object.defineProperty(
         derivedCtor.prototype,
         name,
-        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null),
+        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) || Object.create(null),
       );
     });
   });
@@ -194,9 +186,7 @@ export function render(
 
 export function resolve(values: any, parser?: Parser<any>) {
   if (parser !== undefined) {
-    let fields = values.filter(
-      (v: any) => Types.isObject(v) && 'isField' in v && v.isField(),
-    );
+    let fields = values.filter((v: any) => Types.isObject(v) && 'isField' in v && v.isField());
     if (fields.length === 1 && Types.isObject(parser) && 'field' in parser) {
       return fields[0].resolve(parser);
     }
@@ -204,11 +194,7 @@ export function resolve(values: any, parser?: Parser<any>) {
   return parser;
 }
 
-export function encode(
-  values: any,
-  parser?: Parser<any>,
-  options?: ParserOptions,
-) {
+export function encode(values: any, parser?: Parser<any>, options?: ParserOptions) {
   if (parser !== undefined) {
     return values.map((v: any) => {
       if (Types.isArray(v)) return encode(v, parser, options);
@@ -239,9 +225,7 @@ export class Function<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       name: this.name,
-      values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
-      ),
+      values: this.values.map((v) => (Types.isObject(v) && 'toJson' in v ? v.toJson() : v)),
       normalize: this.normalize,
     };
   }
@@ -334,12 +318,7 @@ export class StringAndCollectionFunctions<T> {
     return new Function<T>('startswith', [left, right], normalize);
   }
 
-  subString(
-    left: any,
-    right: number,
-    length?: number,
-    normalize: Normalize = 'none',
-  ) {
+  subString(left: any, right: number, length?: number, normalize: Normalize = 'none') {
     let values = [left, right];
     if (length !== undefined) {
       values.push(length);
@@ -358,11 +337,7 @@ export class CollectionFunctions<T> {
 }
 
 export class StringFunctions<T> {
-  matchesPattern(
-    left: any | string,
-    pattern: string,
-    normalize: Normalize = 'none',
-  ) {
+  matchesPattern(left: any | string, pattern: string, normalize: Normalize = 'none') {
     return new Function<T>('matchesPattern', [left, pattern], normalize);
   }
   toLower(left: any, normalize: Normalize = 'none') {
@@ -436,9 +411,7 @@ export class ArithmeticFunctions<T> {
 export class TypeFunctions<T> {
   cast<N>(left: T | string, type?: string): N {
     return FieldFactory<Required<N>>([
-      type !== undefined
-        ? new Type<T>('cast', type, left)
-        : new Type<T>('cast', left as string),
+      type !== undefined ? new Type<T>('cast', type, left) : new Type<T>('cast', left as string),
     ]);
   }
 
@@ -482,9 +455,7 @@ export class Operator<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       op: this.op,
-      values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
-      ),
+      values: this.values.map((v) => (Types.isObject(v) && 'toJson' in v ? v.toJson() : v)),
       normalize: this.normalize,
     };
   }
@@ -530,8 +501,7 @@ export class Operator<T> implements Renderable {
                 escape,
                 prefix,
                 parser,
-                normalize:
-                  this.normalize === 'all' || this.normalize === 'right',
+                normalize: this.normalize === 'all' || this.normalize === 'right',
                 options,
               }),
             )
@@ -677,12 +647,7 @@ export class GroupingOperators<T> {
   }
 }
 
-export type AggregateMethod =
-  | 'sum'
-  | 'min'
-  | 'max'
-  | 'average'
-  | 'countdistinct'; //, or with custom aggregation methods;
+export type AggregateMethod = 'sum' | 'min' | 'max' | 'average' | 'countdistinct'; //, or with custom aggregation methods;
 
 export class Aggregate<T> implements Renderable {
   constructor(
@@ -705,11 +670,7 @@ export class Aggregate<T> implements Renderable {
   }
 
   static fromJson<T>(json: { [name: string]: any }): Aggregate<T> {
-    return new Aggregate<T>(
-      RenderableFactory(json['value']),
-      json['method'],
-      json['alias'],
-    );
+    return new Aggregate<T>(RenderableFactory(json['value']), json['method'], json['alias']);
   }
 
   render({
@@ -805,10 +766,7 @@ export class GroupBy<T> implements Renderable {
   }
 
   clone() {
-    return new GroupBy(
-      Objects.clone(this.properties),
-      Objects.clone(this.transformations),
-    );
+    return new GroupBy(Objects.clone(this.properties), Objects.clone(this.transformations));
   }
   resolve(parser: any) {
     return parser;
@@ -841,11 +799,7 @@ export class Transformations<T> {
     return new Function<T>('bottomsum', [value, field], normalize);
   }
 
-  bottomPercent(
-    value: number,
-    field: Renderable,
-    normalize: Normalize = 'none',
-  ) {
+  bottomPercent(value: number, field: Renderable, normalize: Normalize = 'none') {
     return new Function<T>('bottompercent', [value, field], normalize);
   }
 
@@ -892,11 +846,7 @@ export class Type<T> implements Renderable {
   }
 
   static fromJson<T>(json: { [name: string]: any }): Type<T> {
-    return new Type<T>(
-      json['name'],
-      json['type'],
-      RenderableFactory(json['value']),
-    );
+    return new Type<T>(json['name'], json['type'], RenderableFactory(json['value']));
   }
 
   render({
@@ -919,9 +869,7 @@ export class Type<T> implements Renderable {
 
       value = render(left, { aliases, escape, prefix, parser, options });
     }
-    return value
-      ? `${this.name}(${value}, '${this.type}')`
-      : `${this.name}('${this.type}')`;
+    return value ? `${this.name}(${value}, '${this.type}')` : `${this.name}('${this.type}')`;
   }
 
   clone() {
@@ -930,8 +878,7 @@ export class Type<T> implements Renderable {
 
   resolve(parser: any) {
     parser =
-      parser instanceof ODataStructuredTypeFieldParser &&
-      parser.isStructuredType()
+      parser instanceof ODataStructuredTypeFieldParser && parser.isStructuredType()
         ? parser.structuredType()
         : parser;
     return parser?.findChildParser((p: any) => p.isTypeOf(this.type));
@@ -953,9 +900,7 @@ export class Lambda<T> implements Renderable {
     return {
       $type: Types.rawType(this),
       op: this.op,
-      values: this.values.map((v) =>
-        Types.isObject(v) && 'toJson' in v ? v.toJson() : v,
-      ),
+      values: this.values.map((v) => (Types.isObject(v) && 'toJson' in v ? v.toJson() : v)),
       alias: this.alias,
     };
   }
@@ -1063,18 +1008,13 @@ export class ODataTransformations<T> {}
 export interface ODataTransformations<T> extends Transformations<T> {}
 
 applyMixins(ODataTransformations, [Transformations]);
-export const transformations: ODataTransformations<any> =
-  new ODataTransformations<any>();
+export const transformations: ODataTransformations<any> = new ODataTransformations<any>();
 
 export class ODataSyntax<T> {}
 export interface ODataSyntax<T>
   extends ODataOperators<T>,
     ODataFunctions<T>,
     ODataTransformations<T> {}
-applyMixins(ODataSyntax, [
-  ODataOperators,
-  ODataFunctions,
-  ODataTransformations,
-]);
+applyMixins(ODataSyntax, [ODataOperators, ODataFunctions, ODataTransformations]);
 
 export const syntax: ODataSyntax<any> = new ODataSyntax<any>();

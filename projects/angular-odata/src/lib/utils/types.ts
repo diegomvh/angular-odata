@@ -48,8 +48,7 @@ export const Types = {
       (Types.isMap(value) && !value.size) ||
       (Types.isArray(value) && !value.length) ||
       (Types.isFunction(value.isEmpty) && value.isEmpty()) ||
-      (Types.isArray(value) &&
-        (value as any[]).every((v) => Types.isEmpty(v))) ||
+      (Types.isArray(value) && (value as any[]).every((v) => Types.isEmpty(v))) ||
       (Types.isPlainObject(value) &&
         !Object.keys(value).filter((k) => value.hasOwnProperty(k)).length)
     );
@@ -96,8 +95,7 @@ export const Types = {
     }
 
     function areObjectsEqual() {
-      if (Object.keys(value1).length !== Object.keys(value2).length)
-        return false;
+      if (Object.keys(value1).length !== Object.keys(value2).length) return false;
 
       // Check each item in the object
       for (let key in value1) {
