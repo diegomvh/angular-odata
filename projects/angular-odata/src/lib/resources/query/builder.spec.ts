@@ -1006,7 +1006,7 @@ describe('transform', () => {
           with: 'max',
           as: 'Max',
         },
-      }
+      },
     };
 
     const expected = '?$apply=filter(PropName eq 1)/aggregate(Amount with max as Max)';
@@ -1347,7 +1347,9 @@ describe('expand', () => {
   });
 
   it('should allow expand with select as array and top', () => {
-    const expand: Expand<Person> = { Friends: { select: ['FirstName', 'UserName', 'Age'], top: 10 } };
+    const expand: Expand<Person> = {
+      Friends: { select: ['FirstName', 'UserName', 'Age'], top: 10 },
+    };
     const expected = '?$expand=Friends($select=FirstName,UserName,Age;$top=10)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);
@@ -1361,7 +1363,7 @@ describe('expand', () => {
   });
 
   it('should allow expand with orderby', () => {
-    const expand: Expand<{Products: any}> = { Products: { orderBy: 'ReleaseDate asc' } };
+    const expand: Expand<{ Products: any }> = { Products: { orderBy: 'ReleaseDate asc' } };
     const expected = '?$expand=Products($orderby=ReleaseDate asc)';
     const actual = buildQuery({ expand });
     expect(actual).toEqual(expected);

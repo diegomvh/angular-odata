@@ -10,16 +10,17 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   constructor(
     protected type: CsdlStructuredType,
     {
-    Name,
-    Type,
-    Nullable,
-    Annotation,
-  }: {
-    Name: string;
-    Type: string;
-    Nullable?: boolean;
-    Annotation?: any[];
-  }) {
+      Name,
+      Type,
+      Nullable,
+      Annotation,
+    }: {
+      Name: string;
+      Type: string;
+      Nullable?: boolean;
+      Annotation?: any[];
+    },
+  ) {
     super({ Annotation });
     this.Name = Name;
     this.Nullable = Nullable;
@@ -52,28 +53,29 @@ export class CsdlProperty extends CsdlStructuralProperty {
   constructor(
     protected type: CsdlStructuredType,
     {
-    Name,
-    Type,
-    Nullable,
-    MaxLength,
-    Precision,
-    Scale,
-    Unicode,
-    SRID,
-    DefaultValue,
-    Annotation,
-  }: {
-    Name: string;
-    Type: string;
-    Nullable?: boolean;
-    MaxLength?: number;
-    Precision?: number;
-    Scale?: number;
-    Unicode?: boolean;
-    SRID?: string;
-    DefaultValue?: string;
-    Annotation?: any[];
-  }) {
+      Name,
+      Type,
+      Nullable,
+      MaxLength,
+      Precision,
+      Scale,
+      Unicode,
+      SRID,
+      DefaultValue,
+      Annotation,
+    }: {
+      Name: string;
+      Type: string;
+      Nullable?: boolean;
+      MaxLength?: number;
+      Precision?: number;
+      Scale?: number;
+      Unicode?: boolean;
+      SRID?: string;
+      DefaultValue?: string;
+      Annotation?: any[];
+    },
+  ) {
     super(type, { Name, Type, Nullable, Annotation });
     this.MaxLength = MaxLength;
     this.Precision = Precision;
@@ -116,24 +118,25 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
   constructor(
     protected type: CsdlStructuredType,
     {
-    Name,
-    Type,
-    Nullable,
-    Partner,
-    ContainsTarget,
-    ReferentialConstraints,
-    OnDelete,
-    Annotation,
-  }: {
-    Name: string;
-    Type: string;
-    Nullable?: boolean;
-    Partner?: string;
-    ContainsTarget?: boolean;
-    ReferentialConstraints?: any[];
-    OnDelete?: any;
-    Annotation?: any[];
-  }) {
+      Name,
+      Type,
+      Nullable,
+      Partner,
+      ContainsTarget,
+      ReferentialConstraints,
+      OnDelete,
+      Annotation,
+    }: {
+      Name: string;
+      Type: string;
+      Nullable?: boolean;
+      Partner?: string;
+      ContainsTarget?: boolean;
+      ReferentialConstraints?: any[];
+      OnDelete?: any;
+      Annotation?: any[];
+    },
+  ) {
     super(type, { Name, Type, Nullable, Annotation });
     this.Partner = Partner;
     this.ContainsTarget = ContainsTarget;

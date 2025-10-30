@@ -1,13 +1,16 @@
-import { find } from "rxjs";
-import { CsdlEntitySet } from "./csdl-entity-set";
-import { CsdlSingleton } from "./csdl-singleton";
-import { CsdlEntityType } from "./csdl-structured-type";
+import { find } from 'rxjs';
+import { CsdlEntitySet } from './csdl-entity-set';
+import { CsdlSingleton } from './csdl-singleton';
+import { CsdlEntityType } from './csdl-structured-type';
 
 export class CsdlNavigationPropertyBinding {
   Path: string;
   Target: string;
 
-  constructor(protected entitySet: CsdlEntitySet | CsdlSingleton, { Path, Target }: { Path: string; Target: string }) {
+  constructor(
+    protected entitySet: CsdlEntitySet | CsdlSingleton,
+    { Path, Target }: { Path: string; Target: string },
+  ) {
     this.Path = Path;
     this.Target = Target;
   }
@@ -20,7 +23,9 @@ export class CsdlNavigationPropertyBinding {
   }
 
   entityType() {
-    return this.entitySet instanceof CsdlEntitySet ? this.entitySet.EntityType : this.entitySet.Type;
+    return this.entitySet instanceof CsdlEntitySet
+      ? this.entitySet.EntityType
+      : this.entitySet.Type;
   }
 
   resolvePropertyName() {

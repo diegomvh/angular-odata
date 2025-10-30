@@ -28,11 +28,12 @@ export const StandardAggregateMethods = {
   min: 'min',
   max: 'max',
   average: 'average',
-  countdistinct: 'countdistinct'
+  countdistinct: 'countdistinct',
 } as const;
 export type StandardAggregateMethods = ObjectValues<typeof StandardAggregateMethods>;
 export type AggregateType<T> =
-  string | Record<string | keyof T, { with: StandardAggregateMethods; as: string }>;
+  | string
+  | Record<string | keyof T, { with: StandardAggregateMethods; as: string }>;
 
 // OrderBy
 
@@ -75,7 +76,7 @@ export const QueryCustomTypes = {
   Raw: 'Raw',
   Alias: 'Alias',
   Duration: 'Duration',
-  Binary: 'Binary'
+  Binary: 'Binary',
 } as const;
 export type QueryCustomTypes = ObjectValues<typeof QueryCustomTypes>;
 

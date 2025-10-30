@@ -13,7 +13,7 @@ export class Collection extends Base {
     options: ApiGenSchema,
     protected edmType: CsdlEntityType | CsdlComplexType,
     protected entity: Entity,
-    protected model: Model
+    protected model: Model,
   ) {
     super(pkg, options);
   }
@@ -36,22 +36,19 @@ export class Collection extends Base {
     };
   }
   public override name() {
-    return strings.classify(this.edmType.name()) + "Collection";
+    return strings.classify(this.edmType.name()) + 'Collection';
   }
   public override fileName() {
-    return (strings.dasherize(this.edmType.name()) + '.collection');
+    return strings.dasherize(this.edmType.name()) + '.collection';
   }
   public override directory() {
     return this.edmType.namespace().replace(/\./g, '/');
   }
   public override fullName() {
-    return this.edmType.fullName() + "Collection";
+    return this.edmType.fullName() + 'Collection';
   }
   public override importTypes(): string[] {
-    const imports = [
-      this.entity.fullName(),
-      this.model.fullName()
-    ];
+    const imports = [this.entity.fullName(), this.model.fullName()];
     if (this.edmType.BaseType) {
       imports.push(this.edmType.BaseType);
       imports.push(this.edmType.BaseType + 'Collection');

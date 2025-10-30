@@ -36,7 +36,7 @@ export function apigen(options: ApiGenSchema) {
   return async (tree: Tree, context: SchematicContext) => {
     const workspace = await getWorkspace(tree);
     if (!options.project) {
-      options.project = workspace.projects.keys().next().value ?? "";
+      options.project = workspace.projects.keys().next().value ?? '';
     }
     const project = workspace.projects.get(options.project);
     if (!project) {
@@ -63,7 +63,8 @@ export function apigen(options: ApiGenSchema) {
         const pkg = new Package(options, meta);
         pkg.resolveImports();
         return chain(
-          pkg.sources()
+          pkg
+            .sources()
             .map((s) =>
               apply(s.template(), [
                 template({

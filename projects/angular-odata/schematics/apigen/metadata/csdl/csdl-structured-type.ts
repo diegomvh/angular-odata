@@ -71,7 +71,10 @@ export class CsdlStructuredType extends CsdlAnnotable {
     return `${this.schema.Namespace}.${this.Name}`;
   }
 
-  findNavigationPropertyType(propertyName: string, findEntityType: (fullName: string) => CsdlEntityType | undefined): CsdlNavigationProperty | undefined {
+  findNavigationPropertyType(
+    propertyName: string,
+    findEntityType: (fullName: string) => CsdlEntityType | undefined,
+  ): CsdlNavigationProperty | undefined {
     let nav: CsdlNavigationProperty | undefined;
     let structured: CsdlStructuredType = this;
     while (true) {
@@ -80,7 +83,9 @@ export class CsdlStructuredType extends CsdlAnnotable {
       if (!structured.BaseType) break;
       structured = findEntityType(structured.BaseType) as CsdlStructuredType;
     }
-    throw new Error(`Navigation property '${propertyName}' not found on type '${this.fullName()}' or its base types.`);
+    throw new Error(
+      `Navigation property '${propertyName}' not found on type '${this.fullName()}' or its base types.`,
+    );
   }
 }
 

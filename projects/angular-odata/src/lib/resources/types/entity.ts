@@ -128,7 +128,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return this.patch(attrs, options);
   }
 
-  destroy(options?: ODataOptions): Observable<any> {
+  destroy(options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.delete(options);
   }
 

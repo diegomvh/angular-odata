@@ -7,7 +7,10 @@ import { Package } from './package';
 
 export class Module extends Base {
   services: Service[] = [];
-  constructor(protected pkg: Package, options: ApiGenSchema) {
+  constructor(
+    protected pkg: Package,
+    options: ApiGenSchema,
+  ) {
     super(pkg, options);
   }
   public override template(): Source {

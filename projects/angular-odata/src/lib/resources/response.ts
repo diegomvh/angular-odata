@@ -43,7 +43,7 @@ export type ODataResponseJson<T> = {
   status: number;
   statusText: string;
   url: string | null;
-}
+};
 
 /**
  * OData Response
@@ -78,10 +78,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
   }
 
-  static fromJson<T>(
-    req: ODataRequest<T>,
-    json: ODataResponseJson<T>
-  ) {
+  static fromJson<T>(req: ODataRequest<T>, json: ODataResponseJson<T>) {
     return new ODataResponse<T>({
       api: req.api,
       resource: req.resource,
@@ -93,8 +90,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
   }
 
-  toJson(): ODataResponseJson<T>
-  {
+  toJson(): ODataResponseJson<T> {
     return {
       body: this.body,
       headers: this.headers

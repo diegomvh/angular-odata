@@ -176,7 +176,9 @@ export class Callable {
     const { required, optional } = this.parameters();
     const parameters = [...required, ...optional];
     const returnType = this.returnType();
-    const callableNamespaceQualifiedName = this.callable.IsBound ? this.callable.fullName() : this.callable.Name;
+    const callableNamespaceQualifiedName = this.callable.IsBound
+      ? this.callable.fullName()
+      : this.callable.Name;
 
     const methodName = strings.camelize(this.callable.Name);
     const responseType =
@@ -219,7 +221,7 @@ export class Callable {
 
     let types = 'null';
     if (parameters.length > 0) {
-      types = `{${args.join(', ')}}`; 
+      types = `{${args.join(', ')}}`;
     }
 
     // Render
@@ -232,7 +234,8 @@ export class Callable {
 export abstract class Base {
   constructor(
     protected pkg: Package,
-    protected options: ApiGenSchema) {}
+    protected options: ApiGenSchema,
+  ) {}
 
   public abstract name(): string;
   public abstract fileName(): string;
@@ -366,7 +369,7 @@ export class Metadata extends Base {
   findEntityType(fullName: string) {
     return this.meta.findEntityType(fullName);
   }
-  
+
   findComplexType(fullName: string) {
     return this.meta.findComplexType(fullName);
   }

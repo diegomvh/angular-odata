@@ -27,7 +27,10 @@ export class Package {
   functions: Callable[] = [];
   actions: Callable[] = [];
 
-  constructor(protected options: ApiGenSchema, meta: ODataMetadata) {
+  constructor(
+    protected options: ApiGenSchema,
+    meta: ODataMetadata,
+  ) {
     this.metadata = new Metadata(this, options, meta);
     this.module = new Module(this, options);
     this.config = new ApiConfig(this, options);
@@ -119,24 +122,22 @@ export class Package {
         this.actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === s.entityType()),
       );
     });
-    this.models
-      .forEach((m: Model) => {
-        m.addCallables(
-          this.functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === m.entityType()),
-        );
-        m.addCallables(
-          this.actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === m.entityType()),
-        );
-      });
-    this.collections
-      .forEach((c: Collection) => {
-        c.addCallables(
-          this.functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === c.entityType()),
-        );
-        c.addCallables(
-          this.actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === c.entityType()),
-        );
-      });
+    this.models.forEach((m: Model) => {
+      m.addCallables(
+        this.functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === m.entityType()),
+      );
+      m.addCallables(
+        this.actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === m.entityType()),
+      );
+    });
+    this.collections.forEach((c: Collection) => {
+      c.addCallables(
+        this.functions.filter((f) => f.isBound() && f.bindingParameter()?.Type === c.entityType()),
+      );
+      c.addCallables(
+        this.actions.filter((f) => f.isBound() && f.bindingParameter()?.Type === c.entityType()),
+      );
+    });
   }
 
   resolveImports() {
@@ -195,5 +196,4 @@ export class Package {
   findCollection(fullName: string): Collection | undefined {
     return this.collections.find((c) => c.entityType() === fullName);
   }
-
 }

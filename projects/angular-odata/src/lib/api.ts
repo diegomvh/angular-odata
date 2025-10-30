@@ -89,8 +89,10 @@ export class ODataApi {
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
     this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
-    this.models = (config.models ?? {}) as {[type: string]: typeof ODataModel<any>};
-    this.collections = (config.collections ?? {}) as {[type: string]: typeof ODataCollection<any, ODataModel<any>>};
+    this.models = (config.models ?? {}) as { [type: string]: typeof ODataModel<any> };
+    this.collections = (config.collections ?? {}) as {
+      [type: string]: typeof ODataCollection<any, ODataModel<any>>;
+    };
   }
 
   configure(
@@ -486,7 +488,9 @@ export class ODataApi {
   }
 
   public findModel<T>(type: string) {
-    return (this.models[type] ?? this.findStructuredType<any>(type)?.model) as typeof ODataModel<T> | undefined;
+    return (this.models[type] ?? this.findStructuredType<any>(type)?.model) as
+      | typeof ODataModel<T>
+      | undefined;
   }
 
   public createModel<T>(structured: ODataStructuredType<T>) {
@@ -510,7 +514,9 @@ export class ODataApi {
   }
 
   public findCollection<T>(type: string) {
-    return (this.collections[type] ?? this.findStructuredType<any>(type)?.collection) as typeof ODataCollection<T, ODataModel<T>> | undefined;
+    return (this.collections[type] ?? this.findStructuredType<any>(type)?.collection) as
+      | typeof ODataCollection<T, ODataModel<T>>
+      | undefined;
   }
 
   public createCollection<T>(structured: ODataStructuredType<T>, model?: typeof ODataModel<T>) {
@@ -531,7 +537,10 @@ export class ODataApi {
       const structured = this.findStructuredType<T>(type);
       if (structured === undefined) throw Error(`No structured type for ${type}`);
       const Model = this.modelForType<T>(type);
-      Collection = this.createCollection<T>(structured, Model) as typeof ODataCollection<T, ODataModel<T>>;
+      Collection = this.createCollection<T>(structured, Model) as typeof ODataCollection<
+        T,
+        ODataModel<T>
+      >;
     }
     return Collection;
   }

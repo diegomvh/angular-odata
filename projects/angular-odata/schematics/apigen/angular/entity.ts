@@ -8,7 +8,10 @@ import { toTypescriptType } from '../utils';
 import { Package } from './package';
 
 export class EntityProperty {
-  constructor(protected entity: Entity, protected edmType: CsdlProperty | CsdlNavigationProperty) {}
+  constructor(
+    protected entity: Entity,
+    protected edmType: CsdlProperty | CsdlNavigationProperty,
+  ) {}
 
   name() {
     const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.Nullable);
@@ -20,9 +23,8 @@ export class EntityProperty {
     const pkg = this.entity.getPackage();
     const enumType = pkg.findEnum(this.edmType.Type);
     const entityType = pkg.findEntity(this.edmType.Type);
-    let type = "any";
-    if (enumType !== undefined)
-    {
+    let type = 'any';
+    if (enumType !== undefined) {
       type = enumType.importedName!;
       type += this.edmType.Collection ? '[]' : '';
     } else if (entityType !== undefined) {
@@ -36,7 +38,9 @@ export class EntityProperty {
   }
 
   isGeoSpatial(): boolean {
-    return this.edmType.Type.startsWith('Edm.Geography') || this.edmType.Type.startsWith('Edm.Geometry');
+    return (
+      this.edmType.Type.startsWith('Edm.Geography') || this.edmType.Type.startsWith('Edm.Geometry')
+    );
   }
 }
 

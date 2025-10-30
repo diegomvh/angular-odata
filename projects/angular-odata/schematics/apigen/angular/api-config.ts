@@ -19,7 +19,7 @@ export class ApiConfig extends Base {
       version: this.options.version,
       creation: this.options.creation,
       models: this.pkg.models,
-      collections: this.pkg.collections
+      collections: this.pkg.collections,
     };
   }
   public override name() {
@@ -36,8 +36,8 @@ export class ApiConfig extends Base {
   }
   public override importTypes(): string[] {
     const imports = [
-      ...this.pkg.models.map(m => m.fullName()),
-      ...this.pkg.collections.map(c => c.fullName())
+      ...this.pkg.models.map((m) => m.fullName()),
+      ...this.pkg.collections.map((c) => c.fullName()),
     ];
     return imports;
   }

@@ -679,7 +679,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         return resource.destroy(options).pipe(map(() => model));
       }
     } else if (resource instanceof ODataEntitySetResource) {
-      return model.asEntity((e) => e.destroy(options));
+      return model.asEntity((e) => e.destroy(options)).pipe(map(() => model));
     } else {
       return of(model);
     }

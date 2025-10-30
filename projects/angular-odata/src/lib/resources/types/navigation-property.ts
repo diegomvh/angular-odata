@@ -152,24 +152,15 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   //#region Requests
-  protected override post(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<ODataEntity<T>> {
+  protected override post(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override put(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<ODataEntity<T>> {
+  protected override put(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override patch(
-    attrs: Partial<T>,
-    options: ODataOptions = {},
-  ): Observable<ODataEntity<T>> {
+  protected override patch(attrs: Partial<T>, options: ODataOptions = {}): Observable<any> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
@@ -224,7 +215,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns An observable of the destroy
    */
-  destroy(options?: ODataOptions): Observable<any> {
+  destroy(options?: ODataOptions): Observable<ODataEntity<T>> {
     return this.delete(options);
   }
 

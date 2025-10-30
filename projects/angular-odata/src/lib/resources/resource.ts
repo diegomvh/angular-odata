@@ -5,16 +5,18 @@ import { DEFAULT_VERSION, PARAM_SEPARATOR, QUERY_SEPARATOR, VALUE_SEPARATOR } fr
 import { ODataHelper } from '../helper';
 import type { ModelInterface, ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
-import type {
-  ODataStructuredTypeFieldConfig,
-  Parser,
-  ParserOptions,
-  QueryOption,
-} from '../types';
+import type { ODataStructuredTypeFieldConfig, Parser, ParserOptions, QueryOption } from '../types';
 import { PathSegment } from '../types';
 import { Objects, Strings, Types } from '../utils';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
-import { ApplyExpression, ApplyExpressionBuilder, isQueryCustomType, ODataQueryOptions, ODataQueryOptionsHandler, QueryCustomType } from './query';
+import {
+  ApplyExpression,
+  ApplyExpressionBuilder,
+  isQueryCustomType,
+  ODataQueryOptions,
+  ODataQueryOptionsHandler,
+  QueryCustomType,
+} from './query';
 import type { ODataOptions } from './types';
 
 export type EntityKey<T> =
