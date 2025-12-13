@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content class">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -288,7 +306,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/ODataModel.html" target="_self" >&lt;any | ODataModel&lt;any&gt;&gt;</a></code>
+                        <i>Type : </i>        <code><a href="../classes/ODataModel.html" target="_self" >unknown&lt;any | ODataModel&lt;any&gt;&gt;</a></code>
 
                     </td>
                 </tr>
@@ -316,7 +334,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>&lt;any&gt;</code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown&lt;any&gt;</a></code>
 
                     </td>
                 </tr>
@@ -758,7 +776,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>destroy(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, options?)</code>
+                    <code>destroy(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, options?: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -808,6 +826,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1048,7 +1067,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchMany(top: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, options?)</code>
+                    <code>fetchMany(top: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, options?: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -1096,6 +1115,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1137,7 +1157,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchOne(options?)</code>
+                    <code>fetchOne(options?: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -1162,6 +1182,7 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Description</td>
                                         </tr>
@@ -1169,6 +1190,9 @@
                                     <tbody>
                                         <tr>
                                                 <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     Yes
@@ -1209,7 +1233,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchOrCreate(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, undefined)</code>
+                    <code>fetchOrCreate(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -1279,6 +1303,7 @@
                                         </tr>
                                         <tr>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1400,7 +1425,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>modify(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?)</code>
+                    <code>modify(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -1466,6 +1491,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1507,7 +1533,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>save(attrs: Partial<T>, undefined)</code>
+                    <code>save(attrs: Partial<T>, undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -1559,6 +1585,7 @@
                                         </tr>
                                         <tr>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1601,7 +1628,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?)</code>
+                    <code>update(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -1667,6 +1694,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1708,7 +1736,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1778,6 +1806,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1827,7 +1856,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1897,6 +1926,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1946,7 +1976,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2003,6 +2033,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>

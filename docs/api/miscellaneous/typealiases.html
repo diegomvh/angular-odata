@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content miscellaneous-typealiases">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -404,7 +422,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | Record&lt;string |  | literal type&gt;</code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >string | Record&lt;string | unknown | literal type&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -436,7 +454,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code> | NestedExpandOptions&lt;T&gt;</code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown | NestedExpandOptions&lt;T&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -500,7 +518,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | Record&lt;string |  | any&gt;</code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >string | Record&lt;string | unknown | any&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -532,7 +550,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>U | </code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >U | unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -548,7 +566,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -564,7 +582,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -612,7 +630,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code> |  | NestedOrderBy&lt;T&gt;</code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown | unknown | NestedOrderBy&lt;T&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -660,7 +678,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>ObjectValues&lt;&gt;</code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >ObjectValues&lt;unknown&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -676,7 +694,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -724,7 +742,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>ObjectValues&lt;&gt;</code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >ObjectValues&lt;unknown&gt;</a></code>
 </code>
                 </td>
             </tr>
@@ -756,7 +774,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1136,7 +1154,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>        <code><a href="../classes/Type.html" target="_self" > | QueryCustomType | string | number</a></code>
+                    <code>        <code><a href="../classes/Type.html" target="_self" >unknown | QueryCustomType | string | number</a></code>
 </code>
                 </td>
             </tr>
@@ -1206,7 +1224,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1222,7 +1240,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1254,7 +1272,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1304,7 +1322,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1352,7 +1370,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1386,7 +1404,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1402,7 +1420,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1418,7 +1436,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1450,7 +1468,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>
@@ -1466,7 +1484,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code></code>
+                    <code>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
 </code>
                 </td>
             </tr>

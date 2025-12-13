@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content interface">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -608,8 +626,8 @@ export type ODataApiConfig &#x3D; {
   parsers?: { [type: string]: Parser&lt;any&gt; };
   schemas?: ODataSchemaConfig[];
   references?: ODataReferenceConfig[];
-  models?: {[type: string]: { new (...params: any[]): any }};
-  collections?: {[type: string]: { new (...params: any[]): any }};
+  models?: { [type: string]: { new (...params: any[]): any } };
+  collections?: { [type: string]: { new (...params: any[]): any } };
 };
 export type ODataAnnotationConfig &#x3D; {
   term: string;

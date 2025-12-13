@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content class">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -542,6 +560,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                     <tr>
                         <td class="col-md-4">
                                 <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/angular-odata/src/lib/models/collection.ts:54</a></div>
@@ -564,7 +588,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code> | null</code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown | null</a></code>
 
                     </td>
                 </tr>
@@ -715,7 +739,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>&lt;any&gt; | null</code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown&lt;any&gt; | null</a></code>
 
                     </td>
                 </tr>
@@ -1691,7 +1715,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>asEntitySet(ctx: (undefined) => void)</code>
+<code>asEntitySet(ctx: (collection: <a href="../undefineds/now.html">unknown</a>) => void)</code>
                 </td>
             </tr>
 
@@ -2495,7 +2519,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetch(undefined)</code>
+<code>fetch(undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -2518,12 +2542,16 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -2561,7 +2589,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchAll(undefined)</code>
+<code>fetchAll(undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -2584,12 +2612,16 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -2627,7 +2659,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchMany(top: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, undefined)</code>
+<code>fetchMany(top: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -2672,6 +2704,7 @@
                                         </tr>
                                         <tr>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2710,7 +2743,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetchOne(undefined)</code>
+<code>fetchOne(undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -2733,12 +2766,16 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -4499,7 +4536,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>save(undefined)</code>
+<code>save(undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -4524,12 +4561,16 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -4567,7 +4608,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>set(path: string | string[], value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, undefined)</code>
+<code>set(path: string | string[], value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -4621,6 +4662,7 @@
                                         </tr>
                                         <tr>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -4854,7 +4896,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>[]</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown[]</a></code>
 
                         </div>
                             <div class="io-description">
@@ -4914,7 +4956,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>withResource(resource: <a href="../objects/OData.html" target="_self">ODataEntitySetResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt; | null</a>, ctx: (undefined) => void)</code>
+<code>withResource(resource: <a href="../objects/OData.html" target="_self">ODataEntitySetResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt; | null</a>, ctx: (collection: <a href="../undefineds/now.html">unknown</a>) => void)</code>
                 </td>
             </tr>
 
@@ -5767,7 +5809,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
         return resource.destroy(options).pipe(map(() &#x3D;&gt; model));
       }
     } else if (resource instanceof ODataEntitySetResource) {
-      return model.asEntity((e) &#x3D;&gt; e.destroy(options));
+      return model.asEntity((e) &#x3D;&gt; e.destroy(options)).pipe(map(() &#x3D;&gt; model));
     } else {
       return of(model);
     }

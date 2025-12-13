@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content miscellaneous-functions">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -1133,7 +1151,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildPathAndQuery(__namedParameters: {select: <a href="../undefineds/QueryOptions.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search, skiptoken, format, top, skip, filter, apply, transform, compute, orderBy, key, count, expand, action, func, aliases, escape})</code>
+<code>buildPathAndQuery(__namedParameters: {select: <a href="../undefineds/QueryOptions.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search: <a href="../undefineds/now.html" target="_self">unknown</a>, skiptoken: <a href="../undefineds/now.html" target="_self">unknown</a>, format: <a href="../undefineds/now.html" target="_self">unknown</a>, top: <a href="../undefineds/now.html" target="_self">unknown</a>, skip: <a href="../undefineds/now.html" target="_self">unknown</a>, filter: <a href="../undefineds/now.html" target="_self">unknown</a>, apply: <a href="../undefineds/now.html" target="_self">unknown</a>, transform: <a href="../undefineds/now.html" target="_self">unknown</a>, compute: <a href="../undefineds/now.html" target="_self">unknown</a>, orderBy: <a href="../undefineds/now.html" target="_self">unknown</a>, key: <a href="../undefineds/now.html" target="_self">unknown</a>, count: <a href="../undefineds/now.html" target="_self">unknown</a>, expand: <a href="../undefineds/now.html" target="_self">unknown</a>, action: <a href="../undefineds/now.html" target="_self">unknown</a>, func: <a href="../undefineds/now.html" target="_self">unknown</a>, aliases: <a href="../undefineds/now.html" target="_self">unknown</a>, escape: <a href="../undefineds/now.html" target="_self">unknown</a>})</code>
                 </td>
             </tr>
 
@@ -1170,6 +1188,7 @@
                                         <tr>
                                                 <td>search</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1181,6 +1200,7 @@
                                         <tr>
                                                 <td>skiptoken</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1192,6 +1212,7 @@
                                         <tr>
                                                 <td>format</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1203,6 +1224,7 @@
                                         <tr>
                                                 <td>top</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1214,6 +1236,7 @@
                                         <tr>
                                                 <td>skip</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1225,6 +1248,7 @@
                                         <tr>
                                                 <td>filter</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1236,6 +1260,7 @@
                                         <tr>
                                                 <td>apply</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1247,6 +1272,7 @@
                                         <tr>
                                                 <td>transform</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1258,6 +1284,7 @@
                                         <tr>
                                                 <td>compute</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1269,6 +1296,7 @@
                                         <tr>
                                                 <td>orderBy</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1280,6 +1308,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1291,6 +1320,7 @@
                                         <tr>
                                                 <td>count</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1302,6 +1332,7 @@
                                         <tr>
                                                 <td>expand</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1313,6 +1344,7 @@
                                         <tr>
                                                 <td>action</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1324,6 +1356,7 @@
                                         <tr>
                                                 <td>func</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1335,6 +1368,7 @@
                                         <tr>
                                                 <td>aliases</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1346,6 +1380,7 @@
                                         <tr>
                                                 <td>escape</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1356,6 +1391,13 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
                             </div>
                 </td>
             </tr>
@@ -1915,7 +1957,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>Unnamed function(__namedParameters: {select: <a href="../undefineds/QueryOptions.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search, skiptoken, format, top, skip, filter, transform, compute, orderBy, key, count, expand, action, func, aliases, escape})</code>
+<code>Unnamed function(__namedParameters: {select: <a href="../undefineds/QueryOptions.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search: <a href="../undefineds/now.html" target="_self">unknown</a>, skiptoken: <a href="../undefineds/now.html" target="_self">unknown</a>, format: <a href="../undefineds/now.html" target="_self">unknown</a>, top: <a href="../undefineds/now.html" target="_self">unknown</a>, skip: <a href="../undefineds/now.html" target="_self">unknown</a>, filter: <a href="../undefineds/now.html" target="_self">unknown</a>, transform: <a href="../undefineds/now.html" target="_self">unknown</a>, compute: <a href="../undefineds/now.html" target="_self">unknown</a>, orderBy: <a href="../undefineds/now.html" target="_self">unknown</a>, key: <a href="../undefineds/now.html" target="_self">unknown</a>, count: <a href="../undefineds/now.html" target="_self">unknown</a>, expand: <a href="../undefineds/now.html" target="_self">unknown</a>, action: <a href="../undefineds/now.html" target="_self">unknown</a>, func: <a href="../undefineds/now.html" target="_self">unknown</a>, aliases: <a href="../undefineds/now.html" target="_self">unknown</a>, escape: <a href="../undefineds/now.html" target="_self">unknown</a>})</code>
                 </td>
             </tr>
 
@@ -1952,6 +1994,7 @@
                                         <tr>
                                                 <td>search</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1963,6 +2006,7 @@
                                         <tr>
                                                 <td>skiptoken</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1974,6 +2018,7 @@
                                         <tr>
                                                 <td>format</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1985,6 +2030,7 @@
                                         <tr>
                                                 <td>top</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -1996,6 +2042,7 @@
                                         <tr>
                                                 <td>skip</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2007,6 +2054,7 @@
                                         <tr>
                                                 <td>filter</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2018,6 +2066,7 @@
                                         <tr>
                                                 <td>transform</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2029,6 +2078,7 @@
                                         <tr>
                                                 <td>compute</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2040,6 +2090,7 @@
                                         <tr>
                                                 <td>orderBy</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2051,6 +2102,7 @@
                                         <tr>
                                                 <td>key</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2062,6 +2114,7 @@
                                         <tr>
                                                 <td>count</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2073,6 +2126,7 @@
                                         <tr>
                                                 <td>expand</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2084,6 +2138,7 @@
                                         <tr>
                                                 <td>action</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2095,6 +2150,7 @@
                                         <tr>
                                                 <td>func</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2106,6 +2162,7 @@
                                         <tr>
                                                 <td>aliases</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2117,6 +2174,7 @@
                                         <tr>
                                                 <td>escape</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2493,7 +2551,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>ModelField(__namedParameters: {name, ...options: any[]})</code>
+<code>ModelField(__namedParameters: {name: <a href="../undefineds/now.html" target="_self">unknown</a>, ...options: any[]})</code>
                 </td>
             </tr>
 
@@ -2518,6 +2576,7 @@
                                         <tr>
                                                 <td>name</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -2666,6 +2725,13 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
                             </div>
                 </td>
             </tr>

@@ -23,16 +23,18 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                 <li class="chapter">
                     <a data-type="chapter-link" href="index.html"><span class="icon ion-ios-home"></span>Getting started</a>
                     <ul class="links">
-                        <li class="link">
-                            <a href="overview.html" data-type="chapter-link">
-                                <span class="icon ion-ios-keypad"></span>Overview
-                            </a>
-                        </li>
-                        <li class="link">
-                            <a href="index.html" data-type="chapter-link">
-                                <span class="icon ion-ios-paper"></span>README
-                            </a>
-                        </li>
+                                <li class="link">
+                                    <a href="overview.html" data-type="chapter-link">
+                                        <span class="icon ion-ios-keypad"></span>Overview
+                                    </a>
+                                </li>
+
+                            <li class="link">
+                                <a href="index.html" data-type="chapter-link">
+                                    <span class="icon ion-ios-paper"></span>
+                                        README
+                                </a>
+                            </li>
                         <li class="link">
                             <a href="changelog.html"  data-type="chapter-link">
                                 <span class="icon ion-ios-paper"></span>CHANGELOG
@@ -58,6 +60,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                         <span class="icon ion-ios-apps"></span>Properties
                                     </a>
                                 </li>
+
                     </ul>
                 </li>
                     <li class="chapter modules">
@@ -545,6 +548,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <li class="link">
                                     <a href="injectables/ODataServiceFactory.html" data-type="entity-link" >ODataServiceFactory</a>
                                 </li>
+                                <li class="link">
+                                    <a href="injectables/PeopleService.html" data-type="entity-link" >PeopleService</a>
+                                </li>
                             </ul>
                         </li>
                     <li class="chapter">
@@ -556,7 +562,16 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? ' id="interfaces-links"' : 'id="xs-interfaces-links"' }>
                             <li class="link">
+                                <a href="interfaces/Airline.html" data-type="entity-link" >Airline</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Airport.html" data-type="entity-link" >Airport</a>
+                            </li>
+                            <li class="link">
                                 <a href="interfaces/FieldParser.html" data-type="entity-link" >FieldParser</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Flight.html" data-type="entity-link" >Flight</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/ODataApiConfigOptions.html" data-type="entity-link" >ODataApiConfigOptions</a>
@@ -580,6 +595,18 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/PassedInitialConfig.html" data-type="entity-link" >PassedInitialConfig</a>
                             </li>
                             <li class="link">
+                                <a href="interfaces/Person.html" data-type="entity-link" >Person</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Photo.html" data-type="entity-link" >Photo</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/PlanItem.html" data-type="entity-link" >PlanItem</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/PublicTransportation.html" data-type="entity-link" >PublicTransportation</a>
+                            </li>
+                            <li class="link">
                                 <a href="interfaces/Renderable.html" data-type="entity-link" >Renderable</a>
                             </li>
                             <li class="link">
@@ -587,6 +614,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/StructuredTypeFieldOptions.html" data-type="entity-link" >StructuredTypeFieldOptions</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Trip.html" data-type="entity-link" >Trip</a>
                             </li>
                         </ul>
                     </li>
@@ -612,6 +642,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                         </ul>
                     </li>
+                        <li class="chapter">
+                            <a data-type="chapter-link" href="routes.html"><span class="icon ion-ios-git-branch"></span>Routes</a>
+                        </li>
                     <li class="divider"></li>
                     <li class="copyright">
                         Documentation generated using <a href="https://compodoc.app/" target="_blank" rel="noopener noreferrer">

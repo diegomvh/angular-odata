@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content class">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -364,7 +382,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../objects/OData.html" target="_self">ODataActionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -434,6 +452,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -483,7 +502,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../classes/Function.html" target="_self">ODataFunctionOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -553,6 +572,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -602,7 +622,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -659,6 +679,7 @@
                                         <tr>
                                                 <td>responseType</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>

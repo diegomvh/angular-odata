@@ -6,7 +6,7 @@ import {
   PersonGender,
   Flight,
   FlagEnums,
-} from '../../trippin.spec';
+} from '../../trippin.config';
 import { ODataClient } from '../../client';
 import { provideODataClient } from '../../module';
 import { ODataEnumTypeParser } from './enum-type';

@@ -1,0 +1,889 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  PlanItem</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/angular-odata/src/lib/trippin.config.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#ConfirmationCode" 
+>
+                                            ConfirmationCode
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#Description" 
+>
+                                            Description
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#Duration" 
+>
+                                            Duration
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#EndsAt" 
+>
+                                            EndsAt
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#OccursAt" 
+>
+                                            OccursAt
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#PlanItemId" 
+>
+                                            PlanItemId
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#StartsAt" 
+>
+                                            StartsAt
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="ConfirmationCode"></a>
+                                        <span class="name "><b>ConfirmationCode</b>
+                                            <a href="#ConfirmationCode">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>ConfirmationCode:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="Description"></a>
+                                        <span class="name "><b>Description</b>
+                                            <a href="#Description">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>Description:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="Duration"></a>
+                                        <span class="name "><b>Duration</b>
+                                            <a href="#Duration">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>Duration:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="EndsAt"></a>
+                                        <span class="name "><b>EndsAt</b>
+                                            <a href="#EndsAt">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>EndsAt:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="OccursAt"></a>
+                                        <span class="name "><b>OccursAt</b>
+                                            <a href="#OccursAt">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>OccursAt:         <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="PlanItemId"></a>
+                                        <span class="name "><b>PlanItemId</b>
+                                            <a href="#PlanItemId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>PlanItemId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="StartsAt"></a>
+                                        <span class="name "><b>StartsAt</b>
+                                            <a href="#StartsAt">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>StartsAt:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { ODataClient } from &#x27;./client&#x27;;
+import { EDM_PARSERS } from &#x27;./schema&#x27;;
+import { ODataEntitySetService } from &#x27;./services&#x27;;
+import {
+  ODataApiConfig,
+  ODataEntitySetConfig,
+  ODataEnumTypeConfig,
+  ODataStructuredTypeConfig,
+} from &#x27;./types&#x27;;
+
+export const CONFIG_NAME &#x3D; &#x27;TripPin&#x27;;
+export const SERVICE_ROOT &#x3D; &#x27;https://services.odata.org/v4/TripPinServiceRW/&#x27;;
+export const NAMESPACE &#x3D; &#x27;TripPin&#x27;;
+
+//#region Enum
+export enum FlagEnums {
+  Flag1 &#x3D; 1 &lt;&lt; 0,
+  Flag2 &#x3D; 1 &lt;&lt; 1,
+  Flag4 &#x3D; 1 &lt;&lt; 2,
+}
+export enum PersonGender {
+  Male &#x3D; 0,
+  Female &#x3D; 1,
+  Unknown &#x3D; 2,
+}
+export const FlagEnumsConfig &#x3D; {
+  name: &#x27;FlagEnums&#x27;,
+  flags: true,
+  members: FlagEnums,
+  fields: {
+    Flag1: { value: FlagEnums.Flag1 },
+    Flag2: { value: FlagEnums.Flag2 },
+    Flag4: { value: FlagEnums.Flag4 },
+  },
+} as ODataEnumTypeConfig;
+export const PersonGenderConfig &#x3D; {
+  name: &#x27;PersonGender&#x27;,
+  members: PersonGender,
+  fields: {
+    Male: { value: PersonGender.Male },
+    Female: { value: PersonGender.Female },
+    Unknown: { value: PersonGender.Unknown },
+  },
+} as ODataEnumTypeConfig;
+//#endregion
+
+//#region Entities
+export interface Photo {
+  Id: number;
+  Name?: string;
+}
+export const PhotoConfig &#x3D; {
+  name: &#x27;Photo&#x27;,
+  annotations: [{ term: &#x27;Org.OData.Core.V1.AcceptableMediaTypes&#x27; }],
+  fields: {
+    Id: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    Name: { type: &#x27;Edm.String&#x27; },
+  },
+} as ODataStructuredTypeConfig;
+
+export interface Airline {
+  AirlineCode: string;
+  Name: string;
+}
+
+export const AirlineEntityConfig &#x3D; {
+  name: &#x27;Airline&#x27;,
+  keys: [{ name: &#x27;AirlineCode&#x27; }],
+  fields: {
+    AirlineCode: {
+      type: &#x27;Edm.String&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
+  },
+} as ODataStructuredTypeConfig;
+
+export interface Airport {
+  IcaoCode: string;
+  Name: string;
+  IataCode: string;
+}
+
+export const AirportEntityConfig &#x3D; {
+  name: &#x27;Airport&#x27;,
+  keys: [{ name: &#x27;IcaoCode&#x27; }],
+  fields: {
+    IcaoCode: {
+      type: &#x27;Edm.String&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
+    IataCode: {
+      type: &#x27;Edm.String&#x27;,
+      nullable: false,
+      annotations: [{ term: &#x27;Org.OData.Core.V1.Immutable&#x27;, bool: true }],
+    },
+  },
+} as ODataStructuredTypeConfig;
+
+export interface PlanItem {
+  PlanItemId: number;
+  ConfirmationCode?: string;
+  Description?: string;
+  StartsAt?: Date;
+  OccursAt?: any;
+  EndsAt?: Date;
+  Duration?: string;
+}
+export const PlanItemConfig &#x3D; {
+  name: &#x27;PlanItem&#x27;,
+  keys: [{ name: &#x27;PlanItemId&#x27; }],
+  fields: {
+    PlanItemId: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    ConfirmationCode: { type: &#x27;Edm.String&#x27;, default: &#x27;0&#x27; },
+    StartsAt: {
+      type: &#x27;Edm.DateTimeOffset&#x27;,
+      default: &#x27;2022-08-05T15:50:12.052Z&#x27;,
+    },
+    EndsAt: { type: &#x27;Edm.DateTimeOffset&#x27; },
+    Duration: { type: &#x27;Edm.String&#x27;, default: &#x27;M&#x27; },
+  },
+} as ODataStructuredTypeConfig;
+export interface PublicTransportation extends PlanItem {
+  SeatNumber?: string;
+}
+
+export const PublicTransportationEntityConfig &#x3D; {
+  name: &#x27;PublicTransportation&#x27;,
+  base: &#x60;${NAMESPACE}.PlanItem&#x60;,
+  fields: {
+    SeatNumber: { type: &#x27;Edm.String&#x27;, default: &#x27;0&#x27; },
+  },
+} as ODataStructuredTypeConfig;
+
+export interface Flight extends PublicTransportation {
+  FlightNumber: string;
+  From?: Airport;
+  To?: Airport;
+  Airline?: Airline;
+}
+
+export const FlightEntityConfig &#x3D; {
+  name: &#x27;Flight&#x27;,
+  base: &#x60;${NAMESPACE}.PublicTransportation&#x60;,
+  fields: {
+    FlightNumber: { type: &#x27;Edm.String&#x27;, nullable: false, default: &#x27;0&#x27; },
+    From: { type: &#x60;${NAMESPACE}.Airport&#x60;, navigation: true },
+    To: { type: &#x60;${NAMESPACE}.Airport&#x60;, navigation: true },
+    Airline: { type: &#x60;${NAMESPACE}.Airline&#x60;, navigation: true },
+  },
+} as ODataStructuredTypeConfig;
+
+export interface Trip {
+  TripId: number;
+  ShareId?: string;
+  Description?: string;
+  Name: string;
+  Budget: number;
+  StartsAt: Date;
+  EndsAt: Date;
+  Tags: string[];
+  Photos?: Photo[];
+  PlanItems?: PlanItem[];
+}
+export const TripConfig &#x3D; {
+  name: &#x27;Trip&#x27;,
+  annotations: [],
+  fields: {
+    TripId: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    ShareId: { type: &#x27;Edm.String&#x27; },
+    Description: { type: &#x27;Edm.String&#x27; },
+    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
+    Budget: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [
+        { term: &#x27;Org.OData.Measures.V1.ISOCurrency&#x27;, string: &#x27;USD&#x27; },
+        { term: &#x27;Org.OData.Measures.V1.Scale&#x27;, int: 2 },
+      ],
+    },
+    StartsAt: { type: &#x27;Edm.DateTimeOffset&#x27;, nullable: false },
+    EndsAt: { type: &#x27;Edm.DateTimeOffset&#x27;, nullable: false },
+    Tags: { type: &#x27;Edm.String&#x27;, nullable: false, collection: true },
+    Photos: { type: &#x60;${NAMESPACE}.Photo&#x60;, collection: true, navigation: true },
+    PlanItems: {
+      type: &#x60;${NAMESPACE}.PlanItem&#x60;,
+      collection: true,
+      navigation: true,
+    },
+  },
+} as ODataStructuredTypeConfig;
+
+export interface Person {
+  UserName: string;
+  FirstName: string;
+  LastName: string;
+  Emails?: string[];
+  Gender?: PersonGender;
+  Friends?: Person[];
+  Trips?: Trip[];
+  Photo?: Photo;
+}
+export const PersonConfig &#x3D; {
+  name: &#x27;Person&#x27;,
+  annotations: [],
+  fields: {
+    UserName: {
+      type: &#x27;Edm.String&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    FirstName: { type: &#x27;Edm.String&#x27;, nullable: false },
+    LastName: { type: &#x27;Edm.String&#x27;, nullable: false },
+    Emails: { type: &#x27;Edm.String&#x27;, collection: true },
+    Gender: { type: &#x60;${NAMESPACE}.PersonGender&#x60; },
+    Concurrency: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [{ term: &#x27;Org.OData.Core.V1.Computed&#x27;, bool: true }],
+    },
+    Friends: {
+      type: &#x60;${NAMESPACE}.Person&#x60;,
+      collection: true,
+      navigation: true,
+    },
+    Trips: { type: &#x60;${NAMESPACE}.Trip&#x60;, collection: true, navigation: true },
+    Photo: { type: &#x60;${NAMESPACE}.Photo&#x60;, navigation: true },
+  },
+} as ODataStructuredTypeConfig;
+//#endregion
+
+//#region Services
+@Injectable()
+export class PeopleService extends ODataEntitySetService&lt;Person&gt; {
+  constructor(client: ODataClient) {
+    super(client, &#x27;People&#x27;, &#x60;${NAMESPACE}.Person&#x60;);
+  }
+}
+export const PeopleConfig &#x3D; {
+  name: &#x27;People&#x27;,
+  entityType: &#x60;${NAMESPACE}.Person&#x60;,
+  service: PeopleService,
+} as ODataEntitySetConfig;
+//#endregion
+
+export const TripPinConfig &#x3D; {
+  name: CONFIG_NAME,
+  serviceRootUrl: SERVICE_ROOT,
+  options: {
+    stringAsEnum: true,
+    stripMetadata: &#x27;full&#x27;,
+    fetchPolicy: &#x27;no-cache&#x27;,
+  },
+  schemas: [
+    {
+      namespace: &#x60;${NAMESPACE}&#x60;,
+      enums: [PersonGenderConfig, FlagEnumsConfig],
+      entities: [
+        PhotoConfig,
+        PersonConfig,
+        PlanItemConfig,
+        TripConfig,
+        PublicTransportationEntityConfig,
+        FlightEntityConfig,
+        AirlineEntityConfig,
+        AirportEntityConfig,
+      ],
+      containers: [
+        {
+          entitySets: [PeopleConfig],
+        },
+      ],
+    },
+  ],
+  parsers: EDM_PARSERS,
+} as ODataApiConfig;
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'PlanItem.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

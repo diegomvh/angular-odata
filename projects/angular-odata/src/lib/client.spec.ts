@@ -26,7 +26,7 @@ import {
   TripPinConfig,
   Flight,
   CONFIG_NAME,
-} from './trippin.spec';
+} from './trippin.config';
 import { QueryOption } from './types';
 import { provideZonelessChangeDetection } from '@angular/core';
 
@@ -290,7 +290,7 @@ describe('ODataClient', () => {
       .query((q) => q.top(2))
       .fetch()
       .subscribe(({ entities, annots }) => {
-        expect(entities !== null).toBeTrue();
+        expect(entities !== null).toBeTruthy();
         expect((entities as any[]).length).toBe(2);
         expect(annots.entitySet).toEqual('People');
         expect(entities).toEqual(dummyPeople);
@@ -373,7 +373,7 @@ describe('ODataClient', () => {
         Tags: ['Test Tag 1', 'Test Tag 2'],
       })
       .subscribe(({ entity, annots: meta }) => {
-        expect(entity !== null).toBeTrue();
+        expect(entity !== null).toBeTruthy();
         expect(meta.entitySet).toEqual('People');
         expect(entity).toEqual(trip);
       });
@@ -419,7 +419,7 @@ describe('ODataClient', () => {
       .navigationProperty<PlanItem>('PlanItems')
       .create(item)
       .subscribe(({ entity, annots: meta }) => {
-        expect(entity !== null).toBeTrue();
+        expect(entity !== null).toBeTruthy();
         expect(meta.entitySet).toEqual('People');
         expect(entity).toEqual(item);
       });

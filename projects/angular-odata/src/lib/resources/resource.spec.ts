@@ -11,7 +11,7 @@ import {
 import { raw } from './query';
 import { ODataClient } from '../client';
 import { provideODataClient } from '../module';
-import { Person, Photo } from '../trippin.spec';
+import { Person, Photo } from '../trippin.config';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -510,11 +510,11 @@ describe('ODataResource', () => {
     const keithpinckney = mirsking
       .navigationProperty<Person>('Friends')
       .key('keithpinckney');
-    expect(entity.isParentOf(mirsking)).toBeTrue();
-    expect(mirsking.isParentOf(keithpinckney)).toBeTrue();
-    expect(set.isParentOf(entity)).toBeTrue();
-    expect(set.isParentOf(mirsking)).toBeTrue();
-    expect(set.isParentOf(keithpinckney)).toBeTrue();
+    expect(entity.isParentOf(mirsking)).toBeTruthy();
+    expect(mirsking.isParentOf(keithpinckney)).toBeTruthy();
+    expect(set.isParentOf(entity)).toBeTruthy();
+    expect(set.isParentOf(mirsking)).toBeTruthy();
+    expect(set.isParentOf(keithpinckney)).toBeTruthy();
   });
 
   it('should detect child resources', () => {
@@ -530,10 +530,10 @@ describe('ODataResource', () => {
     const keithpinckney = mirsking
       .navigationProperty<Person>('Friends')
       .key('keithpinckney');
-    expect(mirsking.isChildOf(entity)).toBeTrue();
-    expect(keithpinckney.isChildOf(mirsking)).toBeTrue();
-    expect(keithpinckney.isChildOf(entity)).toBeTrue();
-    expect(keithpinckney.isChildOf(set)).toBeTrue();
+    expect(mirsking.isChildOf(entity)).toBeTruthy();
+    expect(keithpinckney.isChildOf(mirsking)).toBeTruthy();
+    expect(keithpinckney.isChildOf(entity)).toBeTruthy();
+    expect(keithpinckney.isChildOf(set)).toBeTruthy();
   });
   */
 
@@ -553,7 +553,7 @@ describe('ODataResource', () => {
       },
     );
     const entity2 = set2.entity('russellwhyte').query((q) => q.expand({ Friends: {} }));
-    expect(entity1.isEqualTo(entity2, 'path')).toBeTrue();
+    expect(entity1.isEqualTo(entity2, 'path')).toBeTruthy();
   });
 
   it('should detect equals by params resources', () => {
@@ -572,7 +572,7 @@ describe('ODataResource', () => {
       },
     );
     const entity2 = set2.entity('russellwhyte').query((q) => q.expand({ Friends: {} }));
-    expect(entity1.isEqualTo(entity2, 'params')).toBeTrue();
+    expect(entity1.isEqualTo(entity2, 'params')).toBeTruthy();
   });
 
   it('should detect equals resources', () => {
@@ -591,7 +591,7 @@ describe('ODataResource', () => {
       },
     );
     const entity2 = set2.entity('russellwhyte').query((q) => q.expand({ Friends: {} }));
-    expect(entity1.isEqualTo(entity2)).toBeTrue();
+    expect(entity1.isEqualTo(entity2)).toBeTruthy();
   });
 
   it('should render big and nested query', () => {

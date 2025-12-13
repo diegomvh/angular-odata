@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content class">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -750,7 +768,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>factory(api: <a href="../classes/ODataApi.html" target="_self">ODataApi</a>, method: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, resource: <a href="../classes/ODataResource.html" target="_self">ODataResource&lt;any&gt;</a>, options)</code>
+                    <code>factory(api: <a href="../classes/ODataApi.html" target="_self">ODataApi</a>, method: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, resource: <a href="../classes/ODataResource.html" target="_self">ODataResource&lt;any&gt;</a>, options: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -817,6 +835,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>

@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content class">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -557,7 +575,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="328" class="link-to-prism">projects/angular-odata/src/lib/api.ts:328</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="330" class="link-to-prism">projects/angular-odata/src/lib/api.ts:330</a></div>
                         </td>
                     </tr>
 
@@ -832,8 +850,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="212"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:212</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="214"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:214</a></div>
                         </td>
                     </tr>
 
@@ -916,8 +934,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="177"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:177</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="179"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:179</a></div>
                         </td>
                     </tr>
 
@@ -959,8 +977,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="235"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:235</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="237"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:237</a></div>
                         </td>
                     </tr>
 
@@ -1036,8 +1054,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="528"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:528</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="534"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:534</a></div>
                         </td>
                     </tr>
 
@@ -1111,8 +1129,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="96"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:96</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -1177,15 +1195,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>configureModel(structured: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;T&gt;</a>, model: <T>)</code>
+                    <code>configureModel(structured: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;T&gt;</a>, model: <a href="../undefineds/now.html" target="_self">unknown&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="477"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:477</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="479"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:479</a></div>
                         </td>
                     </tr>
 
@@ -1228,7 +1246,7 @@
                                         <tr>
                                                 <td>model</td>
                                             <td>
-                                                        <code>&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1266,15 +1284,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createCollection(structured: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;T&gt;</a>, model?: <T>)</code>
+                    <code>createCollection(structured: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;T&gt;</a>, model?: <a href="../undefineds/now.html" target="_self">unknown&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="516"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:516</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="522"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:522</a></div>
                         </td>
                     </tr>
 
@@ -1317,7 +1335,7 @@
                                         <tr>
                                                 <td>model</td>
                                             <td>
-                                                        <code>&lt;T&gt;</code>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown&lt;T&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -1362,8 +1380,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="492"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:492</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="496"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:496</a></div>
                         </td>
                     </tr>
 
@@ -1439,8 +1457,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="346"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:346</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="348"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:348</a></div>
                         </td>
                     </tr>
 
@@ -1506,8 +1524,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="199"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:199</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="201"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:201</a></div>
                         </td>
                     </tr>
 
@@ -1583,8 +1601,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="239"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:239</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="241"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:241</a></div>
                         </td>
                     </tr>
 
@@ -1660,8 +1678,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="395"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:395</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="397"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:397</a></div>
                         </td>
                     </tr>
 
@@ -1749,8 +1767,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="512"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:512</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="516"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:516</a></div>
                         </td>
                     </tr>
 
@@ -1826,8 +1844,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="446"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:446</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="448"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:448</a></div>
                         </td>
                     </tr>
 
@@ -1895,8 +1913,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="539"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:539</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="548"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:548</a></div>
                         </td>
                     </tr>
 
@@ -1964,8 +1982,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="363"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:363</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="365"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:365</a></div>
                         </td>
                     </tr>
 
@@ -2041,8 +2059,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="488"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:488</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="490"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:490</a></div>
                         </td>
                     </tr>
 
@@ -2118,8 +2136,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="355"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:355</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="357"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:357</a></div>
                         </td>
                     </tr>
 
@@ -2187,8 +2205,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="462"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:462</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="464"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:464</a></div>
                         </td>
                     </tr>
 
@@ -2256,8 +2274,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="379"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:379</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="381"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:381</a></div>
                         </td>
                     </tr>
 
@@ -2331,8 +2349,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="131"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:131</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:133</a></div>
                         </td>
                     </tr>
 
@@ -2407,8 +2425,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="135"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:135</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="137"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:137</a></div>
                         </td>
                     </tr>
 
@@ -2482,8 +2500,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="143"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:143</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="145"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:145</a></div>
                         </td>
                     </tr>
 
@@ -2549,8 +2567,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="226"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:226</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="228"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:228</a></div>
                         </td>
                     </tr>
 
@@ -2633,8 +2651,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="169"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:169</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="171"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:171</a></div>
                         </td>
                     </tr>
 
@@ -2678,8 +2696,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="501"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:501</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="505"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:505</a></div>
                         </td>
                     </tr>
 
@@ -2755,8 +2773,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="573"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:573</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="582"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:582</a></div>
                         </td>
                     </tr>
 
@@ -2849,8 +2867,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="550"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:550</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="559"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:559</a></div>
                         </td>
                     </tr>
 
@@ -2936,8 +2954,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="121"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:121</a></div>
                         </td>
                     </tr>
 
@@ -2996,15 +3014,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>request(method: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, resource: <a href="../classes/ODataResource.html" target="_self">ODataResource&lt;any&gt;</a>, options)</code>
+<code>request(method: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, resource: <a href="../classes/ODataResource.html" target="_self">ODataResource&lt;any&gt;</a>, options: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="248"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:248</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="250"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:250</a></div>
                         </td>
                     </tr>
 
@@ -3059,6 +3077,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -3101,8 +3120,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="186"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:186</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="188"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:188</a></div>
                         </td>
                     </tr>
 
@@ -3178,8 +3197,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="243"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:243</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="245"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:245</a></div>
                         </td>
                     </tr>
 
@@ -3334,8 +3353,10 @@ export class ODataApi {
     this.parsers &#x3D; new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
     this.schemas &#x3D; (config.schemas ?? []).map((schema) &#x3D;&gt; new ODataSchema(schema, this));
-    this.models &#x3D; (config.models ?? {}) as {[type: string]: typeof ODataModel&lt;any&gt;};
-    this.collections &#x3D; (config.collections ?? {}) as {[type: string]: typeof ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;};
+    this.models &#x3D; (config.models ?? {}) as { [type: string]: typeof ODataModel&lt;any&gt; };
+    this.collections &#x3D; (config.collections ?? {}) as {
+      [type: string]: typeof ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;;
+    };
   }
 
   configure(
@@ -3731,7 +3752,9 @@ export class ODataApi {
   }
 
   public findModel&lt;T&gt;(type: string) {
-    return (this.models[type] ?? this.findStructuredType&lt;any&gt;(type)?.model) as typeof ODataModel&lt;T&gt; | undefined;
+    return (this.models[type] ?? this.findStructuredType&lt;any&gt;(type)?.model) as
+      | typeof ODataModel&lt;T&gt;
+      | undefined;
   }
 
   public createModel&lt;T&gt;(structured: ODataStructuredType&lt;T&gt;) {
@@ -3755,7 +3778,9 @@ export class ODataApi {
   }
 
   public findCollection&lt;T&gt;(type: string) {
-    return (this.collections[type] ?? this.findStructuredType&lt;any&gt;(type)?.collection) as typeof ODataCollection&lt;T, ODataModel&lt;T&gt;&gt; | undefined;
+    return (this.collections[type] ?? this.findStructuredType&lt;any&gt;(type)?.collection) as
+      | typeof ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;
+      | undefined;
   }
 
   public createCollection&lt;T&gt;(structured: ODataStructuredType&lt;T&gt;, model?: typeof ODataModel&lt;T&gt;) {
@@ -3776,7 +3801,10 @@ export class ODataApi {
       const structured &#x3D; this.findStructuredType&lt;T&gt;(type);
       if (structured &#x3D;&#x3D;&#x3D; undefined) throw Error(&#x60;No structured type for ${type}&#x60;);
       const Model &#x3D; this.modelForType&lt;T&gt;(type);
-      Collection &#x3D; this.createCollection&lt;T&gt;(structured, Model) as typeof ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;;
+      Collection &#x3D; this.createCollection&lt;T&gt;(structured, Model) as typeof ODataCollection&lt;
+        T,
+        ODataModel&lt;T&gt;
+      &gt;;
     }
     return Collection;
   }

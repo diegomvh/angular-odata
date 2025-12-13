@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -79,8 +93,10 @@
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
-               <div class="content getting-started">
+               <div class="content changelog">
                    <div class="content-data">
+
+
 
 <h1>Changelog</h1>
 <p>All notable changes to this project will be documented in this file.</p>
@@ -95,6 +111,8 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <h3>Fixed</h3>
 <h3>Changed</h3>
 <h3>Removed</h3>
+
+
 
 
 
@@ -141,7 +159,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 0;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'getting-started';
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'changelog';
             var COMPODOC_CURRENT_PAGE_URL = 'changelog.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>

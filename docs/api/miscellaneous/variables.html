@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content miscellaneous-variables">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -137,6 +155,12 @@
                         </li>
                         <li>
                             <a href="#ACCEPT" title="projects/angular-odata/src/lib/constants.ts" ><b>ACCEPT</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AirlineEntityConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>AirlineEntityConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AirportEntityConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>AirportEntityConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
                         </li>
                         <li>
                             <a href="#alias" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>alias</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -214,6 +238,9 @@
                             <a href="#COMPUTED" title="projects/angular-odata/src/lib/constants.ts" ><b>COMPUTED</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#CONFIG_NAME" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>CONFIG_NAME</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
                             <a href="#CONTENT_ID" title="projects/angular-odata/src/lib/constants.ts" ><b>CONTENT_ID</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
@@ -278,6 +305,12 @@
                         </li>
                         <li>
                             <a href="#FieldFactory" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>FieldFactory</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FlagEnumsConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>FlagEnumsConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FlightEntityConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>FlightEntityConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
                         </li>
                         <li>
                             <a href="#FUNCTION_REGEX" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>FUNCTION_REGEX</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -349,6 +382,9 @@
                             <a href="#MULTIPART_MIXED_BOUNDARY" title="projects/angular-odata/src/lib/constants.ts" ><b>MULTIPART_MIXED_BOUNDARY</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#NAMESPACE" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>NAMESPACE</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
                             <a href="#NEWLINE" title="projects/angular-odata/src/lib/constants.ts" ><b>NEWLINE</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
@@ -415,6 +451,21 @@
                             <a href="#pathAndParamsFromSegments" title="projects/angular-odata/src/lib/resources/path/segments.ts" ><b>pathAndParamsFromSegments</b>&nbsp;&nbsp;&nbsp;(projects/.../segments.ts)</a>
                         </li>
                         <li>
+                            <a href="#PeopleConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>PeopleConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PersonConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>PersonConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PersonGenderConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>PersonGenderConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PhotoConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>PhotoConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PlanItemConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>PlanItemConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
                             <a href="#PREFER" title="projects/angular-odata/src/lib/constants.ts" ><b>PREFER</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
@@ -425,6 +476,9 @@
                         </li>
                         <li>
                             <a href="#PROPERTY" title="projects/angular-odata/src/lib/helper.ts" ><b>PROPERTY</b>&nbsp;&nbsp;&nbsp;(projects/.../helper.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PublicTransportationEntityConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>PublicTransportationEntityConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
                         </li>
                         <li>
                             <a href="#QUERY_SEPARATOR" title="projects/angular-odata/src/lib/constants.ts" ><b>QUERY_SEPARATOR</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
@@ -446,6 +500,9 @@
                         </li>
                         <li>
                             <a href="#RETRY_AFTER_HEADERS" title="projects/angular-odata/src/lib/constants.ts" ><b>RETRY_AFTER_HEADERS</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SERVICE_ROOT" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>SERVICE_ROOT</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
                         </li>
                         <li>
                             <a href="#StandardAggregateMethods" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>StandardAggregateMethods</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -476,6 +533,12 @@
                         </li>
                         <li>
                             <a href="#transformations" title="projects/angular-odata/src/lib/resources/query/expressions/syntax.ts" ><b>transformations</b>&nbsp;&nbsp;&nbsp;(projects/.../syntax.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TripConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>TripConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TripPinConfig" title="projects/angular-odata/src/lib/trippin.config.ts" ><b>TripPinConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../trippin.config.ts)</a>
                         </li>
                         <li>
                             <a href="#Types" title="projects/angular-odata/src/lib/utils/types.ts" ><b>Types</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -1092,6 +1155,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>/.*Computed$/</code>
                     </td>
                 </tr>
@@ -1320,6 +1389,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>VERSION_4_0</code>
                     </td>
                 </tr>
@@ -1338,6 +1413,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>/.*Description$/</code>
@@ -1410,6 +1491,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>/\s+/</code>
@@ -1562,6 +1649,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>/.*LongDescription$/</code>
                     </td>
                 </tr>
@@ -1684,6 +1777,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>/\r?\n/</code>
@@ -1892,6 +1991,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>/.*OptimisticConcurrency$/</code>
                     </td>
                 </tr>
@@ -1910,6 +2015,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>/.*OptionalParameter$/</code>
@@ -2270,7 +2381,613 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>/^\)\]\}&#x27;,?\n/</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/angular-odata/src/lib/trippin.config.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AirlineEntityConfig"></a>
+                    <span class="name">
+                        <span ><b>AirlineEntityConfig</b></span>
+                        <a href="#AirlineEntityConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;Airline&#x27;,
+  keys: [{ name: &#x27;AirlineCode&#x27; }],
+  fields: {
+    AirlineCode: {
+      type: &#x27;Edm.String&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
+  },
+} as ODataStructuredTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AirportEntityConfig"></a>
+                    <span class="name">
+                        <span ><b>AirportEntityConfig</b></span>
+                        <a href="#AirportEntityConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;Airport&#x27;,
+  keys: [{ name: &#x27;IcaoCode&#x27; }],
+  fields: {
+    IcaoCode: {
+      type: &#x27;Edm.String&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
+    IataCode: {
+      type: &#x27;Edm.String&#x27;,
+      nullable: false,
+      annotations: [{ term: &#x27;Org.OData.Core.V1.Immutable&#x27;, bool: true }],
+    },
+  },
+} as ODataStructuredTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CONFIG_NAME"></a>
+                    <span class="name">
+                        <span ><b>CONFIG_NAME</b></span>
+                        <a href="#CONFIG_NAME"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;TripPin&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FlagEnumsConfig"></a>
+                    <span class="name">
+                        <span ><b>FlagEnumsConfig</b></span>
+                        <a href="#FlagEnumsConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;FlagEnums&#x27;,
+  flags: true,
+  members: FlagEnums,
+  fields: {
+    Flag1: { value: FlagEnums.Flag1 },
+    Flag2: { value: FlagEnums.Flag2 },
+    Flag4: { value: FlagEnums.Flag4 },
+  },
+} as ODataEnumTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FlightEntityConfig"></a>
+                    <span class="name">
+                        <span ><b>FlightEntityConfig</b></span>
+                        <a href="#FlightEntityConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;Flight&#x27;,
+  base: &#x60;${NAMESPACE}.PublicTransportation&#x60;,
+  fields: {
+    FlightNumber: { type: &#x27;Edm.String&#x27;, nullable: false, default: &#x27;0&#x27; },
+    From: { type: &#x60;${NAMESPACE}.Airport&#x60;, navigation: true },
+    To: { type: &#x60;${NAMESPACE}.Airport&#x60;, navigation: true },
+    Airline: { type: &#x60;${NAMESPACE}.Airline&#x60;, navigation: true },
+  },
+} as ODataStructuredTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="NAMESPACE"></a>
+                    <span class="name">
+                        <span ><b>NAMESPACE</b></span>
+                        <a href="#NAMESPACE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;TripPin&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PeopleConfig"></a>
+                    <span class="name">
+                        <span ><b>PeopleConfig</b></span>
+                        <a href="#PeopleConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;People&#x27;,
+  entityType: &#x60;${NAMESPACE}.Person&#x60;,
+  service: PeopleService,
+} as ODataEntitySetConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PersonConfig"></a>
+                    <span class="name">
+                        <span ><b>PersonConfig</b></span>
+                        <a href="#PersonConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;Person&#x27;,
+  annotations: [],
+  fields: {
+    UserName: {
+      type: &#x27;Edm.String&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    FirstName: { type: &#x27;Edm.String&#x27;, nullable: false },
+    LastName: { type: &#x27;Edm.String&#x27;, nullable: false },
+    Emails: { type: &#x27;Edm.String&#x27;, collection: true },
+    Gender: { type: &#x60;${NAMESPACE}.PersonGender&#x60; },
+    Concurrency: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [{ term: &#x27;Org.OData.Core.V1.Computed&#x27;, bool: true }],
+    },
+    Friends: {
+      type: &#x60;${NAMESPACE}.Person&#x60;,
+      collection: true,
+      navigation: true,
+    },
+    Trips: { type: &#x60;${NAMESPACE}.Trip&#x60;, collection: true, navigation: true },
+    Photo: { type: &#x60;${NAMESPACE}.Photo&#x60;, navigation: true },
+  },
+} as ODataStructuredTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PersonGenderConfig"></a>
+                    <span class="name">
+                        <span ><b>PersonGenderConfig</b></span>
+                        <a href="#PersonGenderConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;PersonGender&#x27;,
+  members: PersonGender,
+  fields: {
+    Male: { value: PersonGender.Male },
+    Female: { value: PersonGender.Female },
+    Unknown: { value: PersonGender.Unknown },
+  },
+} as ODataEnumTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PhotoConfig"></a>
+                    <span class="name">
+                        <span ><b>PhotoConfig</b></span>
+                        <a href="#PhotoConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;Photo&#x27;,
+  annotations: [{ term: &#x27;Org.OData.Core.V1.AcceptableMediaTypes&#x27; }],
+  fields: {
+    Id: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    Name: { type: &#x27;Edm.String&#x27; },
+  },
+} as ODataStructuredTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PlanItemConfig"></a>
+                    <span class="name">
+                        <span ><b>PlanItemConfig</b></span>
+                        <a href="#PlanItemConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;PlanItem&#x27;,
+  keys: [{ name: &#x27;PlanItemId&#x27; }],
+  fields: {
+    PlanItemId: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    ConfirmationCode: { type: &#x27;Edm.String&#x27;, default: &#x27;0&#x27; },
+    StartsAt: {
+      type: &#x27;Edm.DateTimeOffset&#x27;,
+      default: &#x27;2022-08-05T15:50:12.052Z&#x27;,
+    },
+    EndsAt: { type: &#x27;Edm.DateTimeOffset&#x27; },
+    Duration: { type: &#x27;Edm.String&#x27;, default: &#x27;M&#x27; },
+  },
+} as ODataStructuredTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PublicTransportationEntityConfig"></a>
+                    <span class="name">
+                        <span ><b>PublicTransportationEntityConfig</b></span>
+                        <a href="#PublicTransportationEntityConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;PublicTransportation&#x27;,
+  base: &#x60;${NAMESPACE}.PlanItem&#x60;,
+  fields: {
+    SeatNumber: { type: &#x27;Edm.String&#x27;, default: &#x27;0&#x27; },
+  },
+} as ODataStructuredTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SERVICE_ROOT"></a>
+                    <span class="name">
+                        <span ><b>SERVICE_ROOT</b></span>
+                        <a href="#SERVICE_ROOT"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://services.odata.org/v4/TripPinServiceRW/&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TripConfig"></a>
+                    <span class="name">
+                        <span ><b>TripConfig</b></span>
+                        <a href="#TripConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: &#x27;Trip&#x27;,
+  annotations: [],
+  fields: {
+    TripId: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [
+        {
+          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
+          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
+        },
+      ],
+    },
+    ShareId: { type: &#x27;Edm.String&#x27; },
+    Description: { type: &#x27;Edm.String&#x27; },
+    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
+    Budget: {
+      type: &#x27;Edm.Int64&#x27;,
+      nullable: false,
+      annotations: [
+        { term: &#x27;Org.OData.Measures.V1.ISOCurrency&#x27;, string: &#x27;USD&#x27; },
+        { term: &#x27;Org.OData.Measures.V1.Scale&#x27;, int: 2 },
+      ],
+    },
+    StartsAt: { type: &#x27;Edm.DateTimeOffset&#x27;, nullable: false },
+    EndsAt: { type: &#x27;Edm.DateTimeOffset&#x27;, nullable: false },
+    Tags: { type: &#x27;Edm.String&#x27;, nullable: false, collection: true },
+    Photos: { type: &#x60;${NAMESPACE}.Photo&#x60;, collection: true, navigation: true },
+    PlanItems: {
+      type: &#x60;${NAMESPACE}.PlanItem&#x60;,
+      collection: true,
+      navigation: true,
+    },
+  },
+} as ODataStructuredTypeConfig</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TripPinConfig"></a>
+                    <span class="name">
+                        <span ><b>TripPinConfig</b></span>
+                        <a href="#TripPinConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  name: CONFIG_NAME,
+  serviceRootUrl: SERVICE_ROOT,
+  options: {
+    stringAsEnum: true,
+    stripMetadata: &#x27;full&#x27;,
+    fetchPolicy: &#x27;no-cache&#x27;,
+  },
+  schemas: [
+    {
+      namespace: &#x60;${NAMESPACE}&#x60;,
+      enums: [PersonGenderConfig, FlagEnumsConfig],
+      entities: [
+        PhotoConfig,
+        PersonConfig,
+        PlanItemConfig,
+        TripConfig,
+        PublicTransportationEntityConfig,
+        FlightEntityConfig,
+        AirlineEntityConfig,
+        AirportEntityConfig,
+      ],
+      containers: [
+        {
+          entitySets: [PeopleConfig],
+        },
+      ],
+    },
+  ],
+  parsers: EDM_PARSERS,
+} as ODataApiConfig</code>
                     </td>
                 </tr>
 
@@ -2291,6 +3008,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(value: any, name?: string): QueryCustomType &#x3D;&gt; ({
@@ -2315,6 +3038,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({
@@ -2418,6 +3147,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({
   type: QueryCustomTypes.Duration,
   value,
@@ -2441,6 +3176,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>/\((.*)\)/</code>
                     </td>
                 </tr>
@@ -2459,6 +3200,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>/(?!indexof)\((\w+)\)/</code>
@@ -2481,6 +3228,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>(value: any) &#x3D;&gt;
   typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; &#x27;type&#x27; in value &amp;&amp; value.type in QueryCustomTypes</code>
                     </td>
@@ -2500,6 +3253,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(value: any) &#x3D;&gt;
@@ -2575,11 +3334,17 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>{
   Raw: &#x27;Raw&#x27;,
   Alias: &#x27;Alias&#x27;,
   Duration: &#x27;Duration&#x27;,
-  Binary: &#x27;Binary&#x27;
+  Binary: &#x27;Binary&#x27;,
 } as const</code>
                     </td>
                 </tr>
@@ -2598,6 +3363,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({
@@ -2623,12 +3394,18 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>{
   sum: &#x27;sum&#x27;,
   min: &#x27;min&#x27;,
   max: &#x27;max&#x27;,
   average: &#x27;average&#x27;,
-  countdistinct: &#x27;countdistinct&#x27;
+  countdistinct: &#x27;countdistinct&#x27;,
 } as const</code>
                     </td>
                 </tr>
@@ -2792,6 +3569,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>new Uint8Array(256)</code>
                     </td>
                 </tr>
@@ -2881,7 +3664,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>[]</code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown[]</a></code>
 
                     </td>
                 </tr>
@@ -2978,6 +3761,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>/Collection\(([\w\.]+)\)/</code>
                     </td>
                 </tr>
@@ -2996,6 +3785,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>/([\w\d\-_]+)\(([\w\d\,\(\)]+)\)/</code>
@@ -3200,6 +3995,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>&lt;any&gt;{
   entity(data: { [name: string]: any }) {
     return data;
@@ -3339,6 +4140,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>/([\w\d\-_]+)\(([\&#x27;\w\d\-_&#x3D;]+)\)/</code>
                     </td>
                 </tr>
@@ -3401,6 +4208,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>/(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/</code>
                     </td>
                 </tr>
@@ -3422,6 +4235,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>/^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/</code>
@@ -3615,6 +4434,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>&lt;T&gt;(
   _d: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; T,
   _s: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; any,
@@ -3653,6 +4478,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>(v: any) &#x3D;&gt; v</code>
                     </td>
                 </tr>
@@ -3671,6 +4502,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(v: any) &#x3D;&gt; Boolean(v)</code>
@@ -3693,6 +4530,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>(v: any) &#x3D;&gt; new Date(v)</code>
                     </td>
                 </tr>
@@ -3713,6 +4556,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>(v: any) &#x3D;&gt; Number(v)</code>
                     </td>
                 </tr>
@@ -3731,6 +4580,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(v: any) &#x3D;&gt; v.toString()</code>
@@ -3844,6 +4699,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>&lt;T extends object&gt;(names: (string | Renderable)[] &#x3D; []): any &#x3D;&gt;
@@ -3968,6 +4829,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(value: any): Renderable &#x3D;&gt; {
@@ -4311,6 +5178,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>{
   deserialize: (value: any) &#x3D;&gt; value,
   serialize: (value: any) &#x3D;&gt; value,
@@ -4631,6 +5504,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>new InjectionToken&lt;ODataApiConfig&gt;(&#x27;odata.config&#x27;)</code>
                     </td>
                 </tr>
@@ -4652,6 +5531,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>&lt;T&gt;(
@@ -4727,6 +5612,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
                         <i>Default value : </i><code>(
   segments: ODataSegment[],
   {
@@ -4770,6 +5661,12 @@
                     </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>Object.getOwnPropertyNames(ODataModel.prototype)</code>

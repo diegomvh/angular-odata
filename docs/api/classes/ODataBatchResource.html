@@ -61,6 +61,20 @@
                }
                toggleDarkMode(darkModeState);
           </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
@@ -81,6 +95,10 @@
                <!-- START CONTENT -->
                <div class="content class">
                    <div class="content-data">
+
+
+
+
 
 
 
@@ -469,7 +487,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:30</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:32</a></code>
 </div>
                         </td>
                     </tr>
@@ -503,7 +521,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:31</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:33</a></code>
 </div>
                         </td>
                     </tr>
@@ -537,7 +555,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:32</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:34</a></code>
 </div>
                         </td>
                     </tr>
@@ -565,7 +583,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>add(ctx: (undefined) => void)</code>
+<code>add(ctx: (batch: <a href="../undefineds/now.html">unknown</a>) => void)</code>
                 </td>
             </tr>
 
@@ -904,7 +922,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>exec(ctx: (undefined) => void, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
+<code>exec(ctx: (batch: <a href="../undefineds/now.html">unknown</a>) => void, options?: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -979,7 +997,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >Observable&lt;unknown&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1347,7 +1365,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>restoreRequester(handler:  | undefined)</code>
+                    <code>restoreRequester(handler: <a href="../undefineds/now.html" target="_self">unknown | undefined</a>)</code>
                 </td>
             </tr>
 
@@ -1378,7 +1396,7 @@
                                         <tr>
                                                 <td>handler</td>
                                             <td>
-                                                        <code> | undefined</code>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown | undefined</a></code>
                                             </td>
 
                                             <td>
@@ -1673,7 +1691,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:309</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:311</a></code>
 </div>
                         </td>
                     </tr>
@@ -1782,7 +1800,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:158</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:160</a></code>
 </div>
                         </td>
                     </tr>
@@ -1819,7 +1837,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataCollection.html" target="_self" >ODataCollection&lt;T, &gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/ODataCollection.html" target="_self" >ODataCollection&lt;T, unknown&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1855,7 +1873,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:107</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:109</a></code>
 </div>
                         </td>
                     </tr>
@@ -1891,6 +1909,13 @@
                                     </tbody>
                                 </table>
                             </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1921,7 +1946,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:65</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:67</a></code>
 </div>
                         </td>
                     </tr>
@@ -1968,7 +1993,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:76</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:78</a></code>
 </div>
                         </td>
                     </tr>
@@ -2011,7 +2036,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:102</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:104</a></code>
 </div>
                         </td>
                     </tr>
@@ -2054,7 +2079,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:371</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:373</a></code>
 </div>
                         </td>
                     </tr>
@@ -2097,7 +2122,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:376</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:378</a></code>
 </div>
                         </td>
                     </tr>
@@ -2148,7 +2173,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:366</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:368</a></code>
 </div>
                         </td>
                     </tr>
@@ -2180,7 +2205,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>delete(options)</code>
+                    <code>delete(options: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -2193,7 +2218,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:545</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:547</a></code>
 </div>
                         </td>
                     </tr>
@@ -2209,6 +2234,7 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
@@ -2216,6 +2242,9 @@
                                     <tbody>
                                         <tr>
                                                 <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -2266,7 +2295,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:329</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:331</a></code>
 </div>
                         </td>
                     </tr>
@@ -2351,7 +2380,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:349</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:351</a></code>
 </div>
                         </td>
                     </tr>
@@ -2423,7 +2452,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>endpointUrl(undefined)</code>
+<code>endpointUrl(undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -2436,7 +2465,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:275</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:277</a></code>
 </div>
                         </td>
                     </tr>
@@ -2452,12 +2481,16 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -2508,7 +2541,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:81</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:83</a></code>
 </div>
                         </td>
                     </tr>
@@ -2540,7 +2573,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>get(options)</code>
+                    <code>get(options: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -2553,7 +2586,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:470</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:472</a></code>
 </div>
                         </td>
                     </tr>
@@ -2569,6 +2602,7 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
@@ -2576,6 +2610,9 @@
                                     <tbody>
                                         <tr>
                                                 <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -2626,7 +2663,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:98</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:100</a></code>
 </div>
                         </td>
                     </tr>
@@ -2669,7 +2706,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:94</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:96</a></code>
 </div>
                         </td>
                     </tr>
@@ -2716,7 +2753,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:58</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:60</a></code>
 </div>
                         </td>
                     </tr>
@@ -2763,7 +2800,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:244</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:246</a></code>
 </div>
                         </td>
                     </tr>
@@ -2848,7 +2885,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:224</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:226</a></code>
 </div>
                         </td>
                     </tr>
@@ -2921,7 +2958,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:234</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:236</a></code>
 </div>
                         </td>
                     </tr>
@@ -2994,7 +3031,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:214</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:216</a></code>
 </div>
                         </td>
                     </tr>
@@ -3067,7 +3104,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:51</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:53</a></code>
 </div>
                         </td>
                     </tr>
@@ -3103,7 +3140,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>patch(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
+                    <code>patch(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -3116,7 +3153,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:526</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:528</a></code>
 </div>
                         </td>
                     </tr>
@@ -3155,6 +3192,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -3193,7 +3231,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pathAndParams(undefined)</code>
+<code>pathAndParams(undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -3206,7 +3244,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:254</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:256</a></code>
 </div>
                         </td>
                     </tr>
@@ -3222,12 +3260,16 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -3242,6 +3284,13 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
                             </div>
                 </td>
             </tr>
@@ -3262,7 +3311,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>post(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
+                    <code>post(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -3275,7 +3324,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:489</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:491</a></code>
 </div>
                         </td>
                     </tr>
@@ -3314,6 +3363,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -3354,7 +3404,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>put(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
+                    <code>put(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -3367,7 +3417,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:507</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:509</a></code>
 </div>
                         </td>
                     </tr>
@@ -3406,6 +3456,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                             </td>
 
                                             <td>
@@ -3457,7 +3508,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:400</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:402</a></code>
 </div>
                         </td>
                     </tr>
@@ -3540,7 +3591,7 @@ Create an object handler for mutate the query options of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:452</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:454</a></code>
 </div>
                         </td>
                     </tr>
@@ -3633,7 +3684,7 @@ Create an object handler for mutate the query options of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:386</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:388</a></code>
 </div>
                         </td>
                     </tr>
@@ -3715,7 +3766,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:339</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:341</a></code>
 </div>
                         </td>
                     </tr>
@@ -3800,7 +3851,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:86</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:88</a></code>
 </div>
                         </td>
                     </tr>
@@ -3843,7 +3894,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:359</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:361</a></code>
 </div>
                         </td>
                     </tr>
@@ -3873,7 +3924,7 @@ Create an object handler for mutate the path segments of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toString(undefined)</code>
+<code>toString(undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                 </td>
             </tr>
 
@@ -3886,7 +3937,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:289</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:291</a></code>
 </div>
                         </td>
                     </tr>
@@ -3902,12 +3953,16 @@ Create an object handler for mutate the path segments of the resource</p>
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -3960,7 +4015,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:409</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:411</a></code>
 </div>
                         </td>
                     </tr>
@@ -4058,7 +4113,7 @@ Create an object handler for mutate the path segments of the resource</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:72</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:74</a></code>
 </div>
                         </td>
                     </tr>

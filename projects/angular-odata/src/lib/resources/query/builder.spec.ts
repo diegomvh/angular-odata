@@ -10,7 +10,7 @@ import buildQuery, {
   type Select,
   type Transform,
 } from './builder';
-import type { Person } from '../../trippin.spec';
+import type { Person } from '../../trippin.config';
 
 interface SomeEntity {
   Id?: number;
