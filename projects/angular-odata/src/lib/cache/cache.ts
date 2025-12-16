@@ -7,13 +7,13 @@ import { ODataCache, PathSegment } from '../types';
 /**
  * A cache entry that holds a payload, a last read time, and a timeout for the entry.
  * @param payload The payload to cache.
- * @param lastRead The last read time.
- * @param timeout The timeout.
+ * @param lastread The last read time.
+ * @param timeout The timeout in seconds.
  * @param tags Some tags to identify the entry.
  */
 export interface ODataCacheEntry<T> {
   payload: T;
-  lastRead: number;
+  lastread: number;
   timeout: number;
   tags: string[];
 }
@@ -74,9 +74,9 @@ export abstract class ODataBaseCache implements ODataCache {
   ): ODataCacheEntry<T> {
     return {
       payload,
-      lastRead: Date.now(),
-      timeout: timeout || this.timeout,
-      tags: tags || [],
+      lastread: Date.now(),
+      timeout: (timeout ?? this.timeout) * 1000,
+      tags: tags ?? [],
     };
   }
 
@@ -103,9 +103,8 @@ export abstract class ODataBaseCache implements ODataCache {
     { timeout, scope, tags }: { timeout?: number; scope?: string[]; tags?: string[] } = {},
   ) {
     const entry = this.buildEntry<T>(payload, { timeout, tags });
-    const key = this.buildKey([...(scope || []), name]);
+    const key = this.buildKey([...(scope ?? []), name]);
     this.entries.set(key, entry);
-    this.forget();
   }
 
   /**
@@ -117,7 +116,9 @@ export abstract class ODataBaseCache implements ODataCache {
   get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
     const key = this.buildKey([...(scope || []), name]);
     const entry = this.entries.get(key);
-    return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
+    if (entry === undefined || this.isExpired(entry)) return undefined;
+    entry.lastread = Date.now();
+    return entry.payload;
   }
 
   /**
@@ -155,7 +156,7 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry<any>) {
-    return entry.lastRead < Date.now() - (entry.timeout || this.timeout) * 1000;
+    return entry.lastread < (Date.now() - entry.timeout);
   }
 
   /**
