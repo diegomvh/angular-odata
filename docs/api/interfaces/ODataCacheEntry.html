@@ -166,9 +166,9 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                        <a href="#lastRead" 
+                                        <a href="#lastread" 
 >
-                                            lastRead
+                                            lastread
                                         </a>
                                 </li>
                                 <li>
@@ -204,9 +204,9 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="lastRead"></a>
-                                        <span class="name "><b>lastRead</b>
-                                            <a href="#lastRead">
+                                        <a name="lastread"></a>
+                                        <span class="name "><b>lastread</b>
+                                            <a href="#lastread">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -214,7 +214,7 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>lastRead:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                        <code>lastread:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -346,13 +346,13 @@ import { ODataCache, PathSegment } from &#x27;../types&#x27;;
 /**
  * A cache entry that holds a payload, a last read time, and a timeout for the entry.
  * @param payload The payload to cache.
- * @param lastRead The last read time.
- * @param timeout The timeout.
+ * @param lastread The last read time.
+ * @param timeout The timeout in seconds.
  * @param tags Some tags to identify the entry.
  */
 export interface ODataCacheEntry&lt;T&gt; {
   payload: T;
-  lastRead: number;
+  lastread: number;
   timeout: number;
   tags: string[];
 }
@@ -413,9 +413,9 @@ export abstract class ODataBaseCache implements ODataCache {
   ): ODataCacheEntry&lt;T&gt; {
     return {
       payload,
-      lastRead: Date.now(),
-      timeout: timeout || this.timeout,
-      tags: tags || [],
+      lastread: Date.now(),
+      timeout: (timeout ?? this.timeout) * 1000,
+      tags: tags ?? [],
     };
   }
 
@@ -442,9 +442,8 @@ export abstract class ODataBaseCache implements ODataCache {
     { timeout, scope, tags }: { timeout?: number; scope?: string[]; tags?: string[] } &#x3D; {},
   ) {
     const entry &#x3D; this.buildEntry&lt;T&gt;(payload, { timeout, tags });
-    const key &#x3D; this.buildKey([...(scope || []), name]);
+    const key &#x3D; this.buildKey([...(scope ?? []), name]);
     this.entries.set(key, entry);
-    this.forget();
   }
 
   /**
@@ -456,7 +455,9 @@ export abstract class ODataBaseCache implements ODataCache {
   get&lt;T&gt;(name: string, { scope }: { scope?: string[] } &#x3D; {}): T | undefined {
     const key &#x3D; this.buildKey([...(scope || []), name]);
     const entry &#x3D; this.entries.get(key);
-    return entry !&#x3D;&#x3D; undefined &amp;&amp; !this.isExpired(entry) ? entry.payload : undefined;
+    if (entry &#x3D;&#x3D;&#x3D; undefined || this.isExpired(entry)) return undefined;
+    entry.lastread &#x3D; Date.now();
+    return entry.payload;
   }
 
   /**
@@ -494,7 +495,7 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry&lt;any&gt;) {
-    return entry.lastRead &lt; Date.now() - (entry.timeout || this.timeout) * 1000;
+    return entry.lastread &lt; (Date.now() - entry.timeout);
   }
 
   /**

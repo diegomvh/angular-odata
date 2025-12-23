@@ -542,8 +542,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="148"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:148</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="149"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:149</a></div>
                         </td>
                     </tr>
 
@@ -581,8 +581,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="127"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:127</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -653,8 +653,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="117"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:117</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="116"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:116</a></div>
                         </td>
                     </tr>
 
@@ -826,8 +826,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="178"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:178</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="179"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:179</a></div>
                         </td>
                     </tr>
 
@@ -907,8 +907,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="208"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:208</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="209"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:209</a></div>
                         </td>
                     </tr>
 
@@ -986,8 +986,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="167"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:167</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="168"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:168</a></div>
                         </td>
                     </tr>
 
@@ -1076,8 +1076,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="157"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:157</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="158"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:158</a></div>
                         </td>
                     </tr>
 
@@ -1500,13 +1500,13 @@ import { ODataCache, PathSegment } from &#x27;../types&#x27;;
 /**
  * A cache entry that holds a payload, a last read time, and a timeout for the entry.
  * @param payload The payload to cache.
- * @param lastRead The last read time.
- * @param timeout The timeout.
+ * @param lastread The last read time.
+ * @param timeout The timeout in seconds.
  * @param tags Some tags to identify the entry.
  */
 export interface ODataCacheEntry&lt;T&gt; {
   payload: T;
-  lastRead: number;
+  lastread: number;
   timeout: number;
   tags: string[];
 }
@@ -1567,9 +1567,9 @@ export abstract class ODataBaseCache implements ODataCache {
   ): ODataCacheEntry&lt;T&gt; {
     return {
       payload,
-      lastRead: Date.now(),
-      timeout: timeout || this.timeout,
-      tags: tags || [],
+      lastread: Date.now(),
+      timeout: (timeout ?? this.timeout) * 1000,
+      tags: tags ?? [],
     };
   }
 
@@ -1596,9 +1596,8 @@ export abstract class ODataBaseCache implements ODataCache {
     { timeout, scope, tags }: { timeout?: number; scope?: string[]; tags?: string[] } &#x3D; {},
   ) {
     const entry &#x3D; this.buildEntry&lt;T&gt;(payload, { timeout, tags });
-    const key &#x3D; this.buildKey([...(scope || []), name]);
+    const key &#x3D; this.buildKey([...(scope ?? []), name]);
     this.entries.set(key, entry);
-    this.forget();
   }
 
   /**
@@ -1610,7 +1609,9 @@ export abstract class ODataBaseCache implements ODataCache {
   get&lt;T&gt;(name: string, { scope }: { scope?: string[] } &#x3D; {}): T | undefined {
     const key &#x3D; this.buildKey([...(scope || []), name]);
     const entry &#x3D; this.entries.get(key);
-    return entry !&#x3D;&#x3D; undefined &amp;&amp; !this.isExpired(entry) ? entry.payload : undefined;
+    if (entry &#x3D;&#x3D;&#x3D; undefined || this.isExpired(entry)) return undefined;
+    entry.lastread &#x3D; Date.now();
+    return entry.payload;
   }
 
   /**
@@ -1648,7 +1649,7 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry&lt;any&gt;) {
-    return entry.lastRead &lt; Date.now() - (entry.timeout || this.timeout) * 1000;
+    return entry.lastread &lt; (Date.now() - entry.timeout);
   }
 
   /**
