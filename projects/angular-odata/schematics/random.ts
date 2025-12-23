@@ -832,6 +832,6 @@ export const getRandomName = (): string => {
   let name: string = '';
   while (name == '' || name == 'BoringWozniak')
     /* Steve Wozniak is not boring */
-    name = `"${Left[getRandomInt(Left.length)]}${Right[getRandomInt(Right.length)]}`;
+    name = `${Left[getRandomInt(Left.length)]}${Right[getRandomInt(Right.length)]}`;
   return name;
 };
