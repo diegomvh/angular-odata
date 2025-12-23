@@ -7,7 +7,7 @@ import { ODataClient,
   ODataEntitySetService, 
   ODataOptions,
   EntityKey } from 'angular-odata';<% for (let imp of imports) { %>
-import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
+import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 @Injectable()
 export class <%= classify(name) %> extends ODataEntitySetService<<%= toTypescriptType(type) %>> {

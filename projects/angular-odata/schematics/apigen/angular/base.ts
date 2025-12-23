@@ -253,37 +253,44 @@ export abstract class Base {
   }
 
   public imports(): Import[] {
+    this.cleanImportedNames();
     const groups = this.dependencies
-      .filter((a) => a[1].path() != this.path())
+      .filter((a) => a[2].path() != this.path())
       .reduce(
         (acc, i) => {
-          const path = makeRelativePath(this.directory(), i[1].path());
+          const path = makeRelativePath(this.directory(), i[2].path());
           if (acc[path] === undefined) {
             acc[path] = [];
           }
           acc[path].push(i);
           return acc;
         },
-        {} as { [path: string]: [string, Base][] },
+        {} as { [path: string]: [string, string, Base][] },
       );
-    return Object.entries(groups).map(([path, items]) => {
+    const imports = Object.entries(groups).map(([path, items]) => {
       const names = items.reduce((acc, i) => [...acc, i[0]], [] as string[]);
-      return new Import(names, path);
+      const aliases = items.reduce((acc, i) => [...acc, i[1]], [] as string[]);
+      return new Import(names, aliases, path);
     });
+    return imports;
   }
 
   public importedName?: string;
   public cleanImportedNames() {
-    this.dependencies.forEach((d) => (d[1].importedName = d[1].name()));
+    for (let d of this.dependencies) {
+      d[2].importedName = d[1];
+    }
   }
-  protected dependencies: [string, Base][] = [];
+
+  protected dependencies: [string, string, Base][] = [];
   public addDependency(renderable: Base) {
-    if (this.dependencies.every((d) => d[1] != renderable)) {
-      var alias = renderable.name()!;
-      while (this.dependencies.some((d) => d[0] == alias)) {
+    if (this.dependencies.every((d) => d[2] != renderable)) {
+      const name = renderable.name()!;
+      let alias = name;
+      while (this.dependencies.some((d) => d[1] === alias)) {
         alias = getRandomName();
       }
-      this.dependencies.push([alias, renderable]);
+      this.dependencies.push([name, alias, renderable]);
     }
   }
 

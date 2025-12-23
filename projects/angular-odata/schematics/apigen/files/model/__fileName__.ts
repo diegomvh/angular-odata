@@ -14,7 +14,7 @@ import {
   Duration,
 } from 'angular-odata';
 <% if (hasGeoFields) { %>import { <% for (let f of geoFields) { %><%= f.type() %>,<% } %> } from 'geojson';<% } %><% for (let imp of imports) { %>
-import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
+import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 @Model()
 export class <%= classify(name) %><E extends <%= entity.name() %>> extends <% if (baseType) { %><%= toTypescriptType(baseType) %><E><% } else { %>ODataModel<E><% } %> {

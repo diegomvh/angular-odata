@@ -142,25 +142,24 @@ export class Package {
 
   resolveImports() {
     const sources = this.sources();
-    sources.forEach((s) => {
+    for (let s of sources) {
       for (let t of s.importTypes()) {
         s.addDependencies(sources.filter((s) => s.fullName() === t));
       }
-      s.cleanImportedNames();
-    });
+    }
   }
 
   sources(): Base[] {
     const sources: Base[] = [
-      this.metadata,
-      this.index,
-      this.module,
-      this.config,
       ...this.enums,
       ...this.entities,
       ...this.models,
       ...this.collections,
       ...this.services,
+      this.metadata,
+      this.index,
+      this.module,
+      this.config,
     ];
     return sources;
   }

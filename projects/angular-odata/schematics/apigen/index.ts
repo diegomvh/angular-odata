@@ -65,8 +65,8 @@ export function apigen(options: ApiGenSchema) {
         return chain(
           pkg
             .sources()
-            .map((s) =>
-              apply(s.template(), [
+            .map((s) => {
+              return apply(s.template(), [
                 template({
                   ...{
                     name: s.name(),
@@ -79,8 +79,8 @@ export function apigen(options: ApiGenSchema) {
                   ...utils,
                 }),
                 move(normalize(`${modulePath}/${s.directory()}`)),
-              ]),
-            )
+              ]);
+            })
             .reduce((rules, s) => [...rules, mergeWith(s, MergeStrategy.Overwrite)], [] as Rule[]),
         );
       });

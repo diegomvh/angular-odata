@@ -10,7 +10,7 @@ import {
   ODataFunctionOptions,
   ODataActionOptions
 } from 'angular-odata';<% for (let imp of imports) { %>
-import { <%= imp.names.join(", ") %> } from '<%= imp.path() %>';<% } %>
+import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 export class <%= classify(name) %><E extends <%= entity.name() %>, M extends <%= model.name() %><E>> extends <% if (baseType) { %><%= toTypescriptType(baseType) %><E, M><% } else { %>ODataCollection<E, M><% } %> {
   <% for (let cal of callables) { %>
