@@ -6,6 +6,7 @@ import { Schema as ApiGenSchema } from '../schema';
 import { CsdlNavigationProperty, CsdlProperty } from '../metadata/csdl/csdl-structural-property';
 import { toTypescriptType } from '../utils';
 import { Package } from './package';
+import { Import } from './import';
 
 export class EntityProperty {
   constructor(
@@ -19,16 +20,16 @@ export class EntityProperty {
     return name + (!required ? '?' : '');
   }
 
-  type() {
+  type(imports: Import[]) {
     const pkg = this.entity.getPackage();
     const enumType = pkg.findEnum(this.edmType.Type);
     const entityType = pkg.findEntity(this.edmType.Type);
     let type = 'any';
     if (enumType !== undefined) {
-      type = enumType.importedName!;
+      type = enumType.importedName(imports)!;
       type += this.edmType.Collection ? '[]' : '';
     } else if (entityType !== undefined) {
-      type = entityType.importedName!;
+      type = entityType.importedName(imports)!;
       type += this.edmType.Collection ? '[]' : '';
     } else {
       type = toTypescriptType(this.edmType.Type);
@@ -41,6 +42,10 @@ export class EntityProperty {
     return (
       this.edmType.Type.startsWith('Edm.Geography') || this.edmType.Type.startsWith('Edm.Geometry')
     );
+  }
+
+  isDuration(): boolean {
+    return this.edmType.Type.startsWith('Edm.Duration');
   }
 }
 
@@ -56,13 +61,13 @@ export class Entity extends Base {
   public override template(): Source {
     return url('./files/entity');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return {
       type: this.name() + (this.edmType instanceof CsdlEntityType ? 'EntityType' : 'ComplexType'),
       baseType: this.edmType.BaseType,
       properties: this.properties(),
-      geoProperties: this.geoProperties(),
       hasGeoProperties: this.hasGeoProperties(),
+      hasDurationProperties: this.hasDurationProperties(),
     };
   }
   public override name() {
@@ -103,10 +108,19 @@ export class Entity extends Base {
       ...(this.edmType.NavigationProperty ?? []).map((p) => new EntityProperty(this, p)),
     ];
   }
+
   public geoProperties(): EntityProperty[] {
     return this.properties().filter((p) => p.isGeoSpatial());
   }
   public hasGeoProperties(): boolean {
     return this.geoProperties().length > 0;
+  }
+
+  public durationProperties() {
+    return this.properties().filter((p) => p.isDuration());
+  }
+
+  public hasDurationProperties(): boolean {
+    return this.durationProperties().length > 0;
   }
 }

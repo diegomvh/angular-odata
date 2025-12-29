@@ -8,6 +8,7 @@ import { toTypescriptType } from '../utils';
 import { Entity } from './entity';
 import { Package } from './package';
 import { CsdlNavigationPropertyBinding } from '../metadata/csdl/csdl-navigation-property-binding';
+import { Import } from './import';
 
 export class ModelField {
   constructor(
@@ -21,22 +22,22 @@ export class ModelField {
     return name + (!required ? '?' : '');
   }
 
-  type() {
+  type(imports: Import[]) {
     const pkg = this.model.getPackage();
     const enumType = pkg.findEnum(this.edmType.Type);
     const entityType = pkg.findEntity(this.edmType.Type);
     let type = 'any';
     if (enumType !== undefined) {
-      type = enumType.importedName!;
+      type = enumType.importedName(imports)!;
       type += this.edmType.Collection ? '[]' : '';
     } else if (entityType !== undefined) {
       if (this.edmType.Collection) {
         const collection = pkg.findCollection(this.edmType.Type);
         const model = pkg.findModel(this.edmType.Type);
-        type = `${collection!.importedName}<${entityType!.importedName}, ${model!.importedName}<${entityType!.importedName}>>`;
+        type = `${collection!.importedName(imports)}<${entityType!.importedName(imports)}, ${model!.importedName(imports)}<${entityType!.importedName(imports)}>>`;
       } else {
         const model = pkg.findModel(this.edmType.Type);
-        type = `${model!.importedName}<${entityType!.importedName}>`;
+        type = `${model!.importedName(imports)}<${entityType!.importedName(imports)}>`;
       }
     } else {
       type = toTypescriptType(this.edmType.Type);
@@ -48,47 +49,47 @@ export class ModelField {
     return type;
   }
 
-  resource() {
+  resource(imports: Import[]) {
     const pkg = this.model.getPackage();
     const resourceName = `$$${this.edmType.Name}`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
       return `public ${resourceName}() {
-    return this.navigationProperty<${entity?.importedName}>('${this.edmType.Name}');
+    return this.navigationProperty<${entity?.importedName(imports)}>('${this.edmType.Name}');
   }
   `;
     } else {
       return `public ${resourceName}() {
-    return this.property<${this.type()}>('${this.edmType.Name}');
+    return this.property<${this.type(imports)}>('${this.edmType.Name}');
   }
   `;
     }
   }
 
-  getter() {
+  getter(imports: Import[]) {
     const pkg = this.model.getPackage();
     const getterName = `$${this.edmType.Name}`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
       return `public ${getterName}() {
-    return this.getAttribute<${entity?.importedName}>('${this.edmType.Name}') as ${entity?.importedName};
+    return this.getAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}') as ${entity?.importedName(imports)};
   }
   `;
     } else {
       return `public ${getterName}() {
-    return this.getAttribute<${this.type()}>('${this.edmType.Name}') as ${this.type()};
+    return this.getAttribute<${this.type(imports)}>('${this.edmType.Name}') as ${this.type(imports)};
   }
   `;
     }
   }
 
-  setter() {
+  setter(imports: Import[]) {
     const pkg = this.model.getPackage();
     const setterName = `${this.edmType.Name}$$`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `public ${setterName}(model: ${this.type()} | null, options?: ODataOptions) {
-    return this.setReference<${entity?.importedName}>('${this.edmType.Name}', model, options);
+      return `public ${setterName}(model: ${this.type(imports)} | null, options?: ODataOptions) {
+    return this.setReference<${entity?.importedName(imports)}>('${this.edmType.Name}', model, options);
   }
   `;
     } else {
@@ -97,18 +98,18 @@ export class ModelField {
     }
   }
 
-  fetch() {
+  fetch(imports: Import[]) {
     const pkg = this.model.getPackage();
     const fetchName = `${this.edmType.Name}$`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName}>) {
-    return this.fetchAttribute<${entity?.importedName}>('${this.edmType.Name}', options) as Observable<${entity?.importedName}>;
+      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName(imports)}>) {
+    return this.fetchAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}', options) as Observable<${entity?.importedName(imports)}>;
   }
 `;
     } else {
-      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${this.type()}>) {
-    return this.fetchAttribute<${this.type()}>('${this.edmType.Name}', options) as Observable<${this.type()}>;
+      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${this.type(imports)}>) {
+    return this.fetchAttribute<${this.type(imports)}>('${this.edmType.Name}', options) as Observable<${this.type(imports)}>;
   }
 `;
     }
@@ -118,6 +119,10 @@ export class ModelField {
     return (
       this.edmType.Type.startsWith('Edm.Geography') || this.edmType.Type.startsWith('Edm.Geometry')
     );
+  }
+
+  isDuration(): boolean {
+    return this.edmType.Type.startsWith('Edm.Duration');
   }
 }
 
@@ -138,16 +143,17 @@ export class Model extends Base {
   public override template(): Source {
     return url('./files/model');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return {
       type: this.name() + 'Model',
       baseType: this.edmType.BaseType ? this.edmType.BaseType + 'Model' : null,
       entity: this.entity,
       fields: this.fields(),
       hasGeoFields: this.hasGeoFields(),
+      hasDurationFields: this.hasDurationFields(),
       geoFields: this.geoFields(),
       callables: this.callables ?? [],
-      navigations: this.navitations(),
+      navigations: this.navitations(imports),
     };
   }
   public override name() {
@@ -211,7 +217,7 @@ export class Model extends Base {
     return imports;
   }
 
-  public navitations(): string[] {
+  public navitations(imports: Import[]): string[] {
     const pkg = this.getPackage();
     const service = pkg.findEntitySet(this.edmType.fullName());
     if (service) {
@@ -233,13 +239,14 @@ export class Model extends Base {
           return p.Name !== nav?.Name;
         }),
       );
-      return this.renderNavigationPropertyBindings(bindings);
+      return this.renderNavigationPropertyBindings(bindings, imports);
     }
     return [];
   }
 
   renderNavigationPropertyBindings(
     bindings: CsdlNavigationPropertyBinding[] | undefined,
+    imports: Import[]
   ): string[] {
     const pkg = this.getPackage();
     let result: string[] = [];
@@ -259,8 +266,8 @@ export class Model extends Base {
       if (propertyEntity && bindingEntity && false) {
       } else {
         const returnType = isCollection
-          ? `ODataCollection<${entity?.importedName}, ODataModel<${entity?.importedName}>>`
-          : `ODataModel<${entity?.importedName}>`;
+          ? `ODataCollection<${entity?.importedName(imports)}, ODataModel<${entity?.importedName(imports)}>>`
+          : `ODataModel<${entity?.importedName(imports)}>`;
         var responseType = isCollection ? 'collection' : 'model';
         var methodName =
           `as${propertyEntity?.Name}` +
@@ -269,8 +276,8 @@ export class Model extends Base {
         var castEntity = pkg.findEntity(propertyEntity?.fullName() || '');
 
         // Navigation
-        result.push(`public ${methodName}(options?: ODataQueryArgumentsOptions<${entity?.importedName}>) {
-    return this.fetchNavigationProperty<${entity?.importedName}>('${binding.Path}', '${responseType}', options) as Observable<${returnType}>;
+        result.push(`public ${methodName}(options?: ODataQueryArgumentsOptions<${entity?.importedName(imports)}>) {
+    return this.fetchNavigationProperty<${entity?.importedName(imports)}>('${binding.Path}', '${responseType}', options) as Observable<${returnType}>;
   }`);
       }
     }
@@ -287,5 +294,13 @@ export class Model extends Base {
   }
   public hasGeoFields(): boolean {
     return this.geoFields().length > 0;
+  }
+
+  public durationFields() {
+    return this.fields().filter((p) => p.isDuration());
+  }
+
+  public hasDurationFields(): boolean {
+    return this.fields().filter((p) => p.isDuration()).length > 0;
   }
 }

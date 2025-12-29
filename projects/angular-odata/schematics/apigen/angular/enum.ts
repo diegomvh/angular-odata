@@ -26,7 +26,7 @@ export class Enum extends Base {
   public override template(): Source {
     return url('./files/enum');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return {
       type: this.name() + 'EnumType',
       values: (this.edmType.Member ?? []).map((m) => new EnumValue(m)),

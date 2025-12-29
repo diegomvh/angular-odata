@@ -10,9 +10,9 @@ export const <%= classify(name) %> = ODataMetadata.fromJson(json).toConfig({
   creation: new Date('<%= creation.toISOString() %>'),
   parsers: EDM_PARSERS,
   models: {<% for(const model of models) { %>
-    '<%= model.entityType() %>': <%= model.importedName %>, <% } %>
+    '<%= model.entityType() %>': <%= model.importedName(imports) %>, <% } %>
   },
   collections: {<% for(const col of collections) { %>
-    '<%= col.entityType() %>': <%= col.importedName %>, <% } %>
+    '<%= col.entityType() %>': <%= col.importedName(imports) %>, <% } %>
   }
 }) as ODataApiConfig;

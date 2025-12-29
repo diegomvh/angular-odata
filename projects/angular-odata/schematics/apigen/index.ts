@@ -66,15 +66,16 @@ export function apigen(options: ApiGenSchema) {
           pkg
             .sources()
             .map((s) => {
+              const imports = s.imports();
               return apply(s.template(), [
                 template({
                   ...{
                     name: s.name(),
                     fileName: s.fileName(),
                     fullName: s.fullName(),
-                    imports: s.imports(),
+                    imports: imports,
                   },
-                  ...s.variables(),
+                  ...s.variables(imports),
                   ...strings,
                   ...utils,
                 }),

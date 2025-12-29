@@ -6,6 +6,7 @@ import { CsdlEntitySet } from '../metadata/csdl/csdl-entity-set';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Package } from './package';
+import { Import } from './import';
 
 export class Service extends Base {
   constructor(
@@ -22,7 +23,7 @@ export class Service extends Base {
         ? url('./files/singleton-service')
         : url('./files/entitycontainer-service');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return {
       path: this.edmElement.name(),
       type:

@@ -105,11 +105,11 @@ export class Callable {
       parameters.length === 0
         ? 'null'
         : `{${parameters
-            .map((p) => {
-              const op = optional.includes(p);
-              return `${p.Name}${op ? '?' : ''}: ${toTypescriptType(p.Type)}`;
-            })
-            .join(', ')}}`;
+          .map((p) => {
+            const op = optional.includes(p);
+            return `${p.Name}${op ? '?' : ''}: ${toTypescriptType(p.Type)}`;
+          })
+          .join(', ')}}`;
     return `public ${methodName}(${keyParameter}) {
     return this.${bindingMethod}(${key}).${baseMethod}<${parametersType}, ${retType}>('${this.fullName()}');
   }`;
@@ -235,7 +235,7 @@ export abstract class Base {
   constructor(
     protected pkg: Package,
     protected options: ApiGenSchema,
-  ) {}
+  ) { }
 
   public abstract name(): string;
   public abstract fileName(): string;
@@ -244,7 +244,7 @@ export abstract class Base {
 
   public abstract importTypes(): string[];
   public abstract template(): Source;
-  public abstract variables(): { [name: string]: any };
+  public abstract variables(imports: Import[]): { [name: string]: any };
 
   public path(): string {
     const directory = this.directory();
@@ -253,7 +253,6 @@ export abstract class Base {
   }
 
   public imports(): Import[] {
-    this.cleanImportedNames();
     const groups = this.dependencies
       .filter((a) => a[2].path() != this.path())
       .reduce(
@@ -270,16 +269,20 @@ export abstract class Base {
     const imports = Object.entries(groups).map(([path, items]) => {
       const names = items.reduce((acc, i) => [...acc, i[0]], [] as string[]);
       const aliases = items.reduce((acc, i) => [...acc, i[1]], [] as string[]);
-      return new Import(names, aliases, path);
+      return new Import(names, aliases, items[0][2].path(), path);
     });
     return imports;
   }
 
-  public importedName?: string;
-  public cleanImportedNames() {
-    for (let d of this.dependencies) {
-      d[2].importedName = d[1];
+  public importedName(imports: Import[]): string {
+    const imp = imports.find((i) => i.absPath === this.path());
+    if (imp !== undefined) {
+      const index = imp.names.findIndex((n) => n === this.name());
+      if (index !== -1) {
+        return imp.aliases[index];
+      }
     }
+    return this.name();
   }
 
   protected dependencies: [string, string, Base][] = [];
@@ -288,7 +291,7 @@ export abstract class Base {
       const name = renderable.name()!;
       let alias = name;
       while (this.dependencies.some((d) => d[1] === alias)) {
-        alias = getRandomName();
+        alias = getRandomName({suffix: name});
       }
       this.dependencies.push([name, alias, renderable]);
     }
@@ -319,7 +322,7 @@ export class Index extends Base {
   public override template(): Source {
     return url('./files/index');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return { ...this.options };
   }
   public override name() {
@@ -350,7 +353,7 @@ export class Metadata extends Base {
   public override template(): Source {
     return url('./files/metadata');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return { content: JSON.stringify(this.meta.toJson(), null, 2) };
   }
   public override name() {

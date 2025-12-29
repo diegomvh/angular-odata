@@ -3,6 +3,7 @@ import { Base } from './base';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Package } from './package';
+import { Import } from './import';
 
 export class ApiConfig extends Base {
   constructor(pkg: Package, options: ApiGenSchema) {
@@ -11,7 +12,7 @@ export class ApiConfig extends Base {
   public override template(): Source {
     return url('./files/api-config');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return {
       serviceRootUrl: this.options.serviceRootUrl,
       metadataUrl: this.options.metadata,

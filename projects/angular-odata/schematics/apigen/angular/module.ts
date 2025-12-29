@@ -4,6 +4,7 @@ import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Service } from './service';
 import { Package } from './package';
+import { Import } from './import';
 
 export class Module extends Base {
   services: Service[] = [];
@@ -16,7 +17,7 @@ export class Module extends Base {
   public override template(): Source {
     return url('./files/module');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return {
       services: this.services,
     };

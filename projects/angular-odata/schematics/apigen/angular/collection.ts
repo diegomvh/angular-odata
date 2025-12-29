@@ -6,6 +6,7 @@ import { Schema as ApiGenSchema } from '../schema';
 import { Model } from './model';
 import { Entity } from './entity';
 import { Package } from './package';
+import { Import } from './import';
 
 export class Collection extends Base {
   constructor(
@@ -25,7 +26,7 @@ export class Collection extends Base {
   public override template(): Source {
     return url('./files/collection');
   }
-  public override variables(): { [name: string]: any } {
+  public override variables(imports: Import[]): { [name: string]: any } {
     return {
       type: this.name() + 'Collection',
       baseType: this.edmType.BaseType ? this.edmType.BaseType + 'Collection' : null,

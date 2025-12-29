@@ -1,15 +1,17 @@
 export class Import {
   public names: string[] = [];
   public aliases: string[] = [];
-  public from: string;
-  public constructor(names: string[], aliases: string[], from: string) {
+  public absPath: string;
+  public relPath: string;
+  public constructor(names: string[], aliases: string[], absPath: string, relPath: string) {
     this.names = names;
     this.aliases = aliases;
-    this.from = from;
+    this.absPath = absPath;
+    this.relPath = relPath;
   }
 
   public path(): string {
-    let path = this.from.toString();
+    let path = this.relPath.toString();
     if (!path.startsWith('../')) path = `./${path}`;
     return path;
   }
