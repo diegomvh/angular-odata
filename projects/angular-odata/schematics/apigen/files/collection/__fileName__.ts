@@ -12,9 +12,13 @@ import {
 } from 'angular-odata';<% for (let imp of imports) { %>
 import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
+// #region Custom
+// #endregion Custom
 export class <%= classify(name) %><E extends <%= entity.name() %>, M extends <%= model.name() %><E>> extends <% if (baseType) { %><%= toTypescriptType(baseType) %><E, M><% } else { %>ODataCollection<E, M><% } %> {
   <% for (let cal of callables) { %>
   // <%= cal.name() %>
   <%= cal.callableMethod() %>
 <% } %>
+// #region Custom
+// #endregion Custom
 }

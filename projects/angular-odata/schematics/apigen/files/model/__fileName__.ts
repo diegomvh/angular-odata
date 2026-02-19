@@ -16,6 +16,8 @@ import {
 <% if (hasGeoFields) { %>import { <% for (let f of geoFields) { %><%= f.type() %>,<% } %> } from 'geojson';<% } %><% for (let imp of imports) { %>
 import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
+// #region Custom
+// #endregion Custom
 @Model()
 export class <%= classify(name) %><E extends <%= entity.name() %>> extends <% if (baseType) { %><%= toTypescriptType(baseType) %><E><% } else { %>ODataModel<E><% } %> {
   <% for (let field of fields) { %>@ModelField()
@@ -28,4 +30,6 @@ export class <%= classify(name) %><E extends <%= entity.name() %>> extends <% if
 <% } %>
   <% for (let nav of navigations) { %><%= nav %>
   <% } %>
+// #region Custom
+// #endregion Custom
 }

@@ -54,15 +54,15 @@ export class ModelField {
     const resourceName = `$$${this.edmType.Name}`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `public ${resourceName}() {
+      return `  public ${resourceName}() {
     return this.navigationProperty<${entity?.importedName(imports)}>('${this.edmType.Name}');
   }
-  `;
+`;
     } else {
-      return `public ${resourceName}() {
+      return `  public ${resourceName}() {
     return this.property<${this.type(imports)}>('${this.edmType.Name}');
   }
-  `;
+`;
     }
   }
 
@@ -71,15 +71,15 @@ export class ModelField {
     const getterName = `$${this.edmType.Name}`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `public ${getterName}() {
+      return `  public ${getterName}() {
     return this.getAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}') as ${entity?.importedName(imports)};
   }
-  `;
+`;
     } else {
-      return `public ${getterName}() {
+      return `  public ${getterName}() {
     return this.getAttribute<${this.type(imports)}>('${this.edmType.Name}') as ${this.type(imports)};
   }
-  `;
+`;
     }
   }
 
@@ -88,13 +88,12 @@ export class ModelField {
     const setterName = `${this.edmType.Name}$$`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `public ${setterName}(model: ${this.type(imports)} | null, options?: ODataOptions) {
+      return `  public ${setterName}(model: ${this.type(imports)} | null, options?: ODataOptions) {
     return this.setReference<${entity?.importedName(imports)}>('${this.edmType.Name}', model, options);
   }
-  `;
+`;
     } else {
-      return `
-  `;
+      return ``;
     }
   }
 
@@ -103,12 +102,12 @@ export class ModelField {
     const fetchName = `${this.edmType.Name}$`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName(imports)}>) {
+      return `  public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName(imports)}>) {
     return this.fetchAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}', options) as Observable<${entity?.importedName(imports)}>;
   }
 `;
     } else {
-      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${this.type(imports)}>) {
+      return `  public ${fetchName}(options?: ODataQueryArgumentsOptions<${this.type(imports)}>) {
     return this.fetchAttribute<${this.type(imports)}>('${this.edmType.Name}', options) as Observable<${this.type(imports)}>;
   }
 `;

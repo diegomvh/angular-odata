@@ -67,6 +67,7 @@ export class Entity extends Base {
       baseType: this.edmType.BaseType,
       properties: this.properties(),
       hasGeoProperties: this.hasGeoProperties(),
+      geoProperties: this.geoProperties(),
       hasDurationProperties: this.hasDurationProperties(),
     };
   }

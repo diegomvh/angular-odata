@@ -2,6 +2,8 @@ import { ODataApiConfig, EDM_PARSERS, ODataMetadata, ODataVersion } from 'angula
 import * as json from './metadata.json';<% for (let imp of imports) { %>
 import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
+// #region Custom
+// #endregion Custom
 export const <%= classify(name) %> = ODataMetadata.fromJson(json).toConfig({
   serviceRootUrl: '<%= serviceRootUrl %>',
   metadataUrl: '<%= metadataUrl %>',

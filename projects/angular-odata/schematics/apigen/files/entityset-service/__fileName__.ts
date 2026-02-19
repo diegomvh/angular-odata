@@ -9,6 +9,8 @@ import { ODataClient,
   EntityKey } from 'angular-odata';<% for (let imp of imports) { %>
 import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
+// #region Custom
+// #endregion Custom
 @Injectable()
 export class <%= classify(name) %> extends ODataEntitySetService<<%= toTypescriptType(type) %>> {
   constructor(client: ODataClient) {
@@ -24,4 +26,6 @@ export class <%= classify(name) %> extends ODataEntitySetService<<%= toTypescrip
   <%= cal.resourceFunction() %>
   <%= cal.callableFunction() %>
 <% } %>
+// #region Custom
+// #endregion Custom
 }
