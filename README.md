@@ -8,7 +8,7 @@
 <p align="center">
   <a href="CONTRIBUTING.md">Contributing</a>
   ·
-  <a href="./docs/README.md">Documentation</a>
+  <a href="./docs/api/index.html">Documentation</a>
   ·
   <a href="https://github.com/diegomvh/AngularODataEntity">Demo</a>
   <br>
