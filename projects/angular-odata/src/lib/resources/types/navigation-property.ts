@@ -164,7 +164,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override delete(options: ODataOptions = {}): Observable<any> {
+  protected override delete(options: ODataOptions = {}): Observable<void> {
     return super.delete({ responseType: 'entity', ...options });
   }
 
@@ -215,7 +215,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns An observable of the destroy
    */
-  destroy(options?: ODataOptions): Observable<ODataEntity<T>> {
+  destroy(options?: ODataOptions): Observable<void> {
     return this.delete(options);
   }
 

@@ -558,7 +558,7 @@ export class ODataResource<T> {
         | 'entities';
       withCount?: boolean;
     } = {},
-  ): Observable<any> {
+  ): Observable<void> {
     return this.api.request<T>('DELETE', this, options);
   }
 }
