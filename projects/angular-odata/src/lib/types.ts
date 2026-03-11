@@ -1,3 +1,4 @@
+import { JSONSchema7 } from 'json-schema';
 import type { Observable } from 'rxjs';
 
 export type ODataVersion = '2.0' | '3.0' | '4.0';
@@ -110,7 +111,7 @@ export enum EdmType {
   GeometryCollection = 'Edm.GeometryCollection',
 }
 
-export enum JsonType {
+export enum JsonSchemaType {
   string = 'string',
   number = 'number',
   integer = 'integer',
@@ -119,6 +120,23 @@ export enum JsonType {
   boolean = 'boolean',
   null = 'null',
 }
+
+export type JsonSchemaSelect<T> = Array<keyof T>;
+export type JsonSchemaCustom<T> = {
+  [P in keyof T]?: (schema: JSONSchema7, field: FieldParser<T[P]>) => JSONSchema7;
+};
+export type JsonSchemaExpand<T> = { [P in keyof T]?: JsonSchemaFieldOptions<T[P]> };
+export type JsonSchemaRequired<T> = { [P in keyof T]?: boolean };
+export type JsonSchemaFieldOptions<T> = {
+  select?: JsonSchemaSelect<T>;
+  custom?: JsonSchemaCustom<T>;
+  expand?: JsonSchemaExpand<T>;
+  required?: JsonSchemaRequired<T>;
+};
+
+export type JsonSchemaOptions<T> = JsonSchemaFieldOptions<T> & {
+  map?: (schema: JSONSchema7, parent?: JSONSchema7) => JSONSchema7 
+};
 
 export interface ParserOptions {
   version?: ODataVersion;

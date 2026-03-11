@@ -1,10 +1,12 @@
+import { JSONSchema7 } from 'json-schema';
 import { raw } from '../../resources/query';
 import {
   ODataEnumTypeConfig,
   ODataEnumTypeFieldConfig,
   ParserOptions,
   FieldParser,
-  JsonType,
+  JsonSchemaType,
+  JsonSchemaOptions,
 } from '../../types';
 import { ODataAnnotatable } from '../annotation';
 
@@ -128,19 +130,23 @@ export class ODataEnumTypeParser<E> extends ODataAnnotatable implements FieldPar
   }
 
   // Json Schema
-  toJsonSchema() {
-    return this.flags
+  toJsonSchema(options?: JsonSchemaOptions<E>, parent?: JSONSchema7): JSONSchema7 {
+    let schema = (this.flags
       ? {
-          title: this.name,
-          type: JsonType.array,
-          items: {
-            type: JsonType.integer,
-          },
-        }
+        title: this.name,
+        type: JsonSchemaType.array,
+        items: {
+          type: JsonSchemaType.integer,
+        },
+      }
       : {
-          type: JsonType.integer,
-          enum: this._fields.map((f) => f.value),
-        };
+        type: JsonSchemaType.integer,
+        enum: this._fields.map((f) => f.value),
+      }) as JSONSchema7;
+    if (options?.map !== undefined) {
+      schema = options.map(schema, parent);
+    }
+    return schema;
   }
 
   validate(

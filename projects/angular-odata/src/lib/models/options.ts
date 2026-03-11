@@ -22,13 +22,12 @@ import {
   ODataPropertyResource,
 } from '../resources';
 import type {
-  JsonSchemaOptions,
   ODataEntitySet,
   ODataEnumType,
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';
-import { EdmType, ParserOptions } from '../types';
+import { EdmType, JsonSchemaOptions, ParserOptions } from '../types';
 import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
@@ -755,7 +754,7 @@ export class ODataModelOptions<T> {
     return this.structuredType.type() === type;
   }
 
-  toJsonSchema(options: JsonSchemaOptions<T> = {}) {
+  toJsonSchema(options?: JsonSchemaOptions<T>) {
     return this.structuredType.toJsonSchema(options);
   }
 

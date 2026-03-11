@@ -10,25 +10,13 @@ import {
   StructuredTypeFieldOptions,
   FieldParser,
   EdmType,
-  JsonType as JsonSchemaType,
+  JsonSchemaType,
+  JsonSchemaOptions,
 } from '../../types';
 import { Objects, Strings, Types } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
 import { ODataEnumTypeParser } from './enum-type';
-
-// JSON SCHEMA
-type JsonSchemaSelect<T> = Array<keyof T>;
-type JsonSchemaCustom<T> = {
-  [P in keyof T]?: (schema: any, field: ODataStructuredTypeFieldParser<T[P]>) => any;
-};
-type JsonSchemaExpand<T> = { [P in keyof T]?: JsonSchemaOptions<T[P]> };
-type JsonSchemaRequired<T> = { [P in keyof T]?: boolean };
-export type JsonSchemaOptions<T> = {
-  select?: JsonSchemaSelect<T>;
-  custom?: JsonSchemaCustom<T>;
-  expand?: JsonSchemaExpand<T>;
-  required?: JsonSchemaRequired<T>;
-};
+import { JSONSchema7 } from 'json-schema';
 
 export class ODataEntityTypeKey {
   name: string;
@@ -211,13 +199,13 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
 
   //#region Json Schema
   // https://json-schema.org/
-  toJsonSchema(options: JsonSchemaOptions<T> = {}) {
+  toJsonSchema(options?: JsonSchemaOptions<T>, parent?: JSONSchema7): JSONSchema7 {
     let schema: any =
       this.parser instanceof ODataStructuredTypeFieldParser ||
       this.parser instanceof ODataStructuredTypeParser ||
       this.parser instanceof ODataEnumTypeParser
-        ? this.parser.toJsonSchema(options)
-        : ({ title: this.name, type: JsonSchemaType.object } as any);
+        ? this.parser.toJsonSchema(options, parent)
+        : ({ title: this.name } as JSONSchema7);
 
     switch (this.type) {
       case EdmType.String:
@@ -274,6 +262,9 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
         items: schema,
         additionalItems: false,
       };
+    if (options?.map !== undefined) {
+      schema = options.map(schema, parent);
+    }
     return schema;
   }
   //#endregion
@@ -610,8 +601,8 @@ export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Pa
   }
 
   // Json Schema
-  toJsonSchema(options: JsonSchemaOptions<T> = {}) {
-    let schema: any = {
+  toJsonSchema(options?: JsonSchemaOptions<T>, parent?: JSONSchema7): JSONSchema7 {
+    let schema: JSONSchema7 = {
       $schema: 'http://json-schema.org/draft-07/schema#',
       $id: `${this.namespace}.${this.name}`,
       title: this.titleize(DESCRIPTION),
@@ -625,40 +616,43 @@ export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Pa
       include_parents: true,
     }).filter(
       (f) =>
-        (!f.navigation || (options.expand && f.name in options.expand)) &&
-        (!options.select || (<string[]>options.select).indexOf(f.name) !== -1),
+        (!f.navigation || (options?.expand && f.name in options?.expand)) &&
+        (!options?.select || (<string[]>options?.select).indexOf(f.name) !== -1),
     );
+    schema.required = [
+      ...(schema.required ?? []),
+      ...fields
+        .filter((f) =>
+          options?.required && f.name in options?.required
+            ? options?.required[f.name as keyof T]
+            : !f.nullable,
+        )
+        .map((f) => f.name),
+    ];
     schema.properties = Object.assign(
       {},
       schema.properties,
       fields
         .map((f) => {
           let expand =
-            options.expand && f.name in options.expand
-              ? (options.expand as any)[f.name]
+            options?.expand && f.name in options?.expand
+              ? (options?.expand as any)[f.name]
               : undefined;
-          let schema = f.toJsonSchema(expand);
-          if (options.custom && f.name in options.custom)
-            schema = (
-              options.custom[f.name as keyof T] as (
+          let child = f.toJsonSchema({...expand, map: options?.map}, schema);
+          if (options?.custom && f.name in options?.custom)
+            child = (
+              options?.custom[f.name as keyof T] as (
                 schema: any,
                 field: ODataStructuredTypeFieldParser<any>,
-              ) => any
-            )(schema, f);
-          return { [f.name]: schema };
+              ) => JSONSchema7
+            )(child, f);
+          return { [f.name]: child };
         })
         .reduce((acc, v) => Object.assign(acc, v), {}),
     );
-    schema.required = [
-      ...schema.required,
-      ...fields
-        .filter((f) =>
-          options.required && f.name in options.required
-            ? options.required[f.name as keyof T]
-            : !f.nullable,
-        )
-        .map((f) => f.name),
-    ];
+    if (options?.map !== undefined) {
+      schema = options.map(schema, parent);
+    }
     return schema;
   }
 
