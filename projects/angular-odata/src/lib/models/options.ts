@@ -22,6 +22,7 @@ import {
   ODataPropertyResource,
 } from '../resources';
 import type {
+  JsonSchemaOptions,
   ODataEntitySet,
   ODataEnumType,
   ODataStructuredType,
@@ -752,6 +753,10 @@ export class ODataModelOptions<T> {
 
   isTypeOf(type: string) {
     return this.structuredType.type() === type;
+  }
+
+  toJsonSchema(options: JsonSchemaOptions<T> = {}) {
+    return this.structuredType.toJsonSchema(options);
   }
 
   isModelFor(entity: T | { [name: string]: any }) {
