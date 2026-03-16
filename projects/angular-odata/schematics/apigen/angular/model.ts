@@ -72,7 +72,7 @@ export class ModelField {
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
       return `  public ${getterName}() {
-    return this.getAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}') as ${entity?.importedName(imports)};
+    return this.getAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}') as ${this.type(imports)};
   }
 `;
     } else {
@@ -103,7 +103,7 @@ export class ModelField {
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
       return `  public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName(imports)}>) {
-    return this.fetchAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}', options) as Observable<${entity?.importedName(imports)}>;
+    return this.fetchAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}', options) as Observable<${this.type(imports)}>;
   }
 `;
     } else {
