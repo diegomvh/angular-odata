@@ -4296,7 +4296,7 @@
       v.months ? v.months + &#x27;M&#x27; : &#x27;&#x27;,
       v.weeks ? v.weeks + &#x27;W&#x27; : &#x27;&#x27;,
       v.days ? v.days + &#x27;D&#x27; : &#x27;&#x27;,
-      &#x27;T&#x27;,
+      (v.hours || v.minutes || v.seconds) ? &#x27;T&#x27; : &#x27;&#x27;,
       v.hours ? v.hours + &#x27;H&#x27; : &#x27;&#x27;,
       v.minutes ? v.minutes + &#x27;M&#x27; : &#x27;&#x27;,
       v.seconds ? v.seconds + &#x27;S&#x27; : &#x27;&#x27;,

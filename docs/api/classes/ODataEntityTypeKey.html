@@ -188,7 +188,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:23</a></div>
                             </td>
                         </tr>
 
@@ -250,7 +250,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:23</a></div>
                         </td>
                     </tr>
 
@@ -276,7 +276,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:22</a></div>
                         </td>
                     </tr>
 
@@ -307,25 +307,13 @@ import {
   StructuredTypeFieldOptions,
   FieldParser,
   EdmType,
-  JsonType as JsonSchemaType,
+  JsonSchemaType,
+  JsonSchemaOptions,
 } from &#x27;../../types&#x27;;
 import { Objects, Strings, Types } from &#x27;../../utils&#x27;;
 import { ODataAnnotatable } from &#x27;../annotation&#x27;;
 import { ODataEnumTypeParser } from &#x27;./enum-type&#x27;;
-
-// JSON SCHEMA
-type JsonSchemaSelect&lt;T&gt; &#x3D; Array&lt;keyof T&gt;;
-type JsonSchemaCustom&lt;T&gt; &#x3D; {
-  [P in keyof T]?: (schema: any, field: ODataStructuredTypeFieldParser&lt;T[P]&gt;) &#x3D;&gt; any;
-};
-type JsonSchemaExpand&lt;T&gt; &#x3D; { [P in keyof T]?: JsonSchemaOptions&lt;T[P]&gt; };
-type JsonSchemaRequired&lt;T&gt; &#x3D; { [P in keyof T]?: boolean };
-export type JsonSchemaOptions&lt;T&gt; &#x3D; {
-  select?: JsonSchemaSelect&lt;T&gt;;
-  custom?: JsonSchemaCustom&lt;T&gt;;
-  expand?: JsonSchemaExpand&lt;T&gt;;
-  required?: JsonSchemaRequired&lt;T&gt;;
-};
+import { JSONSchema7 } from &#x27;json-schema&#x27;;
 
 export class ODataEntityTypeKey {
   name: string;
@@ -508,13 +496,13 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
 
   //#region Json Schema
   // https://json-schema.org/
-  toJsonSchema(options: JsonSchemaOptions&lt;T&gt; &#x3D; {}) {
+  toJsonSchema(options?: JsonSchemaOptions&lt;T&gt;, parent?: JSONSchema7): JSONSchema7 {
     let schema: any &#x3D;
       this.parser instanceof ODataStructuredTypeFieldParser ||
       this.parser instanceof ODataStructuredTypeParser ||
       this.parser instanceof ODataEnumTypeParser
-        ? this.parser.toJsonSchema(options)
-        : ({ title: this.name, type: JsonSchemaType.object } as any);
+        ? this.parser.toJsonSchema(options, parent)
+        : ({ title: this.name } as JSONSchema7);
 
     switch (this.type) {
       case EdmType.String:
@@ -571,6 +559,9 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
         items: schema,
         additionalItems: false,
       };
+    if (options?.map !&#x3D;&#x3D; undefined) {
+      schema &#x3D; options.map(schema, parent);
+    }
     return schema;
   }
   //#endregion
@@ -907,8 +898,8 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
   }
 
   // Json Schema
-  toJsonSchema(options: JsonSchemaOptions&lt;T&gt; &#x3D; {}) {
-    let schema: any &#x3D; {
+  toJsonSchema(options?: JsonSchemaOptions&lt;T&gt;, parent?: JSONSchema7): JSONSchema7 {
+    let schema: JSONSchema7 &#x3D; {
       $schema: &#x27;http://json-schema.org/draft-07/schema#&#x27;,
       $id: &#x60;${this.namespace}.${this.name}&#x60;,
       title: this.titleize(DESCRIPTION),
@@ -922,40 +913,43 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
       include_parents: true,
     }).filter(
       (f) &#x3D;&gt;
-        (!f.navigation || (options.expand &amp;&amp; f.name in options.expand)) &amp;&amp;
-        (!options.select || (&lt;string[]&gt;options.select).indexOf(f.name) !&#x3D;&#x3D; -1),
+        (!f.navigation || (options?.expand &amp;&amp; f.name in options?.expand)) &amp;&amp;
+        (!options?.select || (&lt;string[]&gt;options?.select).indexOf(f.name) !&#x3D;&#x3D; -1),
     );
+    schema.required &#x3D; [
+      ...(schema.required ?? []),
+      ...fields
+        .filter((f) &#x3D;&gt;
+          options?.required &amp;&amp; f.name in options?.required
+            ? options?.required[f.name as keyof T]
+            : !f.nullable,
+        )
+        .map((f) &#x3D;&gt; f.name),
+    ];
     schema.properties &#x3D; Object.assign(
       {},
       schema.properties,
       fields
         .map((f) &#x3D;&gt; {
           let expand &#x3D;
-            options.expand &amp;&amp; f.name in options.expand
-              ? (options.expand as any)[f.name]
+            options?.expand &amp;&amp; f.name in options?.expand
+              ? (options?.expand as any)[f.name]
               : undefined;
-          let schema &#x3D; f.toJsonSchema(expand);
-          if (options.custom &amp;&amp; f.name in options.custom)
-            schema &#x3D; (
-              options.custom[f.name as keyof T] as (
+          let child &#x3D; f.toJsonSchema({...expand, map: options?.map}, schema);
+          if (options?.custom &amp;&amp; f.name in options?.custom)
+            child &#x3D; (
+              options?.custom[f.name as keyof T] as (
                 schema: any,
                 field: ODataStructuredTypeFieldParser&lt;any&gt;,
-              ) &#x3D;&gt; any
-            )(schema, f);
-          return { [f.name]: schema };
+              ) &#x3D;&gt; JSONSchema7
+            )(child, f);
+          return { [f.name]: child };
         })
         .reduce((acc, v) &#x3D;&gt; Object.assign(acc, v), {}),
     );
-    schema.required &#x3D; [
-      ...schema.required,
-      ...fields
-        .filter((f) &#x3D;&gt;
-          options.required &amp;&amp; f.name in options.required
-            ? options.required[f.name as keyof T]
-            : !f.nullable,
-        )
-        .map((f) &#x3D;&gt; f.name),
-    ];
+    if (options?.map !&#x3D;&#x3D; undefined) {
+      schema &#x3D; options.map(schema, parent);
+    }
     return schema;
   }
 

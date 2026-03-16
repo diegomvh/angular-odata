@@ -1116,7 +1116,7 @@ import type {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from &#x27;../schema&#x27;;
-import { EdmType, ParserOptions } from &#x27;../types&#x27;;
+import { EdmType, JsonSchemaOptions, ParserOptions } from &#x27;../types&#x27;;
 import { Objects, Types } from &#x27;../utils&#x27;;
 import { ODataCollection } from &#x27;./collection&#x27;;
 import { ODataModel } from &#x27;./model&#x27;;
@@ -1841,6 +1841,10 @@ export class ODataModelOptions&lt;T&gt; {
 
   isTypeOf(type: string) {
     return this.structuredType.type() &#x3D;&#x3D;&#x3D; type;
+  }
+
+  toJsonSchema(options?: JsonSchemaOptions&lt;T&gt;) {
+    return this.structuredType.toJsonSchema(options);
   }
 
   isModelFor(entity: T | { [name: string]: any }) {

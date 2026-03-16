@@ -216,7 +216,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:15</a></div>
                             </td>
                         </tr>
 
@@ -290,7 +290,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -316,7 +316,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:15</a></div>
                         </td>
                     </tr>
 
@@ -383,8 +383,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="21"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:21</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="23"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:23</a></div>
                         </td>
                     </tr>
 
@@ -610,13 +610,15 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { raw } from &#x27;../../resources/query&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { JSONSchema7 } from &#x27;json-schema&#x27;;
+import { raw } from &#x27;../../resources/query&#x27;;
 import {
   ODataEnumTypeConfig,
   ODataEnumTypeFieldConfig,
   ParserOptions,
   FieldParser,
-  JsonType,
+  JsonSchemaType,
+  JsonSchemaOptions,
 } from &#x27;../../types&#x27;;
 import { ODataAnnotatable } from &#x27;../annotation&#x27;;
 
@@ -740,19 +742,23 @@ export class ODataEnumTypeParser&lt;E&gt; extends ODataAnnotatable implements Fi
   }
 
   // Json Schema
-  toJsonSchema() {
-    return this.flags
+  toJsonSchema(options?: JsonSchemaOptions&lt;E&gt;, parent?: JSONSchema7): JSONSchema7 {
+    let schema &#x3D; (this.flags
       ? {
-          title: this.name,
-          type: JsonType.array,
-          items: {
-            type: JsonType.integer,
-          },
-        }
+        title: this.name,
+        type: JsonSchemaType.array,
+        items: {
+          type: JsonSchemaType.integer,
+        },
+      }
       : {
-          type: JsonType.integer,
-          enum: this._fields.map((f) &#x3D;&gt; f.value),
-        };
+        type: JsonSchemaType.integer,
+        enum: this._fields.map((f) &#x3D;&gt; f.value),
+      }) as JSONSchema7;
+    if (options?.map !&#x3D;&#x3D; undefined) {
+      schema &#x3D; options.map(schema, parent);
+    }
+    return schema;
   }
 
   validate(

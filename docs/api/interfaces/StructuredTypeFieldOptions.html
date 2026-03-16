@@ -219,7 +219,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { Observable } from &#x27;rxjs&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { JSONSchema7 } from &#x27;json-schema&#x27;;
+import type { Observable } from &#x27;rxjs&#x27;;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
 export type FetchPolicy &#x3D;
@@ -331,7 +332,7 @@ export enum EdmType {
   GeometryCollection &#x3D; &#x27;Edm.GeometryCollection&#x27;,
 }
 
-export enum JsonType {
+export enum JsonSchemaType {
   string &#x3D; &#x27;string&#x27;,
   number &#x3D; &#x27;number&#x27;,
   integer &#x3D; &#x27;integer&#x27;,
@@ -340,6 +341,23 @@ export enum JsonType {
   boolean &#x3D; &#x27;boolean&#x27;,
   null &#x3D; &#x27;null&#x27;,
 }
+
+export type JsonSchemaSelect&lt;T&gt; &#x3D; Array&lt;keyof T&gt;;
+export type JsonSchemaCustom&lt;T&gt; &#x3D; {
+  [P in keyof T]?: (schema: JSONSchema7, field: FieldParser&lt;T[P]&gt;) &#x3D;&gt; JSONSchema7;
+};
+export type JsonSchemaExpand&lt;T&gt; &#x3D; { [P in keyof T]?: JsonSchemaFieldOptions&lt;T[P]&gt; };
+export type JsonSchemaRequired&lt;T&gt; &#x3D; { [P in keyof T]?: boolean };
+export type JsonSchemaFieldOptions&lt;T&gt; &#x3D; {
+  select?: JsonSchemaSelect&lt;T&gt;;
+  custom?: JsonSchemaCustom&lt;T&gt;;
+  expand?: JsonSchemaExpand&lt;T&gt;;
+  required?: JsonSchemaRequired&lt;T&gt;;
+};
+
+export type JsonSchemaOptions&lt;T&gt; &#x3D; JsonSchemaFieldOptions&lt;T&gt; &amp; {
+  map?: (schema: JSONSchema7, parent?: JSONSchema7) &#x3D;&gt; JSONSchema7 
+};
 
 export interface ParserOptions {
   version?: ODataVersion;
