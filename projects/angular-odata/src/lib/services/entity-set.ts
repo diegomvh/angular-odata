@@ -16,6 +16,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   static Model?: typeof ODataModel<any>;
   static Collection?: typeof ODataCollection<any, ODataModel<any>>;
 
+  model<M extends ODataModel<T>>(entity?: Partial<T>, reset?: boolean): M;
   model(entity?: Partial<T>, reset?: boolean) {
     const Service = this.constructor as typeof ODataEntitySetService<T>;
     return this.entity().asModel((entity ?? {}) as Partial<T>, {
@@ -24,6 +25,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     });
   }
 
+  collection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities?: Partial<T>[] | { [name: string]: any }[], reset?: boolean): C;
   collection(entities?: Partial<T>[], reset?: boolean) {
     const Service = this.constructor as typeof ODataEntitySetService<T>;
     return this.entities().asCollection((entities ?? []) as Partial<T>[], {
