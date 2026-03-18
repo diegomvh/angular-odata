@@ -7,8 +7,12 @@ import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Package } from './package';
 import { Import } from './import';
+import { Collection } from './collection';
+import { Model } from './model';
 
 export class Service extends Base {
+  model?: Model;
+  collection?: Collection;
   constructor(
     pkg: Package,
     options: ApiGenSchema,
@@ -32,6 +36,8 @@ export class Service extends Base {
           : this.edmElement instanceof CsdlSingleton
             ? this.edmElement.Type
             : this.options.name,
+      model: this.model,
+      collection: this.collection,
       callables: this.callables ?? [],
     };
   }
@@ -43,6 +49,14 @@ export class Service extends Base {
         : '';
   }
 
+  setModel(model: Model) {
+    this.model = model;
+    this.addDependency(model);
+  }
+  setCollection(collection: Collection) {
+    this.collection = collection;
+    this.addDependency(collection);
+  }
   public override name() {
     return strings.classify(this.edmElement.name()) + 'Service';
   }

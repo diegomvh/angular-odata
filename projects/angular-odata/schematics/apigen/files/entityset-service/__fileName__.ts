@@ -17,10 +17,10 @@ export class <%= classify(name) %> extends ODataEntitySetService<<%= toTypescrip
     super(client, '<%= path %>', '<%= type %>');
   }
   <%= camelize(toTypescriptType(type)) %>Model(entity?: Partial<<%= toTypescriptType(type) %>>) {
-    return this.model(entity);
+    return this.model<<%= model.importedName(imports) %><<%= toTypescriptType(type) %>>>(entity);
   }
   <%= camelize(toTypescriptType(type)) %>Collection(entities?: Partial<<%= toTypescriptType(type) %>>[]) {
-    return this.collection(entities);
+    return this.collection<<%= model.importedName(imports) %><<%= toTypescriptType(type) %>>, <%= collection.importedName(imports) %><<%= toTypescriptType(type) %>, <%= model.importedName(imports) %><<%= toTypescriptType(type) %>>>>(entities);
   }<% for (let cal of callables) { %>
   // <%= cal.name() %>
   <%= cal.resourceFunction() %>
