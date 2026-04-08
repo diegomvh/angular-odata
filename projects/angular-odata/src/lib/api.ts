@@ -496,10 +496,10 @@ export class ODataApi {
   public createModel<T>(structured: ODataStructuredType<T>) {
     if (structured.model !== undefined) return structured.model;
     // Build Ad-hoc model
-    const Model = class extends ODataModel<any> {} as typeof ODataModel<any>;
+    const Model = class extends ODataModel<T> {} as typeof ODataModel<T>;
     // Store New Model structured for next time
     structured.model = Model;
-    return Model as typeof ODataModel<T>;
+    return Model;
   }
 
   public modelForType<T>(type: string) {
@@ -525,10 +525,10 @@ export class ODataApi {
     // Build Ad-hoc collection
     const Collection = class extends ODataCollection<T, ODataModel<T>> {
       static override model = model!;
-    } as typeof ODataCollection<any, ODataModel<any>>;
+    } as typeof ODataCollection<T, ODataModel<T>>;
     // Store New Collection structured for next time
     structured.collection = Collection;
-    return Collection as typeof ODataCollection<T, ODataModel<T>>;
+    return Collection;
   }
 
   public collectionForType<T>(type: string) {
@@ -595,7 +595,7 @@ export class ODataApi {
     if (!type.startsWith('Edm.')) {
       structuredType = this.findStructuredType<T>(type) ?? structuredType;
       if (structuredType !== undefined) {
-        meta = ODataModel.buildMetaOptions({ config, structuredType });
+        meta = ODataModel.buildMetaOptions<T>({ config, structuredType });
       }
     }
     // Set Options for next time
