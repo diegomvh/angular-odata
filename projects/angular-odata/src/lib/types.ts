@@ -135,7 +135,7 @@ export type JsonSchemaFieldOptions<T> = {
 };
 
 export type JsonSchemaOptions<T> = JsonSchemaFieldOptions<T> & {
-  map?: (schema: JSONSchema7, parent?: JSONSchema7) => JSONSchema7 
+  map?: (field: FieldParser<T>, schema: JSONSchema7, parent?: JSONSchema7) => JSONSchema7 
 };
 
 export interface ParserOptions {

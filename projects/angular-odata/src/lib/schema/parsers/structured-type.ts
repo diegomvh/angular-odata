@@ -263,7 +263,7 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
         additionalItems: false,
       };
     if (options?.map !== undefined) {
-      schema = options.map(schema, parent);
+      schema = options.map(this, schema, parent);
     }
     return schema;
   }
@@ -651,7 +651,7 @@ export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Pa
         .reduce((acc, v) => Object.assign(acc, v), {}),
     );
     if (options?.map !== undefined) {
-      schema = options.map(schema, parent);
+      schema = options.map(this, schema, parent);
     }
     return schema;
   }
