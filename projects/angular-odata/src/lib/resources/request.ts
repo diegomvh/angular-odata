@@ -23,12 +23,8 @@ export class ODataRequest<T> {
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
   readonly bodyQueryOptions: QueryOption[];
-  readonly fetchPolicy:
-    | 'cache-first'
-    | 'cache-and-network'
-    | 'network-only'
-    | 'no-cache'
-    | 'cache-only';
+  readonly fetchPolicy: FetchPolicy;
+  readonly maxAge?: number;
   readonly resource: ODataResource<T>;
   private readonly _responseType?:
     | 'arraybuffer'
@@ -70,6 +66,7 @@ export class ODataRequest<T> {
       | 'entity'
       | 'entities';
     fetchPolicy?: FetchPolicy;
+    maxAge?: number;
     parserOptions?: ParserOptions;
     withCredentials?: boolean;
     bodyQueryOptions?: QueryOption[];
@@ -91,7 +88,8 @@ export class ODataRequest<T> {
 
     this.withCredentials =
       init.withCredentials === undefined ? this.api.options.withCredentials : init.withCredentials;
-    this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
+    this.fetchPolicy = init.fetchPolicy ?? this.api.options.fetchPolicy;
+    this.maxAge = init.maxAge;
     this.bodyQueryOptions = [
       ...(this.api.options.bodyQueryOptions || []),
       ...(init.bodyQueryOptions || []),
@@ -226,6 +224,7 @@ export class ODataRequest<T> {
       reportProgress: options.reportProgress,
       responseType: options.responseType,
       fetchPolicy: options.fetchPolicy,
+      maxAge: options.maxAge,
       parserOptions: options.parserOptions,
       withCredentials: options.withCredentials,
       bodyQueryOptions: options.bodyQueryOptions,

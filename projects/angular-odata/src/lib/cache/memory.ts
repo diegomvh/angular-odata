@@ -2,8 +2,8 @@ import { ODataRequest, ODataResponse } from '../resources';
 import { ODataBaseCache } from './cache';
 
 export class ODataInMemoryCache extends ODataBaseCache {
-  constructor({ timeout }: { timeout?: number } = {}) {
-    super({ timeout });
+  constructor({ maxAge }: { maxAge?: number } = {}) {
+    super({ maxAge });
   }
 
   /**
@@ -15,7 +15,7 @@ export class ODataInMemoryCache extends ODataBaseCache {
     let scope = this.scope(req);
     let tags = this.tags(res);
     this.put(req.cacheKey, res, {
-      timeout: res.options.maxAge,
+      maxAge: req.maxAge ?? res.options.maxAge,
       scope,
       tags,
     });

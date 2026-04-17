@@ -279,6 +279,7 @@ export class ODataApi {
       bodyQueryOptions: options.bodyQueryOptions,
       reportProgress: options.reportProgress,
       fetchPolicy: options.fetchPolicy,
+      maxAge: options.maxAge,
       parserOptions: options.parserOptions,
       withCredentials: options.withCredentials,
     });
@@ -496,10 +497,10 @@ export class ODataApi {
   public createModel<T>(structured: ODataStructuredType<T>) {
     if (structured.model !== undefined) return structured.model;
     // Build Ad-hoc model
-    const Model = class extends ODataModel<any> {} as typeof ODataModel<any>;
+    const Model = class extends ODataModel<T> {} as typeof ODataModel<T>;
     // Store New Model structured for next time
     structured.model = Model;
-    return Model as typeof ODataModel<T>;
+    return Model;
   }
 
   public modelForType<T>(type: string) {

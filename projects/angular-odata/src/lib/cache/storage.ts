@@ -8,13 +8,13 @@ export class ODataInStorageCache extends ODataBaseCache {
   constructor({
     name,
     storage = sessionStorage,
-    timeout,
+    maxAge,
   }: {
-    timeout?: number;
+    maxAge?: number;
     name: string;
     storage?: Storage;
   }) {
-    super({ timeout });
+    super({ maxAge });
     this.name = name;
     this.storage = storage;
     this.restore();
@@ -54,7 +54,7 @@ export class ODataInStorageCache extends ODataBaseCache {
     const scope = this.scope(req);
     const tags = this.tags(res);
     this.put<ODataResponseJson<any>>(req.cacheKey, res.toJson(), {
-      timeout: res.options.maxAge,
+      maxAge: req.maxAge ?? res.options.maxAge,
       scope,
       tags,
     });

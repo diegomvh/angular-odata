@@ -63,7 +63,7 @@ export const CHANGESET_PREFIX = 'changeset_';
 export const DEFAULT_METADATA = 'minimal';
 export const DEFAULT_STRIP_METADATA = 'full';
 export const DEFAULT_FETCH_POLICY = 'network-only';
-export const DEFAULT_TIMEOUT = 60; // Time in seconds
+export const DEFAULT_MAXAGE = 60;      // The default max age for cache entries in seconds
 export const CALLABLE_BINDING_PARAMETER = 'bindingParameter';
 export const XSSI_PREFIX = /^\)\]\}',?\n/;
 

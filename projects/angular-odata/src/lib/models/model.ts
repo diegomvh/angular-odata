@@ -49,7 +49,7 @@ export class ODataModel<T> {
   }[] = [];
   _attributes: Map<string, ODataModelAttribute<any>> = new Map<string, ODataModelAttribute<any>>();
   _annotations!: ODataEntityAnnotations<T>;
-  _meta: ODataModelOptions<any>;
+  _meta: ODataModelOptions<T>;
   // Events
   events$: ODataModelEventEmitter<T>;
 

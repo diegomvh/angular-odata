@@ -1,29 +1,29 @@
 import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
-import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from '../constants';
+import { CACHE_KEY_SEPARATOR, DEFAULT_MAXAGE } from '../constants';
 import type { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
 import { ODataCache, PathSegment } from '../types';
 
 /**
- * A cache entry that holds a payload, a last read time, and a timeout for the entry.
+ * A cache entry that holds a payload, a date when it was last read from the backend, and a maxAge for the entry.
  * @param payload The payload to cache.
- * @param lastread The last read time.
- * @param timeout The timeout in seconds.
+ * @param date The date when the entry was last read from the backend.
+ * @param maxAge The maximum age for the entry.
  * @param tags Some tags to identify the entry.
  */
 export interface ODataCacheEntry<T> {
   payload: T;
-  lastread: number;
-  timeout: number;
+  date: number;
+  maxAge: number;
   tags: string[];
 }
 
 export abstract class ODataBaseCache implements ODataCache {
-  timeout: number;
+  maxAge: number;
   entries: Map<string, ODataCacheEntry<any>>;
 
-  constructor({ timeout = DEFAULT_TIMEOUT }: { timeout?: number }) {
-    this.timeout = timeout;
+  constructor({ maxAge = DEFAULT_MAXAGE }: { maxAge?: number }) {
+    this.maxAge = maxAge;
     this.entries = new Map<string, ODataCacheEntry<any>>();
   }
 
@@ -64,18 +64,18 @@ export abstract class ODataBaseCache implements ODataCache {
   /**
    * Build an entry from a payload and some options
    * @param payload The payload to store in the cache
-   * @param timeout The timeout for the entry
+   * @param maxAge The maximum age for the entry
    * @param tags The tags for the entry
    * @returns The entry to store in the cache
    */
   buildEntry<T>(
     payload: T,
-    { timeout, tags }: { timeout?: number; tags?: string[] },
+    { maxAge, tags }: { maxAge?: number; tags?: string[] },
   ): ODataCacheEntry<T> {
     return {
       payload,
-      lastread: Date.now(),
-      timeout: (timeout ?? this.timeout) * 1000,
+      date: Date.now(),
+      maxAge: (maxAge ?? this.maxAge) * 1000,
       tags: tags ?? [],
     };
   }
@@ -93,16 +93,16 @@ export abstract class ODataBaseCache implements ODataCache {
    * Put some payload in the cache
    * @param name The name for the entry
    * @param payload The payload to store in the cache
-   * @param timeout The timeout for the entry
+   * @param maxAge The maximum age for the entry
    * @param scope The scope for the entry
    * @param tags The tags for the entry
    */
   put<T>(
     name: string,
     payload: T,
-    { timeout, scope, tags }: { timeout?: number; scope?: string[]; tags?: string[] } = {},
+    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] } = {},
   ) {
-    const entry = this.buildEntry<T>(payload, { timeout, tags });
+    const entry = this.buildEntry<T>(payload, { maxAge, tags });
     const key = this.buildKey([...(scope ?? []), name]);
     this.entries.set(key, entry);
   }
@@ -116,9 +116,7 @@ export abstract class ODataBaseCache implements ODataCache {
   get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
     const key = this.buildKey([...(scope || []), name]);
     const entry = this.entries.get(key);
-    if (entry === undefined || this.isExpired(entry)) return undefined;
-    entry.lastread = Date.now();
-    return entry.payload;
+    return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
   }
 
   /**
@@ -156,7 +154,7 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry<any>) {
-    return entry.lastread < (Date.now() - entry.timeout);
+    return entry.date < (Date.now() - entry.maxAge);
   }
 
   /**

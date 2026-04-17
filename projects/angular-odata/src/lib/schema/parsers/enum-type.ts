@@ -4,7 +4,7 @@ import {
   ODataEnumTypeFieldConfig,
   ParserOptions,
   FieldParser,
-  JsonType,
+  JsonSchemaType,
 } from '../../types';
 import { ODataAnnotatable } from '../annotation';
 
@@ -132,13 +132,13 @@ export class ODataEnumTypeParser<E> extends ODataAnnotatable implements FieldPar
     return this.flags
       ? {
           title: this.name,
-          type: JsonType.array,
+          type: JsonSchemaType.array,
           items: {
-            type: JsonType.integer,
+            type: JsonSchemaType.integer,
           },
         }
       : {
-          type: JsonType.integer,
+          type: JsonSchemaType.integer,
           enum: this._fields.map((f) => f.value),
         };
   }

@@ -14,6 +14,7 @@ export type ODataOptions = {
   reportProgress?: boolean;
   withCredentials?: boolean;
   fetchPolicy?: FetchPolicy;
+  maxAge?: number;
   parserOptions?: ParserOptions;
 };
 

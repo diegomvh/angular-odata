@@ -27,7 +27,7 @@ import type {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';
-import { EdmType, ParserOptions } from '../types';
+import { EdmType, JsonSchemaOptions, ParserOptions } from '../types';
 import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
@@ -752,6 +752,10 @@ export class ODataModelOptions<T> {
 
   isTypeOf(type: string) {
     return this.structuredType.type() === type;
+  }
+
+  toJsonSchema(options?: JsonSchemaOptions<T>) {
+    return this.structuredType.toJsonSchema(options);
   }
 
   isModelFor(entity: T | { [name: string]: any }) {

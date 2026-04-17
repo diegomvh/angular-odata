@@ -10,25 +10,12 @@ import {
   StructuredTypeFieldOptions,
   FieldParser,
   EdmType,
-  JsonType as JsonSchemaType,
+  JsonSchemaType,
+  JsonSchemaOptions,
 } from '../../types';
 import { Objects, Strings, Types } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
 import { ODataEnumTypeParser } from './enum-type';
-
-// JSON SCHEMA
-type JsonSchemaSelect<T> = Array<keyof T>;
-type JsonSchemaCustom<T> = {
-  [P in keyof T]?: (schema: any, field: ODataStructuredTypeFieldParser<T[P]>) => any;
-};
-type JsonSchemaExpand<T> = { [P in keyof T]?: JsonSchemaOptions<T[P]> };
-type JsonSchemaRequired<T> = { [P in keyof T]?: boolean };
-export type JsonSchemaOptions<T> = {
-  select?: JsonSchemaSelect<T>;
-  custom?: JsonSchemaCustom<T>;
-  expand?: JsonSchemaExpand<T>;
-  required?: JsonSchemaRequired<T>;
-};
 
 export class ODataEntityTypeKey {
   name: string;
