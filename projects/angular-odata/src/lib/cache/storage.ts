@@ -54,7 +54,7 @@ export class ODataInStorageCache extends ODataBaseCache {
     const scope = this.scope(req);
     const tags = this.tags(res);
     this.put<ODataResponseJson<any>>(req.cacheKey, res.toJson(), {
-      maxAge: res.options.maxAge,
+      maxAge: req.maxAge ?? res.options.maxAge,
       scope,
       tags,
     });
