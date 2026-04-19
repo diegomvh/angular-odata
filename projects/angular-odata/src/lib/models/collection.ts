@@ -243,7 +243,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         Model = schema.model;
     }
 
-    return Model.meta.api.createModelInstance(
+    return Model.meta.context.createModelInstance(
       Model, 
       data,
       { annots, reset, parent: [this, null], }

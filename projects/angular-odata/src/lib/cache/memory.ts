@@ -1,5 +1,4 @@
-import { ODataModel, ODataModelOptions } from '../models';
-import { EntityKey, ODataRequest, ODataResponse } from '../resources';
+import { ODataRequest, ODataResponse } from '../resources';
 import { ODataBaseCache } from './cache';
 
 export class ODataInMemoryCache extends ODataBaseCache {
@@ -31,19 +30,4 @@ export class ODataInMemoryCache extends ODataBaseCache {
     let scope = this.scope(req);
     return this.get(req.cacheKey, { scope });
   }
-
-  override putModel(key: EntityKey<any>, model: ODataModel<any>): void {
-    let scope = this.scope(model._meta);
-    let tags = this.tags(model._meta);
-    this.put(key.toString(), model, {
-      scope,
-      tags,
-    });
-  }
-
-  override getModel(key: EntityKey<any>, options: ODataModelOptions<any>): ODataModel<any> | undefined {
-    let scope = this.scope(options);
-    return this.get(key.toString(), { scope });
-  }
-
 }

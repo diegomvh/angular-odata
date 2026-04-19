@@ -33,6 +33,7 @@ import { ODataCollection } from './collection';
 import { ODataModel } from './model';
 import { EventEmitter } from '@angular/core';
 import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
+import { ODataModelContext } from './context';
 
 export enum ODataModelEventType {
   Change = 'change',
@@ -548,7 +549,7 @@ export class ODataModelField<F> {
         Model = meta.model;
     }
 
-    return Model.meta.api.createModelInstance(
+    return this.options.context.createModelInstance(
       Model, 
       (value || {}) as Partial<F> | { [name: string]: any }, 
       { annots, reset, parent: [parent, this], }
@@ -709,6 +710,7 @@ export type ODataModelEntry<T, M extends ODataModel<T>> = {
 };
 
 export class ODataModelOptions<T> {
+  context: ODataModelContext;
   name: string;
   cid: string;
   base?: string;
@@ -723,10 +725,13 @@ export class ODataModelOptions<T> {
   constructor({
     config,
     structuredType,
+    context,
   }: {
     config: ModelOptions;
     structuredType: ODataStructuredType<T>;
+    context: ODataModelContext;
   }) {
+    this.context = context;
     this.name = structuredType.name;
     this.base = structuredType.base;
     this.structuredType = structuredType;
@@ -1106,7 +1111,7 @@ export class ODataModelOptions<T> {
           .find((field: ODataModelField<any>) => field.field === name);
         if (field !== undefined) {
           v = Types.isPlainObject(v) || ODataModelOptions.isModel(v) ? v[field.name] : v;
-          options = field.isStructuredType() ? this.api.optionsForType(field.type) : undefined;
+          options = field.isStructuredType() ? this.context.optionsForType(field.type) : undefined;
         }
       }
       if (field === undefined) return undefined;
@@ -1161,7 +1166,7 @@ export class ODataModelOptions<T> {
         include_navigation: false,
         include_parents: true,
       }).find((field: ODataModelField<any>) => field.field === ref.property);
-      const meta = this.api.optionsForType<any>(attr.type);
+      const meta = this.context.optionsForType<any>(attr.type);
       const to = meta
         ?.fields({ include_navigation: false, include_parents: true })
         .find((field: ODataModelField<any>) => field.field === ref.referencedProperty);
@@ -1381,7 +1386,7 @@ export class ODataModelOptions<T> {
       self._parent !== null &&
       ((ODataModelOptions.isModel(self._parent[0]) &&
         self._parent[1] !== null &&
-        this.api.optionsForType(self._parent[1].type) !== self._meta) ||
+        this.context.optionsForType(self._parent[1].type) !== self._meta) ||
         (ODataModelOptions.isCollection(self._parent[0]) &&
           (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model.meta !== self._meta))
     ) {
@@ -1635,7 +1640,7 @@ export class ODataModelOptions<T> {
 
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
-        const meta = this.api.optionsForType<F>(modelField.type);
+        const meta = this.context.optionsForType<F>(modelField.type);
         const ref = meta?.resolveReferential(attr.get(), attr, {
           resolve: false,
         });

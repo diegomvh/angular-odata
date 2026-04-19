@@ -25,7 +25,6 @@ import {
   ODataModelAttribute,
   ODataModelEventType,
   ODataModelEventEmitter,
-  ModelFieldOptions,
   ModelInterface,
 } from './options';
 import type { EdmType, ParserOptions } from '../types';
@@ -52,37 +51,6 @@ export class ODataModel<T> {
   _meta: ODataModelOptions<T>;
   // Events
   events$: ODataModelEventEmitter<T>;
-
-  static buildMetaOptions<T>({
-    config,
-    structuredType,
-  }: {
-    config?: ModelOptions;
-    structuredType: ODataStructuredType<T>;
-  }) {
-    if (config === undefined) {
-      const fields = structuredType
-        .fields({ include_navigation: true, include_parents: true })
-        .reduce((acc, field) => {
-          let name = field.name;
-          // Prevent collision with reserved keywords
-          while (RESERVED_FIELD_NAMES.includes(name)) {
-            name = name + '_';
-          }
-          return Object.assign(acc, {
-            [name]: {
-              field: field.name,
-              default: field.default,
-              required: !field.nullable,
-            },
-          });
-        }, {});
-      config = {
-        fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
-      };
-    }
-    return new ODataModelOptions<T>({ config, structuredType });
-  }
 
   constructor(
     data: Partial<T> | { [name: string]: any } = {},
@@ -838,5 +806,3 @@ export class ODataModel<T> {
   }
   //#endregion
 }
-
-const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);

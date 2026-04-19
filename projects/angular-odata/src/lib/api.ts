@@ -41,6 +41,7 @@ import {
 } from './types';
 import type { ODataMetadata } from './metadata/metadata';
 import { ODataEntityAnnotations } from './annotations';
+import { ODataModelContext } from './models/context';
 
 /**
  * Api abstraction for consuming OData services.
@@ -63,10 +64,8 @@ export class ODataApi {
   parsers: Map<string, Parser<any>>;
   // Schemas
   schemas: ODataSchema[];
-  // Models
-  models: { [type: string]: typeof ODataModel<any> } = {};
-  // Collections
-  collections: { [type: string]: typeof ODataCollection<any, ODataModel<any>> } = {};
+  // Context
+  context: ODataModelContext;
 
   constructor(config: ODataApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;
@@ -90,10 +89,7 @@ export class ODataApi {
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
     this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
-    this.models = (config.models ?? {}) as { [type: string]: typeof ODataModel<any> };
-    this.collections = (config.collections ?? {}) as {
-      [type: string]: typeof ODataCollection<any, ODataModel<any>>;
-    };
+    this.context = new ODataModelContext(this, config);
   }
 
   configure(
@@ -107,16 +103,7 @@ export class ODataApi {
         options: this.options.parserOptions,
       });
     });
-    Object.entries(this.models).forEach(([type, model]) => {
-      const structured = this.findStructuredType<any>(type);
-      if (structured !== undefined) {
-        this.configureModel<any>(structured, model);
-        const collection = this.collections[type];
-        if (collection !== undefined) {
-          collection.model = model;
-        }
-      }
-    });
+    this.context.configure({options: this.options.parserOptions});
   }
 
   populate(metadata: ODataMetadata) {
@@ -300,40 +287,7 @@ export class ODataApi {
     }
 
     if (this.cache !== undefined) {
-      if (req.isFetch()) {
-        // Handle cache for fetch requests
-        const policy = req.fetchPolicy;
-        const cached = this.cache.getResponse(req);
-        if (policy === 'no-cache') {
-          return res$;
-        }
-        if (policy === 'cache-only') {
-          if (cached) {
-            return of(cached);
-          } else {
-            return throwError(() => new Error('No Cached'));
-          }
-        }
-        if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
-          res$ = res$.pipe(
-            tap((res: ODataResponse<any>) => {
-              if (res.options.cacheability !== 'no-store') this.cache!.putResponse(req, res);
-            }),
-          );
-        }
-        if (cached !== undefined && policy !== 'network-only') {
-          res$ = policy === 'cache-and-network' ? res$.pipe(startWith(cached)) : of(cached);
-        }
-      } else if (req.isMutate()) {
-        // Invalidate cache for mutated resources
-        const requests = req.isBatch()
-          ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
-          : [req];
-        for (var r of requests) {
-          const scope = this.cache!.scope(r);
-          this.cache!.forget({ scope });
-        }
-      }
+      res$ = this.handleRequest(req, res$);
     }
 
     switch (options.observe || 'body') {
@@ -360,6 +314,67 @@ export class ODataApi {
     }
   }
 
+  /**
+   * Using the request, handle the fetching of the response
+   * @param req The request to fetch
+   * @param res$ Observable of the response
+   * @returns
+   */
+  private handleRequest(
+    req: ODataRequest<any>,
+    res$: Observable<ODataResponse<any>>,
+  ): Observable<ODataResponse<any>> {
+    return req.isFetch()
+      ? this.handleFetch(req, res$)
+      : req.isMutate()
+        ? this.handleMutate(req, res$)
+        : res$;
+  }
+
+  private handleFetch(
+    req: ODataRequest<any>,
+    res$: Observable<ODataResponse<any>>,
+  ): Observable<ODataResponse<any>> {
+    const policy = req.fetchPolicy;
+    const cached = this.cache!.getResponse(req);
+    if (policy === 'no-cache') {
+      return res$;
+    }
+    if (policy === 'cache-only') {
+      if (cached) {
+        return of(cached);
+      } else {
+        return throwError(() => new Error('No Cached'));
+      }
+    }
+    if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
+      res$ = res$.pipe(
+        tap((res: ODataResponse<any>) => {
+          if (res.options.cacheability !== 'no-store') this.cache!.putResponse(req, res);
+        }),
+      );
+    }
+    return cached !== undefined && policy !== 'network-only'
+      ? policy === 'cache-and-network'
+        ? res$.pipe(startWith(cached))
+        : of(cached)
+      : res$;
+  }
+
+  private handleMutate(
+    req: ODataRequest<any>,
+    res$: Observable<ODataResponse<any>>,
+  ): Observable<ODataResponse<any>> {
+    const requests = req.isBatch()
+      ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
+      : [req];
+    for (var r of requests) {
+      const scope = this.cache!.scope(r);
+      this.cache!.forget({ scope });
+    }
+    return res$;
+  }
+
   //# region Find by Type
   // Memoize
   private memo: {
@@ -369,7 +384,6 @@ export class ODataApi {
     entitySets: Map<string, ODataEntitySet | undefined>;
     singletons: Map<string, ODataSingleton | undefined>;
     parsers: Map<string, Parser<any>>;
-    options: Map<string, ODataModelOptions<any> | undefined>;
   } = {
     enumTypes: new Map<string, ODataEnumType<any> | undefined>(),
     structuredTypes: new Map<string, ODataStructuredType<any> | undefined>(),
@@ -377,7 +391,6 @@ export class ODataApi {
     entitySets: new Map<string, ODataEntitySet | undefined>(),
     singletons: new Map<string, ODataSingleton | undefined>(),
     parsers: new Map<string, Parser<any>>(),
-    options: new Map<string, ODataModelOptions<any> | undefined>(),
   };
 
   public createSchema(config: ODataSchemaConfig) {
@@ -511,124 +524,6 @@ export class ODataApi {
   }
   //#endregion
 
-  public configureModel<T>(structured: ODataStructuredType<T>, model: typeof ODataModel<T>) {
-    model.meta = this.optionsForType<T>(structured.type(), {
-      config: model.options,
-      structuredType: structured,
-    })!;
-    if (model.meta !== undefined) {
-      // Configure
-      model.meta.configure({ options: this.options.parserOptions });
-    }
-  }
-
-  public findModel<T>(type: string) {
-    return (this.models[type] ?? this.findStructuredType<any>(type)?.model) as
-      | typeof ODataModel<T>
-      | undefined;
-  }
-
-  public createModel<T>(structured: ODataStructuredType<T>) {
-    if (structured.model !== undefined) return structured.model;
-    // Build Ad-hoc model
-    const Model = class extends ODataModel<T> {} as typeof ODataModel<T>;
-    // Store New Model structured for next time
-    structured.model = Model;
-    return Model;
-  }
-
-  public modelForType<T>(type: string) {
-    let Model = this.findModel<T>(type);
-    if (Model === undefined) {
-      const structured = this.findStructuredType<T>(type);
-      if (structured === undefined) throw Error(`No structured type for ${type}`);
-      Model = this.createModel<T>(structured);
-      this.configureModel<T>(structured, Model);
-    }
-    return Model;
-  }
-
-  public createModelInstance<T>(
-    Klass: typeof ODataModel,
-    data: Partial<T> | { [name: string]: any } = {},
-    {
-      parent,
-      resource,
-      annots,
-      reset = false,
-    }: {
-      parent?: [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null,
-      ];
-      resource?:
-        | ODataEntityResource<T>
-        | ODataNavigationPropertyResource<T>
-        | ODataPropertyResource<T>
-        | ODataSingletonResource<T>,
-      annots?: ODataEntityAnnotations<T>;
-      reset?: boolean;
-    } = {},
-  ) {
-    if (this.cache !== undefined) {
-      const key = Klass.meta.resolveKey(data);
-      if (key !== undefined) {
-        const model = this.cache.getModel(key as EntityKey<T>, Klass.meta) as ODataModel<T>;
-        if (model !== undefined) {
-          if (parent !== undefined)
-            model._parent = parent;
-          if (resource !== undefined) 
-            model.attach(resource);
-          if (annots !== undefined)
-            model._annotations = annots;
-          return model;
-        }
-      }
-    } 
-    const model = new Klass(data, {
-      parent,
-      resource,
-      annots,
-      reset,
-    }) as ODataModel<T>;
-    if (this.cache !== undefined && model.key() !== undefined) {
-      this.cache.putModel(model.key() as EntityKey<T>, model);
-    }
-    return model;
-  }
-
-  public findCollection<T>(type: string) {
-    return (this.collections[type] ?? this.findStructuredType<any>(type)?.collection) as
-      | typeof ODataCollection<T, ODataModel<T>>
-      | undefined;
-  }
-
-  public createCollection<T>(structured: ODataStructuredType<T>, model?: typeof ODataModel<T>) {
-    if (structured.collection !== undefined) return structured.collection;
-    if (model === undefined) model = this.createModel(structured);
-    // Build Ad-hoc collection
-    const Collection = class extends ODataCollection<T, ODataModel<T>> {
-      static override model = model!;
-    } as typeof ODataCollection<T, ODataModel<T>>;
-    // Store New Collection structured for next time
-    structured.collection = Collection;
-    return Collection;
-  }
-
-  public collectionForType<T>(type: string) {
-    let Collection = this.findCollection<T>(type);
-    if (Collection === undefined) {
-      const structured = this.findStructuredType<T>(type);
-      if (structured === undefined) throw Error(`No structured type for ${type}`);
-      const Model = this.modelForType<T>(type);
-      Collection = this.createCollection<T>(structured, Model) as typeof ODataCollection<
-        T,
-        ODataModel<T>
-      >;
-    }
-    return Collection;
-  }
-
   public findEntitySetForEntityType(entityType: string) {
     if (this.memo.entitySets.has(entityType)) {
       return this.memo.entitySets.get(entityType) as ODataEntitySet | undefined;
@@ -670,20 +565,26 @@ export class ODataApi {
       config,
     }: { structuredType?: ODataStructuredType<T>; config?: ModelOptions } = {},
   ) {
-    // Strucutred Options
-    if (this.memo.options.has(type)) {
-      return this.memo.options.get(type) as ODataModelOptions<T> | undefined;
-    }
+    return this.context.optionsForType(type, { structuredType, config });
+  }
 
-    let meta: ODataModelOptions<T> | undefined = undefined;
-    if (!type.startsWith('Edm.')) {
-      structuredType = this.findStructuredType<T>(type) ?? structuredType;
-      if (structuredType !== undefined) {
-        meta = ODataModel.buildMetaOptions<T>({ config, structuredType });
-      }
-    }
-    // Set Options for next time
-    this.memo.options.set(type, meta);
-    return meta;
+  public findModel<T>(type: string) {
+    return this.context.findModel<T>(type);
+  }
+
+  public findCollection<T>(type: string) {
+    return this.context.findCollection<T>(type);
+  }
+
+  public configureModel<T>(structured: ODataStructuredType<T>, model: typeof ODataModel<T>) {
+    return this.context.configureModel(structured, model, this.options.parserOptions);
+  }
+
+  public modelForType<T>(type: string) {
+    return this.context.modelForType<T>(type);
+  }
+
+  public collectionForType<T>(type: string) {
+    return this.context.collectionForType<T>(type);
   }
 }

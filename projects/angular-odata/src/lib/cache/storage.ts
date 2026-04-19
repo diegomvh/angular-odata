@@ -1,5 +1,4 @@
-import { ODataModel, ODataModelOptions } from '../models';
-import { EntityKey, ODataRequest, ODataResponse, ODataResponseJson } from '../resources';
+import { ODataRequest, ODataResponse, ODataResponseJson } from '../resources';
 import { ODataBaseCache, ODataCacheEntry } from './cache';
 
 export class ODataInStorageCache extends ODataBaseCache {
@@ -32,7 +31,6 @@ export class ODataInStorageCache extends ODataBaseCache {
             this.entries.entries()
           ).map(([key, entry]) => [key, { ...entry, payload: 
             entry.payload instanceof ODataResponse ? entry.payload.toJson() : 
-            entry.payload instanceof ODataModel ? entry.payload.toEntity() : 
             entry.payload } as ODataCacheEntry<any>])
         )
       );
@@ -81,24 +79,6 @@ export class ODataInStorageCache extends ODataBaseCache {
 
     return data instanceof ODataResponse ? data :
       data !== undefined ? ODataResponse.fromJson(req, data) 
-      : undefined;
-  }
-
-  override putModel(key: EntityKey<any>, model: ODataModel<any>): void {
-    let scope = this.scope(model._meta);
-    let tags = this.tags(model._meta);
-    this.put(key.toString(), model, {
-      scope,
-      tags,
-    });
-  }
-
-  override getModel(key: EntityKey<any>, options: ODataModelOptions<any>): ODataModel<any> | undefined {
-    let scope = this.scope(options);
-    const data = this.get<ODataModel<any>>(key.toString(), { scope });
-
-    return data instanceof ODataModel ? data :
-      data !== undefined ? options.fromEntity(data)
       : undefined;
   }
 }

@@ -1,10 +1,6 @@
-import { Observable, of, throwError } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
 import { CACHE_KEY_SEPARATOR, DEFAULT_MAXAGE } from '../constants';
-import type { EntityKey, ODataBatchResource } from '../resources';
 import { ODataRequest, ODataResponse } from '../resources';
 import { ODataCache, PathSegment } from '../types';
-import { ODataModel, ODataModelOptions } from '../models';
 
 /**
  * A cache entry that holds a payload, a date when it was last read from the backend, and a maxAge for the entry.
@@ -28,30 +24,24 @@ export abstract class ODataBaseCache implements ODataCache {
     this.maxAge = maxAge;
     this.entries = new Map<string, ODataCacheEntry<any>>();
   }
+
   abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
   abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
-  abstract getModel(key: EntityKey<any>, options: ODataModelOptions<any>): ODataModel<any> | undefined;
-  abstract putModel(key: EntityKey<any>, model: ODataModel<any>): void;
 
   /**
    * Using the resource on the request build an array of string to identify the scope of the request
    * @param obj The request with the resource to build the scope
    * @returns Array of string to identify the scope of the request
    */
-  scope(obj: ODataRequest<any> | ODataModelOptions<any>): string[] {
-    if (obj instanceof ODataRequest) {
-      const segments = obj.resource.cloneSegments();
-      return segments.segments({ key: true }).reduce(
-        (acc, s) => {
-          if (s.name === PathSegment.entitySet) acc = [...acc, s.path() as string];
-          return acc;
-        },
-        ['request'],
-      ); 
-    } else if (obj instanceof ODataModelOptions) {
-      return ['model', obj.name, obj.type()];
-    }
-    return [];
+  scope(obj: ODataRequest<any>): string[] {
+    const segments = obj.resource.cloneSegments();
+    return segments.segments({ key: true }).reduce(
+      (acc, s) => {
+        if (s.name === PathSegment.entitySet) acc = [...acc, s.path() as string];
+        return acc;
+      },
+      ['request'],
+    ); 
   }
 
   /**
@@ -59,17 +49,13 @@ export abstract class ODataBaseCache implements ODataCache {
    * @param res The response to build the tags
    * @returns Array of string to identify the tags of the response
    */
-  tags(obj: ODataResponse<any> | ODataModelOptions<any>): string[] {
+  tags(obj: ODataResponse<any>): string[] {
     const tags = [];
-    if (obj instanceof ODataResponse) {
-      const context = obj.context;
-      if (context.entitySet) {
-        tags.push(context.key ? `${context.entitySet}(${context.key})` : context.entitySet);
-      }
-      if (context.type) tags.push(context.type);
-    } else if (obj instanceof ODataModelOptions) {
-      tags.push(obj.name);
+    const context = obj.context;
+    if (context.entitySet) {
+      tags.push(context.key ? `${context.entitySet}(${context.key})` : context.entitySet);
     }
+    if (context.type) tags.push(context.type);
     return tags;
   }
 
@@ -167,66 +153,5 @@ export abstract class ODataBaseCache implements ODataCache {
    */
   isExpired(entry: ODataCacheEntry<any>) {
     return entry.date < (Date.now() - entry.maxAge);
-  }
-
-  /**
-   * Using the request, handle the fetching of the response
-   * @param req The request to fetch
-   * @param res$ Observable of the response
-   * @returns
-   */
-  handleRequest(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
-    return req.isFetch()
-      ? this.handleFetch(req, res$)
-      : req.isMutate()
-        ? this.handleMutate(req, res$)
-        : res$;
-  }
-
-  private handleFetch(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
-    const policy = req.fetchPolicy;
-    const cached = this.getResponse(req);
-    if (policy === 'no-cache') {
-      return res$;
-    }
-    if (policy === 'cache-only') {
-      if (cached) {
-        return of(cached);
-      } else {
-        return throwError(() => new Error('No Cached'));
-      }
-    }
-    if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
-      res$ = res$.pipe(
-        tap((res: ODataResponse<any>) => {
-          if (res.options.cacheability !== 'no-store') this.putResponse(req, res);
-        }),
-      );
-    }
-    return cached !== undefined && policy !== 'network-only'
-      ? policy === 'cache-and-network'
-        ? res$.pipe(startWith(cached))
-        : of(cached)
-      : res$;
-  }
-
-  private handleMutate(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
-    const requests = req.isBatch()
-      ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
-      : [req];
-    for (var r of requests) {
-      const scope = this.scope(r);
-      this.forget({ scope });
-    }
-    return res$;
   }
 }

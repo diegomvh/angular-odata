@@ -188,12 +188,10 @@ export interface ODataCache {
   get<T>(key: string, ...opts: any[]): T | undefined;
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
-  getModel(key: EntityKey<any>, options: ODataModelOptions<any>): ODataModel<any> | undefined;
-  putModel(key: EntityKey<any>, model: ODataModel<any>): void;
   flush(): void;
   forget({ name, scope, tags}: { name?: string; scope?: string[]; tags?: string[] }): void;
-  scope(obj: ODataRequest<any> | ODataModelOptions<any>): string[];
-  tags(obj: ODataResponse<any> | ODataModelOptions<any>): string[];
+  scope(obj: ODataRequest<any>): string[];
+  tags(obj: ODataResponse<any>): string[];
 }
 
 export interface ODataApiConfigOptions {
