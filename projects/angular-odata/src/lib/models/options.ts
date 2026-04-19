@@ -414,6 +414,10 @@ export class ODataModelField<F> {
     return this.parser.isEnumType();
   }
 
+  isEdmType() {
+    return this.parser.isEdmType();
+  }
+
   enumType() {
     const enumType = this.enumForType ? this.enumForType(this.type) : undefined;
     //Throw error if not found
@@ -1102,7 +1106,7 @@ export class ODataModelOptions<T> {
           .find((field: ODataModelField<any>) => field.field === name);
         if (field !== undefined) {
           v = Types.isPlainObject(v) || ODataModelOptions.isModel(v) ? v[field.name] : v;
-          options = this.api.optionsForType(field.type);
+          options = field.isStructuredType() ? this.api.optionsForType(field.type) : undefined;
         }
       }
       if (field === undefined) return undefined;
