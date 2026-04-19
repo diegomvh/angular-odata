@@ -1,10 +1,10 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { NEVER, Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { NEVER, Observable, of, throwError } from 'rxjs';
+import { catchError, map, startWith, tap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from './constants';
-import { ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
+import { ModelOptions, ODataCollection, ODataModel, ODataModelField, ODataModelOptions } from './models';
 import { ODataApiOptions } from './options';
-import type { ODataOptions, ODataResource, ODataSegment } from './resources';
+import type { EntityKey, ODataOptions, ODataPropertyResource, ODataResource, ODataSegment } from './resources';
 import {
   ODataQueryOptions,
   ODataPathSegments,
@@ -40,6 +40,7 @@ import {
   ODataCache,
 } from './types';
 import type { ODataMetadata } from './metadata/metadata';
+import { ODataEntityAnnotations } from './annotations';
 
 /**
  * Api abstraction for consuming OData services.
@@ -299,7 +300,40 @@ export class ODataApi {
     }
 
     if (this.cache !== undefined) {
-      res$ = this.cache.handleRequest(req, res$);
+      if (req.isFetch()) {
+        // Handle cache for fetch requests
+        const policy = req.fetchPolicy;
+        const cached = this.cache.getResponse(req);
+        if (policy === 'no-cache') {
+          return res$;
+        }
+        if (policy === 'cache-only') {
+          if (cached) {
+            return of(cached);
+          } else {
+            return throwError(() => new Error('No Cached'));
+          }
+        }
+        if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
+          res$ = res$.pipe(
+            tap((res: ODataResponse<any>) => {
+              if (res.options.cacheability !== 'no-store') this.cache!.putResponse(req, res);
+            }),
+          );
+        }
+        if (cached !== undefined && policy !== 'network-only') {
+          res$ = policy === 'cache-and-network' ? res$.pipe(startWith(cached)) : of(cached);
+        }
+      } else if (req.isMutate()) {
+        // Invalidate cache for mutated resources
+        const requests = req.isBatch()
+          ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
+          : [req];
+        for (var r of requests) {
+          const scope = this.cache!.scope(r);
+          this.cache!.forget({ scope });
+        }
+      }
     }
 
     switch (options.observe || 'body') {
@@ -512,6 +546,55 @@ export class ODataApi {
       this.configureModel<T>(structured, Model);
     }
     return Model;
+  }
+
+  public createModelInstance<T>(
+    Klass: typeof ODataModel,
+    data: Partial<T> | { [name: string]: any } = {},
+    {
+      parent,
+      resource,
+      annots,
+      reset = false,
+    }: {
+      parent?: [
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null,
+      ];
+      resource?:
+        | ODataEntityResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>
+        | ODataSingletonResource<T>,
+      annots?: ODataEntityAnnotations<T>;
+      reset?: boolean;
+    } = {},
+  ) {
+    if (this.cache !== undefined) {
+      const key = Klass.meta.resolveKey(data);
+      if (key !== undefined) {
+        const model = this.cache.getModel(key as EntityKey<T>, Klass.meta) as ODataModel<T>;
+        if (model !== undefined) {
+          if (parent !== undefined)
+            model._parent = parent;
+          if (resource !== undefined) 
+            model.attach(resource);
+          if (annots !== undefined)
+            model._annotations = annots;
+          return model;
+        }
+      }
+    } 
+    const model = new Klass(data, {
+      parent,
+      resource,
+      annots,
+      reset,
+    }) as ODataModel<T>;
+    if (this.cache !== undefined && model.key() !== undefined) {
+      this.cache.putModel(model.key() as EntityKey<T>, model);
+    }
+    return model;
   }
 
   public findCollection<T>(type: string) {

@@ -1,4 +1,5 @@
-import { ODataRequest, ODataResponse, ODataResponseJson } from '../resources';
+import { ODataModel, ODataModelOptions } from '../models';
+import { EntityKey, ODataRequest, ODataResponse, ODataResponseJson } from '../resources';
 import { ODataBaseCache, ODataCacheEntry } from './cache';
 
 export class ODataInStorageCache extends ODataBaseCache {
@@ -25,7 +26,16 @@ export class ODataInStorageCache extends ODataBaseCache {
    * Store the cache in the storage
    */
   store() {
-    this.storage.setItem(this.name, JSON.stringify(Array.from(this.entries.entries())));
+    this.storage.setItem(this.name, 
+        JSON.stringify(
+          Array.from(
+            this.entries.entries()
+          ).map(([key, entry]) => [key, { ...entry, payload: 
+            entry.payload instanceof ODataResponse ? entry.payload.toJson() : 
+            entry.payload instanceof ODataModel ? entry.payload.toEntity() : 
+            entry.payload } as ODataCacheEntry<any>])
+        )
+      );
   }
 
   /**
@@ -53,7 +63,7 @@ export class ODataInStorageCache extends ODataBaseCache {
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     const scope = this.scope(req);
     const tags = this.tags(res);
-    this.put<ODataResponseJson<any>>(req.cacheKey, res.toJson(), {
+    this.put<ODataResponse<any>>(req.cacheKey, res, {
       maxAge: req.maxAge ?? res.options.maxAge,
       scope,
       tags,
@@ -69,6 +79,26 @@ export class ODataInStorageCache extends ODataBaseCache {
     const scope = this.scope(req);
     const data = this.get<ODataResponseJson<any>>(req.cacheKey, { scope });
 
-    return data !== undefined ? ODataResponse.fromJson(req, data) : undefined;
+    return data instanceof ODataResponse ? data :
+      data !== undefined ? ODataResponse.fromJson(req, data) 
+      : undefined;
+  }
+
+  override putModel(key: EntityKey<any>, model: ODataModel<any>): void {
+    let scope = this.scope(model._meta);
+    let tags = this.tags(model._meta);
+    this.put(key.toString(), model, {
+      scope,
+      tags,
+    });
+  }
+
+  override getModel(key: EntityKey<any>, options: ODataModelOptions<any>): ODataModel<any> | undefined {
+    let scope = this.scope(options);
+    const data = this.get<ODataModel<any>>(key.toString(), { scope });
+
+    return data instanceof ODataModel ? data :
+      data !== undefined ? options.fromEntity(data)
+      : undefined;
   }
 }

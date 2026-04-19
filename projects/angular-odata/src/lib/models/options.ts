@@ -548,11 +548,11 @@ export class ODataModelField<F> {
         Model = meta.model;
     }
 
-    return new Model((value || {}) as Partial<F> | { [name: string]: any }, {
-      annots,
-      reset,
-      parent: [parent, this],
-    }) as ODataModel<F>;
+    return Model.meta.api.createModelInstance(
+      Model, 
+      (value || {}) as Partial<F> | { [name: string]: any }, 
+      { annots, reset, parent: [parent, this], }
+    ) as ODataModel<F>;
   }
 
   collectionFactory<F>({
@@ -1255,6 +1255,10 @@ export class ODataModelOptions<T> {
     // Build new resource
     const resource = this.modelResourceFactory(query);
     return this.withResource(self, resource, ctx);
+  }
+
+  fromEntity(entity: T | { [name: string]: any }) {
+    return new this.structuredType!.model!(entity as Partial<T> | { [name: string]: any });
   }
 
   toEntity(
