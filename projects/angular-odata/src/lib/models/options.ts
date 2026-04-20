@@ -549,8 +549,7 @@ export class ODataModelField<F> {
         Model = meta.model;
     }
 
-    return this.options.context.createModelInstance(
-      Model, 
+    return Model.factory(
       (value || {}) as Partial<F> | { [name: string]: any }, 
       { annots, reset, parent: [parent, this], }
     ) as ODataModel<F>;
@@ -569,7 +568,7 @@ export class ODataModelField<F> {
     const annots = this.annotationsFactory(parent.annots()) as ODataEntitiesAnnotations<F>;
     const Collection = this.collectionForType ? this.collectionForType(this.type) : undefined;
     if (Collection === undefined) throw Error(`No Collection type for ${this.name}`);
-    return new Collection((value || []) as Partial<F>[] | { [name: string]: any }[], {
+    return Collection.factory((value || []) as Partial<F>[] | { [name: string]: any }[], {
       annots: annots,
       reset,
       parent: [parent, this],
@@ -737,6 +736,47 @@ export class ODataModelOptions<T> {
     this.structuredType = structuredType;
     this.cid = config?.cid ?? CID_FIELD_NAME;
     config.fields.forEach((value, key) => this.addField<any>(key, value));
+  }
+
+  modelFactory<T>(
+    Model: typeof ODataModel<T>,
+    data: Partial<T> | { [name: string]: any } = {},
+    {
+      parent,
+      resource,
+      annots,
+      reset = false,
+    }: {
+      parent?: [
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null,
+      ];
+      resource?: ODataResource<T> | null;
+      annots?: ODataEntityAnnotations<T>;
+      reset?: boolean;
+    } = {},
+  ) {
+    return new Model(data, {parent, resource, annots, reset});
+  }
+
+  collectionFactory<T>(
+    Collection: typeof ODataCollection<T, ODataModel<T>>,
+    entities: Partial<T>[] | { [name: string]: any }[] = [],
+    {
+      parent,
+      resource,
+      annots,
+      model,
+      reset = false,
+    }: {
+      parent?: [ODataModel<any>, ODataModelField<any>];
+      resource?: ODataResource<T> | null;
+      annots?: ODataEntitiesAnnotations<T>;
+      model?: typeof ODataModel;
+      reset?: boolean;
+    } = {},
+  ) {
+    return new Collection(entities, {parent, resource, annots, reset, model});
   }
 
   get api() {
@@ -1252,6 +1292,7 @@ export class ODataModelOptions<T> {
       return result;
     }
   }
+
   asEntity<R, M extends ODataModel<T>>(self: M, ctx: (model: M) => R): R {
     // Clone query from him or parent
     let query = self._resource?.cloneQuery<T>();

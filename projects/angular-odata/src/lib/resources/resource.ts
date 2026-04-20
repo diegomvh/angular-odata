@@ -154,7 +154,7 @@ export class ODataResource<T> {
       resource = this.api.entitySet<T>(entitySet).entity(entity as Partial<T>);
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
-    return new ModelType(entity, { resource, annots, reset });
+    return ModelType.factory(entity, { resource, annots, reset });
   }
 
   asCollection(
@@ -209,7 +209,7 @@ export class ODataResource<T> {
       resource = this.api.entitySet<T>(entitySet);
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
-    return new CollectionType(entities, { resource, annots, reset });
+    return CollectionType.factory(entities, { resource, annots, reset });
   }
   //#endregion
 

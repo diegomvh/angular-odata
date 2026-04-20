@@ -119,6 +119,25 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this.assign(entities, { reset });
   }
 
+  public static factory<T>(
+    entities: Partial<T>[] | { [name: string]: any }[] = [],
+    {
+      parent,
+      resource,
+      annots,
+      model,
+      reset = false,
+    }: {
+      parent?: [ODataModel<any>, ODataModelField<any>];
+      resource?: ODataResource<T> | null;
+      annots?: ODataEntitiesAnnotations<T>;
+      model?: typeof ODataModel;
+      reset?: boolean;
+    } = {},
+  ) {
+    return this.model!.meta.collectionFactory<T>(this, entities, {parent, resource, annots, reset, model});
+  }
+
   isParentOf(child: ODataModel<any> | ODataCollection<any, ODataModel<any>>): boolean {
     return child !== this && ODataModelOptions.chain(child).some((p) => p[0] === this);
   }
@@ -243,8 +262,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         Model = schema.model;
     }
 
-    return Model.meta.context.createModelInstance(
-      Model, 
+    return Model.factory(
       data,
       { annots, reset, parent: [this, null], }
     ) as M;

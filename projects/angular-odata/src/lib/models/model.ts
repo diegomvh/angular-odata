@@ -88,6 +88,26 @@ export class ODataModel<T> {
     this.assign(data, { reset });
   }
 
+  public static factory<T>(
+    data: Partial<T> | { [name: string]: any } = {},
+    {
+      parent,
+      resource,
+      annots,
+      reset = false,
+    }: {
+      parent?: [
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null,
+      ];
+      resource?: ODataResource<T> | null;
+      annots?: ODataEntityAnnotations<T>;
+      reset?: boolean;
+    } = {},
+  ) {
+    return this.meta.modelFactory<T>(this, data, {parent, resource, annots, reset});
+  }
+
   //#region Resources
   resource():
     | ODataEntityResource<T>
