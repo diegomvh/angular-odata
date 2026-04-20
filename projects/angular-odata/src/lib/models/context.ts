@@ -94,62 +94,12 @@ export class ODataModelContext {
     return Model;
   }
 
-  public createModelInstance<T>(
-    Klass: typeof ODataModel,
-    data: Partial<T> | { [name: string]: any } = {},
-    {
-      parent,
-      resource,
-      annots,
-      reset = false,
-    }: {
-      parent?: [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null,
-      ];
-      resource?:
-        | ODataEntityResource<T>
-        | ODataNavigationPropertyResource<T>
-        | ODataPropertyResource<T>
-        | ODataSingletonResource<T>,
-      annots?: ODataEntityAnnotations<T>;
-      reset?: boolean;
-    } = {},
-  ) {
-    return new Klass(data, {
-      parent,
-      resource,
-      annots,
-      reset,
-    }) as ODataModel<T>;
-    /*
-    const key = Klass.meta.resolveKey(data);
-    if (key !== undefined) {
-      const entryKey = this.buildKey([Klass.meta.type(), JSON.stringify(key)]);
-      const model = this.entries.get(entryKey) as ODataModel<T> | undefined;
-      if (model !== undefined) {
-        if (parent !== undefined)
-          model._parent = parent;
-        if (resource !== undefined) 
-          model.attach(resource);
-        if (annots !== undefined)
-          model._annotations = annots;
-        return model;
-      }
-    }
-    const model = new Klass(data, {
-      parent,
-      resource,
-      annots,
-      reset,
-    }) as ODataModel<T>;
+  public getEntry<T>(key: string) {
+    return this.entries.get(key) as ODataModel<T> | undefined;
+  }
 
-    if (model.key() !== undefined) {
-        const entryKey = this.buildKey([Klass.meta.type(), JSON.stringify(model.key())]);
-      this.entries.set(entryKey, model);
-    }
-    return model;
-    */
+  public putEntry<T>(key: string, model: ODataModel<T>) {
+    this.entries.set(key, model);
   }
 
   public findCollection<T>(type: string) {

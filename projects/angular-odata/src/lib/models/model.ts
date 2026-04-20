@@ -64,7 +64,11 @@ export class ODataModel<T> {
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null,
       ];
-      resource?: ODataResource<T> | null;
+      resource?:
+        | ODataEntityResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>
+        | ODataSingletonResource<T>,
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
     } = {},
@@ -100,7 +104,11 @@ export class ODataModel<T> {
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null,
       ];
-      resource?: ODataResource<T> | null;
+      resource?:
+        | ODataEntityResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>
+        | ODataSingletonResource<T>,
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
     } = {},

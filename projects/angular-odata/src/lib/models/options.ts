@@ -751,12 +751,37 @@ export class ODataModelOptions<T> {
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null,
       ];
-      resource?: ODataResource<T> | null;
+      resource?:
+        | ODataEntityResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>
+        | ODataSingletonResource<T>,
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
+
     } = {},
   ) {
-    return new Model(data, {parent, resource, annots, reset});
+    const key = this.resolveKey(data);
+    if (key !== undefined) {
+      const entryKey = [this.type(), JSON.stringify(key)].join(":")
+      const model = this.context.getEntry<T>(entryKey)
+      if (model !== undefined) {
+        if (parent !== undefined)
+          model._parent = parent;
+        if (resource !== undefined) 
+          model.attach(resource);
+        if (annots !== undefined)
+          model._annotations = annots;
+        return model as ODataModel<T>;
+      }
+    }
+    const model = new Model(data, {parent, resource, annots, reset}) as ODataModel<T>;
+
+    if (model.key() !== undefined) {
+      const entryKey = [this.type(), JSON.stringify(key)].join(":")
+      this.context.putEntry(entryKey, model);
+    }
+    return model;
   }
 
   collectionFactory<T>(
@@ -770,7 +795,10 @@ export class ODataModelOptions<T> {
       reset = false,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
-      resource?: ODataResource<T> | null;
+      resource?: 
+      | ODataEntitySetResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>,
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
       reset?: boolean;
