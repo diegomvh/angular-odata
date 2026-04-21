@@ -1,6 +1,5 @@
 import { ODataEntityAnnotations } from '../annotations';
 import { ODataApi } from '../api';
-import { CACHE_KEY_SEPARATOR } from '../constants';
 import { ModelFieldOptions, ModelOptions, ODataCollection, ODataModel, ODataModelField, ODataModelOptions } from '../models';
 import { ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource } from '../resources';
 import { ODataStructuredType } from '../schema';
@@ -94,11 +93,11 @@ export class ODataModelContext {
     return Model;
   }
 
-  public getEntry<T>(key: string) {
+  public getModel<T>(key: string) {
     return this.entries.get(key) as ODataModel<T> | undefined;
   }
 
-  public putEntry<T>(key: string, model: ODataModel<T>) {
+  public putModel<T>(key: string, model: ODataModel<T>) {
     this.entries.set(key, model);
   }
 
@@ -182,14 +181,5 @@ export class ODataModelContext {
     // Set Options for next time
     this.memo.options.set(type, meta);
     return meta;
-  }
-
-  /**
-   * Build a key from store an entry in the cache
-   * @param names The names of the entry
-   * @returns The key for the entry
-   */
-  buildKey(names: string[]): string {
-    return names.join(CACHE_KEY_SEPARATOR);
   }
 }

@@ -6,6 +6,7 @@ import {
   DEFAULT_VERSION,
   OPTIMISTIC_CONCURRENCY,
   EVENT_SPLITTER,
+  CACHE_KEY_SEPARATOR,
 } from '../constants';
 import { ODataHelper } from '../helper';
 import {
@@ -730,11 +731,11 @@ export class ODataModelOptions<T> {
     structuredType: ODataStructuredType<T>;
     context: ODataModelContext;
   }) {
-    this.context = context;
     this.name = structuredType.name;
     this.base = structuredType.base;
     this.structuredType = structuredType;
     this.cid = config?.cid ?? CID_FIELD_NAME;
+    this.context = context;
     config.fields.forEach((value, key) => this.addField<any>(key, value));
   }
 
@@ -763,8 +764,8 @@ export class ODataModelOptions<T> {
   ) {
     const key = this.resolveKey(data);
     if (key !== undefined) {
-      const entryKey = [this.type(), JSON.stringify(key)].join(":")
-      const model = this.context.getEntry<T>(entryKey)
+      const entryKey = [this.type(), key].join(CACHE_KEY_SEPARATOR)
+      const model = this.context.getModel<T>(entryKey)
       if (model !== undefined) {
         if (parent !== undefined)
           model._parent = parent;
@@ -778,8 +779,8 @@ export class ODataModelOptions<T> {
     const model = new Model(data, {parent, resource, annots, reset}) as ODataModel<T>;
 
     if (model.key() !== undefined) {
-      const entryKey = [this.type(), JSON.stringify(key)].join(":")
-      this.context.putEntry(entryKey, model);
+      const entryKey = [this.type(), key].join(CACHE_KEY_SEPARATOR)
+      this.context.putModel(entryKey, model);
     }
     return model;
   }
@@ -1179,7 +1180,7 @@ export class ODataModelOptions<T> {
           .find((field: ODataModelField<any>) => field.field === name);
         if (field !== undefined) {
           v = Types.isPlainObject(v) || ODataModelOptions.isModel(v) ? v[field.name] : v;
-          options = field.isStructuredType() ? this.context.optionsForType(field.type) : undefined;
+          options = field.isStructuredType() ? this.api.optionsForType(field.type) : undefined;
         }
       }
       if (field === undefined) return undefined;
@@ -1234,7 +1235,7 @@ export class ODataModelOptions<T> {
         include_navigation: false,
         include_parents: true,
       }).find((field: ODataModelField<any>) => field.field === ref.property);
-      const meta = this.context.optionsForType<any>(attr.type);
+      const meta = this.api.optionsForType<any>(attr.type);
       const to = meta
         ?.fields({ include_navigation: false, include_parents: true })
         .find((field: ODataModelField<any>) => field.field === ref.referencedProperty);
@@ -1455,7 +1456,7 @@ export class ODataModelOptions<T> {
       self._parent !== null &&
       ((ODataModelOptions.isModel(self._parent[0]) &&
         self._parent[1] !== null &&
-        this.context.optionsForType(self._parent[1].type) !== self._meta) ||
+        this.api.optionsForType(self._parent[1].type) !== self._meta) ||
         (ODataModelOptions.isCollection(self._parent[0]) &&
           (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model.meta !== self._meta))
     ) {
@@ -1709,7 +1710,7 @@ export class ODataModelOptions<T> {
 
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
-        const meta = this.context.optionsForType<F>(modelField.type);
+        const meta = this.api.optionsForType<F>(modelField.type);
         const ref = meta?.resolveReferential(attr.get(), attr, {
           resolve: false,
         });
