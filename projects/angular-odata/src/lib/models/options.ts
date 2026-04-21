@@ -6,7 +6,6 @@ import {
   DEFAULT_VERSION,
   OPTIMISTIC_CONCURRENCY,
   EVENT_SPLITTER,
-  CACHE_KEY_SEPARATOR,
 } from '../constants';
 import { ODataHelper } from '../helper';
 import {
@@ -34,7 +33,6 @@ import { ODataCollection } from './collection';
 import { ODataModel } from './model';
 import { EventEmitter } from '@angular/core';
 import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations';
-import { ODataModelContext } from './context';
 
 export enum ODataModelEventType {
   Change = 'change',
@@ -550,10 +548,11 @@ export class ODataModelField<F> {
         Model = meta.model;
     }
 
-    return Model.factory(
-      (value || {}) as Partial<F> | { [name: string]: any }, 
-      { annots, reset, parent: [parent, this], }
-    ) as ODataModel<F>;
+    return Model.factory((value || {}) as Partial<F> | { [name: string]: any }, {
+      annots,
+      reset,
+      parent: [parent, this],
+    }) as ODataModel<F>;
   }
 
   collectionFactory<F>({
@@ -710,7 +709,7 @@ export type ODataModelEntry<T, M extends ODataModel<T>> = {
 };
 
 export class ODataModelOptions<T> {
-  context: ODataModelContext;
+  pool: Map<string, ODataModel<any>> = new Map<string, ODataModel<any>>();
   name: string;
   cid: string;
   base?: string;
@@ -725,17 +724,14 @@ export class ODataModelOptions<T> {
   constructor({
     config,
     structuredType,
-    context,
   }: {
     config: ModelOptions;
     structuredType: ODataStructuredType<T>;
-    context: ODataModelContext;
   }) {
     this.name = structuredType.name;
     this.base = structuredType.base;
     this.structuredType = structuredType;
     this.cid = config?.cid ?? CID_FIELD_NAME;
-    this.context = context;
     config.fields.forEach((value, key) => this.addField<any>(key, value));
   }
 
@@ -756,31 +752,25 @@ export class ODataModelOptions<T> {
         | ODataEntityResource<T>
         | ODataNavigationPropertyResource<T>
         | ODataPropertyResource<T>
-        | ODataSingletonResource<T>,
+        | ODataSingletonResource<T>;
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
-
     } = {},
   ) {
     const key = this.resolveKey(data);
     if (key !== undefined) {
-      const entryKey = [this.type(), key].join(CACHE_KEY_SEPARATOR)
-      const model = this.context.getModel<T>(entryKey)
+      const model = this.pool.get(key.toString()) as ODataModel<T> | undefined;
       if (model !== undefined) {
-        if (parent !== undefined)
-          model._parent = parent;
-        if (resource !== undefined) 
-          model.attach(resource);
-        if (annots !== undefined)
-          model._annotations = annots;
+        if (parent !== undefined) model._parent = parent;
+        if (resource !== undefined) model.attach(resource);
+        if (annots !== undefined) model._annotations = annots;
         return model as ODataModel<T>;
       }
     }
-    const model = new Model(data, {parent, resource, annots, reset}) as ODataModel<T>;
+    const model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
 
     if (model.key() !== undefined) {
-      const entryKey = [this.type(), key].join(CACHE_KEY_SEPARATOR)
-      this.context.putModel(entryKey, model);
+      this.pool.set(model.key()!.toString(), model);
     }
     return model;
   }
@@ -796,16 +786,16 @@ export class ODataModelOptions<T> {
       reset = false,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
-      resource?: 
-      | ODataEntitySetResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>,
+      resource?:
+        | ODataEntitySetResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>;
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
       reset?: boolean;
     } = {},
   ) {
-    return new Collection(entities, {parent, resource, annots, reset, model});
+    return new Collection(entities, { parent, resource, annots, reset, model });
   }
 
   get api() {

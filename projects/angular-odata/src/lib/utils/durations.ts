@@ -40,7 +40,7 @@ export const Durations = {
       v.months ? v.months + 'M' : '',
       v.weeks ? v.weeks + 'W' : '',
       v.days ? v.days + 'D' : '',
-      (v.hours || v.minutes || v.seconds) ? 'T' : '',
+      v.hours || v.minutes || v.seconds ? 'T' : '',
       v.hours ? v.hours + 'H' : '',
       v.minutes ? v.minutes + 'M' : '',
       v.seconds ? v.seconds + 'S' : '',

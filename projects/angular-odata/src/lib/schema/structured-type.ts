@@ -1,6 +1,11 @@
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
-import { ParserOptions, ODataStructuredTypeConfig, ODataStructuredTypeFieldConfig, JsonSchemaOptions } from '../types';
+import {
+  ParserOptions,
+  ODataStructuredTypeConfig,
+  ODataStructuredTypeFieldConfig,
+  JsonSchemaOptions,
+} from '../types';
 import { ODataParserSchemaElement } from './element';
 import {
   ODataEntityTypeKey,

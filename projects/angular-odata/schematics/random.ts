@@ -828,7 +828,10 @@ const Right: string[] = [
 function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
 }
-export const getRandomName = ({prefix = "", suffix = ""}: {prefix?: string, suffix?: string} = {}): string => {
+export const getRandomName = ({
+  prefix = '',
+  suffix = '',
+}: { prefix?: string; suffix?: string } = {}): string => {
   let name: string = '';
   while (name == '' || name == 'BoringWozniak')
     /* Steve Wozniak is not boring */

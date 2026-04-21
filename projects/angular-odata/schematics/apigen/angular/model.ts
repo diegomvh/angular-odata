@@ -245,7 +245,7 @@ export class Model extends Base {
 
   renderNavigationPropertyBindings(
     bindings: CsdlNavigationPropertyBinding[] | undefined,
-    imports: Import[]
+    imports: Import[],
   ): string[] {
     const pkg = this.getPackage();
     let result: string[] = [];

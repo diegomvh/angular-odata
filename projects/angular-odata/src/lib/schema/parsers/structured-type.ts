@@ -638,7 +638,7 @@ export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Pa
             options?.expand && f.name in options?.expand
               ? (options?.expand as any)[f.name]
               : undefined;
-          let child = f.toJsonSchema({...expand, map: options?.map}, schema);
+          let child = f.toJsonSchema({ ...expand, map: options?.map }, schema);
           if (options?.custom && f.name in options?.custom)
             child = (
               options?.custom[f.name as keyof T] as (

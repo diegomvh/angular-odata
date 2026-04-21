@@ -73,10 +73,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       reset = false,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
-      resource?: 
-      | ODataEntitySetResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>,
+      resource?:
+        | ODataEntitySetResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>;
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
       reset?: boolean;
@@ -132,16 +132,22 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       reset = false,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
-      resource?: 
-      | ODataEntitySetResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>,
+      resource?:
+        | ODataEntitySetResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>;
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
       reset?: boolean;
     } = {},
   ) {
-    return this.model!.meta.collectionFactory<T>(this, entities, {parent, resource, annots, reset, model});
+    return this.model!.meta.collectionFactory<T>(this, entities, {
+      parent,
+      resource,
+      annots,
+      reset,
+      model,
+    });
   }
 
   isParentOf(child: ODataModel<any> | ODataCollection<any, ODataModel<any>>): boolean {
@@ -268,10 +274,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         Model = schema.model;
     }
 
-    return Model.factory(
-      data,
-      { annots, reset, parent: [this, null], }
-    ) as M;
+    return Model.factory(data, { annots, reset, parent: [this, null] }) as M;
   }
 
   toEntities({

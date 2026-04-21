@@ -2,9 +2,22 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable, of, throwError } from 'rxjs';
 import { catchError, map, startWith, tap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from './constants';
-import { ModelOptions, ODataCollection, ODataModel, ODataModelField, ODataModelOptions } from './models';
+import {
+  ModelFieldOptions,
+  ModelOptions,
+  ODataCollection,
+  ODataModel,
+  ODataModelField,
+  ODataModelOptions,
+} from './models';
 import { ODataApiOptions } from './options';
-import type { EntityKey, ODataOptions, ODataPropertyResource, ODataResource, ODataSegment } from './resources';
+import type {
+  EntityKey,
+  ODataOptions,
+  ODataPropertyResource,
+  ODataResource,
+  ODataSegment,
+} from './resources';
 import {
   ODataQueryOptions,
   ODataPathSegments,
@@ -41,7 +54,8 @@ import {
 } from './types';
 import type { ODataMetadata } from './metadata/metadata';
 import { ODataEntityAnnotations } from './annotations';
-import { ODataModelContext } from './models/context';
+
+const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);
 
 /**
  * Api abstraction for consuming OData services.
@@ -64,8 +78,10 @@ export class ODataApi {
   parsers: Map<string, Parser<any>>;
   // Schemas
   schemas: ODataSchema[];
-  // Context
-  context: ODataModelContext;
+  // Models
+  models: { [type: string]: typeof ODataModel<any> } = {};
+  // Collections
+  collections: { [type: string]: typeof ODataCollection<any, ODataModel<any>> } = {};
 
   constructor(config: ODataApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;
@@ -89,7 +105,10 @@ export class ODataApi {
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
     this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
-    this.context = new ODataModelContext(this, config);
+    this.models = (config.models ?? {}) as { [type: string]: typeof ODataModel<any> };
+    this.collections = (config.collections ?? {}) as {
+      [type: string]: typeof ODataCollection<any, ODataModel<any>>;
+    };
   }
 
   configure(
@@ -103,7 +122,16 @@ export class ODataApi {
         options: this.options.parserOptions,
       });
     });
-    this.context.configure({options: this.options.parserOptions});
+    Object.entries(this.models).forEach(([type, model]) => {
+      const structured = this.findStructuredType<any>(type);
+      if (structured !== undefined) {
+        this.configureModel<any>(structured, model);
+        const collection = this.collections[type];
+        if (collection !== undefined) {
+          collection.model = model;
+        }
+      }
+    });
   }
 
   populate(metadata: ODataMetadata) {
@@ -384,6 +412,7 @@ export class ODataApi {
     entitySets: Map<string, ODataEntitySet | undefined>;
     singletons: Map<string, ODataSingleton | undefined>;
     parsers: Map<string, Parser<any>>;
+    options: Map<string, ODataModelOptions<any> | undefined>;
   } = {
     enumTypes: new Map<string, ODataEnumType<any> | undefined>(),
     structuredTypes: new Map<string, ODataStructuredType<any> | undefined>(),
@@ -391,6 +420,7 @@ export class ODataApi {
     entitySets: new Map<string, ODataEntitySet | undefined>(),
     singletons: new Map<string, ODataSingleton | undefined>(),
     parsers: new Map<string, Parser<any>>(),
+    options: new Map<string, ODataModelOptions<any> | undefined>(),
   };
 
   public createSchema(config: ODataSchemaConfig) {
@@ -558,6 +588,75 @@ export class ODataApi {
     return parser;
   }
 
+  public configureModel<T>(structured: ODataStructuredType<T>, model: typeof ODataModel<T>) {
+    model.meta = this.optionsForType<T>(structured.type(), {
+      config: model.options,
+      structuredType: structured,
+    })!;
+    if (model.meta !== undefined) {
+      // Configure
+      model.meta.configure({ options: this.options.parserOptions });
+    }
+  }
+
+  public findModel<T>(type: string) {
+    return (this.models[type] ?? this.findStructuredType<any>(type)?.model) as
+      | typeof ODataModel<T>
+      | undefined;
+  }
+
+  public createModel<T>(structured: ODataStructuredType<T>) {
+    if (structured.model !== undefined) return structured.model;
+    // Build Ad-hoc model
+    const Model = class extends ODataModel<T> {} as typeof ODataModel<T>;
+    // Store New Model structured for next time
+    structured.model = Model;
+    return Model;
+  }
+
+  public modelForType<T>(type: string) {
+    let Model = this.findModel<T>(type);
+    if (Model === undefined) {
+      const structured = this.findStructuredType<T>(type);
+      if (structured === undefined) throw Error(`No structured type for ${type}`);
+      Model = this.createModel<T>(structured);
+      this.configureModel<T>(structured, Model);
+    }
+    return Model;
+  }
+
+  public findCollection<T>(type: string) {
+    return (this.collections[type] ?? this.findStructuredType<any>(type)?.collection) as
+      | typeof ODataCollection<T, ODataModel<T>>
+      | undefined;
+  }
+
+  public createCollection<T>(structured: ODataStructuredType<T>, model?: typeof ODataModel<T>) {
+    if (structured.collection !== undefined) return structured.collection;
+    if (model === undefined) model = this.createModel(structured);
+    // Build Ad-hoc collection
+    const Collection = class extends ODataCollection<T, ODataModel<T>> {
+      static override model = model!;
+    } as typeof ODataCollection<T, ODataModel<T>>;
+    // Store New Collection structured for next time
+    structured.collection = Collection;
+    return Collection;
+  }
+
+  public collectionForType<T>(type: string) {
+    let Collection = this.findCollection<T>(type);
+    if (Collection === undefined) {
+      const structured = this.findStructuredType<T>(type);
+      if (structured === undefined) throw Error(`No structured type for ${type}`);
+      const Model = this.modelForType<T>(type);
+      Collection = this.createCollection<T>(structured, Model) as typeof ODataCollection<
+        T,
+        ODataModel<T>
+      >;
+    }
+    return Collection;
+  }
+
   public optionsForType<T>(
     type: string,
     {
@@ -565,26 +664,39 @@ export class ODataApi {
       config,
     }: { structuredType?: ODataStructuredType<T>; config?: ModelOptions } = {},
   ) {
-    return this.context.optionsForType(type, { structuredType, config });
-  }
+    // Strucutred Options
+    if (this.memo.options.has(type)) {
+      return this.memo.options.get(type) as ODataModelOptions<T> | undefined;
+    }
 
-  public findModel<T>(type: string) {
-    return this.context.findModel<T>(type);
-  }
-
-  public findCollection<T>(type: string) {
-    return this.context.findCollection<T>(type);
-  }
-
-  public configureModel<T>(structured: ODataStructuredType<T>, model: typeof ODataModel<T>) {
-    return this.context.configureModel(structured, model, this.options.parserOptions);
-  }
-
-  public modelForType<T>(type: string) {
-    return this.context.modelForType<T>(type);
-  }
-
-  public collectionForType<T>(type: string) {
-    return this.context.collectionForType<T>(type);
+    let meta: ODataModelOptions<T> | undefined = undefined;
+    structuredType = this.findStructuredType<T>(type) ?? structuredType;
+    if (structuredType !== undefined) {
+      if (config === undefined) {
+        const fields = structuredType
+          .fields({ include_navigation: true, include_parents: true })
+          .reduce((acc, field) => {
+            let name = field.name;
+            // Prevent collision with reserved keywords
+            while (RESERVED_FIELD_NAMES.includes(name)) {
+              name = name + '_';
+            }
+            return Object.assign(acc, {
+              [name]: {
+                field: field.name,
+                default: field.default,
+                required: !field.nullable,
+              },
+            });
+          }, {});
+        config = {
+          fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
+        };
+      }
+      meta = new ODataModelOptions<T>({ config, structuredType });
+    }
+    // Set Options for next time
+    this.memo.options.set(type, meta);
+    return meta;
   }
 }

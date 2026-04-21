@@ -17,7 +17,14 @@ import {
   ODataQueryOptionsHandler,
   QueryCustomType,
 } from './query';
-import type { ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataOptions, ODataPropertyResource, ODataSingletonResource } from './types';
+import type {
+  ODataEntityResource,
+  ODataEntitySetResource,
+  ODataNavigationPropertyResource,
+  ODataOptions,
+  ODataPropertyResource,
+  ODataSingletonResource,
+} from './types';
 
 export type EntityKey<T> =
   | {
@@ -154,13 +161,15 @@ export class ODataResource<T> {
       resource = this.api.entitySet<T>(entitySet).entity(entity as Partial<T>);
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
-    return ModelType.factory(entity, { resource: 
-      resource as 
+    return ModelType.factory(entity, {
+      resource: resource as
         | ODataEntityResource<T>
         | ODataNavigationPropertyResource<T>
         | ODataPropertyResource<T>
         | ODataSingletonResource<T>,
-      annots, reset });
+      annots,
+      reset,
+    });
   }
 
   asCollection(
@@ -215,12 +224,14 @@ export class ODataResource<T> {
       resource = this.api.entitySet<T>(entitySet);
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
-    return CollectionType.factory(entities, { resource: 
-      resource as 
-      | ODataEntitySetResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>,
-      annots, reset });
+    return CollectionType.factory(entities, {
+      resource: resource as
+        | ODataEntitySetResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>,
+      annots,
+      reset,
+    });
   }
   //#endregion
 

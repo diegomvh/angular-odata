@@ -68,7 +68,7 @@ export class ODataModel<T> {
         | ODataEntityResource<T>
         | ODataNavigationPropertyResource<T>
         | ODataPropertyResource<T>
-        | ODataSingletonResource<T>,
+        | ODataSingletonResource<T>;
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
     } = {},
@@ -108,12 +108,12 @@ export class ODataModel<T> {
         | ODataEntityResource<T>
         | ODataNavigationPropertyResource<T>
         | ODataPropertyResource<T>
-        | ODataSingletonResource<T>,
+        | ODataSingletonResource<T>;
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
     } = {},
   ) {
-    return this.meta.modelFactory<T>(this, data, {parent, resource, annots, reset});
+    return this.meta.modelFactory<T>(this, data, { parent, resource, annots, reset });
   }
 
   //#region Resources

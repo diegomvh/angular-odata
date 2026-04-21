@@ -105,11 +105,11 @@ export class Callable {
       parameters.length === 0
         ? 'null'
         : `{${parameters
-          .map((p) => {
-            const op = optional.includes(p);
-            return `${p.Name}${op ? '?' : ''}: ${toTypescriptType(p.Type)}`;
-          })
-          .join(', ')}}`;
+            .map((p) => {
+              const op = optional.includes(p);
+              return `${p.Name}${op ? '?' : ''}: ${toTypescriptType(p.Type)}`;
+            })
+            .join(', ')}}`;
     return `public ${methodName}(${keyParameter}) {
     return this.${bindingMethod}(${key}).${baseMethod}<${parametersType}, ${retType}>('${this.fullName()}');
   }`;
@@ -235,7 +235,7 @@ export abstract class Base {
   constructor(
     protected pkg: Package,
     protected options: ApiGenSchema,
-  ) { }
+  ) {}
 
   public abstract name(): string;
   public abstract fileName(): string;
@@ -291,7 +291,7 @@ export abstract class Base {
       const name = renderable.name()!;
       let alias = name;
       while (this.dependencies.some((d) => d[1] === alias)) {
-        alias = getRandomName({suffix: name});
+        alias = getRandomName({ suffix: name });
       }
       this.dependencies.push([name, alias, renderable]);
     }

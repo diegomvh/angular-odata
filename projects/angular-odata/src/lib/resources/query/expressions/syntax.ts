@@ -968,10 +968,7 @@ export class LambdaOperators<T> {
 
 export class ODataOperators<T> {}
 export interface ODataOperators<T>
-  extends LogicalOperators<T>,
-    ArithmeticOperators<T>,
-    GroupingOperators<T>,
-    LambdaOperators<T> {}
+  extends LogicalOperators<T>, ArithmeticOperators<T>, GroupingOperators<T>, LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
@@ -983,7 +980,8 @@ export const operators: ODataOperators<any> = new ODataOperators<any>();
 
 export class ODataFunctions<T> {}
 export interface ODataFunctions<T>
-  extends StringAndCollectionFunctions<T>,
+  extends
+    StringAndCollectionFunctions<T>,
     CollectionFunctions<T>,
     StringFunctions<T>,
     DateAndTimeFunctions<T>,
@@ -1012,9 +1010,7 @@ export const transformations: ODataTransformations<any> = new ODataTransformatio
 
 export class ODataSyntax<T> {}
 export interface ODataSyntax<T>
-  extends ODataOperators<T>,
-    ODataFunctions<T>,
-    ODataTransformations<T> {}
+  extends ODataOperators<T>, ODataFunctions<T>, ODataTransformations<T> {}
 applyMixins(ODataSyntax, [ODataOperators, ODataFunctions, ODataTransformations]);
 
 export const syntax: ODataSyntax<any> = new ODataSyntax<any>();

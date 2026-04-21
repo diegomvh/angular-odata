@@ -137,7 +137,7 @@ export type JsonSchemaFieldOptions<T> = {
 };
 
 export type JsonSchemaOptions<T> = JsonSchemaFieldOptions<T> & {
-  map?: (field: FieldParser<T>, schema: JSONSchema7, parent?: JSONSchema7) => JSONSchema7 
+  map?: (field: FieldParser<T>, schema: JSONSchema7, parent?: JSONSchema7) => JSONSchema7;
 };
 
 export interface ParserOptions {
@@ -189,7 +189,7 @@ export interface ODataCache {
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
   flush(): void;
-  forget({ name, scope, tags}: { name?: string; scope?: string[]; tags?: string[] }): void;
+  forget({ name, scope, tags }: { name?: string; scope?: string[]; tags?: string[] }): void;
   scope(obj: ODataRequest<any>): string[];
   tags(obj: ODataResponse<any>): string[];
 }

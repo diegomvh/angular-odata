@@ -25,15 +25,19 @@ export class ODataInStorageCache extends ODataBaseCache {
    * Store the cache in the storage
    */
   store() {
-    this.storage.setItem(this.name, 
-        JSON.stringify(
-          Array.from(
-            this.entries.entries()
-          ).map(([key, entry]) => [key, { ...entry, payload: 
-            entry.payload instanceof ODataResponse ? entry.payload.toJson() : 
-            entry.payload } as ODataCacheEntry<any>])
-        )
-      );
+    this.storage.setItem(
+      this.name,
+      JSON.stringify(
+        Array.from(this.entries.entries()).map(([key, entry]) => [
+          key,
+          {
+            ...entry,
+            payload:
+              entry.payload instanceof ODataResponse ? entry.payload.toJson() : entry.payload,
+          } as ODataCacheEntry<any>,
+        ]),
+      ),
+    );
   }
 
   /**
@@ -77,8 +81,10 @@ export class ODataInStorageCache extends ODataBaseCache {
     const scope = this.scope(req);
     const data = this.get<ODataResponseJson<any>>(req.cacheKey, { scope });
 
-    return data instanceof ODataResponse ? data :
-      data !== undefined ? ODataResponse.fromJson(req, data) 
-      : undefined;
+    return data instanceof ODataResponse
+      ? data
+      : data !== undefined
+        ? ODataResponse.fromJson(req, data)
+        : undefined;
   }
 }

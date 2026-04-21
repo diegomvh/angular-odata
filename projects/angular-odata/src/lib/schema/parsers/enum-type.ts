@@ -131,21 +131,23 @@ export class ODataEnumTypeParser<E> extends ODataAnnotatable implements FieldPar
 
   // Json Schema
   toJsonSchema(options?: JsonSchemaOptions<E>, parent?: JSONSchema7): JSONSchema7 {
-    let schema = (this.flags
-      ? {
-        type: JsonSchemaType.array,
-        title: this.name,
-        "uniqueItems": true,
-        items: {
-          type: JsonSchemaType.string,
-          enum: this._fields.map((f) => f.name),
-        },
-      }
-      : {
-        type: JsonSchemaType.integer,
-        title: this.name,
-        anyOf: this._fields.map((f) => ({ const: f.value, title: f.name })),
-      }) as JSONSchema7;
+    let schema = (
+      this.flags
+        ? {
+            type: JsonSchemaType.array,
+            title: this.name,
+            uniqueItems: true,
+            items: {
+              type: JsonSchemaType.string,
+              enum: this._fields.map((f) => f.name),
+            },
+          }
+        : {
+            type: JsonSchemaType.integer,
+            title: this.name,
+            anyOf: this._fields.map((f) => ({ const: f.value, title: f.name })),
+          }
+    ) as JSONSchema7;
     if (options?.map !== undefined) {
       schema = options.map(this, schema, parent);
     }

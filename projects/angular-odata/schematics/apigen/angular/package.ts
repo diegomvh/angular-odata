@@ -82,11 +82,11 @@ export class Package {
         this.services.push(service);
         for (let entitySet of entityContainer.EntitySet ?? []) {
           const service = new Service(this, options, entitySet);
-          const model = this.models.find(m => m.entityType() === service.entityType());
+          const model = this.models.find((m) => m.entityType() === service.entityType());
           if (model !== undefined) {
             service.setModel(model);
           }
-          const collection = this.collections.find(c => c.entityType() === service.entityType());
+          const collection = this.collections.find((c) => c.entityType() === service.entityType());
           if (collection !== undefined) {
             service.setCollection(collection);
           }
