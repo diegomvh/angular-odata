@@ -479,8 +479,8 @@ export class ODataModelField<F> {
   }
 
   defaults(): any {
-    const meta = this.optionsForType ? this.optionsForType(this.type) : undefined;
-    return this.isStructuredType() && meta !== undefined ? meta.defaults() : this.default;
+    const meta = this.optionsForType && this.isStructuredType() ? this.optionsForType(this.type) : undefined;
+    return meta !== undefined ? meta.defaults() : this.default;
   }
 
   deserialize(value: any, options?: ParserOptions): F | F[] {
@@ -620,6 +620,10 @@ export class ODataModelAttribute<T> {
     return this._field.field;
   }
 
+  isStructuredType() {
+    return this._field.isStructuredType();
+  }
+
   get(): T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null | undefined {
     return this.state === ODataModelState.Changed ? this.change : this.value;
   }
@@ -757,9 +761,10 @@ export class ODataModelOptions<T> {
       reset?: boolean;
     } = {},
   ) {
-    const key = this.resolveKey(data);
+    let model: ODataModel<T> | undefined = undefined;
+    let key = this.resolveKey(data) ?? (<any>data)[this.cid];
     if (key !== undefined) {
-      const model = this.pool.get(key.toString()) as ODataModel<T> | undefined;
+      model = this.pool.get(JSON.stringify(key)) as ODataModel<T> | undefined;
       if (model !== undefined) {
         if (parent !== undefined) model._parent = parent;
         if (resource !== undefined) model.attach(resource);
@@ -767,10 +772,11 @@ export class ODataModelOptions<T> {
         return model as ODataModel<T>;
       }
     }
-    const model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
+    model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
 
-    if (model.key() !== undefined) {
-      this.pool.set(model.key()!.toString(), model);
+    key = this.resolveKey(model) ?? (<any>model)[this.cid];
+    if (key !== undefined) {
+      this.pool.set(JSON.stringify(key), model);
     }
     return model;
   }
@@ -1225,7 +1231,7 @@ export class ODataModelOptions<T> {
         include_navigation: false,
         include_parents: true,
       }).find((field: ODataModelField<any>) => field.field === ref.property);
-      const meta = this.api.optionsForType<any>(attr.type);
+      const meta = attr.isStructuredType() ? this.api.optionsForType(attr.type) : undefined;
       const to = meta
         ?.fields({ include_navigation: false, include_parents: true })
         .find((field: ODataModelField<any>) => field.field === ref.referencedProperty);
@@ -1320,10 +1326,6 @@ export class ODataModelOptions<T> {
     // Build new resource
     const resource = this.modelResourceFactory(query);
     return this.withResource(self, resource, ctx);
-  }
-
-  fromEntity(entity: T | { [name: string]: any }) {
-    return new this.structuredType!.model!(entity as Partial<T> | { [name: string]: any });
   }
 
   toEntity(
@@ -1700,7 +1702,7 @@ export class ODataModelOptions<T> {
 
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
-        const meta = this.api.optionsForType<F>(modelField.type);
+        const meta = modelField.isStructuredType() ? this.api.optionsForType<F>(modelField.type) : undefined;
         const ref = meta?.resolveReferential(attr.get(), attr, {
           resolve: false,
         });

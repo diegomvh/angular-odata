@@ -62,7 +62,7 @@ export class ODataInStorageCache extends ODataBaseCache {
    * @param req The request with the resource to store the response
    * @param res The response to store in the cache
    */
-  putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
+  override putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     const scope = this.scope(req);
     const tags = this.tags(res);
     this.put<ODataResponse<any>>(req.cacheKey, res, {
@@ -77,7 +77,7 @@ export class ODataInStorageCache extends ODataBaseCache {
    * @param req The request with the resource to get the response
    * @returns The response from the cache
    */
-  getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
+  override getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
     const scope = this.scope(req);
     const data = this.get<ODataResponseJson<any>>(req.cacheKey, { scope });
 

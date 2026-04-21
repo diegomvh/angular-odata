@@ -1,5 +1,5 @@
 import { CACHE_KEY_SEPARATOR, DEFAULT_MAXAGE } from '../constants';
-import { ODataRequest, ODataResponse } from '../resources';
+import type { ODataRequest, ODataResponse } from '../resources';
 import { ODataCache, PathSegment } from '../types';
 
 /**
@@ -30,11 +30,11 @@ export abstract class ODataBaseCache implements ODataCache {
 
   /**
    * Using the resource on the request build an array of string to identify the scope of the request
-   * @param obj The request with the resource to build the scope
+   * @param req The request with the resource to build the scope
    * @returns Array of string to identify the scope of the request
    */
-  scope(obj: ODataRequest<any>): string[] {
-    const segments = obj.resource.cloneSegments();
+  scope(req: ODataRequest<any>): string[] {
+    const segments = req.resource.cloneSegments();
     return segments.segments({ key: true }).reduce(
       (acc, s) => {
         if (s.name === PathSegment.entitySet) acc = [...acc, s.path() as string];
@@ -49,9 +49,9 @@ export abstract class ODataBaseCache implements ODataCache {
    * @param res The response to build the tags
    * @returns Array of string to identify the tags of the response
    */
-  tags(obj: ODataResponse<any>): string[] {
+  tags(res: ODataResponse<any>): string[] {
     const tags = [];
-    const context = obj.context;
+    const context = res.context;
     if (context.entitySet) {
       tags.push(context.key ? `${context.entitySet}(${context.key})` : context.entitySet);
     }
@@ -152,6 +152,6 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry<any>) {
-    return entry.date < Date.now() - entry.maxAge;
+    return entry.date < (Date.now() - entry.maxAge);
   }
 }

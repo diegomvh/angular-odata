@@ -554,40 +554,6 @@ export class ODataApi {
   }
   //#endregion
 
-  public findEntitySetForEntityType(entityType: string) {
-    if (this.memo.entitySets.has(entityType)) {
-      return this.memo.entitySets.get(entityType) as ODataEntitySet | undefined;
-    }
-    const entitySet = this.schemas
-      .reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
-      .find((e) => e.entityType === entityType);
-    this.memo.entitySets.set(entityType, entitySet);
-    return entitySet;
-  }
-
-  public parserForType<T>(type: string | EdmType, bindingType?: string) {
-    const key = bindingType !== undefined ? `${bindingType}/${type}` : type;
-    if (this.memo.parsers.has(key)) {
-      return this.memo.parsers.get(key) as Parser<T>;
-    }
-    // None Parser by default
-    let parser: Parser<T> = NONE_PARSER;
-    if (this.parsers.has(type)) {
-      // Edm, Base Parsers
-      parser = this.parsers.get(type) as Parser<T>;
-    } else if (!type.startsWith('Edm.')) {
-      // Callable, EnumType, StructuredType (ComplexType and EntityType) Parsers
-      let value =
-        this.findCallable<T>(type, bindingType) ??
-        this.findEnumType<T>(type) ??
-        this.findStructuredType<T>(type);
-      parser = value?.parser as Parser<T>;
-    }
-    // Set Parser for next time
-    this.memo.parsers.set(key, parser);
-    return parser;
-  }
-
   public configureModel<T>(structured: ODataStructuredType<T>, model: typeof ODataModel<T>) {
     model.meta = this.optionsForType<T>(structured.type(), {
       config: model.options,
@@ -655,6 +621,40 @@ export class ODataApi {
       >;
     }
     return Collection;
+  }
+
+  public findEntitySetForEntityType(entityType: string) {
+    if (this.memo.entitySets.has(entityType)) {
+      return this.memo.entitySets.get(entityType) as ODataEntitySet | undefined;
+    }
+    const entitySet = this.schemas
+      .reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
+      .find((e) => e.entityType === entityType);
+    this.memo.entitySets.set(entityType, entitySet);
+    return entitySet;
+  }
+
+  public parserForType<T>(type: string | EdmType, bindingType?: string) {
+    const key = bindingType !== undefined ? `${bindingType}/${type}` : type;
+    if (this.memo.parsers.has(key)) {
+      return this.memo.parsers.get(key) as Parser<T>;
+    }
+    // None Parser by default
+    let parser: Parser<T> = NONE_PARSER;
+    if (this.parsers.has(type)) {
+      // Edm, Base Parsers
+      parser = this.parsers.get(type) as Parser<T>;
+    } else if (!type.startsWith('Edm.')) {
+      // Callable, EnumType, StructuredType (ComplexType and EntityType) Parsers
+      let value =
+        this.findCallable<T>(type, bindingType) ??
+        this.findEnumType<T>(type) ??
+        this.findStructuredType<T>(type);
+      parser = value?.parser as Parser<T>;
+    }
+    // Set Parser for next time
+    this.memo.parsers.set(key, parser);
+    return parser;
   }
 
   public optionsForType<T>(
