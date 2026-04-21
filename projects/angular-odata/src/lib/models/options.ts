@@ -414,6 +414,10 @@ export class ODataModelField<F> {
     return this.parser.isEnumType();
   }
 
+  isEdmType() {
+    return this.parser.isEdmType();
+  }
+
   enumType() {
     const enumType = this.enumForType ? this.enumForType(this.type) : undefined;
     //Throw error if not found
@@ -475,8 +479,8 @@ export class ODataModelField<F> {
   }
 
   defaults(): any {
-    const meta = this.optionsForType ? this.optionsForType(this.type) : undefined;
-    return this.isStructuredType() && meta !== undefined ? meta.defaults() : this.default;
+    const meta = this.optionsForType && this.isStructuredType() ? this.optionsForType(this.type) : undefined;
+    return meta !== undefined ? meta.defaults() : this.default;
   }
 
   deserialize(value: any, options?: ParserOptions): F | F[] {
@@ -544,7 +548,7 @@ export class ODataModelField<F> {
         Model = meta.model;
     }
 
-    return new Model((value || {}) as Partial<F> | { [name: string]: any }, {
+    return Model.factory((value || {}) as Partial<F> | { [name: string]: any }, {
       annots,
       reset,
       parent: [parent, this],
@@ -564,7 +568,7 @@ export class ODataModelField<F> {
     const annots = this.annotationsFactory(parent.annots()) as ODataEntitiesAnnotations<F>;
     const Collection = this.collectionForType ? this.collectionForType(this.type) : undefined;
     if (Collection === undefined) throw Error(`No Collection type for ${this.name}`);
-    return new Collection((value || []) as Partial<F>[] | { [name: string]: any }[], {
+    return Collection.factory((value || []) as Partial<F>[] | { [name: string]: any }[], {
       annots: annots,
       reset,
       parent: [parent, this],
@@ -614,6 +618,10 @@ export class ODataModelAttribute<T> {
 
   get fieldName() {
     return this._field.field;
+  }
+
+  isStructuredType() {
+    return this._field.isStructuredType();
   }
 
   get(): T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null | undefined {
@@ -705,6 +713,7 @@ export type ODataModelEntry<T, M extends ODataModel<T>> = {
 };
 
 export class ODataModelOptions<T> {
+  pool: Map<string, ODataModel<any>> = new Map<string, ODataModel<any>>();
   name: string;
   cid: string;
   base?: string;
@@ -728,6 +737,71 @@ export class ODataModelOptions<T> {
     this.structuredType = structuredType;
     this.cid = config?.cid ?? CID_FIELD_NAME;
     config.fields.forEach((value, key) => this.addField<any>(key, value));
+  }
+
+  modelFactory<T>(
+    Model: typeof ODataModel<T>,
+    data: Partial<T> | { [name: string]: any } = {},
+    {
+      parent,
+      resource,
+      annots,
+      reset = false,
+    }: {
+      parent?: [
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null,
+      ];
+      resource?:
+        | ODataEntityResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>
+        | ODataSingletonResource<T>;
+      annots?: ODataEntityAnnotations<T>;
+      reset?: boolean;
+    } = {},
+  ) {
+    let model: ODataModel<T> | undefined = undefined;
+    let key = this.resolveKey(data) ?? (<any>data)[this.cid];
+    if (key !== undefined) {
+      model = this.pool.get(JSON.stringify(key)) as ODataModel<T> | undefined;
+      if (model !== undefined) {
+        if (parent !== undefined) model._parent = parent;
+        if (resource !== undefined) model.attach(resource);
+        if (annots !== undefined) model._annotations = annots;
+        return model as ODataModel<T>;
+      }
+    }
+    model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
+
+    key = this.resolveKey(model) ?? (<any>model)[this.cid];
+    if (key !== undefined) {
+      this.pool.set(JSON.stringify(key), model);
+    }
+    return model;
+  }
+
+  collectionFactory<T>(
+    Collection: typeof ODataCollection<T, ODataModel<T>>,
+    entities: Partial<T>[] | { [name: string]: any }[] = [],
+    {
+      parent,
+      resource,
+      annots,
+      model,
+      reset = false,
+    }: {
+      parent?: [ODataModel<any>, ODataModelField<any>];
+      resource?:
+        | ODataEntitySetResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>;
+      annots?: ODataEntitiesAnnotations<T>;
+      model?: typeof ODataModel;
+      reset?: boolean;
+    } = {},
+  ) {
+    return new Collection(entities, { parent, resource, annots, reset, model });
   }
 
   get api() {
@@ -1102,7 +1176,7 @@ export class ODataModelOptions<T> {
           .find((field: ODataModelField<any>) => field.field === name);
         if (field !== undefined) {
           v = Types.isPlainObject(v) || ODataModelOptions.isModel(v) ? v[field.name] : v;
-          options = this.api.optionsForType(field.type);
+          options = field.isStructuredType() ? this.api.optionsForType(field.type) : undefined;
         }
       }
       if (field === undefined) return undefined;
@@ -1157,7 +1231,7 @@ export class ODataModelOptions<T> {
         include_navigation: false,
         include_parents: true,
       }).find((field: ODataModelField<any>) => field.field === ref.property);
-      const meta = this.api.optionsForType<any>(attr.type);
+      const meta = attr.isStructuredType() ? this.api.optionsForType(attr.type) : undefined;
       const to = meta
         ?.fields({ include_navigation: false, include_parents: true })
         .find((field: ODataModelField<any>) => field.field === ref.referencedProperty);
@@ -1243,6 +1317,7 @@ export class ODataModelOptions<T> {
       return result;
     }
   }
+
   asEntity<R, M extends ODataModel<T>>(self: M, ctx: (model: M) => R): R {
     // Clone query from him or parent
     let query = self._resource?.cloneQuery<T>();
@@ -1627,7 +1702,7 @@ export class ODataModelOptions<T> {
 
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
-        const meta = this.api.optionsForType<F>(modelField.type);
+        const meta = modelField.isStructuredType() ? this.api.optionsForType<F>(modelField.type) : undefined;
         const ref = meta?.resolveReferential(attr.get(), attr, {
           resolve: false,
         });

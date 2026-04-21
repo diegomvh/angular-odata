@@ -1,5 +1,6 @@
 import { JSONSchema7 } from 'json-schema';
 import type { Observable } from 'rxjs';
+import { ODataRequest, ODataResponse } from './resources';
 
 export type ODataVersion = '2.0' | '3.0' | '4.0';
 export type FetchPolicy =
@@ -184,8 +185,12 @@ export const NONE_PARSER = {
 export interface ODataCache {
   put<T>(key: string, payload: T, ...opts: any[]): void;
   get<T>(key: string, ...opts: any[]): T | undefined;
-  handleRequest(req: any, res$: Observable<any>): Observable<any>;
+  getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
+  putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
   flush(): void;
+  forget({ name, scope, tags }: { name?: string; scope?: string[]; tags?: string[] }): void;
+  scope(obj: ODataRequest<any>): string[];
+  tags(obj: ODataResponse<any>): string[];
 }
 
 export interface ODataApiConfigOptions {

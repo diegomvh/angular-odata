@@ -58,11 +58,11 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  navigationProperty<N>(path: string) {
+  navigationProperty<N>(path: string): ODataNavigationPropertyResource<N> {
     return ODataNavigationPropertyResource.fromResource<N>(this, path);
   }
 
-  property<P>(path: string) {
+  property<P>(path: string): ODataPropertyResource<P> {
     return ODataPropertyResource.fromResource<P>(this, path);
   }
 

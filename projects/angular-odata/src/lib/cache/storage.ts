@@ -25,7 +25,19 @@ export class ODataInStorageCache extends ODataBaseCache {
    * Store the cache in the storage
    */
   store() {
-    this.storage.setItem(this.name, JSON.stringify(Array.from(this.entries.entries())));
+    this.storage.setItem(
+      this.name,
+      JSON.stringify(
+        Array.from(this.entries.entries()).map(([key, entry]) => [
+          key,
+          {
+            ...entry,
+            payload:
+              entry.payload instanceof ODataResponse ? entry.payload.toJson() : entry.payload,
+          } as ODataCacheEntry<any>,
+        ]),
+      ),
+    );
   }
 
   /**
@@ -50,10 +62,10 @@ export class ODataInStorageCache extends ODataBaseCache {
    * @param req The request with the resource to store the response
    * @param res The response to store in the cache
    */
-  putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
+  override putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     const scope = this.scope(req);
     const tags = this.tags(res);
-    this.put<ODataResponseJson<any>>(req.cacheKey, res.toJson(), {
+    this.put<ODataResponse<any>>(req.cacheKey, res, {
       maxAge: req.maxAge ?? res.options.maxAge,
       scope,
       tags,
@@ -65,10 +77,14 @@ export class ODataInStorageCache extends ODataBaseCache {
    * @param req The request with the resource to get the response
    * @returns The response from the cache
    */
-  getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
+  override getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
     const scope = this.scope(req);
     const data = this.get<ODataResponseJson<any>>(req.cacheKey, { scope });
 
-    return data !== undefined ? ODataResponse.fromJson(req, data) : undefined;
+    return data instanceof ODataResponse
+      ? data
+      : data !== undefined
+        ? ODataResponse.fromJson(req, data)
+        : undefined;
   }
 }

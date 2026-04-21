@@ -25,7 +25,6 @@ import {
   ODataModelAttribute,
   ODataModelEventType,
   ODataModelEventEmitter,
-  ModelFieldOptions,
   ModelInterface,
 } from './options';
 import type { EdmType, ParserOptions } from '../types';
@@ -53,37 +52,6 @@ export class ODataModel<T> {
   // Events
   events$: ODataModelEventEmitter<T>;
 
-  static buildMetaOptions<T>({
-    config,
-    structuredType,
-  }: {
-    config?: ModelOptions;
-    structuredType: ODataStructuredType<T>;
-  }) {
-    if (config === undefined) {
-      const fields = structuredType
-        .fields({ include_navigation: true, include_parents: true })
-        .reduce((acc, field) => {
-          let name = field.name;
-          // Prevent collision with reserved keywords
-          while (RESERVED_FIELD_NAMES.includes(name)) {
-            name = name + '_';
-          }
-          return Object.assign(acc, {
-            [name]: {
-              field: field.name,
-              default: field.default,
-              required: !field.nullable,
-            },
-          });
-        }, {});
-      config = {
-        fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
-      };
-    }
-    return new ODataModelOptions<T>({ config, structuredType });
-  }
-
   constructor(
     data: Partial<T> | { [name: string]: any } = {},
     {
@@ -96,7 +64,11 @@ export class ODataModel<T> {
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null,
       ];
-      resource?: ODataResource<T> | null;
+      resource?:
+        | ODataEntityResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>
+        | ODataSingletonResource<T>;
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
     } = {},
@@ -118,6 +90,30 @@ export class ODataModel<T> {
       data = Objects.merge(this.defaults(), data as { [name: string]: any }) as Partial<T>;
 
     this.assign(data, { reset });
+  }
+
+  public static factory<T>(
+    data: Partial<T> | { [name: string]: any } = {},
+    {
+      parent,
+      resource,
+      annots,
+      reset = false,
+    }: {
+      parent?: [
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null,
+      ];
+      resource?:
+        | ODataEntityResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>
+        | ODataSingletonResource<T>;
+      annots?: ODataEntityAnnotations<T>;
+      reset?: boolean;
+    } = {},
+  ) {
+    return this.meta.modelFactory<T>(this, data, { parent, resource, annots, reset });
   }
 
   //#region Resources
@@ -838,5 +834,3 @@ export class ODataModel<T> {
   }
   //#endregion
 }
-
-const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);

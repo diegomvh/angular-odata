@@ -1,8 +1,8 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { NEVER, Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { NEVER, Observable, of, throwError } from 'rxjs';
+import { catchError, map, startWith, tap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from './constants';
-import { ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
+import { ModelFieldOptions, ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
 import { ODataApiOptions } from './options';
 import type { ODataOptions, ODataResource, ODataSegment } from './resources';
 import {
@@ -40,6 +40,9 @@ import {
   ODataCache,
 } from './types';
 import type { ODataMetadata } from './metadata/metadata';
+import { ODataEntityAnnotations } from './annotations';
+
+const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);
 
 /**
  * Api abstraction for consuming OData services.
@@ -299,7 +302,7 @@ export class ODataApi {
     }
 
     if (this.cache !== undefined) {
-      res$ = this.cache.handleRequest(req, res$);
+      res$ = this.handleRequest(req, res$);
     }
 
     switch (options.observe || 'body') {
@@ -324,6 +327,67 @@ export class ODataApi {
         // Guard against new future observe types being added.
         throw new Error(`Unreachable: unhandled observe type ${options.observe}}`);
     }
+  }
+
+  /**
+   * Using the request, handle the fetching of the response
+   * @param req The request to fetch
+   * @param res$ Observable of the response
+   * @returns
+   */
+  private handleRequest(
+    req: ODataRequest<any>,
+    res$: Observable<ODataResponse<any>>,
+  ): Observable<ODataResponse<any>> {
+    return req.isFetch()
+      ? this.handleFetch(req, res$)
+      : req.isMutate()
+        ? this.handleMutate(req, res$)
+        : res$;
+  }
+
+  private handleFetch(
+    req: ODataRequest<any>,
+    res$: Observable<ODataResponse<any>>,
+  ): Observable<ODataResponse<any>> {
+    const policy = req.fetchPolicy;
+    const cached = this.cache!.getResponse(req);
+    if (policy === 'no-cache') {
+      return res$;
+    }
+    if (policy === 'cache-only') {
+      if (cached) {
+        return of(cached);
+      } else {
+        return throwError(() => new Error('No Cached'));
+      }
+    }
+    if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
+      res$ = res$.pipe(
+        tap((res: ODataResponse<any>) => {
+          if (res.options.cacheability !== 'no-store') this.cache!.putResponse(req, res);
+        }),
+      );
+    }
+    return cached !== undefined && policy !== 'network-only'
+      ? policy === 'cache-and-network'
+        ? res$.pipe(startWith(cached))
+        : of(cached)
+      : res$;
+  }
+
+  private handleMutate(
+    req: ODataRequest<any>,
+    res$: Observable<ODataResponse<any>>,
+  ): Observable<ODataResponse<any>> {
+    const requests = req.isBatch()
+      ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
+      : [req];
+    for (var r of requests) {
+      const scope = this.cache!.scope(r);
+      this.cache!.forget({ scope });
+    }
+    return res$;
   }
 
   //# region Find by Type
@@ -593,11 +657,30 @@ export class ODataApi {
     }
 
     let meta: ODataModelOptions<T> | undefined = undefined;
-    if (!type.startsWith('Edm.')) {
-      structuredType = this.findStructuredType<T>(type) ?? structuredType;
-      if (structuredType !== undefined) {
-        meta = ODataModel.buildMetaOptions({ config, structuredType });
+    structuredType = this.findStructuredType<T>(type) ?? structuredType;
+    if (structuredType !== undefined) {
+      if (config === undefined) {
+        const fields = structuredType
+          .fields({ include_navigation: true, include_parents: true })
+          .reduce((acc, field) => {
+            let name = field.name;
+            // Prevent collision with reserved keywords
+            while (RESERVED_FIELD_NAMES.includes(name)) {
+              name = name + '_';
+            }
+            return Object.assign(acc, {
+              [name]: {
+                field: field.name,
+                default: field.default,
+                required: !field.nullable,
+              },
+            });
+          }, {});
+        config = {
+          fields: new Map<string, ModelFieldOptions>(Object.entries(fields)),
+        };
       }
+      meta = new ODataModelOptions<T>({ config, structuredType });
     }
     // Set Options for next time
     this.memo.options.set(type, meta);

@@ -1,7 +1,5 @@
-import { Observable, of, throwError } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
 import { CACHE_KEY_SEPARATOR, DEFAULT_MAXAGE } from '../constants';
-import type { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
+import type { ODataRequest, ODataResponse } from '../resources';
 import { ODataCache, PathSegment } from '../types';
 
 /**
@@ -155,66 +153,5 @@ export abstract class ODataBaseCache implements ODataCache {
    */
   isExpired(entry: ODataCacheEntry<any>) {
     return entry.date < (Date.now() - entry.maxAge);
-  }
-
-  /**
-   * Using the request, handle the fetching of the response
-   * @param req The request to fetch
-   * @param res$ Observable of the response
-   * @returns
-   */
-  handleRequest(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
-    return req.isFetch()
-      ? this.handleFetch(req, res$)
-      : req.isMutate()
-        ? this.handleMutate(req, res$)
-        : res$;
-  }
-
-  private handleFetch(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
-    const policy = req.fetchPolicy;
-    const cached = this.getResponse(req);
-    if (policy === 'no-cache') {
-      return res$;
-    }
-    if (policy === 'cache-only') {
-      if (cached) {
-        return of(cached);
-      } else {
-        return throwError(() => new Error('No Cached'));
-      }
-    }
-    if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
-      res$ = res$.pipe(
-        tap((res: ODataResponse<any>) => {
-          if (res.options.cacheability !== 'no-store') this.putResponse(req, res);
-        }),
-      );
-    }
-    return cached !== undefined && policy !== 'network-only'
-      ? policy === 'cache-and-network'
-        ? res$.pipe(startWith(cached))
-        : of(cached)
-      : res$;
-  }
-
-  private handleMutate(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
-    const requests = req.isBatch()
-      ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
-      : [req];
-    for (var r of requests) {
-      const scope = this.scope(r);
-      this.forget({ scope });
-    }
-    return res$;
   }
 }
