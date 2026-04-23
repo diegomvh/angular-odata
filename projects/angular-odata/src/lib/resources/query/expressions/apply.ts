@@ -9,7 +9,6 @@ import {
   ODataFunctions,
   ODataOperators,
   operators,
-  syntax,
   transformations,
   Renderable,
   RenderableFactory,
@@ -202,7 +201,7 @@ export class ApplyExpression<T> extends Expression<T> {
   }
 
   aggregate(value: any, method: AggregateMethod, alias: string): ApplyExpression<T> {
-    return this._add(syntax.aggregate(value, method, alias));
+    return this._add(transformations.aggregate(value, method, alias));
   }
 
   //topcount
@@ -296,10 +295,10 @@ export class ApplyExpression<T> extends Expression<T> {
     props: (e: { rollup: (f: any) => any }) => any | any[],
     opts?: (e: GroupByTransformations<T>) => GroupByTransformations<T>,
   ): ApplyExpression<T> {
-    let properties = props({ rollup: (e: any) => syntax.rollup(e) });
+    let properties = props({ rollup: (e: any) => operators.rollup(e) });
     properties = Array.isArray(properties) ? properties : [properties];
-    const transformations = opts !== undefined ? opts(new GroupByTransformations()) : undefined;
-    return this._add(syntax.groupby(properties, transformations));
+    const transformation = opts !== undefined ? opts(new GroupByTransformations()) : undefined;
+    return this._add(transformations.groupby(properties, transformation));
   }
 
   //filter

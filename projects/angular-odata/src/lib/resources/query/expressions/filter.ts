@@ -11,7 +11,6 @@ import {
   operators,
   Renderable,
   RenderableFactory,
-  syntax,
 } from './syntax';
 
 export type FilterConnector = 'and' | 'or';
@@ -128,7 +127,7 @@ export class FilterExpression<F> extends Expression<F> {
             negated: this._negated,
           });
           if (exp.length() > 1) {
-            children.push(syntax.group(exp));
+            children.push(operators.group(exp));
           } else {
             children.push(exp);
           }
@@ -140,7 +139,7 @@ export class FilterExpression<F> extends Expression<F> {
       ) {
         children = [...children, ...node.children()];
       } else {
-        children.push(syntax.group(node));
+        children.push(operators.group(node));
       }
       this._connector = connector;
       this._children = children;
@@ -152,7 +151,7 @@ export class FilterExpression<F> extends Expression<F> {
       this._children = [...this._children, ...node.children()];
     } else {
       this._children.push(
-        node instanceof FilterExpression && !node.negated() ? syntax.group(node) : node,
+        node instanceof FilterExpression && !node.negated() ? operators.group(node) : node,
       );
     }
     return this;
@@ -239,7 +238,7 @@ export class FilterExpression<F> extends Expression<F> {
         e: (connector: FilterConnector = 'and') => new FilterExpression<N>({ connector }),
       }) as FilterExpression<N>;
     }
-    return this._add(syntax.any(left, exp, alias));
+    return this._add(operators.any(left, exp, alias));
   }
 
   all<N>(
@@ -261,7 +260,7 @@ export class FilterExpression<F> extends Expression<F> {
         e: (connector: FilterConnector = 'and') => new FilterExpression<N>({ connector }),
       }) as FilterExpression<N>;
     }
-    return this._add(syntax.all(left, exp, alias));
+    return this._add(operators.all(left, exp, alias));
   }
 
   count<N>(
@@ -274,7 +273,7 @@ export class FilterExpression<F> extends Expression<F> {
   isof(type: string): FilterExpression<F>;
   isof(left: F, type: string): FilterExpression<F>;
   isof(left: any, type?: string): FilterExpression<F> {
-    return this._add(syntax.isof(left, type));
+    return this._add(functions.isof(left, type));
   }
 
   combine(exp: FilterExpression<F>, connector: FilterConnector = 'and'): FilterExpression<F> {

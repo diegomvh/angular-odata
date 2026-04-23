@@ -2,7 +2,7 @@ import { Parser, ParserOptions } from '../../../types';
 import { Types } from '../../../utils';
 import { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { render, FieldFactory, Renderable, RenderableFactory } from './syntax';
+import { render, FieldFactory, Renderable, RenderableFactory, ODataOperators, operators } from './syntax';
 
 export type OrderAttribute = 'asc' | 'desc';
 export class OrderByField implements Renderable {
@@ -60,6 +60,7 @@ export class OrderByField implements Renderable {
 export type OrderByExpressionBuilder<T> = {
   t: Required<T>;
   e: () => OrderByExpression<T>;
+  o: ODataOperators<T>;
 };
 
 export class OrderByExpression<T> extends Expression<T> {
@@ -86,6 +87,7 @@ export class OrderByExpression<T> extends Expression<T> {
       {
         t: FieldFactory<Required<T>>(),
         e: () => new OrderByExpression<T>(),
+        o: operators as ODataOperators<T>,
       },
       current ?? new OrderByExpression<T>(),
     ) as OrderByExpression<T>;
