@@ -761,23 +761,22 @@ export class ODataModelOptions<T> {
       reset?: boolean;
     } = {},
   ) {
-    let model: ODataModel<T> | undefined = undefined;
-    let key = this.resolveKey(data) ?? (<any>data)[this.cid];
+    if (!(this.structuredType.isEntityType() && this.structuredType.isSimpleKey())) 
+      return new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
+    let key = this.resolveKey(data);
     if (key !== undefined) {
-      model = this.pool.get(JSON.stringify(key)) as ODataModel<T> | undefined;
+      const model = this.pool.get(key.toString()) as ODataModel<T> | undefined;
       if (model !== undefined) {
         if (parent !== undefined) model._parent = parent;
         if (resource !== undefined) model.attach(resource);
         if (annots !== undefined) model._annotations = annots;
-        return model as ODataModel<T>;
-      }
+        return model;
+      } 
     }
-    model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
 
-    key = this.resolveKey(model) ?? (<any>model)[this.cid];
-    if (key !== undefined) {
-      this.pool.set(JSON.stringify(key), model);
-    }
+    const model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
+    if (key !== undefined)
+      this.pool.set(key.toString(), model);
     return model;
   }
 

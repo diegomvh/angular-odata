@@ -40,7 +40,6 @@ import {
   ODataCache,
 } from './types';
 import type { ODataMetadata } from './metadata/metadata';
-import { ODataEntityAnnotations } from './annotations';
 
 const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);
 
