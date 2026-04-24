@@ -152,6 +152,6 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry<any>) {
-    return entry.date < (Date.now() - entry.maxAge);
+    return entry.date < Date.now() - entry.maxAge;
   }
 }

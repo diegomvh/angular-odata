@@ -2,7 +2,14 @@ import { Parser, ParserOptions } from '../../../types';
 import { Types } from '../../../utils';
 import { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { render, FieldFactory, Renderable, RenderableFactory, ODataOperators, operators } from './syntax';
+import {
+  render,
+  FieldFactory,
+  Renderable,
+  RenderableFactory,
+  ODataOperators,
+  operators,
+} from './syntax';
 
 export type OrderAttribute = 'asc' | 'desc';
 export class OrderByField implements Renderable {

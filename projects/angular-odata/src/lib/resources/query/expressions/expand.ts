@@ -7,7 +7,15 @@ import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
 import { SearchExpression, SearchExpressionBuilder } from './search';
 import { SelectExpression, SelectExpressionBuilder } from './select';
-import { FieldFactory, ODataOperators, operators, render, Renderable, RenderableFactory, resolve } from './syntax';
+import {
+  FieldFactory,
+  ODataOperators,
+  operators,
+  render,
+  Renderable,
+  RenderableFactory,
+  resolve,
+} from './syntax';
 
 export class ExpandField<T> implements Renderable {
   constructor(
