@@ -1095,8 +1095,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="174"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:174</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="179"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:179</a></div>
                         </td>
                     </tr>
 
@@ -1320,8 +1320,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="170"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:170</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="175"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:175</a></div>
                         </td>
                     </tr>
 
@@ -1387,8 +1387,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="152"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:152</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="157"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:157</a></div>
                         </td>
                     </tr>
 
@@ -1764,20 +1764,25 @@ export class ODataEnumTypeParser&lt;E&gt; extends ODataAnnotatable implements Fi
 
   // Json Schema
   toJsonSchema(options?: JsonSchemaOptions&lt;E&gt;, parent?: JSONSchema7): JSONSchema7 {
-    let schema &#x3D; (this.flags
-      ? {
-        title: this.name,
-        type: JsonSchemaType.array,
-        items: {
-          type: JsonSchemaType.integer,
-        },
-      }
-      : {
-        type: JsonSchemaType.integer,
-        enum: this._fields.map((f) &#x3D;&gt; f.value),
-      }) as JSONSchema7;
+    let schema &#x3D; (
+      this.flags
+        ? {
+            type: JsonSchemaType.array,
+            title: this.name,
+            uniqueItems: true,
+            items: {
+              type: JsonSchemaType.string,
+              enum: this._fields.map((f) &#x3D;&gt; f.name),
+            },
+          }
+        : {
+            type: JsonSchemaType.integer,
+            title: this.name,
+            anyOf: this._fields.map((f) &#x3D;&gt; ({ const: f.value, title: f.name })),
+          }
+    ) as JSONSchema7;
     if (options?.map !&#x3D;&#x3D; undefined) {
-      schema &#x3D; options.map(schema, parent);
+      schema &#x3D; options.map(this, schema, parent);
     }
     return schema;
   }

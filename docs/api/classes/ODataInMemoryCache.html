@@ -167,7 +167,7 @@
                                 <a href="#entries" >entries</a>
                             </li>
                             <li>
-                                <a href="#timeout" >timeout</a>
+                                <a href="#maxAge" >maxAge</a>
                             </li>
                         </ul>
                     </td>
@@ -182,9 +182,11 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier"></span>
                                 <a href="#getResponse" >getResponse</a>
                             </li>
                             <li>
+                                    <span class="modifier"></span>
                                 <a href="#putResponse" >putResponse</a>
                             </li>
                             <li>
@@ -201,17 +203,6 @@
                             </li>
                             <li>
                                 <a href="#get" >get</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#handleFetch" >handleFetch</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#handleMutate" >handleMutate</a>
-                            </li>
-                            <li>
-                                <a href="#handleRequest" >handleRequest</a>
                             </li>
                             <li>
                                 <a href="#isExpired" >isExpired</a>
@@ -315,7 +306,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:23</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:21</a></code>
 </div>
                         </td>
                     </tr>
@@ -327,10 +318,10 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="timeout"></a>
+                    <a name="maxAge"></a>
                     <span class="name">
-                        <span ><b>timeout</b></span>
-                        <a href="#timeout"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>maxAge</b></span>
+                        <a href="#maxAge"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -348,7 +339,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:22</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:20</a></code>
 </div>
                         </td>
                     </tr>
@@ -369,6 +360,7 @@
                 <td class="col-md-4">
                     <a name="getResponse"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                         <span ><b>getResponse</b></span>
                         <a href="#getResponse"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -376,7 +368,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getResponse(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getResponse(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -450,6 +443,7 @@
                 <td class="col-md-4">
                     <a name="putResponse"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                         <span ><b>putResponse</b></span>
                         <a href="#putResponse"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -457,7 +451,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>putResponse(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res: <a href="../classes/ODataResponse.html" target="_self">ODataResponse&lt;any&gt;</a>)</code>
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>putResponse(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res: <a href="../classes/ODataResponse.html" target="_self">ODataResponse&lt;any&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -566,7 +561,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:71</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:69</a></code>
 </div>
                         </td>
                     </tr>
@@ -668,7 +663,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:88</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:86</a></code>
 </div>
                         </td>
                     </tr>
@@ -749,7 +744,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:149</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:145</a></code>
 </div>
                         </td>
                     </tr>
@@ -794,7 +789,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:128</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:124</a></code>
 </div>
                         </td>
                     </tr>
@@ -872,7 +867,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:116</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:114</a></code>
 </div>
                         </td>
                     </tr>
@@ -958,276 +953,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="handleFetch"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>handleFetch</b></span>
-                        <a href="#handleFetch"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>handleFetch(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res$: <a href="../classes/ODataResponse.html" target="_self">Observable&lt;ODataResponse&lt;any&gt;&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
-</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:179</a></code>
-</div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>req</td>
-                                            <td>
-                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>res$</td>
-                                            <td>
-                                                            <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="handleMutate"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>handleMutate</b></span>
-                        <a href="#handleMutate"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>handleMutate(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res$: <a href="../classes/ODataResponse.html" target="_self">Observable&lt;ODataResponse&lt;any&gt;&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
-</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:209</a></code>
-</div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>req</td>
-                                            <td>
-                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>res$</td>
-                                            <td>
-                                                            <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="handleRequest"></a>
-                    <span class="name">
-                        <span ><b>handleRequest</b></span>
-                        <a href="#handleRequest"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>handleRequest(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res$: <a href="../classes/ODataResponse.html" target="_self">Observable&lt;ODataResponse&lt;any&gt;&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
-</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:168</a></code>
-</div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Using the request, handle the fetching of the response</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                                <td>Description</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>req</td>
-                                            <td>
-                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                            <td>
-                                                    <p>The request to fetch</p>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                                <td>res$</td>
-                                            <td>
-                                                            <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                            <td>
-                                                    <p>Observable of the response</p>
-
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="isExpired"></a>
                     <span class="name">
                         <span ><b>isExpired</b></span>
@@ -1250,7 +975,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:158</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:154</a></code>
 </div>
                         </td>
                     </tr>
@@ -1331,7 +1056,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:100</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:98</a></code>
 </div>
                         </td>
                     </tr>
@@ -1456,7 +1181,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:38</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:36</a></code>
 </div>
                         </td>
                     </tr>
@@ -1537,7 +1262,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:54</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:52</a></code>
 </div>
                         </td>
                     </tr>
@@ -1606,8 +1331,8 @@
 import { ODataBaseCache } from &#x27;./cache&#x27;;
 
 export class ODataInMemoryCache extends ODataBaseCache {
-  constructor({ timeout }: { timeout?: number } &#x3D; {}) {
-    super({ timeout });
+  constructor({ maxAge }: { maxAge?: number } &#x3D; {}) {
+    super({ maxAge });
   }
 
   /**
@@ -1615,11 +1340,11 @@ export class ODataInMemoryCache extends ODataBaseCache {
    * @param req The request with the resource to store the response
    * @param res The response to store in the cache
    */
-  putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
+  override putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
     let scope &#x3D; this.scope(req);
     let tags &#x3D; this.tags(res);
     this.put(req.cacheKey, res, {
-      timeout: res.options.maxAge,
+      maxAge: req.maxAge ?? res.options.maxAge,
       scope,
       tags,
     });
@@ -1630,7 +1355,7 @@ export class ODataInMemoryCache extends ODataBaseCache {
    * @param req The request with the resource to get the response
    * @returns The response from the cache
    */
-  getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
+  override getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
     let scope &#x3D; this.scope(req);
     return this.get(req.cacheKey, { scope });
   }

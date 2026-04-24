@@ -259,7 +259,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:65</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:73</a></div>
                             </td>
                         </tr>
 
@@ -364,8 +364,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="94"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:94</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -431,8 +431,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="135"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:135</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:144</a></div>
                         </td>
                     </tr>
 
@@ -504,7 +504,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:129</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:138</a></code>
 </div>
                         </td>
                     </tr>
@@ -541,8 +541,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="143"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:143</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="152"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:152</a></div>
                         </td>
                     </tr>
 
@@ -608,8 +608,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="139"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:139</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="148"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:148</a></div>
                         </td>
                     </tr>
 
@@ -677,8 +677,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="78"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:78</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="86"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:86</a></div>
                         </td>
                     </tr>
 
@@ -766,8 +766,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="104"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:104</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="113"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:113</a></div>
                         </td>
                     </tr>
 
@@ -847,7 +847,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:110</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:119</a></code>
 </div>
                         </td>
                     </tr>
@@ -925,7 +925,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:99</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:108</a></code>
 </div>
                         </td>
                     </tr>
@@ -1170,7 +1170,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:74</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:82</a></div>
                                 </td>
                             </tr>
 
@@ -1185,7 +1185,14 @@
 import { Types } from &#x27;../../../utils&#x27;;
 import { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import { render, FieldFactory, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
+import {
+  render,
+  FieldFactory,
+  Renderable,
+  RenderableFactory,
+  ODataOperators,
+  operators,
+} from &#x27;./syntax&#x27;;
 
 export type OrderAttribute &#x3D; &#x27;asc&#x27; | &#x27;desc&#x27;;
 export class OrderByField implements Renderable {
@@ -1243,6 +1250,7 @@ export class OrderByField implements Renderable {
 export type OrderByExpressionBuilder&lt;T&gt; &#x3D; {
   t: Required&lt;T&gt;;
   e: () &#x3D;&gt; OrderByExpression&lt;T&gt;;
+  o: ODataOperators&lt;T&gt;;
 };
 
 export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
@@ -1269,6 +1277,7 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
       {
         t: FieldFactory&lt;Required&lt;T&gt;&gt;(),
         e: () &#x3D;&gt; new OrderByExpression&lt;T&gt;(),
+        o: operators as ODataOperators&lt;T&gt;,
       },
       current ?? new OrderByExpression&lt;T&gt;(),
     ) as OrderByExpression&lt;T&gt;;

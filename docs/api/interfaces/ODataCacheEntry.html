@@ -148,7 +148,7 @@
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>A cache entry that holds a payload, a last read time, and a timeout for the entry.</p>
+                <p>A cache entry that holds a payload, a date when it was last read from the backend, and a maxAge for the entry.</p>
 
             </p>
 
@@ -166,9 +166,15 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                        <a href="#lastread" 
+                                        <a href="#date" 
 >
-                                            lastread
+                                            date
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#maxAge" 
+>
+                                            maxAge
                                         </a>
                                 </li>
                                 <li>
@@ -181,12 +187,6 @@
                                         <a href="#tags" 
 >
                                             tags
-                                        </a>
-                                </li>
-                                <li>
-                                        <a href="#timeout" 
->
-                                            timeout
                                         </a>
                                 </li>
                             </ul>
@@ -204,9 +204,9 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="lastread"></a>
-                                        <span class="name "><b>lastread</b>
-                                            <a href="#lastread">
+                                        <a name="date"></a>
+                                        <span class="name "><b>date</b>
+                                            <a href="#date">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -214,7 +214,40 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>lastread:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                        <code>date:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="maxAge"></a>
+                                        <span class="name "><b>maxAge</b>
+                                            <a href="#maxAge">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>maxAge:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -299,70 +332,35 @@
 
                         </tbody>
                     </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="timeout"></a>
-                                        <span class="name "><b>timeout</b>
-                                            <a href="#timeout">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>timeout:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-</code>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-
-                                        </td>
-                                    </tr>
-
-
-
-
-
-                        </tbody>
-                    </table>
             </section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable, of, throwError } from &#x27;rxjs&#x27;;
-import { startWith, tap } from &#x27;rxjs/operators&#x27;;
-import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from &#x27;../constants&#x27;;
-import type { ODataBatchResource, ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CACHE_KEY_SEPARATOR, DEFAULT_MAXAGE } from &#x27;../constants&#x27;;
+import type { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
 import { ODataCache, PathSegment } from &#x27;../types&#x27;;
 
 /**
- * A cache entry that holds a payload, a last read time, and a timeout for the entry.
+ * A cache entry that holds a payload, a date when it was last read from the backend, and a maxAge for the entry.
  * @param payload The payload to cache.
- * @param lastread The last read time.
- * @param timeout The timeout in seconds.
+ * @param date The date when the entry was last read from the backend.
+ * @param maxAge The maximum age for the entry.
  * @param tags Some tags to identify the entry.
  */
 export interface ODataCacheEntry&lt;T&gt; {
   payload: T;
-  lastread: number;
-  timeout: number;
+  date: number;
+  maxAge: number;
   tags: string[];
 }
 
 export abstract class ODataBaseCache implements ODataCache {
-  timeout: number;
+  maxAge: number;
   entries: Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;;
 
-  constructor({ timeout &#x3D; DEFAULT_TIMEOUT }: { timeout?: number }) {
-    this.timeout &#x3D; timeout;
+  constructor({ maxAge &#x3D; DEFAULT_MAXAGE }: { maxAge?: number }) {
+    this.maxAge &#x3D; maxAge;
     this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;();
   }
 
@@ -403,18 +401,18 @@ export abstract class ODataBaseCache implements ODataCache {
   /**
    * Build an entry from a payload and some options
    * @param payload The payload to store in the cache
-   * @param timeout The timeout for the entry
+   * @param maxAge The maximum age for the entry
    * @param tags The tags for the entry
    * @returns The entry to store in the cache
    */
   buildEntry&lt;T&gt;(
     payload: T,
-    { timeout, tags }: { timeout?: number; tags?: string[] },
+    { maxAge, tags }: { maxAge?: number; tags?: string[] },
   ): ODataCacheEntry&lt;T&gt; {
     return {
       payload,
-      lastread: Date.now(),
-      timeout: (timeout ?? this.timeout) * 1000,
+      date: Date.now(),
+      maxAge: (maxAge ?? this.maxAge) * 1000,
       tags: tags ?? [],
     };
   }
@@ -432,16 +430,16 @@ export abstract class ODataBaseCache implements ODataCache {
    * Put some payload in the cache
    * @param name The name for the entry
    * @param payload The payload to store in the cache
-   * @param timeout The timeout for the entry
+   * @param maxAge The maximum age for the entry
    * @param scope The scope for the entry
    * @param tags The tags for the entry
    */
   put&lt;T&gt;(
     name: string,
     payload: T,
-    { timeout, scope, tags }: { timeout?: number; scope?: string[]; tags?: string[] } &#x3D; {},
+    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] } &#x3D; {},
   ) {
-    const entry &#x3D; this.buildEntry&lt;T&gt;(payload, { timeout, tags });
+    const entry &#x3D; this.buildEntry&lt;T&gt;(payload, { maxAge, tags });
     const key &#x3D; this.buildKey([...(scope ?? []), name]);
     this.entries.set(key, entry);
   }
@@ -455,9 +453,7 @@ export abstract class ODataBaseCache implements ODataCache {
   get&lt;T&gt;(name: string, { scope }: { scope?: string[] } &#x3D; {}): T | undefined {
     const key &#x3D; this.buildKey([...(scope || []), name]);
     const entry &#x3D; this.entries.get(key);
-    if (entry &#x3D;&#x3D;&#x3D; undefined || this.isExpired(entry)) return undefined;
-    entry.lastread &#x3D; Date.now();
-    return entry.payload;
+    return entry !&#x3D;&#x3D; undefined &amp;&amp; !this.isExpired(entry) ? entry.payload : undefined;
   }
 
   /**
@@ -495,68 +491,7 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry&lt;any&gt;) {
-    return entry.lastread &lt; (Date.now() - entry.timeout);
-  }
-
-  /**
-   * Using the request, handle the fetching of the response
-   * @param req The request to fetch
-   * @param res$ Observable of the response
-   * @returns
-   */
-  handleRequest(
-    req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;,
-  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
-    return req.isFetch()
-      ? this.handleFetch(req, res$)
-      : req.isMutate()
-        ? this.handleMutate(req, res$)
-        : res$;
-  }
-
-  private handleFetch(
-    req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;,
-  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
-    const policy &#x3D; req.fetchPolicy;
-    const cached &#x3D; this.getResponse(req);
-    if (policy &#x3D;&#x3D;&#x3D; &#x27;no-cache&#x27;) {
-      return res$;
-    }
-    if (policy &#x3D;&#x3D;&#x3D; &#x27;cache-only&#x27;) {
-      if (cached) {
-        return of(cached);
-      } else {
-        return throwError(() &#x3D;&gt; new Error(&#x27;No Cached&#x27;));
-      }
-    }
-    if (policy &#x3D;&#x3D;&#x3D; &#x27;cache-first&#x27; || policy &#x3D;&#x3D;&#x3D; &#x27;cache-and-network&#x27; || policy &#x3D;&#x3D;&#x3D; &#x27;network-only&#x27;) {
-      res$ &#x3D; res$.pipe(
-        tap((res: ODataResponse&lt;any&gt;) &#x3D;&gt; {
-          if (res.options.cacheability !&#x3D;&#x3D; &#x27;no-store&#x27;) this.putResponse(req, res);
-        }),
-      );
-    }
-    return cached !&#x3D;&#x3D; undefined &amp;&amp; policy !&#x3D;&#x3D; &#x27;network-only&#x27;
-      ? policy &#x3D;&#x3D;&#x3D; &#x27;cache-and-network&#x27;
-        ? res$.pipe(startWith(cached))
-        : of(cached)
-      : res$;
-  }
-
-  private handleMutate(
-    req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;,
-  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
-    const requests &#x3D; req.isBatch()
-      ? (req.resource as ODataBatchResource).requests().filter((r) &#x3D;&gt; r.isMutate())
-      : [req];
-    for (var r of requests) {
-      const scope &#x3D; this.scope(r);
-      this.forget({ scope });
-    }
-    return res$;
+    return entry.date &lt; Date.now() - entry.maxAge;
   }
 }
 </code></pre>

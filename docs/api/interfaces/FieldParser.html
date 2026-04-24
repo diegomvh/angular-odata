@@ -405,8 +405,10 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { JSONSchema7 } from &#x27;json-schema&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { JSONSchema7 } from &#x27;json-schema&#x27;;
 import type { Observable } from &#x27;rxjs&#x27;;
+import type { ODataModel, ODataModelOptions } from &#x27;./models&#x27;;
+import type { EntityKey, ODataRequest, ODataResponse } from &#x27;./resources&#x27;;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
 export type FetchPolicy &#x3D;
@@ -542,7 +544,7 @@ export type JsonSchemaFieldOptions&lt;T&gt; &#x3D; {
 };
 
 export type JsonSchemaOptions&lt;T&gt; &#x3D; JsonSchemaFieldOptions&lt;T&gt; &amp; {
-  map?: (schema: JSONSchema7, parent?: JSONSchema7) &#x3D;&gt; JSONSchema7 
+  map?: (field: FieldParser&lt;T&gt;, schema: JSONSchema7, parent?: JSONSchema7) &#x3D;&gt; JSONSchema7;
 };
 
 export interface ParserOptions {
@@ -591,8 +593,12 @@ export const NONE_PARSER &#x3D; {
 export interface ODataCache {
   put&lt;T&gt;(key: string, payload: T, ...opts: any[]): void;
   get&lt;T&gt;(key: string, ...opts: any[]): T | undefined;
-  handleRequest(req: any, res$: Observable&lt;any&gt;): Observable&lt;any&gt;;
+  getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined;
+  putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;): void;
   flush(): void;
+  forget({ name, scope, tags }: { name?: string; scope?: string[]; tags?: string[] }): void;
+  scope(obj: ODataRequest&lt;any&gt;): string[];
+  tags(obj: ODataResponse&lt;any&gt;): string[];
 }
 
 export interface ODataApiConfigOptions {

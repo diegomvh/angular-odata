@@ -822,6 +822,10 @@ export class ODataModelField&lt;F&gt; {
     return this.parser.isEnumType();
   }
 
+  isEdmType() {
+    return this.parser.isEdmType();
+  }
+
   enumType() {
     const enumType &#x3D; this.enumForType ? this.enumForType(this.type) : undefined;
     //Throw error if not found
@@ -883,8 +887,9 @@ export class ODataModelField&lt;F&gt; {
   }
 
   defaults(): any {
-    const meta &#x3D; this.optionsForType ? this.optionsForType(this.type) : undefined;
-    return this.isStructuredType() &amp;&amp; meta !&#x3D;&#x3D; undefined ? meta.defaults() : this.default;
+    const meta &#x3D;
+      this.optionsForType &amp;&amp; this.isStructuredType() ? this.optionsForType(this.type) : undefined;
+    return meta !&#x3D;&#x3D; undefined ? meta.defaults() : this.default;
   }
 
   deserialize(value: any, options?: ParserOptions): F | F[] {
@@ -952,7 +957,7 @@ export class ODataModelField&lt;F&gt; {
         Model &#x3D; meta.model;
     }
 
-    return new Model((value || {}) as Partial&lt;F&gt; | { [name: string]: any }, {
+    return Model.factory((value || {}) as Partial&lt;F&gt; | { [name: string]: any }, {
       annots,
       reset,
       parent: [parent, this],
@@ -972,7 +977,7 @@ export class ODataModelField&lt;F&gt; {
     const annots &#x3D; this.annotationsFactory(parent.annots()) as ODataEntitiesAnnotations&lt;F&gt;;
     const Collection &#x3D; this.collectionForType ? this.collectionForType(this.type) : undefined;
     if (Collection &#x3D;&#x3D;&#x3D; undefined) throw Error(&#x60;No Collection type for ${this.name}&#x60;);
-    return new Collection((value || []) as Partial&lt;F&gt;[] | { [name: string]: any }[], {
+    return Collection.factory((value || []) as Partial&lt;F&gt;[] | { [name: string]: any }[], {
       annots: annots,
       reset,
       parent: [parent, this],
@@ -1022,6 +1027,10 @@ export class ODataModelAttribute&lt;T&gt; {
 
   get fieldName() {
     return this._field.field;
+  }
+
+  isStructuredType() {
+    return this._field.isStructuredType();
   }
 
   get(): T | ODataModel&lt;T&gt; | ODataCollection&lt;T, ODataModel&lt;T&gt;&gt; | null | undefined {
@@ -1113,6 +1122,7 @@ export type ODataModelEntry&lt;T, M extends ODataModel&lt;T&gt;&gt; &#x3D; {
 };
 
 export class ODataModelOptions&lt;T&gt; {
+  pool: Map&lt;string, ODataModel&lt;any&gt;&gt; &#x3D; new Map&lt;string, ODataModel&lt;any&gt;&gt;();
   name: string;
   cid: string;
   base?: string;
@@ -1136,6 +1146,69 @@ export class ODataModelOptions&lt;T&gt; {
     this.structuredType &#x3D; structuredType;
     this.cid &#x3D; config?.cid ?? CID_FIELD_NAME;
     config.fields.forEach((value, key) &#x3D;&gt; this.addField&lt;any&gt;(key, value));
+  }
+
+  modelFactory&lt;T&gt;(
+    Model: typeof ODataModel&lt;T&gt;,
+    data: Partial&lt;T&gt; | { [name: string]: any } &#x3D; {},
+    {
+      parent,
+      resource,
+      annots,
+      reset &#x3D; false,
+    }: {
+      parent?: [
+        ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;,
+        ODataModelField&lt;any&gt; | null,
+      ];
+      resource?:
+        | ODataEntityResource&lt;T&gt;
+        | ODataNavigationPropertyResource&lt;T&gt;
+        | ODataPropertyResource&lt;T&gt;
+        | ODataSingletonResource&lt;T&gt;;
+      annots?: ODataEntityAnnotations&lt;T&gt;;
+      reset?: boolean;
+    } &#x3D; {},
+  ) {
+    if (!(this.structuredType.isEntityType() &amp;&amp; this.structuredType.isSimpleKey()))
+      return new Model(data, { parent, resource, annots, reset }) as ODataModel&lt;T&gt;;
+    let key &#x3D; this.resolveKey(data);
+    if (key !&#x3D;&#x3D; undefined) {
+      const model &#x3D; this.pool.get(key.toString()) as ODataModel&lt;T&gt; | undefined;
+      if (model !&#x3D;&#x3D; undefined) {
+        if (parent !&#x3D;&#x3D; undefined) model._parent &#x3D; parent;
+        if (resource !&#x3D;&#x3D; undefined) model.attach(resource);
+        if (annots !&#x3D;&#x3D; undefined) model._annotations &#x3D; annots;
+        return model;
+      }
+    }
+
+    const model &#x3D; new Model(data, { parent, resource, annots, reset }) as ODataModel&lt;T&gt;;
+    if (key !&#x3D;&#x3D; undefined) this.pool.set(key.toString(), model);
+    return model;
+  }
+
+  collectionFactory&lt;T&gt;(
+    Collection: typeof ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;,
+    entities: Partial&lt;T&gt;[] | { [name: string]: any }[] &#x3D; [],
+    {
+      parent,
+      resource,
+      annots,
+      model,
+      reset &#x3D; false,
+    }: {
+      parent?: [ODataModel&lt;any&gt;, ODataModelField&lt;any&gt;];
+      resource?:
+        | ODataEntitySetResource&lt;T&gt;
+        | ODataNavigationPropertyResource&lt;T&gt;
+        | ODataPropertyResource&lt;T&gt;;
+      annots?: ODataEntitiesAnnotations&lt;T&gt;;
+      model?: typeof ODataModel;
+      reset?: boolean;
+    } &#x3D; {},
+  ) {
+    return new Collection(entities, { parent, resource, annots, reset, model });
   }
 
   get api() {
@@ -1510,7 +1583,7 @@ export class ODataModelOptions&lt;T&gt; {
           .find((field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; name);
         if (field !&#x3D;&#x3D; undefined) {
           v &#x3D; Types.isPlainObject(v) || ODataModelOptions.isModel(v) ? v[field.name] : v;
-          options &#x3D; this.api.optionsForType(field.type);
+          options &#x3D; field.isStructuredType() ? this.api.optionsForType(field.type) : undefined;
         }
       }
       if (field &#x3D;&#x3D;&#x3D; undefined) return undefined;
@@ -1565,7 +1638,7 @@ export class ODataModelOptions&lt;T&gt; {
         include_navigation: false,
         include_parents: true,
       }).find((field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; ref.property);
-      const meta &#x3D; this.api.optionsForType&lt;any&gt;(attr.type);
+      const meta &#x3D; attr.isStructuredType() ? this.api.optionsForType(attr.type) : undefined;
       const to &#x3D; meta
         ?.fields({ include_navigation: false, include_parents: true })
         .find((field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; ref.referencedProperty);
@@ -1651,6 +1724,7 @@ export class ODataModelOptions&lt;T&gt; {
       return result;
     }
   }
+
   asEntity&lt;R, M extends ODataModel&lt;T&gt;&gt;(self: M, ctx: (model: M) &#x3D;&gt; R): R {
     // Clone query from him or parent
     let query &#x3D; self._resource?.cloneQuery&lt;T&gt;();
@@ -2035,7 +2109,9 @@ export class ODataModelOptions&lt;T&gt; {
 
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
-        const meta &#x3D; this.api.optionsForType&lt;F&gt;(modelField.type);
+        const meta &#x3D; modelField.isStructuredType()
+          ? this.api.optionsForType&lt;F&gt;(modelField.type)
+          : undefined;
         const ref &#x3D; meta?.resolveReferential(attr.get(), attr, {
           resolve: false,
         });

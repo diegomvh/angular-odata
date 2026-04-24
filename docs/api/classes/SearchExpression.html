@@ -1497,7 +1497,7 @@
 import { Types } from &#x27;../../../utils&#x27;;
 import { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import { render, syntax, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
+import { operators, render, Renderable, RenderableFactory } from &#x27;./syntax&#x27;;
 
 export type SearchConnector &#x3D; &#x27;AND&#x27; | &#x27;OR&#x27;;
 
@@ -1597,7 +1597,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
             negated: this._negated,
           });
           if (exp.length() &gt; 1) {
-            children.push(syntax.group(exp));
+            children.push(operators.group(exp));
           } else {
             children.push(exp);
           }
@@ -1609,7 +1609,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
       ) {
         children &#x3D; [...children, ...node.children()];
       } else {
-        children.push(syntax.group(node));
+        children.push(operators.group(node));
       }
       this._connector &#x3D; connector;
       this._children &#x3D; children;
@@ -1621,7 +1621,7 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
       this._children &#x3D; [...this._children, ...node.children()];
     } else {
       this._children.push(
-        node instanceof SearchExpression &amp;&amp; !node.negated() ? syntax.group(node) : node,
+        node instanceof SearchExpression &amp;&amp; !node.negated() ? operators.group(node) : node,
       );
     }
     return this;

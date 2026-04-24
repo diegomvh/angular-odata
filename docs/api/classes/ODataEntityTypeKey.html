@@ -560,7 +560,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
         additionalItems: false,
       };
     if (options?.map !&#x3D;&#x3D; undefined) {
-      schema &#x3D; options.map(schema, parent);
+      schema &#x3D; options.map(this, schema, parent);
     }
     return schema;
   }
@@ -935,7 +935,7 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
             options?.expand &amp;&amp; f.name in options?.expand
               ? (options?.expand as any)[f.name]
               : undefined;
-          let child &#x3D; f.toJsonSchema({...expand, map: options?.map}, schema);
+          let child &#x3D; f.toJsonSchema({ ...expand, map: options?.map }, schema);
           if (options?.custom &amp;&amp; f.name in options?.custom)
             child &#x3D; (
               options?.custom[f.name as keyof T] as (
@@ -948,7 +948,7 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
         .reduce((acc, v) &#x3D;&gt; Object.assign(acc, v), {}),
     );
     if (options?.map !&#x3D;&#x3D; undefined) {
-      schema &#x3D; options.map(schema, parent);
+      schema &#x3D; options.map(this, schema, parent);
     }
     return schema;
   }

@@ -116,6 +116,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ArithmeticOperators.html" data-type="entity-link" >ArithmeticOperators</a>
                             </li>
                             <li class="link">
+                                <a href="classes/Casting.html" data-type="entity-link" >Casting</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/CastingOperators.html" data-type="entity-link" >CastingOperators</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/CollectionFunctions.html" data-type="entity-link" >CollectionFunctions</a>
                             </li>
                             <li class="link">
