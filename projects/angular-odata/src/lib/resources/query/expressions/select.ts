@@ -1,11 +1,12 @@
 import { Parser, ParserOptions } from '../../../types';
 import { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { FieldFactory, Renderable, RenderableFactory } from './syntax';
+import { FieldFactory, ODataOperators, operators, Renderable, RenderableFactory } from './syntax';
 
 export type SelectExpressionBuilder<T> = {
   t: Required<T>;
   e: () => SelectExpression<T>;
+  o: ODataOperators<T>;
 };
 export class SelectExpression<T> extends Expression<T> {
   constructor({
@@ -31,6 +32,7 @@ export class SelectExpression<T> extends Expression<T> {
       {
         t: FieldFactory<Required<T>>(),
         e: () => new SelectExpression<T>(),
+        o: operators as ODataOperators<T>,
       },
       current ?? new SelectExpression<T>(),
     ) as SelectExpression<T>;

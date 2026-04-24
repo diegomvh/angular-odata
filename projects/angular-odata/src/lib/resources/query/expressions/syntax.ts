@@ -123,6 +123,8 @@ export const RenderableFactory = (value: any): Renderable => {
         return Lambda.fromJson(value);
       case 'Type':
         return Type.fromJson(value);
+      case 'Casting':
+        return Casting.fromJson(value);
       case 'Field':
         return FieldFactory(value['names']);
       default:
@@ -145,7 +147,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
 }
 
 export function render(
-  value: any,
+  value: any, 
   {
     aliases,
     normalize,
@@ -163,7 +165,7 @@ export function render(
   } = {},
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
-    return render(value(syntax), {
+    return render(value({o: operators, f: functions}), {
       aliases,
       normalize,
       prefix,
@@ -647,6 +649,14 @@ export class GroupingOperators<T> {
   }
 }
 
+export class CastingOperators<T> {
+  cast<N>(left: T | string, type?: string): N {
+    return FieldFactory<Required<N>>([
+      type !== undefined ? new Casting<T>(type, left) : new Casting<T>(left as string),
+    ]);
+  }
+}
+
 export type AggregateMethod = 'sum' | 'min' | 'max' | 'average' | 'countdistinct'; //, or with custom aggregation methods;
 
 export class Aggregate<T> implements Renderable {
@@ -885,6 +895,63 @@ export class Type<T> implements Renderable {
   }
 }
 
+export class Casting<T> implements Renderable {
+  constructor(
+    protected type: string,
+    protected value?: any,
+  ) {}
+  get [Symbol.toStringTag]() {
+    return 'Casting';
+  }
+
+  toJson() {
+    return {
+      $type: Types.rawType(this),
+      type: this.type,
+      value: this.value,
+    };
+  }
+
+  static fromJson<T>(json: { [name: string]: any }): Casting<T> {
+    return new Casting<T>(json['type'], RenderableFactory(json['value']));
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+    parser,
+    options,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+    parser?: Parser<T>;
+    options?: ParserOptions;
+  }): string {
+    let value;
+    if (this.value) {
+      parser = resolve([this.value], parser);
+      let [left, right] = encode([this.value], parser, options);
+
+      value = render(left, { aliases, escape, prefix, parser, options });
+    }
+    return value ? `${this.value}/${this.type}` : `${this.type}`;
+  }
+
+  clone() {
+    return new Type(this.type, Objects.clone(this.value));
+  }
+
+  resolve(parser: any) {
+    parser =
+      parser instanceof ODataStructuredTypeFieldParser && parser.isStructuredType()
+        ? parser.structuredType()
+        : parser;
+    return parser?.findChildParser((p: any) => p.isTypeOf(this.type));
+  }
+}
+
 export class Lambda<T> implements Renderable {
   constructor(
     protected op: string,
@@ -968,22 +1035,26 @@ export class LambdaOperators<T> {
 
 export class ODataOperators<T> {}
 export interface ODataOperators<T>
-  extends LogicalOperators<T>,
-    ArithmeticOperators<T>,
-    GroupingOperators<T>,
+  extends 
+    LogicalOperators<T>, 
+    ArithmeticOperators<T>, 
+    GroupingOperators<T>, 
+    CastingOperators<T>, 
     LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
   ArithmeticOperators,
   GroupingOperators,
+  CastingOperators,
   LambdaOperators,
 ]);
 export const operators: ODataOperators<any> = new ODataOperators<any>();
 
 export class ODataFunctions<T> {}
 export interface ODataFunctions<T>
-  extends StringAndCollectionFunctions<T>,
+  extends
+    StringAndCollectionFunctions<T>,
     CollectionFunctions<T>,
     StringFunctions<T>,
     DateAndTimeFunctions<T>,
@@ -1009,12 +1080,3 @@ export interface ODataTransformations<T> extends Transformations<T> {}
 
 applyMixins(ODataTransformations, [Transformations]);
 export const transformations: ODataTransformations<any> = new ODataTransformations<any>();
-
-export class ODataSyntax<T> {}
-export interface ODataSyntax<T>
-  extends ODataOperators<T>,
-    ODataFunctions<T>,
-    ODataTransformations<T> {}
-applyMixins(ODataSyntax, [ODataOperators, ODataFunctions, ODataTransformations]);
-
-export const syntax: ODataSyntax<any> = new ODataSyntax<any>();

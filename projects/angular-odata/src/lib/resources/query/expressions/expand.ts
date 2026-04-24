@@ -7,7 +7,7 @@ import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
 import { SearchExpression, SearchExpressionBuilder } from './search';
 import { SelectExpression, SelectExpressionBuilder } from './select';
-import { FieldFactory, render, Renderable, RenderableFactory, resolve } from './syntax';
+import { FieldFactory, ODataOperators, operators, render, Renderable, RenderableFactory, resolve } from './syntax';
 
 export class ExpandField<T> implements Renderable {
   constructor(
@@ -193,6 +193,7 @@ export class ExpandField<T> implements Renderable {
 export type ExpandExpressionBuilder<T> = {
   t: Required<T>;
   e: () => ExpandExpression<T>;
+  o: ODataOperators<T>;
 };
 export class ExpandExpression<T> extends Expression<T> {
   constructor({
@@ -218,6 +219,7 @@ export class ExpandExpression<T> extends Expression<T> {
       {
         t: FieldFactory<Required<T>>(),
         e: () => new ExpandExpression<T>(),
+        o: operators as ODataOperators<T>,
       },
       current ?? new ExpandExpression<T>(),
     ) as ExpandExpression<T>;

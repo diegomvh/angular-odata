@@ -2,7 +2,7 @@ import { Parser, ParserOptions } from '../../../types';
 import { Types } from '../../../utils';
 import { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { render, syntax, Renderable, RenderableFactory } from './syntax';
+import { operators, render, Renderable, RenderableFactory } from './syntax';
 
 export type SearchConnector = 'AND' | 'OR';
 
@@ -102,7 +102,7 @@ export class SearchExpression<T> extends Expression<T> {
             negated: this._negated,
           });
           if (exp.length() > 1) {
-            children.push(syntax.group(exp));
+            children.push(operators.group(exp));
           } else {
             children.push(exp);
           }
@@ -114,7 +114,7 @@ export class SearchExpression<T> extends Expression<T> {
       ) {
         children = [...children, ...node.children()];
       } else {
-        children.push(syntax.group(node));
+        children.push(operators.group(node));
       }
       this._connector = connector;
       this._children = children;
@@ -126,7 +126,7 @@ export class SearchExpression<T> extends Expression<T> {
       this._children = [...this._children, ...node.children()];
     } else {
       this._children.push(
-        node instanceof SearchExpression && !node.negated() ? syntax.group(node) : node,
+        node instanceof SearchExpression && !node.negated() ? operators.group(node) : node,
       );
     }
     return this;
