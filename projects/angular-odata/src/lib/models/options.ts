@@ -1020,7 +1020,7 @@ export class ODataModelOptions<T> {
     let resource: ODataResource<any> | null = null;
     let prevField: ODataModelField<any> | null = null;
     for (const [model, field] of ODataModelOptions.chain(child)) {
-      resource = resource || (model._resource as ODataResource<T>);
+      resource = resource || (model._resource?.clone() as ODataResource<T>);
       if (resource === null) break;
       if (ODataModelOptions.isModel(model) && (prevField === null || prevField.collection)) {
         const m = model as ODataModel<any>;
@@ -1318,10 +1318,8 @@ export class ODataModelOptions<T> {
   }
 
   asEntity<R, M extends ODataModel<T>>(self: M, ctx: (model: M) => R): R {
-    // Clone query from him or parent
-    let query = self._resource?.cloneQuery<T>();
-    if (query === undefined && self._parent && self._parent[0] instanceof ODataCollection)
-      query = self._parent[0]._resource?.cloneQuery<T>();
+    // Clone query from resource
+    let query = self.resource()?.cloneQuery<T>();
     // Build new resource
     const resource = this.modelResourceFactory(query);
     return this.withResource(self, resource, ctx);
