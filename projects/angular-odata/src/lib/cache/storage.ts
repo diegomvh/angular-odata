@@ -93,4 +93,8 @@ export class ODataInStorageCache extends ODataBaseCache {
 
     return data !== undefined ? ODataResponse.fromJson(req, data) : undefined;
   }
+
+  override size() {
+    return Object.keys(this.storage).filter(k => k.startsWith(this.prefix)).length;
+  }
 }

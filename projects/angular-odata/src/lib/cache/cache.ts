@@ -97,5 +97,6 @@ export abstract class ODataBaseCache implements ODataCache {
   abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
   abstract forget({ name, scope, tags}: { name?: string; scope?: string[]; tags?: string[] }): void;
   abstract flush(): void;
+  abstract size(): number;
 
 }

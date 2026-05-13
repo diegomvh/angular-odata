@@ -91,4 +91,8 @@ export class ODataInMemoryCache extends ODataBaseCache {
   override flush() {
     this.entries = new Map<string, ODataCacheEntry<any>>();
   }
+
+  override size() {
+    return this.entries.size;
+  }
 }
