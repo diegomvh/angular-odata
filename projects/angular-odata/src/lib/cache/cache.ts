@@ -18,15 +18,19 @@ export interface ODataCacheEntry<T> {
 
 export abstract class ODataBaseCache implements ODataCache {
   maxAge: number;
-  entries: Map<string, ODataCacheEntry<any>>;
 
   constructor({ maxAge = DEFAULT_MAXAGE }: { maxAge?: number }) {
     this.maxAge = maxAge;
-    this.entries = new Map<string, ODataCacheEntry<any>>();
   }
 
-  abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
-  abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
+  /**
+   * Check if the entry is expired
+   * @param entry The cache entry
+   * @returns Boolean indicating if the entry is expired
+   */
+  isExpired(entry: ODataCacheEntry<any>) {
+    return entry.date < (Date.now() - entry.maxAge);
+  }
 
   /**
    * Using the resource on the request build an array of string to identify the scope of the request
@@ -87,71 +91,11 @@ export abstract class ODataBaseCache implements ODataCache {
     return names.join(CACHE_KEY_SEPARATOR);
   }
 
-  /**
-   * Put some payload in the cache
-   * @param name The name for the entry
-   * @param payload The payload to store in the cache
-   * @param maxAge The maximum age for the entry
-   * @param scope The scope for the entry
-   * @param tags The tags for the entry
-   */
-  put<T>(
-    name: string,
-    payload: T,
-    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] } = {},
-  ) {
-    const entry = this.buildEntry<T>(payload, { maxAge, tags });
-    const key = this.buildKey([...(scope ?? []), name]);
-    this.entries.set(key, entry);
-  }
+  abstract put<T>(name: string, payload: T, { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] }): void;
+  abstract get<T>(name: string, { scope }: { scope?: string[] }): T | undefined;
+  abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
+  abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
+  abstract forget({ name, scope, tags}: { name?: string; scope?: string[]; tags?: string[] }): void;
+  abstract flush(): void;
 
-  /**
-   * Return the payload from the cache if it exists and is not expired
-   * @param name The name of the entry
-   * @param scope The scope of the entry
-   * @returns The payload of the entry
-   */
-  get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
-    const key = this.buildKey([...(scope || []), name]);
-    const entry = this.entries.get(key);
-    return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
-  }
-
-  /**
-   * Remove all cache entries that are matching with the given options
-   * @param options The options to forget
-   */
-  forget({
-    name,
-    scope = [],
-    tags = [],
-  }: { name?: string; scope?: string[]; tags?: string[] } = {}) {
-    if (name !== undefined) scope.push(name);
-    const key = scope.length > 0 ? this.buildKey(scope) : undefined;
-    this.entries.forEach((entry, k) => {
-      if (
-        this.isExpired(entry) || // Expired
-        (key !== undefined && k.startsWith(key)) || // Key
-        (tags.length > 0 && tags.some((t) => entry.tags.indexOf(t) !== -1)) // Tags
-      ) {
-        this.entries.delete(k);
-      }
-    });
-  }
-
-  /**
-   * Remove all cache entries
-   */
-  flush() {
-    this.entries = new Map<string, ODataCacheEntry<any>>();
-  }
-
-  /**
-   * Check if the entry is expired
-   * @param entry The cache entry
-   * @returns Boolean indicating if the entry is expired
-   */
-  isExpired(entry: ODataCacheEntry<any>) {
-    return entry.date < Date.now() - entry.maxAge;
-  }
 }

@@ -2,59 +2,69 @@ import { ODataRequest, ODataResponse, ODataResponseJson } from '../resources';
 import { ODataBaseCache, ODataCacheEntry } from './cache';
 
 export class ODataInStorageCache extends ODataBaseCache {
-  name: string;
+  prefix: string;
   storage: Storage;
 
   constructor({
-    name,
+    prefix,
     storage = sessionStorage,
     maxAge,
   }: {
     maxAge?: number;
-    name: string;
+    prefix: string;
     storage?: Storage;
   }) {
     super({ maxAge });
-    this.name = name;
+    this.prefix = prefix;
     this.storage = storage;
-    this.restore();
-    window.addEventListener('beforeunload', () => this.store());
   }
 
-  /**
-   * Store the cache in the storage
-   */
-  store() {
-    this.storage.setItem(
-      this.name,
-      JSON.stringify(
-        Array.from(this.entries.entries()).map(([key, entry]) => [
-          key,
-          {
-            ...entry,
-            payload:
-              entry.payload instanceof ODataResponse ? entry.payload.toJson() : entry.payload,
-          } as ODataCacheEntry<any>,
-        ]),
-      ),
-    );
+  override buildKey(names: string[]): string {
+    return super.buildKey([this.prefix, ...names]);
   }
 
-  /**
-   * Restore the cache from the storage
-   */
-  restore() {
-    this.entries = new Map<string, ODataCacheEntry<any>>(
-      JSON.parse(this.storage.getItem(this.name) || '[]'),
-    );
+  override put<T>(
+    name: string,
+    payload: T,
+    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] } = {},
+  ) {
+    const entry = this.buildEntry<T>(payload, { maxAge, tags });
+    const key = this.buildKey([...(scope ?? []), name]);
+    this.storage.setItem(key, JSON.stringify(entry));
+  }
+
+  override get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
+    const key = this.buildKey([...(scope || []), name]);
+    const entry = JSON.parse(this.storage.getItem(key) ?? "{}");
+    return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
+  }
+
+  override forget({
+    name,
+    scope = [],
+    tags = [],
+  }: { name?: string, scope?: string[]; tags?: string[] }) {
+    if (name) scope.push(name);
+    const key = scope.length > 0 ? this.buildKey(scope) : undefined;
+    Object.keys(this.storage).filter(k => k.startsWith(this.prefix)).forEach(k => {
+      const entry = JSON.parse(this.storage.getItem(k) ?? "{}");
+      if (
+        this.isExpired(entry) || // Expired
+        (key !== undefined && k.startsWith(key)) || // Key
+        (tags.length > 0 && tags.some((t) => entry.tags.indexOf(t) !== -1)) // Tags
+      ) {
+        this.storage.removeItem(k);
+      }
+    });
   }
 
   /**
    * Flush the cache and clean the storage
    */
   override flush() {
-    super.flush();
-    this.store();
+    Object.keys(this.storage).filter(k => k.startsWith(this.prefix)).forEach(k => {
+      this.storage.removeItem(k);
+    });
   }
 
   /**
@@ -65,7 +75,7 @@ export class ODataInStorageCache extends ODataBaseCache {
   override putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     const scope = this.scope(req);
     const tags = this.tags(res);
-    this.put<ODataResponse<any>>(req.cacheKey, res, {
+    this.put<ODataResponseJson<any>>(req.cacheKey, res.toJson(), {
       maxAge: req.maxAge ?? res.options.maxAge,
       scope,
       tags,
@@ -81,10 +91,6 @@ export class ODataInStorageCache extends ODataBaseCache {
     const scope = this.scope(req);
     const data = this.get<ODataResponseJson<any>>(req.cacheKey, { scope });
 
-    return data instanceof ODataResponse
-      ? data
-      : data !== undefined
-        ? ODataResponse.fromJson(req, data)
-        : undefined;
+    return data !== undefined ? ODataResponse.fromJson(req, data) : undefined;
   }
 }
