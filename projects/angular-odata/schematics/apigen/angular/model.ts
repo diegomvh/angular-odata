@@ -30,6 +30,9 @@ export class ModelField {
     if (enumType !== undefined) {
       type = enumType.importedName(imports)!;
       type += this.edmType.Collection ? '[]' : '';
+      if (!this.edmType.Collection && enumType.isFlags() && !enumType.hasValue(0)) {
+        type += ' | 0';
+      }
     } else if (entityType !== undefined) {
       if (this.edmType.Collection) {
         const collection = pkg.findCollection(this.edmType.Type);

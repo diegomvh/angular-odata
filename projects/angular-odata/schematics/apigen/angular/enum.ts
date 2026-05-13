@@ -47,8 +47,11 @@ export class Enum extends Base {
   public members() {
     return this.edmType.Member.map((m) => `${m.Name} = ${m.Value}`);
   }
-  public flags() {
+  public isFlags() {
     return this.edmType.IsFlags;
+  }
+  public hasValue(value: number) {
+    return this.edmType.Member.some(m => m.Value === value);
   }
   public override importTypes(): string[] {
     return [];
