@@ -592,7 +592,9 @@ export class ODataMetadataParser {
   }
 
   protected propertyValueToBoolean(attributeValue?: string) {
-    return attributeValue !== undefined ? attributeValue === 'true' : false;
+    return attributeValue !== undefined && attributeValue === 'true' ?  true : 
+      attributeValue !== undefined && attributeValue === 'false' ? false :
+      undefined;
   }
 
   protected propertyValueToDate(attributeValue?: string) {
