@@ -138,8 +138,8 @@ export class ODataEnumTypeParser<E> extends ODataAnnotatable implements FieldPar
             title: this.name,
             uniqueItems: true,
             items: {
-              type: JsonSchemaType.string,
-              enum: this._fields.map((f) => f.name),
+              type: JsonSchemaType.integer,
+              enum: this._fields.map((f) => f.value),
             },
           }
         : {
