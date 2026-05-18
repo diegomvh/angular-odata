@@ -584,7 +584,7 @@ export class ODataMetadataParser {
 
   protected getAttributeValue(attributes: NamedNodeMap, attributeName: string) {
     const attribute: Attr | null = attributes.getNamedItem(attributeName);
-    return attribute !== null && attribute.nodeValue ? attribute.nodeValue : undefined;
+    return attribute !== null && attribute.nodeValue != null ? attribute.nodeValue : undefined;
   }
 
   protected propertyValueToNumber(attributeValue?: string) {

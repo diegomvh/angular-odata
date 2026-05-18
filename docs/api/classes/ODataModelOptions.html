@@ -760,8 +760,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1730"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1730</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1728"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1728</a></div>
                         </td>
                     </tr>
 
@@ -1022,8 +1022,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1488"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1488</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1486"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1486</a></div>
                         </td>
                     </tr>
 
@@ -1929,8 +1929,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1556"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1556</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1554"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1554</a></div>
                         </td>
                     </tr>
 
@@ -2169,8 +2169,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1552"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1552</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1550"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1550</a></div>
                         </td>
                     </tr>
 
@@ -2312,8 +2312,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1548"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1548</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1546"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1546</a></div>
                         </td>
                     </tr>
 
@@ -2916,8 +2916,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1460"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1460</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1458"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1458</a></div>
                         </td>
                     </tr>
 
@@ -3357,8 +3357,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1587"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1587</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1585"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1585</a></div>
                         </td>
                     </tr>
 
@@ -3477,8 +3477,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1330"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1330</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1328"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:1328</a></div>
                         </td>
                     </tr>
 
@@ -4921,7 +4921,7 @@ export class ODataModelOptions&lt;T&gt; {
     let resource: ODataResource&lt;any&gt; | null &#x3D; null;
     let prevField: ODataModelField&lt;any&gt; | null &#x3D; null;
     for (const [model, field] of ODataModelOptions.chain(child)) {
-      resource &#x3D; resource || (model._resource as ODataResource&lt;T&gt;);
+      resource &#x3D; resource || (model._resource?.clone() as ODataResource&lt;T&gt;);
       if (resource &#x3D;&#x3D;&#x3D; null) break;
       if (ODataModelOptions.isModel(model) &amp;&amp; (prevField &#x3D;&#x3D;&#x3D; null || prevField.collection)) {
         const m &#x3D; model as ODataModel&lt;any&gt;;
@@ -5219,10 +5219,8 @@ export class ODataModelOptions&lt;T&gt; {
   }
 
   asEntity&lt;R, M extends ODataModel&lt;T&gt;&gt;(self: M, ctx: (model: M) &#x3D;&gt; R): R {
-    // Clone query from him or parent
-    let query &#x3D; self._resource?.cloneQuery&lt;T&gt;();
-    if (query &#x3D;&#x3D;&#x3D; undefined &amp;&amp; self._parent &amp;&amp; self._parent[0] instanceof ODataCollection)
-      query &#x3D; self._parent[0]._resource?.cloneQuery&lt;T&gt;();
+    // Clone query from resource
+    let query &#x3D; self.resource()?.cloneQuery&lt;T&gt;();
     // Build new resource
     const resource &#x3D; this.modelResourceFactory(query);
     return this.withResource(self, resource, ctx);

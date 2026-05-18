@@ -413,6 +413,7 @@ export interface ODataCache {
   forget({ name, scope, tags }: { name?: string; scope?: string[]; tags?: string[] }): void;
   scope(obj: ODataRequest&lt;any&gt;): string[];
   tags(obj: ODataResponse&lt;any&gt;): string[];
+  size(): number;
 }
 
 export interface ODataApiConfigOptions {

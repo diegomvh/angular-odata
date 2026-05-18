@@ -201,6 +201,12 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="#size" 
+>
+                                        size
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="#tags" 
 >
                                         tags
@@ -724,6 +730,43 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="size"></a>
+                    <span class="name">
+                        <span ><b>size</b></span>
+                        <a href="#size"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>size()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="195"
+                                    class="link-to-prism">projects/angular-odata/src/lib/types.ts:195</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="tags"></a>
                     <span class="name">
                         <span ><b>tags</b></span>
@@ -987,6 +1030,7 @@ export interface ODataCache {
   forget({ name, scope, tags }: { name?: string; scope?: string[]; tags?: string[] }): void;
   scope(obj: ODataRequest&lt;any&gt;): string[];
   tags(obj: ODataResponse&lt;any&gt;): string[];
+  size(): number;
 }
 
 export interface ODataApiConfigOptions {
