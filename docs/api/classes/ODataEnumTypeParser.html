@@ -1771,8 +1771,8 @@ export class ODataEnumTypeParser&lt;E&gt; extends ODataAnnotatable implements Fi
             title: this.name,
             uniqueItems: true,
             items: {
-              type: JsonSchemaType.string,
-              enum: this._fields.map((f) &#x3D;&gt; f.name),
+              type: JsonSchemaType.integer,
+              enum: this._fields.map((f) &#x3D;&gt; f.value),
             },
           }
         : {
