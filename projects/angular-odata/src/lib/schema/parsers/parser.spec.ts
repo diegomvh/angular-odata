@@ -177,9 +177,9 @@ describe('ODataClient', () => {
   it('should serialize flags', () => {
     const parser = client.parserForType(`${NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
-    expect(parser.serialize(<FlagEnums>3)).toEqual('Flag1, Flag2');
+    expect(parser.serialize(<FlagEnums>3)).toEqual('Flag1,Flag2');
     expect(parser.serialize(<FlagEnums>0)).toEqual('0');
-    expect(parser.serialize(FlagEnums.Flag1 | FlagEnums.Flag4)).toEqual('Flag1, Flag4');
+    expect(parser.serialize(FlagEnums.Flag1 | FlagEnums.Flag4)).toEqual('Flag1,Flag4');
   });
 
   it('should deserialize flags', () => {
