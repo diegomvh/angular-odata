@@ -66,11 +66,11 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataPropertyResource.fromResource<P>(this, path);
   }
 
-  action<P, R>(path: string) {
+  action<P, R>(path: string): ODataActionResource<P, R> {
     return ODataActionResource.fromResource<P, R>(this, path);
   }
 
-  function<P, R>(path: string) {
+  function<P, R>(path: string): ODataFunctionResource<P, R> {
     return ODataFunctionResource.fromResource<P, R>(this, path);
   }
 
