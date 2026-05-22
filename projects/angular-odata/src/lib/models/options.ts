@@ -1023,22 +1023,13 @@ export class ODataModelOptions<T> {
     let resource: ODataResource<any> | null = null;
     let prevField: ODataModelField<any> | null = null;
     for (const [model, field] of ODataModelOptions.chain(child)) {
-      resource = resource || (model._resource?.clone() as ODataResource<T>);
+      resource = field !== null ? 
+          (field.collection ? field.options.collectionResourceFactory() : field.options.modelResourceFactory()) :
+          (resource ?? (model._resource?.clone() as ODataResource<T>));
       if (resource === null) break;
       if (ODataModelOptions.isModel(model) && (prevField === null || prevField.collection)) {
-        const m = model as ODataModel<any>;
-        // Resolve subtype if collection not is from field
-        // FIXME
-        /*
-        if (field === null) {
-          const r = m._meta.modelResourceFactory(resource.cloneQuery<T>());
-          if (r !== null && !r.isTypeOf(resource) && r.isSubtypeOf(resource)) {
-            resource = r;
-          }
-        }
-        */
-        // Resolve key
-        const mKey = m.key({ field_mapping: true }) as EntityKey<any>;
+        // Resolve Key
+        const mKey = (model as ODataModel<any>).key({ field_mapping: true }) as EntityKey<any>;
         if (mKey !== undefined) {
           resource =
             resource instanceof ODataEntitySetResource
