@@ -636,10 +636,9 @@ export class ODataModel<T> {
   //#endregion
 
   // Cast
-  cast<S>(type: string, ModelType?: typeof ODataModel): ODataModel<T> & ModelInterface<T>;
-  cast<S, M extends ODataModel<S>>(type: string, ModelType?: typeof ODataModel): M;
-  cast<S>(type: string, ModelType?: typeof ODataModel) {
-    //: ODataModel<S> {
+  cast<S>(type: string, ModelType?: typeof ODataModel<S>): ODataModel<S> & ModelInterface<S>;
+  cast<S, M extends ODataModel<S>>(type: string, ModelType?: typeof ODataModel<S>): M;
+  cast<S>(type: string, ModelType?: typeof ODataModel<S>) {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource))
       throw new Error(`cast: Can't cast to derived model without ODataEntityResource`);
