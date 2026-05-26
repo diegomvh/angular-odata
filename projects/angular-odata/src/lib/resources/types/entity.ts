@@ -74,19 +74,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataFunctionResource.fromResource<P, R>(this, path);
   }
 
-  cast<C>(type: string) {
-    const thisType = this.incomingType();
-    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
-    // Downcast
-    const castSchema = baseSchema?.findChildSchema((s) => s.type() === type);
-    if (castSchema !== undefined && baseSchema !== undefined && !castSchema.isSubtypeOf(baseSchema))
-      throw new Error(`cast: Cannot cast to ${type}`);
-    const segments = this.cloneSegments();
-    segments.add(PathSegment.type, type).incomingType(type);
-    return new ODataEntityResource<C>(this.api, {
-      segments,
-      query: this.cloneQuery<C>(),
-    });
+  override cast<C>(type: string): ODataEntityResource<C> {
+    return super.cast(type) as ODataEntityResource<C>;
   }
 
   //#region Requests

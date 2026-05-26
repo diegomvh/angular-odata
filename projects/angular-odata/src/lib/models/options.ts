@@ -1020,27 +1020,31 @@ export class ODataModelOptions<T> {
     let resource: ODataResource<any> | null = null;
     let prevField: ODataModelField<any> | null = null;
     for (const [model, field] of ODataModelOptions.chain(child)) {
-      resource = field !== null ? 
-          (field.collection ? field.options.collectionResourceFactory() : field.options.modelResourceFactory()) :
-          (resource ?? (model._resource?.clone() as ODataResource<T>));
+      resource = resource ?? (model._resource?.clone() as ODataResource<T>);
+      // Break if no resource
       if (resource === null) break;
-      if (ODataModelOptions.isModel(model) && (prevField === null || prevField.collection)) {
-        // Resolve Key
-        const mKey = (model as ODataModel<any>).key({ field_mapping: true }) as EntityKey<any>;
-        if (mKey !== undefined) {
+      // Resolve Key 
+      if ((prevField === null || prevField.collection) && ODataModelOptions.isModel(model) && (model as ODataModel<any>)._meta.isEntityType()) {
+        const key = (model as ODataModel<any>).key({ field_mapping: true }) as EntityKey<any>;
+        if (key !== undefined) {
           resource =
             resource instanceof ODataEntitySetResource
-              ? resource.entity(mKey)
-              : (resource as ODataEntityResource<T>).key(mKey);
+              ? resource.entity(key)
+              : (resource as ODataEntityResource<T>).key(key);
         }
       }
-      prevField = field;
-      if (field === null && model._resource !== null) {
-        // Apply the query from model to new resource
-        model._resource.query((qs) => resource?.query((qd) => qd.restore(qs.store())));
-      } else if (field !== null) {
+      if (field !== null) {
+        // Resolve Structured Type Cast
+        if (resource.structuredType() !== field.options.structuredType) {
+          resource = resource.cast<any>(field.options.structuredType.type());
+        }
+        // Build Resource from field
         resource = field.resourceFactory<any, any>(resource);
+      } else if (model._resource !== null) {
+        // Apply parameters from model._resource to new resource
+        model._resource.query((qs) => resource?.query((qd) => qd.restore(qs.store())));
       }
+      prevField = field;
     }
     return resource;
   }

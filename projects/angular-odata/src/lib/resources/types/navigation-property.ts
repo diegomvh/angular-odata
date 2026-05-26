@@ -137,18 +137,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     });
   }
 
-  cast<C>(type: string) {
-    const thisType = this.incomingType();
-    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
-    const castSchema = this.api.findStructuredType<C>(type);
-    if (castSchema !== undefined && baseSchema !== undefined && !castSchema.isSubtypeOf(baseSchema))
-      throw new Error(`Cannot cast to ${type}`);
-    const segments = this.cloneSegments();
-    segments.add(PathSegment.type, type).incomingType(type);
-    return new ODataNavigationPropertyResource<C>(this.api, {
-      segments,
-      query: this.cloneQuery<C>(),
-    });
+  override cast<C>(type: string): ODataNavigationPropertyResource<C> {
+    return super.cast(type) as ODataNavigationPropertyResource<C>;
   }
 
   //#region Requests
