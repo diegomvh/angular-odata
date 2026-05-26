@@ -323,6 +323,21 @@ export class ODataResource<T> {
     });
   }
 
+  cast<C>(type: string) {
+    const Ctor = this.constructor as typeof ODataResource;
+    const thisType = this.incomingType();
+    const baseSchema = thisType !== undefined ? this.api.structuredType(thisType) : undefined;
+    const castSchema = this.api.findStructuredType<C>(type);
+    if (castSchema !== undefined && baseSchema !== undefined && !castSchema.isSubtypeOf(baseSchema))
+      throw new Error(`cast: Cannot cast to ${type}`);
+    const segments = this.cloneSegments();
+    segments.add(PathSegment.type, type).incomingType(type);
+    return new Ctor<C>(this.api, {
+      segments,
+      query: this.cloneQuery<C>(),
+    });
+  }
+
   private __parser(
     value: any,
     options?: ParserOptions,

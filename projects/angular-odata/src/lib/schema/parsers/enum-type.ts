@@ -110,8 +110,8 @@ export class ODataEnumTypeParser<E> extends ODataAnnotatable implements FieldPar
       let names = this.fields(value as number).map((f) => f.name);
       if (names.length === 0) names = [`${value}`];
       return !parserOptions?.stringAsEnum
-        ? `${this.namespace}.${this.name}'${names.join(', ')}'`
-        : names.join(', ');
+        ? `${this.namespace}.${this.name}'${names.join(',')}'`
+        : names.join(',');
     } else {
       let name = this.field(value as number)?.name;
       if (name === undefined) name = `${value}`;
