@@ -1035,8 +1035,14 @@ export class ODataModelOptions<T> {
       }
       if (field !== null) {
         // Resolve Structured Type Cast
-        if (resource.structuredType() !== field.options.structuredType) {
-          resource = resource.cast<any>(field.options.structuredType.type());
+        const resourceType = resource.structuredType();
+        const fieldType = field.options.structuredType;
+        if (resourceType !== undefined && 
+          fieldType !== undefined && 
+          fieldType !== resourceType && 
+          fieldType.isSubtypeOf(resourceType)
+        ) {
+          resource = resource.cast<any>(fieldType.type());
         }
         // Build Resource from field
         resource = field.resourceFactory<any, any>(resource);

@@ -300,22 +300,12 @@ export class ODataApi {
       withCredentials: options.withCredentials,
     });
 
-    let res$ = this.requester !== undefined ? this.requester(req) : NEVER;
-
-    res$ = res$.pipe(
-      map((res: HttpEvent<any>) =>
-        res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res,
-      ),
-    );
+    let res$ = this.handleRequest(req);
 
     if (this.errorHandler !== undefined) res$ = res$.pipe(catchError(this.errorHandler));
 
     if (options.observe === 'events') {
       return res$;
-    }
-
-    if (this.cache !== undefined) {
-      res$ = this.handleRequest(req, res$);
     }
 
     switch (options.observe || 'body') {
@@ -345,54 +335,55 @@ export class ODataApi {
   /**
    * Using the request, handle the fetching of the response
    * @param req The request to fetch
-   * @param res$ Observable of the response
    * @returns
    */
   private handleRequest(
     req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
-    return req.isFetch()
-      ? this.handleFetch(req, res$)
-      : req.isMutate()
-        ? this.handleMutate(req, res$)
-        : res$;
+  ): Observable<any> {
+    return (this.cache !== undefined && req.isFetch()) ? this.handleCacheFetch(req) : 
+      (this.cache !== undefined && req.isMutate()) ? this.handleCacheMutate(req) :
+      this.handleRequester(req);
   }
 
-  private handleFetch(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
+  private handleRequester(req:ODataRequest<any>) {
+    return (this.requester !== undefined ? this.requester(req) : NEVER).pipe(
+      map((res: HttpEvent<any>) =>
+        res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res,
+      ),
+    );
+  }
+
+  private handleCacheFetch(req: ODataRequest<any>): Observable<any> {
     const policy = req.fetchPolicy;
     const cached = this.cache!.getResponse(req);
     if (policy === 'no-cache') {
-      return res$;
+      return this.handleRequester(req);
     }
     if (policy === 'cache-only') {
-      if (cached) {
+      if (cached !== undefined) {
         return of(cached);
       } else {
         return throwError(() => new Error('No Cached'));
       }
     }
-    if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
+    let res$: Observable<any> = cached !== undefined && policy !== 'network-only'
+      ? policy === 'cache-and-network'
+        ? this.handleRequester(req).pipe(startWith(cached))
+        : of(cached)
+      : this.handleRequester(req);
+    if (cached === undefined && (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only')) {
       res$ = res$.pipe(
-        tap((res: ODataResponse<any>) => {
-          if (res.options.cacheability !== 'no-store') this.cache!.putResponse(req, res);
+        tap((res: ODataResponse<any>) => { 
+          if (res.options.cacheability !== 'no-store') {
+            this.cache!.putResponse(req, res);
+          }
         }),
       );
     }
-    return cached !== undefined && policy !== 'network-only'
-      ? policy === 'cache-and-network'
-        ? res$.pipe(startWith(cached))
-        : of(cached)
-      : res$;
+    return res$;
   }
 
-  private handleMutate(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>,
-  ): Observable<ODataResponse<any>> {
+  private handleCacheMutate(req: ODataRequest<any>): Observable<any> {
     const requests = req.isBatch()
       ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
       : [req];
@@ -400,7 +391,7 @@ export class ODataApi {
       const scope = this.cache!.scope(r);
       this.cache!.forget({ scope });
     }
-    return res$;
+    return this.handleRequester(req);
   }
 
   //# region Find by Type
