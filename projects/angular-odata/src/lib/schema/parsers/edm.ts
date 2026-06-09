@@ -25,10 +25,10 @@ const EdmParser = <T>(
 });
 
 const Identity = (v: any) => v;
-const toNumber = (v: any) => Number(v);
-const toString = (v: any) => v.toString();
-const toBoolean = (v: any) => Boolean(v);
-const toDate = (v: any) => new Date(v);
+const toNumber = (v: any) => v && Number(v);
+const toString = (v: any) => v && v.toString();
+const toBoolean = (v: any) => v && Boolean(v);
+const toDate = (v: any) => v && new Date(v);
 
 export const EDM_PARSERS: { [type: string]: FieldParser<any> } = {
   //Edm.Guid 16-byte (128-bit) unique identifier
