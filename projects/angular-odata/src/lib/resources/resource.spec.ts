@@ -20,7 +20,7 @@ const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const ENTITY_SET = 'People';
 
 describe('ODataResource', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
@@ -33,6 +33,7 @@ describe('ODataResource', () => {
         provideHttpClientTesting(),
       ],
     });
+    await TestBed.inject(ODataClient).initialize();
   });
 
   it('should create batch resource', () => {

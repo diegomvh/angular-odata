@@ -31,7 +31,7 @@ import { QueryOption } from './types';
 import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('ODataClient', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
@@ -40,6 +40,7 @@ describe('ODataClient', () => {
         provideHttpClientTesting(),
       ],
     });
+    await TestBed.inject(ODataClient).initialize();
   });
 
   afterEach(() => {
