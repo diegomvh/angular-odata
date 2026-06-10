@@ -6,7 +6,7 @@ export class ODataIndexedDBCache extends ODataBaseCache {
   private version: number;
   private store: string;
   private entries: Map<string, ODataCacheEntry<any>>;
-  private _db: Promise<IDBDatabase> | null;
+  private _db: Promise<IDBDatabase>;
 
   constructor({
     name = 'ODataCache',

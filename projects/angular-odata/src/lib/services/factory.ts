@@ -4,7 +4,7 @@ import { ODataEntitySetService } from './entity-set';
 import { ODataSingletonService } from './singleton';
 import type { ODataCollection, ODataModel } from '../models';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ODataServiceFactory {
   constructor(protected client: ODataClient) {}
 

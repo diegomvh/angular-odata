@@ -1,51 +1,61 @@
-import { Observable, forkJoin, map, of } from 'rxjs';
+import { firstValueFrom, forkJoin, map, Observable } from 'rxjs';
 import type { ODataApiConfig } from './types';
 import { ODataMetadataParser } from './metadata';
+import { ODataRequest } from './resources';
 
-export abstract class ODataConfigLoader {
-  abstract loadConfigs(): Observable<ODataApiConfig[]>;
+export abstract class ODataLoader {
+  abstract load(): Promise<{ configs: ODataApiConfig[], requester: (req: ODataRequest<any>) => Observable<any> }>;
 }
 
-export class ODataConfigSyncLoader implements ODataConfigLoader {
-  constructor(private readonly passedConfigs: ODataApiConfig | ODataApiConfig[]) {}
+export class ODataSyncLoader implements ODataLoader {
+  constructor(
+    private readonly passedConfigs: ODataApiConfig | ODataApiConfig[],
+    private readonly requester: (req: ODataRequest<any>) => Observable<any>) { }
 
-  loadConfigs(): Observable<ODataApiConfig[]> {
-    return Array.isArray(this.passedConfigs) ? of(this.passedConfigs) : of([this.passedConfigs]);
+  load() {
+    const configs = Array.isArray(this.passedConfigs) ? this.passedConfigs : [this.passedConfigs];
+    return Promise.resolve({ configs, requester: this.requester });
   }
 }
 
-export class ODataConfigAsyncLoader implements ODataConfigLoader {
+export class ODataAsyncLoader implements ODataLoader {
   constructor(
     private readonly configs$:
       | Observable<ODataApiConfig>[]
       | Observable<ODataApiConfig | ODataApiConfig[]>,
-  ) {}
+    private readonly requester: (req: ODataRequest<any>) => Observable<any>) { }
 
-  loadConfigs(): Observable<ODataApiConfig[]> {
-    return Array.isArray(this.configs$)
-      ? forkJoin(this.configs$)
+  load() {
+    return firstValueFrom(Array.isArray(this.configs$)
+      ? forkJoin(this.configs$).pipe(map(configs => ({ configs, requester: this.requester })))
       : (this.configs$ as Observable<ODataApiConfig | ODataApiConfig[]>).pipe(
-          map((value) =>
-            Array.isArray(value) ? (value as ODataApiConfig[]) : ([value] as ODataApiConfig[]),
-          ),
-        );
+        map((value) => ({
+          configs: Array.isArray(value) ? (value as ODataApiConfig[]) : ([value] as ODataApiConfig[]),
+          requester: this.requester
+        })
+        ),
+      ));
   }
 }
 
-export class ODataMetadataLoader implements ODataConfigLoader {
+
+export class ODataMetadataLoader implements ODataLoader {
   constructor(
     private readonly sources$: Observable<string | string[]>,
     private readonly baseConfigs: ODataApiConfig | ODataApiConfig[],
-  ) {}
+    private readonly requester: (req: ODataRequest<any>) => Observable<any>
+  ) { }
 
-  loadConfigs(): Observable<ODataApiConfig[]> {
+  load() {
     const configs = Array.isArray(this.baseConfigs) ? this.baseConfigs : [this.baseConfigs];
-    return this.sources$.pipe(
-      map((source) =>
-        (Array.isArray(source) ? source : [source]).map((m, i) =>
+    return firstValueFrom(this.sources$.pipe(
+      map((source) => ({
+        configs: (Array.isArray(source) ? source : [source]).map((m, i) =>
           new ODataMetadataParser(m).metadata().toConfig(configs[i] ?? {}),
         ),
-      ),
+        requester: this.requester
+      })
+      )),
     );
   }
 }

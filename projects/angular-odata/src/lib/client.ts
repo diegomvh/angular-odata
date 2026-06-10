@@ -1,8 +1,8 @@
 import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import type { ODataApi } from './api';
-import { ODataConfigLoader } from './loaders';
+import { ODataLoader } from './loaders';
 import type { ODataCollection, ODataModel } from './models/index';
 import type {
   ODataActionResource,
@@ -13,7 +13,6 @@ import type {
   ODataMetadataResource,
   ODataNavigationPropertyResource,
   ODataOptions,
-  ODataRequest,
   ODataResponse,
   ODataSegment,
   ODataSingletonResource,
@@ -41,28 +40,17 @@ function addBody<T>(
   };
 }
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ODataClient {
   settings?: ODataSettings;
-  constructor(
-    private http: HttpClient,
-    private loader: ODataConfigLoader,
-  ) {
-    this.loader.loadConfigs().subscribe((configs) => {
+
+  constructor(private loader: ODataLoader) {}
+
+  initialize() {
+    return this.loader.load().then(({configs, requester}) => {
       this.settings = new ODataSettings(configs);
-      this.settings.configure({
-        requester: (req: ODataRequest<any>): Observable<any> =>
-          this.http.request(req.method, `${req.url}`, {
-            body: req.body,
-            context: req.context,
-            headers: req.headers,
-            observe: req.observe,
-            params: req.params,
-            reportProgress: req.reportProgress,
-            responseType: req.responseType,
-            withCredentials: req.withCredentials,
-          }),
-      });
+      this.settings.configure({requester});
+      return true;
     });
   }
 
