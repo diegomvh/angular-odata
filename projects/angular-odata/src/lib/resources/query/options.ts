@@ -152,7 +152,7 @@ export class ODataQueryOptions<T> {
   }
 
   toQueryArguments(): ODataQueryArguments<T> {
-    return {
+    return Objects.clone({
       select: this._values.get(QueryOption.select) ?? null,
       expand: this._values.get(QueryOption.expand) ?? null,
       transform: this._values.get(QueryOption.transform) ?? null,
@@ -166,7 +166,7 @@ export class ODataQueryOptions<T> {
       skiptoken: this._values.get(QueryOption.skiptoken) ?? null,
       levels: this._values.get(QueryOption.levels) ?? null,
       count: this._values.get(QueryOption.count) ?? null,
-    } as ODataQueryArguments<T>;
+    }) as ODataQueryArguments<T>;
   }
 
   clone<O>() {

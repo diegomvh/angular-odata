@@ -252,10 +252,10 @@ export enum ODataModelState {
 
 export type ModelInterface<T> = {
   [P in keyof T]: T[P] extends (infer U)[]
-  ? ODataCollection<U, ODataModel<U> & ModelInterface<U>>
-  : T[P] extends object
-  ? ODataModel<T[P]> & ModelInterface<T[P]>
-  : T[P];
+    ? ODataCollection<U, ODataModel<U> & ModelInterface<U>>
+    : T[P] extends object
+      ? ODataModel<T[P]> & ModelInterface<T[P]>
+      : T[P];
 };
 
 export type ModelOptions = {
@@ -277,7 +277,7 @@ export type ModelFieldOptions = {
 };
 
 export function Model({ cid = CID_FIELD_NAME }: { cid?: string } = {}) {
-  return <T extends { new(...args: any[]): {} }>(constructor: T) => {
+  return <T extends { new (...args: any[]): {} }>(constructor: T) => {
     const Klass = <any>constructor;
     if (!Klass.hasOwnProperty('options'))
       Klass.options = {
@@ -479,7 +479,8 @@ export class ODataModelField<F> {
   }
 
   defaults(): any {
-    const meta = this.optionsForType && this.isStructuredType() ? this.optionsForType(this.type) : undefined;
+    const meta =
+      this.optionsForType && this.isStructuredType() ? this.optionsForType(this.type) : undefined;
     return meta !== undefined ? meta.defaults() : this.default;
   }
 
@@ -586,7 +587,7 @@ export class ODataModelAttribute<T> {
   constructor(
     private _model: ODataModel<any>,
     private _field: ODataModelField<T>,
-  ) { }
+  ) {}
 
   get type() {
     return this._field.type;
@@ -646,8 +647,8 @@ export class ODataModelAttribute<T> {
         ? !(current as ODataModel<T>).equals(value as ODataModel<T>)
         : ODataModelOptions.isCollection(current) && ODataModelOptions.isCollection(value)
           ? !(current as ODataCollection<T, ODataModel<T>>).equals(
-            value as ODataCollection<T, ODataModel<T>>,
-          )
+              value as ODataCollection<T, ODataModel<T>>,
+            )
           : !Types.isEqual(current, value);
     if (reset) {
       this.value = value;
@@ -753,34 +754,36 @@ export class ODataModelOptions<T> {
         ODataModelField<any> | null,
       ];
       resource?:
-      | ODataEntityResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>
-      | ODataSingletonResource<T>;
+        | ODataEntityResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>
+        | ODataSingletonResource<T>;
       annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
     } = {},
   ) {
-    return new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
     /*
-if (!(this.structuredType.isEntityType() && this.structuredType.isSimpleKey())) 
-  return new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
-let key = this.resolveKey(data);
-if (key !== undefined) {
-  const model = this.pool.get(key.toString()) as ODataModel<T> | undefined;
-  if (model !== undefined) {
-    if (parent !== undefined) model._parent = parent;
-    if (resource !== undefined) model.attach(resource);
-    if (annots !== undefined) model._annotations = annots;
-    return model;
-  } 
-}
+    let model: ODataModel<T> | undefined;
+    if (false && this.structuredType.isEntityType() && this.structuredType.isSimpleKey()) {
+      let key = this.resolveKey(data)?.toString();
+      if (key !== undefined) {
+        model = this.pool.get(key) as ODataModel<T> | undefined;
+        if (model !== undefined) {
+          //if (parent !== undefined) model._parent = parent;
+          if (resource !== undefined) model._resource = resource;
+          if (annots !== undefined) model._annotations = annots;
+          return model;
+        }
+      }
 
-const model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
-if (key !== undefined)
-  this.pool.set(key.toString(), model);
-return model;
+      model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
+      if (key !== undefined) this.pool.set(key.toString(), model);
+    } else {
+      model = new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
+    }
+    return model;
     */
+    return new Model(data, { parent, resource, annots, reset }) as ODataModel<T>;
   }
 
   collectionFactory<T>(
@@ -795,9 +798,9 @@ return model;
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
       resource?:
-      | ODataEntitySetResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>;
+        | ODataEntitySetResource<T>
+        | ODataNavigationPropertyResource<T>
+        | ODataPropertyResource<T>;
       annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
       reset?: boolean;
@@ -1038,8 +1041,14 @@ return model;
       }
       if (field !== null) {
         // Resolve Structured Type Cast
-        if (resource.structuredType() !== field.options.structuredType) {
-          resource = resource.cast<any>(field.options.structuredType.type());
+        const resourceType = resource.structuredType();
+        const fieldType = field.options.structuredType;
+        if (resourceType !== undefined && 
+          fieldType !== undefined && 
+          fieldType !== resourceType && 
+          fieldType.isSubtypeOf(resourceType)
+        ) {
+          resource = resource.cast<any>(fieldType.type());
         }
         // Build Resource from field
         resource = field.resourceFactory<any, any>(resource);
@@ -1115,10 +1124,10 @@ return model;
       this.attach(
         self,
         resource as
-        | ODataEntityResource<T>
-        | ODataPropertyResource<T>
-        | ODataNavigationPropertyResource<T>
-        | ODataSingletonResource<T>,
+          | ODataEntityResource<T>
+          | ODataPropertyResource<T>
+          | ODataNavigationPropertyResource<T>
+          | ODataSingletonResource<T>,
       );
     }
 
@@ -1299,11 +1308,17 @@ return model;
   ): R {
     // Push
     self.pushResource(resource);
-    // Execute
+    // Execute function
     const result = ctx(self);
     if (result instanceof Observable) {
-      return (result as any).pipe(finalize(() => self.popResource()));
+      return (result as any).pipe(
+        finalize(() => {
+          // Pop
+          self.popResource();
+        }),
+      );
     } else {
+      // Pop
       self.popResource();
       return result;
     }
@@ -1675,15 +1690,15 @@ return model;
             ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
             : modelField.collection
               ? modelField.collectionFactory<F>({
-                parent: self,
-                value: value as F[] | { [name: string]: any }[],
-                reset: reset,
-              })
+                  parent: self,
+                  value: value as F[] | { [name: string]: any }[],
+                  reset: reset,
+                })
               : modelField.modelFactory<F>({
-                parent: self,
-                value: value,
-                reset: reset,
-              }),
+                  parent: self,
+                  value: value,
+                  reset: reset,
+                }),
           reset,
           reparent,
         );
@@ -1691,7 +1706,9 @@ return model;
 
       // Resolve referentials
       if (!ODataModelOptions.isCollection(attr.get())) {
-        const meta = modelField.isStructuredType() ? this.api.optionsForType<F>(modelField.type) : undefined;
+        const meta = modelField.isStructuredType()
+          ? this.api.optionsForType<F>(modelField.type)
+          : undefined;
         const ref = meta?.resolveReferential(attr.get(), attr, {
           resolve: false,
         });

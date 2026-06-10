@@ -147,7 +147,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
 }
 
 export function render(
-  value: any, 
+  value: any,
   {
     aliases,
     normalize,
@@ -165,7 +165,7 @@ export function render(
   } = {},
 ): string | number | boolean | null {
   if (Types.isFunction(value)) {
-    return render(value({o: operators, f: functions}), {
+    return render(value({ o: operators, f: functions }), {
       aliases,
       normalize,
       prefix,
@@ -1035,11 +1035,11 @@ export class LambdaOperators<T> {
 
 export class ODataOperators<T> {}
 export interface ODataOperators<T>
-  extends 
-    LogicalOperators<T>, 
-    ArithmeticOperators<T>, 
-    GroupingOperators<T>, 
-    CastingOperators<T>, 
+  extends
+    LogicalOperators<T>,
+    ArithmeticOperators<T>,
+    GroupingOperators<T>,
+    CastingOperators<T>,
     LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [

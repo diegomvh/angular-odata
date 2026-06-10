@@ -907,7 +907,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     const toRemove: M[] = [];
     objects.forEach((obj, index) => {
       const isModel = ODataModelOptions.isModel(obj);
-      const model = isModel 
+      const model = isModel
         ? (obj as M)
         : (this.modelFactory(obj as Partial<T> | { [name: string]: any }, {
             reset,
@@ -918,9 +918,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
       if (merge && entry !== undefined) {
         if (entry.model !== model || !isModel) {
-          const entity = entry.model !== model ? 
-            model.toEntity({ client_id: true, ...INCLUDE_DEEP, }) as { [name: string]: any } : 
-            obj as { [name: string]: any };
+          const entity =
+            entry.model !== model
+              ? (model.toEntity({ client_id: true, ...INCLUDE_DEEP }) as { [name: string]: any })
+              : (obj as { [name: string]: any });
           entry.model.assign(entity, { add, merge, remove, reset, silent });
           // Model Change?
           if (entry.model.hasChanged()) toMerge.push(entry.model);

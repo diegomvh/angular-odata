@@ -17,7 +17,14 @@ import {
   ODataQueryOptionsHandler,
   QueryCustomType,
 } from './query';
-import type { ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataOptions, ODataPropertyResource, ODataSingletonResource } from './types';
+import type {
+  ODataEntityResource,
+  ODataEntitySetResource,
+  ODataNavigationPropertyResource,
+  ODataOptions,
+  ODataPropertyResource,
+  ODataSingletonResource,
+} from './types';
 
 export type EntityKey<T> =
   | {
@@ -304,15 +311,17 @@ export class ODataResource<T> {
   }
 
   toString(
-    { escape, ...options }: ParserOptions & { escape?: boolean } = {
+    { escape, ...options }: ParserOptions & { escape?: boolean, params?: boolean } = {
       escape: false,
+      params: true,
     },
   ): string {
-    let [path, params] = this.pathAndParams({ escape, ...options });
-    let queryString = Object.entries(params)
+    let [rpath, rparams] = this.pathAndParams({ escape, ...options });
+    if (!options.params) return rpath;
+    let queryString = Object.entries(rparams)
       .map((e) => `${e[0]}${VALUE_SEPARATOR}${e[1]}`)
       .join(PARAM_SEPARATOR);
-    return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path;
+    return queryString ? `${rpath}${QUERY_SEPARATOR}${queryString}` : rpath;
   }
 
   clone(): ODataResource<T> {
