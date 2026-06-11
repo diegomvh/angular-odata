@@ -492,21 +492,23 @@ export class ODataApi {
             bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
       );
     });
-    callable = callables.find((c) => {
-      const isCallableType = c.type({alias: true}) == value;
-      const callableBindingType = c.binding()?.type;
-      const callableBindingStructuredType =
-        callableBindingType !== undefined
-          ? this.findStructuredType(callableBindingType)
-          : undefined;
+    callable = 
+      callable ?? 
+      callables.find((c) => {
+        const isCallableType = c.type({alias: true}) == value;
+        const callableBindingType = c.binding()?.type;
+        const callableBindingStructuredType =
+          callableBindingType !== undefined
+            ? this.findStructuredType(callableBindingType)
+            : undefined;
 
-      return (
-        isCallableType &&
-        (!bindingStructuredType ||
-          (callableBindingStructuredType &&
-            bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
-      );
-    });
+        return (
+          isCallableType &&
+          (!bindingStructuredType ||
+            (callableBindingStructuredType &&
+              bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
+        );
+      });
     callable =
       callable ??
       callables.find((c) => {
