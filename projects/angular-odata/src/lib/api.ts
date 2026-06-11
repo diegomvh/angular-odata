@@ -283,7 +283,7 @@ export class ODataApi {
       bodyQueryOptions?: QueryOption[];
     },
   ): Observable<any> {
-    let req = ODataRequest.factory(this, method, resource, {
+    const req = ODataRequest.factory(this, method, resource, {
       body: options.body,
       etag: options.etag,
       context: options.context,
@@ -440,6 +440,7 @@ export class ODataApi {
       <ODataEnumType<T>[]>[],
     );
     let enumType = enumTypes.find((e) => e.type() === value);
+    enumType = enumType ?? enumTypes.find((e) => e.type({alias: true}) === value);
     enumType = enumType ?? enumTypes.find((e) => e.name === value);
     this.memo.enumTypes.set(value, enumType);
     return enumType;
@@ -456,6 +457,7 @@ export class ODataApi {
       <ODataStructuredType<T>[]>[],
     );
     let structuredType = structuredTypes.find((e) => e.type() === value);
+    structuredType = structuredType ?? structuredTypes.find((e) => e.type({alias: true}) === value);
     structuredType = structuredType ?? structuredTypes.find((e) => e.name === value);
     this.memo.structuredTypes.set(value, structuredType);
     return structuredType;
@@ -477,6 +479,21 @@ export class ODataApi {
     );
     let callable = callables.find((c) => {
       const isCallableType = c.type() == value;
+      const callableBindingType = c.binding()?.type;
+      const callableBindingStructuredType =
+        callableBindingType !== undefined
+          ? this.findStructuredType(callableBindingType)
+          : undefined;
+
+      return (
+        isCallableType &&
+        (!bindingStructuredType ||
+          (callableBindingStructuredType &&
+            bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
+      );
+    });
+    callable = callables.find((c) => {
+      const isCallableType = c.type({alias: true}) == value;
       const callableBindingType = c.binding()?.type;
       const callableBindingStructuredType =
         callableBindingType !== undefined
@@ -523,6 +540,7 @@ export class ODataApi {
       <ODataEntitySet[]>[],
     );
     let entitySet = entitySets.find((e) => e.type() === value);
+    entitySet = entitySet ?? entitySets.find((e) => e.type({alias: true}) === value);
     entitySet = entitySet ?? entitySets.find((e) => e.name === value);
     this.memo.entitySets.set(value, entitySet);
     return entitySet;
@@ -539,6 +557,7 @@ export class ODataApi {
       <ODataSingleton[]>[],
     );
     let singleton = singletons.find((e) => e.type() === value);
+    singleton = singleton ?? singletons.find((e) => e.type({alias: true}) === value);
     singleton = singleton ?? singletons.find((e) => e.name === value);
     this.memo.singletons.set(value, singleton);
     return singleton;

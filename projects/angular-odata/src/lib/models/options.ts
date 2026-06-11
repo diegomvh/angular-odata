@@ -311,11 +311,6 @@ export class ODataModelField<F> {
   field: string;
   parser: ODataStructuredTypeFieldParser<F>;
   options: ODataModelOptions<any>;
-  optionsForType?: (type: string) => ODataModelOptions<any> | undefined;
-  modelForType?: (t: string) => typeof ODataModel<any> | undefined;
-  collectionForType?: (t: string) => typeof ODataCollection<any, ODataModel<any>> | undefined;
-  enumForType?: (t: string) => ODataEnumType<F> | undefined;
-  structuredForType?: (t: string) => ODataStructuredType<F> | undefined;
   default?: any;
   required: boolean;
   concurrency: boolean;
@@ -361,27 +356,12 @@ export class ODataModelField<F> {
   }
 
   configure({
-    optionsForType,
-    modelForType,
-    collectionForType,
-    enumForType,
-    structuredForType,
     concurrency,
     options,
   }: {
-    optionsForType: (type: string) => ODataModelOptions<any> | undefined;
-    modelForType: (t: string) => typeof ODataModel<any> | undefined;
-    collectionForType: (t: string) => typeof ODataCollection<any, any> | undefined;
-    enumForType: (t: string) => ODataEnumType<any> | undefined;
-    structuredForType: (t: string) => ODataStructuredType<any> | undefined;
     concurrency: boolean;
     options: ParserOptions;
   }) {
-    this.optionsForType = optionsForType;
-    this.modelForType = modelForType;
-    this.collectionForType = collectionForType;
-    this.enumForType = enumForType;
-    this.structuredForType = structuredForType;
     this.parserOptions = options;
     if (concurrency) this.concurrency = concurrency;
     if (this.default !== undefined) this.default = this.deserialize(this.default, options);
@@ -404,7 +384,7 @@ export class ODataModelField<F> {
   }
 
   structuredType() {
-    const structuredType = this.structuredForType ? this.structuredForType(this.type) : undefined;
+    const structuredType = this.options.api.findStructuredType(this.type);
     //Throw error if not found
     if (!structuredType) throw new Error(`Could not find structured type for ${this.parser.type}`);
     return structuredType;
@@ -419,7 +399,7 @@ export class ODataModelField<F> {
   }
 
   enumType() {
-    const enumType = this.enumForType ? this.enumForType(this.type) : undefined;
+    const enumType = this.options.api.findEnumType(this.type);
     //Throw error if not found
     if (!enumType) throw new Error(`Could not find enum type for ${this.parser.type}`);
     return enumType;
@@ -479,8 +459,7 @@ export class ODataModelField<F> {
   }
 
   defaults(): any {
-    const meta =
-      this.optionsForType && this.isStructuredType() ? this.optionsForType(this.type) : undefined;
+    const meta = this.isStructuredType() ? this.options.api.optionsForType(this.type) : undefined;
     return meta !== undefined ? meta.defaults() : this.default;
   }
 
@@ -534,7 +513,7 @@ export class ODataModelField<F> {
   }): ODataModel<F> {
     // Model
     const annots = this.annotationsFactory(parent.annots()) as ODataEntityAnnotations<F>;
-    let Model = this.modelForType ? this.modelForType(this.type) : undefined;
+    let Model = this.options.api.modelForType(this.type);
     if (Model === undefined) throw Error(`No Model type for ${this.name}`);
     if (value !== undefined) {
       annots.update(value);
@@ -567,7 +546,7 @@ export class ODataModelField<F> {
   }): ODataCollection<F, ODataModel<F>> {
     // Collection Factory
     const annots = this.annotationsFactory(parent.annots()) as ODataEntitiesAnnotations<F>;
-    const Collection = this.collectionForType ? this.collectionForType(this.type) : undefined;
+    const Collection = this.options.api.collectionForType(this.type);
     if (Collection === undefined) throw Error(`No Collection type for ${this.name}`);
     return Collection.factory((value || []) as Partial<F>[] | { [name: string]: any }[], {
       annots: annots,
@@ -870,11 +849,6 @@ export class ODataModelOptions<T> {
     this._fields.forEach((field) => {
       const concurrency = concurrencyFields.indexOf(field.field) !== -1;
       field.configure({
-        optionsForType: (t: string) => this.api.optionsForType(t),
-        modelForType: (t: string) => this.api.modelForType(t),
-        collectionForType: (t: string) => this.api.collectionForType(t),
-        enumForType: (t: string) => this.api.findEnumType(t),
-        structuredForType: (t: string) => this.api.findStructuredType(t),
         concurrency,
         options,
       });
@@ -951,11 +925,6 @@ export class ODataModelOptions<T> {
       parser: structuredFieldParser,
     });
     modelField.configure({
-      optionsForType: (t: string) => this.api.optionsForType(t),
-      modelForType: (t: string) => this.api.modelForType(t),
-      collectionForType: (t: string) => this.api.collectionForType(t),
-      enumForType: (t: string) => this.api.findEnumType(t),
-      structuredForType: (t: string) => this.api.findStructuredType(t),
       options: this.api.options,
       concurrency: false,
     });

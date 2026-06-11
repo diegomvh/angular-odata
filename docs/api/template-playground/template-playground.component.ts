@@ -94,7 +94,7 @@ interface CompoDocConfig {
           <div class="template-file-list">
             <h3>Templates</h3>
             <ul class="file-list">
-              <li *ngFor="let template of templates; trackBy: trackByName"
+              <li *="let template of templates; trackBy: trackByName"
                   [class.active]="selectedFile === template"
                   (click)="selectFile(template)">
                 <i class="file-icon ion-document-text"></i>
