@@ -47,11 +47,12 @@ export class ODataClient {
   constructor(private loader: ODataLoader) {}
 
   initialize() {
-    return this.loader.load().then(({configs, requester}) => {
+    return this.loader.load()
+    .then(({configs, requester}) => {
       this.settings = new ODataSettings(configs);
-      this.settings.configure({requester});
-      return true;
-    });
+      return this.settings.initialize(requester);
+    })
+    .then(results => results.every(v => v));
   }
 
   //#region Resolve Building Blocks

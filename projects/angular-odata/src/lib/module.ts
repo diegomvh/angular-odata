@@ -46,9 +46,7 @@ export function provideODataClient(passedConfig: PassedInitialConfig): Environme
     // Make the ODATA_CONFIG available through injection
     { provide: ODATA_CONFIG, useValue: passedConfig.config ?? [] },
     // Register the startup task
-    provideAppInitializer(() => {
-      return inject(ODataClient).initialize();
-    }),
+    provideAppInitializer(() => inject(ODataClient).initialize()),
     ODataClient,
     ODataServiceFactory,
   ];
@@ -76,9 +74,7 @@ export class ODataModule {
       // Make the ODATA_CONFIG available through injection
       { provide: ODATA_CONFIG, useValue: passedConfig.config ?? []},
       // Register the startup task
-      provideAppInitializer(() => {
-        return inject(ODataClient).initialize();
-      }),
+      provideAppInitializer(() => inject(ODataClient).initialize()),
       ODataClient,
       ODataServiceFactory,
     ];

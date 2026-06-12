@@ -1,7 +1,6 @@
 import type { JSONSchema7 } from 'json-schema';
 import type { Observable } from 'rxjs';
-import type { ODataModel, ODataModelOptions } from './models';
-import type { EntityKey, ODataRequest, ODataResponse } from './resources';
+import type { ODataRequest, ODataResponse } from './resources';
 
 export type ODataVersion = '2.0' | '3.0' | '4.0';
 export type FetchPolicy =
@@ -242,6 +241,7 @@ export type ODataApiConfig = {
   errorHandler?: (error: any, caught: Observable<any>) => Observable<never>;
   options?: ODataApiConfigOptions;
   parsers?: { [type: string]: Parser<any> };
+  populateFromMetadata?: boolean;
   schemas?: ODataSchemaConfig[];
   references?: ODataReferenceConfig[];
   models?: { [type: string]: { new (...params: any[]): any } };
@@ -257,12 +257,13 @@ export type ODataAnnotationConfig = {
 };
 export type ODataReferenceConfig = {
   uri: string;
-  includes?: string;
   annotations?: ODataAnnotationConfig[];
-  enums?: ODataEnumTypeConfig[];
-  entities?: ODataStructuredTypeConfig[];
-  callables?: ODataCallableConfig[];
-  containers?: ODataEntityContainerConfig[];
+  includes?: { namespace: string; alias?: string; }[];
+  includeAnnotations?: {
+    termNamespace: string; 
+    qualifier?: string;
+    targetNamespace?: string; 
+  }[] 
 };
 export type ODataSchemaConfig = {
   namespace: string;

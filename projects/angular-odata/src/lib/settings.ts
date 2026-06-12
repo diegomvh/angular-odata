@@ -19,8 +19,10 @@ export class ODataSettings {
     if (this.apis.every((c) => !c.default)) this.apis[0].default = true;
   }
 
-  configure(settings: { requester?: (request: ODataRequest<any>) => Observable<any> }) {
-    this.apis.forEach((api) => api.configure(settings));
+  initialize(requester: (request: ODataRequest<any>) => Observable<any>) {
+    return Promise.all(
+      this.apis.map((api) => api.initialize(requester))
+    );
   }
 
   public defaultApi() {

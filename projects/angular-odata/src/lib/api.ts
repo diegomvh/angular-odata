@@ -1,5 +1,5 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { NEVER, Observable, of, throwError } from 'rxjs';
+import { firstValueFrom, NEVER, Observable, of, throwError } from 'rxjs';
 import { catchError, map, startWith, tap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from './constants';
 import {
@@ -54,6 +54,7 @@ import {
 } from './types';
 import type { ODataMetadata } from './metadata/metadata';
 import { ODataEntityAnnotations } from './annotations';
+import { ODataReference } from './schema/reference';
 
 const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);
 
@@ -76,8 +77,12 @@ export class ODataApi {
   errorHandler?: (error: any, caught: Observable<any>) => Observable<never>;
   // Base Parsers
   parsers: Map<string, Parser<any>>;
+  // Populate from Metadata 
+  populateFromMetadata: boolean;
   // Schemas
   schemas: ODataSchema[];
+  // References
+  references: ODataReference[];
   // Models
   models: { [type: string]: typeof ODataModel<any> } = {};
   // Collections
@@ -104,19 +109,17 @@ export class ODataApi {
     this.errorHandler = config.errorHandler;
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
+    this.populateFromMetadata = config.populateFromMetadata ?? false;
     this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
+    this.references = (config.references ?? []).map((reference) => new ODataReference(reference, this));
     this.models = (config.models ?? {}) as { [type: string]: typeof ODataModel<any> };
     this.collections = (config.collections ?? {}) as {
       [type: string]: typeof ODataCollection<any, ODataModel<any>>;
     };
   }
 
-  configure(
-    settings: {
-      requester?: (request: ODataRequest<any>) => Observable<any>;
-    } = {},
-  ) {
-    this.requester = settings.requester;
+  initialize(requester: (request: ODataRequest<any>) => Observable<any>) {
+    this.requester = requester;
     this.schemas.forEach((schema) => {
       schema.configure({
         options: this.options.parserOptions,
@@ -132,6 +135,9 @@ export class ODataApi {
         }
       }
     });
+    return (this.populateFromMetadata) ?
+      firstValueFrom(this.metadata().fetch().pipe(map(metadata => this.populate(metadata)))) :
+      Promise.resolve(true);
   }
 
   populate(metadata: ODataMetadata) {
@@ -144,6 +150,7 @@ export class ODataApi {
         options: this.options.parserOptions,
       });
     });
+    return true;
   }
 
   fromJson<P, R>(json: {
