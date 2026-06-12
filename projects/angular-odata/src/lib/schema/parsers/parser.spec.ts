@@ -17,6 +17,8 @@ import { Parser } from '../../types';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ODataRequest } from '../../resources';
+import { of } from 'rxjs';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -29,7 +31,7 @@ describe('ODataClient', () => {
     Black,
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
@@ -132,7 +134,7 @@ describe('ODataClient', () => {
         },
       ],
     });
-    api.configure();
+    await api.initialize((request: ODataRequest<any>) => of(null));
   });
 
   /*
