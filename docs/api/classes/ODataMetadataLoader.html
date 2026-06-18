@@ -147,7 +147,7 @@
                 <h3>Implements</h3>
             </p>
             <p class="comment">
-                            <code><a href="../classes/ODataConfigLoader.html" target="_self" >ODataConfigLoader</a></code>
+                            <code><a href="../classes/ODataLoader.html" target="_self" >ODataLoader</a></code>
             </p>
 
 
@@ -165,7 +165,7 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#loadConfigs" >loadConfigs</a>
+                                <a href="#load" >load</a>
                             </li>
                         </ul>
                     </td>
@@ -185,12 +185,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(sources$: Observable<string | []>, baseConfigs: <a href="../classes/ODataApi.html" target="_self">ODataApiConfig | ODataApiConfig[]</a>)</code>
+<code>constructor(sources$: Observable<string | []>, baseConfigs: <a href="../classes/ODataApi.html" target="_self">ODataApiConfig | ODataApiConfig[]</a>, requester: (req: <a href="../classes/ODataRequest.html">ODataRequest<any></a>) => void)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:42</a></div>
                             </td>
                         </tr>
 
@@ -231,6 +231,18 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>requester</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -250,24 +262,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="loadConfigs"></a>
+                    <a name="load"></a>
                     <span class="name">
-                        <span ><b>loadConfigs</b></span>
-                        <a href="#loadConfigs"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>load</b></span>
+                        <a href="#load"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>loadConfigs()</code>
+<code>load()</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="41"
-                                    class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:41</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">projects/angular-odata/src/lib/loaders.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -276,7 +288,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataApi.html" target="_self" >Observable&lt;ODataApiConfig[]&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                         </div>
                 </td>
@@ -293,54 +305,64 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable, forkJoin, map, of } from &#x27;rxjs&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { firstValueFrom, forkJoin, map, Observable } from &#x27;rxjs&#x27;;
 import type { ODataApiConfig } from &#x27;./types&#x27;;
 import { ODataMetadataParser } from &#x27;./metadata&#x27;;
+import { ODataRequest } from &#x27;./resources&#x27;;
 
-export abstract class ODataConfigLoader {
-  abstract loadConfigs(): Observable&lt;ODataApiConfig[]&gt;;
+export abstract class ODataLoader {
+  abstract load(): Promise&lt;{ configs: ODataApiConfig[], requester: (req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt; }&gt;;
 }
 
-export class ODataConfigSyncLoader implements ODataConfigLoader {
-  constructor(private readonly passedConfigs: ODataApiConfig | ODataApiConfig[]) {}
+export class ODataSyncLoader implements ODataLoader {
+  constructor(
+    private readonly passedConfigs: ODataApiConfig | ODataApiConfig[],
+    private readonly requester: (req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;) { }
 
-  loadConfigs(): Observable&lt;ODataApiConfig[]&gt; {
-    return Array.isArray(this.passedConfigs) ? of(this.passedConfigs) : of([this.passedConfigs]);
+  load() {
+    const configs &#x3D; Array.isArray(this.passedConfigs) ? this.passedConfigs : [this.passedConfigs];
+    return Promise.resolve({ configs, requester: this.requester });
   }
 }
 
-export class ODataConfigAsyncLoader implements ODataConfigLoader {
+export class ODataAsyncLoader implements ODataLoader {
   constructor(
     private readonly configs$:
       | Observable&lt;ODataApiConfig&gt;[]
       | Observable&lt;ODataApiConfig | ODataApiConfig[]&gt;,
-  ) {}
+    private readonly requester: (req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;) { }
 
-  loadConfigs(): Observable&lt;ODataApiConfig[]&gt; {
-    return Array.isArray(this.configs$)
-      ? forkJoin(this.configs$)
+  load() {
+    return firstValueFrom(Array.isArray(this.configs$)
+      ? forkJoin(this.configs$).pipe(map(configs &#x3D;&gt; ({ configs, requester: this.requester })))
       : (this.configs$ as Observable&lt;ODataApiConfig | ODataApiConfig[]&gt;).pipe(
-          map((value) &#x3D;&gt;
-            Array.isArray(value) ? (value as ODataApiConfig[]) : ([value] as ODataApiConfig[]),
-          ),
-        );
+        map((value) &#x3D;&gt; ({
+          configs: Array.isArray(value) ? (value as ODataApiConfig[]) : ([value] as ODataApiConfig[]),
+          requester: this.requester
+        })
+        ),
+      ));
   }
 }
 
-export class ODataMetadataLoader implements ODataConfigLoader {
+
+export class ODataMetadataLoader implements ODataLoader {
   constructor(
     private readonly sources$: Observable&lt;string | string[]&gt;,
     private readonly baseConfigs: ODataApiConfig | ODataApiConfig[],
-  ) {}
+    private readonly requester: (req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;
+  ) { }
 
-  loadConfigs(): Observable&lt;ODataApiConfig[]&gt; {
+  load() {
     const configs &#x3D; Array.isArray(this.baseConfigs) ? this.baseConfigs : [this.baseConfigs];
-    return this.sources$.pipe(
-      map((source) &#x3D;&gt;
-        (Array.isArray(source) ? source : [source]).map((m, i) &#x3D;&gt;
+    return firstValueFrom(this.sources$.pipe(
+      map((source) &#x3D;&gt; ({
+        configs: (Array.isArray(source) ? source : [source]).map((m, i) &#x3D;&gt;
           new ODataMetadataParser(m).metadata().toConfig(configs[i] ?? {}),
         ),
-      ),
+        requester: this.requester
+      })
+      )),
     );
   }
 }

@@ -3232,7 +3232,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(value: any) &#x3D;&gt;
-  typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; &#x27;type&#x27; in value &amp;&amp; value.type in QueryCustomTypes</code>
+  value !&#x3D;&#x3D; null &amp;&amp; value !&#x3D;&#x3D; undefined &amp;&amp; typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; &#x27;type&#x27; in value &amp;&amp; value.type in QueryCustomTypes</code>
                     </td>
                 </tr>
 
@@ -4507,7 +4507,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>(v: any) &#x3D;&gt; Boolean(v)</code>
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; v &amp;&amp; Boolean(v)</code>
                     </td>
                 </tr>
 
@@ -4533,7 +4533,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>(v: any) &#x3D;&gt; new Date(v)</code>
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; v &amp;&amp; new Date(v)</code>
                     </td>
                 </tr>
 
@@ -4559,7 +4559,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>(v: any) &#x3D;&gt; Number(v)</code>
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; v &amp;&amp; Number(v)</code>
                     </td>
                 </tr>
 
@@ -4585,7 +4585,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>(v: any) &#x3D;&gt; v.toString()</code>
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; v &amp;&amp; v.toString()</code>
                     </td>
                 </tr>
 
@@ -5483,7 +5483,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>new InjectionToken&lt;ODataApiConfig&gt;(&#x27;odata.config&#x27;)</code>
+                        <i>Default value : </i><code>new InjectionToken&lt;ODataApiConfig | ODataApiConfig[]&gt;(&#x27;odata.config&#x27;)</code>
                     </td>
                 </tr>
 

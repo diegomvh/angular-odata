@@ -231,7 +231,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:75</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:73</a></div>
                             </td>
                         </tr>
 
@@ -317,7 +317,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:75</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -456,7 +456,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:58</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:56</a></code>
 </div>
                         </td>
                     </tr>
@@ -532,7 +532,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:68</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:66</a></code>
 </div>
                         </td>
                     </tr>
@@ -1046,9 +1046,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
    * @returns True if the callable is type of the given type
    */
   isTypeOf(element: ODataSchemaElement): boolean {
-    const names &#x3D; [&#x60;${this.schema.namespace}.${this.name}&#x60;];
-    if (this.schema.alias) names.push(&#x60;${this.schema.alias}.${this.name}&#x60;);
-    return names.includes(element.type());
+    return this.type() &#x3D;&#x3D;&#x3D; element.type();
   }
 
   /**

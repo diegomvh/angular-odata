@@ -534,7 +534,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataParserSchemaElement.html#source" target="_self" >ODataParserSchemaElement:75</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataParserSchemaElement.html#source" target="_self" >ODataParserSchemaElement:73</a></code>
 </div>
                         </td>
                     </tr>
@@ -1198,8 +1198,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="129"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:129</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="142"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:142</a></div>
                         </td>
                     </tr>
 
@@ -1340,8 +1340,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="146"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:146</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="134"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:134</a></div>
                         </td>
                     </tr>
 
@@ -2796,18 +2796,6 @@ export class ODataStructuredType&lt;T&gt; extends ODataParserSchemaElement&lt;
     return this.parent.findParentSchema(predicate);
   }
 
-  findChildSchema(
-    predicate: (p: ODataStructuredType&lt;any&gt;) &#x3D;&gt; boolean,
-  ): ODataStructuredType&lt;any&gt; | undefined {
-    if (predicate(this)) return this;
-    let match: ODataStructuredType&lt;any&gt; | undefined;
-    for (let ch of this.children) {
-      match &#x3D; ch.findChildSchema(predicate);
-      if (match !&#x3D;&#x3D; undefined) break;
-    }
-    return match;
-  }
-
   /**
    * Find a parent schema of the structured type for the given field.
    * @param field Field that belongs to the structured type
@@ -2819,6 +2807,18 @@ export class ODataStructuredType&lt;T&gt; extends ODataParserSchemaElement&lt;
         p.fields({ include_parents: false, include_navigation: true }).find((f) &#x3D;&gt; f &#x3D;&#x3D;&#x3D; field) !&#x3D;&#x3D;
         undefined,
     ) as ODataStructuredType&lt;E&gt;;
+  }
+
+  findChildSchema(
+    predicate: (p: ODataStructuredType&lt;any&gt;) &#x3D;&gt; boolean,
+  ): ODataStructuredType&lt;any&gt; | undefined {
+    if (predicate(this)) return this;
+    let match: ODataStructuredType&lt;any&gt; | undefined;
+    for (let ch of this.children) {
+      match &#x3D; ch.findChildSchema(predicate);
+      if (match !&#x3D;&#x3D; undefined) break;
+    }
+    return match;
   }
 
   /**

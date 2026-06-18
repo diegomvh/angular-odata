@@ -724,8 +724,8 @@ export class ODataEnumTypeParser&lt;E&gt; extends ODataAnnotatable implements Fi
       let names &#x3D; this.fields(value as number).map((f) &#x3D;&gt; f.name);
       if (names.length &#x3D;&#x3D;&#x3D; 0) names &#x3D; [&#x60;${value}&#x60;];
       return !parserOptions?.stringAsEnum
-        ? &#x60;${this.namespace}.${this.name}&#x27;${names.join(&#x27;, &#x27;)}&#x27;&#x60;
-        : names.join(&#x27;, &#x27;);
+        ? &#x60;${this.namespace}.${this.name}&#x27;${names.join(&#x27;,&#x27;)}&#x27;&#x60;
+        : names.join(&#x27;,&#x27;);
     } else {
       let name &#x3D; this.field(value as number)?.name;
       if (name &#x3D;&#x3D;&#x3D; undefined) name &#x3D; &#x60;${value}&#x60;;

@@ -719,11 +719,6 @@ export class ODataModelField&lt;F&gt; {
   field: string;
   parser: ODataStructuredTypeFieldParser&lt;F&gt;;
   options: ODataModelOptions&lt;any&gt;;
-  optionsForType?: (type: string) &#x3D;&gt; ODataModelOptions&lt;any&gt; | undefined;
-  modelForType?: (t: string) &#x3D;&gt; typeof ODataModel&lt;any&gt; | undefined;
-  collectionForType?: (t: string) &#x3D;&gt; typeof ODataCollection&lt;any, ODataModel&lt;any&gt;&gt; | undefined;
-  enumForType?: (t: string) &#x3D;&gt; ODataEnumType&lt;F&gt; | undefined;
-  structuredForType?: (t: string) &#x3D;&gt; ODataStructuredType&lt;F&gt; | undefined;
   default?: any;
   required: boolean;
   concurrency: boolean;
@@ -769,27 +764,12 @@ export class ODataModelField&lt;F&gt; {
   }
 
   configure({
-    optionsForType,
-    modelForType,
-    collectionForType,
-    enumForType,
-    structuredForType,
     concurrency,
     options,
   }: {
-    optionsForType: (type: string) &#x3D;&gt; ODataModelOptions&lt;any&gt; | undefined;
-    modelForType: (t: string) &#x3D;&gt; typeof ODataModel&lt;any&gt; | undefined;
-    collectionForType: (t: string) &#x3D;&gt; typeof ODataCollection&lt;any, any&gt; | undefined;
-    enumForType: (t: string) &#x3D;&gt; ODataEnumType&lt;any&gt; | undefined;
-    structuredForType: (t: string) &#x3D;&gt; ODataStructuredType&lt;any&gt; | undefined;
     concurrency: boolean;
     options: ParserOptions;
   }) {
-    this.optionsForType &#x3D; optionsForType;
-    this.modelForType &#x3D; modelForType;
-    this.collectionForType &#x3D; collectionForType;
-    this.enumForType &#x3D; enumForType;
-    this.structuredForType &#x3D; structuredForType;
     this.parserOptions &#x3D; options;
     if (concurrency) this.concurrency &#x3D; concurrency;
     if (this.default !&#x3D;&#x3D; undefined) this.default &#x3D; this.deserialize(this.default, options);
@@ -812,7 +792,7 @@ export class ODataModelField&lt;F&gt; {
   }
 
   structuredType() {
-    const structuredType &#x3D; this.structuredForType ? this.structuredForType(this.type) : undefined;
+    const structuredType &#x3D; this.options.api.findStructuredType(this.type);
     //Throw error if not found
     if (!structuredType) throw new Error(&#x60;Could not find structured type for ${this.parser.type}&#x60;);
     return structuredType;
@@ -827,7 +807,7 @@ export class ODataModelField&lt;F&gt; {
   }
 
   enumType() {
-    const enumType &#x3D; this.enumForType ? this.enumForType(this.type) : undefined;
+    const enumType &#x3D; this.options.api.findEnumType(this.type);
     //Throw error if not found
     if (!enumType) throw new Error(&#x60;Could not find enum type for ${this.parser.type}&#x60;);
     return enumType;
@@ -887,8 +867,7 @@ export class ODataModelField&lt;F&gt; {
   }
 
   defaults(): any {
-    const meta &#x3D;
-      this.optionsForType &amp;&amp; this.isStructuredType() ? this.optionsForType(this.type) : undefined;
+    const meta &#x3D; this.isStructuredType() ? this.options.api.optionsForType(this.type) : undefined;
     return meta !&#x3D;&#x3D; undefined ? meta.defaults() : this.default;
   }
 
@@ -942,7 +921,7 @@ export class ODataModelField&lt;F&gt; {
   }): ODataModel&lt;F&gt; {
     // Model
     const annots &#x3D; this.annotationsFactory(parent.annots()) as ODataEntityAnnotations&lt;F&gt;;
-    let Model &#x3D; this.modelForType ? this.modelForType(this.type) : undefined;
+    let Model &#x3D; this.options.api.modelForType(this.type);
     if (Model &#x3D;&#x3D;&#x3D; undefined) throw Error(&#x60;No Model type for ${this.name}&#x60;);
     if (value !&#x3D;&#x3D; undefined) {
       annots.update(value);
@@ -975,7 +954,7 @@ export class ODataModelField&lt;F&gt; {
   }): ODataCollection&lt;F, ODataModel&lt;F&gt;&gt; {
     // Collection Factory
     const annots &#x3D; this.annotationsFactory(parent.annots()) as ODataEntitiesAnnotations&lt;F&gt;;
-    const Collection &#x3D; this.collectionForType ? this.collectionForType(this.type) : undefined;
+    const Collection &#x3D; this.options.api.collectionForType(this.type);
     if (Collection &#x3D;&#x3D;&#x3D; undefined) throw Error(&#x60;No Collection type for ${this.name}&#x60;);
     return Collection.factory((value || []) as Partial&lt;F&gt;[] | { [name: string]: any }[], {
       annots: annots,
@@ -1278,11 +1257,6 @@ export class ODataModelOptions&lt;T&gt; {
     this._fields.forEach((field) &#x3D;&gt; {
       const concurrency &#x3D; concurrencyFields.indexOf(field.field) !&#x3D;&#x3D; -1;
       field.configure({
-        optionsForType: (t: string) &#x3D;&gt; this.api.optionsForType(t),
-        modelForType: (t: string) &#x3D;&gt; this.api.modelForType(t),
-        collectionForType: (t: string) &#x3D;&gt; this.api.collectionForType(t),
-        enumForType: (t: string) &#x3D;&gt; this.api.findEnumType(t),
-        structuredForType: (t: string) &#x3D;&gt; this.api.findStructuredType(t),
         concurrency,
         options,
       });
@@ -1359,11 +1333,6 @@ export class ODataModelOptions&lt;T&gt; {
       parser: structuredFieldParser,
     });
     modelField.configure({
-      optionsForType: (t: string) &#x3D;&gt; this.api.optionsForType(t),
-      modelForType: (t: string) &#x3D;&gt; this.api.modelForType(t),
-      collectionForType: (t: string) &#x3D;&gt; this.api.collectionForType(t),
-      enumForType: (t: string) &#x3D;&gt; this.api.findEnumType(t),
-      structuredForType: (t: string) &#x3D;&gt; this.api.findStructuredType(t),
       options: this.api.options,
       concurrency: false,
     });
@@ -1428,36 +1397,37 @@ export class ODataModelOptions&lt;T&gt; {
     let resource: ODataResource&lt;any&gt; | null &#x3D; null;
     let prevField: ODataModelField&lt;any&gt; | null &#x3D; null;
     for (const [model, field] of ODataModelOptions.chain(child)) {
-      resource &#x3D; resource || (model._resource?.clone() as ODataResource&lt;T&gt;);
+      resource &#x3D; resource ?? (model._resource?.clone() as ODataResource&lt;T&gt;);
+      // Break if no resource
       if (resource &#x3D;&#x3D;&#x3D; null) break;
-      if (ODataModelOptions.isModel(model) &amp;&amp; (prevField &#x3D;&#x3D;&#x3D; null || prevField.collection)) {
-        const m &#x3D; model as ODataModel&lt;any&gt;;
-        // Resolve subtype if collection not is from field
-        // FIXME
-        /*
-        if (field &#x3D;&#x3D;&#x3D; null) {
-          const r &#x3D; m._meta.modelResourceFactory(resource.cloneQuery&lt;T&gt;());
-          if (r !&#x3D;&#x3D; null &amp;&amp; !r.isTypeOf(resource) &amp;&amp; r.isSubtypeOf(resource)) {
-            resource &#x3D; r;
-          }
-        }
-        */
-        // Resolve key
-        const mKey &#x3D; m.key({ field_mapping: true }) as EntityKey&lt;any&gt;;
-        if (mKey !&#x3D;&#x3D; undefined) {
+      // Resolve Key 
+      if ((prevField &#x3D;&#x3D;&#x3D; null || prevField.collection) &amp;&amp; ODataModelOptions.isModel(model) &amp;&amp; (model as ODataModel&lt;any&gt;)._meta.isEntityType()) {
+        const key &#x3D; (model as ODataModel&lt;any&gt;).key({ field_mapping: true }) as EntityKey&lt;any&gt;;
+        if (key !&#x3D;&#x3D; undefined) {
           resource &#x3D;
             resource instanceof ODataEntitySetResource
-              ? resource.entity(mKey)
-              : (resource as ODataEntityResource&lt;T&gt;).key(mKey);
+              ? resource.entity(key)
+              : (resource as ODataEntityResource&lt;T&gt;).key(key);
         }
       }
-      prevField &#x3D; field;
-      if (field &#x3D;&#x3D;&#x3D; null &amp;&amp; model._resource !&#x3D;&#x3D; null) {
-        // Apply the query from model to new resource
-        model._resource.query((qs) &#x3D;&gt; resource?.query((qd) &#x3D;&gt; qd.restore(qs.store())));
-      } else if (field !&#x3D;&#x3D; null) {
+      if (field !&#x3D;&#x3D; null) {
+        // Resolve Structured Type Cast
+        const resourceType &#x3D; resource.structuredType();
+        const fieldType &#x3D; field.options.structuredType;
+        if (resourceType !&#x3D;&#x3D; undefined &amp;&amp; 
+          fieldType !&#x3D;&#x3D; undefined &amp;&amp; 
+          fieldType !&#x3D;&#x3D; resourceType &amp;&amp; 
+          fieldType.isSubtypeOf(resourceType)
+        ) {
+          resource &#x3D; resource.cast&lt;any&gt;(fieldType.type());
+        }
+        // Build Resource from field
         resource &#x3D; field.resourceFactory&lt;any, any&gt;(resource);
+      } else if (model._resource !&#x3D;&#x3D; null) {
+        // Apply parameters from model._resource to new resource
+        model._resource.query((qs) &#x3D;&gt; resource?.query((qd) &#x3D;&gt; qd.restore(qs.store())));
       }
+      prevField &#x3D; field;
     }
     return resource;
   }

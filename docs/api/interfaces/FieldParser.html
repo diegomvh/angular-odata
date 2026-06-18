@@ -407,8 +407,7 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { JSONSchema7 } from &#x27;json-schema&#x27;;
 import type { Observable } from &#x27;rxjs&#x27;;
-import type { ODataModel, ODataModelOptions } from &#x27;./models&#x27;;
-import type { EntityKey, ODataRequest, ODataResponse } from &#x27;./resources&#x27;;
+import type { ODataRequest, ODataResponse } from &#x27;./resources&#x27;;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
 export type FetchPolicy &#x3D;
@@ -649,6 +648,7 @@ export type ODataApiConfig &#x3D; {
   errorHandler?: (error: any, caught: Observable&lt;any&gt;) &#x3D;&gt; Observable&lt;never&gt;;
   options?: ODataApiConfigOptions;
   parsers?: { [type: string]: Parser&lt;any&gt; };
+  populateFromMetadata?: boolean;
   schemas?: ODataSchemaConfig[];
   references?: ODataReferenceConfig[];
   models?: { [type: string]: { new (...params: any[]): any } };
@@ -664,12 +664,13 @@ export type ODataAnnotationConfig &#x3D; {
 };
 export type ODataReferenceConfig &#x3D; {
   uri: string;
-  includes?: string;
   annotations?: ODataAnnotationConfig[];
-  enums?: ODataEnumTypeConfig[];
-  entities?: ODataStructuredTypeConfig[];
-  callables?: ODataCallableConfig[];
-  containers?: ODataEntityContainerConfig[];
+  includes?: { namespace: string; alias?: string; }[];
+  includeAnnotations?: {
+    termNamespace: string; 
+    qualifier?: string;
+    targetNamespace?: string; 
+  }[] 
 };
 export type ODataSchemaConfig &#x3D; {
   namespace: string;
