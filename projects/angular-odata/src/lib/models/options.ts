@@ -384,7 +384,7 @@ export class ODataModelField<F> {
   }
 
   structuredType() {
-    const structuredType = this.options.api.findStructuredType(this.type);
+    const structuredType = this.options.api.findStructuredType<F>(this.type);
     //Throw error if not found
     if (!structuredType) throw new Error(`Could not find structured type for ${this.parser.type}`);
     return structuredType;
@@ -399,7 +399,7 @@ export class ODataModelField<F> {
   }
 
   enumType() {
-    const enumType = this.options.api.findEnumType(this.type);
+    const enumType = this.options.api.findEnumType<F>(this.type);
     //Throw error if not found
     if (!enumType) throw new Error(`Could not find enum type for ${this.parser.type}`);
     return enumType;
