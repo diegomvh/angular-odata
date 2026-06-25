@@ -731,7 +731,7 @@ export class ODataModelOptions<T> {
       parent?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null,
-      ];
+      ] | null;
       resource?:
         | ODataEntityResource<T>
         | ODataNavigationPropertyResource<T>
@@ -769,7 +769,7 @@ export class ODataModelOptions<T> {
       model,
       reset = false,
     }: {
-      parent?: [ODataModel<any>, ODataModelField<any>];
+      parent?: [ODataModel<any>, ODataModelField<any>] | null;
       resource?:
         | ODataEntitySetResource<T>
         | ODataNavigationPropertyResource<T>
@@ -1068,7 +1068,7 @@ export class ODataModelOptions<T> {
       parent?: [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null,
-      ];
+      ] | null;
       resource?: ODataResource<T> | null;
       annots?: ODataEntityAnnotations<T>;
     } = {},

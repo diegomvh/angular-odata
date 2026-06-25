@@ -162,6 +162,7 @@ export class ODataResource<T> {
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
     return ModelType.factory(entity, {
+      parent: null,
       resource: resource as
         | ODataEntityResource<T>
         | ODataNavigationPropertyResource<T>
@@ -225,6 +226,7 @@ export class ODataResource<T> {
       resource.query((q) => q.restore(this.queryOptions.toQueryArguments()));
     }
     return CollectionType.factory(entities, {
+      parent: null,
       resource: resource as
         | ODataEntitySetResource<T>
         | ODataNavigationPropertyResource<T>

@@ -72,7 +72,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       model,
       reset = false,
     }: {
-      parent?: [ODataModel<any>, ODataModelField<any>];
+      parent?: [ODataModel<any>, ODataModelField<any>] | null;
       resource?:
         | ODataEntitySetResource<T>
         | ODataNavigationPropertyResource<T>
@@ -131,7 +131,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       model,
       reset = false,
     }: {
-      parent?: [ODataModel<any>, ODataModelField<any>];
+      parent?: [ODataModel<any>, ODataModelField<any>] | null;
       resource?:
         | ODataEntitySetResource<T>
         | ODataNavigationPropertyResource<T>
