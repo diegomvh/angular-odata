@@ -41,7 +41,7 @@ function addBody<T>(
   };
 }
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ODataClient {
   settings?: ODataSettings;
   constructor(

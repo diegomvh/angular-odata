@@ -191,6 +191,7 @@ export interface ODataCache {
   forget({ name, scope, tags }: { name?: string; scope?: string[]; tags?: string[] }): void;
   scope(obj: ODataRequest<any>): string[];
   tags(obj: ODataResponse<any>): string[];
+  size(): number;
 }
 
 export interface ODataApiConfigOptions {
@@ -255,12 +256,13 @@ export type ODataAnnotationConfig = {
 };
 export type ODataReferenceConfig = {
   uri: string;
-  includes?: string;
   annotations?: ODataAnnotationConfig[];
-  enums?: ODataEnumTypeConfig[];
-  entities?: ODataStructuredTypeConfig[];
-  callables?: ODataCallableConfig[];
-  containers?: ODataEntityContainerConfig[];
+  includes?: { namespace: string; alias?: string; }[];
+  includeAnnotations?: {
+    termNamespace: string; 
+    qualifier?: string;
+    targetNamespace?: string; 
+  }[] 
 };
 export type ODataSchemaConfig = {
   namespace: string;

@@ -40,6 +40,8 @@ import {
   ODataCache,
 } from './types';
 import type { ODataMetadata } from './metadata/metadata';
+import { ODataEntityAnnotations } from './annotations';
+import { ODataReference } from './schema/reference';
 
 const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);
 
@@ -64,6 +66,8 @@ export class ODataApi {
   parsers: Map<string, Parser<any>>;
   // Schemas
   schemas: ODataSchema[];
+  // References
+  references: ODataReference[];
   // Models
   models: { [type: string]: typeof ODataModel<any> } = {};
   // Collections
@@ -91,6 +95,7 @@ export class ODataApi {
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
     this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
+    this.references = (config.references ?? []).map((reference) => new ODataReference(reference, this));
     this.models = (config.models ?? {}) as { [type: string]: typeof ODataModel<any> };
     this.collections = (config.collections ?? {}) as {
       [type: string]: typeof ODataCollection<any, ODataModel<any>>;
@@ -269,7 +274,7 @@ export class ODataApi {
       bodyQueryOptions?: QueryOption[];
     },
   ): Observable<any> {
-    let req = ODataRequest.factory(this, method, resource, {
+    const req = ODataRequest.factory(this, method, resource, {
       body: options.body,
       etag: options.etag,
       context: options.context,
@@ -423,12 +428,13 @@ export class ODataApi {
     }
     const enumTypes = this.schemas.reduce(
       (acc, schema) => [...acc, ...schema.enums],
-      <ODataEnumType<T>[]>[],
+      <ODataEnumType<any>[]>[],
     );
     let enumType = enumTypes.find((e) => e.type() === value);
+    enumType = enumType ?? enumTypes.find((e) => e.type({alias: true}) === value);
     enumType = enumType ?? enumTypes.find((e) => e.name === value);
     this.memo.enumTypes.set(value, enumType);
-    return enumType;
+    return enumType as ODataEnumType<T> | undefined;
   }
   //#endregion
 
@@ -439,12 +445,13 @@ export class ODataApi {
     }
     const structuredTypes = this.schemas.reduce(
       (acc, schema) => [...acc, ...schema.entities],
-      <ODataStructuredType<T>[]>[],
+      <ODataStructuredType<any>[]>[],
     );
     let structuredType = structuredTypes.find((e) => e.type() === value);
+    structuredType = structuredType ?? structuredTypes.find((e) => e.type({alias: true}) === value);
     structuredType = structuredType ?? structuredTypes.find((e) => e.name === value);
     this.memo.structuredTypes.set(value, structuredType);
-    return structuredType;
+    return structuredType as ODataStructuredType<T> | undefined;
   }
   //#endregion
 
@@ -459,14 +466,14 @@ export class ODataApi {
       bindingType !== undefined ? this.findStructuredType<any>(bindingType) : undefined;
     const callables = this.schemas.reduce(
       (acc, schema) => [...acc, ...schema.callables],
-      <ODataCallable<R>[]>[],
+      <ODataCallable<any>[]>[],
     );
     let callable = callables.find((c) => {
       const isCallableType = c.type() == value;
       const callableBindingType = c.binding()?.type;
       const callableBindingStructuredType =
         callableBindingType !== undefined
-          ? this.findStructuredType(callableBindingType)
+          ? this.findStructuredType<any>(callableBindingType)
           : undefined;
 
       return (
@@ -476,6 +483,23 @@ export class ODataApi {
             bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
       );
     });
+    callable = 
+      callable ?? 
+      callables.find((c) => {
+        const isCallableType = c.type({alias: true}) == value;
+        const callableBindingType = c.binding()?.type;
+        const callableBindingStructuredType =
+          callableBindingType !== undefined
+            ? this.findStructuredType<any>(callableBindingType)
+            : undefined;
+
+        return (
+          isCallableType &&
+          (!bindingStructuredType ||
+            (callableBindingStructuredType &&
+              bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
+        );
+      });
     callable =
       callable ??
       callables.find((c) => {
@@ -483,7 +507,7 @@ export class ODataApi {
         const callableBindingType = c.binding()?.type;
         const callableBindingStructuredType =
           callableBindingType !== undefined
-            ? this.findStructuredType(callableBindingType)
+            ? this.findStructuredType<any>(callableBindingType)
             : undefined;
 
         return (
@@ -495,7 +519,7 @@ export class ODataApi {
       });
 
     this.memo.callables.set(key, callable);
-    return callable;
+    return callable as ODataCallable<R> | undefined;
   }
   //#endregion
 
@@ -509,9 +533,10 @@ export class ODataApi {
       <ODataEntitySet[]>[],
     );
     let entitySet = entitySets.find((e) => e.type() === value);
+    entitySet = entitySet ?? entitySets.find((e) => e.type({alias: true}) === value);
     entitySet = entitySet ?? entitySets.find((e) => e.name === value);
     this.memo.entitySets.set(value, entitySet);
-    return entitySet;
+    return entitySet as ODataEntitySet | undefined;
   }
   //#endregion
 
@@ -525,9 +550,10 @@ export class ODataApi {
       <ODataSingleton[]>[],
     );
     let singleton = singletons.find((e) => e.type() === value);
+    singleton = singleton ?? singletons.find((e) => e.type({alias: true}) === value);
     singleton = singleton ?? singletons.find((e) => e.name === value);
     this.memo.singletons.set(value, singleton);
-    return singleton;
+    return singleton as ODataSingleton | undefined;
   }
   //#endregion
 
@@ -580,10 +606,10 @@ export class ODataApi {
     // Build Ad-hoc collection
     const Collection = class extends ODataCollection<T, ODataModel<T>> {
       static override model = model!;
-    } as typeof ODataCollection<any, ODataModel<any>>;
+    } as typeof ODataCollection<T, ODataModel<T>>;
     // Store New Collection structured for next time
     structured.collection = Collection;
-    return Collection as typeof ODataCollection<T, ODataModel<T>>;
+    return Collection;
   }
 
   public collectionForType<T>(type: string) {

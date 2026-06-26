@@ -45,9 +45,7 @@ export class ODataSchemaElement extends ODataAnnotatable {
    * @returns True if the callable is type of the given type
    */
   isTypeOf(element: ODataSchemaElement): boolean {
-    const names = [`${this.schema.namespace}.${this.name}`];
-    if (this.schema.alias) names.push(`${this.schema.alias}.${this.name}`);
-    return names.includes(element.type());
+    return this.type() === element.type();
   }
 
   /**

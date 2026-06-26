@@ -32,7 +32,7 @@ import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   static model: typeof ODataModel<any> | null = null;
   _parent:
-    | [ODataModel<any> | ODataCollection<any, ODataModel<any>>, ODataModelField<any> | null]
+    | [ODataModel<any>, ODataModelField<any>]
     | null = null;
   _resource:
     | ODataEntitySetResource<T>
@@ -41,7 +41,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     | null = null;
   _resources: {
     parent:
-      | [ODataModel<any> | ODataCollection<any, ODataModel<any>>, ODataModelField<any> | null]
+      | [ODataModel<any>, ODataModelField<any>]
       | null;
     resource:
       | ODataEntitySetResource<T>
@@ -72,7 +72,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       model,
       reset = false,
     }: {
-      parent?: [ODataModel<any>, ODataModelField<any>];
+      parent?: [ODataModel<any>, ODataModelField<any>] | null;
       resource?:
         | ODataEntitySetResource<T>
         | ODataNavigationPropertyResource<T>
@@ -131,7 +131,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       model,
       reset = false,
     }: {
-      parent?: [ODataModel<any>, ODataModelField<any>];
+      parent?: [ODataModel<any>, ODataModelField<any>] | null;
       resource?:
         | ODataEntitySetResource<T>
         | ODataNavigationPropertyResource<T>
@@ -336,6 +336,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return new (<typeof ODataCollection>this.constructor)(
       this.toEntities(INCLUDE_DEEP) as Partial<T>[],
       {
+        parent: this._parent,
         resource: this.resource()?.clone(),
         annots: this.annots().clone(),
       },
