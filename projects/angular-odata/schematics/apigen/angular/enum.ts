@@ -51,7 +51,7 @@ export class Enum extends Base {
     return this.edmType.IsFlags;
   }
   public hasValue(value: number) {
-    return this.edmType.Member.some(m => m.Value === value);
+    return this.edmType.Member.some((m) => m.Value === value);
   }
   public override importTypes(): string[] {
     return [];

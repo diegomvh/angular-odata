@@ -106,7 +106,11 @@ export const binary = (value: string): QueryCustomType => ({
   value,
 });
 export const isQueryCustomType = (value: any) =>
-  value !== null && value !== undefined && typeof value === 'object' && 'type' in value && value.type in QueryCustomTypes;
+  value !== null &&
+  value !== undefined &&
+  typeof value === 'object' &&
+  'type' in value &&
+  value.type in QueryCustomTypes;
 
 export const isRawType = (value: any) =>
   isQueryCustomType(value) && (value as QueryCustomType).type === QueryCustomTypes.Raw;

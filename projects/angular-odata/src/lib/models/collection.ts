@@ -31,18 +31,14 @@ import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../annotations
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   static model: typeof ODataModel<any> | null = null;
-  _parent:
-    | [ODataModel<any>, ODataModelField<any>]
-    | null = null;
+  _parent: [ODataModel<any>, ODataModelField<any>] | null = null;
   _resource:
     | ODataEntitySetResource<T>
     | ODataNavigationPropertyResource<T>
     | ODataPropertyResource<T>
     | null = null;
   _resources: {
-    parent:
-      | [ODataModel<any>, ODataModelField<any>]
-      | null;
+    parent: [ODataModel<any>, ODataModelField<any>] | null;
     resource:
       | ODataEntitySetResource<T>
       | ODataNavigationPropertyResource<T>

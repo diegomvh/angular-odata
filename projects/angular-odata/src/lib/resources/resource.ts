@@ -313,7 +313,7 @@ export class ODataResource<T> {
   }
 
   toString(
-    { escape, ...options }: ParserOptions & { escape?: boolean, params?: boolean } = {
+    { escape, ...options }: ParserOptions & { escape?: boolean; params?: boolean } = {
       escape: false,
       params: true,
     },

@@ -35,7 +35,7 @@ export class ODataInStorageCache extends ODataBaseCache {
 
   override get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
     const key = this.buildKey([...(scope || []), name]);
-    const entry = JSON.parse(this.storage.getItem(key) ?? "{}");
+    const entry = JSON.parse(this.storage.getItem(key) ?? '{}');
     return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
   }
 
@@ -43,28 +43,36 @@ export class ODataInStorageCache extends ODataBaseCache {
     name,
     scope = [],
     tags = [],
-  }: { name?: string, scope?: string[]; tags?: string[] }) {
+  }: {
+    name?: string;
+    scope?: string[];
+    tags?: string[];
+  }) {
     if (name) scope.push(name);
     const key = scope.length > 0 ? this.buildKey(scope) : undefined;
-    Object.keys(this.storage).filter(k => k.startsWith(this.prefix)).forEach(k => {
-      const entry = JSON.parse(this.storage.getItem(k) ?? "{}");
-      if (
-        this.isExpired(entry) || // Expired
-        (key !== undefined && k.startsWith(key)) || // Key
-        (tags.length > 0 && tags.some((t) => entry.tags.indexOf(t) !== -1)) // Tags
-      ) {
-        this.storage.removeItem(k);
-      }
-    });
+    Object.keys(this.storage)
+      .filter((k) => k.startsWith(this.prefix))
+      .forEach((k) => {
+        const entry = JSON.parse(this.storage.getItem(k) ?? '{}');
+        if (
+          this.isExpired(entry) || // Expired
+          (key !== undefined && k.startsWith(key)) || // Key
+          (tags.length > 0 && tags.some((t) => entry.tags.indexOf(t) !== -1)) // Tags
+        ) {
+          this.storage.removeItem(k);
+        }
+      });
   }
 
   /**
    * Flush the cache and clean the storage
    */
   override flush() {
-    Object.keys(this.storage).filter(k => k.startsWith(this.prefix)).forEach(k => {
-      this.storage.removeItem(k);
-    });
+    Object.keys(this.storage)
+      .filter((k) => k.startsWith(this.prefix))
+      .forEach((k) => {
+        this.storage.removeItem(k);
+      });
   }
 
   /**
@@ -95,6 +103,6 @@ export class ODataInStorageCache extends ODataBaseCache {
   }
 
   override size() {
-    return Object.keys(this.storage).filter(k => k.startsWith(this.prefix)).length;
+    return Object.keys(this.storage).filter((k) => k.startsWith(this.prefix)).length;
   }
 }

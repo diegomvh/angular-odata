@@ -20,9 +20,7 @@ export class ODataSettings {
   }
 
   initialize(requester: (request: ODataRequest<any>) => Observable<any>) {
-    return Promise.all(
-      this.apis.map((api) => api.initialize(requester))
-    );
+    return Promise.all(this.apis.map((api) => api.initialize(requester)));
   }
 
   public defaultApi() {

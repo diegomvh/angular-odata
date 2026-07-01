@@ -40,19 +40,20 @@ function addBody<T>(
   };
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ODataClient {
   settings?: ODataSettings;
 
   constructor(private loader: ODataLoader) {}
 
   initialize() {
-    return this.loader.load()
-    .then(({configs, requester}) => {
-      this.settings = new ODataSettings(configs);
-      return this.settings.initialize(requester);
-    })
-    .then(results => results.every(v => v));
+    return this.loader
+      .load()
+      .then(({ configs, requester }) => {
+        this.settings = new ODataSettings(configs);
+        return this.settings.initialize(requester);
+      })
+      .then((results) => results.every((v) => v));
   }
 
   //#region Resolve Building Blocks

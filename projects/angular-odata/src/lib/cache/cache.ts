@@ -29,7 +29,7 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry<any>) {
-    return entry.date < (Date.now() - entry.maxAge);
+    return entry.date < Date.now() - entry.maxAge;
   }
 
   /**
@@ -91,12 +91,23 @@ export abstract class ODataBaseCache implements ODataCache {
     return names.join(CACHE_KEY_SEPARATOR);
   }
 
-  abstract put<T>(name: string, payload: T, { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] }): void;
+  abstract put<T>(
+    name: string,
+    payload: T,
+    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] },
+  ): void;
   abstract get<T>(name: string, { scope }: { scope?: string[] }): T | undefined;
   abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
   abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
-  abstract forget({ name, scope, tags}: { name?: string; scope?: string[]; tags?: string[] }): void;
+  abstract forget({
+    name,
+    scope,
+    tags,
+  }: {
+    name?: string;
+    scope?: string[];
+    tags?: string[];
+  }): void;
   abstract flush(): void;
   abstract size(): number;
-
 }

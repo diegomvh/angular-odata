@@ -71,7 +71,7 @@ export class ODataInMemoryCache extends ODataBaseCache {
     name,
     scope = [],
     tags = [],
-  }: { name?: string, scope?: string[]; tags?: string[] } = {}) {
+  }: { name?: string; scope?: string[]; tags?: string[] } = {}) {
     if (name) scope.push(name);
     const key = scope.length > 0 ? this.buildKey(scope) : undefined;
     this.entries.forEach((entry, k) => {

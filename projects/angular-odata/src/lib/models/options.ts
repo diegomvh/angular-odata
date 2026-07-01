@@ -355,13 +355,7 @@ export class ODataModelField<F> {
     return this.parser.annotatedValue<T>(term);
   }
 
-  configure({
-    concurrency,
-    options,
-  }: {
-    concurrency: boolean;
-    options: ParserOptions;
-  }) {
+  configure({ concurrency, options }: { concurrency: boolean; options: ParserOptions }) {
     this.parserOptions = options;
     if (concurrency) this.concurrency = concurrency;
     if (this.default !== undefined) this.default = this.deserialize(this.default, options);
@@ -728,10 +722,9 @@ export class ODataModelOptions<T> {
       annots,
       reset = false,
     }: {
-      parent?: [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null,
-      ] | null;
+      parent?:
+        | [ODataModel<any> | ODataCollection<any, ODataModel<any>>, ODataModelField<any> | null]
+        | null;
       resource?:
         | ODataEntityResource<T>
         | ODataNavigationPropertyResource<T>
@@ -992,8 +985,12 @@ export class ODataModelOptions<T> {
       resource = resource ?? (model._resource?.clone() as ODataResource<T>);
       // Break if no resource
       if (resource === null) break;
-      // Resolve Key 
-      if ((prevField === null || prevField.collection) && ODataModelOptions.isModel(model) && (model as ODataModel<any>)._meta.isEntityType()) {
+      // Resolve Key
+      if (
+        (prevField === null || prevField.collection) &&
+        ODataModelOptions.isModel(model) &&
+        (model as ODataModel<any>)._meta.isEntityType()
+      ) {
         const key = (model as ODataModel<any>).key({ field_mapping: true }) as EntityKey<any>;
         if (key !== undefined) {
           resource =
@@ -1006,9 +1003,10 @@ export class ODataModelOptions<T> {
         // Resolve Structured Type Cast
         const resourceType = resource.structuredType();
         const fieldType = field.options.structuredType;
-        if (resourceType !== undefined && 
-          fieldType !== undefined && 
-          fieldType !== resourceType && 
+        if (
+          resourceType !== undefined &&
+          fieldType !== undefined &&
+          fieldType !== resourceType &&
           fieldType.isSubtypeOf(resourceType)
         ) {
           resource = resource.cast<any>(fieldType.type());
@@ -1065,10 +1063,9 @@ export class ODataModelOptions<T> {
       resource,
       annots,
     }: {
-      parent?: [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null,
-      ] | null;
+      parent?:
+        | [ODataModel<any> | ODataCollection<any, ODataModel<any>>, ODataModelField<any> | null]
+        | null;
       resource?: ODataResource<T> | null;
       annots?: ODataEntityAnnotations<T>;
     } = {},
