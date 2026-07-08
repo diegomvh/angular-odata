@@ -9,3 +9,5 @@ import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
   ]
 })
 export class <%= classify(name) %> { }
+// #region Custom
+// #endregion Custom
