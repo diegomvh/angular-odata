@@ -575,12 +575,48 @@ export class ODataModel<T> {
   }
 
   //#region Callables
-  callFunction<P, R>(
+  protected callFunction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'property',
+    options?: ODataFunctionOptions<R>,
+  ): Observable<R>;
+  protected callFunction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'model',
+    options?: ODataFunctionOptions<R>,
+  ): Observable<ODataModel<R>>;
+  protected callFunction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'collection',
+    options?: ODataFunctionOptions<R>,
+  ): Observable<ODataCollection<R, ODataModel<R>>>;
+  protected callFunction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'none',
+    options?: ODataFunctionOptions<R>,
+  ): Observable<null>;
+  protected callFunction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'blob',
+    options?: ODataFunctionOptions<R>,
+  ): Observable<Blob>;
+  protected callFunction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'arraybuffer',
+    options?: ODataFunctionOptions<R>,
+  ): Observable<ArrayBuffer>;
+  protected callFunction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none' | 'blob' | 'arraybuffer',
     options: ODataFunctionOptions<R> = {},
-  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null | Blob | ArrayBuffer> {
+  ): Observable<any> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
       return throwError(
@@ -604,12 +640,48 @@ export class ODataModel<T> {
     }
   }
 
-  callAction<P, R>(
+  protected callAction<P, R>(
     name: string,
     params: P | null,
-    responseType?: 'property' | 'model' | 'collection' | 'none' | 'blob' | 'arraybuffer',
-    { ...options }: {} & ODataActionOptions<R> = {},
-  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null | Blob | ArrayBuffer> {
+    responseType: 'model',
+    { ...options }: ODataActionOptions<R>,
+  ): Observable<ODataModel<R>>;
+  protected callAction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'collection',
+    { ...options }: ODataActionOptions<R>,
+  ): Observable<ODataCollection<R, ODataModel<R>>>;
+  protected callAction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'property',
+    { ...options }: ODataActionOptions<R>,
+  ): Observable<R>;
+  protected callAction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'none',
+    { ...options }: ODataActionOptions<R>,
+  ): Observable<null>;
+  protected callAction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'blob',
+    { ...options }: ODataActionOptions<R>,
+  ): Observable<Blob>;
+  protected callAction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'arraybuffer',
+    { ...options }: ODataActionOptions<R>,
+  ): Observable<ArrayBuffer>;
+  protected callAction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'property' | 'model' | 'collection' | 'none' | 'blob' | 'arraybuffer',
+    { ...options }: ODataActionOptions<R> = {},
+  ): Observable<any> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
       return throwError(
