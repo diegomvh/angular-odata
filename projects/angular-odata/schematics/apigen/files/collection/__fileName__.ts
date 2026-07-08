@@ -22,3 +22,5 @@ export class <%= classify(name) %><E extends <%= entity.name() %>, M extends <%=
 // #region Custom
 // #endregion Custom
 }
+// #region Custom
+// #endregion Custom

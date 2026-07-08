@@ -6,3 +6,5 @@ export enum <%= classify(name) %> {<% for(let value of values) { %>
 // #region Custom
 // #endregion Custom
 }
+// #region Custom
+// #endregion Custom

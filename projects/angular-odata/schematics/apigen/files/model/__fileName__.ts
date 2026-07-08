@@ -33,3 +33,5 @@ export class <%= classify(name) %><E extends <%= entity.name() %>> extends <% if
 // #region Custom
 // #endregion Custom
 }
+// #region Custom
+// #endregion Custom

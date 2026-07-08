@@ -29,3 +29,5 @@ export class <%= classify(name) %> extends ODataEntitySetService<<%= toTypescrip
 // #region Custom
 // #endregion Custom
 }
+// #region Custom
+// #endregion Custom

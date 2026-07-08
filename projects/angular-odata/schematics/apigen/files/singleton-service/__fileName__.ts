@@ -20,3 +20,5 @@ export class <%= classify(name) %> extends ODataSingletonService<<%= toTypescrip
 // #region Custom
 // #endregion Custom
 }
+// #region Custom
+// #endregion Custom

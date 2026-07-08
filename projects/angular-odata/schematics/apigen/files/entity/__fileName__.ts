@@ -10,3 +10,5 @@ export interface <%= classify(name) %><% if (baseType) { %> extends <%= toTypesc
 // #region Custom
 // #endregion Custom
 }
+// #region Custom
+// #endregion Custom

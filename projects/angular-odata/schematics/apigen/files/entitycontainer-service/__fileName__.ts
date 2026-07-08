@@ -20,3 +20,5 @@ export class <%= classify(name) %> extends ODataBaseService {
 // #region Custom
 // #endregion Custom
 }
+// #region Custom
+// #endregion Custom

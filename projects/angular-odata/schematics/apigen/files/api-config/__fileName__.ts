@@ -18,3 +18,5 @@ export const <%= classify(name) %> = ODataMetadata.fromJson(json).toConfig({
     '<%= col.entityType() %>': <%= col.importedName(imports) %>, <% } %>
   }
 }) as ODataApiConfig;
+// #region Custom
+// #endregion Custom
