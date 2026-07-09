@@ -512,8 +512,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="99"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:99</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -551,8 +551,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="98"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:98</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="102"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:102</a></div>
                         </td>
                     </tr>
 
@@ -619,8 +619,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="95"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:95</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:99</a></div>
                         </td>
                     </tr>
 
@@ -707,8 +707,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="96"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:96</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -951,8 +951,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="97"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:97</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:101</a></div>
                         </td>
                     </tr>
 
@@ -1107,8 +1107,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="100"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:100</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="112"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:112</a></div>
                         </td>
                     </tr>
 
@@ -1240,7 +1240,7 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry&lt;any&gt;) {
-    return entry.date &lt; (Date.now() - entry.maxAge);
+    return entry.date &lt; Date.now() - entry.maxAge;
   }
 
   /**
@@ -1302,14 +1302,25 @@ export abstract class ODataBaseCache implements ODataCache {
     return names.join(CACHE_KEY_SEPARATOR);
   }
 
-  abstract put&lt;T&gt;(name: string, payload: T, { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] }): void;
+  abstract put&lt;T&gt;(
+    name: string,
+    payload: T,
+    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] },
+  ): void;
   abstract get&lt;T&gt;(name: string, { scope }: { scope?: string[] }): T | undefined;
   abstract getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined;
   abstract putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;): void;
-  abstract forget({ name, scope, tags}: { name?: string; scope?: string[]; tags?: string[] }): void;
+  abstract forget({
+    name,
+    scope,
+    tags,
+  }: {
+    name?: string;
+    scope?: string[];
+    tags?: string[];
+  }): void;
   abstract flush(): void;
   abstract size(): number;
-
 }
 </code></pre>
     </div>

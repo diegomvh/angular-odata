@@ -169,8 +169,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="72"
-                                    class="link-to-prism">projects/angular-odata/src/lib/module.ts:72</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">projects/angular-odata/src/lib/module.ts:75</a></div>
                         </td>
                     </tr>
 
@@ -248,7 +248,8 @@ export interface PassedInitialConfig {
 export const ODATA_CONFIG &#x3D; new InjectionToken&lt;ODataApiConfig | ODataApiConfig[]&gt;(&#x27;odata.config&#x27;);
 
 export function defaultHttpSyncLoader(config: ODataApiConfig | ODataApiConfig[], http: HttpClient) {
-  return new ODataSyncLoader(config!,
+  return new ODataSyncLoader(
+    config!,
     (req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; &#x3D;&gt;
       http.request(req.method, &#x60;${req.url}&#x60;, {
         body: req.body,
@@ -260,7 +261,7 @@ export function defaultHttpSyncLoader(config: ODataApiConfig | ODataApiConfig[],
         responseType: req.responseType,
         withCredentials: req.withCredentials,
       }),
-    ); 
+  );
 }
 
 // Standalone version
@@ -274,13 +275,15 @@ export function provideODataClient(passedConfig: PassedInitialConfig): Environme
     ODataServiceFactory,
   ];
   if (passedConfig?.loader &#x3D;&#x3D;&#x3D; undefined) {
-    providers &#x3D; [...providers,
-    provideHttpClient(),
-    {
-      provide: ODataLoader,
-      useFactory: defaultHttpSyncLoader,
-      deps: [ODATA_CONFIG, HttpClient],
-    }];
+    providers &#x3D; [
+      ...providers,
+      provideHttpClient(),
+      {
+        provide: ODataLoader,
+        useFactory: defaultHttpSyncLoader,
+        deps: [ODATA_CONFIG, HttpClient],
+      },
+    ];
   } else {
     providers &#x3D; [...providers, passedConfig.loader];
   }
@@ -295,30 +298,31 @@ export class ODataModule {
   static forRoot(passedConfig: PassedInitialConfig): ModuleWithProviders&lt;ODataModule&gt; {
     let providers: (Provider | EnvironmentProviders)[] &#x3D; [
       // Make the ODATA_CONFIG available through injection
-      { provide: ODATA_CONFIG, useValue: passedConfig.config ?? []},
+      { provide: ODATA_CONFIG, useValue: passedConfig.config ?? [] },
       // Register the startup task
       provideAppInitializer(() &#x3D;&gt; inject(ODataClient).initialize()),
       ODataClient,
       ODataServiceFactory,
     ];
     if (passedConfig?.loader &#x3D;&#x3D;&#x3D; undefined) {
-      providers &#x3D; [...providers,
-      provideHttpClient(),
-      {
-        provide: ODataLoader,
-        useFactory: defaultHttpSyncLoader,
-        deps: [ODATA_CONFIG, HttpClient],
-      }];
+      providers &#x3D; [
+        ...providers,
+        provideHttpClient(),
+        {
+          provide: ODataLoader,
+          useFactory: defaultHttpSyncLoader,
+          deps: [ODATA_CONFIG, HttpClient],
+        },
+      ];
     } else {
       providers &#x3D; [...providers, passedConfig.loader];
     }
     return {
       ngModule: ODataModule,
-      providers
+      providers,
     };
   }
 }
-
 </code></pre>
     </div>
 </div>

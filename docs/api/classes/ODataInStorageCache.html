@@ -488,7 +488,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:64</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:70</a></code>
 </div>
                         </td>
                     </tr>
@@ -709,7 +709,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:90</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:98</a></code>
 </div>
                         </td>
                     </tr>
@@ -906,7 +906,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:75</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:83</a></code>
 </div>
                         </td>
                     </tr>
@@ -1004,7 +1004,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:97</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:105</a></code>
 </div>
                         </td>
                     </tr>
@@ -1413,7 +1413,7 @@ export class ODataInStorageCache extends ODataBaseCache {
 
   override get&lt;T&gt;(name: string, { scope }: { scope?: string[] } &#x3D; {}): T | undefined {
     const key &#x3D; this.buildKey([...(scope || []), name]);
-    const entry &#x3D; JSON.parse(this.storage.getItem(key) ?? &quot;{}&quot;);
+    const entry &#x3D; JSON.parse(this.storage.getItem(key) ?? &#x27;{}&#x27;);
     return entry !&#x3D;&#x3D; undefined &amp;&amp; !this.isExpired(entry) ? entry.payload : undefined;
   }
 
@@ -1421,28 +1421,36 @@ export class ODataInStorageCache extends ODataBaseCache {
     name,
     scope &#x3D; [],
     tags &#x3D; [],
-  }: { name?: string, scope?: string[]; tags?: string[] }) {
+  }: {
+    name?: string;
+    scope?: string[];
+    tags?: string[];
+  }) {
     if (name) scope.push(name);
     const key &#x3D; scope.length &gt; 0 ? this.buildKey(scope) : undefined;
-    Object.keys(this.storage).filter(k &#x3D;&gt; k.startsWith(this.prefix)).forEach(k &#x3D;&gt; {
-      const entry &#x3D; JSON.parse(this.storage.getItem(k) ?? &quot;{}&quot;);
-      if (
-        this.isExpired(entry) || // Expired
-        (key !&#x3D;&#x3D; undefined &amp;&amp; k.startsWith(key)) || // Key
-        (tags.length &gt; 0 &amp;&amp; tags.some((t) &#x3D;&gt; entry.tags.indexOf(t) !&#x3D;&#x3D; -1)) // Tags
-      ) {
-        this.storage.removeItem(k);
-      }
-    });
+    Object.keys(this.storage)
+      .filter((k) &#x3D;&gt; k.startsWith(this.prefix))
+      .forEach((k) &#x3D;&gt; {
+        const entry &#x3D; JSON.parse(this.storage.getItem(k) ?? &#x27;{}&#x27;);
+        if (
+          this.isExpired(entry) || // Expired
+          (key !&#x3D;&#x3D; undefined &amp;&amp; k.startsWith(key)) || // Key
+          (tags.length &gt; 0 &amp;&amp; tags.some((t) &#x3D;&gt; entry.tags.indexOf(t) !&#x3D;&#x3D; -1)) // Tags
+        ) {
+          this.storage.removeItem(k);
+        }
+      });
   }
 
   /**
    * Flush the cache and clean the storage
    */
   override flush() {
-    Object.keys(this.storage).filter(k &#x3D;&gt; k.startsWith(this.prefix)).forEach(k &#x3D;&gt; {
-      this.storage.removeItem(k);
-    });
+    Object.keys(this.storage)
+      .filter((k) &#x3D;&gt; k.startsWith(this.prefix))
+      .forEach((k) &#x3D;&gt; {
+        this.storage.removeItem(k);
+      });
   }
 
   /**
@@ -1473,7 +1481,7 @@ export class ODataInStorageCache extends ODataBaseCache {
   }
 
   override size() {
-    return Object.keys(this.storage).filter(k &#x3D;&gt; k.startsWith(this.prefix)).length;
+    return Object.keys(this.storage).filter((k) &#x3D;&gt; k.startsWith(this.prefix)).length;
   }
 }
 </code></pre>

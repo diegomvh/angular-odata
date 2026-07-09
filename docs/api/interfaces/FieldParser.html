@@ -665,12 +665,12 @@ export type ODataAnnotationConfig &#x3D; {
 export type ODataReferenceConfig &#x3D; {
   uri: string;
   annotations?: ODataAnnotationConfig[];
-  includes?: { namespace: string; alias?: string; }[];
+  includes?: { namespace: string; alias?: string }[];
   includeAnnotations?: {
-    termNamespace: string; 
+    termNamespace: string;
     qualifier?: string;
-    targetNamespace?: string; 
-  }[] 
+    targetNamespace?: string;
+  }[];
 };
 export type ODataSchemaConfig &#x3D; {
   namespace: string;

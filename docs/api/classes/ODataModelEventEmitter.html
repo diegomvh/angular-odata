@@ -763,13 +763,7 @@ export class ODataModelField&lt;F&gt; {
     return this.parser.annotatedValue&lt;T&gt;(term);
   }
 
-  configure({
-    concurrency,
-    options,
-  }: {
-    concurrency: boolean;
-    options: ParserOptions;
-  }) {
+  configure({ concurrency, options }: { concurrency: boolean; options: ParserOptions }) {
     this.parserOptions &#x3D; options;
     if (concurrency) this.concurrency &#x3D; concurrency;
     if (this.default !&#x3D;&#x3D; undefined) this.default &#x3D; this.deserialize(this.default, options);
@@ -792,7 +786,7 @@ export class ODataModelField&lt;F&gt; {
   }
 
   structuredType() {
-    const structuredType &#x3D; this.options.api.findStructuredType(this.type);
+    const structuredType &#x3D; this.options.api.findStructuredType&lt;F&gt;(this.type);
     //Throw error if not found
     if (!structuredType) throw new Error(&#x60;Could not find structured type for ${this.parser.type}&#x60;);
     return structuredType;
@@ -807,7 +801,7 @@ export class ODataModelField&lt;F&gt; {
   }
 
   enumType() {
-    const enumType &#x3D; this.options.api.findEnumType(this.type);
+    const enumType &#x3D; this.options.api.findEnumType&lt;F&gt;(this.type);
     //Throw error if not found
     if (!enumType) throw new Error(&#x60;Could not find enum type for ${this.parser.type}&#x60;);
     return enumType;
@@ -1136,10 +1130,9 @@ export class ODataModelOptions&lt;T&gt; {
       annots,
       reset &#x3D; false,
     }: {
-      parent?: [
-        ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;,
-        ODataModelField&lt;any&gt; | null,
-      ];
+      parent?:
+        | [ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;, ODataModelField&lt;any&gt; | null]
+        | null;
       resource?:
         | ODataEntityResource&lt;T&gt;
         | ODataNavigationPropertyResource&lt;T&gt;
@@ -1177,7 +1170,7 @@ export class ODataModelOptions&lt;T&gt; {
       model,
       reset &#x3D; false,
     }: {
-      parent?: [ODataModel&lt;any&gt;, ODataModelField&lt;any&gt;];
+      parent?: [ODataModel&lt;any&gt;, ODataModelField&lt;any&gt;] | null;
       resource?:
         | ODataEntitySetResource&lt;T&gt;
         | ODataNavigationPropertyResource&lt;T&gt;
@@ -1400,8 +1393,12 @@ export class ODataModelOptions&lt;T&gt; {
       resource &#x3D; resource ?? (model._resource?.clone() as ODataResource&lt;T&gt;);
       // Break if no resource
       if (resource &#x3D;&#x3D;&#x3D; null) break;
-      // Resolve Key 
-      if ((prevField &#x3D;&#x3D;&#x3D; null || prevField.collection) &amp;&amp; ODataModelOptions.isModel(model) &amp;&amp; (model as ODataModel&lt;any&gt;)._meta.isEntityType()) {
+      // Resolve Key
+      if (
+        (prevField &#x3D;&#x3D;&#x3D; null || prevField.collection) &amp;&amp;
+        ODataModelOptions.isModel(model) &amp;&amp;
+        (model as ODataModel&lt;any&gt;)._meta.isEntityType()
+      ) {
         const key &#x3D; (model as ODataModel&lt;any&gt;).key({ field_mapping: true }) as EntityKey&lt;any&gt;;
         if (key !&#x3D;&#x3D; undefined) {
           resource &#x3D;
@@ -1414,9 +1411,10 @@ export class ODataModelOptions&lt;T&gt; {
         // Resolve Structured Type Cast
         const resourceType &#x3D; resource.structuredType();
         const fieldType &#x3D; field.options.structuredType;
-        if (resourceType !&#x3D;&#x3D; undefined &amp;&amp; 
-          fieldType !&#x3D;&#x3D; undefined &amp;&amp; 
-          fieldType !&#x3D;&#x3D; resourceType &amp;&amp; 
+        if (
+          resourceType !&#x3D;&#x3D; undefined &amp;&amp;
+          fieldType !&#x3D;&#x3D; undefined &amp;&amp;
+          fieldType !&#x3D;&#x3D; resourceType &amp;&amp;
           fieldType.isSubtypeOf(resourceType)
         ) {
           resource &#x3D; resource.cast&lt;any&gt;(fieldType.type());
@@ -1473,10 +1471,9 @@ export class ODataModelOptions&lt;T&gt; {
       resource,
       annots,
     }: {
-      parent?: [
-        ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;,
-        ODataModelField&lt;any&gt; | null,
-      ];
+      parent?:
+        | [ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;, ODataModelField&lt;any&gt; | null]
+        | null;
       resource?: ODataResource&lt;T&gt; | null;
       annots?: ODataEntityAnnotations&lt;T&gt;;
     } &#x3D; {},

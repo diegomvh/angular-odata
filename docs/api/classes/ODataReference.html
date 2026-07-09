@@ -222,7 +222,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:40</a></div>
                             </td>
                         </tr>
 
@@ -296,7 +296,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -322,7 +322,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -348,7 +348,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -374,7 +374,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -441,8 +441,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="49"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:49</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/reference.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -675,14 +675,13 @@ export class ODataInclude {
   namespace: string;
   alias?: string;
   reference: ODataReference;
-  constructor(config: {namespace: string, alias?: string}, reference: ODataReference) {
+  constructor(config: { namespace: string; alias?: string }, reference: ODataReference) {
     this.namespace &#x3D; config.namespace;
     this.alias &#x3D; config.alias;
     this.reference &#x3D; reference;
   }
 
-  configure({ options }: { options: ParserOptions }) {
-  }
+  configure({ options }: { options: ParserOptions }) {}
 }
 
 export class ODataIncludeAnnotation {
@@ -690,36 +689,42 @@ export class ODataIncludeAnnotation {
   qualifier?: string;
   targetNamespace?: string;
   reference: ODataReference;
-  constructor(config: {termNamespace: string, qualifier?: string, targetNamespace?: string}, reference: ODataReference) {
-    this.termNamespace &#x3D; config.termNamespace; 
+  constructor(
+    config: { termNamespace: string; qualifier?: string; targetNamespace?: string },
+    reference: ODataReference,
+  ) {
+    this.termNamespace &#x3D; config.termNamespace;
     this.qualifier &#x3D; config.qualifier;
     this.targetNamespace &#x3D; config.targetNamespace;
     this.reference &#x3D; reference;
   }
 
-  configure({ options }: { options: ParserOptions }) {
-  }
+  configure({ options }: { options: ParserOptions }) {}
 }
 
 export class ODataReference extends ODataAnnotatable {
   api: ODataApi;
   uri: string;
-  includes: ODataInclude[]
-  includeAnnotations: ODataIncludeAnnotation[]
+  includes: ODataInclude[];
+  includeAnnotations: ODataIncludeAnnotation[];
 
   constructor(config: ODataReferenceConfig, api: ODataApi) {
     super(config);
     this.api &#x3D; api;
     this.uri &#x3D; config.uri;
     this.includes &#x3D; (config.includes ?? []).map((config) &#x3D;&gt; new ODataInclude(config, this));
-    this.includeAnnotations &#x3D; (config.includeAnnotations ?? []).map((config) &#x3D;&gt; new ODataIncludeAnnotation(config, this));
+    this.includeAnnotations &#x3D; (config.includeAnnotations ?? []).map(
+      (config) &#x3D;&gt; new ODataIncludeAnnotation(config, this),
+    );
   }
 
   configure({ options }: { options: ParserOptions }) {
     // Configure Includes
     this.includes.forEach((include) &#x3D;&gt; include.configure({ options }));
     // Configure IncludeAnnotations
-    this.includeAnnotations.forEach((includeAnnotation) &#x3D;&gt; includeAnnotation.configure({ options }));
+    this.includeAnnotations.forEach((includeAnnotation) &#x3D;&gt;
+      includeAnnotation.configure({ options }),
+    );
   }
 }
 </code></pre>
