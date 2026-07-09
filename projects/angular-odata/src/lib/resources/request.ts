@@ -12,7 +12,7 @@ import {
   TEXT_PLAIN,
 } from '../constants';
 import type { FetchPolicy, ParserOptions, QueryOption } from '../types';
-import { Http, Types } from '../utils';
+import { Http, Objects, Types } from '../utils';
 import type { ODataResource } from './resource';
 import type { ODataOptions } from './types';
 
@@ -79,48 +79,51 @@ export class ODataRequest<T> {
     this.observe = init.observe;
     this.context = init.context;
 
+    // Options
+    const apiOptions = this.api.options;
+    const parserOptions = Objects.merge(apiOptions.parserOptions, init.parserOptions ?? {});
+
     // Response Type
     this._responseType = init.responseType;
 
     // The Body
     this._body = init.body !== undefined ? init.body : null;
-    if (this._body !== null) this._body = this.resource.serialize(this._body, init.parserOptions);
+    if (this._body !== null) this._body = this.resource.serialize(this._body, parserOptions);
 
-    this.withCredentials =
-      init.withCredentials === undefined ? this.api.options.withCredentials : init.withCredentials;
-    this.fetchPolicy = init.fetchPolicy ?? this.api.options.fetchPolicy;
+    this.withCredentials = init.withCredentials ?? apiOptions.withCredentials;
+    this.fetchPolicy = init.fetchPolicy ?? apiOptions.fetchPolicy;
     this.maxAge = init.maxAge;
     this.bodyQueryOptions = [
-      ...(this.api.options.bodyQueryOptions || []),
-      ...(init.bodyQueryOptions || []),
+      ...(apiOptions.bodyQueryOptions ?? []),
+      ...(init.bodyQueryOptions ?? []),
     ];
 
     // The Path and Params from resource
-    const [resourcePath, resourceParams] = this.resource.pathAndParams(init.parserOptions);
+    const [resourcePath, resourceParams] = this.resource.pathAndParams(parserOptions);
     this._path = resourcePath;
 
     //#region Headers
     const customHeaders: { [name: string]: string | string[] } = {};
     if (typeof init.etag === 'string') {
-      if (this.api.options.etag.ifMatch && ['PUT', 'PATCH', 'DELETE'].indexOf(this._method) !== -1)
+      if (apiOptions.etag.ifMatch && ['PUT', 'PATCH', 'DELETE'].indexOf(this._method) !== -1)
         customHeaders[IF_MATCH_HEADER] = init.etag;
-      else if (this.api.options.etag.ifNoneMatch && ['GET'].indexOf(this._method) !== -1)
+      else if (apiOptions.etag.ifNoneMatch && ['GET'].indexOf(this._method) !== -1)
         customHeaders[IF_NONE_MATCH_HEADER] = init.etag;
     }
 
     const accept = [];
     // Metadata
-    if (this.api.options.accept?.metadata !== undefined)
-      accept.push(`odata.metadata=${this.api.options.accept?.metadata}`);
+    if (apiOptions.accept?.metadata !== undefined)
+      accept.push(`odata.metadata=${apiOptions.accept?.metadata}`);
     // IEEE754
-    if (this.api.options.accept?.ieee754Compatible !== undefined)
-      accept.push(`IEEE754Compatible=${this.api.options.accept?.ieee754Compatible}`);
+    if (apiOptions.accept?.ieee754Compatible !== undefined)
+      accept.push(`IEEE754Compatible=${apiOptions.accept?.ieee754Compatible}`);
     // streaming
-    if (this.api.options.accept?.streaming !== undefined)
-      accept.push(`streaming=${this.api.options.accept?.streaming}`);
+    if (apiOptions.accept?.streaming !== undefined)
+      accept.push(`streaming=${apiOptions.accept?.streaming}`);
     // ExponentialDecimals
-    if (this.api.options.accept?.exponentialDecimals !== undefined)
-      accept.push(`ExponentialDecimals=${this.api.options.accept?.exponentialDecimals}`);
+    if (apiOptions.accept?.exponentialDecimals !== undefined)
+      accept.push(`ExponentialDecimals=${apiOptions.accept?.exponentialDecimals}`);
     if (accept.length > 0)
       customHeaders[ACCEPT] = [
         `${APPLICATION_JSON};${accept.join(';')}`,
@@ -131,28 +134,28 @@ export class ODataRequest<T> {
     const prefer = [];
     // Return
     if (
-      this.api.options.prefer?.return !== undefined &&
+      apiOptions.prefer?.return !== undefined &&
       ['POST', 'PUT', 'PATCH'].indexOf(this._method) !== -1
     )
-      prefer.push(`return=${this.api.options.prefer?.return}`);
+      prefer.push(`return=${apiOptions.prefer?.return}`);
     // MaxPageSize
-    if (this.api.options.prefer?.maxPageSize !== undefined && ['GET'].indexOf(this._method) !== -1)
-      prefer.push(`odata.maxpagesize=${this.api.options.prefer?.maxPageSize}`);
+    if (apiOptions.prefer?.maxPageSize !== undefined && ['GET'].indexOf(this._method) !== -1)
+      prefer.push(`odata.maxpagesize=${apiOptions.prefer?.maxPageSize}`);
     // Annotations
     if (
-      this.api.options.prefer?.includeAnnotations !== undefined &&
+      apiOptions.prefer?.includeAnnotations !== undefined &&
       ['GET'].indexOf(this._method) !== -1
     )
-      prefer.push(`odata.include-annotations=${this.api.options.prefer?.includeAnnotations}`);
+      prefer.push(`odata.include-annotations=${apiOptions.prefer?.includeAnnotations}`);
     // Omit Null Values
-    if (this.api.options.prefer?.omitNullValues === true && ['GET'].indexOf(this._method) !== -1)
+    if (apiOptions.prefer?.omitNullValues === true && ['GET'].indexOf(this._method) !== -1)
       prefer.push(`omit-values=nulls`);
     // Continue on Error
-    if (this.api.options.prefer?.continueOnError === true && ['POST'].indexOf(this._method) !== -1)
+    if (apiOptions.prefer?.continueOnError === true && ['POST'].indexOf(this._method) !== -1)
       prefer.push(`odata.continue-on-error`);
     if (prefer.length > 0) customHeaders[PREFER] = prefer;
     this._headers = Http.mergeHttpHeaders(
-      this.api.options.headers,
+      apiOptions.headers,
       customHeaders,
       init.headers || {},
     );
@@ -170,7 +173,7 @@ export class ODataRequest<T> {
       Object.assign(customParams, resourceParams);
     }
 
-    const params = Http.mergeHttpParams(this.api.options.params, customParams, init.params || {});
+    const params = Http.mergeHttpParams(apiOptions.params, customParams, init.params || {});
 
     this._params =
       this._responseType === 'entity'
@@ -200,7 +203,9 @@ export class ODataRequest<T> {
       bodyQueryOptions?: QueryOption[];
     },
   ) {
+    // Options
     const apiOptions = api.options;
+
     let params = options.params || {};
     if (options.withCount) {
       params = Http.mergeHttpParams(params, apiOptions.helper.countParam());

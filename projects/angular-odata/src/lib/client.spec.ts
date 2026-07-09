@@ -302,6 +302,28 @@ describe('ODataClient', () => {
     req.flush(data);
   });
 
+  it('should call function with not parenthesis', () => {
+    let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
+    let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
+    client.function<any, any>('NS.MyFunction')
+      .call(null)
+      .subscribe();
+    const req = httpMock.expectOne(`${SERVICE_ROOT}NS.MyFunction`);
+    expect(req.request.method).toBe('GET');
+    req.flush({});
+  });
+
+  it('should call function with parenthesis', () => {
+    let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
+    let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
+    client.function<any, any>('NS.MyFunction')
+      .call({p1:1, p2:2})
+      .subscribe();
+    const req = httpMock.expectOne(`${SERVICE_ROOT}NS.MyFunction(p1=1,p2=2)`);
+    expect(req.request.method).toBe('GET');
+    req.flush({});
+  });
+
   it('should fetch person', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
