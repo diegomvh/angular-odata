@@ -644,43 +644,43 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'model',
-    { ...options }: ODataActionOptions<R>,
+    options?: ODataActionOptions<R>,
   ): Observable<ODataModel<R>>;
   protected callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'collection',
-    { ...options }: ODataActionOptions<R>,
+    options?: ODataActionOptions<R>,
   ): Observable<ODataCollection<R, ODataModel<R>>>;
   protected callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property',
-    { ...options }: ODataActionOptions<R>,
+    options?: ODataActionOptions<R>,
   ): Observable<R>;
   protected callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'none',
-    { ...options }: ODataActionOptions<R>,
+    options?: ODataActionOptions<R>,
   ): Observable<null>;
   protected callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'blob',
-    { ...options }: ODataActionOptions<R>,
+    options?: ODataActionOptions<R>,
   ): Observable<Blob>;
   protected callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'arraybuffer',
-    { ...options }: ODataActionOptions<R>,
+    options?: ODataActionOptions<R>,
   ): Observable<ArrayBuffer>;
   protected callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none' | 'blob' | 'arraybuffer',
-    { ...options }: ODataActionOptions<R> = {},
+    options: ODataActionOptions<R> = {},
   ): Observable<any> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
