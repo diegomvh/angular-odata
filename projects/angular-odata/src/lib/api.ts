@@ -1,10 +1,23 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { NEVER, Observable, of, throwError } from 'rxjs';
-import { catchError, finalize, map, startWith, tap } from 'rxjs/operators';
+import { firstValueFrom, NEVER, Observable, of, throwError } from 'rxjs';
+import { catchError, map, startWith, tap } from 'rxjs/operators';
 import { DEFAULT_VERSION } from './constants';
-import { ModelFieldOptions, ModelOptions, ODataCollection, ODataModel, ODataModelOptions } from './models';
+import {
+  ModelFieldOptions,
+  ModelOptions,
+  ODataCollection,
+  ODataModel,
+  ODataModelField,
+  ODataModelOptions,
+} from './models';
 import { ODataApiOptions } from './options';
-import type { ODataOptions, ODataResource, ODataSegment } from './resources';
+import type {
+  EntityKey,
+  ODataOptions,
+  ODataPropertyResource,
+  ODataResource,
+  ODataSegment,
+} from './resources';
 import {
   ODataQueryOptions,
   ODataPathSegments,
@@ -95,7 +108,9 @@ export class ODataApi {
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
     this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
-    this.references = (config.references ?? []).map((reference) => new ODataReference(reference, this));
+    this.references = (config.references ?? []).map(
+      (reference) => new ODataReference(reference, this),
+    );
     this.models = (config.models ?? {}) as { [type: string]: typeof ODataModel<any> };
     this.collections = (config.collections ?? {}) as {
       [type: string]: typeof ODataCollection<any, ODataModel<any>>;
@@ -135,6 +150,7 @@ export class ODataApi {
         options: this.options.parserOptions,
       });
     });
+    return true;
   }
 
   fromJson<P, R>(json: {
@@ -328,15 +344,15 @@ export class ODataApi {
    * @param req The request to fetch
    * @returns
    */
-  private handleRequest(
-    req: ODataRequest<any>,
-  ): Observable<any> {
-    return (this.cache !== undefined && req.isFetch()) ? this.handleCacheFetch(req) : 
-      (this.cache !== undefined && req.isMutate()) ? this.handleCacheMutate(req) :
-      this.handleRequester(req);
+  private handleRequest(req: ODataRequest<any>): Observable<any> {
+    return this.cache !== undefined && req.isFetch()
+      ? this.handleCacheFetch(req)
+      : this.cache !== undefined && req.isMutate()
+        ? this.handleCacheMutate(req)
+        : this.handleRequester(req);
   }
 
-  private handleRequester(req:ODataRequest<any>) {
+  private handleRequester(req: ODataRequest<any>) {
     return (this.requester !== undefined ? this.requester(req) : NEVER).pipe(
       map((res: HttpEvent<any>) =>
         res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res,
@@ -357,14 +373,18 @@ export class ODataApi {
         return throwError(() => new Error('No Cached'));
       }
     }
-    let res$: Observable<any> = cached !== undefined && policy !== 'network-only'
-      ? policy === 'cache-and-network'
-        ? this.handleRequester(req).pipe(startWith(cached))
-        : of(cached)
-      : this.handleRequester(req);
-    if (cached === undefined && (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only')) {
+    let res$: Observable<any> =
+      cached !== undefined && policy !== 'network-only'
+        ? policy === 'cache-and-network'
+          ? this.handleRequester(req).pipe(startWith(cached))
+          : of(cached)
+        : this.handleRequester(req);
+    if (
+      cached === undefined &&
+      (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only')
+    ) {
       res$ = res$.pipe(
-        tap((res: ODataResponse<any>) => { 
+        tap((res: ODataResponse<any>) => {
           if (res.options.cacheability !== 'no-store') {
             this.cache!.putResponse(req, res);
           }
@@ -431,7 +451,7 @@ export class ODataApi {
       <ODataEnumType<any>[]>[],
     );
     let enumType = enumTypes.find((e) => e.type() === value);
-    enumType = enumType ?? enumTypes.find((e) => e.type({alias: true}) === value);
+    enumType = enumType ?? enumTypes.find((e) => e.type({ alias: true }) === value);
     enumType = enumType ?? enumTypes.find((e) => e.name === value);
     this.memo.enumTypes.set(value, enumType);
     return enumType as ODataEnumType<T> | undefined;
@@ -448,7 +468,8 @@ export class ODataApi {
       <ODataStructuredType<any>[]>[],
     );
     let structuredType = structuredTypes.find((e) => e.type() === value);
-    structuredType = structuredType ?? structuredTypes.find((e) => e.type({alias: true}) === value);
+    structuredType =
+      structuredType ?? structuredTypes.find((e) => e.type({ alias: true }) === value);
     structuredType = structuredType ?? structuredTypes.find((e) => e.name === value);
     this.memo.structuredTypes.set(value, structuredType);
     return structuredType as ODataStructuredType<T> | undefined;
@@ -483,10 +504,10 @@ export class ODataApi {
             bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
       );
     });
-    callable = 
-      callable ?? 
+    callable =
+      callable ??
       callables.find((c) => {
-        const isCallableType = c.type({alias: true}) == value;
+        const isCallableType = c.type({ alias: true }) == value;
         const callableBindingType = c.binding()?.type;
         const callableBindingStructuredType =
           callableBindingType !== undefined
@@ -533,7 +554,7 @@ export class ODataApi {
       <ODataEntitySet[]>[],
     );
     let entitySet = entitySets.find((e) => e.type() === value);
-    entitySet = entitySet ?? entitySets.find((e) => e.type({alias: true}) === value);
+    entitySet = entitySet ?? entitySets.find((e) => e.type({ alias: true }) === value);
     entitySet = entitySet ?? entitySets.find((e) => e.name === value);
     this.memo.entitySets.set(value, entitySet);
     return entitySet as ODataEntitySet | undefined;
@@ -550,7 +571,7 @@ export class ODataApi {
       <ODataSingleton[]>[],
     );
     let singleton = singletons.find((e) => e.type() === value);
-    singleton = singleton ?? singletons.find((e) => e.type({alias: true}) === value);
+    singleton = singleton ?? singletons.find((e) => e.type({ alias: true }) === value);
     singleton = singleton ?? singletons.find((e) => e.name === value);
     this.memo.singletons.set(value, singleton);
     return singleton as ODataSingleton | undefined;

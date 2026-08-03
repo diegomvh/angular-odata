@@ -50,7 +50,19 @@ export abstract class ODataBaseService {
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
-    responseType: 'property' | 'entity' | 'entities' | 'none',
+    responseType: 'blob',
+    options?: ODataFunctionOptions<R>,
+  ): Observable<Blob>;
+  protected callFunction<P, R>(
+    params: P | null,
+    resource: ODataFunctionResource<P, R>,
+    responseType: 'arraybuffer',
+    options?: ODataFunctionOptions<R>,
+  ): Observable<ArrayBuffer>;
+  protected callFunction<P, R>(
+    params: P | null,
+    resource: ODataFunctionResource<P, R>,
+    responseType: 'property' | 'entity' | 'entities' | 'none' | 'blob' | 'arraybuffer',
     options: ODataFunctionOptions<R> = {},
   ): Observable<any> {
     resource.query((q) => q.restore(options));
@@ -87,7 +99,19 @@ export abstract class ODataBaseService {
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
-    responseType: 'property' | 'entity' | 'entities' | 'none',
+    responseType: 'blob',
+    options?: ODataActionOptions<R>,
+  ): Observable<Blob>;
+  protected callAction<P, R>(
+    params: P | null,
+    resource: ODataActionResource<P, R>,
+    responseType: 'arraybuffer',
+    options?: ODataActionOptions<R>,
+  ): Observable<ArrayBuffer>;
+  protected callAction<P, R>(
+    params: P | null,
+    resource: ODataActionResource<P, R>,
+    responseType: 'property' | 'entity' | 'entities' | 'none' | 'blob' | 'arraybuffer',
     options: ODataActionOptions<R> = {},
   ): Observable<any> {
     resource.query((q) => q.restore(options));

@@ -117,7 +117,7 @@ export class CsdlProperty extends CsdlStructuralProperty {
 export class CsdlNavigationProperty extends CsdlStructuralProperty {
   public Partner?: string;
   public ContainsTarget?: boolean;
-  public ReferentialConstraints?: CsdlReferentialConstraint[];
+  public ReferentialConstraint?: CsdlReferentialConstraint[];
   public OnDelete?: CsdlOnDelete;
 
   constructor({
@@ -126,7 +126,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     Nullable,
     Partner,
     ContainsTarget,
-    ReferentialConstraints,
+    ReferentialConstraint,
     OnDelete,
     Annotation,
   }: {
@@ -135,14 +135,14 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     Nullable?: boolean;
     Partner?: string;
     ContainsTarget?: boolean;
-    ReferentialConstraints?: any[];
+    ReferentialConstraint?: any[];
     OnDelete?: any;
     Annotation?: any[];
   }) {
     super({ Name, Type, Nullable, Annotation });
     this.Partner = Partner;
     this.ContainsTarget = ContainsTarget;
-    this.ReferentialConstraints = ReferentialConstraints?.map(
+    this.ReferentialConstraint = ReferentialConstraint?.map(
       (r) => new CsdlReferentialConstraint(r),
     );
     this.OnDelete = OnDelete ? new CsdlOnDelete(OnDelete) : undefined;
@@ -156,8 +156,8 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
     if (this.ContainsTarget !== undefined) {
       json['ContainsTarget'] = this.ContainsTarget;
     }
-    if (Array.isArray(this.ReferentialConstraints) && this.ReferentialConstraints.length > 0) {
-      json['ReferentialConstraints'] = this.ReferentialConstraints.map((r) => r.toJson());
+    if (Array.isArray(this.ReferentialConstraint) && this.ReferentialConstraint.length > 0) {
+      json['ReferentialConstraint'] = this.ReferentialConstraint.map((r) => r.toJson());
     }
     if (this.OnDelete !== undefined) {
       json['OnDelete'] = this.OnDelete;
@@ -173,7 +173,7 @@ export class CsdlNavigationProperty extends CsdlStructuralProperty {
       collection: this.Collection,
       nullable: this.Nullable,
       navigation: true,
-      referentials: this.ReferentialConstraints?.map((r) => ({
+      referentials: this.ReferentialConstraint?.map((r) => ({
         property: r.Property,
         referencedProperty: r.ReferencedProperty,
       })),

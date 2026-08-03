@@ -257,12 +257,12 @@ export type ODataAnnotationConfig = {
 export type ODataReferenceConfig = {
   uri: string;
   annotations?: ODataAnnotationConfig[];
-  includes?: { namespace: string; alias?: string; }[];
+  includes?: { namespace: string; alias?: string }[];
   includeAnnotations?: {
-    termNamespace: string; 
+    termNamespace: string;
     qualifier?: string;
-    targetNamespace?: string; 
-  }[] 
+    targetNamespace?: string;
+  }[];
 };
 export type ODataSchemaConfig = {
   namespace: string;

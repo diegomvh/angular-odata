@@ -8,8 +8,10 @@ import {
   move,
   template,
   mergeWith,
-  MergeStrategy,
   SchematicsException,
+  forEach,
+  FileEntry,
+  MergeStrategy,
 } from '@angular-devkit/schematics';
 import { createDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import { parseName } from '@schematics/angular/utility/parse-name';
@@ -17,15 +19,6 @@ import { parseName } from '@schematics/angular/utility/parse-name';
 import { Schema as ApiGenSchema } from './schema';
 import { ODataMetadataParser } from './metadata/parser';
 import { toTypescriptType } from './utils';
-import { Module } from './angular/module';
-import { ApiConfig } from './angular/api-config';
-import { Enum } from './angular/enum';
-import { Base, Callable, Index, Metadata } from './angular/base';
-import { Entity } from './angular/entity';
-import { Service } from './angular/service';
-import { Collection } from './angular/collection';
-import { Model } from './angular/model';
-import { CsdlAction, CsdlFunction } from './metadata/csdl/csdl-function-action';
 import { Package } from './angular/package';
 
 const utils = {
