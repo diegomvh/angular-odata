@@ -1,6 +1,6 @@
 import { strings } from '@angular-devkit/core';
 import { Base } from './base';
-import { CsdlComplexType, CsdlEntityType } from '../metadata/csdl/csdl-structured-type';
+import { CsdlComplexType, CsdlEntityType } from '../../metadata/parser/csdl/csdl-structured-type';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Model } from './model';

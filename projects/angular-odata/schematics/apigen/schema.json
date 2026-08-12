@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema",
   "$id": "SchematicsMetadata",
-  "title": "Metadata Schema",
+  "title": "Generate API from metadata file.",
   "type": "object",
   "properties": {
     "name": {
@@ -21,6 +21,11 @@
     "models": {
       "type": "boolean",
       "description": "Generate models for the entities and complex types.",
+      "default": true
+    },
+    "staticMetadata": {
+      "type": "boolean",
+      "description": "Generate metadata.json file with the metadata content and load it at runtime.",
       "default": true
     },
     "project": {

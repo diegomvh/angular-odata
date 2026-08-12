@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
 
-import { ODataMetadata } from './metadata';
+import { ODataMetadata } from '../metadata';
 
 const VERSION_4_0: string = '4.0';
 

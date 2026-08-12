@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "SchematicsMetadata",
+  "title": "Extract metadata and convert it to JSON",
+  "type": "object",
+  "properties": {
+    "url": {
+      "description": "The url of the metadata.",
+      "type": "string"
+    },
+    "format": {
+      "description": "The format of the metadata.",
+      "type": "string",
+      "default": "json"
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path at which to create the metadata file, relative to the workspace root.",
+      "visible": false
+    }
+  },
+  "required": [
+    "url"
+  ]
+}

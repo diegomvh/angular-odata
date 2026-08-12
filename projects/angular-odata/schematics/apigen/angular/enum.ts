@@ -1,4 +1,4 @@
-import { CsdlEnumType, CsdlMember } from '../metadata/csdl/csdl-enum-type';
+import { CsdlEnumType, CsdlMember } from '../../metadata/parser/csdl/csdl-enum-type';
 import { strings } from '@angular-devkit/core';
 import { Base } from './base';
 import { Import } from './import';

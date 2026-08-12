@@ -2,17 +2,16 @@ import { Base, Callable, Index, Metadata } from './base';
 import { Schema as ApiGenSchema } from '../schema';
 import { Module } from './module';
 import { ApiConfig } from './api-config';
-import { ODataMetadata } from '../metadata';
+import { ODataMetadata } from '../../metadata/metadata';
 import { Enum } from './enum';
 import { Entity } from './entity';
 import { Model } from './model';
 import { Collection } from './collection';
 import { Service } from './service';
-import { CsdlAction, CsdlFunction } from '../metadata/csdl/csdl-function-action';
-import { CsdlEnumMember } from '../metadata/csdl/csdl-annotation';
-import { CsdlEnumType } from '../metadata/csdl/csdl-enum-type';
-import { CsdlComplexType, CsdlEntityType } from '../metadata/csdl/csdl-structured-type';
-import { CsdlEntitySet } from '../metadata/csdl/csdl-entity-set';
+import { CsdlAction, CsdlFunction } from '../../metadata/parser/csdl/csdl-function-action';
+import { CsdlEnumType } from '../../metadata/parser/csdl/csdl-enum-type';
+import { CsdlComplexType, CsdlEntityType } from '../../metadata/parser/csdl/csdl-structured-type';
+import { CsdlEntitySet } from '../../metadata/parser/csdl/csdl-entity-set';
 
 export class Package {
   metadata: Metadata;
@@ -157,6 +156,7 @@ export class Package {
     }
   }
 
+
   sources(): Base[] {
     const sources: Base[] = [
       ...this.enums,
@@ -164,11 +164,13 @@ export class Package {
       ...this.models,
       ...this.collections,
       ...this.services,
-      this.metadata,
       this.index,
       this.module,
       this.config,
     ];
+    if (this.options.staticMetadata) {
+      sources.push(this.metadata);
+    }
     return sources;
   }
 

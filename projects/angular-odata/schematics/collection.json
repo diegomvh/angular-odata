@@ -9,6 +9,11 @@
       "description": "Generate API from metadata file.",
       "factory": "./apigen/index#apigen",
       "schema": "./apigen/schema.json"
+    },
+    "metadata": {
+      "description": "Dump metadata.",
+      "factory": "./metadata/index#metadata",
+      "schema": "./metadata/schema.json"
     }
   }
 }

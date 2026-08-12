@@ -1,8 +1,8 @@
 import { strings } from '@angular-devkit/core';
 import { Base } from './base';
-import { CsdlEntityContainer } from '../metadata/csdl/csdl-entity-container';
-import { CsdlSingleton } from '../metadata/csdl/csdl-singleton';
-import { CsdlEntitySet } from '../metadata/csdl/csdl-entity-set';
+import { CsdlEntityContainer } from '../../metadata/parser/csdl/csdl-entity-container';
+import { CsdlSingleton } from '../../metadata/parser/csdl/csdl-singleton';
+import { CsdlEntitySet } from '../../metadata/parser/csdl/csdl-entity-set';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
 import { Package } from './package';

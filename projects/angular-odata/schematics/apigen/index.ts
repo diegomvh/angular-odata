@@ -17,7 +17,7 @@ import { createDefaultPath, getWorkspace } from '@schematics/angular/utility/wor
 import { parseName } from '@schematics/angular/utility/parse-name';
 
 import { Schema as ApiGenSchema } from './schema';
-import { ODataMetadataParser } from './metadata/parser';
+import { ODataMetadataParser } from '../metadata/parser';
 import { toTypescriptType } from './utils';
 import { Package } from './angular/package';
 

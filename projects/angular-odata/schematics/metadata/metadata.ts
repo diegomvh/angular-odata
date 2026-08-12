@@ -1,10 +1,10 @@
-import { CsdlEntityContainer } from './csdl/csdl-entity-container';
-import { CsdlEntitySet } from './csdl/csdl-entity-set';
-import { CsdlEnumType } from './csdl/csdl-enum-type';
-import { CsdlAction, CsdlFunction } from './csdl/csdl-function-action';
-import { CsdlReference } from './csdl/csdl-reference';
-import { CsdlSchema } from './csdl/csdl-schema';
-import { CsdlComplexType, CsdlEntityType } from './csdl/csdl-structured-type';
+import { CsdlEntityContainer } from './parser/csdl/csdl-entity-container';
+import { CsdlEntitySet } from './parser/csdl/csdl-entity-set';
+import { CsdlEnumType } from './parser/csdl/csdl-enum-type';
+import { CsdlAction, CsdlFunction } from './parser/csdl/csdl-function-action';
+import { CsdlReference } from './parser/csdl/csdl-reference';
+import { CsdlSchema } from './parser/csdl/csdl-schema';
+import { CsdlComplexType, CsdlEntityType } from './parser/csdl/csdl-structured-type';
 
 export class ODataMetadata {
   Version: string;

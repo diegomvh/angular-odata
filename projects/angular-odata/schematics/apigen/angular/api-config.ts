@@ -20,6 +20,7 @@ export class ApiConfig extends Base {
       version: this.options.version,
       creation: this.options.creation,
       models: this.pkg.models,
+      staticMetadata: this.options.staticMetadata,
       collections: this.pkg.collections,
     };
   }

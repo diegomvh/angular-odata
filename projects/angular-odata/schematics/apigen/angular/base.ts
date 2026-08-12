@@ -8,9 +8,9 @@ import {
   CsdlCallable,
   CsdlFunction,
   CsdlParameter,
-} from '../metadata/csdl/csdl-function-action';
+} from '../../metadata/parser/csdl/csdl-function-action';
 import { makeRelativePath, toTypescriptType } from '../utils';
-import { ODataMetadata } from '../metadata';
+import { ODataMetadata } from '../../metadata/metadata';
 import { Package } from './package';
 
 export class Callable {
