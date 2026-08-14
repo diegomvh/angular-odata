@@ -1,7 +1,7 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { firstValueFrom, NEVER, Observable, of, throwError } from 'rxjs';
 import { catchError, map, startWith, tap } from 'rxjs/operators';
-import { DEFAULT_VERSION } from './constants';
+import { $METADATA, DEFAULT_VERSION } from './constants';
 import {
   ModelFieldOptions,
   ModelOptions,
@@ -95,7 +95,7 @@ export class ODataApi {
         "The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters",
       );
     if (!this.serviceRootUrl.endsWith('/')) this.serviceRootUrl += '/';
-    this.metadataUrl = config.metadataUrl ?? `${this.serviceRootUrl}$metadata`;
+    this.metadataUrl = config.metadataUrl ?? `${this.serviceRootUrl}${$METADATA}`;
     this.name = config.name;
     this.version = config.version ?? DEFAULT_VERSION;
     this.default = config.default ?? false;

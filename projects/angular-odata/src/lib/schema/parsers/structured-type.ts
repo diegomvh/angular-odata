@@ -444,10 +444,9 @@ export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Pa
     parserForType: (type: string) => Parser<any>;
   }) {
     this.parserOptions = options;
-    if (this.base) {
-      const parent = parserForType(this.base) as ODataStructuredTypeParser<any>;
-      parent.children.push(this);
-      this.parent = parent;
+    if (this.base !== undefined) {
+      this.parent = parserForType(this.base) as ODataStructuredTypeParser<any>;
+      if (this.parent !== undefined) this.parent.children.push(this);
     }
     this._fields.forEach((f) => f.configure({ options, parserForType }));
   }
