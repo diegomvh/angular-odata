@@ -893,7 +893,7 @@ export class ODataMetadataParser {
 
   protected getAttributeValue(attributes: NamedNodeMap, attributeName: string) {
     const attribute: Attr | null &#x3D; attributes.getNamedItem(attributeName);
-    return attribute !&#x3D;&#x3D; null &amp;&amp; attribute.nodeValue ? attribute.nodeValue : undefined;
+    return attribute !&#x3D;&#x3D; null &amp;&amp; attribute.nodeValue !&#x3D; null ? attribute.nodeValue : undefined;
   }
 
   protected propertyValueToNumber(attributeValue?: string) {
@@ -901,7 +901,11 @@ export class ODataMetadataParser {
   }
 
   protected propertyValueToBoolean(attributeValue?: string) {
-    return attributeValue !&#x3D;&#x3D; undefined ? attributeValue &#x3D;&#x3D;&#x3D; &#x27;true&#x27; : false;
+    return attributeValue !&#x3D;&#x3D; undefined &amp;&amp; attributeValue &#x3D;&#x3D;&#x3D; &#x27;true&#x27;
+      ? true
+      : attributeValue !&#x3D;&#x3D; undefined &amp;&amp; attributeValue &#x3D;&#x3D;&#x3D; &#x27;false&#x27;
+        ? false
+        : undefined;
   }
 
   protected propertyValueToDate(attributeValue?: string) {

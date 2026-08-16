@@ -825,36 +825,36 @@ export class ODataModelField&lt;F&gt; {
         : undefined;
     } else {
       const computed &#x3D; this.annotatedValue&lt;boolean&gt;(COMPUTED);
-      const errors &#x3D; this.parser?.validate(value, { method, navigation }) || [];
+      const errors &#x3D; this.parser?.validate(value, { method, navigation }) ?? [];
       if (
         this.required &amp;&amp;
         (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;modify&#x27;)) &amp;&amp; // Is null or undefined without patch?
         !(computed &amp;&amp; method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) // Not (Is Computed field and create) ?
       ) {
-        errors[&#x27;push&#x27;](&#x60;required&#x60;);
+        if (errors.indexOf(&#x27;required&#x27;) &#x3D;&#x3D;&#x3D; -1) errors.push(&#x60;required&#x60;);
       }
       if (
         this.maxLength !&#x3D;&#x3D; undefined &amp;&amp;
         typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp;
         value.length &gt; this.maxLength
       ) {
-        errors[&#x27;push&#x27;](&#x60;maxlength&#x60;);
+        if (errors.indexOf(&#x27;maxlength&#x27;) &#x3D;&#x3D;&#x3D; -1) errors.push(&#x60;maxlength&#x60;);
       }
       if (
         this.minLength !&#x3D;&#x3D; undefined &amp;&amp;
         typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp;
         value.length &lt; this.minLength
       ) {
-        errors[&#x27;push&#x27;](&#x60;minlength&#x60;);
+        if (errors.indexOf(&#x27;minlength&#x27;) &#x3D;&#x3D;&#x3D; -1) errors.push(&#x60;minlength&#x60;);
       }
       if (this.min !&#x3D;&#x3D; undefined &amp;&amp; typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27; &amp;&amp; value &lt; this.min) {
-        errors[&#x27;push&#x27;](&#x60;min&#x60;);
+        if (errors.indexOf(&#x27;min&#x27;) &#x3D;&#x3D;&#x3D; -1) errors.push(&#x60;min&#x60;);
       }
       if (this.max !&#x3D;&#x3D; undefined &amp;&amp; typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27; &amp;&amp; value &gt; this.max) {
-        errors[&#x27;push&#x27;](&#x60;max&#x60;);
+        if (errors.indexOf(&#x27;max&#x27;) &#x3D;&#x3D;&#x3D; -1) errors.push(&#x60;max&#x60;);
       }
       if (this.pattern !&#x3D;&#x3D; undefined &amp;&amp; typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; !this.pattern.test(value)) {
-        errors[&#x27;push&#x27;](&#x60;pattern&#x60;);
+        if (errors.indexOf(&#x27;pattern&#x27;) &#x3D;&#x3D;&#x3D; -1) errors.push(&#x60;pattern&#x60;);
       }
       return !Types.isEmpty(errors) ? errors : undefined;
     }
