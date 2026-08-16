@@ -581,7 +581,7 @@ export class ODataMetadataParser {
 
   protected getAttributeValue(attributes: NamedNodeMap, attributeName: string) {
     const attribute: Attr | null = attributes.getNamedItem(attributeName);
-    return attribute !== null && attribute.nodeValue ? attribute.nodeValue : undefined;
+    return attribute !== null && attribute.nodeValue != null ? attribute.nodeValue : undefined;
   }
 
   protected propertyValueToNumber(attributeValue?: string) {
@@ -589,7 +589,11 @@ export class ODataMetadataParser {
   }
 
   protected propertyValueToBoolean(attributeValue?: string) {
-    return attributeValue !== undefined ? attributeValue === 'true' : false;
+    return attributeValue !== undefined && attributeValue === 'true'
+      ? true
+      : attributeValue !== undefined && attributeValue === 'false'
+        ? false
+        : undefined;
   }
 
   protected propertyValueToDate(attributeValue?: string) {

@@ -417,36 +417,36 @@ export class ODataModelField<F> {
         : undefined;
     } else {
       const computed = this.annotatedValue<boolean>(COMPUTED);
-      const errors = this.parser?.validate(value, { method, navigation }) || [];
+      const errors = this.parser?.validate(value, { method, navigation }) ?? [];
       if (
         this.required &&
         (value === null || (value === undefined && method !== 'modify')) && // Is null or undefined without patch?
         !(computed && method === 'create') // Not (Is Computed field and create) ?
       ) {
-        errors['push'](`required`);
+        if (errors.indexOf('required') === -1) errors.push(`required`);
       }
       if (
         this.maxLength !== undefined &&
         typeof value === 'string' &&
         value.length > this.maxLength
       ) {
-        errors['push'](`maxlength`);
+        if (errors.indexOf('maxlength') === -1) errors.push(`maxlength`);
       }
       if (
         this.minLength !== undefined &&
         typeof value === 'string' &&
         value.length < this.minLength
       ) {
-        errors['push'](`minlength`);
+        if (errors.indexOf('minlength') === -1) errors.push(`minlength`);
       }
       if (this.min !== undefined && typeof value === 'number' && value < this.min) {
-        errors['push'](`min`);
+        if (errors.indexOf('min') === -1) errors.push(`min`);
       }
       if (this.max !== undefined && typeof value === 'number' && value > this.max) {
-        errors['push'](`max`);
+        if (errors.indexOf('max') === -1) errors.push(`max`);
       }
       if (this.pattern !== undefined && typeof value === 'string' && !this.pattern.test(value)) {
-        errors['push'](`pattern`);
+        if (errors.indexOf('pattern') === -1) errors.push(`pattern`);
       }
       return !Types.isEmpty(errors) ? errors : undefined;
     }
