@@ -1237,15 +1237,14 @@ export class ODataModelOptions&lt;T&gt; {
   }
 
   configure({ options }: { options: ParserOptions }) {
-    if (this.base) {
-      const parent &#x3D; this.api.optionsForType(this.base) as ODataModelOptions&lt;any&gt;;
-      parent.children.push(this);
-      this.parent &#x3D; parent;
+    if (this.base !&#x3D;&#x3D; undefined) {
+      this.parent &#x3D; this.api.optionsForType(this.base) as ODataModelOptions&lt;any&gt;;
+      if (this.parent !&#x3D;&#x3D; undefined) this.parent.children.push(this);
     }
     this.entitySet &#x3D; this.api.findEntitySetForEntityType(this.type());
     let concurrencyFields: string[] &#x3D; [];
     if (this.entitySet !&#x3D;&#x3D; undefined) {
-      concurrencyFields &#x3D; this.entitySet.annotatedValue&lt;string[]&gt;(OPTIMISTIC_CONCURRENCY) || [];
+      concurrencyFields &#x3D; this.entitySet.annotatedValue&lt;string[]&gt;(OPTIMISTIC_CONCURRENCY) ?? [];
     }
     this._fields.forEach((field) &#x3D;&gt; {
       const concurrency &#x3D; concurrencyFields.indexOf(field.field) !&#x3D;&#x3D; -1;

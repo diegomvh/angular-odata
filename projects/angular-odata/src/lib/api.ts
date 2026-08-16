@@ -51,6 +51,7 @@ import {
   QueryOption,
   ODataSchemaConfig,
   ODataCache,
+  ODataReferenceConfig,
 } from './types';
 import type { ODataMetadata } from './metadata/metadata';
 import { ODataEntityAnnotations } from './annotations';
@@ -80,9 +81,9 @@ export class ODataApi {
   // Populate from Metadata
   populateFromMetadata: boolean;
   // Schemas
-  schemas: ODataSchema[];
+  schemas: ODataSchema[] = [];
   // References
-  references: ODataReference[];
+  references: ODataReference[] = [];
   // Models
   models: { [type: string]: typeof ODataModel<any> } = {};
   // Collections
@@ -110,18 +111,21 @@ export class ODataApi {
     this.parsers = new Map(Object.entries(config.parsers ?? EDM_PARSERS));
 
     this.populateFromMetadata = config.populateFromMetadata ?? false;
-    this.schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
-    this.references = (config.references ?? []).map(
-      (reference) => new ODataReference(reference, this),
-    );
-    this.models = (config.models ?? {}) as { [type: string]: typeof ODataModel<any> };
-    this.collections = (config.collections ?? {}) as {
-      [type: string]: typeof ODataCollection<any, ODataModel<any>>;
-    };
+    this.populate(config);
   }
 
   initialize(requester: (request: ODataRequest<any>) => Observable<any>) {
     this.requester = requester;
+    return (this.populateFromMetadata
+      ? firstValueFrom(
+          this.metadata()
+            .fetch()
+            .pipe(map((metadata) => this.populate(metadata.toConfig()))),
+        )
+      : Promise.resolve()).then(() => this.configure());
+  }
+
+  configure() {
     this.schemas.forEach((schema) => {
       schema.configure({
         options: this.options.parserOptions,
@@ -137,26 +141,31 @@ export class ODataApi {
         }
       }
     });
-    return this.populateFromMetadata
-      ? firstValueFrom(
-          this.metadata()
-            .fetch()
-            .pipe(map((metadata) => this.populate(metadata))),
-        )
-      : Promise.resolve(true);
+    return true;
   }
 
-  populate(metadata: ODataMetadata) {
-    const config = metadata.toConfig();
-    this.version = config.version ?? DEFAULT_VERSION;
-    const schemas = (config.schemas ?? []).map((schema) => new ODataSchema(schema, this));
-    this.schemas = [...this.schemas, ...schemas];
-    schemas.forEach((schema) => {
-      schema.configure({
-        options: this.options.parserOptions,
-      });
-    });
-    return true;
+  private populate({
+    schemas,
+    references,
+    models,
+    collections
+  }: {
+    schemas?: ODataSchemaConfig[];
+    references?: ODataReferenceConfig[];
+    models?: { [type: string]: { new (...params: any[]): any } };
+    collections?: { [type: string]: { new (...params: any[]): any } };
+  }) {
+    const odataSchemas = (schemas ?? []).map((schema) => new ODataSchema(schema, this));
+    //TODO: Merge duplicates
+    this.schemas = [...this.schemas, ...odataSchemas];
+    const odataReferences = (references ?? []).map((reference) => new ODataReference(reference, this));
+    this.references = [...this.references, ...odataReferences]; 
+    const odataModels = (models ?? {}) as { [type: string]: typeof ODataModel<any> };
+    this.models = { ...this.models, ...odataModels }; 
+    const odataCollections = (collections ?? {}) as {
+      [type: string]: typeof ODataCollection<any, ODataModel<any>>;
+    };
+    this.collections = { ...this.collections, ...odataCollections };
   }
 
   fromJson<P, R>(json: {

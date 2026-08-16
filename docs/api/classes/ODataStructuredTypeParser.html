@@ -940,8 +940,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="590"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:590</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="589"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:589</a></div>
                         </td>
                     </tr>
 
@@ -1135,8 +1135,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="503"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:503</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="502"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:502</a></div>
                         </td>
                     </tr>
 
@@ -1218,8 +1218,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="461"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:461</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="460"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:460</a></div>
                         </td>
                     </tr>
 
@@ -1354,8 +1354,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="494"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:494</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="493"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:493</a></div>
                         </td>
                     </tr>
 
@@ -1391,8 +1391,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="490"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:490</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="489"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:489</a></div>
                         </td>
                     </tr>
 
@@ -1666,8 +1666,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="481"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:481</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="480"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:480</a></div>
                         </td>
                     </tr>
 
@@ -1735,8 +1735,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="521"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:521</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="520"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:520</a></div>
                         </td>
                     </tr>
 
@@ -1822,8 +1822,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="562"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:562</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="561"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:561</a></div>
                         </td>
                     </tr>
 
@@ -2061,8 +2061,8 @@ Titleize is meant for creating pretty output.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="604"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:604</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="603"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:603</a></div>
                         </td>
                     </tr>
 
@@ -2140,8 +2140,8 @@ Titleize is meant for creating pretty output.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="659"
-                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:659</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="658"
+                                    class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:658</a></div>
                         </td>
                     </tr>
 
@@ -2830,10 +2830,9 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
   }) {
     this.parserOptions &#x3D; options;
-    if (this.base) {
-      const parent &#x3D; parserForType(this.base) as ODataStructuredTypeParser&lt;any&gt;;
-      parent.children.push(this);
-      this.parent &#x3D; parent;
+    if (this.base !&#x3D;&#x3D; undefined) {
+      this.parent &#x3D; parserForType(this.base) as ODataStructuredTypeParser&lt;any&gt;;
+      if (this.parent !&#x3D;&#x3D; undefined) this.parent.children.push(this);
     }
     this._fields.forEach((f) &#x3D;&gt; f.configure({ options, parserForType }));
   }

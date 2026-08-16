@@ -741,10 +741,9 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
   }) {
     this.parserOptions &#x3D; options;
-    if (this.base) {
-      const parent &#x3D; parserForType(this.base) as ODataStructuredTypeParser&lt;any&gt;;
-      parent.children.push(this);
-      this.parent &#x3D; parent;
+    if (this.base !&#x3D;&#x3D; undefined) {
+      this.parent &#x3D; parserForType(this.base) as ODataStructuredTypeParser&lt;any&gt;;
+      if (this.parent !&#x3D;&#x3D; undefined) this.parent.children.push(this);
     }
     this._fields.forEach((f) &#x3D;&gt; f.configure({ options, parserForType }));
   }

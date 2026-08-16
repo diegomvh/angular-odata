@@ -67,7 +67,7 @@ export class ODataClient {
     let api: ODataApi | undefined = undefined;
     if (value instanceof ODataResource) api = this.settings!.findApiForTypes(value.types());
     else if (typeof value === 'string')
-      api = this.settings!.findApiByName(value) || this.settings!.findApiForType(value);
+      api = this.settings!.findApiByName(value) ?? this.settings!.findApiForType(value);
     return api ?? this.settings!.defaultApi();
   }
 
