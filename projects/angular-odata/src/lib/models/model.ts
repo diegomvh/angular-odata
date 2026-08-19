@@ -9,8 +9,8 @@ import {
   ODataOptions,
   ODataPropertyResource,
   ODataQueryArguments,
-  ODataQueryArgumentsOptions,
   ODataQueryOptionsHandler,
+  ODataQueryableOptions,
   ODataResource,
   ODataSingletonResource,
 } from '../resources';
@@ -623,7 +623,9 @@ export class ODataModel<T> {
         () => new Error("callFunction: Can't call function without ODataEntityResource with key"),
       );
 
-    const func = resource.function<P, R>(name).query((q) => q.restore(options));
+    let func = resource.function<P, R>(name);
+    if (options.query !== undefined) 
+      func = func.query(options.query);
     switch (responseType) {
       case 'property':
         return this._request(func.callProperty(params, options), (resp) => resp);
@@ -688,7 +690,9 @@ export class ODataModel<T> {
         () => new Error("callAction: Can't call action without ODataEntityResource with key"),
       );
 
-    const action = resource.action<P, R>(name).query((q) => q.restore(options));
+    let action = resource.action<P, R>(name);
+    if (options.query !== undefined)
+      action = action.query(options.query);
     switch (responseType) {
       case 'property':
         return this._request(action.callProperty(params, options), (resp) => resp);
@@ -723,10 +727,10 @@ export class ODataModel<T> {
   fetchNavigationProperty<S>(
     name: keyof T | string,
     responseType: 'model' | 'collection',
-    options: ODataQueryArgumentsOptions<S> = {},
+    options: ODataQueryableOptions<S> = {},
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
-    const nav = this.navigationProperty<S>(name) as ODataNavigationPropertyResource<S>;
-    nav.query((q) => q.restore(options));
+    let nav = this.navigationProperty<S>(name) as ODataNavigationPropertyResource<S>;
+    if (options.query !== undefined) nav = nav.query(options.query);
     switch (responseType) {
       case 'model':
         return nav.fetchModel(options);
@@ -737,28 +741,28 @@ export class ODataModel<T> {
 
   fetchAttribute<P>(
     name: keyof T,
-    options: ODataQueryArgumentsOptions<P> = {},
+    options: ODataQueryableOptions<P> = {},
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
     const field = this._meta.findField<P>(name);
     if (!field) throw Error(`fetchAttribute: Can't find attribute ${name as string}`);
 
     if (field.isStructuredType() && field.collection) {
-      const collection = field.collectionFactory<P>({ parent: this });
-      collection.query((q) => q.restore(options as ODataQueryArguments<P>));
+      let collection = field.collectionFactory<P>({ parent: this });
+      if (options.query !== undefined) collection = collection.query(options.query);
       return this._request(collection.fetch(options), () => {
         this.assign({ [name]: collection });
         return collection;
       });
     } else if (field.isStructuredType()) {
-      const model = field.modelFactory<P>({ parent: this });
-      model.query((q) => q.restore(options as ODataQueryArguments<P>));
+      let model = field.modelFactory<P>({ parent: this });
+      if (options.query !== undefined) model = model.query(options.query);
       return this._request(model.fetch(options), () => {
         this.assign({ [name]: model });
         return model;
       });
     } else {
-      const prop = field.resourceFactory<T, P>(this.resource()!) as ODataPropertyResource<P>;
-      prop.query((q) => q.restore(options as ODataQueryArguments<P>));
+      let prop = field.resourceFactory<T, P>(this.resource()!) as ODataPropertyResource<P>;
+      if (options.query !== undefined) prop = prop.query(options.query);
       return this._request(prop.fetchProperty(options), (resp) => {
         this.assign({ [name]: resp });
         return resp;

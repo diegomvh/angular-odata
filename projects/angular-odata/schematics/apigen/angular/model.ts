@@ -105,12 +105,12 @@ export class ModelField {
     const fetchName = `${this.edmType.Name}$`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `  public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName(imports)}>) {
+      return `  public ${fetchName}(options?: ODataQueryableOptions<${entity?.importedName(imports)}>) {
     return this.fetchAttribute<${entity?.importedName(imports)}>('${this.edmType.Name}', options) as Observable<${this.type(imports)}>;
   }
 `;
     } else {
-      return `  public ${fetchName}(options?: ODataQueryArgumentsOptions<${this.type(imports)}>) {
+      return `  public ${fetchName}(options?: ODataQueryableOptions<${this.type(imports)}>) {
     return this.fetchAttribute<${this.type(imports)}>('${this.edmType.Name}', options) as Observable<${this.type(imports)}>;
   }
 `;
@@ -196,7 +196,13 @@ export class Model extends Base {
       }
     }
     for (let callable of this.callables ?? []) {
-      imports.push(...callable.importTypes());
+      for (let type of callable.importTypes()) {
+        if (!type.startsWith('Edm.')) {
+          imports.push(type);
+          imports.push(type + 'Model');
+          imports.push(type + 'Collection');
+        }
+      }
     }
     const service = pkg.findEntitySet(this.edmType.fullName());
     if (service) {
@@ -278,7 +284,7 @@ export class Model extends Base {
         var castEntity = pkg.findEntity(propertyEntity?.fullName() || '');
 
         // Navigation
-        result.push(`public ${methodName}(options?: ODataQueryArgumentsOptions<${entity?.importedName(imports)}>) {
+        result.push(`public ${methodName}(options?: ODataQueryableOptions<${entity?.importedName(imports)}>) {
     return this.fetchNavigationProperty<${entity?.importedName(imports)}>('${binding.Path}', '${responseType}', options) as Observable<${returnType}>;
   }`);
       }

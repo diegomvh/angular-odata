@@ -12,10 +12,13 @@ import {
 import { makeRelativePath, toTypescriptType } from '../utils';
 import { ODataMetadata } from '../../metadata/metadata';
 import { Package } from './package';
+import { model } from '@angular/core';
 
 export class Callable {
   callables: CsdlCallable[] = [];
-  constructor(protected callable: CsdlCallable) {
+  constructor(
+    protected pkg: Package,
+    protected callable: CsdlCallable) {
     this.callables.push(callable);
   }
 
@@ -89,7 +92,7 @@ export class Callable {
     return this.callable.fullName();
   }
 
-  resourceFunction() {
+  resourceFunction(imports: Import[]) {
     const isFunction = this.callable instanceof CsdlFunction;
     const methodName = strings.camelize(this.callable.Name);
     const { binding, required, optional } = this.parameters();
@@ -115,7 +118,7 @@ export class Callable {
   }`;
   }
 
-  callableFunction() {
+  callableFunction(imports: Import[]) {
     const isFunction = this.callable instanceof CsdlFunction;
     const { binding, required, optional } = this.parameters();
     const parameters = [...required, ...optional];
@@ -171,7 +174,7 @@ export class Callable {
   }`;
   }
 
-  callableMethod() {
+  callableMethod(imports: Import[]) {
     const isFunction = this.callable instanceof CsdlFunction;
     const { required, optional } = this.parameters();
     const parameters = [...required, ...optional];
@@ -179,6 +182,12 @@ export class Callable {
     const callableNamespaceQualifiedName = this.callable.IsBound
       ? this.callable.fullName()
       : this.callable.Name;
+
+    const pkg = this.getPackage();
+    const returnEnumType = returnType === undefined ? undefined : pkg.findEnum(returnType.Type);
+    const returnEntityType = returnType === undefined ? undefined : pkg.findEntity(returnType.Type);
+    const returnCollection = returnType === undefined ? undefined : pkg.findCollection(returnType.Type);
+    const returnModel = returnType === undefined ? undefined : pkg.findModel(returnType.Type);
 
     const methodName = strings.camelize(this.callable.Name);
     const responseType =
@@ -190,6 +199,16 @@ export class Callable {
             ? 'property'
             : 'model';
     const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const callableReturnType = 
+      returnType === undefined 
+        ?  `` 
+        : returnType?.Type.startsWith('Edm.') ?
+            ` as Observable<${retType}>`
+        : returnEnumType !== undefined  ?
+            ` as Observable<${returnEnumType!.importedName(imports)}>`
+        : returnType?.Collection ?
+            ` as Observable<${returnCollection!.importedName(imports)}<${returnEntityType!.importedName(imports)}, ${returnModel!.importedName(imports)}<${returnEntityType!.importedName(imports)}>>>` :
+            ` as Observable<${returnModel!.importedName(imports)}<${returnEntityType!.importedName(imports)}>>`;
 
     const baseMethod = isFunction ? 'callFunction' : 'callAction';
     const parametersCall =
@@ -226,8 +245,12 @@ export class Callable {
 
     // Render
     return `public ${methodName}(${fargs.join(', ')}) {
-    return this.${baseMethod}<${types}, ${retType}>('${callableNamespaceQualifiedName}', ${parametersCall}, '${responseType}', options);
+    return this.${baseMethod}<${types}, ${retType}>('${callableNamespaceQualifiedName}', ${parametersCall}, '${responseType}', options)${callableReturnType};
   }`;
+  }
+
+  public getPackage() {
+    return this.pkg;
   }
 }
 

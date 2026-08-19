@@ -10,6 +10,7 @@ import {
 import { ODataHelper } from '../helper';
 import {
   EntityKey,
+  ODataQueryableOptions,
   ODataQueryOptions,
   ODataQueryOptionsHandler,
   ODataResource,

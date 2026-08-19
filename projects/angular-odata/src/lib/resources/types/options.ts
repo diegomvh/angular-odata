@@ -1,6 +1,7 @@
 import { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { FetchPolicy, ParserOptions } from '../../types';
-import { ODataQueryArguments } from '../query';
+import { ODataQueryOptionsHandler } from '../query';
+import { ODataStructuredType } from '../../schema';
 
 export type ODataOptions = {
   etag?: string;
@@ -24,8 +25,10 @@ export type ODataEntitiesOptions = ODataOptions & {
   withCount?: boolean;
 };
 export type ODataPropertyOptions = ODataOptions & { responseType?: 'property' };
-export type ODataQueryArgumentsOptions<T> = ODataOptions & ODataQueryArguments<T>;
-export type ODataActionOptions<T> = ODataQueryArgumentsOptions<T>;
-export type ODataFunctionOptions<T> = ODataQueryArgumentsOptions<T> & {
+export type ODataQueryableOptions<T> = ODataOptions & {
+  query?: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void;
+};
+export type ODataActionOptions<T> = ODataQueryableOptions<T>;
+export type ODataFunctionOptions<T> = ODataQueryableOptions<T> & {
   alias?: boolean;
 };

@@ -107,7 +107,7 @@ export class Package {
       if (callable !== undefined) {
         callable.addOverload(f);
       } else {
-        callables.push(new Callable(f));
+        callables.push(new Callable(this, f));
       }
       return callables;
     }, [] as Callable[]);
@@ -116,7 +116,7 @@ export class Package {
       if (callable !== undefined) {
         callable.addOverload(a);
       } else {
-        callables.push(new Callable(a));
+        callables.push(new Callable(this, a));
       }
       return callables;
     }, [] as Callable[]);

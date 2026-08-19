@@ -8,7 +8,7 @@ import {
   ODataModel,
   ODataCollection,
   ODataOptions,
-  ODataQueryArgumentsOptions,
+  ODataQueryableOptions,
   ODataFunctionOptions,
   ODataActionOptions,<% if (hasDurationFields) { %>
   Duration,<% } %>
@@ -26,7 +26,7 @@ export class <%= classify(name) %><E extends <%= entity.name() %>> extends <% if
   <% } %>
   <% for (let cal of callables) { %>
   // <%= cal.name() %>
-  <%= cal.callableMethod() %>
+  <%= cal.callableMethod(imports) %>
 <% } %>
   <% for (let nav of navigations) { %><%= nav %>
   <% } %>

@@ -19,7 +19,7 @@ import type {
   ODataSegment,
 } from './resources';
 import {
-  ODataQueryOptions,
+  ODataQueryableOptions,
   ODataPathSegments,
   ODataRequest,
   ODataResponse,
@@ -31,6 +31,7 @@ import {
   ODataEntitySetResource,
   ODataSingletonResource,
   ODataNavigationPropertyResource,
+  ODataQueryOptions,
 } from './resources';
 import {
   EDM_PARSERS,

@@ -23,8 +23,8 @@ export class <%= classify(name) %> extends ODataEntitySetService<<%= toTypescrip
     return this.collection<<%= model.importedName(imports) %><<%= toTypescriptType(type) %>>, <%= collection.importedName(imports) %><<%= toTypescriptType(type) %>, <%= model.importedName(imports) %><<%= toTypescriptType(type) %>>>>(entities);
   }<% for (let cal of callables) { %>
   // <%= cal.name() %>
-  <%= cal.resourceFunction() %>
-  <%= cal.callableFunction() %>
+  <%= cal.resourceFunction(imports) %>
+  <%= cal.callableFunction(imports) %>
 <% } %>
 // #region Custom
 // #endregion Custom

@@ -9,7 +9,7 @@ import type {
   ODataFunctionResource,
   ODataNavigationPropertyResource,
   ODataProperty,
-  ODataQueryArgumentsOptions,
+  ODataQueryableOptions,
 } from '../resources';
 
 export abstract class ODataBaseService {
@@ -65,7 +65,7 @@ export abstract class ODataBaseService {
     responseType: 'property' | 'entity' | 'entities' | 'none' | 'blob' | 'arraybuffer',
     options: ODataFunctionOptions<R> = {},
   ): Observable<any> {
-    resource.query((q) => q.restore(options));
+    if (options.query !== undefined) resource = resource.query(options.query);
     return resource.call(params, {
       responseType: responseType as any,
       ...options,
@@ -114,7 +114,7 @@ export abstract class ODataBaseService {
     responseType: 'property' | 'entity' | 'entities' | 'none' | 'blob' | 'arraybuffer',
     options: ODataActionOptions<R> = {},
   ): Observable<any> {
-    resource.query((q) => q.restore(options));
+    if (options.query !== undefined) resource = resource.query(options.query);
     return resource.call(params, {
       responseType: responseType as any,
       ...options,
@@ -124,19 +124,19 @@ export abstract class ODataBaseService {
   protected fetchNavigationProperty<S>(
     resource: ODataNavigationPropertyResource<S>,
     responseType: 'entity',
-    options?: ODataQueryArgumentsOptions<S>,
+    options?: ODataQueryableOptions<S>,
   ): Observable<ODataEntity<S>>;
   protected fetchNavigationProperty<S>(
     resource: ODataNavigationPropertyResource<S>,
     responseType: 'entities',
-    options?: ODataQueryArgumentsOptions<S>,
+    options?: ODataQueryableOptions<S>,
   ): Observable<ODataEntities<S>>;
   protected fetchNavigationProperty<S>(
     resource: ODataNavigationPropertyResource<S>,
     responseType: 'entity' | 'entities',
-    options: ODataQueryArgumentsOptions<S> = {},
+    options: ODataQueryableOptions<S> = {},
   ): Observable<any> {
-    resource.query((q) => q.restore(options));
+    if (options.query !== undefined) resource = resource.query(options.query);
     return resource.fetch({ responseType: responseType as any, ...options });
   }
 }
