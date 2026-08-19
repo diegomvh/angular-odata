@@ -1962,7 +1962,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryableOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2025,7 +2025,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryArgumentsOptions&lt;S&gt;</a></code>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryableOptions&lt;S&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -2063,7 +2063,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: <a href="../undefineds/now.html" target="_self">unknown</a>, options?: <a href="../objects/OData.html" target="_self">ODataQueryableOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2126,7 +2126,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryArgumentsOptions&lt;S&gt;</a></code>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryableOptions&lt;S&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -2164,7 +2164,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: "entity" | "entities", options: <a href="../objects/OData.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType: "entity" | "entities", options: <a href="../objects/OData.html" target="_self">ODataQueryableOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2232,7 +2232,7 @@
                                         <tr>
                                                 <td>options</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryArgumentsOptions&lt;S&gt;</a></code>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryableOptions&lt;S&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -2306,7 +2306,7 @@ import type {
   ODataFunctionResource,
   ODataNavigationPropertyResource,
   ODataProperty,
-  ODataQueryArgumentsOptions,
+  ODataQueryableOptions,
 } from &#x27;../resources&#x27;;
 
 export abstract class ODataBaseService {
@@ -2362,7 +2362,7 @@ export abstract class ODataBaseService {
     responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27; | &#x27;blob&#x27; | &#x27;arraybuffer&#x27;,
     options: ODataFunctionOptions&lt;R&gt; &#x3D; {},
   ): Observable&lt;any&gt; {
-    resource.query((q) &#x3D;&gt; q.restore(options));
+    if (options.query !&#x3D;&#x3D; undefined) resource &#x3D; resource.query(options.query);
     return resource.call(params, {
       responseType: responseType as any,
       ...options,
@@ -2411,7 +2411,7 @@ export abstract class ODataBaseService {
     responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27; | &#x27;blob&#x27; | &#x27;arraybuffer&#x27;,
     options: ODataActionOptions&lt;R&gt; &#x3D; {},
   ): Observable&lt;any&gt; {
-    resource.query((q) &#x3D;&gt; q.restore(options));
+    if (options.query !&#x3D;&#x3D; undefined) resource &#x3D; resource.query(options.query);
     return resource.call(params, {
       responseType: responseType as any,
       ...options,
@@ -2421,19 +2421,19 @@ export abstract class ODataBaseService {
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entity&#x27;,
-    options?: ODataQueryArgumentsOptions&lt;S&gt;,
+    options?: ODataQueryableOptions&lt;S&gt;,
   ): Observable&lt;ODataEntity&lt;S&gt;&gt;;
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entities&#x27;,
-    options?: ODataQueryArgumentsOptions&lt;S&gt;,
+    options?: ODataQueryableOptions&lt;S&gt;,
   ): Observable&lt;ODataEntities&lt;S&gt;&gt;;
   protected fetchNavigationProperty&lt;S&gt;(
     resource: ODataNavigationPropertyResource&lt;S&gt;,
     responseType: &#x27;entity&#x27; | &#x27;entities&#x27;,
-    options: ODataQueryArgumentsOptions&lt;S&gt; &#x3D; {},
+    options: ODataQueryableOptions&lt;S&gt; &#x3D; {},
   ): Observable&lt;any&gt; {
-    resource.query((q) &#x3D;&gt; q.restore(options));
+    if (options.query !&#x3D;&#x3D; undefined) resource &#x3D; resource.query(options.query);
     return resource.fetch({ responseType: responseType as any, ...options });
   }
 }
