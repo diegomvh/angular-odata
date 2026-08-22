@@ -741,6 +741,7 @@ export class ODataModelOptions<T> {
     if (key !== undefined) {
       const model = this.pool.get(key.toString()) as ODataModel<T> | undefined;
       if (model !== undefined) {
+        model.assign(data, { reset, reparent: true });
         if (parent !== undefined) model._parent = parent;
         if (resource !== undefined) model.attach(resource);
         if (annots !== undefined) model._annotations = annots;
