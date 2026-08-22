@@ -1149,6 +1149,7 @@ export class ODataModelOptions&lt;T&gt; {
     if (key !&#x3D;&#x3D; undefined) {
       const model &#x3D; this.pool.get(key.toString()) as ODataModel&lt;T&gt; | undefined;
       if (model !&#x3D;&#x3D; undefined) {
+        model.assign(data, { reset, reparent: true });
         if (parent !&#x3D;&#x3D; undefined) model._parent &#x3D; parent;
         if (resource !&#x3D;&#x3D; undefined) model.attach(resource);
         if (annots !&#x3D;&#x3D; undefined) model._annotations &#x3D; annots;
