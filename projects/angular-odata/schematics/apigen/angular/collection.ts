@@ -75,6 +75,14 @@ export class Collection extends Base {
     }
     for (let callable of this.callables ?? []) {
       imports.push(...callable.importTypes());
+
+      const returnType = callable.returnType();
+      if (returnType && !returnType.Type.startsWith('Edm.')) {
+        imports.push(returnType.Type + 'Model');
+        if (returnType.Collection) {
+          imports.push(returnType.Type + 'Collection');
+        }
+      }
     }
     return imports;
   }
