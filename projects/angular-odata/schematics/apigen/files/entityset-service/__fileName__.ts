@@ -11,7 +11,7 @@ import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 // #region Custom
 // #endregion Custom
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class <%= classify(name) %> extends ODataEntitySetService<<%= toTypescriptType(type) %>> {
   constructor(client: ODataClient) {
     super(client, '<%= path %>', '<%= type %>');

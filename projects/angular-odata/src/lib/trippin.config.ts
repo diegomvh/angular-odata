@@ -276,7 +276,7 @@ export const PersonConfig = {
 //#endregion
 
 //#region Services
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PeopleService extends ODataEntitySetService<Person> {
   constructor(client: ODataClient) {
     super(client, 'People', `${NAMESPACE}.Person`);

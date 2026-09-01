@@ -12,7 +12,7 @@ import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 // #region Custom
 // #endregion Custom
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class <%= classify(name) %> extends ODataBaseService {
   constructor(client: ODataClient) {
     super(client, '<%= path %>', '<%= type %>');
