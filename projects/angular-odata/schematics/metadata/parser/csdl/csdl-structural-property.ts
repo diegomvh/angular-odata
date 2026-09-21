@@ -44,6 +44,12 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   isEdmType(): boolean {
     return this.Type.startsWith('Edm.');
   }
+
+  // Unlike the CSDL default, an omitted Nullable is treated as non-nullable; only an explicit
+  // Nullable="true" widens the generated type. Nullable on a collection refers to its elements.
+  isNullable(): boolean {
+    return !this.Collection && this.Nullable === true;
+  }
 }
 
 export class CsdlProperty extends CsdlStructuralProperty {

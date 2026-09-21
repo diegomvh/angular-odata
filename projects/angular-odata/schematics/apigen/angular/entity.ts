@@ -15,12 +15,12 @@ export class EntityProperty {
   ) {}
 
   name() {
-    const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.Nullable);
+    const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.isNullable());
     const name = this.edmType.Name;
     return name + (!required ? '?' : '');
   }
 
-  type(imports: Import[]) {
+  baseType(imports: Import[] = []) {
     const pkg = this.entity.getPackage();
     const enumType = pkg.findEnum(this.edmType.Type);
     const entityType = pkg.findEntity(this.edmType.Type);
@@ -39,6 +39,11 @@ export class EntityProperty {
       type += this.edmType.Collection ? '[]' : '';
     }
     return type;
+  }
+
+  type(imports: Import[] = []) {
+    const type = this.baseType(imports);
+    return this.edmType.isNullable() ? `${type} | null` : type;
   }
 
   isGeoSpatial(): boolean {

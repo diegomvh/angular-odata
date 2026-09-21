@@ -17,12 +17,12 @@ export class ModelField {
   ) {}
 
   name() {
-    const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.Nullable);
+    const required = !(this.edmType instanceof CsdlNavigationProperty || this.edmType.isNullable());
     const name = this.edmType.Name;
     return name + (!required ? '?' : '');
   }
 
-  type(imports: Import[]) {
+  baseType(imports: Import[] = []) {
     const pkg = this.model.getPackage();
     const enumType = pkg.findEnum(this.edmType.Type);
     const entityType = pkg.findEntity(this.edmType.Type);
@@ -46,10 +46,12 @@ export class ModelField {
       type = toTypescriptType(this.edmType.Type);
       type += this.edmType.Collection ? '[]' : '';
     }
-    if (this.edmType.Nullable && !this.edmType.Collection) {
-      type += ' | null';
-    }
     return type;
+  }
+
+  type(imports: Import[] = []) {
+    const type = this.baseType(imports);
+    return this.edmType.isNullable() ? `${type} | null` : type;
   }
 
   resource(imports: Import[]) {
@@ -91,7 +93,7 @@ export class ModelField {
     const setterName = `${this.edmType.Name}$$`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `  public ${setterName}(model: ${this.type(imports)} | null, options?: ODataOptions) {
+      return `  public ${setterName}(model: ${this.baseType(imports)} | null, options?: ODataOptions) {
     return this.setReference<${entity?.importedName(imports)}>('${this.edmType.Name}', model, options);
   }
 `;
