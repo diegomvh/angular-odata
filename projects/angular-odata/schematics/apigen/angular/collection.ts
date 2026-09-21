@@ -74,7 +74,13 @@ export class Collection extends Base {
       }
     }
     for (let callable of this.callables ?? []) {
-      imports.push(...callable.importTypes());
+      for (let type of callable.importTypes()) {
+        if (!type.startsWith('Edm.')) {
+          imports.push(type);
+          imports.push(type + 'Model');
+          imports.push(type + 'Collection');
+        }
+      }
     }
     return imports;
   }
