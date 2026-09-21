@@ -37,6 +37,7 @@
     "publish": "npm run build && npm run schematics && npm publish dist/angular-odata/",
     "release": "cp README.md projects/angular-odata/README.md && npm run docs && npm run publish",
     "trippin": "ng generate angular-odata:apigen --name=TripPin --metadata='https://services.odata.org/V4/TripPinServiceRW/$metadata'",
+    "nexus": "ng generate angular-odata:apigen --name=Nexus --metadata='http://localhost:5272/$metadata'",
     "prettier": "prettier --write \"projects/angular-odata/**/*.ts\""
   },
   "prettier": {
