@@ -536,7 +536,7 @@ export const PersonConfig &#x3D; {
 //#endregion
 
 //#region Services
-@Injectable()
+@Injectable({ providedIn: &#x27;root&#x27; })
 export class PeopleService extends ODataEntitySetService&lt;Person&gt; {
   constructor(client: ODataClient) {
     super(client, &#x27;People&#x27;, &#x60;${NAMESPACE}.Person&#x60;);
