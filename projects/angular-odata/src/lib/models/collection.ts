@@ -987,7 +987,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         () => new Error("callFunction: Can't call function without ODataEntitySetResource"),
       );
 
-    const func = resource.function<P, R>(name).query((q) => q.restore(options));
+    let func = resource.function<P, R>(name);
+    if (options.query !== undefined) func = func.query(options.query);
     switch (responseType) {
       case 'property':
         return this._request(func.callProperty(params, options), (resp) => resp);
@@ -1012,7 +1013,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         () => new Error(`callAction: Can't call action without ODataEntitySetResource`),
       );
     }
-    const action = resource.action<P, R>(name).query((q) => q.restore(options));
+    let action = resource.action<P, R>(name);
+    if (options.query !== undefined) action = action.query(options.query);
     switch (responseType) {
       case 'property':
         return this._request(action.callProperty(params, options), (resp) => resp);

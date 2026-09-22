@@ -102,12 +102,12 @@ export class ModelField {
     const fetchName = `${this.edmType.Name}$`;
     if (this.edmType instanceof CsdlNavigationProperty) {
       const entity = pkg.findEntity(this.edmType.Type);
-      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${entity?.importedName}>) {
+      return `public ${fetchName}(options?: ODataQueryableOptions<${entity?.importedName}>) {
     return this.fetchAttribute<${entity?.importedName}>('${this.edmType.Name}', options) as Observable<${entity?.importedName}>;
   }
 `;
     } else {
-      return `public ${fetchName}(options?: ODataQueryArgumentsOptions<${this.type()}>) {
+      return `public ${fetchName}(options?: ODataQueryableOptions<${this.type()}>) {
     return this.fetchAttribute<${this.type()}>('${this.edmType.Name}', options) as Observable<${this.type()}>;
   }
 `;
@@ -269,7 +269,7 @@ export class Model extends Base {
         var castEntity = pkg.findEntity(propertyEntity?.fullName() || '');
 
         // Navigation
-        result.push(`public ${methodName}(options?: ODataQueryArgumentsOptions<${entity?.importedName}>) {
+        result.push(`public ${methodName}(options?: ODataQueryableOptions<${entity?.importedName}>) {
     return this.fetchNavigationProperty<${entity?.importedName}>('${binding.Path}', '${responseType}', options) as Observable<${returnType}>;
   }`);
       }
