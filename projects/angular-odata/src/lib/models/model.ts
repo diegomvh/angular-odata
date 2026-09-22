@@ -8,7 +8,6 @@ import {
   ODataNavigationPropertyResource,
   ODataOptions,
   ODataPropertyResource,
-  ODataQueryArguments,
   ODataQueryOptionsHandler,
   ODataQueryableOptions,
   ODataResource,

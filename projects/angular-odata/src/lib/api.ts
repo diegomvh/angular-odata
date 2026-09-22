@@ -12,14 +12,12 @@ import {
 } from './models';
 import { ODataApiOptions } from './options';
 import type {
-  EntityKey,
   ODataOptions,
   ODataPropertyResource,
   ODataResource,
   ODataSegment,
 } from './resources';
 import {
-  ODataQueryableOptions,
   ODataPathSegments,
   ODataRequest,
   ODataResponse,

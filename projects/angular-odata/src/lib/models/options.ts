@@ -10,7 +10,6 @@ import {
 import { ODataHelper } from '../helper';
 import {
   EntityKey,
-  ODataQueryableOptions,
   ODataQueryOptions,
   ODataQueryOptionsHandler,
   ODataResource,
@@ -24,7 +23,6 @@ import {
 } from '../resources';
 import type {
   ODataEntitySet,
-  ODataEnumType,
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';

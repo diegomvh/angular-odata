@@ -11,7 +11,6 @@ import {
   ODataOptions,
   ODataPropertyResource,
   ODataQueryOptionsHandler,
-  ODataResource,
 } from '../resources';
 import type { ODataStructuredType } from '../schema/structured-type';
 import { Types } from '../utils/types';
