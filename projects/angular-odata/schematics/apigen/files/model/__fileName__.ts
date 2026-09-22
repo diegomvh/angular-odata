@@ -13,7 +13,7 @@ import {
   ODataActionOptions,<% if (hasDurationFields) { %>
   Duration,<% } %>
 } from 'angular-odata';
-<% if (hasGeoFields) { %>import { <% for (let f of geoFields) { %><%= f.type() %>,<% } %> } from 'geojson';<% } %><% for (let imp of imports) { %>
+<% if (hasGeoFields) { %>import { <% for (let f of geoFields) { %><%= f.baseType() %>,<% } %> } from 'geojson';<% } %><% for (let imp of imports) { %>
 import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 // #region Custom

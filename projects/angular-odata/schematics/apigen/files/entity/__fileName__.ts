@@ -1,5 +1,5 @@
 <% if (hasDurationProperties) { %>import { Duration } from 'angular-odata';<% } %>
-<% if (hasGeoProperties) { %>import { <% for (let p of geoProperties) { %><%= p.type() %>,<% } %> } from 'geojson';<% } %><% for (let imp of imports) { %>
+<% if (hasGeoProperties) { %>import { <% for (let p of geoProperties) { %><%= p.baseType() %>,<% } %> } from 'geojson';<% } %><% for (let imp of imports) { %>
 import { <%= imp.resolve().join(", ") %> } from '<%= imp.path() %>';<% } %>
 
 // #region Custom
