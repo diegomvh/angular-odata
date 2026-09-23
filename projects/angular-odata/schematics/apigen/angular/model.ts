@@ -3,7 +3,10 @@ import { Base } from './base';
 import { CsdlComplexType, CsdlEntityType } from '../../metadata/parser/csdl/csdl-structured-type';
 import { url, Source } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from '../schema';
-import { CsdlNavigationProperty, CsdlProperty } from '../../metadata/parser/csdl/csdl-structural-property';
+import {
+  CsdlNavigationProperty,
+  CsdlProperty,
+} from '../../metadata/parser/csdl/csdl-structural-property';
 import { toTypescriptType } from '../utils';
 import { Entity } from './entity';
 import { Package } from './package';

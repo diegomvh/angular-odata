@@ -142,10 +142,7 @@ export class ODataRequest<T> {
     if (apiOptions.prefer?.maxPageSize !== undefined && ['GET'].indexOf(this._method) !== -1)
       prefer.push(`odata.maxpagesize=${apiOptions.prefer?.maxPageSize}`);
     // Annotations
-    if (
-      apiOptions.prefer?.includeAnnotations !== undefined &&
-      ['GET'].indexOf(this._method) !== -1
-    )
+    if (apiOptions.prefer?.includeAnnotations !== undefined && ['GET'].indexOf(this._method) !== -1)
       prefer.push(`odata.include-annotations=${apiOptions.prefer?.includeAnnotations}`);
     // Omit Null Values
     if (apiOptions.prefer?.omitNullValues === true && ['GET'].indexOf(this._method) !== -1)
@@ -154,11 +151,7 @@ export class ODataRequest<T> {
     if (apiOptions.prefer?.continueOnError === true && ['POST'].indexOf(this._method) !== -1)
       prefer.push(`odata.continue-on-error`);
     if (prefer.length > 0) customHeaders[PREFER] = prefer;
-    this._headers = Http.mergeHttpHeaders(
-      apiOptions.headers,
-      customHeaders,
-      init.headers || {},
-    );
+    this._headers = Http.mergeHttpHeaders(apiOptions.headers, customHeaders, init.headers || {});
     //#endregion
 
     //#region Params

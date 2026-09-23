@@ -131,30 +131,38 @@ export class Package {
     });
     this.models.forEach((m: Model) => {
       m.addCallables(
-        this.functions.filter((f) => 
-          f.isBound() && 
-          f.bindingParameter()?.Type === m.entityType() &&
-          !f.bindingParameter()?.Collection)
+        this.functions.filter(
+          (f) =>
+            f.isBound() &&
+            f.bindingParameter()?.Type === m.entityType() &&
+            !f.bindingParameter()?.Collection,
+        ),
       );
       m.addCallables(
-        this.actions.filter((f) => 
-          f.isBound() && 
-          f.bindingParameter()?.Type === m.entityType() &&
-          !f.bindingParameter()?.Collection)
+        this.actions.filter(
+          (f) =>
+            f.isBound() &&
+            f.bindingParameter()?.Type === m.entityType() &&
+            !f.bindingParameter()?.Collection,
+        ),
       );
     });
     this.collections.forEach((c: Collection) => {
       c.addCallables(
-        this.functions.filter((f) => 
-          f.isBound() && 
-          f.bindingParameter()?.Type === c.entityType() &&
-          f.bindingParameter()?.Collection)
+        this.functions.filter(
+          (f) =>
+            f.isBound() &&
+            f.bindingParameter()?.Type === c.entityType() &&
+            f.bindingParameter()?.Collection,
+        ),
       );
       c.addCallables(
-        this.actions.filter((f) => 
-          f.isBound() && 
-          f.bindingParameter()?.Type === c.entityType() &&
-          f.bindingParameter()?.Collection)
+        this.actions.filter(
+          (f) =>
+            f.isBound() &&
+            f.bindingParameter()?.Type === c.entityType() &&
+            f.bindingParameter()?.Collection,
+        ),
       );
     });
   }
@@ -167,7 +175,6 @@ export class Package {
       }
     }
   }
-
 
   sources(): Base[] {
     const sources: Base[] = [

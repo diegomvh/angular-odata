@@ -18,7 +18,8 @@ export class Callable {
   callables: CsdlCallable[] = [];
   constructor(
     protected pkg: Package,
-    protected callable: CsdlCallable) {
+    protected callable: CsdlCallable,
+  ) {
     this.callables.push(callable);
   }
 
@@ -186,7 +187,8 @@ export class Callable {
     const pkg = this.getPackage();
     const returnEnumType = returnType === undefined ? undefined : pkg.findEnum(returnType.Type);
     const returnEntityType = returnType === undefined ? undefined : pkg.findEntity(returnType.Type);
-    const returnCollection = returnType === undefined ? undefined : pkg.findCollection(returnType.Type);
+    const returnCollection =
+      returnType === undefined ? undefined : pkg.findCollection(returnType.Type);
     const returnModel = returnType === undefined ? undefined : pkg.findModel(returnType.Type);
 
     const methodName = strings.camelize(this.callable.Name);
@@ -199,16 +201,16 @@ export class Callable {
             ? 'property'
             : 'model';
     const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
-    const callableReturnType = 
-      returnType === undefined 
-        ?  `` 
-        : returnType?.Type.startsWith('Edm.') ?
-            ` as Observable<${retType}>`
-        : returnEnumType !== undefined  ?
-            ` as Observable<${returnEnumType!.importedName(imports)}>`
-        : returnType?.Collection ?
-            ` as Observable<${returnCollection!.importedName(imports)}<${returnEntityType!.importedName(imports)}, ${returnModel!.importedName(imports)}<${returnEntityType!.importedName(imports)}>>>` :
-            ` as Observable<${returnModel!.importedName(imports)}<${returnEntityType!.importedName(imports)}>>`;
+    const callableReturnType =
+      returnType === undefined
+        ? ``
+        : returnType?.Type.startsWith('Edm.')
+          ? ` as Observable<${retType}>`
+          : returnEnumType !== undefined
+            ? ` as Observable<${returnEnumType!.importedName(imports)}>`
+            : returnType?.Collection
+              ? ` as Observable<${returnCollection!.importedName(imports)}<${returnEntityType!.importedName(imports)}, ${returnModel!.importedName(imports)}<${returnEntityType!.importedName(imports)}>>>`
+              : ` as Observable<${returnModel!.importedName(imports)}<${returnEntityType!.importedName(imports)}>>`;
 
     const baseMethod = isFunction ? 'callFunction' : 'callAction';
     const parametersCall =

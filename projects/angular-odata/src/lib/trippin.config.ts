@@ -113,7 +113,7 @@ export const TripPinConfig = TripPinMetadata.toConfig({
     stringAsEnum: true,
     stripMetadata: 'full',
     fetchPolicy: 'no-cache',
-    nonParenthesisForEmptyParameterFunction: true
+    nonParenthesisForEmptyParameterFunction: true,
   },
   schemas: [
     {

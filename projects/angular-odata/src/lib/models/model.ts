@@ -623,8 +623,7 @@ export class ODataModel<T> {
       );
 
     let func = resource.function<P, R>(name);
-    if (options.query !== undefined) 
-      func = func.query(options.query);
+    if (options.query !== undefined) func = func.query(options.query);
     switch (responseType) {
       case 'property':
         return this._request(func.callProperty(params, options), (resp) => resp);
@@ -690,8 +689,7 @@ export class ODataModel<T> {
       );
 
     let action = resource.action<P, R>(name);
-    if (options.query !== undefined)
-      action = action.query(options.query);
+    if (options.query !== undefined) action = action.query(options.query);
     switch (responseType) {
       case 'property':
         return this._request(action.callProperty(params, options), (resp) => resp);
