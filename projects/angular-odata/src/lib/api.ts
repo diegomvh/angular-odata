@@ -11,12 +11,7 @@ import {
   ODataModelOptions,
 } from './models';
 import { ODataApiOptions } from './options';
-import type {
-  ODataOptions,
-  ODataPropertyResource,
-  ODataResource,
-  ODataSegment,
-} from './resources';
+import type { ODataOptions, ODataPropertyResource, ODataResource, ODataSegment } from './resources';
 import {
   ODataPathSegments,
   ODataRequest,
@@ -115,13 +110,15 @@ export class ODataApi {
 
   initialize(requester: (request: ODataRequest<any>) => Observable<any>) {
     this.requester = requester;
-    return (this.populateFromMetadata
-      ? firstValueFrom(
-          this.metadata()
-            .fetch()
-            .pipe(map((metadata) => this.populate(metadata.toConfig()))),
-        )
-      : Promise.resolve()).then(() => this.configure());
+    return (
+      this.populateFromMetadata
+        ? firstValueFrom(
+            this.metadata()
+              .fetch()
+              .pipe(map((metadata) => this.populate(metadata.toConfig()))),
+          )
+        : Promise.resolve()
+    ).then(() => this.configure());
   }
 
   configure() {
@@ -147,7 +144,7 @@ export class ODataApi {
     schemas,
     references,
     models,
-    collections
+    collections,
   }: {
     schemas?: ODataSchemaConfig[];
     references?: ODataReferenceConfig[];
@@ -157,10 +154,12 @@ export class ODataApi {
     const odataSchemas = (schemas ?? []).map((schema) => new ODataSchema(schema, this));
     //TODO: Merge duplicates
     this.schemas = [...this.schemas, ...odataSchemas];
-    const odataReferences = (references ?? []).map((reference) => new ODataReference(reference, this));
-    this.references = [...this.references, ...odataReferences]; 
+    const odataReferences = (references ?? []).map(
+      (reference) => new ODataReference(reference, this),
+    );
+    this.references = [...this.references, ...odataReferences];
     const odataModels = (models ?? {}) as { [type: string]: typeof ODataModel<any> };
-    this.models = { ...this.models, ...odataModels }; 
+    this.models = { ...this.models, ...odataModels };
     const odataCollections = (collections ?? {}) as {
       [type: string]: typeof ODataCollection<any, ODataModel<any>>;
     };

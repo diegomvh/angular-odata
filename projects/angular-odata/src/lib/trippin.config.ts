@@ -296,7 +296,7 @@ export const TripPinConfig = {
     stringAsEnum: true,
     stripMetadata: 'full',
     fetchPolicy: 'no-cache',
-    nonParenthesisForEmptyParameterFunction: true
+    nonParenthesisForEmptyParameterFunction: true,
   },
   schemas: [
     {

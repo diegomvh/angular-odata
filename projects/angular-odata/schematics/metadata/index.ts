@@ -1,8 +1,4 @@
-import {
-  SchematicContext,
-  Tree,
-  SchematicsException,
-} from '@angular-devkit/schematics';
+import { SchematicContext, Tree, SchematicsException } from '@angular-devkit/schematics';
 import { Schema as ApiGenSchema } from './schema';
 import { createDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import { parseName } from '@schematics/angular/utility/parse-name';
@@ -22,14 +18,20 @@ export function metadata(options: ApiGenSchema) {
       options.path = await createDefaultPath(tree, name);
     }
 
-    const metadataPath = parseName(options.path, options.format === "json" ? "metadata.json" : "metadata.xml");
+    const metadataPath = parseName(
+      options.path,
+      options.format === 'json' ? 'metadata.json' : 'metadata.xml',
+    );
     return fetch(options.url)
-    .then((resp) => resp.text())
-    .then((data) => {
-      const filePath = normalize(metadataPath.path) + '/' + metadataPath.name;
-      const content = (options.format === 'json') ?  JSON.stringify(new ODataMetadataParser(data).metadata().toJson()) : data;
-      tree.create(filePath, content);
-      return tree;
-    });
+      .then((resp) => resp.text())
+      .then((data) => {
+        const filePath = normalize(metadataPath.path) + '/' + metadataPath.name;
+        const content =
+          options.format === 'json'
+            ? JSON.stringify(new ODataMetadataParser(data).metadata().toJson())
+            : data;
+        tree.create(filePath, content);
+        return tree;
+      });
   };
-  }
+}
