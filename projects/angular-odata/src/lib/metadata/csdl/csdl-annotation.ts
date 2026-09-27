@@ -1,4 +1,4 @@
-import type { ODataAnnotationConfig } from '../../types';
+import type { ODataAnnotationConfig, ODataAnnotationValueConfig } from '../../types';
 import type { CsdlSchema } from './csdl-schema';
 
 export class CsdlAnnotable {
@@ -118,11 +118,20 @@ export class CsdlAnnotation {
   }
 
   toConfig(): ODataAnnotationConfig {
+    var items: (string | ODataAnnotationValueConfig)[] | undefined = undefined;
+    if (Array.isArray(this.Collection) && this.Collection.length > 0) {
+      items = this.Collection.map((m) => m.toConfig()).flat();
+    } else if (Array.isArray(this.Record) && this.Record.length > 0) {
+      items = this.Record.map((m) => m.toConfig()).flat();
+    } else if (Array.isArray(this.EnumMember) && this.EnumMember.length > 0) {
+      items = this.EnumMember.map((m) => m.toConfig());
+    }
     return {
       term: this.Term,
       string: this.String,
       bool: this.Bool,
       int: this.Int,
+      values: items,
     } as ODataAnnotationConfig;
   }
 }
@@ -267,6 +276,22 @@ export class CsdlCollection {
     }
     return json;
   }
+
+  toConfig() {
+    if (Array.isArray(this.String) && this.String.length > 0) {
+      return this.String.map((s) => s.toConfig());
+    }
+    if (Array.isArray(this.Record) && this.Record.length > 0) {
+      return this.Record.map((r) => r.toConfig()).flat();
+    }
+    if (Array.isArray(this.PropertyPath) && this.PropertyPath.length > 0) {
+      return this.PropertyPath.map((p) => p.toConfig());
+    }
+    if (Array.isArray(this.NavigationPropertyPath) && this.NavigationPropertyPath.length > 0) {
+      return this.NavigationPropertyPath.map((p) => p.toConfig());
+    }
+    return [];
+  }
 }
 
 export class CsdlRecord {
@@ -281,6 +306,13 @@ export class CsdlRecord {
       json['PropertyValue'] = this.PropertyValue.map((p) => p.toJson());
     }
     return json;
+  }
+
+  toConfig(): ODataAnnotationValueConfig[] {
+    if (Array.isArray(this.PropertyValue) && this.PropertyValue.length > 0) {
+      return this.PropertyValue.map((p) => p.toConfig());
+    }
+    return [];
   }
 }
 
@@ -319,6 +351,20 @@ export class CsdlPropertyValue {
     }
     return json;
   }
+
+  toConfig(): ODataAnnotationValueConfig {
+    const config: ODataAnnotationValueConfig = { name: this.Name };
+    if (this.String !== undefined) {
+      config['string'] = this.String;
+    }
+    if (this.Date !== undefined) {
+      config['date'] = this.Date;
+    }
+    if (Array.isArray(this.EnumMember) && this.EnumMember.length > 0) {
+      config['enumMembers'] = this.EnumMember.map((m) => m.toConfig());
+    }
+    return config;
+  }
 }
 
 export class CsdlEnumMember {
@@ -331,6 +377,10 @@ export class CsdlEnumMember {
     return {
       TextContent: this.TextContent,
     };
+  }
+
+  toConfig() {
+    return this.TextContent;
   }
 }
 
@@ -345,6 +395,10 @@ export class CsdlString {
       TextContent: this.TextContent,
     };
   }
+
+  toConfig() {
+    return this.TextContent;
+  }
 }
 
 export class CsdlPropertyPath {
@@ -358,6 +412,9 @@ export class CsdlPropertyPath {
       TextContent: this.TextContent,
     };
   }
+  toConfig() {
+    return this.TextContent;
+  }
 }
 
 export class CsdlNavigationPropertyPath {
@@ -370,5 +427,8 @@ export class CsdlNavigationPropertyPath {
     return {
       TextContent: this.TextContent,
     };
+  }
+  toConfig() {
+    return this.TextContent;
   }
 }

@@ -16,16 +16,17 @@ import {
 } from './resources';
 import { ODataStructuredType, ODataStructuredTypeParser } from './schema';
 import {
-  NAMESPACE,
+  TRIPPIN_NAMESPACE,
   Person,
   PersonGender,
   Photo,
   PlanItem,
-  SERVICE_ROOT,
+  TRIPPIN_SERVICE_ROOT,
   Trip,
   TripPinConfig,
   Flight,
-  CONFIG_NAME,
+  TRIPPIN_CONFIG_NAME,
+  CustomConfig,
 } from './trippin.config';
 import { QueryOption } from './types';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -35,7 +36,7 @@ describe('ODataClient', () => {
     TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
-        provideODataClient({ config: TripPinConfig }),
+        provideODataClient({ config: [TripPinConfig, CustomConfig] }),
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
@@ -53,7 +54,7 @@ describe('ODataClient', () => {
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     );
     const entity = set.entity('russellwhyte');
     const friends = entity.navigationProperty<Person>('Friends');
@@ -65,7 +66,7 @@ describe('ODataClient', () => {
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     );
     const entity = set.entity('russellwhyte');
     const photo = entity.navigationProperty<Photo>('Photo');
@@ -84,7 +85,7 @@ describe('ODataClient', () => {
   it('should return person parser for resource', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    const set: ODataResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
+    const set: ODataResource<Person> = client.entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`);
     const api = client.apiFor(set);
     const parser = api.parserForType<Person>(
       set.outgoingType() as string,
@@ -96,37 +97,37 @@ describe('ODataClient', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     expect(function () {
-      client.parserForType<Person>(`${NAMESPACE}.Foo`);
-    }).toThrow(new Error('No Parser for type TripPin.Foo was found'));
+      client.parserForType<Person>(`${TRIPPIN_NAMESPACE}.Foo`);
+    }).toThrow(new Error(`No Parser for type ${TRIPPIN_NAMESPACE}.Foo was found`));
   });
 
   it('should throw error entity config', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     expect(function () {
-      client.enumTypeForType<Person>(`${NAMESPACE}.Foo`);
-    }).toThrow(new Error('No Enum for type TripPin.Foo was found'));
+      client.enumTypeForType<Person>(`${TRIPPIN_NAMESPACE}.Foo`);
+    }).toThrow(new Error(`No Enum for type ${TRIPPIN_NAMESPACE}.Foo was found`));
   });
 
   it('should throw error entity config', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     expect(function () {
-      client.structuredTypeForType<Person>(`${NAMESPACE}.Foo`);
-    }).toThrow(new Error('No Structured for type TripPin.Foo was found'));
+      client.structuredTypeForType<Person>(`${TRIPPIN_NAMESPACE}.Foo`);
+    }).toThrow(new Error(`No Structured for type ${TRIPPIN_NAMESPACE}.Foo was found`));
   });
 
   it('should return person parser for type', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    const parser = client.parserForType<Person>(`${NAMESPACE}.Person`);
+    const parser = client.parserForType<Person>(`${TRIPPIN_NAMESPACE}.Person`);
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
 
   it('should return person entity config', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
+    const config = client.structuredTypeForType<Person>(`${TRIPPIN_NAMESPACE}.Person`);
     expect(config instanceof ODataStructuredType).toBeTruthy();
   });
 
@@ -134,62 +135,62 @@ describe('ODataClient', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const metadata: ODataMetadataResource = client.metadata();
-    expect(metadata.endpointUrl()).toEqual(SERVICE_ROOT + '$metadata');
+    expect(metadata.endpointUrl()).toEqual(TRIPPIN_SERVICE_ROOT + '$metadata');
   });
 
   it('should create batch resource', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const batch: ODataBatchResource = client.batch();
-    expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
+    expect(batch.endpointUrl()).toEqual(TRIPPIN_SERVICE_ROOT + '$batch');
   });
 
   it('should create singleton resource', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const singleton: ODataSingletonResource<Person> = client.singleton<Person>('Me');
-    expect(singleton.endpointUrl()).toEqual(SERVICE_ROOT + 'Me');
+    expect(singleton.endpointUrl()).toEqual(TRIPPIN_SERVICE_ROOT + 'Me');
   });
 
   it('should create entitySet resource', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People');
-    expect(set.endpointUrl()).toEqual(SERVICE_ROOT + 'People');
+    expect(set.endpointUrl()).toEqual(TRIPPIN_SERVICE_ROOT + 'People');
   });
 
   it('should create unbound function resource', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const fun: ODataFunctionResource<any, any> = client.function<any, any>('NS.MyFunction');
-    expect(fun.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyFunction()');
+    expect(fun.endpointUrl()).toEqual(TRIPPIN_SERVICE_ROOT + 'NS.MyFunction()');
   });
 
   it('should create unbound action resource', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const act: ODataActionResource<any, any> = client.action<any, any>('NS.MyAction');
-    expect(act.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyAction');
+    expect(act.endpointUrl()).toEqual(TRIPPIN_SERVICE_ROOT + 'NS.MyAction');
   });
 
   it('should return parser for People', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    const api = client.apiFor(CONFIG_NAME);
+    const api = client.apiFor(TRIPPIN_CONFIG_NAME);
     const parser = api.parserForType<Person>(
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     ) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
-    expect(parser.fields({ include_navigation: true, include_parents: false }).length).toEqual(9);
-    expect(parser.fields({ include_navigation: false, include_parents: false }).length).toEqual(6);
+    expect(parser.fields({ include_navigation: true, include_parents: false }).length).toEqual(10);
+    expect(parser.fields({ include_navigation: false, include_parents: false }).length).toEqual(7);
   });
 
   it('should return parser for Flight', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    const api = client.apiFor(CONFIG_NAME);
+    const api = client.apiFor(TRIPPIN_CONFIG_NAME);
     const parser = api.parserForType<Flight>(
-      `${NAMESPACE}.Flight`,
+      `${TRIPPIN_NAMESPACE}.Flight`,
     ) as ODataStructuredTypeParser<Flight>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
     expect(parser.fields({ include_navigation: false, include_parents: false }).length).toEqual(1);
@@ -203,7 +204,7 @@ describe('ODataClient', () => {
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     );
     const func = set.function<any, any>('NS.MyFunction');
     const json = func.toJson();
@@ -212,8 +213,8 @@ describe('ODataClient', () => {
         {
           name: 'entitySet',
           path: 'People',
-          incomingType: 'TripPin.Person',
-          outgoingType: 'TripPin.Person',
+          incomingType: `${TRIPPIN_NAMESPACE}.Person`,
+          outgoingType: `${TRIPPIN_NAMESPACE}.Person`,
         },
         { name: 'function', path: 'NS.MyFunction' },
       ],
@@ -226,7 +227,7 @@ describe('ODataClient', () => {
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     );
     const func = set.function<any, any>('NS.MyFunction');
     func.query((q) => {
@@ -238,8 +239,8 @@ describe('ODataClient', () => {
         {
           name: 'entitySet',
           path: 'People',
-          incomingType: 'TripPin.Person',
-          outgoingType: 'TripPin.Person',
+          incomingType: `${TRIPPIN_NAMESPACE}.Person`,
+          outgoingType: `${TRIPPIN_NAMESPACE}.Person`,
         },
         { name: 'function', path: 'NS.MyFunction' },
       ],
@@ -287,7 +288,7 @@ describe('ODataClient', () => {
       value: dummyPeople,
     };
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .query((q) => q.top(2))
       .fetch()
       .subscribe(({ entities, annots }) => {
@@ -297,7 +298,7 @@ describe('ODataClient', () => {
         expect(entities).toEqual(dummyPeople);
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People?$top=2`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People?$top=2`);
     expect(req.request.method).toBe('GET');
     req.flush(data);
   });
@@ -308,7 +309,7 @@ describe('ODataClient', () => {
     client.function<any, any>('NS.MyFunction')
       .call(null)
       .subscribe();
-    const req = httpMock.expectOne(`${SERVICE_ROOT}NS.MyFunction`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}NS.MyFunction`);
     expect(req.request.method).toBe('GET');
     req.flush({});
   });
@@ -319,7 +320,7 @@ describe('ODataClient', () => {
     client.function<any, any>('NS.MyFunction')
       .call({p1:1, p2:2})
       .subscribe();
-    const req = httpMock.expectOne(`${SERVICE_ROOT}NS.MyFunction(p1=1,p2=2)`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}NS.MyFunction(p1=1,p2=2)`);
     expect(req.request.method).toBe('GET');
     req.flush({});
   });
@@ -340,14 +341,14 @@ describe('ODataClient', () => {
     };
     const entityFunctions = {
       '#Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips': {
-        title: 'Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips',
+        title: `${TRIPPIN_NAMESPACE}.GetFriendsTrips`,
         target:
           "http://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/People('diegomvh')/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips",
       },
     };
 
     const entity: ODataEntityResource<Person> = client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte');
 
     entity.fetch().subscribe(({ entity, annots }) => {
@@ -356,7 +357,7 @@ describe('ODataClient', () => {
       expect(entity).toEqual(person);
     });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People('russellwhyte')`);
     expect(req.request.method).toBe('GET');
 
     const data = { ...person, ...entityMetadata, ...entityFunctions };
@@ -381,7 +382,7 @@ describe('ODataClient', () => {
       ...trip,
     };
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Trip>('Trips')
       .create({
@@ -401,7 +402,7 @@ describe('ODataClient', () => {
         expect(entity).toEqual(trip);
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')/Trips`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Trips`);
     expect(req.request.method).toBe('POST');
     req.flush(data);
   });
@@ -435,7 +436,7 @@ describe('ODataClient', () => {
       ...item,
     };
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Trip>('Trips')
       .key(1003)
@@ -444,10 +445,10 @@ describe('ODataClient', () => {
       .subscribe(({ entity, annots: meta }) => {
         expect(entity !== null).toBeTruthy();
         expect(meta.entitySet).toEqual('People');
-        expect(entity).toEqual(item);
+        expect(entity).toEqual({...item, Duration: { sign: 1, hours: 3 }});
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')/Trips(1003)/PlanItems`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Trips(1003)/PlanItems`);
     expect(req.request.method).toBe('POST');
     req.flush(data);
   });
@@ -456,7 +457,7 @@ describe('ODataClient', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Trip>('Trips')
       .key(1001)
@@ -465,7 +466,7 @@ describe('ODataClient', () => {
         expect(entity).toBeNull();
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')/Trips(1001)`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Trips(1001)`);
     expect(req.request.method).toBe('DELETE');
     req.flush('');
   });
@@ -474,7 +475,7 @@ describe('ODataClient', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Photo>('Photo')
       .reference()
@@ -483,7 +484,7 @@ describe('ODataClient', () => {
         expect(photo).toBeDefined();
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Photo/$ref`);
     expect(req.request.method).toBe('GET');
     req.flush('');
   });
@@ -491,9 +492,9 @@ describe('ODataClient', () => {
   it('should set reference', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    let target = client.entitySet<Photo>('Photos', `${NAMESPACE}.Photo`).entity(1);
+    let target = client.entitySet<Photo>('Photos', `${TRIPPIN_NAMESPACE}.Photo`).entity(1);
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Photo>('Photo')
       .reference()
@@ -502,10 +503,10 @@ describe('ODataClient', () => {
         //expect(entity).toBeNull();
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Photo/$ref`);
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual({
-      '@odata.id': `${SERVICE_ROOT}Photos(1)`,
+      '@odata.id': `${TRIPPIN_SERVICE_ROOT}Photos(1)`,
     });
     req.flush('');
   });
@@ -514,7 +515,7 @@ describe('ODataClient', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Photo>('Photo')
       .reference()
@@ -523,7 +524,7 @@ describe('ODataClient', () => {
         //expect(entity).toBeNull();
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Photo/$ref`);
     expect(req.request.method).toBe('DELETE');
     req.flush('');
   });
@@ -531,9 +532,9 @@ describe('ODataClient', () => {
   it('should add collection reference', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    let target = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('mirsking');
+    let target = client.entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`).entity('mirsking');
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Person>('Friends')
       .reference()
@@ -542,10 +543,10 @@ describe('ODataClient', () => {
         //expect(entity).toBeNull();
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')/Friends/$ref`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Friends/$ref`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
-      '@odata.id': `${SERVICE_ROOT}People('mirsking')`,
+      '@odata.id': `${TRIPPIN_SERVICE_ROOT}People('mirsking')`,
     });
     req.flush('');
   });
@@ -553,9 +554,9 @@ describe('ODataClient', () => {
   it('should remove collection reference using target', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    let target = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('mirsking');
+    let target = client.entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`).entity('mirsking');
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Person>('Friends')
       .reference()
@@ -565,7 +566,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Friends/$ref?$id=${SERVICE_ROOT}People('mirsking')`,
+      `${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Friends/$ref?$id=${TRIPPIN_SERVICE_ROOT}People('mirsking')`,
     );
     expect(req.request.method).toBe('DELETE');
     req.flush('');
@@ -575,7 +576,7 @@ describe('ODataClient', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Person>('Friends')
       .key('mirsking')
@@ -586,7 +587,7 @@ describe('ODataClient', () => {
       });
 
     const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People('russellwhyte')/Friends('mirsking')/$ref`,
+      `${TRIPPIN_SERVICE_ROOT}People('russellwhyte')/Friends('mirsking')/$ref`,
     );
     expect(req.request.method).toBe('DELETE');
     req.flush('');
@@ -597,7 +598,7 @@ describe('ODataClient', () => {
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const people: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     );
     const api = client.apiFor(people);
     api.options.bodyQueryOptions = [QueryOption.select, QueryOption.expand];
@@ -611,7 +612,7 @@ describe('ODataClient', () => {
         expect(people).toBeDefined();
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People/$query`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People/$query`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toBe('$select=FistName,LastName&$expand=Friends');
     req.flush('');
@@ -621,7 +622,7 @@ describe('ODataClient', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .query((q) => {
         q.select(['FistName', 'LastName']);
         q.expand({ Friends: {} });
@@ -633,7 +634,7 @@ describe('ODataClient', () => {
         expect(people).toBeDefined();
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People/$query`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People/$query`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toBe('$select=FistName,LastName&$expand=Friends');
     req.flush('');
@@ -644,7 +645,7 @@ describe('ODataClient', () => {
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
     const people: ODataEntitySetResource<Person> = client.entitySet<Person>(
       'People',
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     );
     const api = client.apiFor(people);
     api.options.bodyQueryOptions = [QueryOption.select];
@@ -661,7 +662,7 @@ describe('ODataClient', () => {
         expect(people).toBeDefined();
       });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}People/$query?$expand=Friends`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}People/$query?$expand=Friends`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toBe("$select=FistName,LastName&$filter=Gender%20eq%20'Male'");
     req.flush('');
@@ -690,12 +691,12 @@ OData-Version: 4.0
 ${JSON.stringify(payload)}
 --batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b--`;
     const entity: ODataEntityResource<Person> = client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte');
     client
       .batch()
       .exec((batch) => {
-        expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
+        expect(batch.endpointUrl()).toEqual(TRIPPIN_SERVICE_ROOT + '$batch');
         entity.fetch().subscribe(({ annots }) => {
           expect(annots.entitySet).toEqual('People');
           expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
@@ -708,7 +709,7 @@ ${JSON.stringify(payload)}
       'Content-Type':
         'multipart/mixed; boundary=batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b',
     });
-    const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe('POST');
     req.flush(data, { headers });
   });
@@ -746,7 +747,7 @@ OData-Version: 4.0
 ${JSON.stringify(payload)}
 --batch_6520643b-3c13-4889-aa60-b4422cf2b82b--`;
     const entity: ODataEntityResource<Person> = client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte');
     client
       .batch()
@@ -762,7 +763,7 @@ ${JSON.stringify(payload)}
       'Content-Length': data.length.toString(),
       'Content-Type': 'multipart/mixed; boundary=batch_6520643b-3c13-4889-aa60-b4422cf2b82b',
     });
-    const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe('POST');
     req.flush(data, { headers });
   });
@@ -770,7 +771,7 @@ ${JSON.stringify(payload)}
   it('should execute one json batch', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    const api = client.apiFor(CONFIG_NAME);
+    const api = client.apiFor(TRIPPIN_CONFIG_NAME);
     api.options.jsonBatchFormat = true;
     const payload = {
       responses: [
@@ -792,12 +793,12 @@ ${JSON.stringify(payload)}
     };
     const data = `${JSON.stringify(payload)}`;
     const entity: ODataEntityResource<Person> = client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte');
     client
       .batch()
       .exec((batch) => {
-        expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
+        expect(batch.endpointUrl()).toEqual(TRIPPIN_SERVICE_ROOT + '$batch');
         entity.fetch().subscribe(({ annots }) => {
           expect(annots.entitySet).toEqual('People');
           expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
@@ -810,7 +811,7 @@ ${JSON.stringify(payload)}
       'OData-Version': '4.01',
       'Content-Type': 'application/json',
     });
-    const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe('POST');
     req.flush(payload, { headers });
   });
@@ -818,7 +819,7 @@ ${JSON.stringify(payload)}
   it('should execute two batch', () => {
     let client: ODataClient = TestBed.inject<ODataClient>(ODataClient);
     let httpMock: HttpTestingController = TestBed.inject(HttpTestingController);
-    const api = client.apiFor(CONFIG_NAME);
+    const api = client.apiFor(TRIPPIN_CONFIG_NAME);
     api.options.jsonBatchFormat = true;
     const payload = {
       responses: [
@@ -854,7 +855,7 @@ ${JSON.stringify(payload)}
     };
     const data = `${JSON.stringify(payload)}`;
     const entity: ODataEntityResource<Person> = client
-      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entitySet<Person>('People', `${TRIPPIN_NAMESPACE}.Person`)
       .entity('russellwhyte');
     client
       .batch()
@@ -871,7 +872,7 @@ ${JSON.stringify(payload)}
       'OData-Version': '4.01',
       'Content-Type': 'application/json',
     });
-    const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
+    const req = httpMock.expectOne(`${TRIPPIN_SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe('POST');
     req.flush(payload, { headers });
   });

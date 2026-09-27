@@ -97,7 +97,7 @@ export class CsdlSchema {
     return {
       namespace: this.Namespace,
       alias: base?.alias ?? this.Alias,
-      annotations: this.Annotations?.map((t) => t.toConfig()),
+      annotations: this.Annotations?.flatMap((t) => t.toConfig()),
       enums: this.EnumType?.map((t) => t.toConfig(base?.enums?.find((cs) => cs.name === t.Name))),
       entities: [
         ...(this.ComplexType ?? []).map((t) =>

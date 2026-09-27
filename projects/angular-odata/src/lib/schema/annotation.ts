@@ -1,16 +1,18 @@
-import { ODataAnnotationConfig } from '../types';
+import { ODataAnnotationConfig, ODataAnnotationValueConfig } from '../types';
 
 export class ODataAnnotation {
   term: string;
   string?: string;
   bool?: boolean;
   int?: number;
-  permissions?: string[];
-  properties?: string[];
+  values?: (string|ODataAnnotationValueConfig)[];
 
   constructor(annot: ODataAnnotationConfig) {
     this.term = annot.term;
-    Object.assign(this, annot);
+    this.string = annot.string;
+    this.bool = annot.bool;
+    this.int = annot.int;
+    this.values = annot.values;
   }
 }
 
@@ -43,7 +45,6 @@ export class ODataAnnotatable {
     return (annot.string ||
       annot.bool ||
       annot.int ||
-      annot.permissions ||
-      annot.properties) as any;
+      annot.values) as any;
   }
 }

@@ -244,17 +244,25 @@ export type ODataApiConfig = {
   populateFromMetadata?: boolean;
   schemas?: ODataSchemaConfig[];
   references?: ODataReferenceConfig[];
-  models?: { [type: string]: { new (...params: any[]): any } };
-  collections?: { [type: string]: { new (...params: any[]): any } };
+  models?: { [type: string]: { new(...params: any[]): any } };
+  collections?: { [type: string]: { new(...params: any[]): any } };
 };
+
+export type ODataAnnotationValueConfig = {
+  name?: string;
+  string?: string;
+  date?: Date;
+  enumMembers?: string[];
+};
+
 export type ODataAnnotationConfig = {
   term: string;
   string?: string;
   bool?: boolean;
   int?: number;
-  permissions?: string[];
-  properties?: string[];
+  values?: (string|ODataAnnotationValueConfig)[];
 };
+
 export type ODataReferenceConfig = {
   uri: string;
   annotations?: ODataAnnotationConfig[];
@@ -315,8 +323,8 @@ export type ODataStructuredTypeConfig = {
   name: string;
   base?: string;
   open?: boolean;
-  model?: { new (...params: any[]): any };
-  collection?: { new (...params: any[]): any };
+  model?: { new(...params: any[]): any };
+  collection?: { new(...params: any[]): any };
   annotations?: ODataAnnotationConfig[];
   keys?: { name: string; alias?: string }[];
   fields?: { [name: string]: ODataStructuredTypeFieldConfig };
@@ -340,14 +348,14 @@ export type ODataCallableConfig = {
 export type ODataEntitySetConfig = {
   name: string;
   entityType: string;
-  service: { new (...params: any[]): any };
+  service: { new(...params: any[]): any };
   annotations?: ODataAnnotationConfig[];
 };
 
 export type ODataSingletonConfig = {
   name: string;
   type: string;
-  service: { new (...params: any[]): any };
+  service: { new(...params: any[]): any };
   annotations?: ODataAnnotationConfig[];
 };
 //#endregion

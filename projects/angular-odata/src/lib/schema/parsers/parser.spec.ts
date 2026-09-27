@@ -2,10 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import {
   TripPinConfig,
   Person,
-  NAMESPACE,
+  TRIPPIN_NAMESPACE,
   PersonGender,
   Flight,
   FlagEnums,
+  CUSTOM_NAMESPACE,
+  CustomConfig,
 } from '../../trippin.config';
 import { ODataClient } from '../../client';
 import { provideODataClient } from '../../module';
@@ -35,7 +37,7 @@ describe('ODataClient', () => {
     TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
-        provideODataClient({ config: TripPinConfig }),
+        provideODataClient({ config: [TripPinConfig, CustomConfig] }),
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
@@ -145,19 +147,19 @@ describe('ODataClient', () => {
   */
 
   it('should return parser for type', () => {
-    const parser = client.parserForType(`${NAMESPACE}.Person`);
+    const parser = client.parserForType(`${TRIPPIN_NAMESPACE}.Person`);
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
 
   it('should return parser from config', () => {
-    const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
+    const schema = client.structuredTypeForType<Person>(`${TRIPPIN_NAMESPACE}.Person`);
     expect(schema !== null).toBeTruthy();
     const parser = (schema as ODataStructuredType<Person>).parser;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
 
   it('should serialize enum', () => {
-    const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
+    const schema = client.structuredTypeForType<Person>(`${TRIPPIN_NAMESPACE}.Person`);
     expect(schema !== null).toBeTruthy();
     const field = (schema as ODataStructuredType<Person>).field('Gender');
     expect(field !== undefined).toBeTruthy();
@@ -170,14 +172,14 @@ describe('ODataClient', () => {
   });
 
   it('should deserialize enum', () => {
-    const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
+    const schema = client.structuredTypeForType<Person>(`${TRIPPIN_NAMESPACE}.Person`);
     const field = schema.field('Gender') as ODataStructuredTypeFieldParser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
     expect(field.deserialize('Female', schema.api.options)).toEqual(PersonGender.Female);
   });
 
   it('should serialize flags', () => {
-    const parser = client.parserForType(`${NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
+    const parser = client.parserForType(`${CUSTOM_NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
     expect(parser.serialize(<FlagEnums>3)).toEqual('Flag1,Flag2');
     expect(parser.serialize(<FlagEnums>0)).toEqual('0');
@@ -185,14 +187,14 @@ describe('ODataClient', () => {
   });
 
   it('should deserialize flags', () => {
-    const parser = client.parserForType(`${NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
+    const parser = client.parserForType(`${CUSTOM_NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
     expect(parser.deserialize('Flag4')).toEqual(FlagEnums.Flag4);
     expect(parser.deserialize('0')).toEqual(<FlagEnums>0);
   });
 
   it('should pack flags', () => {
-    const parser = client.parserForType(`${NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
+    const parser = client.parserForType(`${CUSTOM_NAMESPACE}.FlagEnums`) as ODataEnumTypeParser<FlagEnums>;
     expect(parser !== undefined).toBeTruthy();
     expect(parser.unpack(FlagEnums.Flag1 | FlagEnums.Flag2)).toEqual([
       FlagEnums.Flag1,
@@ -205,7 +207,7 @@ describe('ODataClient', () => {
 
   it('should validate entity', () => {
     const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     ) as ODataStructuredType<Person>;
     expect(
       schema.parser.validate({
@@ -222,7 +224,7 @@ describe('ODataClient', () => {
 
   it('should validate entity inheritance', () => {
     const schema = client.structuredTypeForType<Flight>(
-      `${NAMESPACE}.Flight`,
+      `${TRIPPIN_NAMESPACE}.Flight`,
     ) as ODataStructuredType<Flight>;
     expect(
       schema.parser.validate({
@@ -236,7 +238,7 @@ describe('ODataClient', () => {
 
   it('should validate entity with collection', () => {
     const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     ) as ODataStructuredType<Person>;
     expect(
       schema.parser.validate(
@@ -261,7 +263,7 @@ describe('ODataClient', () => {
 
   it('should validate valid entity on create', () => {
     const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     ) as ODataStructuredType<Person>;
     expect(
       schema.parser.validate(
@@ -279,7 +281,7 @@ describe('ODataClient', () => {
 
   it('should validate invalid entity on create', () => {
     const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     ) as ODataStructuredType<Person>;
     expect(
       schema.parser.validate(
@@ -294,7 +296,7 @@ describe('ODataClient', () => {
 
   it('should validate entity on update', () => {
     const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     ) as ODataStructuredType<Person>;
     expect(
       schema.parser.validate({
@@ -308,7 +310,7 @@ describe('ODataClient', () => {
 
   it('should validate entity on patch', () => {
     const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     ) as ODataStructuredType<Person>;
     expect(
       schema.parser.validate(
@@ -323,10 +325,10 @@ describe('ODataClient', () => {
 
   it('should serialize entity', () => {
     const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`,
+      `${TRIPPIN_NAMESPACE}.Person`,
     ) as ODataStructuredType<Person>;
     const parser = client.parserForType<Person>(
-      `${NAMESPACE}.PersonGender`,
+      `${TRIPPIN_NAMESPACE}.PersonGender`,
     ) as ODataEnumTypeParser<Person>;
     // Change parser settings
     expect(
@@ -345,7 +347,7 @@ describe('ODataClient', () => {
       LastName: 'Name',
       UserName: 'name',
       Emails: [],
-      Gender: `${NAMESPACE}.PersonGender'Male'`,
+      Gender: `${TRIPPIN_NAMESPACE}.PersonGender'Male'`,
     });
   });
 
@@ -406,20 +408,14 @@ describe('ODataClient', () => {
 
   it('should defaults attrs for entity', () => {
     const schema = client.structuredTypeForType<Flight>(
-      `${NAMESPACE}.Flight`,
+      `${TRIPPIN_NAMESPACE}.Flight`,
     ) as ODataStructuredType<Flight>;
-    expect(schema.parser.defaults()).toEqual({
-      ConfirmationCode: '0',
-      StartsAt: new Date('2022-08-05T15:50:12.052Z'),
-      Duration: 'M',
-      SeatNumber: '0',
-      FlightNumber: '0',
-    });
+    expect(schema.parser.defaults()).toEqual({});
   });
 
   it('should resolve single key for entity', () => {
     const schema = client.structuredTypeForType<Flight>(
-      `${NAMESPACE}.Flight`,
+      `${TRIPPIN_NAMESPACE}.Flight`,
     ) as ODataStructuredType<Flight>;
     expect(
       schema.parser.resolveKey({
@@ -435,7 +431,7 @@ describe('ODataClient', () => {
 
   it('should resolve key for entity', () => {
     const schema = client.structuredTypeForType<Flight>(
-      `${NAMESPACE}.Flight`,
+      `${TRIPPIN_NAMESPACE}.Flight`,
     ) as ODataStructuredType<Flight>;
     expect(
       schema.parser.resolveKey(
