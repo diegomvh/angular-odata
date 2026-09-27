@@ -719,9 +719,6 @@ export class ODataModelField&lt;F&gt; {
   parser: ODataStructuredTypeFieldParser&lt;F&gt;;
   options: ODataModelOptions&lt;any&gt;;
   default?: any;
-  required: boolean;
-  concurrency: boolean;
-  maxLength?: number;
   minLength?: number;
   min?: number;
   max?: number;
@@ -737,9 +734,6 @@ export class ODataModelField&lt;F&gt; {
     this.field &#x3D; field;
     this.parser &#x3D; parser;
     this.default &#x3D; opts.default || parser.default;
-    this.required &#x3D; Boolean(opts.required || !parser.nullable);
-    this.concurrency &#x3D; Boolean(opts.concurrency);
-    this.maxLength &#x3D; opts.maxLength || parser.maxLength;
     this.minLength &#x3D; opts.minLength;
     this.min &#x3D; opts.min;
     this.max &#x3D; opts.max;
@@ -762,14 +756,21 @@ export class ODataModelField&lt;F&gt; {
     return this.parser.annotatedValue&lt;T&gt;(term);
   }
 
-  configure({ concurrency, options }: { concurrency: boolean; options: ParserOptions }) {
+  configure({ options }: { options: ParserOptions }) {
     this.parserOptions &#x3D; options;
-    if (concurrency) this.concurrency &#x3D; concurrency;
     if (this.default !&#x3D;&#x3D; undefined) this.default &#x3D; this.deserialize(this.default, options);
   }
 
   isKey() {
     return this.parser.isKey();
+  }
+
+  isComputed() {
+    return this.parser.isComputed();
+  }
+
+  isOptimisticConcurrency() {
+    return this.parser.isOptimisticConcurrency();
   }
 
   hasReferentials() {
@@ -812,9 +813,9 @@ export class ODataModelField&lt;F&gt; {
       method,
       navigation &#x3D; false,
     }: {
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+      method: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {},
+    },
   ) {
     if (ODataModelOptions.isModel(value)) {
       return !value.isValid({ method, navigation }) ? value._errors : undefined;
@@ -823,22 +824,7 @@ export class ODataModelField&lt;F&gt; {
         ? value.models().map((m: ODataModel&lt;any&gt;) &#x3D;&gt; m._errors)
         : undefined;
     } else {
-      const computed &#x3D; this.annotatedValue&lt;boolean&gt;(COMPUTED);
       const errors &#x3D; this.parser?.validate(value, { method, navigation }) ?? [];
-      if (
-        this.required &amp;&amp;
-        (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;modify&#x27;)) &amp;&amp; // Is null or undefined without patch?
-        !(computed &amp;&amp; method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) // Not (Is Computed field and create) ?
-      ) {
-        if (errors.indexOf(&#x27;required&#x27;) &#x3D;&#x3D;&#x3D; -1) errors.push(&#x60;required&#x60;);
-      }
-      if (
-        this.maxLength !&#x3D;&#x3D; undefined &amp;&amp;
-        typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp;
-        value.length &gt; this.maxLength
-      ) {
-        if (errors.indexOf(&#x27;maxlength&#x27;) &#x3D;&#x3D;&#x3D; -1) errors.push(&#x60;maxlength&#x60;);
-      }
       if (
         this.minLength !&#x3D;&#x3D; undefined &amp;&amp;
         typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp;
@@ -977,12 +963,11 @@ export class ODataModelAttribute&lt;T&gt; {
     return this._field.navigation;
   }
 
-  get computed() {
-    return this._field.annotatedValue&lt;boolean&gt;(COMPUTED);
+  isComputed() {
+    return this._field.isComputed();
   }
-
-  get concurrency() {
-    return Boolean(this._field.concurrency);
+  isOptimisticConcurrency() {
+    return this._field.isOptimisticConcurrency();
   }
 
   get referentials() {
@@ -1242,17 +1227,7 @@ export class ODataModelOptions&lt;T&gt; {
       if (this.parent !&#x3D;&#x3D; undefined) this.parent.children.push(this);
     }
     this.entitySet &#x3D; this.api.findEntitySetForEntityType(this.type());
-    let concurrencyFields: string[] &#x3D; [];
-    if (this.entitySet !&#x3D;&#x3D; undefined) {
-      concurrencyFields &#x3D; this.entitySet.annotatedValue&lt;string[]&gt;(OPTIMISTIC_CONCURRENCY) ?? [];
-    }
-    this._fields.forEach((field) &#x3D;&gt; {
-      const concurrency &#x3D; concurrencyFields.indexOf(field.field) !&#x3D;&#x3D; -1;
-      field.configure({
-        concurrency,
-        options,
-      });
-    });
+    this._fields.forEach((field) &#x3D;&gt; field.configure({ options, }));
   }
 
   fields({
@@ -1325,8 +1300,7 @@ export class ODataModelOptions&lt;T&gt; {
       parser: structuredFieldParser,
     });
     modelField.configure({
-      options: this.api.options,
-      concurrency: false,
+      options: this.api.options
     });
     Object.defineProperty(self, modelField.name, {
       configurable: true,
@@ -1624,9 +1598,9 @@ export class ODataModelOptions&lt;T&gt; {
       method,
       navigation &#x3D; false,
     }: {
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+      method: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {},
+    },
   ): { [name: string]: string[] } | undefined {
     const errors &#x3D; this.fields({
       include_parents: true,
@@ -1742,9 +1716,9 @@ export class ODataModelOptions&lt;T&gt; {
       .reduce((acc, attr) &#x3D;&gt; {
         const name &#x3D; field_mapping ? attr.fieldName : attr.name;
         let value: any &#x3D; attr.get();
-        const computed &#x3D; attr.computed;
+        const computed &#x3D; attr.isComputed();
         const navigation &#x3D; attr.navigation;
-        const concurrency &#x3D; attr.concurrency;
+        const concurrency &#x3D; attr.isOptimisticConcurrency();
         if (ODataModelOptions.isModel(value)) {
           value &#x3D; (value as ODataModel&lt;any&gt;).toEntity({
             client_id,

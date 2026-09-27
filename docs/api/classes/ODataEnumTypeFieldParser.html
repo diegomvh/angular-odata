@@ -772,12 +772,12 @@ export class ODataEnumTypeParser&lt;E&gt; extends ODataAnnotatable implements Fi
       method,
       navigation &#x3D; false,
     }: {
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+      method: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {},
+    },
   ): string[] | undefined {
     if (this.flags) {
-      let fields &#x3D; this.fields(value);
+      const fields &#x3D; this.fields(value);
       return value &amp;&amp; fields.length &#x3D;&#x3D;&#x3D; 0 ? [&#x27;mismatch&#x27;] : undefined;
     } else {
       return this.fields(value).length !&#x3D;&#x3D; 1 ? [&#x27;mismatch&#x27;] : undefined;

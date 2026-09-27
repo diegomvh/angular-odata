@@ -4263,7 +4263,6 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -4276,9 +4275,6 @@
                                                     No
                                             </td>
 
-                                            <td>
-                                                    <code>{}</code>
-                                            </td>
 
                                         </tr>
                                     </tbody>
@@ -5590,7 +5586,6 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Default value</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -5603,9 +5598,6 @@
                                                     No
                                             </td>
 
-                                            <td>
-                                                    <code>{}</code>
-                                            </td>
 
                                         </tr>
                                     </tbody>
@@ -5989,9 +5981,9 @@ export class ODataModel&lt;T&gt; {
     method,
     navigation &#x3D; false,
   }: {
-    method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+    method: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
     navigation?: boolean;
-  } &#x3D; {}) {
+  }) {
     return this._meta.validate(this, { method, navigation });
   }
 
@@ -5999,9 +5991,9 @@ export class ODataModel&lt;T&gt; {
     method,
     navigation &#x3D; false,
   }: {
-    method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+    method: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
     navigation?: boolean;
-  } &#x3D; {}): boolean {
+  }): boolean {
     this._errors &#x3D; this.validate({ method, navigation });
     if (this._errors !&#x3D;&#x3D; undefined)
       this.events$.trigger(ODataModelEventType.Invalid, {

@@ -187,7 +187,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:32</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:33</a></div>
                             </td>
                         </tr>
 
@@ -248,7 +248,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -274,7 +274,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:32</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -293,7 +293,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { COMPUTED, DEFAULT_VERSION, DESCRIPTION, LONG_DESCRIPTION } from &#x27;../../constants&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { COMPUTED, DEFAULT_VERSION, DESCRIPTION, LONG_DESCRIPTION, OPTIMISTIC_CONCURRENCY } from &#x27;../../constants&#x27;;
 import { ODataHelper } from &#x27;../../helper&#x27;;
 import { raw } from &#x27;../../resources/query&#x27;;
 import {
@@ -310,6 +310,7 @@ import {
 } from &#x27;../../types&#x27;;
 import { Objects, Strings, Types } from &#x27;../../utils&#x27;;
 import { ODataAnnotatable } from &#x27;../annotation&#x27;;
+import { ODataEntitySet } from &#x27;../entity-set&#x27;;
 import { ODataEnumTypeParser } from &#x27;./enum-type&#x27;;
 import { JSONSchema7 } from &#x27;json-schema&#x27;;
 
@@ -340,6 +341,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
   navigation: boolean;
   nullable?: boolean;
   default?: any;
+  optimisticConcurrency: boolean &#x3D; false;
   maxLength?: number;
   precision?: number;
   scale?: number | &#x27;variable&#x27;;
@@ -374,9 +376,9 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
       method,
       navigation &#x3D; false,
     }: {
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+      method: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {},
+    },
   ): { [name: string]: any } | { [name: string]: any }[] | string[] | undefined {
     let errors;
     if (this.collection &amp;&amp; Array.isArray(value)) {
@@ -394,13 +396,8 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
       errors &#x3D; this.enumType().validate(value, { method, navigation });
     } else {
       // IsEdmType
-      const computed &#x3D; this.annotatedValue&lt;boolean&gt;(COMPUTED);
       errors &#x3D; [];
-      if (
-        !this.nullable &amp;&amp;
-        (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;modify&#x27;)) &amp;&amp; // Is null or undefined without patch?
-        !(computed &amp;&amp; method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) // Not (Is Computed field and create) ?
-      ) {
+      if (method !&#x3D;&#x3D; &#x27;modify&#x27; &amp;&amp; value &#x3D;&#x3D; null &amp;&amp; !(this.nullable || this.isComputed())) {
         errors.push(&#x60;required&#x60;);
       }
       if (
@@ -480,16 +477,17 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
 
   configure({
     options,
+    optimisticConcurrency,
     parserForType,
   }: {
     options: ParserOptions;
+    optimisticConcurrency?: boolean;
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
   }) {
     this.parserOptions &#x3D; options;
     this.parser &#x3D; parserForType(this.type);
-    if (this.default !&#x3D;&#x3D; undefined) {
-      this.default &#x3D; this.deserialize(this.default, options);
-    }
+    if (optimisticConcurrency !&#x3D;&#x3D; undefined) this.optimisticConcurrency &#x3D; optimisticConcurrency;
+    if (this.default !&#x3D;&#x3D; undefined) this.default &#x3D; this.deserialize(this.default, options);
   }
 
   //#region Json Schema
@@ -566,6 +564,14 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
 
   isKey() {
     return this.structured.keys({ include_parents: true }).some((k) &#x3D;&gt; k.name &#x3D;&#x3D;&#x3D; this.name);
+  }
+  
+  isComputed() {
+    return this.annotatedValue&lt;boolean&gt;(COMPUTED);
+  }
+
+  isOptimisticConcurrency() {
+    return this.optimisticConcurrency;
   }
 
   hasReferentials() {
@@ -733,9 +739,11 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
 
   configure({
     options,
+    entitySet,
     parserForType,
   }: {
     options: ParserOptions;
+    entitySet?: ODataEntitySet;
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
   }) {
     this.parserOptions &#x3D; options;
@@ -743,7 +751,11 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
       this.parent &#x3D; parserForType(this.base) as ODataStructuredTypeParser&lt;any&gt;;
       if (this.parent !&#x3D;&#x3D; undefined) this.parent.children.push(this);
     }
-    this._fields.forEach((f) &#x3D;&gt; f.configure({ options, parserForType }));
+    const optimisticConcurrencyFields &#x3D; entitySet?.annotatedValue&lt;string[]&gt;(OPTIMISTIC_CONCURRENCY) ?? [];
+    this._fields.forEach((field) &#x3D;&gt; {
+      const optimisticConcurrency &#x3D; optimisticConcurrencyFields.indexOf(field.name) !&#x3D;&#x3D; -1;
+      field.configure({ options, optimisticConcurrency, parserForType }); 
+    });
   }
 
   /**
@@ -956,10 +968,9 @@ export class ODataStructuredTypeParser&lt;T&gt; extends ODataAnnotatable impleme
       method,
       navigation &#x3D; false,
     }: {
-      create?: boolean;
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+      method: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
-    } &#x3D; {},
+    },
   ): { [name: string]: any } | undefined {
     const errors &#x3D; {} as { [name: string]: any };
     const fields &#x3D; this.fields({

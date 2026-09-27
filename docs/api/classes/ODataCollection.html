@@ -6000,7 +6000,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
     { silent &#x3D; false, server &#x3D; true }: { silent?: boolean; server?: boolean } &#x3D; {},
   ) {
     const model &#x3D; this.modelFactory(attrs);
-    return (model.isValid() &amp;&amp; server ? model.save() : of(model)).pipe(
+    return (model.isValid({ method: &#x27;create&#x27; }) &amp;&amp; server ? model.save() : of(model)).pipe(
       switchMap((model) &#x3D;&gt; this.add(model, { silent, server })),
       map(() &#x3D;&gt; model),
     );
