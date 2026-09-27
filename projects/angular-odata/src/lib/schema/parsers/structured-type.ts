@@ -1,4 +1,4 @@
-import { COMPUTED, DEFAULT_VERSION, DESCRIPTION, LONG_DESCRIPTION } from '../../constants';
+import { COMPUTED, DEFAULT_VERSION, DESCRIPTION, LONG_DESCRIPTION, OPTIMISTIC_CONCURRENCY } from '../../constants';
 import { ODataHelper } from '../../helper';
 import { raw } from '../../resources/query';
 import {
@@ -15,6 +15,7 @@ import {
 } from '../../types';
 import { Objects, Strings, Types } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
+import { ODataEntitySet } from '../entity-set';
 import { ODataEnumTypeParser } from './enum-type';
 import { JSONSchema7 } from 'json-schema';
 
@@ -45,6 +46,7 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
   navigation: boolean;
   nullable?: boolean;
   default?: any;
+  optimisticConcurrency: boolean = false;
   maxLength?: number;
   precision?: number;
   scale?: number | 'variable';
@@ -79,9 +81,9 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'modify';
+      method: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {},
+    },
   ): { [name: string]: any } | { [name: string]: any }[] | string[] | undefined {
     let errors;
     if (this.collection && Array.isArray(value)) {
@@ -99,13 +101,8 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
       errors = this.enumType().validate(value, { method, navigation });
     } else {
       // IsEdmType
-      const computed = this.annotatedValue<boolean>(COMPUTED);
       errors = [];
-      if (
-        !this.nullable &&
-        (value === null || (value === undefined && method !== 'modify')) && // Is null or undefined without patch?
-        !(computed && method === 'create') // Not (Is Computed field and create) ?
-      ) {
+      if (method !== 'modify' && value == null && !(this.nullable || this.isComputed())) {
         errors.push(`required`);
       }
       if (
@@ -185,16 +182,17 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
 
   configure({
     options,
+    optimisticConcurrency,
     parserForType,
   }: {
     options: ParserOptions;
+    optimisticConcurrency?: boolean;
     parserForType: (type: string) => Parser<any>;
   }) {
     this.parserOptions = options;
     this.parser = parserForType(this.type);
-    if (this.default !== undefined) {
-      this.default = this.deserialize(this.default, options);
-    }
+    if (optimisticConcurrency !== undefined) this.optimisticConcurrency = optimisticConcurrency;
+    if (this.default !== undefined) this.default = this.deserialize(this.default, options);
   }
 
   //#region Json Schema
@@ -271,6 +269,14 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
 
   isKey() {
     return this.structured.keys({ include_parents: true }).some((k) => k.name === this.name);
+  }
+  
+  isComputed() {
+    return this.annotatedValue<boolean>(COMPUTED);
+  }
+
+  isOptimisticConcurrency() {
+    return this.optimisticConcurrency;
   }
 
   hasReferentials() {
@@ -438,9 +444,11 @@ export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Pa
 
   configure({
     options,
+    entitySet,
     parserForType,
   }: {
     options: ParserOptions;
+    entitySet?: ODataEntitySet;
     parserForType: (type: string) => Parser<any>;
   }) {
     this.parserOptions = options;
@@ -448,7 +456,11 @@ export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Pa
       this.parent = parserForType(this.base) as ODataStructuredTypeParser<any>;
       if (this.parent !== undefined) this.parent.children.push(this);
     }
-    this._fields.forEach((f) => f.configure({ options, parserForType }));
+    const optimisticConcurrencyFields = entitySet?.annotatedValue<string[]>(OPTIMISTIC_CONCURRENCY) ?? [];
+    this._fields.forEach((field) => {
+      const optimisticConcurrency = optimisticConcurrencyFields.indexOf(field.name) !== -1;
+      field.configure({ options, optimisticConcurrency, parserForType }); 
+    });
   }
 
   /**
@@ -661,10 +673,9 @@ export class ODataStructuredTypeParser<T> extends ODataAnnotatable implements Pa
       method,
       navigation = false,
     }: {
-      create?: boolean;
-      method?: 'create' | 'update' | 'modify';
+      method: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {},
+    },
   ): { [name: string]: any } | undefined {
     const errors = {} as { [name: string]: any };
     const fields = this.fields({

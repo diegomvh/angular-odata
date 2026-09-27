@@ -36,8 +36,10 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
       this.parent = this.api.findStructuredType<any>(this.base);
       if (this.parent !== undefined) this.parent.children.push(this);
     }
+    const entitySet = this.api.findEntitySetForEntityType(this.type()) ?? this.api.findEntitySetForEntityType(this.type({ alias: true }));
     this.parser.configure({
       options,
+      entitySet,
       parserForType: (t: string) => this.api.parserForType(t),
     });
     if (this.model !== undefined) {
@@ -284,9 +286,9 @@ export class ODataStructuredType<T> extends ODataParserSchemaElement<
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'modify';
+      method: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {},
+    },
   ) {
     return this.parser.validate(attrs, { method, navigation });
   }

@@ -799,7 +799,7 @@ export class CsdlSchema {
     return {
       namespace: this.Namespace,
       alias: base?.alias ?? this.Alias,
-      annotations: this.Annotations?.map((t) &#x3D;&gt; t.toConfig()),
+      annotations: this.Annotations?.flatMap((t) &#x3D;&gt; t.toConfig()),
       enums: this.EnumType?.map((t) &#x3D;&gt; t.toConfig(base?.enums?.find((cs) &#x3D;&gt; cs.name &#x3D;&#x3D;&#x3D; t.Name))),
       entities: [
         ...(this.ComplexType ?? []).map((t) &#x3D;&gt;

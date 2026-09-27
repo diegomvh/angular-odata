@@ -771,7 +771,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     { silent = false, server = true }: { silent?: boolean; server?: boolean } = {},
   ) {
     const model = this.modelFactory(attrs);
-    return (model.isValid() && server ? model.save() : of(model)).pipe(
+    return (model.isValid({ method: 'create' }) && server ? model.save() : of(model)).pipe(
       switchMap((model) => this.add(model, { silent, server })),
       map(() => model),
     );

@@ -1095,17 +1095,25 @@ export type ODataApiConfig &#x3D; {
   populateFromMetadata?: boolean;
   schemas?: ODataSchemaConfig[];
   references?: ODataReferenceConfig[];
-  models?: { [type: string]: { new (...params: any[]): any } };
-  collections?: { [type: string]: { new (...params: any[]): any } };
+  models?: { [type: string]: { new(...params: any[]): any } };
+  collections?: { [type: string]: { new(...params: any[]): any } };
 };
+
+export type ODataAnnotationValueConfig &#x3D; {
+  name?: string;
+  string?: string;
+  date?: Date;
+  enumMembers?: string[];
+};
+
 export type ODataAnnotationConfig &#x3D; {
   term: string;
   string?: string;
   bool?: boolean;
   int?: number;
-  permissions?: string[];
-  properties?: string[];
+  values?: (string|ODataAnnotationValueConfig)[];
 };
+
 export type ODataReferenceConfig &#x3D; {
   uri: string;
   annotations?: ODataAnnotationConfig[];
@@ -1166,8 +1174,8 @@ export type ODataStructuredTypeConfig &#x3D; {
   name: string;
   base?: string;
   open?: boolean;
-  model?: { new (...params: any[]): any };
-  collection?: { new (...params: any[]): any };
+  model?: { new(...params: any[]): any };
+  collection?: { new(...params: any[]): any };
   annotations?: ODataAnnotationConfig[];
   keys?: { name: string; alias?: string }[];
   fields?: { [name: string]: ODataStructuredTypeFieldConfig };
@@ -1191,14 +1199,14 @@ export type ODataCallableConfig &#x3D; {
 export type ODataEntitySetConfig &#x3D; {
   name: string;
   entityType: string;
-  service: { new (...params: any[]): any };
+  service: { new(...params: any[]): any };
   annotations?: ODataAnnotationConfig[];
 };
 
 export type ODataSingletonConfig &#x3D; {
   name: string;
   type: string;
-  service: { new (...params: any[]): any };
+  service: { new(...params: any[]): any };
   annotations?: ODataAnnotationConfig[];
 };
 //#endregion

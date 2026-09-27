@@ -160,12 +160,12 @@ export class ODataEnumTypeParser<E> extends ODataAnnotatable implements FieldPar
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'modify';
+      method: 'create' | 'update' | 'modify';
       navigation?: boolean;
-    } = {},
+    },
   ): string[] | undefined {
     if (this.flags) {
-      let fields = this.fields(value);
+      const fields = this.fields(value);
       return value && fields.length === 0 ? ['mismatch'] : undefined;
     } else {
       return this.fields(value).length !== 1 ? ['mismatch'] : undefined;

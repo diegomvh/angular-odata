@@ -546,7 +546,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { ODataAnnotationConfig } from &#x27;../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { ODataAnnotationConfig, ODataAnnotationValueConfig } from &#x27;../../types&#x27;;
 import type { CsdlSchema } from &#x27;./csdl-schema&#x27;;
 
 export class CsdlAnnotable {
@@ -666,11 +666,20 @@ export class CsdlAnnotation {
   }
 
   toConfig(): ODataAnnotationConfig {
+    var items: (string | ODataAnnotationValueConfig)[] | undefined &#x3D; undefined;
+    if (Array.isArray(this.Collection) &amp;&amp; this.Collection.length &gt; 0) {
+      items &#x3D; this.Collection.map((m) &#x3D;&gt; m.toConfig()).flat();
+    } else if (Array.isArray(this.Record) &amp;&amp; this.Record.length &gt; 0) {
+      items &#x3D; this.Record.map((m) &#x3D;&gt; m.toConfig()).flat();
+    } else if (Array.isArray(this.EnumMember) &amp;&amp; this.EnumMember.length &gt; 0) {
+      items &#x3D; this.EnumMember.map((m) &#x3D;&gt; m.toConfig());
+    }
     return {
       term: this.Term,
       string: this.String,
       bool: this.Bool,
       int: this.Int,
+      values: items,
     } as ODataAnnotationConfig;
   }
 }
@@ -815,6 +824,22 @@ export class CsdlCollection {
     }
     return json;
   }
+
+  toConfig() {
+    if (Array.isArray(this.String) &amp;&amp; this.String.length &gt; 0) {
+      return this.String.map((s) &#x3D;&gt; s.toConfig());
+    }
+    if (Array.isArray(this.Record) &amp;&amp; this.Record.length &gt; 0) {
+      return this.Record.map((r) &#x3D;&gt; r.toConfig()).flat();
+    }
+    if (Array.isArray(this.PropertyPath) &amp;&amp; this.PropertyPath.length &gt; 0) {
+      return this.PropertyPath.map((p) &#x3D;&gt; p.toConfig());
+    }
+    if (Array.isArray(this.NavigationPropertyPath) &amp;&amp; this.NavigationPropertyPath.length &gt; 0) {
+      return this.NavigationPropertyPath.map((p) &#x3D;&gt; p.toConfig());
+    }
+    return [];
+  }
 }
 
 export class CsdlRecord {
@@ -829,6 +854,13 @@ export class CsdlRecord {
       json[&#x27;PropertyValue&#x27;] &#x3D; this.PropertyValue.map((p) &#x3D;&gt; p.toJson());
     }
     return json;
+  }
+
+  toConfig(): ODataAnnotationValueConfig[] {
+    if (Array.isArray(this.PropertyValue) &amp;&amp; this.PropertyValue.length &gt; 0) {
+      return this.PropertyValue.map((p) &#x3D;&gt; p.toConfig());
+    }
+    return [];
   }
 }
 
@@ -867,6 +899,20 @@ export class CsdlPropertyValue {
     }
     return json;
   }
+
+  toConfig(): ODataAnnotationValueConfig {
+    const config: ODataAnnotationValueConfig &#x3D; { name: this.Name };
+    if (this.String !&#x3D;&#x3D; undefined) {
+      config[&#x27;string&#x27;] &#x3D; this.String;
+    }
+    if (this.Date !&#x3D;&#x3D; undefined) {
+      config[&#x27;date&#x27;] &#x3D; this.Date;
+    }
+    if (Array.isArray(this.EnumMember) &amp;&amp; this.EnumMember.length &gt; 0) {
+      config[&#x27;enumMembers&#x27;] &#x3D; this.EnumMember.map((m) &#x3D;&gt; m.toConfig());
+    }
+    return config;
+  }
 }
 
 export class CsdlEnumMember {
@@ -879,6 +925,10 @@ export class CsdlEnumMember {
     return {
       TextContent: this.TextContent,
     };
+  }
+
+  toConfig() {
+    return this.TextContent;
   }
 }
 
@@ -893,6 +943,10 @@ export class CsdlString {
       TextContent: this.TextContent,
     };
   }
+
+  toConfig() {
+    return this.TextContent;
+  }
 }
 
 export class CsdlPropertyPath {
@@ -906,6 +960,9 @@ export class CsdlPropertyPath {
       TextContent: this.TextContent,
     };
   }
+  toConfig() {
+    return this.TextContent;
+  }
 }
 
 export class CsdlNavigationPropertyPath {
@@ -918,6 +975,9 @@ export class CsdlNavigationPropertyPath {
     return {
       TextContent: this.TextContent,
     };
+  }
+  toConfig() {
+    return this.TextContent;
   }
 }
 </code></pre>

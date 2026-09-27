@@ -212,13 +212,12 @@ describe('ODataClient', () => {
     expect(
       schema.parser.validate({
         Gender: 4,
-      } as any),
+      } as any, { method: 'create' }),
     ).toEqual({
       UserName: ['required'],
       FirstName: ['required'],
       LastName: ['required'],
-      Gender: ['mismatch'],
-      Concurrency: ['required'],
+      Gender: ['mismatch']
     });
   });
 
@@ -230,7 +229,7 @@ describe('ODataClient', () => {
       schema.parser.validate({
         ConfirmationCode: '0',
         FlightNumber: '0',
-      }),
+      }, { method: 'create' }),
     ).toEqual({
       PlanItemId: ['required'],
     });
@@ -304,8 +303,8 @@ describe('ODataClient', () => {
         LastName: 'LastName',
         UserName: 'UserName',
         Gender: PersonGender.Male,
-      }),
-    ).toEqual({ Concurrency: ['required'] });
+      }, { method: 'update' }),
+    ).toBeUndefined();
   });
 
   it('should validate entity on patch', () => {

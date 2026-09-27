@@ -185,6 +185,9 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                <a href="#toConfig" >toConfig</a>
+                            </li>
+                            <li>
                                 <a href="#toJson" >toJson</a>
                             </li>
                         </ul>
@@ -210,7 +213,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="291" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:291</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="323" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:323</a></div>
                             </td>
                         </tr>
 
@@ -272,7 +275,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="290" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:290</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="322" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:322</a></div>
                         </td>
                     </tr>
 
@@ -299,7 +302,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="291" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:291</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="323" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:323</a></div>
                         </td>
                     </tr>
 
@@ -325,7 +328,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="288" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:288</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="320" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:320</a></div>
                         </td>
                     </tr>
 
@@ -352,7 +355,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="289" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:289</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="321" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:321</a></div>
                         </td>
                     </tr>
 
@@ -366,6 +369,43 @@
     <h3 id="methods">
         Methods
     </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toConfig"></a>
+                    <span class="name">
+                        <span ><b>toConfig</b></span>
+                        <a href="#toConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toConfig()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="355"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:355</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataAnnotationValueConfig" target="_self" >ODataAnnotationValueConfig</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -386,8 +426,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="309"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:309</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="341"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-annotation.ts:341</a></div>
                         </td>
                     </tr>
 
@@ -413,7 +453,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { ODataAnnotationConfig } from &#x27;../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { ODataAnnotationConfig, ODataAnnotationValueConfig } from &#x27;../../types&#x27;;
 import type { CsdlSchema } from &#x27;./csdl-schema&#x27;;
 
 export class CsdlAnnotable {
@@ -533,11 +573,20 @@ export class CsdlAnnotation {
   }
 
   toConfig(): ODataAnnotationConfig {
+    var items: (string | ODataAnnotationValueConfig)[] | undefined &#x3D; undefined;
+    if (Array.isArray(this.Collection) &amp;&amp; this.Collection.length &gt; 0) {
+      items &#x3D; this.Collection.map((m) &#x3D;&gt; m.toConfig()).flat();
+    } else if (Array.isArray(this.Record) &amp;&amp; this.Record.length &gt; 0) {
+      items &#x3D; this.Record.map((m) &#x3D;&gt; m.toConfig()).flat();
+    } else if (Array.isArray(this.EnumMember) &amp;&amp; this.EnumMember.length &gt; 0) {
+      items &#x3D; this.EnumMember.map((m) &#x3D;&gt; m.toConfig());
+    }
     return {
       term: this.Term,
       string: this.String,
       bool: this.Bool,
       int: this.Int,
+      values: items,
     } as ODataAnnotationConfig;
   }
 }
@@ -682,6 +731,22 @@ export class CsdlCollection {
     }
     return json;
   }
+
+  toConfig() {
+    if (Array.isArray(this.String) &amp;&amp; this.String.length &gt; 0) {
+      return this.String.map((s) &#x3D;&gt; s.toConfig());
+    }
+    if (Array.isArray(this.Record) &amp;&amp; this.Record.length &gt; 0) {
+      return this.Record.map((r) &#x3D;&gt; r.toConfig()).flat();
+    }
+    if (Array.isArray(this.PropertyPath) &amp;&amp; this.PropertyPath.length &gt; 0) {
+      return this.PropertyPath.map((p) &#x3D;&gt; p.toConfig());
+    }
+    if (Array.isArray(this.NavigationPropertyPath) &amp;&amp; this.NavigationPropertyPath.length &gt; 0) {
+      return this.NavigationPropertyPath.map((p) &#x3D;&gt; p.toConfig());
+    }
+    return [];
+  }
 }
 
 export class CsdlRecord {
@@ -696,6 +761,13 @@ export class CsdlRecord {
       json[&#x27;PropertyValue&#x27;] &#x3D; this.PropertyValue.map((p) &#x3D;&gt; p.toJson());
     }
     return json;
+  }
+
+  toConfig(): ODataAnnotationValueConfig[] {
+    if (Array.isArray(this.PropertyValue) &amp;&amp; this.PropertyValue.length &gt; 0) {
+      return this.PropertyValue.map((p) &#x3D;&gt; p.toConfig());
+    }
+    return [];
   }
 }
 
@@ -734,6 +806,20 @@ export class CsdlPropertyValue {
     }
     return json;
   }
+
+  toConfig(): ODataAnnotationValueConfig {
+    const config: ODataAnnotationValueConfig &#x3D; { name: this.Name };
+    if (this.String !&#x3D;&#x3D; undefined) {
+      config[&#x27;string&#x27;] &#x3D; this.String;
+    }
+    if (this.Date !&#x3D;&#x3D; undefined) {
+      config[&#x27;date&#x27;] &#x3D; this.Date;
+    }
+    if (Array.isArray(this.EnumMember) &amp;&amp; this.EnumMember.length &gt; 0) {
+      config[&#x27;enumMembers&#x27;] &#x3D; this.EnumMember.map((m) &#x3D;&gt; m.toConfig());
+    }
+    return config;
+  }
 }
 
 export class CsdlEnumMember {
@@ -746,6 +832,10 @@ export class CsdlEnumMember {
     return {
       TextContent: this.TextContent,
     };
+  }
+
+  toConfig() {
+    return this.TextContent;
   }
 }
 
@@ -760,6 +850,10 @@ export class CsdlString {
       TextContent: this.TextContent,
     };
   }
+
+  toConfig() {
+    return this.TextContent;
+  }
 }
 
 export class CsdlPropertyPath {
@@ -773,6 +867,9 @@ export class CsdlPropertyPath {
       TextContent: this.TextContent,
     };
   }
+  toConfig() {
+    return this.TextContent;
+  }
 }
 
 export class CsdlNavigationPropertyPath {
@@ -785,6 +882,9 @@ export class CsdlNavigationPropertyPath {
     return {
       TextContent: this.TextContent,
     };
+  }
+  toConfig() {
+    return this.TextContent;
   }
 }
 </code></pre>

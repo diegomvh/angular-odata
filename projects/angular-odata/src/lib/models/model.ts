@@ -241,9 +241,9 @@ export class ODataModel<T> {
     method,
     navigation = false,
   }: {
-    method?: 'create' | 'update' | 'modify';
+    method: 'create' | 'update' | 'modify';
     navigation?: boolean;
-  } = {}) {
+  }) {
     return this._meta.validate(this, { method, navigation });
   }
 
@@ -251,9 +251,9 @@ export class ODataModel<T> {
     method,
     navigation = false,
   }: {
-    method?: 'create' | 'update' | 'modify';
+    method: 'create' | 'update' | 'modify';
     navigation?: boolean;
-  } = {}): boolean {
+  }): boolean {
     this._errors = this.validate({ method, navigation });
     if (this._errors !== undefined)
       this.events$.trigger(ODataModelEventType.Invalid, {

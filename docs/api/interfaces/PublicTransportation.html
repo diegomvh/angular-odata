@@ -229,16 +229,10 @@
 import { ODataClient } from &#x27;./client&#x27;;
 import { EDM_PARSERS } from &#x27;./schema&#x27;;
 import { ODataEntitySetService } from &#x27;./services&#x27;;
-import {
-  ODataApiConfig,
-  ODataEntitySetConfig,
-  ODataEnumTypeConfig,
-  ODataStructuredTypeConfig,
-} from &#x27;./types&#x27;;
-
-export const CONFIG_NAME &#x3D; &#x27;TripPin&#x27;;
-export const SERVICE_ROOT &#x3D; &#x27;https://services.odata.org/v4/TripPinServiceRW/&#x27;;
-export const NAMESPACE &#x3D; &#x27;TripPin&#x27;;
+import { ODataApiConfig, ODataEnumTypeConfig } from &#x27;./types&#x27;;
+import { ODataMetadata } from &#x27;./metadata&#x27;;
+import * as json from &#x27;./trippin.metadata.json&#x27;;
+import { Duration } from &#x27;./utils&#x27;;
 
 //#region Enum
 export enum FlagEnums {
@@ -261,15 +255,6 @@ export const FlagEnumsConfig &#x3D; {
     Flag4: { value: FlagEnums.Flag4 },
   },
 } as ODataEnumTypeConfig;
-export const PersonGenderConfig &#x3D; {
-  name: &#x27;PersonGender&#x27;,
-  members: PersonGender,
-  fields: {
-    Male: { value: PersonGender.Male },
-    Female: { value: PersonGender.Female },
-    Unknown: { value: PersonGender.Unknown },
-  },
-} as ODataEnumTypeConfig;
 //#endregion
 
 //#region Entities
@@ -277,75 +262,17 @@ export interface Photo {
   Id: number;
   Name?: string;
 }
-export const PhotoConfig &#x3D; {
-  name: &#x27;Photo&#x27;,
-  annotations: [{ term: &#x27;Org.OData.Core.V1.AcceptableMediaTypes&#x27; }],
-  fields: {
-    Id: {
-      type: &#x27;Edm.Int64&#x27;,
-      nullable: false,
-      annotations: [
-        {
-          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
-          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
-        },
-      ],
-    },
-    Name: { type: &#x27;Edm.String&#x27; },
-  },
-} as ODataStructuredTypeConfig;
 
 export interface Airline {
   AirlineCode: string;
   Name: string;
 }
 
-export const AirlineEntityConfig &#x3D; {
-  name: &#x27;Airline&#x27;,
-  keys: [{ name: &#x27;AirlineCode&#x27; }],
-  fields: {
-    AirlineCode: {
-      type: &#x27;Edm.String&#x27;,
-      nullable: false,
-      annotations: [
-        {
-          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
-          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
-        },
-      ],
-    },
-    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
-  },
-} as ODataStructuredTypeConfig;
-
 export interface Airport {
   IcaoCode: string;
   Name: string;
   IataCode: string;
 }
-
-export const AirportEntityConfig &#x3D; {
-  name: &#x27;Airport&#x27;,
-  keys: [{ name: &#x27;IcaoCode&#x27; }],
-  fields: {
-    IcaoCode: {
-      type: &#x27;Edm.String&#x27;,
-      nullable: false,
-      annotations: [
-        {
-          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
-          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
-        },
-      ],
-    },
-    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
-    IataCode: {
-      type: &#x27;Edm.String&#x27;,
-      nullable: false,
-      annotations: [{ term: &#x27;Org.OData.Core.V1.Immutable&#x27;, bool: true }],
-    },
-  },
-} as ODataStructuredTypeConfig;
 
 export interface PlanItem {
   PlanItemId: number;
@@ -354,42 +281,11 @@ export interface PlanItem {
   StartsAt?: Date;
   OccursAt?: any;
   EndsAt?: Date;
-  Duration?: string;
+  Duration?: string | Duration;
 }
-export const PlanItemConfig &#x3D; {
-  name: &#x27;PlanItem&#x27;,
-  keys: [{ name: &#x27;PlanItemId&#x27; }],
-  fields: {
-    PlanItemId: {
-      type: &#x27;Edm.Int64&#x27;,
-      nullable: false,
-      annotations: [
-        {
-          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
-          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
-        },
-      ],
-    },
-    ConfirmationCode: { type: &#x27;Edm.String&#x27;, default: &#x27;0&#x27; },
-    StartsAt: {
-      type: &#x27;Edm.DateTimeOffset&#x27;,
-      default: &#x27;2022-08-05T15:50:12.052Z&#x27;,
-    },
-    EndsAt: { type: &#x27;Edm.DateTimeOffset&#x27; },
-    Duration: { type: &#x27;Edm.String&#x27;, default: &#x27;M&#x27; },
-  },
-} as ODataStructuredTypeConfig;
 export interface PublicTransportation extends PlanItem {
   SeatNumber?: string;
 }
-
-export const PublicTransportationEntityConfig &#x3D; {
-  name: &#x27;PublicTransportation&#x27;,
-  base: &#x60;${NAMESPACE}.PlanItem&#x60;,
-  fields: {
-    SeatNumber: { type: &#x27;Edm.String&#x27;, default: &#x27;0&#x27; },
-  },
-} as ODataStructuredTypeConfig;
 
 export interface Flight extends PublicTransportation {
   FlightNumber: string;
@@ -397,17 +293,6 @@ export interface Flight extends PublicTransportation {
   To?: Airport;
   Airline?: Airline;
 }
-
-export const FlightEntityConfig &#x3D; {
-  name: &#x27;Flight&#x27;,
-  base: &#x60;${NAMESPACE}.PublicTransportation&#x60;,
-  fields: {
-    FlightNumber: { type: &#x27;Edm.String&#x27;, nullable: false, default: &#x27;0&#x27; },
-    From: { type: &#x60;${NAMESPACE}.Airport&#x60;, navigation: true },
-    To: { type: &#x60;${NAMESPACE}.Airport&#x60;, navigation: true },
-    Airline: { type: &#x60;${NAMESPACE}.Airline&#x60;, navigation: true },
-  },
-} as ODataStructuredTypeConfig;
 
 export interface Trip {
   TripId: number;
@@ -421,42 +306,6 @@ export interface Trip {
   Photos?: Photo[];
   PlanItems?: PlanItem[];
 }
-export const TripConfig &#x3D; {
-  name: &#x27;Trip&#x27;,
-  annotations: [],
-  fields: {
-    TripId: {
-      type: &#x27;Edm.Int64&#x27;,
-      nullable: false,
-      annotations: [
-        {
-          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
-          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
-        },
-      ],
-    },
-    ShareId: { type: &#x27;Edm.String&#x27; },
-    Description: { type: &#x27;Edm.String&#x27; },
-    Name: { type: &#x27;Edm.String&#x27;, nullable: false },
-    Budget: {
-      type: &#x27;Edm.Int64&#x27;,
-      nullable: false,
-      annotations: [
-        { term: &#x27;Org.OData.Measures.V1.ISOCurrency&#x27;, string: &#x27;USD&#x27; },
-        { term: &#x27;Org.OData.Measures.V1.Scale&#x27;, int: 2 },
-      ],
-    },
-    StartsAt: { type: &#x27;Edm.DateTimeOffset&#x27;, nullable: false },
-    EndsAt: { type: &#x27;Edm.DateTimeOffset&#x27;, nullable: false },
-    Tags: { type: &#x27;Edm.String&#x27;, nullable: false, collection: true },
-    Photos: { type: &#x60;${NAMESPACE}.Photo&#x60;, collection: true, navigation: true },
-    PlanItems: {
-      type: &#x60;${NAMESPACE}.PlanItem&#x60;,
-      collection: true,
-      navigation: true,
-    },
-  },
-} as ODataStructuredTypeConfig;
 
 export interface Person {
   UserName: string;
@@ -468,57 +317,25 @@ export interface Person {
   Trips?: Trip[];
   Photo?: Photo;
 }
-export const PersonConfig &#x3D; {
-  name: &#x27;Person&#x27;,
-  annotations: [],
-  fields: {
-    UserName: {
-      type: &#x27;Edm.String&#x27;,
-      nullable: false,
-      annotations: [
-        {
-          term: &#x27;Org.OData.Core.V1.Permissions&#x27;,
-          permissions: [&#x27;Org.OData.Core.V1.Permission/Read&#x27;],
-        },
-      ],
-    },
-    FirstName: { type: &#x27;Edm.String&#x27;, nullable: false },
-    LastName: { type: &#x27;Edm.String&#x27;, nullable: false },
-    Emails: { type: &#x27;Edm.String&#x27;, collection: true },
-    Gender: { type: &#x60;${NAMESPACE}.PersonGender&#x60; },
-    Concurrency: {
-      type: &#x27;Edm.Int64&#x27;,
-      nullable: false,
-      annotations: [{ term: &#x27;Org.OData.Core.V1.Computed&#x27;, bool: true }],
-    },
-    Friends: {
-      type: &#x60;${NAMESPACE}.Person&#x60;,
-      collection: true,
-      navigation: true,
-    },
-    Trips: { type: &#x60;${NAMESPACE}.Trip&#x60;, collection: true, navigation: true },
-    Photo: { type: &#x60;${NAMESPACE}.Photo&#x60;, navigation: true },
-  },
-} as ODataStructuredTypeConfig;
 //#endregion
 
 //#region Services
+
+export const TRIPPIN_CONFIG_NAME &#x3D; &#x27;TripPin&#x27;;
+export const TRIPPIN_SERVICE_ROOT &#x3D; &#x27;https://services.odata.org/v4/TripPinServiceRW/&#x27;;
+export const TRIPPIN_NAMESPACE &#x3D; &#x27;Microsoft.OData.SampleService.Models.TripPin&#x27;;
 @Injectable({ providedIn: &#x27;root&#x27; })
 export class PeopleService extends ODataEntitySetService&lt;Person&gt; {
   constructor(client: ODataClient) {
-    super(client, &#x27;People&#x27;, &#x60;${NAMESPACE}.Person&#x60;);
+    super(client, &#x27;People&#x27;, &#x60;${TRIPPIN_NAMESPACE}.Person&#x60;);
   }
 }
-export const PeopleConfig &#x3D; {
-  name: &#x27;People&#x27;,
-  entityType: &#x60;${NAMESPACE}.Person&#x60;,
-  service: PeopleService,
-} as ODataEntitySetConfig;
 //#endregion
 
-export const TripPinConfig &#x3D; {
-  name: CONFIG_NAME,
-  serviceRootUrl: SERVICE_ROOT,
+export const TripPinMetadata &#x3D; ODataMetadata.fromJson(json);
+export const TripPinConfig &#x3D; TripPinMetadata.toConfig({
+  name: TRIPPIN_CONFIG_NAME,
+  serviceRootUrl: TRIPPIN_SERVICE_ROOT,
   options: {
     stringAsEnum: true,
     stripMetadata: &#x27;full&#x27;,
@@ -527,28 +344,33 @@ export const TripPinConfig &#x3D; {
   },
   schemas: [
     {
-      namespace: &#x60;${NAMESPACE}&#x60;,
-      enums: [PersonGenderConfig, FlagEnumsConfig],
-      entities: [
-        PhotoConfig,
-        PersonConfig,
-        PlanItemConfig,
-        TripConfig,
-        PublicTransportationEntityConfig,
-        FlightEntityConfig,
-        AirlineEntityConfig,
-        AirportEntityConfig,
-      ],
-      containers: [
-        {
-          entitySets: [PeopleConfig],
-        },
-      ],
-    },
+      namespace: &#x60;${TRIPPIN_NAMESPACE}&#x60;,
+      enums: [FlagEnumsConfig],
+    }
   ],
   parsers: EDM_PARSERS,
-} as ODataApiConfig;
-</code></pre>
+}) as ODataApiConfig;
+
+export const CUSTOM_SERVICE_ROOT &#x3D; &#x27;https://services.odata.org/v4/TripPinServiceRW/&#x27;;
+export const CUSTOM_CONFIG_NAME &#x3D; &#x27;Custom&#x27;;
+export const CUSTOM_NAMESPACE &#x3D; &#x27;Custom&#x27;;
+export const CustomConfig &#x3D; {
+  name: CUSTOM_CONFIG_NAME,
+  serviceRootUrl: CUSTOM_SERVICE_ROOT,
+  options: {
+    stringAsEnum: true,
+    stripMetadata: &#x27;full&#x27;,
+    fetchPolicy: &#x27;no-cache&#x27;,
+    nonParenthesisForEmptyParameterFunction: true
+  },
+  schemas: [
+    {
+      namespace: &#x60;${CUSTOM_NAMESPACE}&#x60;,
+      enums: [FlagEnumsConfig],
+    }
+  ],
+  parsers: EDM_PARSERS,
+} as ODataApiConfig;</code></pre>
     </div>
 </div>
 
