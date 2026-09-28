@@ -34,7 +34,7 @@ export class ODataSchema extends ODataAnnotatable {
   }
 
   isNamespaceOf(type: string) {
-    return type.startsWith(this.namespace) ?? (this.alias && type.startsWith(this.alias));
+    return type.startsWith(this.namespace) || (this.alias != null && type.startsWith(this.alias));
   }
 
   get entitySets() {

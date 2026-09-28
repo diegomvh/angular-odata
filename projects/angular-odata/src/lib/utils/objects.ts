@@ -144,7 +144,7 @@ export const Objects = {
 
   resolveKey(key: any, { single = true }: { single?: boolean } = {}) {
     const type = Types.rawType(key);
-    if (['number', 'string'].indexOf(type) !== -1) return key;
+    if (['Number', 'String'].indexOf(type) !== -1) return key;
     if (type !== 'Map' && type !== 'Object') {
       return undefined;
     }
