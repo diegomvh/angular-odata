@@ -1,0 +1,427 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content additional-page">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1>Configuration</h1>
+<p>Each API is described by an <code>ODataApiConfig</code> object.</p>
+<h2><code>ODataApiConfig</code></h2>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>serviceRootUrl</code></td>
+<td>Root URL of the OData service. Required.</td>
+</tr>
+<tr>
+<td><code>metadataUrl</code></td>
+<td>URL of the <code>$metadata</code> document. Defaults to <code>serviceRootUrl</code> + <code>$metadata</code>.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Name of the API, needed when you register several APIs.</td>
+</tr>
+<tr>
+<td><code>default</code></td>
+<td>Marks the API used when no name is given.</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>OData version: <code>&#39;4.0&#39;</code> (default), <code>&#39;3.0&#39;</code> or <code>&#39;2.0&#39;</code>.</td>
+</tr>
+<tr>
+<td><code>cache</code></td>
+<td>An <code>ODataCache</code> instance. See <a href="caching.html">Caching</a>.</td>
+</tr>
+<tr>
+<td><code>errorHandler</code></td>
+<td><code>(error, caught) =&gt; Observable&lt;never&gt;</code> called when a request fails.</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td>Request and parsing options, described below.</td>
+</tr>
+<tr>
+<td><code>parsers</code></td>
+<td>Custom parsers keyed by EDM type name.</td>
+</tr>
+<tr>
+<td><code>populateFromMetadata</code></td>
+<td>Fetch <code>$metadata</code> at startup and build the schemas from it. Defaults to <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>schemas</code></td>
+<td>Static schema declarations (enums, entities, callables and containers).</td>
+</tr>
+<tr>
+<td><code>references</code></td>
+<td>Referenced schemas (<code>edmx:Reference</code>).</td>
+</tr>
+<tr>
+<td><code>models</code>, <code>collections</code></td>
+<td>Model and collection classes keyed by type name.</td>
+</tr>
+</tbody>
+</table>
+<h2><code>options</code></h2>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>params</code>, <code>headers</code></td>
+<td>Default query parameters and headers for every request.</td>
+</tr>
+<tr>
+<td><code>withCredentials</code></td>
+<td>Send credentials with cross-site requests.</td>
+</tr>
+<tr>
+<td><code>accept</code></td>
+<td>Values for the <code>Accept</code> header: <code>metadata</code> (<code>&#39;minimal&#39;</code>, <code>&#39;full&#39;</code>, <code>&#39;none&#39;</code>), <code>ieee754Compatible</code>, <code>exponentialDecimals</code>, <code>streaming</code>.</td>
+</tr>
+<tr>
+<td><code>etag</code></td>
+<td>Send <code>If-Match</code> (<code>ifMatch</code>) and <code>If-None-Match</code> (<code>ifNoneMatch</code>) headers.</td>
+</tr>
+<tr>
+<td><code>prefer</code></td>
+<td>Values for the <code>Prefer</code> header: <code>maxPageSize</code>, <code>return</code> (<code>&#39;representation&#39;</code> or <code>&#39;minimal&#39;</code>), <code>continueOnError</code>, <code>includeAnnotations</code>.</td>
+</tr>
+<tr>
+<td><code>stripMetadata</code></td>
+<td>Remove annotations from responses down to the given metadata level.</td>
+</tr>
+<tr>
+<td><code>fetchPolicy</code></td>
+<td>Default fetch policy. Defaults to <code>&#39;network-only&#39;</code>. See <a href="caching.html">Caching</a>.</td>
+</tr>
+<tr>
+<td><code>bodyQueryOptions</code></td>
+<td>Query options sent in the request body (<code>GET /$query</code>) instead of the URL.</td>
+</tr>
+<tr>
+<td><code>stringAsEnum</code></td>
+<td>Serialize enum values as plain strings.</td>
+</tr>
+<tr>
+<td><code>deleteRefBy</code></td>
+<td>Delete references by <code>&#39;path&#39;</code> or by <code>&#39;id&#39;</code>.</td>
+</tr>
+<tr>
+<td><code>nonParenthesisForEmptyParameterFunction</code></td>
+<td>Call functions with no parameters without <code>()</code>.</td>
+</tr>
+<tr>
+<td><code>jsonBatchFormat</code></td>
+<td>Send <code>$batch</code> requests in JSON format.</td>
+</tr>
+<tr>
+<td><code>relativeUrls</code></td>
+<td>Use relative URLs inside <code>$batch</code> requests.</td>
+</tr>
+</tbody>
+</table>
+<h2>Example</h2>
+<p>Generated configurations can be extended with your own settings. The demo application
+combines three APIs:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">provideODataClient({
+  config: [
+    // Schemas loaded from $metadata at startup
+    {
+      name: &#39;MicrosoftGraph&#39;,
+      serviceRootUrl: &#39;https://graph.microsoft.com/v1.0/&#39;,
+      populateFromMetadata: true,
+      options: { stringAsEnum: true },
+    },
+    // Generated configuration, with a cache and decimals sent as strings
+    {
+      ...NorthwindConfig,
+      cache: new ODataInMemoryCache({ maxAge: 60 }),
+      options: { accept: { ieee754Compatible: true } },
+    },
+    // Generated configuration, used when no API name is given
+    {
+      ...TripPinConfig,
+      default: true,
+      options: {
+        stringAsEnum: true,
+        stripMetadata: &#39;minimal&#39;,
+        accept: { metadata: &#39;minimal&#39; },
+        prefer: { return: &#39;representation&#39; },
+      },
+    },
+  ],
+});</code></pre></div><h2>Loaders</h2>
+<p>A loader provides the API configurations and the function that sends requests. By default
+the client uses <code>ODataSyncLoader</code> with the <code>config</code> you pass and <code>HttpClient</code>. To load the
+configuration in another way, pass your own <code>ODataLoader</code> provider as <code>loader</code>:</p>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>Loader</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ODataSyncLoader</code></td>
+<td>Configurations known at build time (the default).</td>
+</tr>
+<tr>
+<td><code>ODataAsyncLoader</code></td>
+<td>Configurations that come from one or more observables, for example a remote JSON file.</td>
+</tr>
+<tr>
+<td><code>ODataMetadataLoader</code></td>
+<td>Configurations built from <code>$metadata</code> documents, for example the <code>metadata.json</code> produced by the <a href="code-generation.html">code generator</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>This loader, from the demo application, downloads the TripPin <code>$metadata</code> at startup,
+builds a configuration from it, and adds the static configurations passed in <code>config</code>:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { HttpClient } from &#39;&#64;angular/common/http&#39;;
+import {
+  ODATA_CONFIG,
+  ODataApiConfig,
+  ODataAsyncLoader,
+  ODataLoader,
+  ODataMetadataParser,
+  ODataRequest,
+  provideODataClient,
+} from &#39;angular-odata&#39;;
+import { map } from &#39;rxjs&#39;;
+
+export function createMixedLoader(
+  staticConfigs: ODataApiConfig | ODataApiConfig[],
+  http: HttpClient,
+) {
+  const serviceRootUrl = &#39;https://services.odata.org/V4/TripPinServiceRW&#39;;
+  const configs$ = http
+    .get(`${serviceRootUrl}/$metadata`, { responseType: &#39;text&#39; })
+    .pipe(
+      map((xml) =&gt; [
+        new ODataMetadataParser(xml).metadata().toConfig({ serviceRootUrl, name: &#39;TripPinAsync&#39; }),
+        ...(Array.isArray(staticConfigs) ? staticConfigs : [staticConfigs]),
+      ]),
+    );
+  return new ODataAsyncLoader(configs$, (req: ODataRequest&lt;any&gt;) =&gt;
+    http.request(req.method, `${req.url}`, {
+      body: req.body,
+      context: req.context,
+      headers: req.headers,
+      observe: req.observe,
+      params: req.params,
+      reportProgress: req.reportProgress,
+      responseType: req.responseType,
+      withCredentials: req.withCredentials,
+    }),
+  );
+}
+
+provideODataClient({
+  config: [NorthwindConfig, TripPinConfig],
+  loader: { provide: ODataLoader, useFactory: createMixedLoader, deps: [ODATA_CONFIG, HttpClient] },
+});</code></pre></div><p>To build the configurations only from <code>$metadata</code> documents, use <code>ODataMetadataLoader</code>,
+which takes an observable of the XML documents, the base configurations and the request
+function.</p>
+<p>When you pass a <code>loader</code>, the client does not call <code>provideHttpClient()</code>, so register it
+yourself.</p>
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'configuration.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

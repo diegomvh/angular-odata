@@ -7,9 +7,9 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-	   <link rel="stylesheet" href="./styles/style.css">
-        <link rel="stylesheet" href="./styles/dark.css">
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
           <script>
@@ -78,7 +78,7 @@
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
-                    <a href="./" class="navbar-brand">angular-odata documentation</a>
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
                     <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
                </div>
         </div>
@@ -93,7 +93,7 @@
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
-               <div class="content package-properties">
+               <div class="content additional-page">
                    <div class="content-data">
 
 
@@ -115,32 +115,78 @@
 
 
 
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">Properties</li>
-    </ol>
-    <ul class="properties-list">
-        <li>
-            <b>Version</b> : 0.159.0</li>
-        <li>
-            <b>Description</b> : Client side OData typescript library for Angular</li>
-        <li>
-            <b>Keywords</b> : client, odata, odata v4, odata v3, odata v2, typescript, api, @angular, angular</li>
-        <li>
-            <b>Homepage</b> : https://github.com/diegomvh/angular-odata</li>
-        <li>
-            <b>Bugs</b> : https://github.com/diegomvh/angular-odata/issues</li>
-        <li>
-            <b>License</b> : MIT</li>
-        <li>
-            <b>Repository</b> : git+https://github.com/diegomvh/angular-odata.git</li>
-        <li>
-            <b>Author</b> : Diego van Haaster</li>
-    </ul>
 
 
 
 
 
+<h1>Code generation</h1>
+<p>The library includes Angular schematics that read a <code>$metadata</code> document and generate a
+typed client.</p>
+<h2><code>apigen</code></h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">ng generate angular-odata:apigen --name=TripPin --metadata=&#39;https://services.odata.org/V4/TripPinServiceRW/$metadata&#39;</code></pre></div><table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Name of the generated API. Also used for the folder and the file names. Required.</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>URL of the <code>$metadata</code> document. Required. The service root URL is derived from it.</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>Folder in which to create the API. Defaults to the source folder of the project.</td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td>Angular project. Defaults to the current project.</td>
+</tr>
+<tr>
+<td><code>models</code></td>
+<td>Generate model and collection classes. Default: <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>staticMetadata</code></td>
+<td>Save the metadata to <code>metadata.json</code> and build the configuration from it, instead of fetching <code>$metadata</code> at startup. Default: <code>true</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The schematic creates a folder named after the API. For TripPin, the demo application has:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-none">trip-pin/
+  index.ts                 # Barrel: import everything from &#39;./trip-pin&#39;
+  trip-pin.config.ts       # TripPinConfig: the ODataApiConfig
+  trip-pin.module.ts       # TripPinModule: provides every generated service
+  metadata.json            # When staticMetadata is true
+  Microsoft/OData/SampleService/Models/TripPin/   # One folder per schema namespace
+    person.entity.ts       # interface Person
+    person.model.ts        # class PersonModel
+    person.collection.ts   # class PersonCollection
+    person-gender.enum.ts  # enum PersonGender
+    location.complex.ts    # interface Location (complex type)
+    people.service.ts      # class PeopleService (entity set)
+    me.service.ts          # class MeService (singleton)
+    default-container.service.ts   # Unbound functions and actions</code></pre></div><p>Models and collections are generated only when <code>models</code> is <code>true</code>.</p>
+<p>Register the generated configuration:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { provideODataClient } from &#39;angular-odata&#39;;
+import { TripPinConfig } from &#39;./trip-pin&#39;;
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideODataClient({ config: TripPinConfig })],
+};</code></pre></div><h2>Custom code</h2>
+<p>The generated files contain <code>// #region Custom</code> and <code>// #endregion Custom</code> blocks. Put your
+own code inside them: when you run the schematic again, it keeps the content of these blocks
+and overwrites everything else. If the number of blocks in the new file differs from the old
+one, the schematic prints a warning and does not keep them.</p>
+<h2><code>metadata</code></h2>
+<p>The <code>metadata</code> schematic downloads a <code>$metadata</code> document and saves it as JSON:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">ng generate angular-odata:metadata --url=&#39;https://services.odata.org/V4/TripPinServiceRW/$metadata&#39;</code></pre></div>
                    </div><div class="search-results">
     <div class="has-results">
         <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
@@ -165,9 +211,9 @@
           </label>
 
        <script>
-            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'package-properties';
-            var COMPODOC_CURRENT_PAGE_URL = 'properties.html';
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'code-generation.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 
@@ -184,30 +230,30 @@
                }
           </script>
 
-       <script src="./js/libs/custom-elements.min.js"></script>
-       <script src="./js/libs/lit-html.js"></script>
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
 
-       <script src="./js/menu-wc.js" defer></script>
-       <script nomodule src="./js/menu-wc_es5.js" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
-       <script src="./js/libs/bootstrap-native.js"></script>
+       <script src="../js/libs/bootstrap-native.js"></script>
 
-       <script src="./js/libs/es6-shim.min.js"></script>
-       <script src="./js/libs/EventDispatcher.js"></script>
-       <script src="./js/libs/promise.min.js"></script>
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
 
-       <script src="./js/compodoc.js"></script>
+       <script src="../js/compodoc.js"></script>
 
-       <script src="./js/tabs.js"></script>
-       <script src="./js/menu.js"></script>
-       <script src="./js/libs/clipboard.min.js"></script>
-       <script src="./js/libs/prism.js"></script>
-       <script src="./js/sourceCode.js"></script>
-          <script src="./js/search/search.js"></script>
-          <script src="./js/search/lunr.min.js"></script>
-          <script src="./js/search/search-lunr.js"></script>
-          <script src="./js/search/search_index.js"></script>
-       <script src="./js/lazy-load-graphs.js"></script>
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
 
 
     </body>

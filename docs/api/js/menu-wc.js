@@ -63,6 +63,46 @@ customElements.define('compodoc-menu', class extends HTMLElement {
 
                     </ul>
                 </li>
+                    <li class="chapter additional">
+                        <div class="simple menu-toggler" data-bs-toggle="collapse" ${ isNormalMode ? 'data-bs-target="#additional-pages"'
+                            : 'data-bs-target="#xs-additional-pages"' }>
+                            <span class="icon ion-ios-book"></span>
+                            <span>Handbook</span>
+                            <span class="icon ion-ios-arrow-down"></span>
+                        </div>
+                        <ul class="links collapse " ${ isNormalMode ? 'id="additional-pages"' : 'id="xs-additional-pages"' }>
+                                    <li class="link ">
+                                        <a href="additional-documentation/introduction.html" data-type="entity-link" data-context-id="additional">Introduction</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/getting-started.html" data-type="entity-link" data-context-id="additional">Getting started</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/configuration.html" data-type="entity-link" data-context-id="additional">Configuration</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/resources.html" data-type="entity-link" data-context-id="additional">Resources</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/query-builder.html" data-type="entity-link" data-context-id="additional">Query builder</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/services.html" data-type="entity-link" data-context-id="additional">Services</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/models-and-collections.html" data-type="entity-link" data-context-id="additional">Models and collections</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/caching.html" data-type="entity-link" data-context-id="additional">Caching</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/code-generation.html" data-type="entity-link" data-context-id="additional">Code generation</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/writing-the-handbook.html" data-type="entity-link" data-context-id="additional">Writing the handbook</a>
+                                    </li>
+                        </ul>
+                    </li>
                     <li class="chapter modules">
                         <a data-type="chapter-link" href="modules.html">
                             <div class="menu-toggler linked" data-bs-toggle="collapse" ${ isNormalMode ?

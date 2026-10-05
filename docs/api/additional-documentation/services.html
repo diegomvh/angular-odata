@@ -1,0 +1,328 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content additional-page">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1>Services</h1>
+<p>Services wrap the resources of one entity set or singleton in an injectable class.</p>
+<h2>Entity set services</h2>
+<p>Extend <code>ODataEntitySetService</code> and pass the entity set path and the entity type to the
+constructor:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { Injectable } from &#39;&#64;angular/core&#39;;
+import { ODataClient, ODataEntitySetService } from &#39;angular-odata&#39;;
+
+&#64;Injectable({ providedIn: &#39;root&#39; })
+export class PeopleService extends ODataEntitySetService&lt;Person&gt; {
+  constructor(client: ODataClient) {
+    super(client, &#39;People&#39;, &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;);
+  }
+}</code></pre></div><p>The service gives you resources and shortcuts:</p>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entities()</code></td>
+<td>A new <code>ODataEntitySetResource</code> for the entity set.</td>
+</tr>
+<tr>
+<td><code>entity(key)</code></td>
+<td>A new <code>ODataEntityResource</code> for one entity.</td>
+</tr>
+<tr>
+<td><code>fetchAll()</code>, <code>fetchMany(top)</code>, <code>fetchOne()</code></td>
+<td>Shortcuts for the same methods of the entity set resource.</td>
+</tr>
+<tr>
+<td><code>create(attrs)</code></td>
+<td>Creates an entity.</td>
+</tr>
+<tr>
+<td><code>update(key, attrs)</code>, <code>modify(key, attrs)</code></td>
+<td>Replace (PUT) or update (PATCH) an entity.</td>
+</tr>
+<tr>
+<td><code>destroy(key)</code></td>
+<td>Deletes an entity.</td>
+</tr>
+<tr>
+<td><code>fetchOrCreate(key, attrs)</code></td>
+<td>Fetches an entity and creates it when the server answers 404.</td>
+</tr>
+<tr>
+<td><code>save(attrs)</code></td>
+<td>Creates or updates the entity, depending on whether <code>attrs</code> contains the key. Entities with compound keys require an explicit <code>method</code>.</td>
+</tr>
+<tr>
+<td><code>model(attrs)</code>, <code>collection(entities)</code></td>
+<td>Create a <a href="models-and-collections.html">model or collection</a> bound to the entity set.</td>
+</tr>
+</tbody>
+</table>
+<p>This component, adapted from the demo application, loads one person with its photo, trips
+and friends, then downloads the photo through another service:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">&#64;Component({
+  selector: &#39;trip-person&#39;,
+  template: `&lt;pre&gt;{{ person() | json }}&lt;/pre&gt;`,
+  imports: [JsonPipe],
+})
+export class PersonComponent {
+  private peopleService = inject(PeopleService);
+  private photosService = inject(PhotosService);
+  person = signal&lt;Person | null&gt;(null);
+
+  show(userName: string) {
+    this.peopleService
+      .entity({ UserName: userName })
+      .query((q) =&gt;
+        q.expand(({ e, t }) =&gt;
+          e()
+            .field(t.Photo)
+            .field(t.Trips)
+            .field(t.Friends, (f) =&gt; f.levels(2)),
+        ),
+      )
+      .fetch()
+      .subscribe(({ entity }) =&gt; {
+        this.person.set(entity);
+        if (entity?.Photo) {
+          this.photosService.entity(entity.Photo).media().fetchBlob().subscribe(console.log);
+        }
+      });
+  }
+}</code></pre></div><h2>Reading the schema</h2>
+<p><code>structuredTypeSchema</code> gives access to the schema of the entity type, for example to build
+the columns of a table from the metadata:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const schema = this.peopleService.structuredTypeSchema;
+const columns = (schema?.fields({ include_parents: true, include_navigation: false }) ?? []).map(
+  (field) =&gt; ({
+    field: field.name,
+    sortable: !field.collection,
+    filterable: field.type === EdmType.String,
+  }),
+);</code></pre></div><h2>Singleton services</h2>
+<p><code>ODataSingletonService</code> works the same way for singletons. It has <code>entity()</code>, <code>model()</code> and
+<code>attach()</code>.</p>
+<h2>Services without a class</h2>
+<p><code>ODataServiceFactory</code> creates services at runtime:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const factory = inject(ODataServiceFactory);
+const airportsService = factory.entitySet&lt;Airport&gt;(&#39;Airports&#39;);
+const airports = airportsService.entities();
+airports.fetchAll().subscribe(({ entities }) =&gt; {});
+
+const people = factory.entitySet&lt;Person&gt;(
+  &#39;People&#39;,
+  &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;,
+);
+const me = factory.singleton&lt;Person&gt;(&#39;Me&#39;);</code></pre></div><p>The second argument is an API name or an entity type, and the service uses it to find the API. When it is omitted, the service uses the default API.</p>
+<p>Both methods accept an optional <code>Model</code> (and, for entity sets, <code>Collection</code>) class.</p>
+<h2>Generated services</h2>
+<p>The <a href="code-generation.html">code generator</a> creates one service for each entity set and
+singleton, with typed methods for the bound functions and actions, and helpers that return
+the generated model and collection classes:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">&#64;Injectable({ providedIn: &#39;root&#39; })
+export class PeopleService extends ODataEntitySetService&lt;Person&gt; {
+  constructor(client: ODataClient) {
+    super(client, &#39;People&#39;, &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;);
+  }
+  personModel(entity?: Partial&lt;Person&gt;) {
+    return this.model&lt;PersonModel&lt;Person&gt;&gt;(entity);
+  }
+  personCollection(entities?: Partial&lt;Person&gt;[]) {
+    return this.collection&lt;PersonModel&lt;Person&gt;, PersonCollection&lt;Person, PersonModel&lt;Person&gt;&gt;&gt;(
+      entities,
+    );
+  }
+}</code></pre></div>
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'services.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

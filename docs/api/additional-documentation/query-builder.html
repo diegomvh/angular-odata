@@ -1,0 +1,344 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content additional-page">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1>Query builder</h1>
+<p>Every resource has a <code>query()</code> method. The callback receives an <code>ODataQueryOptionsHandler</code>
+with a method for each system query option. The changes are applied to the resource.</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const people = client.entitySet&lt;Person&gt;(&#39;People&#39;).query((q) =&gt; {
+  q.select([&#39;UserName&#39;, &#39;FirstName&#39;, &#39;LastName&#39;]);
+  q.filter({ FirstName: { startswith: &#39;R&#39; } });
+  q.orderBy(&#39;LastName desc&#39;);
+  q.top(10);
+});</code></pre></div><p>Each option accepts a plain value or an <strong>expression factory</strong>. Expression factories are
+typed: the <code>t</code> argument has the same shape as the entity type, so the compiler checks field
+names and navigation paths.</p>
+<h2><code>$select</code></h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">q.select([&#39;UserName&#39;, &#39;FirstName&#39;]);
+q.select(({ e, t }) =&gt; e().field(t.UserName).field(t.FirstName));
+// Navigation paths: $select=Car/Model/Name,Age
+q.select(({ e, t }) =&gt; e().field(t.Car?.Model?.Name).field(t.Age));</code></pre></div><h2><code>$filter</code></h2>
+<p>Plain values are strings, objects or arrays:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">q.filter(&quot;FirstName eq &#39;Russell&#39;&quot;);
+q.filter({ Age: { lt: 30 } });
+q.filter({ Id: { in: [1, 2, 3] } });
+q.filter({ or: [{ FirstName: &#39;Russell&#39; }, { FirstName: &#39;Scott&#39; }] });
+q.filter({ not: { Id: { in: [1, 2, 3] } } });</code></pre></div><p>The factory gives you <code>e</code> (a new expression, with an optional <code>&#39;and&#39;</code> or <code>&#39;or&#39;</code>
+connector), <code>t</code> (typed fields), <code>f</code> (canonical functions) and <code>o</code> (operators):</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">// Id eq 1 and Type/Id ne 3 and startswith(Name, &#39;a&#39;)
+q.filter(({ e }) =&gt; e().eq(&#39;Id&#39;, 1).ne(&#39;Type/Id&#39;, 3).startsWith(&#39;Name&#39;, &#39;a&#39;));
+
+// Id eq 1 or Type/Id ne 3 or endswith(Name, &#39;a&#39;)
+q.filter(({ e }) =&gt; e(&#39;or&#39;).eq(&#39;Id&#39;, 1).ne(&#39;Type/Id&#39;, 3).endsWith(&#39;Name&#39;, &#39;a&#39;));
+
+// tolower(CompanyName) eq &#39;alfreds futterkiste&#39;
+q.filter(({ e, f }) =&gt; e().eq(f.toLower(&#39;CompanyName&#39;), &#39;alfreds futterkiste&#39;));
+
+// Navigation through complex properties: Location/City/Region eq &#39;California&#39;
+q.filter(({ e, t }) =&gt; e().eq(t.Location.City.Region, &#39;California&#39;));
+
+// Lambda operators over a collection of entities:
+// PlanItems/any(p:startswith(p/ConfirmationCode, &#39;CO&#39;))
+q.filter(({ e, t }) =&gt;
+  e().any(t.PlanItems, ({ e, t }) =&gt; e().startsWith(t.ConfirmationCode, &#39;CO&#39;)),
+);
+
+// ... and over a collection of primitive values, combined with or:
+// Emails/any(e:e eq &#39;Javier&#64;contoso.com&#39;) or contains(UserName, &#39;javier&#39;)
+q.filter(({ e, t }) =&gt;
+  e()
+    .any(t.Emails, ({ e, t }) =&gt; e().eq(t, &#39;Javier&#64;contoso.com&#39;))
+    .or(e().contains(t.UserName, &#39;javier&#39;)),
+);</code></pre></div><p>The expression supports the comparison operators <code>eq</code>, <code>ne</code>, <code>gt</code>, <code>ge</code>, <code>lt</code>, <code>le</code>, <code>has</code>
+and <code>in</code>; the string functions <code>contains</code>, <code>startsWith</code> and <code>endsWith</code>; the logical
+operators <code>and</code>, <code>or</code> and <code>not</code>; the lambda operators <code>any</code> and <code>all</code>; and <code>isof</code> and
+<code>count</code>. <code>f</code> provides the other canonical functions (<code>length</code>, <code>toUpper</code>, <code>trim</code>, <code>indexOf</code>,
+<code>subString</code>, <code>concat</code>, <code>year</code>, and so on).</p>
+<p>When the factory callback has a second argument, it receives the current expression, so you
+can add conditions to an existing filter.</p>
+<h2><code>$expand</code></h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">q.expand([&#39;Friends&#39;, &#39;Trips&#39;]);
+q.expand({ Trips: { select: [&#39;Name&#39;], orderBy: &#39;Name&#39;, top: 5 } });
+
+// $expand=Friends($expand=Friends),Trips($select=Name,Tags)
+q.expand(({ e, t }) =&gt;
+  e()
+    .field(t.Friends, (f) =&gt; f.expand(({ e, t }) =&gt; e().field(t.Friends)))
+    .field(t.Trips, (f) =&gt; f.select(({ e }) =&gt; e().fields(&#39;Name&#39;, &#39;Tags&#39;))),
+);
+
+// $expand=Photo,Trips,Friends($levels=2)
+q.expand(({ e, t }) =&gt;
+  e()
+    .field(t.Photo)
+    .field(t.Trips)
+    .field(t.Friends, (f) =&gt; f.levels(2)),
+);
+
+// $expand=Trips($select=Name;$filter=year(StartsAt) eq 2024;$orderBy=StartsAt asc;$top=1)
+q.expand(({ e, t }) =&gt;
+  e().field(t.Trips, (f) =&gt; {
+    f.select(({ e, t }) =&gt; e().field(t.Name));
+    f.filter(({ e, f, t }) =&gt; e().eq(f.year(t.StartsAt), 2024));
+    f.orderBy(({ e, t }) =&gt; e().ascending(t.StartsAt));
+    f.top(1);
+  }),
+);</code></pre></div><p>Inside an expanded field you can call <code>select</code>, <code>expand</code>, <code>filter</code>, <code>search</code>, <code>orderBy</code>,
+<code>compute</code>, <code>skip</code>, <code>top</code>, <code>levels</code> and <code>count</code>.</p>
+<h2><code>$orderby</code></h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">q.orderBy(&#39;LastName desc&#39;);
+q.orderBy([&#39;LastName&#39;, &#39;FirstName&#39;]);
+q.orderBy(({ e, t }) =&gt; e().descending(t.Age).ascending(t.LastName));</code></pre></div><h2><code>$search</code></h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">q.search(&#39;John&#39;);
+q.search(({ e }) =&gt; e().term(&#39;John&#39;));</code></pre></div><h2><code>$compute</code></h2>
+<p><code>compute()</code> takes a string or a factory. Each <code>field()</code> adds a computed property built with
+the operators (<code>o</code>) and functions (<code>f</code>):</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">// Northwind: $compute=UnitPrice add 2 as DoublePrice
+products.query((q) =&gt;
+  q.compute(({ e, t }) =&gt; e().field(&#39;DoublePrice&#39;, ({ o }) =&gt; o.add(t.UnitPrice, 2))),
+);</code></pre></div><h2><code>$apply</code></h2>
+<p><code>apply()</code> takes a string. <code>transform()</code> takes an object that is converted to an <code>$apply</code>
+expression.</p>
+<p>Resources also have a <code>transform()</code> method that takes an apply factory and returns a new
+resource typed with the shape of the result:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">// People?$apply=groupby((Gender))
+const genders = people.transform&lt;{ Gender: PersonGender }&gt;(({ e, t }) =&gt;
+  e().groupBy(() =&gt; [t.Gender]),
+);
+genders.fetch().subscribe(({ entities }) =&gt; {});</code></pre></div><p>The apply expression also has <code>aggregate</code>, <code>filter</code>, <code>search</code>, <code>expand</code>, <code>concat</code> and
+<code>identity</code>.</p>
+<h2><code>$format</code></h2>
+<p><code>format()</code> takes a string.</p>
+<h2>Paging</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">q.top(20);
+q.skip(40);
+q.skiptoken(&#39;abc&#39;);
+q.paging({ skip: 40, top: 20 });
+q.removePaging();</code></pre></div><p><code>fetchAll()</code> and <code>fetchMany()</code> follow the next links of the server for you. See
+<a href="resources.html">Resources</a>.</p>
+<h2>Example: a server-side table</h2>
+<p>Data tables usually send paging, sorting and filtering to the server. This handler, adapted
+from the demo application, builds a new resource for each change of the table:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">loadPage({ first, rows, sortField, sortOrder }: TableState) {
+  const people = this.peopleService.entities().query((q) =&gt; {
+    if (first) q.skip(first);
+    if (rows) q.top(rows);
+    if (sortField)
+      q.orderBy(({ e }) =&gt; (sortOrder === 1 ? e().ascending(sortField) : e().descending(sortField)));
+  });
+  people.fetch({ withCount: true }).subscribe(({ entities, annots }) =&gt; {
+    this.rows.set(entities ?? []);
+    this.total.set(annots.count ?? 0);
+  });
+}
+
+search(field: string, value: string) {
+  // contains(tolower(FirstName), &#39;rus&#39;)
+  const people = this.peopleService
+    .entities()
+    .query((q) =&gt; q.filter(({ e, f }) =&gt; e().contains(f.toLower(field), value.toLowerCase())));
+  people.fetch().subscribe(({ entities }) =&gt; this.rows.set(entities ?? []));
+}</code></pre></div><p>Field names can be strings when they come from the user interface, as here, or typed
+fields (<code>t.FirstName</code>) when they are known at compile time.</p>
+<h2>Reading and resetting options</h2>
+<p>Each method returns a handler when called without arguments:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">people.query((q) =&gt; {
+  const top = q.top().value();
+  q.select().push(&#39;LastName&#39;);
+  q.filter().clear();
+});</code></pre></div><p>Other useful methods of the handler are <code>remove(...options)</code>, <code>keep(...options)</code>, <code>clear()</code>,
+<code>store()</code> and <code>restore()</code>, and <code>toJson()</code> and <code>fromJson()</code>.</p>
+<h2>Sending query options in the body</h2>
+<p>Long URLs can exceed the limits of some servers. Add the option names to
+<code>bodyQueryOptions</code>, in the API configuration or in the request options, to send them in
+the body of a <code>GET /$query</code> request:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">people.fetch({ bodyQueryOptions: [QueryOption.filter, QueryOption.select] });</code></pre></div>
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'query-builder.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

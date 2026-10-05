@@ -1,0 +1,284 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content additional-page">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1>Getting started</h1>
+<h2>Register the client</h2>
+<h3>Standalone applications</h3>
+<p>Register the client with <code>provideODataClient()</code> in your application config:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { ApplicationConfig } from &#39;&#64;angular/core&#39;;
+import { provideODataClient } from &#39;angular-odata&#39;;
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideODataClient({
+      config: {
+        serviceRootUrl:
+          &#39;https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/&#39;,
+      },
+    }),
+  ],
+};</code></pre></div><p><code>provideODataClient()</code> registers <code>ODataClient</code>, <code>ODataServiceFactory</code> and an app initializer
+that loads the configuration (and the metadata, when needed) before the application starts.
+If you do not pass a <code>loader</code>, it also calls <code>provideHttpClient()</code> and uses <code>HttpClient</code> to
+send requests.</p>
+<h3>NgModule applications</h3>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { NgModule } from &#39;&#64;angular/core&#39;;
+import { ODataModule } from &#39;angular-odata&#39;;
+
+&#64;NgModule({
+  imports: [
+    ODataModule.forRoot({
+      config: {
+        serviceRootUrl:
+          &#39;https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/&#39;,
+      },
+    }),
+  ],
+})
+export class AppModule {}</code></pre></div><h3>Several APIs</h3>
+<p><code>config</code> also accepts an array. Give each API a <code>name</code> and mark one as the <code>default</code>:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">provideODataClient({
+  config: [
+    { name: &#39;trippin&#39;, default: true, serviceRootUrl: &#39;https://example.com/trippin/&#39; },
+    { name: &#39;northwind&#39;, serviceRootUrl: &#39;https://example.com/northwind/&#39; },
+  ],
+});</code></pre></div><p>Methods that build resources take an optional API name, for example
+<code>client.entitySet&lt;Product&gt;(&#39;Products&#39;, &#39;northwind&#39;)</code>.</p>
+<h2>Your first request</h2>
+<p>Inject <code>ODataClient</code>, build a resource and fetch it:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { Component, inject } from &#39;&#64;angular/core&#39;;
+import { ODataClient } from &#39;angular-odata&#39;;
+
+interface Person {
+  UserName: string;
+  FirstName: string;
+  LastName: string;
+}
+
+&#64;Component({ selector: &#39;app-people&#39;, template: &#39;&#39; })
+export class PeopleComponent {
+  private client = inject(ODataClient);
+
+  ngOnInit() {
+    const people = this.client.entitySet&lt;Person&gt;(&#39;People&#39;);
+    people.query((q) =&gt; {
+      q.select([&#39;UserName&#39;, &#39;FirstName&#39;, &#39;LastName&#39;]);
+      q.top(10);
+    });
+    people.fetch({ withCount: true }).subscribe(({ entities, annots }) =&gt; {
+      console.log(annots.count, entities);
+    });
+  }
+}</code></pre></div><h2>Using a generated API</h2>
+<p>The <a href="code-generation.html">code generator</a> writes interfaces, services, models and a
+configuration from the <code>$metadata</code> of your service. This is how the
+<a href="https://github.com/diegomvh/AngularODataEntity">demo application</a> works:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">ng generate angular-odata:apigen --models=true --name=TripPin --metadata=&#39;https://services.odata.org/V4/TripPinServiceRW/$metadata&#39;</code></pre></div><b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { TripPinConfig } from &#39;./trip-pin&#39;;
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideODataClient({ config: TripPinConfig })],
+};</code></pre></div><b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { PeopleService } from &#39;./trip-pin&#39;;
+
+export class PeopleComponent {
+  private peopleService = inject(PeopleService);
+
+  ngOnInit() {
+    this.peopleService
+      .entities()
+      .query((q) =&gt; q.top(10))
+      .fetch({ withCount: true })
+      .subscribe(({ entities, annots }) =&gt; console.log(annots.count, entities));
+  }
+}</code></pre></div><p>Next, read <a href="resources.html">Resources</a> and the <a href="query-builder.html">Query builder</a> chapters. To
+get typed services and models for your API, see <a href="code-generation.html">Code generation</a>.</p>
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'getting-started.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

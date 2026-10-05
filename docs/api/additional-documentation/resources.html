@@ -1,0 +1,325 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content additional-page">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1>Resources</h1>
+<p>A resource describes a URL of the OData service: its path segments and its query options.
+You build resources with <code>ODataClient</code> (or with a <a href="services.html">service</a>) and then call
+methods that send requests. Every request method returns an <code>Observable</code>.</p>
+<p>The examples in this chapter use the
+<a href="https://services.odata.org/V4/TripPinServiceRW/">TripPin</a> sample service, as the
+<a href="https://github.com/diegomvh/AngularODataEntity">demo application</a> does.</p>
+<h2>Entity sets</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { firstValueFrom } from &#39;rxjs&#39;;
+
+const airports = client.entitySet&lt;Airport&gt;(&#39;Airports&#39;);
+
+// GET Airports
+const { entities } = await firstValueFrom(airports.fetch());
+
+// GET Airports?$count=true
+const { annots } = await firstValueFrom(airports.fetch({ withCount: true }));
+console.log(annots.count);
+
+// GET Airports/$count
+const count = await firstValueFrom(airports.count().fetch());
+
+// GET Airports?$top=1
+const { entity: first } = await firstValueFrom(airports.fetchOne());
+
+// Fetch pages until there are at least 4 airports
+const { entities: four } = await firstValueFrom(airports.fetchMany(4));
+
+// Follow every next link and return all the airports
+const { entities: all } = await firstValueFrom(airports.fetchAll());</code></pre></div><p><code>fetch()</code> emits <code>{ entities, annots }</code>. <code>annots</code> holds the annotations of the response:
+<code>count</code>, <code>skip</code> and <code>skiptoken</code> (from the next link), <code>etag</code>, and so on.</p>
+<h2>Changing and copying resources</h2>
+<p><code>query()</code> changes the resource it is called on. Call <code>clone()</code> first to keep the original:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const unitedStates = airports
+  .clone()
+  .query((q) =&gt; q.filter(({ e, t }) =&gt; e().eq(t.Location.City.CountryRegion, &#39;United States&#39;)));
+
+airports.query((q) =&gt; q.filter(({ e, t }) =&gt; e().eq(t.Location.City.Region, &#39;California&#39;)));
+airports.query((q) =&gt; q.filter().clear());</code></pre></div><h2>Entities</h2>
+<p>Pass the key to <code>entity()</code>. Use an object for compound keys, or to name the key property:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const cyyz = client.entitySet&lt;Airport&gt;(&#39;Airports&#39;).entity(&#39;CYYZ&#39;);
+const russell = client.entitySet&lt;Person&gt;(&#39;People&#39;).entity({ UserName: &#39;russellwhyte&#39; });
+
+cyyz.fetch().subscribe(({ entity, annots }) =&gt; console.log(entity, annots.etag));
+cyyz.fetchEntity().subscribe((airport) =&gt; {});
+
+russell.update(person); // PUT
+russell.modify({ FirstName: &#39;Russell&#39; }); // PATCH
+russell.destroy(); // DELETE</code></pre></div><p>Send the entity ETag with the <code>etag</code> option to use optimistic concurrency:
+<code>russell.modify(changes, { etag: annots.etag })</code>.</p>
+<h2>Navigation properties and properties</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const trips = russell.navigationProperty&lt;Trip&gt;(&#39;Trips&#39;);
+trips.fetch().subscribe(({ entities }) =&gt; {});
+trips
+  .entity(0)
+  .fetch()
+  .subscribe(({ entity }) =&gt; {});
+
+// $ref
+russell.navigationProperty&lt;Person&gt;(&#39;Friends&#39;).reference();
+
+// Single property value
+russell
+  .property&lt;string&gt;(&#39;FirstName&#39;)
+  .fetchProperty()
+  .subscribe((value) =&gt; {});</code></pre></div><h2>Media</h2>
+<p>Media entities, such as TripPin photos, expose their content with <code>media()</code>:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">client
+  .entitySet&lt;Photo&gt;(&#39;Photos&#39;)
+  .entity(person.Photo)
+  .media()
+  .fetchBlob()
+  .subscribe((blob) =&gt; (image.src = URL.createObjectURL(blob)));</code></pre></div><h2>Functions and actions</h2>
+<p>Unbound callables are built from the client. Bound callables are built from the resource
+they are bound to.</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">// Unbound function
+client
+  .function&lt;{ lat: number; lon: number }, Airport&gt;(&#39;GetNearestAirport&#39;)
+  .callEntity({ lat: 33, lon: -118 })
+  .subscribe((airport) =&gt; {});
+
+// Function bound to an entity
+russell
+  .function&lt;{ userName: string }, Trip[]&gt;(
+    &#39;Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips&#39;,
+  )
+  .callEntities({ userName: &#39;ronaldmundy&#39; })
+  .subscribe((trips) =&gt; {});
+
+// Unbound action
+client.action&lt;null, null&gt;(&#39;ResetDataSource&#39;).call(null).subscribe();</code></pre></div><p>The <code>call*</code> helpers choose how the response is read: <code>callProperty</code>, <code>callEntity</code>,
+<code>callEntities</code>, <code>callModel</code>, <code>callCollection</code>, <code>callArraybuffer</code> and <code>callBlob</code>. Generated
+services include typed methods for every callable. See <a href="code-generation.html">Code generation</a>.</p>
+<h2>Singletons</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">client
+  .singleton&lt;Person&gt;(&#39;Me&#39;)
+  .fetch()
+  .subscribe(({ entity }) =&gt; {});</code></pre></div><h2>Batch requests</h2>
+<p><code>batch().exec()</code> collects every request created inside its callback and sends them all in a
+single <code>$batch</code> request. Each inner observable still emits its own response.</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { combineLatest } from &#39;rxjs&#39;;
+
+const people = client.entitySet&lt;Person&gt;(&#39;People&#39;);
+client
+  .batch()
+  .exec(() =&gt;
+    combineLatest({
+      russell: people.entity(&#39;russellwhyte&#39;).fetch(),
+      scott: people.entity(&#39;scottketchum&#39;).fetch(),
+    }),
+  )
+  .subscribe(([result$, response]) =&gt; result$.subscribe(({ russell, scott }) =&gt; {}));</code></pre></div><h2>Several APIs</h2>
+<p>When you register several APIs, use <code>apiFor()</code> to build resources for one of them:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const northwind = client.apiFor(&#39;Northwind&#39;);
+const orders = await firstValueFrom(northwind.entitySet&lt;Order&gt;(&#39;Orders&#39;).fetchEntities());</code></pre></div><h2>Saving and restoring resources</h2>
+<p>A resource can be converted to JSON, for example to keep the current query of a page, and
+rebuilt later:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const json = airports.toJson();
+const restored = client.fromJson(json) as ODataEntitySetResource&lt;Airport&gt;;
+restored.fetch().subscribe(({ entities }) =&gt; {});</code></pre></div><h2>Metadata</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">// GET $metadata, parsed into an ODataMetadata object
+client
+  .metadata()
+  .fetch()
+  .subscribe((metadata) =&gt; console.log(metadata.toConfig()));</code></pre></div><h2>Low-level HTTP</h2>
+<p><code>ODataClient</code> also has <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, <code>delete</code> and <code>request</code> methods that
+take a resource or a URL, for cases the resource API does not cover.</p>
+<h2>Query options</h2>
+<p>Every resource has a <code>query()</code> method that edits its query options. See
+<a href="query-builder.html">Query builder</a>.</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">airports.query((q) =&gt; q.top(5));
+console.log(airports.toString()); // Airports?$top=5</code></pre></div>
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'resources.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

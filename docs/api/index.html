@@ -100,16 +100,18 @@
 <h1 align="center">Angular OData</h1>
 
 <p align="center">
-  <em>A fluent API for querying, creating, updating and deleting OData resources in Angular.</em>
+  <em>A typed, fluent client for OData services in Angular.</em>
   <br>
 </p>
 
 <p align="center">
-  <a href="CONTRIBUTING.md">Contributing</a>
+  <a href="https://diegomvh.github.io/angular-odata/docs/api/additional-documentation/introduction.html">Handbook</a>
   ·
-  <a href="./docs/api/index.html">Documentation</a>
+  <a href="https://diegomvh.github.io/angular-odata/docs/api/index.html">API reference</a>
   ·
   <a href="https://github.com/diegomvh/AngularODataEntity">Demo</a>
+  ·
+  <a href="https://github.com/diegomvh/angular-odata/blob/main/CONTRIBUTING.md">Contributing</a>
   <br>
   <br>
 </p>
@@ -125,10 +127,133 @@
 
 <hr>
 
-<h2>Installation</h2>
-<p>Install from npm:</p>
-<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h2>OData Version</h2>
-<p>The library works mainly with OData Version 4, however, it incorporates basic support for versions 3 and 2.</p>
+<p><a href="https://www.odata.org/">OData</a> is a standard for REST APIs: every service describes its
+data in a <code>$metadata</code> document and accepts the same query options (<code>$filter</code>, <code>$select</code>,
+<code>$expand</code>, <code>$orderby</code>, …). <strong>angular-odata</strong> lets your Angular application talk to any OData
+service without writing URLs by hand: you build requests with typed TypeScript code and get
+back typed results.</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">// GET People?$select=UserName,FirstName&amp;$filter=contains(UserName, &#39;russell&#39;)&amp;$top=10
+client
+  .entitySet&lt;Person&gt;(&#39;People&#39;)
+  .query((q) =&gt; {
+    q.filter(({ e, t }) =&gt; e().contains(t.UserName, &#39;russell&#39;));
+    q.select([&#39;UserName&#39;, &#39;FirstName&#39;]);
+    q.top(10);
+  })
+  .fetch()
+  .subscribe(({ entities }) =&gt; console.log(entities));</code></pre></div><h2>Features</h2>
+<ul>
+<li><strong>Typed query builder</strong>: <code>$filter</code>, <code>$select</code>, <code>$expand</code>, <code>$orderby</code>, <code>$search</code>,
+<code>$compute</code>, <code>$apply</code> and paging, with field names checked by the compiler.</li>
+<li><strong>Complete OData API</strong>: entity sets, entities, navigation properties, functions,
+actions, singletons, media and <code>$batch</code> requests.</li>
+<li><strong>Code generation</strong>: one command creates interfaces, services and models from your
+service&#39;s <code>$metadata</code>.</li>
+<li><strong>Models and collections</strong>: change tracking, validation and <code>save()</code> / <code>destroy()</code>.</li>
+<li><strong>Caching</strong>: in-memory, Web Storage or IndexedDB, with fetch policies such as
+<code>cache-first</code> and <code>cache-and-network</code>.</li>
+<li><strong>Several APIs</strong> in the same application, each with its own configuration.</li>
+</ul>
+<h2>Quick start</h2>
+<h3>1. Install</h3>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h3>2. Register the client</h3>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">// app.config.ts
+import { ApplicationConfig } from &#39;&#64;angular/core&#39;;
+import { provideODataClient } from &#39;angular-odata&#39;;
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideODataClient({
+      config: { serviceRootUrl: &#39;https://services.odata.org/V4/TripPinServiceRW/&#39; },
+    }),
+  ],
+};</code></pre></div><p>Applications that use NgModules can import <code>ODataModule.forRoot({ config })</code> instead.</p>
+<h3>3. Query your service</h3>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { Component, inject, signal } from &#39;&#64;angular/core&#39;;
+import { ODataClient } from &#39;angular-odata&#39;;
+
+interface Person {
+  UserName: string;
+  FirstName: string;
+  LastName: string;
+}
+
+&#64;Component({
+  selector: &#39;app-people&#39;,
+  template: `
+    &#64;for (person of people(); track person.UserName) {
+      &lt;p&gt;{{ person.FirstName }} {{ person.LastName }}&lt;/p&gt;
+    }
+  `,
+})
+export class PeopleComponent {
+  private client = inject(ODataClient);
+  people = signal&lt;Person[]&gt;([]);
+
+  ngOnInit() {
+    this.client
+      .entitySet&lt;Person&gt;(&#39;People&#39;)
+      .query((q) =&gt; {
+        q.orderBy(&#39;LastName&#39;);
+        q.top(10);
+      })
+      .fetch()
+      .subscribe(({ entities }) =&gt; this.people.set(entities ?? []));
+  }
+}</code></pre></div><h3>4. Optional: generate a typed API</h3>
+<p>Instead of writing interfaces and services by hand, generate them from the <code>$metadata</code> of
+your service:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">ng generate angular-odata:apigen --name=TripPin --metadata=&#39;https://services.odata.org/V4/TripPinServiceRW/$metadata&#39;</code></pre></div><b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { PeopleService, TripPinConfig } from &#39;./trip-pin&#39;;
+
+// app.config.ts
+provideODataClient({ config: TripPinConfig });
+
+// Any component or service
+const people = inject(PeopleService);
+people
+  .entity(&#39;russellwhyte&#39;)
+  .fetch()
+  .subscribe(({ entity }) =&gt; console.log(entity));</code></pre></div><h2>A few more examples</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const people = client.entitySet&lt;Person&gt;(&#39;People&#39;);
+
+// Create, update and delete
+people.create({ UserName: &#39;jdoe&#39;, FirstName: &#39;John&#39;, LastName: &#39;Doe&#39; }).subscribe();
+people.entity(&#39;jdoe&#39;).modify({ FirstName: &#39;Johnny&#39; }).subscribe();
+people.entity(&#39;jdoe&#39;).destroy().subscribe();
+
+// Expand related entities: $expand=Trips($select=Name,Budget)
+people
+  .entity(&#39;russellwhyte&#39;)
+  .query((q) =&gt;
+    q.expand(({ e, t }) =&gt;
+      e().field(t.Trips, (f) =&gt; f.select(({ e, t }) =&gt; e().field(t.Name).field(t.Budget))),
+    ),
+  )
+  .fetch()
+  .subscribe(({ entity }) =&gt; console.log(entity?.Trips));
+
+// Follow the server&#39;s next links and get every entity
+people.fetchAll().subscribe(({ entities }) =&gt; console.log(entities.length));</code></pre></div><h2>Documentation</h2>
+<ul>
+<li><strong><a href="https://diegomvh.github.io/angular-odata/docs/api/additional-documentation/introduction.html">Handbook</a></strong>:
+guides for configuration, resources, the query builder, services, models, caching and code
+generation.</li>
+<li><strong><a href="https://diegomvh.github.io/angular-odata/docs/api/index.html">API reference</a></strong>: every
+class and method, generated from the source code.</li>
+<li><strong><a href="https://github.com/diegomvh/AngularODataEntity">Demo application</a></strong>: a complete Angular
+application that uses the TripPin and Northwind sample services.</li>
+</ul>
+<h2>Compatibility</h2>
+<ul>
+<li><strong>Angular</strong>: 20 or later.</li>
+<li><strong>OData</strong>: version 4 is fully supported; versions 3 and 2 have basic support.</li>
+</ul>
+<h2>Contributing</h2>
+<p>Bug reports and pull requests are welcome. Read the
+<a href="https://github.com/diegomvh/angular-odata/blob/main/CONTRIBUTING.md">contributing guide</a>
+to get started.</p>
+<h2>License</h2>
+<p><a href="https://github.com/diegomvh/angular-odata/blob/main/LICENSE">MIT</a></p>
 
 
 

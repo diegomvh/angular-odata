@@ -7,9 +7,9 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-	   <link rel="stylesheet" href="./styles/style.css">
-        <link rel="stylesheet" href="./styles/dark.css">
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
           <script>
@@ -78,7 +78,7 @@
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
-                    <a href="./" class="navbar-brand">angular-odata documentation</a>
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
                     <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
                </div>
         </div>
@@ -93,7 +93,7 @@
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
-               <div class="content package-properties">
+               <div class="content additional-page">
                    <div class="content-data">
 
 
@@ -115,31 +115,41 @@
 
 
 
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">Properties</li>
-    </ol>
-    <ul class="properties-list">
-        <li>
-            <b>Version</b> : 0.159.0</li>
-        <li>
-            <b>Description</b> : Client side OData typescript library for Angular</li>
-        <li>
-            <b>Keywords</b> : client, odata, odata v4, odata v3, odata v2, typescript, api, @angular, angular</li>
-        <li>
-            <b>Homepage</b> : https://github.com/diegomvh/angular-odata</li>
-        <li>
-            <b>Bugs</b> : https://github.com/diegomvh/angular-odata/issues</li>
-        <li>
-            <b>License</b> : MIT</li>
-        <li>
-            <b>Repository</b> : git+https://github.com/diegomvh/angular-odata.git</li>
-        <li>
-            <b>Author</b> : Diego van Haaster</li>
-    </ul>
 
 
 
 
+
+<h1>Writing the handbook</h1>
+<p>This handbook lives in the <code>handbook/</code> folder of the repository. Compodoc adds it to the API
+documentation as additional documentation, so both are published together in <code>docs/api</code>.</p>
+<h2>Files</h2>
+<ul>
+<li><code>handbook/summary.json</code>: the table of contents. Each entry has a <code>title</code>, a <code>file</code> (relative
+to <code>handbook/</code>) and, optionally, <code>children</code> with the same shape.</li>
+<li><code>handbook/*.md</code>: one Markdown file for each chapter.</li>
+</ul>
+<h2>Adding a chapter</h2>
+<ol>
+<li>Create the Markdown file in <code>handbook/</code>. Start it with a level-one heading.</li>
+<li>Add an entry to <code>summary.json</code>, in the position where it should appear in the menu.</li>
+<li>Run <code>npm run docs</code> and open <code>docs/api/index.html</code> to check the result.</li>
+</ol>
+<h2>Links between chapters</h2>
+<p>Compodoc writes each chapter to <code>docs/api/additional-documentation/</code> and builds the file
+name from the <strong>title</strong> in <code>summary.json</code>, not from the Markdown file name: the title is
+converted to lower case and spaces become hyphens. For example, the chapter titled
+&quot;Models and collections&quot; is published as <code>models-and-collections.html</code>.</p>
+<p>Link to other chapters with that name: <code>[Caching](caching.html)</code>. Links to children use the
+parent folder: <code>parent-title/child-title.html</code>.</p>
+<h2>Conventions</h2>
+<ul>
+<li>Write in English, in short sentences and in the present tense.</li>
+<li>Check examples against the source code and the specs. Prefer examples that the specs
+already test.</li>
+<li>Describe usage in the handbook. Describe signatures in the JSDoc of the source code, which
+compodoc publishes in the API reference.</li>
+</ul>
 
                    </div><div class="search-results">
     <div class="has-results">
@@ -165,9 +175,9 @@
           </label>
 
        <script>
-            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'package-properties';
-            var COMPODOC_CURRENT_PAGE_URL = 'properties.html';
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'writing-the-handbook.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 
@@ -184,30 +194,30 @@
                }
           </script>
 
-       <script src="./js/libs/custom-elements.min.js"></script>
-       <script src="./js/libs/lit-html.js"></script>
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
 
-       <script src="./js/menu-wc.js" defer></script>
-       <script nomodule src="./js/menu-wc_es5.js" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
-       <script src="./js/libs/bootstrap-native.js"></script>
+       <script src="../js/libs/bootstrap-native.js"></script>
 
-       <script src="./js/libs/es6-shim.min.js"></script>
-       <script src="./js/libs/EventDispatcher.js"></script>
-       <script src="./js/libs/promise.min.js"></script>
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
 
-       <script src="./js/compodoc.js"></script>
+       <script src="../js/compodoc.js"></script>
 
-       <script src="./js/tabs.js"></script>
-       <script src="./js/menu.js"></script>
-       <script src="./js/libs/clipboard.min.js"></script>
-       <script src="./js/libs/prism.js"></script>
-       <script src="./js/sourceCode.js"></script>
-          <script src="./js/search/search.js"></script>
-          <script src="./js/search/lunr.min.js"></script>
-          <script src="./js/search/search-lunr.js"></script>
-          <script src="./js/search/search_index.js"></script>
-       <script src="./js/lazy-load-graphs.js"></script>
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
 
 
     </body>

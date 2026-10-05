@@ -57,7 +57,19 @@ projects/angular-odata/schematics/
     angular/            # Angular template generators
     metadata/csdl/      # CSDL XML parsing
     files/              # __fileName__ template files
+
+handbook/               # Handbook (Markdown), included in the compodoc site
+  summary.json          # Table of contents read by compodoc --includes
+  *.md                  # One file per chapter
 ```
+
+## Documentation
+
+- `npm run docs` builds the API reference and the handbook into `docs/api`.
+- The handbook is compodoc "additional documentation": add chapters to `handbook/summary.json`.
+  Compodoc names each page after its title (`Query builder` → `query-builder.html`), so
+  link chapters by that name.
+- When you change public behavior, update the matching handbook chapter.
 
 ## Key Scripts
 
@@ -67,5 +79,6 @@ projects/angular-odata/schematics/
 | `npm test` | Run tests |
 | `npm run trippin` | Generate TripPin API client from OData sample |
 | `npm run schematics` | Build schematics separately |
+| `npm run docs` | Generate API reference + handbook with compodoc (`docs/api`) |
 | `npm run release` | Build + docs + publish |
 | `npm run versioning` | Sync version in root + lib package.json |

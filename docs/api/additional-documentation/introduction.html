@@ -7,9 +7,9 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-	   <link rel="stylesheet" href="./styles/style.css">
-        <link rel="stylesheet" href="./styles/dark.css">
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
           <script>
@@ -78,7 +78,7 @@
 
         <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
                <div class="d-flex">
-                    <a href="./" class="navbar-brand">angular-odata documentation</a>
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
                     <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
                </div>
         </div>
@@ -93,7 +93,7 @@
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
-               <div class="content package-properties">
+               <div class="content additional-page">
                    <div class="content-data">
 
 
@@ -115,31 +115,49 @@
 
 
 
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">Properties</li>
-    </ol>
-    <ul class="properties-list">
-        <li>
-            <b>Version</b> : 0.159.0</li>
-        <li>
-            <b>Description</b> : Client side OData typescript library for Angular</li>
-        <li>
-            <b>Keywords</b> : client, odata, odata v4, odata v3, odata v2, typescript, api, @angular, angular</li>
-        <li>
-            <b>Homepage</b> : https://github.com/diegomvh/angular-odata</li>
-        <li>
-            <b>Bugs</b> : https://github.com/diegomvh/angular-odata/issues</li>
-        <li>
-            <b>License</b> : MIT</li>
-        <li>
-            <b>Repository</b> : git+https://github.com/diegomvh/angular-odata.git</li>
-        <li>
-            <b>Author</b> : Diego van Haaster</li>
-    </ul>
 
 
 
 
+
+<h1>Introduction</h1>
+<p><strong>angular-odata</strong> is a client-side OData library for Angular. It offers a fluent, typed API
+for querying, creating, updating and deleting OData resources.</p>
+<p>The library works mainly with OData Version 4 and has basic support for versions 3 and 2.</p>
+<h2>Features</h2>
+<ul>
+<li><strong>Resources</strong>: typed builders for entity sets, entities, navigation properties, functions,
+actions, singletons and <code>$batch</code> requests.</li>
+<li><strong>Query builder</strong>: <code>$select</code>, <code>$expand</code>, <code>$filter</code>, <code>$orderby</code>, <code>$search</code>, <code>$compute</code>,
+<code>$apply</code>, paging and counting, with typed expression factories.</li>
+<li><strong>Services</strong>: injectable entity set and singleton services.</li>
+<li><strong>Models and collections</strong>: rich objects with change tracking, validation and
+persistence.</li>
+<li><strong>Metadata</strong>: schemas can be loaded from <code>$metadata</code> or declared statically.</li>
+<li><strong>Caching</strong>: in-memory, Web Storage and IndexedDB caches with fetch policies.</li>
+<li><strong>Code generation</strong>: the <code>apigen</code> schematic builds a typed API from a <code>$metadata</code>
+document.</li>
+</ul>
+<h2>Installation</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h2>How this handbook is organized</h2>
+<ol>
+<li><a href="getting-started.html">Getting started</a>: register the client and send your first request.</li>
+<li><a href="configuration.html">Configuration</a>: every option of <code>ODataApiConfig</code>.</li>
+<li><a href="resources.html">Resources</a>: the resource API, the core of the library.</li>
+<li><a href="query-builder.html">Query builder</a>: building query options.</li>
+<li><a href="services.html">Services</a>: entity set and singleton services.</li>
+<li><a href="models-and-collections.html">Models and collections</a>: working with <code>ODataModel</code> and <code>ODataCollection</code>.</li>
+<li><a href="caching.html">Caching</a>: caches and fetch policies.</li>
+<li><a href="code-generation.html">Code generation</a>: generating a typed API with the schematics.</li>
+</ol>
+<p>For the signature of a class or method, see the API reference generated from the source
+code, which is part of this site.</p>
+<h2>Demo application</h2>
+<p>Most examples in this handbook come from the
+<a href="https://github.com/diegomvh/AngularODataEntity">AngularODataEntity</a> demo. It uses APIs
+generated from the public <a href="https://services.odata.org/V4/TripPinServiceRW/">TripPin</a> and
+<a href="https://services.odata.org/V4/Northwind/Northwind.svc/">Northwind</a> sample services, and
+shows the library in data tables, dialogs and standalone example scripts.</p>
 
                    </div><div class="search-results">
     <div class="has-results">
@@ -165,9 +183,9 @@
           </label>
 
        <script>
-            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'package-properties';
-            var COMPODOC_CURRENT_PAGE_URL = 'properties.html';
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'introduction.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 
@@ -184,30 +202,30 @@
                }
           </script>
 
-       <script src="./js/libs/custom-elements.min.js"></script>
-       <script src="./js/libs/lit-html.js"></script>
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
 
-       <script src="./js/menu-wc.js" defer></script>
-       <script nomodule src="./js/menu-wc_es5.js" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
-       <script src="./js/libs/bootstrap-native.js"></script>
+       <script src="../js/libs/bootstrap-native.js"></script>
 
-       <script src="./js/libs/es6-shim.min.js"></script>
-       <script src="./js/libs/EventDispatcher.js"></script>
-       <script src="./js/libs/promise.min.js"></script>
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
 
-       <script src="./js/compodoc.js"></script>
+       <script src="../js/compodoc.js"></script>
 
-       <script src="./js/tabs.js"></script>
-       <script src="./js/menu.js"></script>
-       <script src="./js/libs/clipboard.min.js"></script>
-       <script src="./js/libs/prism.js"></script>
-       <script src="./js/sourceCode.js"></script>
-          <script src="./js/search/search.js"></script>
-          <script src="./js/search/lunr.min.js"></script>
-          <script src="./js/search/search-lunr.js"></script>
-          <script src="./js/search/search_index.js"></script>
-       <script src="./js/lazy-load-graphs.js"></script>
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
 
 
     </body>

@@ -1,0 +1,12 @@
+[
+  { "title": "Introduction", "file": "introduction.md" },
+  { "title": "Getting started", "file": "getting-started.md" },
+  { "title": "Configuration", "file": "configuration.md" },
+  { "title": "Resources", "file": "resources.md" },
+  { "title": "Query builder", "file": "query-builder.md" },
+  { "title": "Services", "file": "services.md" },
+  { "title": "Models and collections", "file": "models.md" },
+  { "title": "Caching", "file": "caching.md" },
+  { "title": "Code generation", "file": "code-generation.md" },
+  { "title": "Writing the handbook", "file": "writing-the-handbook.md" }
+]

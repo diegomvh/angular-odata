@@ -1,0 +1,338 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-odata documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">angular-odata documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content additional-page">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1>Models and collections</h1>
+<p><code>ODataModel</code> and <code>ODataCollection</code> are rich wrappers around entities. They keep track of
+changes, validate values with the schema, emit events and know how to save themselves.</p>
+<h2>Declaring a model</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { Model, ModelField, ODataCollection, ODataModel } from &#39;angular-odata&#39;;
+
+&#64;Model()
+export class PersonModel&lt;E extends Person&gt; extends ODataModel&lt;E&gt; {
+  &#64;ModelField()
+  declare UserName: string;
+  &#64;ModelField()
+  declare FirstName: string;
+  &#64;ModelField()
+  declare LastName: string;
+  &#64;ModelField()
+  declare Friends: ODataCollection&lt;Person, PersonModel&lt;Person&gt;&gt;;
+}
+
+export class PersonCollection&lt;E extends Person, M extends PersonModel&lt;E&gt;&gt; extends ODataCollection&lt;
+  E,
+  M
+&gt; {}</code></pre></div><p>Register the classes in the API configuration so that the client uses them for the type:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const config: ODataApiConfig = {
+  serviceRootUrl: &#39;...&#39;,
+  models: { &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;: PersonModel },
+  collections: { &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;: PersonCollection },
+};</code></pre></div><p><code>@ModelField()</code> accepts <code>name</code> (the server property name, when it differs from the class
+property), <code>default</code>, <code>required</code>, <code>concurrency</code> and validation rules (<code>minLength</code>,
+<code>maxLength</code>, <code>min</code>, <code>max</code>, <code>pattern</code>). The
+<a href="code-generation.html">code generator</a> writes these classes for you.</p>
+<h2>Using models</h2>
+<p>These examples come from the demo application, which uses the generated TripPin API:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { firstValueFrom } from &#39;rxjs&#39;;
+
+const peopleService = inject(PeopleService);
+
+// Fetch, change and save
+const scott = peopleService.personModel({ UserName: &#39;scottketchum&#39; });
+await firstValueFrom(scott.fetch());
+scott.Gender = PersonGender.Female;
+scott.hasChanged(); // true
+await firstValueFrom(scott.save()); // PUT or PATCH; POST when the model is new
+
+// Delete
+await firstValueFrom(scott.destroy());</code></pre></div><p>A model has its own query options. Expanded navigation properties become models and
+collections:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const scott = peopleService.personModel({ UserName: &#39;scottketchum&#39; });
+scott.query((q) =&gt; q.expand(({ e, t }) =&gt; e().field(t.Friends)));
+await firstValueFrom(scott.fetch());
+scott.Friends?.forEach((friend) =&gt; console.log(friend.FirstName));</code></pre></div><h3>Models reached through another model</h3>
+<p>A model loaded through a navigation property keeps the path it was loaded from: the friends
+of Scott are addressed through <code>People(&#39;scottketchum&#39;)/Friends</code>. <code>asEntity()</code> runs a callback
+in which the model is bound to its own entity set instead:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const friend = scott.Friends?.first();
+if (friend) {
+  friend.Gender = PersonGender.Female;
+  console.log(friend.resource()?.toString()); // A path through People(&#39;scottketchum&#39;)/Friends
+  await firstValueFrom(friend.asEntity((f) =&gt; f.save())); // Saved through the People entity set
+}</code></pre></div><p>Other useful methods:</p>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isNew()</code></td>
+<td><code>true</code> when the model has no key.</td>
+</tr>
+<tr>
+<td><code>isValid()</code>, <code>validate()</code></td>
+<td>Validate the values against the schema.</td>
+</tr>
+<tr>
+<td><code>toEntity()</code>, <code>toJson()</code></td>
+<td>Convert the model to a plain object.</td>
+</tr>
+<tr>
+<td><code>assign(values)</code>, <code>reset()</code>, <code>clear()</code></td>
+<td>Change or reset the values.</td>
+</tr>
+<tr>
+<td><code>query((q) =&gt; ...)</code></td>
+<td>Change the query options used by <code>fetch()</code>.</td>
+</tr>
+<tr>
+<td><code>fetchNavigationProperty(name, &#39;model&#39; | &#39;collection&#39;)</code></td>
+<td>Fetch a navigation property as a model or collection.</td>
+</tr>
+<tr>
+<td><code>clone()</code></td>
+<td>Copy the model.</td>
+</tr>
+</tbody>
+</table>
+<h2>Using collections</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const airports = inject(AirportsService).collection();
+airports.query((q) =&gt; q.orderBy(&#39;Name&#39;));
+await firstValueFrom(airports.fetch({ withCount: true }));
+console.log(airports.models());
+airports.forEach((airport) =&gt; console.log(airport.Name));</code></pre></div><p>Collections have array-like methods (<code>map</code>, <code>filter</code>, <code>find</code>, <code>reduce</code>, <code>some</code>, <code>every</code>,
+<code>forEach</code>, <code>first</code>, <code>last</code>), change methods (<code>add</code>, <code>remove</code>, <code>create</code>, <code>set</code>, <code>reset</code>), and
+the fetch methods <code>fetch</code>, <code>fetchAll</code>, <code>fetchMany</code> and <code>fetchOne</code>.</p>
+<h2>Generated accessors</h2>
+<p>For each field, the <a href="code-generation.html">code generator</a> adds helper methods to the model
+class. For a field named <code>Friends</code>:</p>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$$Friends()</code></td>
+<td>The resource of the property or navigation property.</td>
+</tr>
+<tr>
+<td><code>$Friends()</code></td>
+<td>The current value, as a model or collection for navigation properties.</td>
+</tr>
+<tr>
+<td><code>Friends$(options?)</code></td>
+<td>An observable that fetches the value from the server.</td>
+</tr>
+<tr>
+<td><code>Friends$$(model)</code></td>
+<td>Sets the reference (<code>$ref</code>) of a navigation property.</td>
+</tr>
+</tbody>
+</table>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">scott.Friends$().subscribe((friends) =&gt; console.log(friends?.models()));</code></pre></div><h2>Events</h2>
+<p>Models and collections emit events through <code>events$</code>:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { ODataModelEventType } from &#39;angular-odata&#39;;
+
+russell.events$.subscribe((event) =&gt; {
+  if (event.type === ODataModelEventType.Change) {
+    console.log(event.value, event.previous);
+  }
+});</code></pre></div><p>The event types are <code>change</code>, <code>reset</code>, <code>update</code>, <code>sort</code>, <code>destroy</code>, <code>add</code>, <code>remove</code>,
+<code>invalid</code>, <code>request</code>, <code>sync</code> and <code>attach</code>.</p>
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'additional-page';
+            var COMPODOC_CURRENT_PAGE_URL = 'models-and-collections.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
