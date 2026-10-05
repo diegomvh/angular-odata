@@ -458,7 +458,7 @@ export class ODataModel<T> {
       );
 
     // Resolve method and resource key
-    if (method === undefined && this.schema().isCompoundKey())
+    if (method === undefined && this.isCompoundKey())
       return throwError(
         () => new Error('save: Composite key require a specific method, use create/update/modify'),
       );
@@ -558,6 +558,10 @@ export class ODataModel<T> {
 
   isNew() {
     return !this._meta.hasKey(this);
+  }
+
+  isCompoundKey() {
+    return this.schema().isCompoundKey();
   }
 
   withResource<R>(resource: any, ctx: (model: this) => R): R {
