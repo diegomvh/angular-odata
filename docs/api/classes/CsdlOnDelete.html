@@ -198,7 +198,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="202" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:202</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="205" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:205</a></div>
                             </td>
                         </tr>
 
@@ -259,7 +259,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="202" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:202</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="205" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:205</a></div>
                         </td>
                     </tr>
 
@@ -293,8 +293,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="208"
-                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:208</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="211"
+                                    class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:211</a></div>
                         </td>
                     </tr>
 
@@ -348,12 +348,15 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: { [key: string]: any } &#x3D; {
       ...super.toJson(),
       Name: this.Name,
-      Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type,
-      Nullable: this.Nullable,
-    } as { [key: string]: any };
+      Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type
+    };
+    if (this.Nullable !&#x3D;&#x3D; undefined) {
+      json[&#x27;Nullable&#x27;] &#x3D; this.Nullable;
+    }
+    return json;
   }
 }
 

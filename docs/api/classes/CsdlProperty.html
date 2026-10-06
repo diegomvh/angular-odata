@@ -247,7 +247,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:47</a></div>
                             </td>
                         </tr>
 
@@ -309,7 +309,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -336,7 +336,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:42</a></div>
                         </td>
                     </tr>
 
@@ -363,7 +363,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -390,7 +390,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -417,7 +417,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:43</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -444,7 +444,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:42</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-structural-property.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -653,7 +653,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:101</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:104</a></code>
 </div>
                         </td>
                     </tr>
@@ -698,7 +698,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:78</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:81</a></code>
 </div>
                         </td>
                     </tr>
@@ -753,12 +753,15 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: { [key: string]: any } &#x3D; {
       ...super.toJson(),
       Name: this.Name,
-      Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type,
-      Nullable: this.Nullable,
-    } as { [key: string]: any };
+      Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type
+    };
+    if (this.Nullable !&#x3D;&#x3D; undefined) {
+      json[&#x27;Nullable&#x27;] &#x3D; this.Nullable;
+    }
+    return json;
   }
 }
 

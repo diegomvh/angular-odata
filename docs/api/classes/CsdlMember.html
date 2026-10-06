@@ -217,7 +217,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:73</a></div>
                             </td>
                         </tr>
 
@@ -278,7 +278,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:77</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:72</a></div>
                         </td>
                     </tr>
 
@@ -305,7 +305,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">projects/angular-odata/src/lib/metadata/csdl/csdl-enum-type.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -381,7 +381,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:93</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:88</a></code>
 </div>
                         </td>
                     </tr>
@@ -456,7 +456,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:85</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:80</a></code>
 </div>
                         </td>
                     </tr>
@@ -542,17 +542,12 @@ export class CsdlEnumType extends CsdlAnnotable {
     return &#x60;${this.schema.Namespace}.${this.Name}&#x60;;
   }
 
-  override toConfig(base?: Partial&lt;ODataEnumTypeConfig&gt;): ODataEnumTypeConfig {
+  override toConfig(base?: Partial&lt;ODataEnumTypeConfig&gt;) {
     return {
       ...super.toConfig(),
       name: this.Name,
-      fields: this.Member.reduce(
-        (acc, m) &#x3D;&gt; ({
-          ...acc,
-          [m.Name]: m.toConfig(),
-        }),
-        {},
-      ),
+      fields: this.Member.reduce((acc, m) &#x3D;&gt; ({ ...acc, [m.Name]: m.toConfig(), }), {} as { [name: string]: ODataEnumTypeFieldConfig }),
+      members: this.Member.reduce((acc, m) &#x3D;&gt; ({ ...acc, [m.Name]: m.Value, [m.Value!]: m.Name }), {}),
       flags: this.IsFlags,
     } as ODataEnumTypeConfig;
   }
@@ -575,12 +570,12 @@ export class CsdlMember extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(base?: Partial&lt;ODataEnumTypeFieldConfig&gt;): ODataEnumTypeFieldConfig {
-    const config: { [key: string]: any } &#x3D; {
+  override toConfig(base?: Partial&lt;ODataEnumTypeFieldConfig&gt;) {
+    return {
       ...super.toConfig(),
+      name: this.Name,
       value: this.Value,
-    };
-    return config as ODataEnumTypeFieldConfig;
+    } as ODataEnumTypeFieldConfig;
   }
 }
 </code></pre>

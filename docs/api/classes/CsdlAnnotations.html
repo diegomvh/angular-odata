@@ -784,29 +784,40 @@ export class CsdlRecord {
 }
 
 export class CsdlPropertyValue {
-  Name: string;
+  Property: string;
+  Bool?: boolean;
   String?: string;
   Date?: Date;
   EnumMember?: CsdlEnumMember[];
+  TextContent?: string;
   constructor({
-    Name,
+    Property,
+    Bool,
     String,
     Date,
     EnumMember,
+    TextContent,
   }: {
-    Name: string;
+    Property: string;
+    Bool?: boolean;
     String?: string;
     Date?: Date;
     EnumMember?: any[];
+    TextContent?: string;
   }) {
-    this.Name &#x3D; Name;
+    this.Property &#x3D; Property;
+    this.Bool &#x3D; Bool;
     this.String &#x3D; String;
     this.Date &#x3D; Date;
     this.EnumMember &#x3D; EnumMember?.map((a) &#x3D;&gt; new CsdlEnumMember(a));
+    this.TextContent &#x3D; TextContent;
   }
 
   toJson() {
-    const json: { [key: string]: any } &#x3D; { Name: this.Name };
+    const json: { [key: string]: any } &#x3D; { Property: this.Property };
+    if (this.Bool !&#x3D;&#x3D; undefined) {
+      json[&#x27;Bool&#x27;] &#x3D; this.Bool;
+    }
     if (this.String !&#x3D;&#x3D; undefined) {
       json[&#x27;String&#x27;] &#x3D; this.String;
     }
@@ -816,11 +827,17 @@ export class CsdlPropertyValue {
     if (Array.isArray(this.EnumMember) &amp;&amp; this.EnumMember.length &gt; 0) {
       json[&#x27;EnumMember&#x27;] &#x3D; this.EnumMember.map((m) &#x3D;&gt; m.toJson());
     }
+    if (this.TextContent !&#x3D;&#x3D; undefined) {
+      json[&#x27;TextContent&#x27;] &#x3D; this.TextContent;
+    }
     return json;
   }
 
   toConfig(): ODataAnnotationValueConfig {
-    const config: ODataAnnotationValueConfig &#x3D; { name: this.Name };
+    const config: ODataAnnotationValueConfig &#x3D; { property: this.Property };
+    if (this.Bool !&#x3D;&#x3D; undefined) {
+      config[&#x27;bool&#x27;] &#x3D; this.Bool;
+    }
     if (this.String !&#x3D;&#x3D; undefined) {
       config[&#x27;string&#x27;] &#x3D; this.String;
     }
@@ -829,6 +846,9 @@ export class CsdlPropertyValue {
     }
     if (Array.isArray(this.EnumMember) &amp;&amp; this.EnumMember.length &gt; 0) {
       config[&#x27;enumMembers&#x27;] &#x3D; this.EnumMember.map((m) &#x3D;&gt; m.toConfig());
+    }
+    if (this.TextContent !&#x3D;&#x3D; undefined) {
+      config[&#x27;textContent&#x27;] &#x3D; this.TextContent;
     }
     return config;
   }

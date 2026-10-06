@@ -682,10 +682,12 @@ export type ODataApiConfig &#x3D; {
 };
 
 export type ODataAnnotationValueConfig &#x3D; {
-  name?: string;
+  property?: string;
+  bool?: boolean;
   string?: string;
   date?: Date;
   enumMembers?: string[];
+  textContent?: string;
 };
 
 export type ODataAnnotationConfig &#x3D; {
@@ -724,6 +726,7 @@ export type ODataEntityContainerConfig &#x3D; {
 };
 
 export type ODataEnumTypeFieldConfig &#x3D; {
+  name: string;
   value: number;
   annotations?: ODataAnnotationConfig[];
 };
@@ -764,9 +767,26 @@ export type ODataStructuredTypeConfig &#x3D; {
 };
 
 export type ODataParameterConfig &#x3D; {
+  name: string;
   type: string;
   nullable?: boolean;
   collection?: boolean;
+  maxLength?: number;
+  precision?: number;
+  scale?: number | &#x27;variable&#x27;;
+  srid?: string;
+  annotations?: ODataAnnotationConfig[];
+};
+
+export type ODataReturnConfig &#x3D; {
+  type: string;
+  collection?: boolean;
+  nullable?: boolean;
+  maxLength?: number;
+  precision?: number;
+  scale?: number | &#x27;variable&#x27;;
+  srid?: string;
+  annotations?: ODataAnnotationConfig[];
 };
 
 export type ODataCallableConfig &#x3D; {
@@ -775,7 +795,7 @@ export type ODataCallableConfig &#x3D; {
   bound?: boolean;
   composable?: boolean;
   parameters?: { [name: string]: ODataParameterConfig };
-  return?: { type: string; collection?: boolean };
+  return?: ODataReturnConfig;
 };
 
 export type ODataEntitySetConfig &#x3D; {

@@ -563,7 +563,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:268</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/CsdlAnnotable.html#source" target="_self" >CsdlAnnotable:279</a></code>
 </div>
                         </td>
                     </tr>
@@ -618,7 +618,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>    <code>{ [key: string]: any; }</code>
 
                         </div>
                 </td>
@@ -635,7 +635,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { ODataCallableConfig, ODataParameterConfig } from &#x27;../../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { ODataCallableConfig, ODataParameterConfig, ODataReturnConfig } from &#x27;../../types&#x27;;
 import { CsdlAnnotable } from &#x27;./csdl-annotation&#x27;;
 import type { CsdlEntityContainer } from &#x27;./csdl-entity-container&#x27;;
 import type { CsdlSchema } from &#x27;./csdl-schema&#x27;;
@@ -739,7 +739,7 @@ export class CsdlFunction extends CsdlCallable {
       entitySetPath: this.EntitySetPath,
       bound: this.IsBound,
       composable: this.IsComposable,
-      parameters: this.Parameter?.map((p) &#x3D;&gt; p.toConfig()),
+      parameters: this.Parameter?.reduce((acc, p) &#x3D;&gt; ({...acc, [p.Name]: p.toConfig()}), {} as { [name: string]: ODataParameterConfig }),
       return: this.ReturnType?.toConfig(),
     } as ODataCallableConfig;
   }
@@ -771,12 +771,12 @@ export class CsdlAction extends CsdlCallable {
     };
   }
 
-  toConfig(base?: Partial&lt;ODataCallableConfig&gt;): ODataCallableConfig {
+  toConfig(base?: Partial&lt;ODataCallableConfig&gt;) {
     return {
       name: this.Name,
       entitySetPath: this.EntitySetPath,
       bound: this.IsBound,
-      parameters: this.Parameter?.map((p) &#x3D;&gt; p.toConfig()),
+      parameters: this.Parameter?.reduce((acc, p) &#x3D;&gt; ({...acc, [p.Name]: p.toConfig()}), {} as { [name: string]: ODataParameterConfig }),
       return: this.ReturnType?.toConfig(),
     } as ODataCallableConfig;
   }
@@ -890,25 +890,52 @@ export class CsdlParameter extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: {[key: string]: any} &#x3D; {
       ...super.toJson(),
       Name: this.Name,
-      Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type,
-      Nullable: this.Nullable,
-      MaxLength: this.MaxLength,
-      Precision: this.Precision,
-      Scale: this.Scale,
-      SRID: this.SRID,
+      Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type
     };
+    if (this.Nullable !&#x3D;&#x3D; undefined) {
+      json[&#x27;Nullable&#x27;] &#x3D; this.Nullable;
+    }
+    if (this.MaxLength !&#x3D;&#x3D; undefined) {
+      json[&#x27;MaxLength&#x27;] &#x3D; this.MaxLength;
+    }
+    if (this.Precision !&#x3D;&#x3D; undefined) {
+      json[&#x27;Precision&#x27;] &#x3D; this.Precision;
+    }
+    if (this.Scale !&#x3D;&#x3D; undefined) {
+      json[&#x27;Scale&#x27;] &#x3D; this.Scale;
+    }
+    if (this.SRID !&#x3D;&#x3D; undefined) {
+      json[&#x27;SRID&#x27;] &#x3D; this.SRID;
+    }
+    return json;
   }
 
-  override toConfig(): ODataParameterConfig {
-    return {
+  override toConfig() {
+    const config &#x3D; {
       ...super.toConfig(),
+      name: this.Name,
       type: this.Type,
-      nullable: this.Nullable,
-      collection: false,
-    };
+      collection: this.Collection,
+    } as ODataParameterConfig;
+    if (this.Nullable !&#x3D;&#x3D; undefined) {
+      config.nullable &#x3D; this.Nullable;
+    }
+    if (this.MaxLength !&#x3D;&#x3D; undefined) {
+      config.maxLength &#x3D; this.MaxLength;
+    }
+    if (this.Precision !&#x3D;&#x3D; undefined) {
+      config.precision &#x3D; this.Precision;
+    }
+    if (this.Scale !&#x3D;&#x3D; undefined) {
+      config.scale &#x3D; this.Scale;
+    }
+    if (this.SRID !&#x3D;&#x3D; undefined) {
+      config.srid &#x3D; this.SRID;
+    }
+    return config;
   }
 }
 
@@ -946,21 +973,48 @@ export class CsdlReturnType {
   }
 
   toJson() {
-    return {
-      Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type,
-      Nullable: this.Nullable,
-      MaxLength: this.MaxLength,
-      Precision: this.Precision,
-      Scale: this.Scale,
-      SRID: this.SRID,
+    const json: {[key: string]: any} &#x3D; {
+      Type: this.Collection ? &#x60;Collection(${this.Type})&#x60; : this.Type
     };
+    if (this.Nullable !&#x3D;&#x3D; undefined) {
+      json[&#x27;Nullable&#x27;] &#x3D; this.Nullable;
+    }
+    if (this.MaxLength !&#x3D;&#x3D; undefined) {
+      json[&#x27;MaxLength&#x27;] &#x3D; this.MaxLength;
+    }
+    if (this.Precision !&#x3D;&#x3D; undefined) {
+      json[&#x27;Precision&#x27;] &#x3D; this.Precision;
+    }
+    if (this.Scale !&#x3D;&#x3D; undefined) {
+      json[&#x27;Scale&#x27;] &#x3D; this.Scale;
+    }
+    if (this.SRID !&#x3D;&#x3D; undefined) {
+      json[&#x27;SRID&#x27;] &#x3D; this.SRID;
+    }
+    return json;
   }
 
-  toConfig(): { type: string; collection?: boolean | undefined } | undefined {
-    return {
+  toConfig() {
+    const config &#x3D; {
       type: this.Type,
-      collection: false,
-    };
+      collection: this.Collection
+    } as ODataReturnConfig;
+    if (this.Nullable !&#x3D;&#x3D; undefined) {
+      config.nullable &#x3D; this.Nullable;
+    }
+    if (this.MaxLength !&#x3D;&#x3D; undefined) {
+      config.maxLength &#x3D; this.MaxLength;
+    }
+    if (this.Precision !&#x3D;&#x3D; undefined) {
+      config.precision &#x3D; this.Precision;
+    }
+    if (this.Scale !&#x3D;&#x3D; undefined) {
+      config.scale &#x3D; this.Scale;
+    }
+    if (this.SRID !&#x3D;&#x3D; undefined) {
+      config.srid &#x3D; this.SRID;
+    }
+    return config;
   }
 }
 </code></pre>
