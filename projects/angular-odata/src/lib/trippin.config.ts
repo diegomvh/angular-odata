@@ -23,9 +23,9 @@ export const FlagEnumsConfig = {
   flags: true,
   members: FlagEnums,
   fields: {
-    Flag1: { value: FlagEnums.Flag1 },
-    Flag2: { value: FlagEnums.Flag2 },
-    Flag4: { value: FlagEnums.Flag4 },
+    Flag1: { name: 'Flag1', value: FlagEnums.Flag1 },
+    Flag2: { name: 'Flag2', value: FlagEnums.Flag2 },
+    Flag4: { name: 'Flag4', value: FlagEnums.Flag4 },
   },
 } as ODataEnumTypeConfig;
 //#endregion

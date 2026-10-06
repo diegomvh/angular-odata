@@ -107,7 +107,7 @@ describe('ODataSettings', () => {
               {
                 name: 'Gender',
                 members: { Male: 0, Female: 1 },
-                fields: { Male: { value: 0 }, Female: { value: 1 } },
+                fields: { Male: { name: 'Male', value: 0 }, Female: { name: 'Female', value: 1 } },
                 flags: false,
               },
             ],

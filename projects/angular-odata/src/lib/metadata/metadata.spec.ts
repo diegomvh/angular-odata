@@ -58,9 +58,9 @@ describe('ODataMetadata', () => {
 
     const gender = schema.enums?.find((e) => e.name === 'PersonGender') as ODataEnumTypeConfig;
     expect(gender.fields).toEqual({
-      Male: { value: 0 },
-      Female: { value: 1 },
-      Unknown: { value: 2 },
+      Male: { name: "Male", value: 0 },
+      Female: { name: "Female", value: 1 },
+      Unknown: { name: "Unknown", value: 2 },
     });
 
     const getFriendsTrips = schema.callables?.find(
@@ -70,7 +70,8 @@ describe('ODataMetadata', () => {
     expect(getFriendsTrips.entitySetPath).toEqual('person/Friends/Trips');
     expect(getFriendsTrips.return).toEqual({
       type: `${TRIPPIN_NAMESPACE}.Trip`,
-      collection: false,
+      collection: true,
+      nullable: false,
     });
 
     const container = schema.containers?.[0] as ODataEntityContainerConfig;
@@ -287,12 +288,23 @@ describe('ODataMetadata', () => {
     ) as ODataCallableConfig;
     expect(getNearestAirport.bound).toBeFalsy();
     expect(getNearestAirport.composable).toBeTruthy();
-    expect(getNearestAirport.parameters).toEqual([
-      { type: 'Edm.Double', nullable: false, collection: false },
-      { type: 'Edm.Double', nullable: false, collection: false },
-    ]);
+    expect(getNearestAirport.parameters).toEqual({
+      "lat": {
+        "name": "lat",
+        "collection": false,
+        "nullable": false,
+        "type": "Edm.Double",
+      },
+      "lon": {
+        "name": "lon",
+        "collection": false,
+        "nullable": false,
+        "type": "Edm.Double",
+      },
+    });
     expect(getNearestAirport.return).toEqual({
       type: `${TRIPPIN_NAMESPACE}.Airport`,
+      nullable: false,
       collection: false,
     });
     const resetDataSource = schema.callables?.find(
@@ -304,11 +316,26 @@ describe('ODataMetadata', () => {
     const shareTrip = schema.callables?.find((c) => c.name === 'ShareTrip') as ODataCallableConfig;
     expect(shareTrip.bound).toBeTruthy();
     expect(shareTrip.composable).toBeUndefined();
-    expect(shareTrip.parameters).toEqual([
-      { type: `${TRIPPIN_NAMESPACE}.Person`, nullable: false, collection: false },
-      { type: 'Edm.String', nullable: false, collection: false },
-      { type: 'Edm.Int32', nullable: false, collection: false },
-    ]);
+    expect(shareTrip.parameters).toEqual({
+      "person": {
+        "collection": false,
+        "name": "person",
+        "nullable": false,
+        "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
+      },
+      "tripId": {
+        "collection": false,
+        "name": "tripId",
+        "nullable": false,
+        "type": "Edm.Int32",
+      },
+      "userName": {
+        "collection": false,
+        "name": "userName",
+        "nullable": false,
+        "type": "Edm.String",
+      },
+    });
   });
 
   it('should create config from json round trip', () => {

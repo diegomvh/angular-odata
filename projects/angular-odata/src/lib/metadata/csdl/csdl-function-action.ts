@@ -253,31 +253,53 @@ export class CsdlParameter extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: {[key: string]: any} = {
       ...super.toJson(),
       Name: this.Name,
-      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
-      Nullable: this.Nullable,
-      MaxLength: this.MaxLength,
-      Precision: this.Precision,
-      Scale: this.Scale,
-      SRID: this.SRID,
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type
     };
+    if (this.Nullable !== undefined) {
+      json['Nullable'] = this.Nullable;
+    }
+    if (this.MaxLength !== undefined) {
+      json['MaxLength'] = this.MaxLength;
+    }
+    if (this.Precision !== undefined) {
+      json['Precision'] = this.Precision;
+    }
+    if (this.Scale !== undefined) {
+      json['Scale'] = this.Scale;
+    }
+    if (this.SRID !== undefined) {
+      json['SRID'] = this.SRID;
+    }
+    return json;
   }
 
   override toConfig() {
-    return {
+    const config = {
       ...super.toConfig(),
       name: this.Name,
       type: this.Type,
-      nullable: this.Nullable,
       collection: this.Collection,
-      maxLength: this.MaxLength,
-      precision: this.Precision,
-      scale: this.Scale,
-      srid: this.SRID,
     } as ODataParameterConfig;
-  };
+    if (this.Nullable !== undefined) {
+      config.nullable = this.Nullable;
+    }
+    if (this.MaxLength !== undefined) {
+      config.maxLength = this.MaxLength;
+    }
+    if (this.Precision !== undefined) {
+      config.precision = this.Precision;
+    }
+    if (this.Scale !== undefined) {
+      config.scale = this.Scale;
+    }
+    if (this.SRID !== undefined) {
+      config.srid = this.SRID;
+    }
+    return config;
+  }
 }
 
 export class CsdlReturnType {
@@ -314,25 +336,47 @@ export class CsdlReturnType {
   }
 
   toJson() {
-    return {
-      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
-      Nullable: this.Nullable,
-      MaxLength: this.MaxLength,
-      Precision: this.Precision,
-      Scale: this.Scale,
-      SRID: this.SRID,
+    const json: {[key: string]: any} = {
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type
     };
+    if (this.Nullable !== undefined) {
+      json['Nullable'] = this.Nullable;
+    }
+    if (this.MaxLength !== undefined) {
+      json['MaxLength'] = this.MaxLength;
+    }
+    if (this.Precision !== undefined) {
+      json['Precision'] = this.Precision;
+    }
+    if (this.Scale !== undefined) {
+      json['Scale'] = this.Scale;
+    }
+    if (this.SRID !== undefined) {
+      json['SRID'] = this.SRID;
+    }
+    return json;
   }
 
   toConfig() {
-    return {
+    const config = {
       type: this.Type,
-      collection: this.Collection,
-      nullable: this.Nullable,
-      maxLength: this.MaxLength,
-      precision: this.Precision,
-      scale: this.Scale,
-      srid: this.SRID,
+      collection: this.Collection
     } as ODataReturnConfig;
+    if (this.Nullable !== undefined) {
+      config.nullable = this.Nullable;
+    }
+    if (this.MaxLength !== undefined) {
+      config.maxLength = this.MaxLength;
+    }
+    if (this.Precision !== undefined) {
+      config.precision = this.Precision;
+    }
+    if (this.Scale !== undefined) {
+      config.scale = this.Scale;
+    }
+    if (this.SRID !== undefined) {
+      config.srid = this.SRID;
+    }
+    return config;
   }
 }
