@@ -36,7 +36,8 @@
     "versioning": "npm version 0.162.0 --allow-same-version && cd projects/angular-odata && npm version 0.162.0 --allow-same-version && cd ../..",
     "publish": "npm run build && npm run schematics && npm publish dist/angular-odata/",
     "release": "cp README.md projects/angular-odata/README.md && npm run docs && npm run publish",
-    "trippin": "ng generate angular-odata:apigen --name=TripPin --metadata='https://services.odata.org/V4/TripPinServiceRW/$metadata'",
+    "trippin:apigen": "ng generate angular-odata:apigen --name=TripPin --metadata='https://services.odata.org/V4/TripPinServiceRW/$metadata'",
+    "trippin:metadata": "ng generate angular-odata:metadata --url='https://services.odata.org/V4/TripPinServiceRW/$metadata'",
     "prettier": "prettier --write \"projects/angular-odata/**/*.ts\""
   },
   "prettier": {

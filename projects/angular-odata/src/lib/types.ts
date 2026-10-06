@@ -249,10 +249,12 @@ export type ODataApiConfig = {
 };
 
 export type ODataAnnotationValueConfig = {
-  name?: string;
+  property?: string;
+  bool?: boolean;
   string?: string;
   date?: Date;
   enumMembers?: string[];
+  textContent?: string;
 };
 
 export type ODataAnnotationConfig = {

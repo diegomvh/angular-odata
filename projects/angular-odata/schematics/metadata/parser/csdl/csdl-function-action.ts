@@ -238,16 +238,27 @@ export class CsdlParameter extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: {[key: string]: any} = {
       ...super.toJson(),
       Name: this.Name,
-      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
-      Nullable: this.Nullable,
-      MaxLength: this.MaxLength,
-      Precision: this.Precision,
-      Scale: this.Scale,
-      SRID: this.SRID,
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type
     };
+    if (this.Nullable !== undefined) {
+      json['Nullable'] = this.Nullable;
+    }
+    if (this.MaxLength !== undefined) {
+      json['MaxLength'] = this.MaxLength;
+    }
+    if (this.Precision !== undefined) {
+      json['Precision'] = this.Precision;
+    }
+    if (this.Scale !== undefined) {
+      json['Scale'] = this.Scale;
+    }
+    if (this.SRID !== undefined) {
+      json['SRID'] = this.SRID;
+    }
+    return json;
   }
 }
 
@@ -285,13 +296,24 @@ export class CsdlReturnType {
   }
 
   toJson() {
-    return {
-      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
-      Nullable: this.Nullable,
-      MaxLength: this.MaxLength,
-      Precision: this.Precision,
-      Scale: this.Scale,
-      SRID: this.SRID,
+    const json: {[key: string]: any} = {
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type
     };
+    if (this.Nullable !== undefined) {
+      json['Nullable'] = this.Nullable;
+    }
+    if (this.MaxLength !== undefined) {
+      json['MaxLength'] = this.MaxLength;
+    }
+    if (this.Precision !== undefined) {
+      json['Precision'] = this.Precision;
+    }
+    if (this.Scale !== undefined) {
+      json['Scale'] = this.Scale;
+    }
+    if (this.SRID !== undefined) {
+      json['SRID'] = this.SRID;
+    }
+    return json;
   }
 }

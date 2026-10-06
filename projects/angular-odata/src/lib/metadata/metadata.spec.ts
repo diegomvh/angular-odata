@@ -161,8 +161,15 @@ describe('ODataMetadata', () => {
       string: 'People',
     });
     expect(people.annotations?.[2]?.values).toEqual([
-      { enumMembers: ['Org.OData.Capabilities.V1.NavigationType/None'] },
-      {},
+      { 
+        enumMembers: ['Org.OData.Capabilities.V1.NavigationType/None'],
+        property: "Navigability",
+        textContent: "Org.OData.Capabilities.V1.NavigationType/None",
+       },
+      {
+        property: "RestrictedProperties",
+        textContent: "Org.OData.Capabilities.V1.NavigationType/Recursive",
+      },
     ]);
   });
 

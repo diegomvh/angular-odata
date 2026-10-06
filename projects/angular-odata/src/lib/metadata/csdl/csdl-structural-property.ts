@@ -26,12 +26,15 @@ export abstract class CsdlStructuralProperty extends CsdlAnnotable {
   }
 
   override toJson() {
-    return {
+    const json: { [key: string]: any } = {
       ...super.toJson(),
       Name: this.Name,
-      Type: this.Collection ? `Collection(${this.Type})` : this.Type,
-      Nullable: this.Nullable,
-    } as { [key: string]: any };
+      Type: this.Collection ? `Collection(${this.Type})` : this.Type
+    };
+    if (this.Nullable !== undefined) {
+      json['Nullable'] = this.Nullable;
+    }
+    return json;
   }
 }
 

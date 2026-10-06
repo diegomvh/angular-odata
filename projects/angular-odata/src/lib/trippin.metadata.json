@@ -15,22 +15,19 @@
           "EntitySet": [
             {
               "Annotation": [
-                {
-                  "Term": "Org.OData.Core.V1.ResourcePath",
-                  "String": "Photos"
-                },
+                { "Term": "Org.OData.Core.V1.ResourcePath", "String": "Photos" },
                 {
                   "Term": "Org.OData.Capabilities.V1.SearchRestrictions",
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
+                        { "Property": "Searchable", "TextContent": "" },
                         {
+                          "Property": "UnsupportedExpressions",
                           "EnumMember": [
-                            {
-                              "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none"
-                            }
-                          ]
+                            { "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none" }
+                          ],
+                          "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none"
                         }
                       ]
                     }
@@ -41,8 +38,8 @@
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
-                        {}
+                        { "Property": "Insertable", "TextContent": "" },
+                        { "Property": "NonInsertableNavigationProperties", "TextContent": "" }
                       ]
                     }
                   ]
@@ -55,33 +52,25 @@
               "Annotation": [
                 {
                   "Term": "Org.OData.Core.V1.OptimisticConcurrency",
-                  "Collection": [
-                    {
-                      "PropertyPath": [
-                        {
-                          "TextContent": "Concurrency"
-                        }
-                      ]
-                    }
-                  ]
+                  "Collection": [{ "PropertyPath": [{ "TextContent": "Concurrency" }] }]
                 },
-                {
-                  "Term": "Org.OData.Core.V1.ResourcePath",
-                  "String": "People"
-                },
+                { "Term": "Org.OData.Core.V1.ResourcePath", "String": "People" },
                 {
                   "Term": "Org.OData.Capabilities.V1.NavigationRestrictions",
                   "Record": [
                     {
                       "PropertyValue": [
                         {
+                          "Property": "Navigability",
                           "EnumMember": [
-                            {
-                              "TextContent": "Org.OData.Capabilities.V1.NavigationType/None"
-                            }
-                          ]
+                            { "TextContent": "Org.OData.Capabilities.V1.NavigationType/None" }
+                          ],
+                          "TextContent": "Org.OData.Capabilities.V1.NavigationType/None"
                         },
-                        {}
+                        {
+                          "Property": "RestrictedProperties",
+                          "TextContent": "Org.OData.Capabilities.V1.NavigationType/Recursive"
+                        }
                       ]
                     }
                   ]
@@ -91,13 +80,13 @@
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
+                        { "Property": "Searchable", "TextContent": "" },
                         {
+                          "Property": "UnsupportedExpressions",
                           "EnumMember": [
-                            {
-                              "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none"
-                            }
-                          ]
+                            { "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none" }
+                          ],
+                          "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none"
                         }
                       ]
                     }
@@ -108,8 +97,11 @@
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
-                        {}
+                        { "Property": "Insertable", "TextContent": "" },
+                        {
+                          "Property": "NonInsertableNavigationProperties",
+                          "TextContent": "TripsFriends"
+                        }
                       ]
                     }
                   ]
@@ -118,10 +110,7 @@
               "Name": "People",
               "EntityType": "Microsoft.OData.SampleService.Models.TripPin.Person",
               "NavigationPropertyBinding": [
-                {
-                  "Path": "Friends",
-                  "Target": "People"
-                },
+                { "Path": "Friends", "Target": "People" },
                 {
                   "Path": "Microsoft.OData.SampleService.Models.TripPin.Flight/Airline",
                   "Target": "Airlines"
@@ -134,10 +123,7 @@
                   "Path": "Microsoft.OData.SampleService.Models.TripPin.Flight/To",
                   "Target": "Airports"
                 },
-                {
-                  "Path": "Photo",
-                  "Target": "Photos"
-                },
+                { "Path": "Photo", "Target": "Photos" },
                 {
                   "Path": "Microsoft.OData.SampleService.Models.TripPin.Trip/Photos",
                   "Target": "Photos"
@@ -146,22 +132,19 @@
             },
             {
               "Annotation": [
-                {
-                  "Term": "Org.OData.Core.V1.ResourcePath",
-                  "String": "Airlines"
-                },
+                { "Term": "Org.OData.Core.V1.ResourcePath", "String": "Airlines" },
                 {
                   "Term": "Org.OData.Capabilities.V1.SearchRestrictions",
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
+                        { "Property": "Searchable", "TextContent": "" },
                         {
+                          "Property": "UnsupportedExpressions",
                           "EnumMember": [
-                            {
-                              "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none"
-                            }
-                          ]
+                            { "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none" }
+                          ],
+                          "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none"
                         }
                       ]
                     }
@@ -172,8 +155,8 @@
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
-                        {}
+                        { "Property": "Insertable", "TextContent": "" },
+                        { "Property": "NonInsertableNavigationProperties", "TextContent": "" }
                       ]
                     }
                   ]
@@ -184,22 +167,19 @@
             },
             {
               "Annotation": [
-                {
-                  "Term": "Org.OData.Core.V1.ResourcePath",
-                  "String": "Airports"
-                },
+                { "Term": "Org.OData.Core.V1.ResourcePath", "String": "Airports" },
                 {
                   "Term": "Org.OData.Capabilities.V1.SearchRestrictions",
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
+                        { "Property": "Searchable", "TextContent": "" },
                         {
+                          "Property": "UnsupportedExpressions",
                           "EnumMember": [
-                            {
-                              "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none"
-                            }
-                          ]
+                            { "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none" }
+                          ],
+                          "TextContent": "Org.OData.Capabilities.V1.SearchExpressions/none"
                         }
                       ]
                     }
@@ -210,8 +190,8 @@
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
-                        {}
+                        { "Property": "Insertable", "TextContent": "" },
+                        { "Property": "NonInsertableNavigationProperties", "TextContent": "" }
                       ]
                     }
                   ]
@@ -221,8 +201,8 @@
                   "Record": [
                     {
                       "PropertyValue": [
-                        {},
-                        {}
+                        { "Property": "Deletable", "TextContent": "" },
+                        { "Property": "NonDeletableNavigationProperties", "TextContent": "" }
                       ]
                     }
                   ]
@@ -234,12 +214,7 @@
           ],
           "Singleton": [
             {
-              "Annotation": [
-                {
-                  "Term": "Org.OData.Core.V1.ResourcePath",
-                  "String": "Me"
-                }
-              ],
+              "Annotation": [{ "Term": "Org.OData.Core.V1.ResourcePath", "String": "Me" }],
               "Name": "Me",
               "Type": "Microsoft.OData.SampleService.Models.TripPin.Person"
             }
@@ -264,15 +239,7 @@
           "Annotation": [
             {
               "Term": "Org.OData.Core.V1.AcceptableMediaTypes",
-              "Collection": [
-                {
-                  "String": [
-                    {
-                      "TextContent": "image/jpeg"
-                    }
-                  ]
-                }
-              ]
+              "Collection": [{ "String": [{ "TextContent": "image/jpeg" }] }]
             }
           ],
           "Name": "Photo",
@@ -281,29 +248,16 @@
               "Annotation": [
                 {
                   "Term": "Org.OData.Core.V1.Permissions",
-                  "EnumMember": [
-                    {
-                      "TextContent": "Org.OData.Core.V1.Permission/Read"
-                    }
-                  ]
+                  "EnumMember": [{ "TextContent": "Org.OData.Core.V1.Permission/Read" }]
                 }
               ],
               "Name": "Id",
               "Type": "Edm.Int64",
               "Nullable": false
             },
-            {
-              "Name": "Name",
-              "Type": "Edm.String"
-            }
+            { "Name": "Name", "Type": "Edm.String" }
           ],
-          "Key": {
-            "PropertyRef": [
-              {
-                "Name": "Id"
-              }
-            ]
-          },
+          "Key": { "PropertyRef": [{ "Name": "Id" }] },
           "HasStream": true
         },
         {
@@ -313,31 +267,16 @@
               "Annotation": [
                 {
                   "Term": "Org.OData.Core.V1.Permissions",
-                  "EnumMember": [
-                    {
-                      "TextContent": "Org.OData.Core.V1.Permission/Read"
-                    }
-                  ]
+                  "EnumMember": [{ "TextContent": "Org.OData.Core.V1.Permission/Read" }]
                 }
               ],
               "Name": "UserName",
               "Type": "Edm.String",
               "Nullable": false
             },
-            {
-              "Name": "FirstName",
-              "Type": "Edm.String",
-              "Nullable": false
-            },
-            {
-              "Name": "LastName",
-              "Type": "Edm.String",
-              "Nullable": false
-            },
-            {
-              "Name": "Emails",
-              "Type": "Collection(Edm.String)"
-            },
+            { "Name": "FirstName", "Type": "Edm.String", "Nullable": false },
+            { "Name": "LastName", "Type": "Edm.String", "Nullable": false },
+            { "Name": "Emails", "Type": "Collection(Edm.String)" },
             {
               "Name": "AddressInfo",
               "Type": "Collection(Microsoft.OData.SampleService.Models.TripPin.Location)"
@@ -347,12 +286,7 @@
               "Type": "Microsoft.OData.SampleService.Models.TripPin.PersonGender"
             },
             {
-              "Annotation": [
-                {
-                  "Term": "Org.OData.Core.V1.Computed",
-                  "Bool": "true"
-                }
-              ],
+              "Annotation": [{ "Term": "Org.OData.Core.V1.Computed", "Bool": true }],
               "Name": "Concurrency",
               "Type": "Edm.Int64",
               "Nullable": false
@@ -368,19 +302,10 @@
               "Type": "Collection(Microsoft.OData.SampleService.Models.TripPin.Trip)",
               "ContainsTarget": true
             },
-            {
-              "Name": "Photo",
-              "Type": "Microsoft.OData.SampleService.Models.TripPin.Photo"
-            }
+            { "Name": "Photo", "Type": "Microsoft.OData.SampleService.Models.TripPin.Photo" }
           ],
           "OpenType": true,
-          "Key": {
-            "PropertyRef": [
-              {
-                "Name": "UserName"
-              }
-            ]
-          }
+          "Key": { "PropertyRef": [{ "Name": "UserName" }] }
         },
         {
           "Name": "Airline",
@@ -389,30 +314,16 @@
               "Annotation": [
                 {
                   "Term": "Org.OData.Core.V1.Permissions",
-                  "EnumMember": [
-                    {
-                      "TextContent": "Org.OData.Core.V1.Permission/Read"
-                    }
-                  ]
+                  "EnumMember": [{ "TextContent": "Org.OData.Core.V1.Permission/Read" }]
                 }
               ],
               "Name": "AirlineCode",
               "Type": "Edm.String",
               "Nullable": false
             },
-            {
-              "Name": "Name",
-              "Type": "Edm.String",
-              "Nullable": false
-            }
+            { "Name": "Name", "Type": "Edm.String", "Nullable": false }
           ],
-          "Key": {
-            "PropertyRef": [
-              {
-                "Name": "AirlineCode"
-              }
-            ]
-          }
+          "Key": { "PropertyRef": [{ "Name": "AirlineCode" }] }
         },
         {
           "Name": "Airport",
@@ -421,29 +332,16 @@
               "Annotation": [
                 {
                   "Term": "Org.OData.Core.V1.Permissions",
-                  "EnumMember": [
-                    {
-                      "TextContent": "Org.OData.Core.V1.Permission/Read"
-                    }
-                  ]
+                  "EnumMember": [{ "TextContent": "Org.OData.Core.V1.Permission/Read" }]
                 }
               ],
               "Name": "IcaoCode",
               "Type": "Edm.String",
               "Nullable": false
             },
+            { "Name": "Name", "Type": "Edm.String", "Nullable": false },
             {
-              "Name": "Name",
-              "Type": "Edm.String",
-              "Nullable": false
-            },
-            {
-              "Annotation": [
-                {
-                  "Term": "Org.OData.Core.V1.Immutable",
-                  "Bool": "true"
-                }
-              ],
+              "Annotation": [{ "Term": "Org.OData.Core.V1.Immutable", "Bool": true }],
               "Name": "IataCode",
               "Type": "Edm.String",
               "Nullable": false
@@ -454,13 +352,7 @@
               "Nullable": false
             }
           ],
-          "Key": {
-            "PropertyRef": [
-              {
-                "Name": "IcaoCode"
-              }
-            ]
-          }
+          "Key": { "PropertyRef": [{ "Name": "IcaoCode" }] }
         },
         {
           "Name": "PlanItem",
@@ -469,61 +361,28 @@
               "Annotation": [
                 {
                   "Term": "Org.OData.Core.V1.Permissions",
-                  "EnumMember": [
-                    {
-                      "TextContent": "Org.OData.Core.V1.Permission/Read"
-                    }
-                  ]
+                  "EnumMember": [{ "TextContent": "Org.OData.Core.V1.Permission/Read" }]
                 }
               ],
               "Name": "PlanItemId",
               "Type": "Edm.Int32",
               "Nullable": false
             },
-            {
-              "Name": "ConfirmationCode",
-              "Type": "Edm.String"
-            },
-            {
-              "Name": "StartsAt",
-              "Type": "Edm.DateTimeOffset"
-            },
-            {
-              "Name": "EndsAt",
-              "Type": "Edm.DateTimeOffset"
-            },
-            {
-              "Name": "Duration",
-              "Type": "Edm.Duration"
-            }
+            { "Name": "ConfirmationCode", "Type": "Edm.String" },
+            { "Name": "StartsAt", "Type": "Edm.DateTimeOffset" },
+            { "Name": "EndsAt", "Type": "Edm.DateTimeOffset" },
+            { "Name": "Duration", "Type": "Edm.Duration" }
           ],
-          "Key": {
-            "PropertyRef": [
-              {
-                "Name": "PlanItemId"
-              }
-            ]
-          }
+          "Key": { "PropertyRef": [{ "Name": "PlanItemId" }] }
         },
         {
           "Name": "PublicTransportation",
-          "Property": [
-            {
-              "Name": "SeatNumber",
-              "Type": "Edm.String"
-            }
-          ],
+          "Property": [{ "Name": "SeatNumber", "Type": "Edm.String" }],
           "BaseType": "Microsoft.OData.SampleService.Models.TripPin.PlanItem"
         },
         {
           "Name": "Flight",
-          "Property": [
-            {
-              "Name": "FlightNumber",
-              "Type": "Edm.String",
-              "Nullable": false
-            }
-          ],
+          "Property": [{ "Name": "FlightNumber", "Type": "Edm.String", "Nullable": false }],
           "NavigationProperty": [
             {
               "Name": "From",
@@ -546,10 +405,7 @@
         {
           "Name": "Event",
           "Property": [
-            {
-              "Name": "Description",
-              "Type": "Edm.String"
-            },
+            { "Name": "Description", "Type": "Edm.String" },
             {
               "Name": "OccursAt",
               "Type": "Microsoft.OData.SampleService.Models.TripPin.EventLocation",
@@ -566,60 +422,28 @@
               "Annotation": [
                 {
                   "Term": "Org.OData.Core.V1.Permissions",
-                  "EnumMember": [
-                    {
-                      "TextContent": "Org.OData.Core.V1.Permission/Read"
-                    }
-                  ]
+                  "EnumMember": [{ "TextContent": "Org.OData.Core.V1.Permission/Read" }]
                 }
               ],
               "Name": "TripId",
               "Type": "Edm.Int32",
               "Nullable": false
             },
-            {
-              "Name": "ShareId",
-              "Type": "Edm.Guid"
-            },
-            {
-              "Name": "Description",
-              "Type": "Edm.String"
-            },
-            {
-              "Name": "Name",
-              "Type": "Edm.String",
-              "Nullable": false
-            },
+            { "Name": "ShareId", "Type": "Edm.Guid" },
+            { "Name": "Description", "Type": "Edm.String" },
+            { "Name": "Name", "Type": "Edm.String", "Nullable": false },
             {
               "Annotation": [
-                {
-                  "Term": "Org.OData.Measures.V1.ISOCurrency",
-                  "String": "USD"
-                },
-                {
-                  "Term": "Org.OData.Measures.V1.Scale",
-                  "Int": "2"
-                }
+                { "Term": "Org.OData.Measures.V1.ISOCurrency", "String": "USD" },
+                { "Term": "Org.OData.Measures.V1.Scale", "Int": 2 }
               ],
               "Name": "Budget",
               "Type": "Edm.Single",
               "Nullable": false
             },
-            {
-              "Name": "StartsAt",
-              "Type": "Edm.DateTimeOffset",
-              "Nullable": false
-            },
-            {
-              "Name": "EndsAt",
-              "Type": "Edm.DateTimeOffset",
-              "Nullable": false
-            },
-            {
-              "Name": "Tags",
-              "Type": "Collection(Edm.String)",
-              "Nullable": false
-            }
+            { "Name": "StartsAt", "Type": "Edm.DateTimeOffset", "Nullable": false },
+            { "Name": "EndsAt", "Type": "Edm.DateTimeOffset", "Nullable": false },
+            { "Name": "Tags", "Type": "Collection(Edm.String)", "Nullable": false }
           ],
           "NavigationProperty": [
             {
@@ -632,44 +456,22 @@
               "ContainsTarget": true
             }
           ],
-          "Key": {
-            "PropertyRef": [
-              {
-                "Name": "TripId"
-              }
-            ]
-          }
+          "Key": { "PropertyRef": [{ "Name": "TripId" }] }
         }
       ],
       "ComplexType": [
         {
           "Name": "City",
           "Property": [
-            {
-              "Name": "CountryRegion",
-              "Type": "Edm.String",
-              "Nullable": false
-            },
-            {
-              "Name": "Name",
-              "Type": "Edm.String",
-              "Nullable": false
-            },
-            {
-              "Name": "Region",
-              "Type": "Edm.String",
-              "Nullable": false
-            }
+            { "Name": "CountryRegion", "Type": "Edm.String", "Nullable": false },
+            { "Name": "Name", "Type": "Edm.String", "Nullable": false },
+            { "Name": "Region", "Type": "Edm.String", "Nullable": false }
           ]
         },
         {
           "Name": "Location",
           "Property": [
-            {
-              "Name": "Address",
-              "Type": "Edm.String",
-              "Nullable": false
-            },
+            { "Name": "Address", "Type": "Edm.String", "Nullable": false },
             {
               "Name": "City",
               "Type": "Microsoft.OData.SampleService.Models.TripPin.City",
@@ -680,24 +482,14 @@
         },
         {
           "Name": "EventLocation",
-          "Property": [
-            {
-              "Name": "BuildingInfo",
-              "Type": "Edm.String"
-            }
-          ],
+          "Property": [{ "Name": "BuildingInfo", "Type": "Edm.String" }],
           "BaseType": "Microsoft.OData.SampleService.Models.TripPin.Location",
           "OpenType": true
         },
         {
           "Name": "AirportLocation",
           "Property": [
-            {
-              "Name": "Loc",
-              "Type": "Edm.GeographyPoint",
-              "Nullable": false,
-              "SRID": "4326"
-            }
+            { "Name": "Loc", "Type": "Edm.GeographyPoint", "Nullable": false, "SRID": "4326" }
           ],
           "BaseType": "Microsoft.OData.SampleService.Models.TripPin.Location",
           "OpenType": true
@@ -707,38 +499,21 @@
         {
           "Name": "PersonGender",
           "Member": [
-            {
-              "Name": "Male",
-              "Value": 0
-            },
-            {
-              "Name": "Female",
-              "Value": 1
-            },
-            {
-              "Name": "Unknown",
-              "Value": 2
-            }
+            { "Name": "Male", "Value": 0 },
+            { "Name": "Female", "Value": 1 },
+            { "Name": "Unknown", "Value": 2 }
           ]
         }
       ],
       "Annotations": [
         {
           "Annotation": [
-            {
-              "Term": "Org.OData.Core.V1.DereferenceableIDs",
-              "Bool": "true"
-            },
-            {
-              "Term": "Org.OData.Core.V1.ConventionalIDs",
-              "Bool": "true"
-            },
+            { "Term": "Org.OData.Core.V1.DereferenceableIDs", "Bool": true },
+            { "Term": "Org.OData.Core.V1.ConventionalIDs", "Bool": true },
             {
               "Term": "Org.OData.Capabilities.V1.ConformanceLevel",
               "EnumMember": [
-                {
-                  "TextContent": "Org.OData.Capabilities.V1.ConformanceLevelType/Advanced"
-                }
+                { "TextContent": "Org.OData.Capabilities.V1.ConformanceLevelType/Advanced" }
               ]
             },
             {
@@ -759,82 +534,34 @@
                 }
               ]
             },
-            {
-              "Term": "Org.OData.Capabilities.V1.AsynchronousRequestsSupported",
-              "Bool": "true"
-            },
-            {
-              "Term": "Org.OData.Capabilities.V1.BatchContinueOnErrorSupported",
-              "Bool": "false"
-            },
+            { "Term": "Org.OData.Capabilities.V1.AsynchronousRequestsSupported", "Bool": true },
+            { "Term": "Org.OData.Capabilities.V1.BatchContinueOnErrorSupported", "Bool": false },
             {
               "Term": "Org.OData.Capabilities.V1.FilterFunctions",
               "Collection": [
                 {
                   "String": [
-                    {
-                      "TextContent": "contains"
-                    },
-                    {
-                      "TextContent": "endswith"
-                    },
-                    {
-                      "TextContent": "startswith"
-                    },
-                    {
-                      "TextContent": "length"
-                    },
-                    {
-                      "TextContent": "indexof"
-                    },
-                    {
-                      "TextContent": "substring"
-                    },
-                    {
-                      "TextContent": "tolower"
-                    },
-                    {
-                      "TextContent": "toupper"
-                    },
-                    {
-                      "TextContent": "trim"
-                    },
-                    {
-                      "TextContent": "concat"
-                    },
-                    {
-                      "TextContent": "year"
-                    },
-                    {
-                      "TextContent": "month"
-                    },
-                    {
-                      "TextContent": "day"
-                    },
-                    {
-                      "TextContent": "hour"
-                    },
-                    {
-                      "TextContent": "minute"
-                    },
-                    {
-                      "TextContent": "second"
-                    },
-                    {
-                      "TextContent": "round"
-                    },
-                    {
-                      "TextContent": "floor"
-                    },
-                    {
-                      "TextContent": "ceiling"
-                    },
-                    {
-                      "TextContent": "cast"
-                    },
-                    {
-                      "TextContent": "isof"
-                    }
+                    { "TextContent": "contains" },
+                    { "TextContent": "endswith" },
+                    { "TextContent": "startswith" },
+                    { "TextContent": "length" },
+                    { "TextContent": "indexof" },
+                    { "TextContent": "substring" },
+                    { "TextContent": "tolower" },
+                    { "TextContent": "toupper" },
+                    { "TextContent": "trim" },
+                    { "TextContent": "concat" },
+                    { "TextContent": "year" },
+                    { "TextContent": "month" },
+                    { "TextContent": "day" },
+                    { "TextContent": "hour" },
+                    { "TextContent": "minute" },
+                    { "TextContent": "second" },
+                    { "TextContent": "round" },
+                    { "TextContent": "floor" },
+                    { "TextContent": "ceiling" },
+                    { "TextContent": "cast" },
+                    { "TextContent": "isof" }
                   ]
                 }
               ]
@@ -844,9 +571,7 @@
         }
       ],
       "Action": [
-        {
-          "Name": "ResetDataSource"
-        },
+        { "Name": "ResetDataSource" },
         {
           "Name": "ShareTrip",
           "IsBound": true,
@@ -856,16 +581,8 @@
               "Type": "Microsoft.OData.SampleService.Models.TripPin.Person",
               "Nullable": false
             },
-            {
-              "Name": "userName",
-              "Type": "Edm.String",
-              "Nullable": false
-            },
-            {
-              "Name": "tripId",
-              "Type": "Edm.Int32",
-              "Nullable": false
-            }
+            { "Name": "userName", "Type": "Edm.String", "Nullable": false },
+            { "Name": "tripId", "Type": "Edm.Int32", "Nullable": false }
           ]
         }
       ],
@@ -917,11 +634,7 @@
               "Type": "Microsoft.OData.SampleService.Models.TripPin.Person",
               "Nullable": false
             },
-            {
-              "Name": "userName",
-              "Type": "Edm.String",
-              "Nullable": false
-            }
+            { "Name": "userName", "Type": "Edm.String", "Nullable": false }
           ],
           "IsComposable": true
         },
@@ -932,16 +645,8 @@
             "Nullable": false
           },
           "Parameter": [
-            {
-              "Name": "lat",
-              "Type": "Edm.Double",
-              "Nullable": false
-            },
-            {
-              "Name": "lon",
-              "Type": "Edm.Double",
-              "Nullable": false
-            }
+            { "Name": "lat", "Type": "Edm.Double", "Nullable": false },
+            { "Name": "lon", "Type": "Edm.Double", "Nullable": false }
           ],
           "IsComposable": true
         }

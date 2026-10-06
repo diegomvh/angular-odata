@@ -317,29 +317,40 @@ export class CsdlRecord {
 }
 
 export class CsdlPropertyValue {
-  Name: string;
+  Property: string;
+  Bool?: boolean;
   String?: string;
   Date?: Date;
   EnumMember?: CsdlEnumMember[];
+  TextContent?: string;
   constructor({
-    Name,
+    Property,
+    Bool,
     String,
     Date,
     EnumMember,
+    TextContent,
   }: {
-    Name: string;
+    Property: string;
+    Bool?: boolean;
     String?: string;
     Date?: Date;
     EnumMember?: any[];
+    TextContent?: string;
   }) {
-    this.Name = Name;
+    this.Property = Property;
+    this.Bool = Bool;
     this.String = String;
     this.Date = Date;
     this.EnumMember = EnumMember?.map((a) => new CsdlEnumMember(a));
+    this.TextContent = TextContent;
   }
 
   toJson() {
-    const json: { [key: string]: any } = { Name: this.Name };
+    const json: { [key: string]: any } = { Property: this.Property };
+    if (this.Bool !== undefined) {
+      json['Bool'] = this.Bool;
+    }
     if (this.String !== undefined) {
       json['String'] = this.String;
     }
@@ -349,11 +360,17 @@ export class CsdlPropertyValue {
     if (Array.isArray(this.EnumMember) && this.EnumMember.length > 0) {
       json['EnumMember'] = this.EnumMember.map((m) => m.toJson());
     }
+    if (this.TextContent !== undefined) {
+      json['TextContent'] = this.TextContent;
+    }
     return json;
   }
 
   toConfig(): ODataAnnotationValueConfig {
-    const config: ODataAnnotationValueConfig = { name: this.Name };
+    const config: ODataAnnotationValueConfig = { property: this.Property };
+    if (this.Bool !== undefined) {
+      config['bool'] = this.Bool;
+    }
     if (this.String !== undefined) {
       config['string'] = this.String;
     }
@@ -362,6 +379,9 @@ export class CsdlPropertyValue {
     }
     if (Array.isArray(this.EnumMember) && this.EnumMember.length > 0) {
       config['enumMembers'] = this.EnumMember.map((m) => m.toConfig());
+    }
+    if (this.TextContent !== undefined) {
+      config['textContent'] = this.TextContent;
     }
     return config;
   }
