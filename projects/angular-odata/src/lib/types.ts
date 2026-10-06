@@ -11,6 +11,7 @@ export type FetchPolicy =
   | 'cache-only';
 export type ODataMetadataType = 'minimal' | 'full' | 'none';
 export type CacheCacheability = 'public' | 'private' | 'no-cache' | 'no-store';
+export type CacheInvalidation = 'entity-set' | 'api';
 
 export enum PathSegment {
   batch = 'batch',
@@ -183,6 +184,8 @@ export const NONE_PARSER = {
 } as Parser<any>;
 
 export interface ODataCache {
+  /** Wait until persisted entries are available, or a reported memory fallback is ready. */
+  ready?(): Promise<void>;
   put<T>(key: string, payload: T, ...opts: any[]): void;
   get<T>(key: string, ...opts: any[]): T | undefined;
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
@@ -218,6 +221,8 @@ export interface ODataApiConfigOptions {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
+  ignoreCacheControl?: boolean;
+  cacheInvalidation?: CacheInvalidation;
   bodyQueryOptions?: QueryOption[];
   stringAsEnum?: boolean;
   //https://github.com/OData/WebApi/issues/1974

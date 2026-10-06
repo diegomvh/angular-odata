@@ -1,108 +1,192 @@
-import { ODataRequest, ODataResponse, ODataResponseJson } from '../resources';
-import { ODataBaseCache, ODataCacheEntry } from './cache';
+import { CACHE_KEY_SEPARATOR } from '../constants';
+import { Types } from '../utils/types';
+import type { ODataCacheEntry, ODataCacheFilter, ODataCacheOptions } from './cache';
+import { ODataInMemoryCache } from './memory';
 
-export class ODataInStorageCache extends ODataBaseCache {
+export class ODataInStorageCache extends ODataInMemoryCache {
   prefix: string;
-  storage: Storage;
+  private _storage?: Storage;
+  private _persistent = true;
+  private _memoryOnly = new Set<string>();
 
   constructor({
     prefix,
-    storage = sessionStorage,
-    maxAge,
-  }: {
-    maxAge?: number;
-    prefix: string;
-    storage?: Storage;
-  }) {
-    super({ maxAge });
+    storage,
+    ...options
+  }: ODataCacheOptions & { prefix: string; storage?: Storage }) {
+    super(options);
     this.prefix = prefix;
-    this.storage = storage;
+    try {
+      this._storage = storage ?? globalThis.sessionStorage;
+      if (this._storage === undefined) throw new Error('Web Storage is unavailable');
+    } catch (error) {
+      this.disablePersistence(error);
+    }
+    this.loadFromStorage();
+  }
+
+  /** The backing storage. Throws if the platform has no Web Storage implementation. */
+  get storage(): Storage {
+    if (this._storage === undefined) throw new Error('Web Storage is unavailable');
+    return this._storage;
+  }
+
+  set storage(storage: Storage) {
+    this._storage = storage;
+    this._persistent = true;
+    this.loadFromStorage();
   }
 
   override buildKey(names: string[]): string {
     return super.buildKey([this.prefix, ...names]);
   }
 
-  override put<T>(
-    name: string,
-    payload: T,
-    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] } = {},
-  ) {
-    const entry = this.buildEntry<T>(payload, { maxAge, tags });
-    const key = this.buildKey([...(scope ?? []), name]);
-    this.storage.setItem(key, JSON.stringify(entry));
+  private disablePersistence(cause: unknown): void {
+    if (!this._persistent) return;
+    this._persistent = false;
+    this.reportError('Web Storage cache persistence failed; using memory only', cause);
   }
 
-  override get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
-    const key = this.buildKey([...(scope || []), name]);
-    const entry = JSON.parse(this.storage.getItem(key) ?? '{}');
-    return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
+  private storageKeys(): string[] {
+    if (this._storage === undefined) return [];
+    try {
+      const keys: string[] = [];
+      const prefix = `${this.prefix}${CACHE_KEY_SEPARATOR}`;
+      for (let index = 0; index < this.storage.length; index++) {
+        const key = this.storage.key(index);
+        if (key !== null && key.startsWith(prefix)) keys.push(key);
+      }
+      return keys;
+    } catch (error) {
+      this.disablePersistence(error);
+      return [];
+    }
   }
 
-  override forget({
-    name,
-    scope = [],
-    tags = [],
-  }: {
-    name?: string;
-    scope?: string[];
-    tags?: string[];
-  }) {
-    if (name) scope.push(name);
-    const key = scope.length > 0 ? this.buildKey(scope) : undefined;
-    Object.keys(this.storage)
-      .filter((k) => k.startsWith(this.prefix))
-      .forEach((k) => {
-        const entry = JSON.parse(this.storage.getItem(k) ?? '{}');
-        if (
-          this.isExpired(entry) || // Expired
-          (key !== undefined && k.startsWith(key)) || // Key
-          (tags.length > 0 && tags.some((t) => entry.tags.indexOf(t) !== -1)) // Tags
-        ) {
-          this.storage.removeItem(k);
-        }
-      });
+  private readEntry(key: string): ODataCacheEntry<unknown> | undefined {
+    let raw: string | null;
+    try {
+      raw = this.storage.getItem(key);
+    } catch (error) {
+      this.disablePersistence(error);
+      return this.entries.get(key);
+    }
+    if (raw === null) return undefined;
+    let value: unknown;
+    try {
+      value = JSON.parse(raw);
+    } catch (error) {
+      this.deleteEntry(key);
+      this.reportCorruption('Discarding invalid JSON from the Web Storage cache', error);
+      return undefined;
+    }
+    if (!this.isEntry(value)) {
+      this.deleteEntry(key);
+      this.reportCorruption('Discarding an invalid Web Storage cache entry');
+      return undefined;
+    }
+    if (this.isExpired(value)) {
+      this.deleteEntry(key);
+      return undefined;
+    }
+    return value;
   }
 
-  /**
-   * Flush the cache and clean the storage
-   */
-  override flush() {
-    Object.keys(this.storage)
-      .filter((k) => k.startsWith(this.prefix))
-      .forEach((k) => {
-        this.storage.removeItem(k);
-      });
-  }
-
-  /**
-   * Store the response in the cache
-   * @param req The request with the resource to store the response
-   * @param res The response to store in the cache
-   */
-  override putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
-    const scope = this.scope(req);
-    const tags = this.tags(res);
-    this.put<ODataResponseJson<any>>(req.cacheKey, res.toJson(), {
-      maxAge: req.maxAge ?? res.options.maxAge,
-      scope,
-      tags,
+  private loadFromStorage(): void {
+    if (!this._persistent) return;
+    const keys = this.storageKeys();
+    if (!this._persistent) return;
+    const stored = new Set(keys);
+    this.entries.forEach((_, key) => {
+      if (!stored.has(key) && !this._memoryOnly.has(key)) super.deleteEntry(key);
     });
+    for (const key of keys) {
+      if (!this._persistent) break;
+      if (this._memoryOnly.has(key)) continue;
+      const entry = this.readEntry(key);
+      if (entry !== undefined) super.setEntry(key, entry);
+    }
+    this.prune();
   }
 
-  /**
-   * Restore the response from the cache
-   * @param req The request with the resource to get the response
-   * @returns The response from the cache
-   */
-  override getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
-    const scope = this.scope(req);
-    const data = this.get<ODataResponseJson<any>>(req.cacheKey, { scope });
-
-    return data !== undefined ? ODataResponse.fromJson(req, data) : undefined;
+  // Removal is attempted after a memory fallback so flush/forget still clear persisted data.
+  private removeStoredEntry(key: string): void {
+    if (this._storage === undefined) return;
+    try {
+      this.storage.removeItem(key);
+    } catch (error) {
+      this.disablePersistence(error);
+    }
   }
 
-  override size() {
-    return Object.keys(this.storage).filter((k) => k.startsWith(this.prefix)).length;
+  protected override setEntry(key: string, entry: ODataCacheEntry<unknown>): void {
+    super.setEntry(key, entry);
+    const payload = this.isResponseJson(entry.payload) ? entry.payload.body : entry.payload;
+    if (['ArrayBuffer', 'Blob', 'File'].includes(Types.rawType(payload))) {
+      this._memoryOnly.add(key);
+      this.removeStoredEntry(key);
+      return;
+    }
+    this._memoryOnly.delete(key);
+    if (!this._persistent) {
+      this.removeStoredEntry(key);
+      return;
+    }
+    try {
+      const serialized = JSON.stringify(entry);
+      if (!this.isEntry(JSON.parse(serialized))) {
+        throw new TypeError('Cache payload is not JSON serializable');
+      }
+      this.storage.setItem(key, serialized);
+    } catch (error) {
+      this.disablePersistence(error);
+    }
+  }
+
+  protected override deleteEntry(key: string): void {
+    super.deleteEntry(key);
+    this._memoryOnly.delete(key);
+    this.removeStoredEntry(key);
+  }
+
+  protected override expireEntry(key: string): void {
+    if (this._persistent && !this._memoryOnly.has(key)) {
+      const latest = this.readEntry(key);
+      if (latest !== undefined && !this.isExpired(latest)) {
+        super.setEntry(key, latest);
+        return;
+      }
+    }
+    super.expireEntry(key);
+  }
+
+  protected override clearEntries(): void {
+    const keys = this.storageKeys();
+    super.clearEntries();
+    this._memoryOnly.clear();
+    keys.forEach((key) => this.removeStoredEntry(key));
+  }
+
+  /** Read a persisted entry, or its in-memory fallback, without renewing its age. */
+  override get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
+    const key = this.buildKey([...(scope ?? []), name]);
+    if (this._persistent && !this._memoryOnly.has(key)) {
+      const entry = this.readEntry(key);
+      if (entry === undefined) super.deleteEntry(key);
+      else super.setEntry(key, entry);
+    }
+    return super.get<T>(name, { scope });
+  }
+
+  /** Remove matching entries from both persistent storage and the memory fallback. */
+  override forget(options: ODataCacheFilter = {}): void {
+    this.loadFromStorage();
+    super.forget(options);
+  }
+
+  /** Count unexpired entries, including memory-only binary responses. */
+  override size(): number {
+    this.loadFromStorage();
+    return super.size();
   }
 }

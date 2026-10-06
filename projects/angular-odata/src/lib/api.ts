@@ -1,6 +1,6 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { firstValueFrom, NEVER, Observable, of, throwError } from 'rxjs';
-import { catchError, map, startWith, tap } from 'rxjs/operators';
+import { defer, firstValueFrom, from, NEVER, Observable, of, throwError } from 'rxjs';
+import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { $METADATA, DEFAULT_VERSION } from './constants';
 import {
   ModelFieldOptions,
@@ -52,12 +52,16 @@ import { ODataEntityAnnotations } from './annotations';
 import { ODataReference } from './schema/reference';
 
 const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);
+// Share invalidation generations across API instances using the same cache.
+const CACHE_GENERATIONS = new WeakMap<ODataCache, Map<string, number>>();
+const CACHE_MISSES = new WeakSet<Error>();
 
 /**
  * Api abstraction for consuming OData services.
  */
 export class ODataApi {
   requester?: (request: ODataRequest<any>) => Observable<any>;
+  private _requestCapture?: (request: ODataRequest<any>) => Observable<any>;
   serviceRootUrl: string;
   metadataUrl: string;
   name?: string;
@@ -315,6 +319,8 @@ export class ODataApi {
       bodyQueryOptions: options.bodyQueryOptions,
       reportProgress: options.reportProgress,
       fetchPolicy: options.fetchPolicy,
+      ignoreCacheControl: options.ignoreCacheControl,
+      cacheInvalidation: options.cacheInvalidation,
       maxAge: options.maxAge,
       parserOptions: options.parserOptions,
       withCredentials: options.withCredentials,
@@ -358,64 +364,126 @@ export class ODataApi {
    * @returns
    */
   private handleRequest(req: ODataRequest<any>): Observable<any> {
-    return this.cache !== undefined && req.isFetch()
-      ? this.handleCacheFetch(req)
-      : this.cache !== undefined && req.isMutate()
-        ? this.handleCacheMutate(req)
-        : this.handleRequester(req);
+    return this._requestCapture !== undefined
+      ? this.handleRequester(req, this._requestCapture)
+      : this.executeRequest(req);
   }
 
-  private handleRequester(req: ODataRequest<any>) {
-    return (this.requester !== undefined ? this.requester(req) : NEVER).pipe(
+  /** @internal Collect batch requests synchronously without executing their cache effects. */
+  captureRequests<R>(
+    capture: (request: ODataRequest<any>) => Observable<any>,
+    callback: () => R,
+  ): R {
+    const previous = this._requestCapture;
+    this._requestCapture = capture;
+    try {
+      return callback();
+    } finally {
+      this._requestCapture = previous;
+    }
+  }
+
+  /** @internal Execute a collected or ordinary request with subscription-time cache semantics. */
+  executeRequest(
+    req: ODataRequest<any>,
+    requester = this.requester,
+    cacheReady = false,
+  ): Observable<any> {
+    return defer(() => {
+      const cache = this.cache;
+      const network = () => this.handleRequester(req, requester);
+      if (cache === undefined) return network();
+      if (req.isFetch()) {
+        if (req.fetchPolicy === 'no-cache') return network();
+        const fetch = () => this.handleCacheFetch(req, cache, network);
+        return !cacheReady && req.fetchPolicy !== 'network-only' && cache.ready !== undefined
+          ? from(cache.ready()).pipe(switchMap(fetch))
+          : fetch();
+      }
+      return req.isMutate() && !req.isBatch()
+        ? network().pipe(
+            tap((res: HttpEvent<any>) => {
+              if (res.type === HttpEventType.Response && res.ok) this.invalidateCache(req, cache);
+            }),
+          )
+        : network();
+    });
+  }
+
+  /** @internal Whether the error is a `cache-only` miss rather than a cache failure. */
+  isCacheMiss(error: unknown): boolean {
+    return error instanceof Error && CACHE_MISSES.has(error);
+  }
+
+  private handleRequester(
+    req: ODataRequest<any>,
+    requester: ((request: ODataRequest<any>) => Observable<any>) | undefined,
+  ) {
+    return (requester !== undefined ? requester(req) : NEVER).pipe(
       map((res: HttpEvent<any>) =>
         res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res,
       ),
     );
   }
 
-  private handleCacheFetch(req: ODataRequest<any>): Observable<any> {
-    const policy = req.fetchPolicy;
-    const cached = this.cache!.getResponse(req);
-    if (policy === 'no-cache') {
-      return this.handleRequester(req);
-    }
-    if (policy === 'cache-only') {
-      if (cached !== undefined) {
-        return of(cached);
-      } else {
-        return throwError(() => new Error('No Cached'));
-      }
-    }
-    let res$: Observable<any> =
-      cached !== undefined && policy !== 'network-only'
-        ? policy === 'cache-and-network'
-          ? this.handleRequester(req).pipe(startWith(cached))
-          : of(cached)
-        : this.handleRequester(req);
-    if (
-      cached === undefined &&
-      (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only')
-    ) {
-      res$ = res$.pipe(
-        tap((res: ODataResponse<any>) => {
-          if (res.options.cacheability !== 'no-store') {
-            this.cache!.putResponse(req, res);
-          }
-        }),
-      );
-    }
-    return res$;
+  private cacheGeneration(req: ODataRequest<any>, cache: ODataCache): number {
+    const generations = CACHE_GENERATIONS.get(cache);
+    const apiKey = JSON.stringify(req.cacheScope);
+    const scopeKey = JSON.stringify(cache.scope(req));
+    return (
+      (generations?.get(apiKey) ?? 0) +
+      (scopeKey !== apiKey ? generations?.get(scopeKey) ?? 0 : 0)
+    );
   }
 
-  private handleCacheMutate(req: ODataRequest<any>): Observable<any> {
-    const requests = req.isBatch()
-      ? (req.resource as ODataBatchResource).requests().filter((r) => r.isMutate())
-      : [req];
-    for (var r of requests) {
-      const scope = this.cache!.scope(r);
-      this.cache!.forget({ scope });
+  private invalidateCache(req: ODataRequest<any>, cache: ODataCache): void {
+    let generations = CACHE_GENERATIONS.get(cache);
+    if (generations === undefined) {
+      generations = new Map();
+      CACHE_GENERATIONS.set(cache, generations);
     }
-    return this.handleRequester(req);
+    const scope = cache.scope(req);
+    // Custom scopes outside the API partition use scoped invalidation.
+    const target = req.cacheInvalidation === 'api' &&
+      req.cacheScope.every((part, index) => scope[index] === part) ? req.cacheScope : scope;
+    const key = JSON.stringify(target);
+    generations.set(key, (generations.get(key) ?? 0) + 1);
+    cache.forget({ scope: target });
+  }
+
+  private handleCacheFetch(
+    req: ODataRequest<any>,
+    cache: ODataCache,
+    network: () => Observable<any>,
+  ): Observable<any> {
+    const policy = req.fetchPolicy;
+    const cached = policy === 'network-only' ? undefined : cache.getResponse(req);
+    if (policy === 'cache-only') {
+      if (cached !== undefined) return of(cached);
+      const miss = new Error('No Cached');
+      CACHE_MISSES.add(miss);
+      return throwError(() => miss);
+    }
+    if (cached !== undefined && policy === 'cache-first') return of(cached);
+    const generation = this.cacheGeneration(req, cache);
+    const response = defer(network).pipe(
+      tap((res: HttpEvent<any>) => {
+        if (
+          res.type !== HttpEventType.Response ||
+          !res.ok ||
+          generation !== this.cacheGeneration(req, cache)
+        ) {
+          return;
+        }
+        const response =
+          res instanceof ODataResponse ? res : ODataResponse.fromHttpResponse(req, res);
+        if (response.isCacheable(req.ignoreCacheControl)) cache.putResponse(req, response);
+        else cache.forget({ name: req.cacheKey, scope: cache.scope(req) });
+      }),
+    );
+    return cached !== undefined && policy === 'cache-and-network'
+      ? response.pipe(startWith(cached))
+      : response;
   }
 
   //# region Find by Type

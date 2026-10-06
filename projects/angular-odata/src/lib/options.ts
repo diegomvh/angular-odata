@@ -1,6 +1,7 @@
 import type {
   ODataApiConfigOptions,
   FetchPolicy,
+  CacheInvalidation,
   ODataMetadataType,
   ODataVersion,
   ParserOptions,
@@ -44,6 +45,10 @@ export class ODataApiOptions implements ODataApiConfigOptions {
    * Cache fetch policy
    */
   fetchPolicy: FetchPolicy;
+  /** Ignore response Cache-Control directives. Defaults to false. */
+  ignoreCacheControl: boolean;
+  /** Scope invalidated by successful writes. Defaults to entity-set. */
+  cacheInvalidation: CacheInvalidation;
   /**
    * Extra params to be sent in the request
    */
@@ -111,6 +116,8 @@ export class ODataApiOptions implements ODataApiConfigOptions {
     this.withCredentials = config.withCredentials;
     this.stripMetadata = config.stripMetadata || DEFAULT_STRIP_METADATA;
     this.fetchPolicy = config.fetchPolicy || DEFAULT_FETCH_POLICY;
+    this.ignoreCacheControl = config.ignoreCacheControl ?? false;
+    this.cacheInvalidation = config.cacheInvalidation ?? 'entity-set';
     this.bodyQueryOptions = config.bodyQueryOptions || [];
     this.accept = config.accept;
     Object.assign(this.etag, config.etag || {});

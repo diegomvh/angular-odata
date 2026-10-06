@@ -110,17 +110,38 @@ describe('ODataResponseOptions', () => {
       expect(options.cacheability).toBe('private');
     });
 
-    it('should not set the cacheability when the directive is not trimmed', () => {
+    it('should trim directives', () => {
       const options = new ODataResponseOptions({});
       options.setCache('max-age=3600, private');
       expect(options.maxAge).toBe(3600);
-      expect(options.cacheability).toBeUndefined();
+      expect(options.cacheability).toBe('private');
     });
 
-    it('should ignore a non numeric max age', () => {
+    it('should treat an invalid freshness lifetime as immediately stale', () => {
       const options = new ODataResponseOptions({});
       options.setCache('max-age=abc');
-      expect(options.maxAge).toBeUndefined();
+      expect(options.maxAge).toBe(0);
+    });
+
+    it.each(['private, max-age=5, no-store', 'no-store,public', 'PUBLIC, No-Store, MAX-AGE = "5"'])(
+      'should preserve restrictive directives in %s',
+      (header) => {
+        const options = new ODataResponseOptions({});
+        options.setCache(header);
+        expect(options.cacheability).toBe('no-store');
+      },
+    );
+
+    it('should parse whitespace and retain the shortest duplicate lifetime', () => {
+      const options = new ODataResponseOptions({});
+      options.setCache('public, MAX-AGE = "5", max-age=60');
+      expect(options.maxAge).toBe(5);
+    });
+
+    it.each(['-1', 'Infinity', '1.5', '', 'NaN'])('should reject max-age=%s', (value) => {
+      const options = new ODataResponseOptions({});
+      options.setCache(`max-age=${value}`);
+      expect(options.maxAge).toBe(0);
     });
   });
 });

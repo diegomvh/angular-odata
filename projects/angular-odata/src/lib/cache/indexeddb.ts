@@ -1,163 +1,202 @@
-import { ODataRequest, ODataResponse, ODataResponseJson } from '../resources';
-import { ODataBaseCache, ODataCacheEntry } from './cache';
+import type { ODataCacheEntry, ODataCacheFilter, ODataCacheOptions } from './cache';
+import { ODataInMemoryCache } from './memory';
 
-export class ODataIndexedDBCache extends ODataBaseCache {
+type PendingOperation =
+  | { kind: 'put'; key: string; entry: ODataCacheEntry<unknown> }
+  | { kind: 'forget'; options: ODataCacheFilter }
+  | { kind: 'flush' };
+
+export class ODataIndexedDBCache extends ODataInMemoryCache {
   private name: string;
   private version: number;
   private store: string;
-  private entries: Map<string, ODataCacheEntry<any>>;
-  private _db: Promise<IDBDatabase>;
+  private _database?: IDBDatabase;
+  private _persistent = true;
+  private _hydrated = false;
+  private _pending: PendingOperation[] = [];
+  private _writes: Promise<void> = Promise.resolve();
+  private _ready: Promise<void>;
 
   constructor({
     name = 'ODataCache',
     store = 'cache',
     version = 1,
-    maxAge,
-  }: {
-    name?: string;
-    store?: string;
-    version?: number;
-    maxAge?: number;
-  } = {}) {
-    super({ maxAge });
+    ...options
+  }: ODataCacheOptions & { name?: string; store?: string; version?: number } = {}) {
+    super(options);
     this.name = name;
     this.store = store;
     this.version = version;
-    this.entries = new Map();
-    this._db = this.initDb();
-  }
-
-  private initDb(): Promise<IDBDatabase> {
-    return new Promise<IDBDatabase>((resolve, reject) => {
-      const request = indexedDB.open(this.name, this.version);
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains(this.store)) {
-          db.createObjectStore(this.store);
-        }
-      };
-      request.onsuccess = async (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        await this.loadFromDb(db);
-        resolve(db);
-      };
-      request.onerror = (event) => {
-        reject((event.target as IDBOpenDBRequest).error);
-      };
+    this._ready = this.initialize().catch((error: unknown) => {
+      const flushed = this._pending.some((operation) => operation.kind === 'flush');
+      this.disablePersistence(error);
+      this._hydrated = true;
+      this._pending = [];
+      if (flushed) this.persist((store) => store.clear(), true);
     });
   }
 
-  private loadFromDb(db: IDBDatabase): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(this.store, 'readonly');
-      const store = transaction.objectStore(this.store);
-      const request = store.openCursor();
-      request.onsuccess = (event) => {
-        const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
-        if (cursor) {
-          this.entries.set(cursor.key as string, cursor.value as ODataCacheEntry<any>);
-          cursor.continue();
-        } else {
-          resolve();
-        }
-      };
-      request.onerror = (event) => {
-        reject((event.target as IDBRequest).error);
-      };
-    });
+  /** Wait for hydration and queued writes, or an explicitly reported memory-only fallback. */
+  ready(): Promise<void> {
+    return this._ready.then(() => this._writes).then(() => this.checkError());
   }
 
-  private async withDb<T>(fn: (db: IDBDatabase) => Promise<T>): Promise<T> {
-    const db = await this._db!;
-    return fn(db);
-  }
-
-  override put<T>(
-    name: string,
-    payload: T,
-    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] } = {},
-  ) {
-    const entry = this.buildEntry<T>(payload, { maxAge, tags });
-    const key = this.buildKey([...(scope ?? []), name]);
-    this.entries.set(key, entry);
-    this.withDb((db) => {
-      return new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction(this.store, 'readwrite');
-        const store = transaction.objectStore(this.store);
-        store.put(entry, key);
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = (event) => reject((event.target as IDBRequest).error);
-      });
-    });
-  }
-
-  override get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
-    const key = this.buildKey([...(scope || []), name]);
-    const entry = this.entries.get(key);
-    return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
-  }
-
-  override putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
-    const scope = this.scope(req);
-    const tags = this.tags(res);
-    this.put<ODataResponseJson<any>>(req.cacheKey, res.toJson(), {
-      maxAge: req.maxAge ?? res.options.maxAge,
-      scope,
-      tags,
-    });
-  }
-
-  override getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
-    const scope = this.scope(req);
-    const data = this.get<ODataResponseJson<any>>(req.cacheKey, { scope });
-    return data !== undefined ? ODataResponse.fromJson(req, data) : undefined;
-  }
-
-  override forget({
-    name,
-    scope = [],
-    tags = [],
-  }: { name?: string; scope?: string[]; tags?: string[] } = {}) {
-    if (name) scope.push(name);
-    const key = scope.length > 0 ? this.buildKey(scope) : undefined;
-    const keysToDelete: string[] = [];
-    this.entries.forEach((entry, k) => {
-      if (
-        this.isExpired(entry) ||
-        (key !== undefined && k.startsWith(key)) ||
-        (tags.length > 0 && tags.some((t) => entry.tags.indexOf(t) !== -1))
-      ) {
-        keysToDelete.push(k);
-      }
-    });
-    keysToDelete.forEach((k) => this.entries.delete(k));
-    if (keysToDelete.length > 0) {
-      this.withDb((db) => {
-        return new Promise<void>((resolve, reject) => {
-          const transaction = db.transaction(this.store, 'readwrite');
-          const store = transaction.objectStore(this.store);
-          keysToDelete.forEach((k) => store.delete(k));
-          transaction.oncomplete = () => resolve();
-          transaction.onerror = (event) => reject((event.target as IDBRequest).error);
-        });
-      });
+  protected override reportError(message: string, cause?: unknown): void {
+    // IndexedDB event callbacks cannot throw into the caller's observable.
+    try {
+      super.reportError(message, cause);
+    } catch (error) {
+      if (!(error instanceof Error)) throw error;
+      this._error = error;
     }
   }
 
-  override flush() {
-    this.entries = new Map();
-    this.withDb((db) => {
-      return new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction(this.store, 'readwrite');
-        const store = transaction.objectStore(this.store);
-        store.clear();
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = (event) => reject((event.target as IDBRequest).error);
-      });
+  // The database stays open after a fallback so flush/forget can still remove persisted data.
+  private disablePersistence(cause: unknown): void {
+    if (!this._persistent) return;
+    this._persistent = false;
+    this.reportError('IndexedDB cache persistence failed; using memory only', cause);
+  }
+
+  private openDb(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.name, this.version);
+      let failed = false;
+      const fail = (error: unknown) => {
+        failed = true;
+        reject(error);
+      };
+      request.onupgradeneeded = () => {
+        if (failed) {
+          request.transaction?.abort();
+          return;
+        }
+        const db = request.result;
+        if (!db.objectStoreNames.contains(this.store)) db.createObjectStore(this.store);
+      };
+      request.onsuccess = () => {
+        const db = request.result;
+        if (failed) {
+          db.close();
+          return;
+        }
+        db.onversionchange = () => {
+          db.close();
+          this._database = undefined;
+          this.disablePersistence(new Error('IndexedDB cache version changed'));
+        };
+        resolve(db);
+      };
+      request.onerror = () => fail(request.error);
+      request.onblocked = () => fail(new Error('IndexedDB cache opening was blocked'));
     });
   }
 
-  override size() {
-    return this.entries.size;
+  private loadFromDb(db: IDBDatabase): Promise<Map<string, ODataCacheEntry<unknown>>> {
+    return new Promise((resolve, reject) => {
+      const entries = new Map<string, ODataCacheEntry<unknown>>();
+      const transaction = db.transaction(this.store, 'readwrite');
+      const request = transaction.objectStore(this.store).openCursor();
+      request.onsuccess = () => {
+        const cursor = request.result;
+        if (cursor === null) return;
+        const value: unknown = cursor.value;
+        if (typeof cursor.key !== 'string' || !this.isEntry(value)) {
+          cursor.delete();
+          this.reportCorruption('Discarding an invalid IndexedDB cache entry');
+        } else if (this.isExpired(value)) {
+          cursor.delete();
+        } else {
+          entries.set(cursor.key, value);
+        }
+        cursor.continue();
+      };
+      transaction.oncomplete = () => resolve(entries);
+      transaction.onerror = () => reject(transaction.error ?? new Error('IndexedDB load failed'));
+      transaction.onabort = () => reject(transaction.error ?? new Error('IndexedDB load aborted'));
+    });
+  }
+
+  private async initialize(): Promise<void> {
+    const db = await this.openDb();
+    this._database = db;
+    const entries = await this.loadFromDb(db);
+    if (!this._persistent) {
+      this._hydrated = true;
+      this._pending = [];
+      return;
+    }
+    const pending = this._pending;
+    this._pending = [];
+    super.clearEntries();
+    entries.forEach((entry, key) => super.setEntry(key, entry));
+    this._hydrated = true;
+    for (const operation of pending) {
+      switch (operation.kind) {
+        case 'put':
+          this.setEntry(operation.key, operation.entry);
+          break;
+        case 'forget':
+          this.forget(operation.options);
+          break;
+        case 'flush':
+          this.flush();
+          break;
+      }
+    }
+    this.prune();
+    await this._writes;
+  }
+
+  private persist(operation: (store: IDBObjectStore) => void, removal = false): void {
+    this._writes = this._writes
+      .then(() => {
+        const db = this._database;
+        if (db === undefined || (!this._persistent && !removal)) return;
+        return new Promise<void>((resolve, reject) => {
+          const transaction = db.transaction(this.store, 'readwrite');
+          transaction.oncomplete = () => resolve();
+          transaction.onerror = () =>
+            reject(transaction.error ?? new Error('IndexedDB write failed'));
+          transaction.onabort = () =>
+            reject(transaction.error ?? new Error('IndexedDB write aborted'));
+          try {
+            operation(transaction.objectStore(this.store));
+          } catch (error) {
+            transaction.abort();
+            reject(error);
+          }
+        });
+      })
+      .catch((error: unknown) => this.disablePersistence(error));
+  }
+
+  protected override setEntry(key: string, entry: ODataCacheEntry<unknown>): void {
+    super.setEntry(key, entry);
+    if (!this._hydrated) this._pending.push({ kind: 'put', key, entry });
+    else if (this._persistent) this.persist((store) => store.put(entry, key));
+    else this.persist((store) => store.delete(key), true);
+  }
+
+  protected override deleteEntry(key: string): void {
+    super.deleteEntry(key);
+    if (this._hydrated) this.persist((store) => store.delete(key), true);
+  }
+
+  protected override clearEntries(): void {
+    super.clearEntries();
+    if (!this._hydrated) this._pending.push({ kind: 'flush' });
+    else this.persist((store) => store.clear(), true);
+  }
+
+  /** Invalidate loaded entries and record filters that must also apply during hydration. */
+  override forget(options: ODataCacheFilter = {}): void {
+    if (!this._hydrated) {
+      this._pending.push({
+        kind: 'forget',
+        options: { ...options, scope: [...(options.scope ?? [])], tags: [...(options.tags ?? [])] },
+      });
+    }
+    super.forget(options);
   }
 }

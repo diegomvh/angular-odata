@@ -7,10 +7,10 @@ class TestCache extends ODataBaseCache {
   get<T>(_name: string): T | undefined {
     return undefined;
   }
-  getResponse(_req: any): any {
+  override getResponse(_req: any): any {
     return undefined;
   }
-  putResponse(_req: any, _res: any): void {}
+  override putResponse(_req: any, _res: any): void {}
   forget(_opts?: any): void {}
   flush(): void {}
   size(): number {
@@ -65,8 +65,11 @@ describe('ODataBaseCache', () => {
         { name: PathSegment.entitySet, path: 'People' },
         { name: PathSegment.navigationProperty, path: 'Trips' },
       ]);
-      const req = { resource: { cloneSegments: () => segments } } as any;
-      expect(new TestCache({}).scope(req)).toEqual(['request', 'People']);
+      const req = {
+        cacheScope: ['request', 'v2', 'api'],
+        resource: { cloneSegments: () => segments },
+      } as any;
+      expect(new TestCache({}).scope(req)).toEqual(['request', 'v2', 'api', 'People']);
     });
 
     it('should not include navigation property names in the scope', () => {
@@ -74,15 +77,21 @@ describe('ODataBaseCache', () => {
         { name: PathSegment.entitySet, path: 'People' },
         { name: PathSegment.navigationProperty, path: 'Trips' },
       ]);
-      const req = { resource: { cloneSegments: () => segments } } as any;
+      const req = {
+        cacheScope: ['request', 'v2', 'api'],
+        resource: { cloneSegments: () => segments },
+      } as any;
       const scope = new TestCache({}).scope(req);
       expect(scope).not.toContain('Trips');
     });
 
     it('should return only the default scope for a request without entity set', () => {
       const segments = new ODataPathSegments([{ name: PathSegment.function, path: 'GetPeople' }]);
-      const req = { resource: { cloneSegments: () => segments } } as any;
-      expect(new TestCache({}).scope(req)).toEqual(['request']);
+      const req = {
+        cacheScope: ['request', 'v2', 'api'],
+        resource: { cloneSegments: () => segments },
+      } as any;
+      expect(new TestCache({}).scope(req)).toEqual(['request', 'v2', 'api']);
     });
   });
 
@@ -134,6 +143,18 @@ describe('ODataBaseCache', () => {
       const cache = new TestCache({ maxAge: 10 });
       const entry = cache.buildEntry('payload', { maxAge: 120 });
       expect(entry.maxAge).toBe(120 * 1000);
+    });
+
+    it.each([-1, NaN, Infinity])('should reject an invalid max age %s', (maxAge) => {
+      expect(() => new TestCache({ maxAge })).toThrow(RangeError);
+      expect(() => new TestCache({}).buildEntry(1, { maxAge })).toThrow(RangeError);
+    });
+
+    it('should copy the supplied tags', () => {
+      const tags = ['People'];
+      const entry = new TestCache({}).buildEntry(1, { tags });
+      tags.push('Trips');
+      expect(entry.tags).toEqual(['People']);
     });
   });
 

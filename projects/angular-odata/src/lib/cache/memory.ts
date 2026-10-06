@@ -1,11 +1,43 @@
-import { ODataRequest, ODataResponse } from '../resources';
-import { ODataBaseCache, ODataCacheEntry } from './cache';
+import { ODataBaseCache } from './cache';
+import type { ODataCacheEntry, ODataCacheFilter, ODataCacheOptions } from './cache';
 
 export class ODataInMemoryCache extends ODataBaseCache {
   entries: Map<string, ODataCacheEntry<any>>;
-  constructor({ maxAge }: { maxAge?: number } = {}) {
-    super({ maxAge });
+  private _nextExpiry = Infinity;
+
+  constructor(options: ODataCacheOptions = {}) {
+    super(options);
     this.entries = new Map<string, ODataCacheEntry<any>>();
+  }
+
+  protected setEntry(key: string, entry: ODataCacheEntry<unknown>): void {
+    this.entries.set(key, entry);
+    this._nextExpiry = Math.min(this._nextExpiry, entry.date + entry.maxAge);
+  }
+
+  protected deleteEntry(key: string): void {
+    this.entries.delete(key);
+  }
+
+  protected expireEntry(key: string): void {
+    this.deleteEntry(key);
+  }
+
+  protected clearEntries(): void {
+    this.entries.clear();
+    this._nextExpiry = Infinity;
+  }
+
+  protected prune(): void {
+    if (Date.now() < this._nextExpiry) return;
+    this._nextExpiry = Infinity;
+    this.entries.forEach((entry, key) => {
+      if (this.isExpired(entry)) this.expireEntry(key);
+      const current = this.entries.get(key);
+      if (current !== undefined) {
+        this._nextExpiry = Math.min(this._nextExpiry, current.date + current.maxAge);
+      }
+    });
   }
 
   /**
@@ -21,9 +53,11 @@ export class ODataInMemoryCache extends ODataBaseCache {
     payload: T,
     { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] } = {},
   ) {
+    this.checkError();
     const entry = this.buildEntry<T>(payload, { maxAge, tags });
     const key = this.buildKey([...(scope ?? []), name]);
-    this.entries.set(key, entry);
+    this.prune();
+    this.setEntry(key, entry);
   }
 
   /**
@@ -33,55 +67,21 @@ export class ODataInMemoryCache extends ODataBaseCache {
    * @returns The payload of the entry
    */
   override get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {
+    this.checkError();
+    this.prune();
     const key = this.buildKey([...(scope || []), name]);
     const entry = this.entries.get(key);
     return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
   }
 
   /**
-   * Store the response in the cache
-   * @param req The request with the resource to store the response
-   * @param res The response to store in the cache
-   */
-  override putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
-    let scope = this.scope(req);
-    let tags = this.tags(res);
-    this.put(req.cacheKey, res, {
-      maxAge: req.maxAge ?? res.options.maxAge,
-      scope,
-      tags,
-    });
-  }
-
-  /**
-   * Restore the response from the cache
-   * @param req The request with the resource to get the response
-   * @returns The response from the cache
-   */
-  override getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
-    let scope = this.scope(req);
-    return this.get(req.cacheKey, { scope });
-  }
-
-  /**
    * Remove all cache entries that are matching with the given options
    * @param options The options to forget
    */
-  override forget({
-    name,
-    scope = [],
-    tags = [],
-  }: { name?: string; scope?: string[]; tags?: string[] } = {}) {
-    if (name) scope.push(name);
-    const key = scope.length > 0 ? this.buildKey(scope) : undefined;
+  override forget(options: ODataCacheFilter = {}) {
+    this.checkError();
     this.entries.forEach((entry, k) => {
-      if (
-        this.isExpired(entry) || // Expired
-        (key !== undefined && k.startsWith(key)) || // Key
-        (tags.length > 0 && tags.some((t) => entry.tags.indexOf(t) !== -1)) // Tags
-      ) {
-        this.entries.delete(k);
-      }
+      if (this.matches(k, entry, options)) this.deleteEntry(k);
     });
   }
 
@@ -89,10 +89,14 @@ export class ODataInMemoryCache extends ODataBaseCache {
    * Remove all cache entries
    */
   override flush() {
-    this.entries = new Map<string, ODataCacheEntry<any>>();
+    this.checkError();
+    this.clearEntries();
   }
 
+  /** Return the number of unexpired entries. */
   override size() {
+    this.checkError();
+    this.prune();
     return this.entries.size;
   }
 }

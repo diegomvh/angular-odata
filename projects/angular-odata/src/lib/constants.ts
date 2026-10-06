@@ -78,6 +78,7 @@ export const ODATA_ALIAS_PREFIX = '@';
 export const NEWLINE = '\r\n';
 export const NEWLINE_REGEXP = /\r?\n/;
 export const CACHE_KEY_SEPARATOR = ':';
+export const CACHE_REPRESENTATION_HEADERS = ['accept', 'accept-language', 'prefer'];
 
 // Models
 export const CID_FIELD_NAME = '_cid';

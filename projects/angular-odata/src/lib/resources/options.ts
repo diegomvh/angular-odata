@@ -68,14 +68,32 @@ export class ODataResponseOptions implements ResponseOptions {
   }
 
   setCache(cacheControl: string) {
-    cacheControl.split(',').forEach((directive) => {
-      if (directive.startsWith(MAX_AGE)) {
-        let maxAge = Number(directive.split('=')[1]);
-        if (!Number.isNaN(maxAge)) this.maxAge = maxAge;
+    const precedence: CacheCacheability[] = ['public', 'private', 'no-cache', 'no-store'];
+    this.cacheability = undefined;
+    this.maxAge = undefined;
+    for (const directive of cacheControl.split(',')) {
+      const separator = directive.indexOf('=');
+      const name = (separator < 0 ? directive : directive.slice(0, separator)).trim().toLowerCase();
+      const value =
+        separator < 0
+          ? ''
+          : directive
+              .slice(separator + 1)
+              .trim()
+              .replace(/^"(.*)"$/, '$1');
+      if (name === MAX_AGE) {
+        const maxAge = /^\d+$/.test(value) ? Number(value) : NaN;
+        const seconds = Number.isFinite(maxAge * 1000) ? maxAge : 0;
+        this.maxAge = Math.min(this.maxAge ?? Infinity, seconds);
       }
-      if (['public', 'private', 'no-cache', 'no-store'].indexOf(directive) !== -1) {
-        this.cacheability = directive as CacheCacheability;
+      const cacheability = precedence.find((candidate) => candidate === name);
+      if (
+        cacheability !== undefined &&
+        (this.cacheability === undefined ||
+          precedence.indexOf(cacheability) > precedence.indexOf(this.cacheability))
+      ) {
+        this.cacheability = cacheability;
       }
-    });
+    }
   }
 }
