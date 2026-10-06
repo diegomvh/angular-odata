@@ -1,4 +1,4 @@
-import type { ODataCallableConfig, ODataParameterConfig } from '../../types';
+import type { ODataCallableConfig, ODataParameterConfig, ODataReturnConfig } from '../../types';
 import { CsdlAnnotable } from './csdl-annotation';
 import type { CsdlEntityContainer } from './csdl-entity-container';
 import type { CsdlSchema } from './csdl-schema';
@@ -102,7 +102,7 @@ export class CsdlFunction extends CsdlCallable {
       entitySetPath: this.EntitySetPath,
       bound: this.IsBound,
       composable: this.IsComposable,
-      parameters: this.Parameter?.map((p) => p.toConfig()),
+      parameters: this.Parameter?.reduce((acc, p) => ({...acc, [p.Name]: p.toConfig()}), {} as { [name: string]: ODataParameterConfig }),
       return: this.ReturnType?.toConfig(),
     } as ODataCallableConfig;
   }
@@ -134,12 +134,12 @@ export class CsdlAction extends CsdlCallable {
     };
   }
 
-  toConfig(base?: Partial<ODataCallableConfig>): ODataCallableConfig {
+  toConfig(base?: Partial<ODataCallableConfig>) {
     return {
       name: this.Name,
       entitySetPath: this.EntitySetPath,
       bound: this.IsBound,
-      parameters: this.Parameter?.map((p) => p.toConfig()),
+      parameters: this.Parameter?.reduce((acc, p) => ({...acc, [p.Name]: p.toConfig()}), {} as { [name: string]: ODataParameterConfig }),
       return: this.ReturnType?.toConfig(),
     } as ODataCallableConfig;
   }
@@ -265,14 +265,19 @@ export class CsdlParameter extends CsdlAnnotable {
     };
   }
 
-  override toConfig(): ODataParameterConfig {
+  override toConfig() {
     return {
       ...super.toConfig(),
+      name: this.Name,
       type: this.Type,
       nullable: this.Nullable,
-      collection: false,
-    };
-  }
+      collection: this.Collection,
+      maxLength: this.MaxLength,
+      precision: this.Precision,
+      scale: this.Scale,
+      srid: this.SRID,
+    } as ODataParameterConfig;
+  };
 }
 
 export class CsdlReturnType {
@@ -319,10 +324,15 @@ export class CsdlReturnType {
     };
   }
 
-  toConfig(): { type: string; collection?: boolean | undefined } | undefined {
+  toConfig() {
     return {
       type: this.Type,
-      collection: false,
-    };
+      collection: this.Collection,
+      nullable: this.Nullable,
+      maxLength: this.MaxLength,
+      precision: this.Precision,
+      scale: this.Scale,
+      srid: this.SRID,
+    } as ODataReturnConfig;
   }
 }

@@ -291,6 +291,7 @@ export type ODataEntityContainerConfig = {
 };
 
 export type ODataEnumTypeFieldConfig = {
+  name: string;
   value: number;
   annotations?: ODataAnnotationConfig[];
 };
@@ -331,9 +332,26 @@ export type ODataStructuredTypeConfig = {
 };
 
 export type ODataParameterConfig = {
+  name: string;
   type: string;
   nullable?: boolean;
   collection?: boolean;
+  maxLength?: number;
+  precision?: number;
+  scale?: number | 'variable';
+  srid?: string;
+  annotations?: ODataAnnotationConfig[];
+};
+
+export type ODataReturnConfig = {
+  type: string;
+  collection?: boolean;
+  nullable?: boolean;
+  maxLength?: number;
+  precision?: number;
+  scale?: number | 'variable';
+  srid?: string;
+  annotations?: ODataAnnotationConfig[];
 };
 
 export type ODataCallableConfig = {
@@ -342,7 +360,7 @@ export type ODataCallableConfig = {
   bound?: boolean;
   composable?: boolean;
   parameters?: { [name: string]: ODataParameterConfig };
-  return?: { type: string; collection?: boolean };
+  return?: ODataReturnConfig;
 };
 
 export type ODataEntitySetConfig = {

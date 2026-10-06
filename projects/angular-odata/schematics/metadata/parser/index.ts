@@ -287,8 +287,6 @@ export class ODataMetadataParser {
       case ODataMetadataParser.ATTRIBUTE_TERM:
       case ODataMetadataParser.ATTRIBUTE_QUALIFIER:
       case ODataMetadataParser.ATTRIBUTE_STRING:
-      case ODataMetadataParser.ATTRIBUTE_BOOL:
-      case ODataMetadataParser.ATTRIBUTE_INT:
       case ODataMetadataParser.ATTRIBUTE_TARGET_NAMESPACE:
       case ODataMetadataParser.ATTRIBUTE_NAME:
       case ODataMetadataParser.ATTRIBUTE_TYPE:
@@ -310,6 +308,7 @@ export class ODataMetadataParser {
       case ODataMetadataParser.ATTRIBUTE_BASE_TERM:
       case ODataMetadataParser.ATTRIBUTE_APPLIES_TO:
         return this.getAttributeValue(attributes, field.name);
+      case ODataMetadataParser.ATTRIBUTE_BOOL:
       case ODataMetadataParser.ATTRIBUTE_NULLABLE:
       case ODataMetadataParser.ATTRIBUTE_UNICODE:
       case ODataMetadataParser.ATTRIBUTE_OPEN_TYPE:
@@ -321,6 +320,7 @@ export class ODataMetadataParser {
       case ODataMetadataParser.ATTRIBUTE_ABSTRACT:
       case ODataMetadataParser.ATTRIBUTE_IS_FLAGS:
         return this.propertyValueToBoolean(this.getAttributeValue(attributes, field.name));
+      case ODataMetadataParser.ATTRIBUTE_INT:
       case ODataMetadataParser.ATTRIBUTE_VALUE:
       case ODataMetadataParser.ATTRIBUTE_MAX_LENGTH:
       case ODataMetadataParser.ATTRIBUTE_PRECISION:

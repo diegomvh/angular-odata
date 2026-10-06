@@ -57,17 +57,12 @@ export class CsdlEnumType extends CsdlAnnotable {
     return `${this.schema.Namespace}.${this.Name}`;
   }
 
-  override toConfig(base?: Partial<ODataEnumTypeConfig>): ODataEnumTypeConfig {
+  override toConfig(base?: Partial<ODataEnumTypeConfig>) {
     return {
       ...super.toConfig(),
       name: this.Name,
-      fields: this.Member.reduce(
-        (acc, m) => ({
-          ...acc,
-          [m.Name]: m.toConfig(),
-        }),
-        {},
-      ),
+      fields: this.Member.reduce((acc, m) => ({ ...acc, [m.Name]: m.toConfig(), }), {} as { [name: string]: ODataEnumTypeFieldConfig }),
+      members: this.Member.reduce((acc, m) => ({ ...acc, [m.Name]: m.Value, [m.Value!]: m.Name }), {}),
       flags: this.IsFlags,
     } as ODataEnumTypeConfig;
   }
@@ -90,11 +85,11 @@ export class CsdlMember extends CsdlAnnotable {
     return json;
   }
 
-  override toConfig(base?: Partial<ODataEnumTypeFieldConfig>): ODataEnumTypeFieldConfig {
-    const config: { [key: string]: any } = {
+  override toConfig(base?: Partial<ODataEnumTypeFieldConfig>) {
+    return {
       ...super.toConfig(),
+      name: this.Name,
       value: this.Value,
-    };
-    return config as ODataEnumTypeFieldConfig;
+    } as ODataEnumTypeFieldConfig;
   }
 }
