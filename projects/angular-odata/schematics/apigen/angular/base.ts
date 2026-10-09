@@ -148,13 +148,13 @@ export class Callable {
       ...args,
       ...(required.length === 0
         ? []
-        : required.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}`)),
+        : required.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}${p.Collection ? '[]' : ''}`)),
     ];
     args = [
       ...args,
       ...(optional.length === 0
         ? []
-        : optional.map((p) => `${p.Name}?: ${toTypescriptType(p.Type)}`)),
+        : optional.map((p) => `${p.Name}?: ${toTypescriptType(p.Type)}${p.Collection ? '[]' : ''}`)),
     ];
     const optionsType =
       returnType !== undefined && returnType.Type.startsWith('Edm.')
@@ -222,13 +222,13 @@ export class Callable {
       ...args,
       ...(required.length === 0
         ? []
-        : required.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}`)),
+        : required.map((p) => `${p.Name}: ${toTypescriptType(p.Type)}${p.Collection ? '[]' : ''}`)),
     ];
     args = [
       ...args,
       ...(optional.length === 0
         ? []
-        : optional.map((p) => `${p.Name}?: ${toTypescriptType(p.Type)}`)),
+        : optional.map((p) => `${p.Name}?: ${toTypescriptType(p.Type)}${p.Collection ? '[]' : ''}`)),
     ];
     const optionsType =
       returnType !== undefined && returnType.Type.startsWith('Edm.')
