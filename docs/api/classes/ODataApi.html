@@ -165,6 +165,11 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#_requestCapture" >_requestCapture</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Optional</span>
                                 <a href="#cache" >cache</a>
                             </li>
@@ -239,7 +244,14 @@
                                 <a href="#batch" >batch</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#cacheGeneration" >cacheGeneration</a>
+                            </li>
+                            <li>
                                 <a href="#callable" >callable</a>
+                            </li>
+                            <li>
+                                <a href="#captureRequests" >captureRequests</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -269,6 +281,9 @@
                             </li>
                             <li>
                                 <a href="#enumType" >enumType</a>
+                            </li>
+                            <li>
+                                <a href="#executeRequest" >executeRequest</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -324,10 +339,6 @@
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#handleCacheMutate" >handleCacheMutate</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
                                 <a href="#handleRequest" >handleRequest</a>
                             </li>
                             <li>
@@ -336,6 +347,13 @@
                             </li>
                             <li>
                                 <a href="#initialize" >initialize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#invalidateCache" >invalidateCache</a>
+                            </li>
+                            <li>
+                                <a href="#isCacheMiss" >isCacheMiss</a>
                             </li>
                             <li>
                                 <a href="#metadata" >metadata</a>
@@ -388,7 +406,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">projects/angular-odata/src/lib/api.ts:84</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">projects/angular-odata/src/lib/api.ts:88</a></div>
                             </td>
                         </tr>
 
@@ -435,6 +453,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="_requestCapture"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>_requestCapture</b></span>
+                        <a href="#_requestCapture"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">projects/angular-odata/src/lib/api.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="cache"></a>
                     <span class="name">
                             <span class="modifier">Optional</span>
@@ -451,7 +497,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">projects/angular-odata/src/lib/api.ts:70</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">projects/angular-odata/src/lib/api.ts:74</a></div>
                         </td>
                     </tr>
 
@@ -482,7 +528,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">projects/angular-odata/src/lib/api.ts:84</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">projects/angular-odata/src/lib/api.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -508,7 +554,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">projects/angular-odata/src/lib/api.ts:66</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">projects/angular-odata/src/lib/api.ts:70</a></div>
                         </td>
                     </tr>
 
@@ -534,7 +580,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">projects/angular-odata/src/lib/api.ts:65</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">projects/angular-odata/src/lib/api.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -561,7 +607,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">projects/angular-odata/src/lib/api.ts:72</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">projects/angular-odata/src/lib/api.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -601,7 +647,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="423" class="link-to-prism">projects/angular-odata/src/lib/api.ts:423</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="491" class="link-to-prism">projects/angular-odata/src/lib/api.ts:491</a></div>
                         </td>
                     </tr>
 
@@ -627,7 +673,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">projects/angular-odata/src/lib/api.ts:62</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">projects/angular-odata/src/lib/api.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -658,7 +704,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">projects/angular-odata/src/lib/api.ts:82</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">projects/angular-odata/src/lib/api.ts:86</a></div>
                         </td>
                     </tr>
 
@@ -685,7 +731,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">projects/angular-odata/src/lib/api.ts:63</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">projects/angular-odata/src/lib/api.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -711,7 +757,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">projects/angular-odata/src/lib/api.ts:68</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">projects/angular-odata/src/lib/api.ts:72</a></div>
                         </td>
                     </tr>
 
@@ -737,7 +783,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">projects/angular-odata/src/lib/api.ts:74</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/api.ts:78</a></div>
                         </td>
                     </tr>
 
@@ -763,7 +809,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">projects/angular-odata/src/lib/api.ts:76</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">projects/angular-odata/src/lib/api.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -794,7 +840,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">projects/angular-odata/src/lib/api.ts:80</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">projects/angular-odata/src/lib/api.ts:84</a></div>
                         </td>
                     </tr>
 
@@ -821,7 +867,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">projects/angular-odata/src/lib/api.ts:60</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">projects/angular-odata/src/lib/api.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -852,7 +898,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">projects/angular-odata/src/lib/api.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">projects/angular-odata/src/lib/api.ts:82</a></div>
                         </td>
                     </tr>
 
@@ -878,7 +924,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">projects/angular-odata/src/lib/api.ts:61</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">projects/angular-odata/src/lib/api.ts:65</a></div>
                         </td>
                     </tr>
 
@@ -904,7 +950,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">projects/angular-odata/src/lib/api.ts:64</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">projects/angular-odata/src/lib/api.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -938,8 +984,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="250"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:250</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="254"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:254</a></div>
                         </td>
                     </tr>
 
@@ -1022,8 +1068,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="215"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:215</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="219"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:219</a></div>
                         </td>
                     </tr>
 
@@ -1049,6 +1095,87 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="cacheGeneration"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>cacheGeneration</b></span>
+                        <a href="#cacheGeneration"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>cacheGeneration(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, cache: <a href="../interfaces/ODataCache.html" target="_self">ODataCache</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="429"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:429</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>cache</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ODataCache.html" target="_self" >ODataCache</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="callable"></a>
                     <span class="name">
                         <span ><b>callable</b></span>
@@ -1065,8 +1192,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="273"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:273</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="277"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:277</a></div>
                         </td>
                     </tr>
 
@@ -1124,6 +1251,93 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="captureRequests"></a>
+                    <span class="name">
+                        <span ><b>captureRequests</b></span>
+                        <a href="#captureRequests"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>captureRequests(capture: (request: <a href="../classes/ODataRequest.html">ODataRequest<any></a>) => void, callback: () => void)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="373"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:373</a></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>R</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>capture</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>callback</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>R</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="collectionForType"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
@@ -1142,8 +1356,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="649"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:649</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="717"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:717</a></div>
                         </td>
                     </tr>
 
@@ -1217,8 +1431,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="124"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:124</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -1256,8 +1470,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="594"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:594</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="662"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:662</a></div>
                         </td>
                     </tr>
 
@@ -1345,8 +1559,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="637"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:637</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="705"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:705</a></div>
                         </td>
                     </tr>
 
@@ -1434,8 +1648,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="611"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:611</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="679"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:679</a></div>
                         </td>
                     </tr>
 
@@ -1511,8 +1725,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="441"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:441</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="509"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:509</a></div>
                         </td>
                     </tr>
 
@@ -1578,8 +1792,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="237"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:237</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="241"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:241</a></div>
                         </td>
                     </tr>
 
@@ -1655,8 +1869,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="277"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:277</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="281"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:281</a></div>
                         </td>
                     </tr>
 
@@ -1714,6 +1928,106 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="executeRequest"></a>
+                    <span class="name">
+                        <span ><b>executeRequest</b></span>
+                        <a href="#executeRequest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>executeRequest(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, requester: <a href="../undefineds/now.html" target="_self">unknown</a>, cacheReady: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="387"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:387</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>requester</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>this.requester</code>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>cacheReady</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="findCallable"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
@@ -1732,8 +2046,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="493"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:493</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="561"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:561</a></div>
                         </td>
                     </tr>
 
@@ -1821,8 +2135,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="631"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:631</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="699"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:699</a></div>
                         </td>
                     </tr>
 
@@ -1898,8 +2212,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="561"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:561</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="629"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:629</a></div>
                         </td>
                     </tr>
 
@@ -1967,8 +2281,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="663"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:663</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="731"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:731</a></div>
                         </td>
                     </tr>
 
@@ -2036,8 +2350,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="458"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:458</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="526"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:526</a></div>
                         </td>
                     </tr>
 
@@ -2113,8 +2427,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="605"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:605</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="673"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:673</a></div>
                         </td>
                     </tr>
 
@@ -2190,8 +2504,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="450"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:450</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="518"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:518</a></div>
                         </td>
                     </tr>
 
@@ -2259,8 +2573,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="578"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:578</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="646"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:646</a></div>
                         </td>
                     </tr>
 
@@ -2328,8 +2642,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="475"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:475</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="543"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:543</a></div>
                         </td>
                     </tr>
 
@@ -2403,8 +2717,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="169"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:169</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="173"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:173</a></div>
                         </td>
                     </tr>
 
@@ -2479,8 +2793,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="173"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:173</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:177</a></div>
                         </td>
                     </tr>
 
@@ -2554,8 +2868,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="181"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:181</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:185</a></div>
                         </td>
                     </tr>
 
@@ -2621,8 +2935,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="264"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:264</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="268"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:268</a></div>
                         </td>
                     </tr>
 
@@ -2700,15 +3014,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>handleCacheFetch(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
+                    <code>handleCacheFetch(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, cache: <a href="../interfaces/ODataCache.html" target="_self">ODataCache</a>, network: () => void)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="376"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:376</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="454"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:454</a></div>
                         </td>
                     </tr>
 
@@ -2740,67 +3054,22 @@
 
 
                                         </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="handleCacheMutate"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>handleCacheMutate</b></span>
-                        <a href="#handleCacheMutate"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>handleCacheMutate(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="410"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:410</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
                                         <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>req</td>
+                                                <td>cache</td>
                                             <td>
-                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                                            <code><a href="../interfaces/ODataCache.html" target="_self" >ODataCache</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>network</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
                                             </td>
 
                                             <td>
@@ -2845,8 +3114,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="360"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:360</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="366"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:366</a></div>
                         </td>
                     </tr>
 
@@ -2914,15 +3183,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>handleRequester(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
+                    <code>handleRequester(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, requester: <a href="../undefineds/now.html" target="_self">unknown | undefined</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="368"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:368</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="418"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:418</a></div>
                         </td>
                     </tr>
 
@@ -2946,6 +3215,18 @@
                                                 <td>req</td>
                                             <td>
                                                             <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>requester</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown | undefined</a></code>
                                             </td>
 
                                             <td>
@@ -2988,8 +3269,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:111</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:115</a></div>
                         </td>
                     </tr>
 
@@ -3039,6 +3320,154 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="invalidateCache"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>invalidateCache</b></span>
+                        <a href="#invalidateCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>invalidateCache(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, cache: <a href="../interfaces/ODataCache.html" target="_self">ODataCache</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="439"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:439</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>cache</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ODataCache.html" target="_self" >ODataCache</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isCacheMiss"></a>
+                    <span class="name">
+                        <span ><b>isCacheMiss</b></span>
+                        <a href="#isCacheMiss"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isCacheMiss(error: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="414"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:414</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="metadata"></a>
                     <span class="name">
                         <span ><b>metadata</b></span>
@@ -3055,8 +3484,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="207"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:207</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="211"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:211</a></div>
                         </td>
                     </tr>
 
@@ -3100,8 +3529,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="620"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:620</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="688"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:688</a></div>
                         </td>
                     </tr>
 
@@ -3177,8 +3606,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="697"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:697</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="765"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:765</a></div>
                         </td>
                     </tr>
 
@@ -3271,8 +3700,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="674"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:674</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="742"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:742</a></div>
                         </td>
                     </tr>
 
@@ -3360,8 +3789,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="143"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:143</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="147"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:147</a></div>
                         </td>
                     </tr>
 
@@ -3426,8 +3855,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="286"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:286</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="290"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:290</a></div>
                         </td>
                     </tr>
 
@@ -3525,8 +3954,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="224"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:224</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="228"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:228</a></div>
                         </td>
                     </tr>
 
@@ -3602,8 +4031,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="281"
-                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:281</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="285"
+                                    class="link-to-prism">projects/angular-odata/src/lib/api.ts:285</a></div>
                         </td>
                     </tr>
 
@@ -3668,8 +4097,8 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpEvent, HttpEventType } from &#x27;@angular/common/http&#x27;;
-import { firstValueFrom, NEVER, Observable, of, throwError } from &#x27;rxjs&#x27;;
-import { catchError, map, startWith, tap } from &#x27;rxjs/operators&#x27;;
+import { defer, firstValueFrom, from, NEVER, Observable, of, throwError } from &#x27;rxjs&#x27;;
+import { catchError, map, startWith, switchMap, tap } from &#x27;rxjs/operators&#x27;;
 import { $METADATA, DEFAULT_VERSION } from &#x27;./constants&#x27;;
 import {
   ModelFieldOptions,
@@ -3721,12 +4150,16 @@ import { ODataEntityAnnotations } from &#x27;./annotations&#x27;;
 import { ODataReference } from &#x27;./schema/reference&#x27;;
 
 const RESERVED_FIELD_NAMES &#x3D; Object.getOwnPropertyNames(ODataModel.prototype);
+// Share invalidation generations across API instances using the same cache.
+const CACHE_GENERATIONS &#x3D; new WeakMap&lt;ODataCache, Map&lt;string, number&gt;&gt;();
+const CACHE_MISSES &#x3D; new WeakSet&lt;Error&gt;();
 
 /**
  * Api abstraction for consuming OData services.
  */
 export class ODataApi {
   requester?: (request: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;;
+  private _requestCapture?: (request: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;;
   serviceRootUrl: string;
   metadataUrl: string;
   name?: string;
@@ -3984,6 +4417,8 @@ export class ODataApi {
       bodyQueryOptions: options.bodyQueryOptions,
       reportProgress: options.reportProgress,
       fetchPolicy: options.fetchPolicy,
+      ignoreCacheControl: options.ignoreCacheControl,
+      cacheInvalidation: options.cacheInvalidation,
       maxAge: options.maxAge,
       parserOptions: options.parserOptions,
       withCredentials: options.withCredentials,
@@ -4027,64 +4462,126 @@ export class ODataApi {
    * @returns
    */
   private handleRequest(req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; {
-    return this.cache !&#x3D;&#x3D; undefined &amp;&amp; req.isFetch()
-      ? this.handleCacheFetch(req)
-      : this.cache !&#x3D;&#x3D; undefined &amp;&amp; req.isMutate()
-        ? this.handleCacheMutate(req)
-        : this.handleRequester(req);
+    return this._requestCapture !&#x3D;&#x3D; undefined
+      ? this.handleRequester(req, this._requestCapture)
+      : this.executeRequest(req);
   }
 
-  private handleRequester(req: ODataRequest&lt;any&gt;) {
-    return (this.requester !&#x3D;&#x3D; undefined ? this.requester(req) : NEVER).pipe(
+  /** @internal Collect batch requests synchronously without executing their cache effects. */
+  captureRequests&lt;R&gt;(
+    capture: (request: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;,
+    callback: () &#x3D;&gt; R,
+  ): R {
+    const previous &#x3D; this._requestCapture;
+    this._requestCapture &#x3D; capture;
+    try {
+      return callback();
+    } finally {
+      this._requestCapture &#x3D; previous;
+    }
+  }
+
+  /** @internal Execute a collected or ordinary request with subscription-time cache semantics. */
+  executeRequest(
+    req: ODataRequest&lt;any&gt;,
+    requester &#x3D; this.requester,
+    cacheReady &#x3D; false,
+  ): Observable&lt;any&gt; {
+    return defer(() &#x3D;&gt; {
+      const cache &#x3D; this.cache;
+      const network &#x3D; () &#x3D;&gt; this.handleRequester(req, requester);
+      if (cache &#x3D;&#x3D;&#x3D; undefined) return network();
+      if (req.isFetch()) {
+        if (req.fetchPolicy &#x3D;&#x3D;&#x3D; &#x27;no-cache&#x27;) return network();
+        const fetch &#x3D; () &#x3D;&gt; this.handleCacheFetch(req, cache, network);
+        return !cacheReady &amp;&amp; req.fetchPolicy !&#x3D;&#x3D; &#x27;network-only&#x27; &amp;&amp; cache.ready !&#x3D;&#x3D; undefined
+          ? from(cache.ready()).pipe(switchMap(fetch))
+          : fetch();
+      }
+      return req.isMutate() &amp;&amp; !req.isBatch()
+        ? network().pipe(
+            tap((res: HttpEvent&lt;any&gt;) &#x3D;&gt; {
+              if (res.type &#x3D;&#x3D;&#x3D; HttpEventType.Response &amp;&amp; res.ok) this.invalidateCache(req, cache);
+            }),
+          )
+        : network();
+    });
+  }
+
+  /** @internal Whether the error is a &#x60;cache-only&#x60; miss rather than a cache failure. */
+  isCacheMiss(error: unknown): boolean {
+    return error instanceof Error &amp;&amp; CACHE_MISSES.has(error);
+  }
+
+  private handleRequester(
+    req: ODataRequest&lt;any&gt;,
+    requester: ((request: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;) | undefined,
+  ) {
+    return (requester !&#x3D;&#x3D; undefined ? requester(req) : NEVER).pipe(
       map((res: HttpEvent&lt;any&gt;) &#x3D;&gt;
         res.type &#x3D;&#x3D;&#x3D; HttpEventType.Response ? ODataResponse.fromHttpResponse&lt;any&gt;(req, res) : res,
       ),
     );
   }
 
-  private handleCacheFetch(req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; {
-    const policy &#x3D; req.fetchPolicy;
-    const cached &#x3D; this.cache!.getResponse(req);
-    if (policy &#x3D;&#x3D;&#x3D; &#x27;no-cache&#x27;) {
-      return this.handleRequester(req);
-    }
-    if (policy &#x3D;&#x3D;&#x3D; &#x27;cache-only&#x27;) {
-      if (cached !&#x3D;&#x3D; undefined) {
-        return of(cached);
-      } else {
-        return throwError(() &#x3D;&gt; new Error(&#x27;No Cached&#x27;));
-      }
-    }
-    let res$: Observable&lt;any&gt; &#x3D;
-      cached !&#x3D;&#x3D; undefined &amp;&amp; policy !&#x3D;&#x3D; &#x27;network-only&#x27;
-        ? policy &#x3D;&#x3D;&#x3D; &#x27;cache-and-network&#x27;
-          ? this.handleRequester(req).pipe(startWith(cached))
-          : of(cached)
-        : this.handleRequester(req);
-    if (
-      cached &#x3D;&#x3D;&#x3D; undefined &amp;&amp;
-      (policy &#x3D;&#x3D;&#x3D; &#x27;cache-first&#x27; || policy &#x3D;&#x3D;&#x3D; &#x27;cache-and-network&#x27; || policy &#x3D;&#x3D;&#x3D; &#x27;network-only&#x27;)
-    ) {
-      res$ &#x3D; res$.pipe(
-        tap((res: ODataResponse&lt;any&gt;) &#x3D;&gt; {
-          if (res.options.cacheability !&#x3D;&#x3D; &#x27;no-store&#x27;) {
-            this.cache!.putResponse(req, res);
-          }
-        }),
-      );
-    }
-    return res$;
+  private cacheGeneration(req: ODataRequest&lt;any&gt;, cache: ODataCache): number {
+    const generations &#x3D; CACHE_GENERATIONS.get(cache);
+    const apiKey &#x3D; JSON.stringify(req.cacheScope);
+    const scopeKey &#x3D; JSON.stringify(cache.scope(req));
+    return (
+      (generations?.get(apiKey) ?? 0) +
+      (scopeKey !&#x3D;&#x3D; apiKey ? generations?.get(scopeKey) ?? 0 : 0)
+    );
   }
 
-  private handleCacheMutate(req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; {
-    const requests &#x3D; req.isBatch()
-      ? (req.resource as ODataBatchResource).requests().filter((r) &#x3D;&gt; r.isMutate())
-      : [req];
-    for (var r of requests) {
-      const scope &#x3D; this.cache!.scope(r);
-      this.cache!.forget({ scope });
+  private invalidateCache(req: ODataRequest&lt;any&gt;, cache: ODataCache): void {
+    let generations &#x3D; CACHE_GENERATIONS.get(cache);
+    if (generations &#x3D;&#x3D;&#x3D; undefined) {
+      generations &#x3D; new Map();
+      CACHE_GENERATIONS.set(cache, generations);
     }
-    return this.handleRequester(req);
+    const scope &#x3D; cache.scope(req);
+    // Custom scopes outside the API partition use scoped invalidation.
+    const target &#x3D; req.cacheInvalidation &#x3D;&#x3D;&#x3D; &#x27;api&#x27; &amp;&amp;
+      req.cacheScope.every((part, index) &#x3D;&gt; scope[index] &#x3D;&#x3D;&#x3D; part) ? req.cacheScope : scope;
+    const key &#x3D; JSON.stringify(target);
+    generations.set(key, (generations.get(key) ?? 0) + 1);
+    cache.forget({ scope: target });
+  }
+
+  private handleCacheFetch(
+    req: ODataRequest&lt;any&gt;,
+    cache: ODataCache,
+    network: () &#x3D;&gt; Observable&lt;any&gt;,
+  ): Observable&lt;any&gt; {
+    const policy &#x3D; req.fetchPolicy;
+    const cached &#x3D; policy &#x3D;&#x3D;&#x3D; &#x27;network-only&#x27; ? undefined : cache.getResponse(req);
+    if (policy &#x3D;&#x3D;&#x3D; &#x27;cache-only&#x27;) {
+      if (cached !&#x3D;&#x3D; undefined) return of(cached);
+      const miss &#x3D; new Error(&#x27;No Cached&#x27;);
+      CACHE_MISSES.add(miss);
+      return throwError(() &#x3D;&gt; miss);
+    }
+    if (cached !&#x3D;&#x3D; undefined &amp;&amp; policy &#x3D;&#x3D;&#x3D; &#x27;cache-first&#x27;) return of(cached);
+    const generation &#x3D; this.cacheGeneration(req, cache);
+    const response &#x3D; defer(network).pipe(
+      tap((res: HttpEvent&lt;any&gt;) &#x3D;&gt; {
+        if (
+          res.type !&#x3D;&#x3D; HttpEventType.Response ||
+          !res.ok ||
+          generation !&#x3D;&#x3D; this.cacheGeneration(req, cache)
+        ) {
+          return;
+        }
+        const response &#x3D;
+          res instanceof ODataResponse ? res : ODataResponse.fromHttpResponse(req, res);
+        if (response.isCacheable(req.ignoreCacheControl)) cache.putResponse(req, response);
+        else cache.forget({ name: req.cacheKey, scope: cache.scope(req) });
+      }),
+    );
+    return cached !&#x3D;&#x3D; undefined &amp;&amp; policy &#x3D;&#x3D;&#x3D; &#x27;cache-and-network&#x27;
+      ? response.pipe(startWith(cached))
+      : response;
   }
 
   //# region Find by Type

@@ -338,8 +338,23 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CACHE_KEY_SEPARATOR, DEFAULT_MAXAGE } from &#x27;../constants&#x27;;
-import type { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
-import { ODataCache, PathSegment } from &#x27;../types&#x27;;
+import type { ODataRequest } from &#x27;../resources/request&#x27;;
+import { ODataResponse } from &#x27;../resources/response&#x27;;
+import type { ODataResponseJson } from &#x27;../resources/response&#x27;;
+import type { ODataCache } from &#x27;../types&#x27;;
+import { PathSegment } from &#x27;../types&#x27;;
+
+export type ODataCacheOptions &#x3D; {
+  maxAge?: number;
+  /** Opt into memory fallback on persistence failures; also told of discarded corrupt entries. */
+  onError?: (error: Error) &#x3D;&gt; void;
+};
+
+export type ODataCacheFilter &#x3D; {
+  name?: string;
+  scope?: string[];
+  tags?: string[];
+};
 
 /**
  * A cache entry that holds a payload, a date when it was last read from the backend, and a maxAge for the entry.
@@ -357,9 +372,16 @@ export interface ODataCacheEntry&lt;T&gt; {
 
 export abstract class ODataBaseCache implements ODataCache {
   maxAge: number;
+  private _onError?: (error: Error) &#x3D;&gt; void;
+  protected _error?: Error;
 
-  constructor({ maxAge &#x3D; DEFAULT_MAXAGE }: { maxAge?: number }) {
+  constructor({
+    maxAge &#x3D; DEFAULT_MAXAGE,
+    onError,
+  }: ODataCacheOptions) {
+    this.validateMaxAge(maxAge);
     this.maxAge &#x3D; maxAge;
+    this._onError &#x3D; onError;
   }
 
   /**
@@ -368,7 +390,7 @@ export abstract class ODataBaseCache implements ODataCache {
    * @returns Boolean indicating if the entry is expired
    */
   isExpired(entry: ODataCacheEntry&lt;any&gt;) {
-    return entry.date &lt; Date.now() - entry.maxAge;
+    return entry.date &lt;&#x3D; Date.now() - entry.maxAge;
   }
 
   /**
@@ -378,12 +400,13 @@ export abstract class ODataBaseCache implements ODataCache {
    */
   scope(req: ODataRequest&lt;any&gt;): string[] {
     const segments &#x3D; req.resource.cloneSegments();
-    return segments.segments({ key: true }).reduce(
+    return segments.segments().reduce(
       (acc, s) &#x3D;&gt; {
-        if (s.name &#x3D;&#x3D;&#x3D; PathSegment.entitySet) acc &#x3D; [...acc, s.path() as string];
+        if (s.name &#x3D;&#x3D;&#x3D; PathSegment.entitySet || s.name &#x3D;&#x3D;&#x3D; PathSegment.singleton)
+          acc &#x3D; [...acc, s.path() as string];
         return acc;
       },
-      [&#x27;request&#x27;],
+      req.cacheScope,
     );
   }
 
@@ -413,11 +436,13 @@ export abstract class ODataBaseCache implements ODataCache {
     payload: T,
     { maxAge, tags }: { maxAge?: number; tags?: string[] },
   ): ODataCacheEntry&lt;T&gt; {
+    const seconds &#x3D; maxAge ?? this.maxAge;
+    this.validateMaxAge(seconds);
     return {
       payload,
       date: Date.now(),
-      maxAge: (maxAge ?? this.maxAge) * 1000,
-      tags: tags ?? [],
+      maxAge: seconds * 1000,
+      tags: [...(tags ?? [])],
     };
   }
 
@@ -430,14 +455,138 @@ export abstract class ODataBaseCache implements ODataCache {
     return names.join(CACHE_KEY_SEPARATOR);
   }
 
+  protected validateMaxAge(maxAge: number): void {
+    if (!Number.isFinite(maxAge * 1000) || maxAge &lt; 0) {
+      throw new RangeError(&#x27;Cache maxAge must be a finite, non-negative number of seconds&#x27;);
+    }
+  }
+
+  protected reportError(message: string, cause?: unknown): void {
+    const error &#x3D; new Error(message, { cause });
+    if (this._onError !&#x3D;&#x3D; undefined) this._onError(error);
+    else {
+      this._error &#x3D; error;
+      throw error;
+    }
+  }
+
+  /** Report a discarded entry; corrupt entries are treated as cache misses. */
+  protected reportCorruption(message: string, cause?: unknown): void {
+    this._onError?.(new Error(message, { cause }));
+  }
+
+  protected checkError(): void {
+    if (this._error !&#x3D;&#x3D; undefined) throw this._error;
+  }
+
+  protected isEntry(value: unknown): value is ODataCacheEntry&lt;unknown&gt; {
+    return (
+      typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp;
+      value !&#x3D;&#x3D; null &amp;&amp;
+      &#x27;payload&#x27; in value &amp;&amp;
+      &#x27;date&#x27; in value &amp;&amp;
+      typeof value.date &#x3D;&#x3D;&#x3D; &#x27;number&#x27; &amp;&amp;
+      Number.isFinite(value.date) &amp;&amp;
+      &#x27;maxAge&#x27; in value &amp;&amp;
+      typeof value.maxAge &#x3D;&#x3D;&#x3D; &#x27;number&#x27; &amp;&amp;
+      Number.isFinite(value.maxAge) &amp;&amp;
+      value.maxAge &gt;&#x3D; 0 &amp;&amp;
+      &#x27;tags&#x27; in value &amp;&amp;
+      Array.isArray(value.tags) &amp;&amp;
+      value.tags.every((tag: unknown) &#x3D;&gt; typeof tag &#x3D;&#x3D;&#x3D; &#x27;string&#x27;)
+    );
+  }
+
+  protected matches(
+    key: string,
+    entry: ODataCacheEntry&lt;unknown&gt;,
+    { name, scope &#x3D; [], tags &#x3D; [] }: ODataCacheFilter,
+  ): boolean {
+    const scopedKey &#x3D; this.buildKey(name !&#x3D;&#x3D; undefined ? [...scope, name] : scope);
+    return (
+      this.isExpired(entry) ||
+      (name !&#x3D;&#x3D; undefined
+        ? key &#x3D;&#x3D;&#x3D; scopedKey
+        : scope.length &gt; 0 &amp;&amp;
+          (key &#x3D;&#x3D;&#x3D; scopedKey || key.startsWith(&#x60;${scopedKey}${CACHE_KEY_SEPARATOR}&#x60;))) ||
+      tags.some((tag) &#x3D;&gt; entry.tags.includes(tag))
+    );
+  }
+
+  protected isResponseJson(value: unknown): value is ODataResponseJson&lt;unknown&gt; {
+    return (
+      typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp;
+      value !&#x3D;&#x3D; null &amp;&amp;
+      &#x27;body&#x27; in value &amp;&amp;
+      &#x27;status&#x27; in value &amp;&amp;
+      typeof value.status &#x3D;&#x3D;&#x3D; &#x27;number&#x27; &amp;&amp;
+      Number.isInteger(value.status) &amp;&amp;
+      &#x27;statusText&#x27; in value &amp;&amp;
+      typeof value.statusText &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp;
+      &#x27;url&#x27; in value &amp;&amp;
+      (value.url &#x3D;&#x3D;&#x3D; null || typeof value.url &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) &amp;&amp;
+      &#x27;headers&#x27; in value &amp;&amp;
+      typeof value.headers &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp;
+      value.headers !&#x3D;&#x3D; null &amp;&amp;
+      !Array.isArray(value.headers) &amp;&amp;
+      Object.values(value.headers).every(
+        (header: unknown) &#x3D;&gt;
+          typeof header &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ||
+          (Array.isArray(header) &amp;&amp; header.every((part: unknown) &#x3D;&gt; typeof part &#x3D;&#x3D;&#x3D; &#x27;string&#x27;)),
+      )
+    );
+  }
+
+  protected snapshot(response: ODataResponseJson&lt;unknown&gt;): ODataResponseJson&lt;unknown&gt; {
+    const body &#x3D; response.body;
+    return {
+      ...response,
+      body:
+        typeof Blob !&#x3D;&#x3D; &#x27;undefined&#x27; &amp;&amp; body instanceof Blob
+          ? body.slice(0, body.size, body.type)
+          : structuredClone(body),
+      headers: structuredClone(response.headers),
+    };
+  }
+
+  /** Store a detached response snapshot, respecting server reuse restrictions. */
+  putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;): void {
+    const scope &#x3D; this.scope(req);
+    if (!res.isCacheable(req.ignoreCacheControl)) {
+      this.forget({ name: req.cacheKey, scope });
+      return;
+    }
+    this.put(req.cacheKey, this.snapshot(res.toJson()), {
+      maxAge: req.maxAge ?? (req.ignoreCacheControl ? undefined : res.options.maxAge),
+      scope,
+      tags: this.tags(res),
+    });
+  }
+
+  /** Restore a detached response using the current request&#x27;s resource and parser. */
+  getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
+    const scope &#x3D; this.scope(req);
+    const data &#x3D; this.get&lt;unknown&gt;(req.cacheKey, { scope });
+    if (data &#x3D;&#x3D;&#x3D; undefined) return undefined;
+    if (!this.isResponseJson(data)) {
+      this.forget({ name: req.cacheKey, scope });
+      this.reportCorruption(&#x27;Discarding an invalid cached OData response&#x27;);
+      return undefined;
+    }
+    const response &#x3D; ODataResponse.fromJson(req, this.snapshot(data));
+    if (!response.isCacheable(req.ignoreCacheControl)) {
+      this.forget({ name: req.cacheKey, scope });
+      return undefined;
+    }
+    return response;
+  }
+
   abstract put&lt;T&gt;(
     name: string,
     payload: T,
     { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] },
   ): void;
   abstract get&lt;T&gt;(name: string, { scope }: { scope?: string[] }): T | undefined;
-  abstract getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined;
-  abstract putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;): void;
   abstract forget({
     name,
     scope,

@@ -223,6 +223,14 @@
 <td>Default fetch policy. Defaults to <code>&#39;network-only&#39;</code>. See <a href="caching.html">Caching</a>.</td>
 </tr>
 <tr>
+<td><code>ignoreCacheControl</code></td>
+<td>Ignore response Cache-Control directives. Defaults to <code>false</code>; overridable per request.</td>
+</tr>
+<tr>
+<td><code>cacheInvalidation</code></td>
+<td>Successful-write invalidation: <code>&#39;entity-set&#39;</code> (default) or <code>&#39;api&#39;</code>. Overridable per request. Related expanded/navigation responses may need manual clearing.</td>
+</tr>
+<tr>
 <td><code>bodyQueryOptions</code></td>
 <td>Query options sent in the request body (<code>GET /$query</code>) instead of the URL.</td>
 </tr>

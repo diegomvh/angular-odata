@@ -146,9 +146,11 @@ follows a <strong>fetch policy</strong>.</p>
 </tr>
 </tbody>
 </table>
-<p>All caches take a <code>maxAge</code> in seconds. The default is 60.</p>
-<p>Each API has its own cache. The demo application keeps Northwind in memory and TripPin in
-IndexedDB:</p>
+<p>All caches take a finite, non-negative <code>maxAge</code> in seconds. The default is 60.
+An entry expires exactly at its deadline; <code>maxAge: 0</code> makes it immediately stale.
+Expired entries are removed during cache activity, and <code>size()</code> counts unexpired entries.</p>
+<p>Configure a cache for each API. A shared built-in cache partitions responses by service
+root and API name. The demo application keeps Northwind in memory and TripPin in IndexedDB:</p>
 <b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">import { ODataIndexedDBCache, ODataInMemoryCache } from &#39;angular-odata&#39;;
 
 provideODataClient({
@@ -162,6 +164,31 @@ provideODataClient({
   ],
 });</code></pre></div><p><code>ODataInStorageCache</code> takes a <code>prefix</code> and a <code>storage</code>:
 <code>new ODataInStorageCache({ prefix: &#39;odata&#39;, storage: localStorage, maxAge: 300 })</code>.</p>
+<p>Web Storage persists JSON and text responses. Blob and ArrayBuffer responses remain in
+that cache instance&#39;s memory rather than being converted to lossy JSON, so they do not
+survive a reload. IndexedDB supports persistent binary responses.</p>
+<h3>Persistent-cache readiness and errors</h3>
+<p>IndexedDB loads existing entries asynchronously. Cache-reading fetch policies wait for
+this automatically. For direct cache access, await readiness first:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">const cache = new ODataIndexedDBCache({ name: &#39;TripPinCache&#39; });
+await cache.ready();
+console.log(cache.size());</code></pre></div><p><code>put()</code>, <code>get()</code>, <code>forget()</code>, <code>flush()</code>, and <code>size()</code> remain synchronous. Local writes are
+visible immediately, including before IndexedDB finishes loading. Startup writes,
+invalidations, and flushes are applied in order, without resurrecting older entries.
+<code>ready()</code> also waits for queued persistence work to settle; it is not a durability
+guarantee when the cache has fallen back to memory.</p>
+<p>Cache errors are not logged by default. Synchronous cache operations throw; asynchronous
+IndexedDB failures reject <code>ready()</code>. During an API request, these failures use the
+observable error channel and the API&#39;s optional <code>errorHandler</code>, like other request errors.
+Responses are not delayed by persistence: an asynchronous persistence failure surfaces
+on the next request that uses the cache.</p>
+<p>Both persistent caches accept <code>onError: (error: Error) =&gt; void</code> to opt into recovery.
+If supplied, this callback handles storage access, quota, and database errors while the
+instance continues in memory-only mode. Without <code>onError</code>, failures propagate rather than
+silently falling back. After a fallback, <code>flush()</code> and <code>forget()</code> still remove persisted
+entries.</p>
+<p>Malformed persisted entries are discarded and treated as cache misses. They are reported
+to <code>onError</code> when supplied.</p>
 <h2>Fetch policies</h2>
 <table class="table table-bordered compodoc-table">
 <thead>
@@ -219,11 +246,77 @@ console.log(cache.size()); // 0</code></pre></div><p><code>cache-and-network</co
 fresh rows replace them when the server answers. The observable emits once or twice:</p>
 <b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">people
   .fetch({ withCount: true, fetchPolicy: &#39;cache-and-network&#39; })
-  .subscribe(({ entities, annots }) =&gt; this.rows.set(entities ?? []));</code></pre></div><p><code>maxAge</code> can also be set per request: <code>fetch({ fetchPolicy: &#39;cache-first&#39;, maxAge: 30 })</code>.</p>
+  .subscribe(({ entities, annots }) =&gt; this.rows.set(entities ?? []));</code></pre></div><p><code>maxAge</code> can also be set per request: <code>fetch({ fetchPolicy: &#39;cache-first&#39;, maxAge: 30 })</code>.
+The stored lifetime uses the request&#39;s <code>maxAge</code>, then the response&#39;s <code>max-age</code>, then the
+cache default. A cache hit does not renew the lifetime.</p>
+<p>Cache decisions are made when the observable is subscribed to, not when it is created.
+<code>network-only</code> does not read the cache, but replaces an existing entry with the fresh
+response. <code>no-cache</code> does not access the cache at all. Event/progress requests pass through
+their HTTP events; only successful final responses are stored.</p>
+<p>Unsubscribing from <code>cache-and-network</code> after the cached emission can cancel the network
+refresh. In particular, <code>firstValueFrom()</code> returns the first emission and unsubscribes;
+use a subscription or <code>lastValueFrom()</code> when the refresh must complete.</p>
+<p>By default, server cache restrictions take precedence over a requested lifetime. Responses with
+<code>Cache-Control: no-store</code> are not cached. Server <code>no-cache</code> requires validation; because
+the client does not implement conditional cache revalidation, it fetches again instead
+of reusing those responses. A restrictive refresh also removes the older reusable entry.</p>
+<p>Set <code>options.ignoreCacheControl: true</code> in the API configuration, or
+<code>fetch({ ignoreCacheControl: true })</code> for a request, to ignore response Cache-Control
+directives, including <code>no-store</code>, <code>no-cache</code>, and <code>max-age</code>. The default is <code>false</code>; an
+explicit per-request <code>false</code> overrides a global <code>true</code>. With this opt-in, lifetime comes
+from the request&#39;s <code>maxAge</code> or the cache default. Fetch policies and <code>Vary</code> restrictions
+still apply. Only enable this when your application can safely disregard the server&#39;s
+caching requirements.</p>
+<h3>Response identity and isolation</h3>
+<p>Response keys include the API partition, resource path and query, transport response
+type, credentials mode, <code>ignoreCacheControl</code>, and the <code>Accept</code>, <code>Accept-Language</code>, and
+<code>Prefer</code> request headers.
+Keys use <code>|</code>-delimited components, escaping literal <code>%</code> and <code>|</code> within each component.
+Header values retain their JSON array representation to distinguish multiple values
+from a single value containing commas.
+Moving query parameters into a POST <code>$query</code> body preserves the logical GET identity.
+Responses whose <code>Vary</code> includes other headers or <code>*</code> are not reused.</p>
+<p>The response-key format is versioned. Returned response bodies are detached snapshots
+and use the current request&#39;s resource/parser.</p>
+<p>This is not automatic authentication isolation. Use separate cache instances and
+persistent namespaces, or clear the cache when the signed-in user or tenant changes.
+Authorization/cookie values are not placed in response keys, and headers added only
+by HTTP interceptors are not visible when the OData request key is built.</p>
 <h2>Invalidation</h2>
-<p>Requests that change data (<code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>) remove the cached entries of
-the affected resources. To clear the cache yourself, call <code>flush()</code> on the cache instance,
-or <code>forget()</code> with a <code>name</code>, <code>scope</code> or <code>tags</code>.</p>
+<p>Successful requests that change data (<code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>) invalidate the
+matching entity set by default, including its cached lists, entities, and child paths.
+Singleton writes invalidate that singleton. Other sets, API partitions, and manually
+stored payloads are retained. Operations with no identifiable set or singleton, such as
+unbound actions, fall back to invalidating the API&#39;s responses.</p>
+<p><strong>Expanded and navigation responses rooted in other entity sets may remain stale.</strong>
+Clear them manually, or configure <code>options.cacheInvalidation: &#39;api&#39;</code> to invalidate all
+response entries for that API after a successful write.</p>
+<p><code>cacheInvalidation</code> accepts <code>&#39;entity-set&#39;</code> (the default) or <code>&#39;api&#39;</code> globally and per
+request. A request overrides the API setting, so a write with broader side effects can
+use <code>{ cacheInvalidation: &#39;api&#39; }</code>, while an isolated write can explicitly use
+<code>{ cacheInvalidation: &#39;entity-set&#39; }</code>. Related-resource lists are not inferred or supported.</p>
+<p>Creating an observable without subscribing, or receiving an unsuccessful mutation,
+does not invalidate entries. GET requests started before a successful mutation may
+still deliver their results to their subscribers, but cannot refill the invalidated
+cache with those older results.</p>
+<p>Batch requests are collected synchronously by <code>add()</code>. Their cache policies are evaluated
+when <code>send()</code> is subscribed to; cache hits are omitted from the network subrequest list.
+Successful mutating subresponses invalidate the cache even when no consumer subscribes
+to an individual inner response. An outer batch HTTP success alone does not invalidate
+entries if all mutations failed.
+All returned subresponses are dispatched before a synchronous cache-processing error
+terminates the batch.</p>
+<p>Cache readiness failures and synchronous cache errors terminate the outer batch through
+its error channel and optional API <code>errorHandler</code>, even without inner subscribers.
+Readiness failure terminates all collected inner requests as well. Unsuccessful HTTP
+subresponses and <code>cache-only</code> misses remain individual request errors.</p>
+<p>To clear an entire cache instance, including manually stored payloads, call <code>flush()</code>.
+<code>forget({ name, scope, tags })</code> matches an exact name within its scope, a scope and its
+descendants, or any matching tag. Scope matching respects segment boundaries and does
+not modify the supplied arrays. <code>forget({})</code> removes expired entries.</p>
+<p>Custom synchronous caches remain supported. They may optionally implement <code>ready()</code>.
+Custom response scopes should start with <code>request.cacheScope</code> to participate in API-wide
+invalidation; other custom scope conventions use scoped invalidation.</p>
 
                    </div><div class="search-results">
     <div class="has-results">

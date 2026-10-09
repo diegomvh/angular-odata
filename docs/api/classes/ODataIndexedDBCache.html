@@ -146,7 +146,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+                            <code><a href="../classes/ODataInMemoryCache.html" target="_self" >ODataInMemoryCache</a></code>
             </p>
 
 
@@ -165,11 +165,28 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#_db" >_db</a>
+                                    <span class="modifier">Optional</span>
+                                <a href="#_database" >_database</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#entries" >entries</a>
+                                <a href="#_hydrated" >_hydrated</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_pending" >_pending</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_persistent" >_persistent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_ready" >_ready</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_writes" >_writes</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
@@ -182,6 +199,23 @@
                             <li>
                                     <span class="modifier">Private</span>
                                 <a href="#version" >version</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_nextExpiry" >_nextExpiry</a>
+                            </li>
+                            <li>
+                                <a href="#entries" >entries</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#_error" >_error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#_onError" >_onError</a>
                             </li>
                             <li>
                                 <a href="#maxAge" >maxAge</a>
@@ -199,28 +233,68 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Protected</span>
                                     <span class="modifier"></span>
-                                <a href="#flush" >flush</a>
+                                <a href="#clearEntries" >clearEntries</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                    <span class="modifier"></span>
+                                <a href="#deleteEntry" >deleteEntry</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#disablePersistence" >disablePersistence</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
                                 <a href="#forget" >forget</a>
                             </li>
                             <li>
-                                    <span class="modifier"></span>
-                                <a href="#get" >get</a>
-                            </li>
-                            <li>
-                                    <span class="modifier"></span>
-                                <a href="#getResponse" >getResponse</a>
-                            </li>
-                            <li>
                                     <span class="modifier">Private</span>
-                                <a href="#initDb" >initDb</a>
+                                    <span class="modifier">Async</span>
+                                <a href="#initialize" >initialize</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
                                 <a href="#loadFromDb" >loadFromDb</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#openDb" >openDb</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#persist" >persist</a>
+                            </li>
+                            <li>
+                                <a href="#ready" >ready</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                    <span class="modifier"></span>
+                                <a href="#reportError" >reportError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                    <span class="modifier"></span>
+                                <a href="#setEntry" >setEntry</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#expireEntry" >expireEntry</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#flush" >flush</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#get" >get</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#prune" >prune</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
@@ -228,16 +302,7 @@
                             </li>
                             <li>
                                     <span class="modifier"></span>
-                                <a href="#putResponse" >putResponse</a>
-                            </li>
-                            <li>
-                                    <span class="modifier"></span>
                                 <a href="#size" >size</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#withDb" >withDb</a>
                             </li>
                             <li>
                                 <a href="#buildEntry" >buildEntry</a>
@@ -246,13 +311,47 @@
                                 <a href="#buildKey" >buildKey</a>
                             </li>
                             <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#checkError" >checkError</a>
+                            </li>
+                            <li>
+                                <a href="#getResponse" >getResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#isEntry" >isEntry</a>
+                            </li>
+                            <li>
                                 <a href="#isExpired" >isExpired</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#isResponseJson" >isResponseJson</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#matches" >matches</a>
+                            </li>
+                            <li>
+                                <a href="#putResponse" >putResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#reportCorruption" >reportCorruption</a>
                             </li>
                             <li>
                                 <a href="#scope" >scope</a>
                             </li>
                             <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#snapshot" >snapshot</a>
+                            </li>
+                            <li>
                                 <a href="#tags" >tags</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#validateMaxAge" >validateMaxAge</a>
                             </li>
                         </ul>
                     </td>
@@ -272,12 +371,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(undefined: literal type)</code>
+<code>constructor(undefined: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:18</a></div>
                             </td>
                         </tr>
 
@@ -297,7 +396,7 @@
                                                 <tr>
                                                   
                                                         <td>
-                                                                    <code>literal type</code>
+                                                                        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -323,23 +422,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="_db"></a>
+                    <a name="_database"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                        <span ><b>_db</b></span>
-                        <a href="#_db"><span class="icon ion-ios-link"></span></a>
+                            <span class="modifier">Optional</span>
+                        <span ><b>_database</b></span>
+                        <a href="#_database"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>Promise&lt;IDBDatabase&gt;</code>
+                        <i>Type : </i>    <code>IDBDatabase</code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:13</a></div>
                         </td>
                     </tr>
 
@@ -350,23 +450,151 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="entries"></a>
+                    <a name="_hydrated"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                        <span ><b>entries</b></span>
-                        <a href="#entries"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>_hydrated</b></span>
+                        <a href="#_hydrated"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Map&lt;string | ODataCacheEntry&lt;any&gt;&gt;</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:15</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_pending"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_pending</b></span>
+                        <a href="#_pending"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#PendingOperation" target="_self" >PendingOperation[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_persistent"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_persistent</b></span>
+                        <a href="#_persistent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_ready"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_ready</b></span>
+                        <a href="#_ready"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Promise&lt;void&gt;</code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_writes"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_writes</b></span>
+                        <a href="#_writes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Promise&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Promise.resolve()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:17</a></div>
                         </td>
                     </tr>
 
@@ -393,7 +621,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:10</a></div>
                         </td>
                     </tr>
 
@@ -420,7 +648,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:12</a></div>
                         </td>
                     </tr>
 
@@ -447,7 +675,149 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:6</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:11</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_nextExpiry"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_nextExpiry</b></span>
+                        <a href="#_nextExpiry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Infinity</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataInMemoryCache.html" target="_self" >ODataInMemoryCache</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataInMemoryCache.html#source" target="_self" >ODataInMemoryCache:6</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="entries"></a>
+                    <span class="name">
+                        <span ><b>entries</b></span>
+                        <a href="#entries"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Map&lt;string | ODataCacheEntry&lt;any&gt;&gt;</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataInMemoryCache.html" target="_self" >ODataInMemoryCache</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataInMemoryCache.html#source" target="_self" >ODataInMemoryCache:5</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_error"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>_error</b></span>
+                        <a href="#_error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Error</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:37</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_onError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>_onError</b></span>
+                        <a href="#_onError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:36</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -479,7 +849,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:20</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:35</a></code>
 </div>
                         </td>
                     </tr>
@@ -498,31 +868,32 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="flush"></a>
+                    <a name="clearEntries"></a>
                     <span class="name">
+                            <span class="modifier">Protected</span>
                             <span class="modifier"></span>
-                        <span ><b>flush</b></span>
-                        <a href="#flush"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>clearEntries</b></span>
+                        <a href="#clearEntries"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>flush()</code>
+                    <code>clearEntries()</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataInMemoryCache.html" target="_self" >ODataInMemoryCache</a></code>
 </div>
                         </td>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:147</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataInMemoryCache.html#source" target="_self" >ODataInMemoryCache:186</a></code>
 </div>
                         </td>
                     </tr>
@@ -535,6 +906,151 @@
                             <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                         </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteEntry"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                            <span class="modifier"></span>
+                        <span ><b>deleteEntry</b></span>
+                        <a href="#deleteEntry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteEntry(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataInMemoryCache.html" target="_self" >ODataInMemoryCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataInMemoryCache.html#source" target="_self" >ODataInMemoryCache:181</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="disablePersistence"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>disablePersistence</b></span>
+                        <a href="#disablePersistence"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>disablePersistence(cause: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cause</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -554,7 +1070,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>forget(undefined: literal type)</code>
+                    <code>forget(options: <a href="../undefineds/ODataCacheFilter.html" target="_self">ODataCacheFilter</a>)</code>
                 </td>
             </tr>
 
@@ -567,7 +1083,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:116</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:193</a></code>
 </div>
                         </td>
                     </tr>
@@ -575,6 +1091,8 @@
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>Invalidate loaded entries and record filters that must also apply during hydration.</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -590,8 +1108,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                                <td>options</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                            <code><a href="../miscellaneous/typealiases.html#ODataCacheFilter" target="_self" >ODataCacheFilter</a></code>
                                             </td>
 
                                             <td>
@@ -621,201 +1140,27 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="get"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                        <span ><b>get</b></span>
-                        <a href="#get"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>get(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, undefined: literal type)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
-</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:94</a></code>
-</div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                                <td>Default value</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>name</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-                                            <td>
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                        <code>literal type</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-                                            <td>
-                                                    <code>{}</code>
-                                            </td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>T | undefined</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getResponse"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                        <span ><b>getResponse</b></span>
-                        <a href="#getResponse"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getResponse(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
-</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:110</a></code>
-</div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>req</td>
-                                            <td>
-                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse | undefined</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="initDb"></a>
+                    <a name="initialize"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                        <span ><b>initDb</b></span>
-                        <a href="#initDb"><span class="icon ion-ios-link"></span></a>
+                            <span class="modifier">Async</span>
+                        <span ><b>initialize</b></span>
+                        <a href="#initialize"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>initDb()</code>
+                    <code>initialize()</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="30"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:30</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:120</a></div>
                         </td>
                     </tr>
 
@@ -824,7 +1169,7 @@
                 <td class="col-md-4">
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;IDBDatabase&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
 
                         </div>
                 </td>
@@ -853,8 +1198,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="50"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:50</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -890,12 +1235,630 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Promise&lt;Map&lt;string, ODataCacheEntry&lt;unknown&gt;&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">
                                 
                             </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openDb"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>openDb</b></span>
+                        <a href="#openDb"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>openDb()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;IDBDatabase&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="persist"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>persist</b></span>
+                        <a href="#persist"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>persist(operation: (store: IDBObjectStore) => void, removal: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="151"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:151</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>operation</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>removal</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ready"></a>
+                    <span class="name">
+                        <span ><b>ready</b></span>
+                        <a href="#ready"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ready()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Wait for hydration and queued writes, or an explicitly reported memory-only fallback.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="reportError"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                            <span class="modifier"></span>
+                        <span ><b>reportError</b></span>
+                        <a href="#reportError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>reportError(message: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, cause?: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:44</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>message</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>cause</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setEntry"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                            <span class="modifier"></span>
+                        <span ><b>setEntry</b></span>
+                        <a href="#setEntry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setEntry(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, entry: <a href="../objects/OData.html" target="_self">ODataCacheEntry&lt;unknown&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataInMemoryCache.html" target="_self" >ODataInMemoryCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataInMemoryCache.html#source" target="_self" >ODataInMemoryCache:174</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>entry</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataCacheEntry&lt;unknown&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expireEntry"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>expireEntry</b></span>
+                        <a href="#expireEntry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>expireEntry(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataInMemoryCache.html" target="_self" >ODataInMemoryCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataInMemoryCache.html#source" target="_self" >ODataInMemoryCache:22</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="flush"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>flush</b></span>
+                        <a href="#flush"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>flush()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:91</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Remove all cache entries</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="get"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>get</b></span>
+                        <a href="#get"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>get(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, undefined: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:69</a></code>
+</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Return the payload from the cache if it exists and is not expired</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>The name of the entry</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>T | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The payload of the entry</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prune"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>prune</b></span>
+                        <a href="#prune"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>prune()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataInMemoryCache.html" target="_self" >ODataInMemoryCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataInMemoryCache.html#source" target="_self" >ODataInMemoryCache:31</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
                 </td>
             </tr>
         </tbody>
@@ -928,7 +1891,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:75</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:51</a></code>
 </div>
                         </td>
                     </tr>
@@ -944,6 +1907,8 @@
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>Put some payload in the cache</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -955,6 +1920,7 @@
                                                 <td>Type</td>
                                             <td>Optional</td>
                                                 <td>Default value</td>
+                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -971,6 +1937,10 @@
                                             <td>
                                             </td>
 
+                                            <td>
+                                                    <p>The name for the entry</p>
+
+                                            </td>
                                         </tr>
                                         <tr>
                                                 <td>payload</td>
@@ -985,6 +1955,10 @@
                                             <td>
                                             </td>
 
+                                            <td>
+                                                    <p>The payload to store in the cache</p>
+
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -999,93 +1973,8 @@
                                                     <code>{}</code>
                                             </td>
 
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="putResponse"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                        <span ><b>putResponse</b></span>
-                        <a href="#putResponse"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>putResponse(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res: <a href="../classes/ODataResponse.html" target="_self">ODataResponse&lt;any&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
-</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:100</a></code>
-</div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>req</td>
                                             <td>
-                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
                                             </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>res</td>
-                                            <td>
-                                                            <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1129,7 +2018,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:160</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:97</a></code>
 </div>
                         </td>
                     </tr>
@@ -1137,89 +2026,13 @@
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>Return the number of unexpired entries.</p>
+</div>
 
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                         </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="withDb"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>withDb</b></span>
-                        <a href="#withDb"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>withDb(fn: (db: IDBDatabase) => void)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="70"
-                                    class="link-to-prism">projects/angular-odata/src/lib/cache/indexeddb.ts:70</a></div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Type parameters :</b>
-                            <ul class="type-parameters">
-                                    <li>T</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>fn</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;T&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1250,7 +2063,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:73</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:96</a></code>
 </div>
                         </td>
                     </tr>
@@ -1352,7 +2165,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:90</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:115</a></code>
 </div>
                         </td>
                     </tr>
@@ -1411,6 +2224,201 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="checkError"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>checkError</b></span>
+                        <a href="#checkError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkError()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:139</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getResponse"></a>
+                    <span class="name">
+                        <span ><b>getResponse</b></span>
+                        <a href="#getResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getResponse(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:228</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Restore a detached response using the current request&#39;s resource and parser.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse | undefined</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isEntry"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>isEntry</b></span>
+                        <a href="#isEntry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isEntry(value: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:143</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataCacheEntry&lt;unknown&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="isExpired"></a>
                     <span class="name">
                         <span ><b>isExpired</b></span>
@@ -1433,7 +2441,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:31</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:53</a></code>
 </div>
                         </td>
                     </tr>
@@ -1492,6 +2500,355 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="isResponseJson"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>isResponseJson</b></span>
+                        <a href="#isResponseJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isResponseJson(value: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:177</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponseJson&lt;unknown&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="matches"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>matches</b></span>
+                        <a href="#matches"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>matches(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, entry: <a href="../objects/OData.html" target="_self">ODataCacheEntry&lt;unknown&gt;</a>, undefined: <a href="../undefineds/ODataCacheFilter.html" target="_self">ODataCacheFilter</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:161</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>entry</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataCacheEntry&lt;unknown&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ODataCacheFilter" target="_self" >ODataCacheFilter</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="putResponse"></a>
+                    <span class="name">
+                        <span ><b>putResponse</b></span>
+                        <a href="#putResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>putResponse(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res: <a href="../classes/ODataResponse.html" target="_self">ODataResponse&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:214</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Store a detached response snapshot, respecting server reuse restrictions.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="reportCorruption"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>reportCorruption</b></span>
+                        <a href="#reportCorruption"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>reportCorruption(message: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, cause?: <a href="../undefineds/now.html" target="_self">unknown</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:135</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Report a discarded entry; corrupt entries are treated as cache misses.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>message</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>cause</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="scope"></a>
                     <span class="name">
                         <span ><b>scope</b></span>
@@ -1514,7 +2871,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:40</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:62</a></code>
 </div>
                         </td>
                     </tr>
@@ -1573,6 +2930,81 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="snapshot"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>snapshot</b></span>
+                        <a href="#snapshot"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>snapshot(response: <a href="../classes/ODataResponse.html" target="_self">ODataResponseJson&lt;unknown&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:201</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>response</td>
+                                            <td>
+                                                            <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponseJson&lt;unknown&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponseJson&lt;unknown&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="tags"></a>
                     <span class="name">
                         <span ><b>tags</b></span>
@@ -1595,7 +3027,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:56</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:79</a></code>
 </div>
                         </td>
                     </tr>
@@ -1650,6 +3082,81 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateMaxAge"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>validateMaxAge</b></span>
+                        <a href="#validateMaxAge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateMaxAge(maxAge: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseCache.html" target="_self" >ODataBaseCache</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataBaseCache.html#source" target="_self" >ODataBaseCache:119</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>maxAge</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
 
@@ -1660,167 +3167,206 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataRequest, ODataResponse, ODataResponseJson } from &#x27;../resources&#x27;;
-import { ODataBaseCache, ODataCacheEntry } from &#x27;./cache&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { ODataCacheEntry, ODataCacheFilter, ODataCacheOptions } from &#x27;./cache&#x27;;
+import { ODataInMemoryCache } from &#x27;./memory&#x27;;
 
-export class ODataIndexedDBCache extends ODataBaseCache {
+type PendingOperation &#x3D;
+  | { kind: &#x27;put&#x27;; key: string; entry: ODataCacheEntry&lt;unknown&gt; }
+  | { kind: &#x27;forget&#x27;; options: ODataCacheFilter }
+  | { kind: &#x27;flush&#x27; };
+
+export class ODataIndexedDBCache extends ODataInMemoryCache {
   private name: string;
   private version: number;
   private store: string;
-  private entries: Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;;
-  private _db: Promise&lt;IDBDatabase&gt;;
+  private _database?: IDBDatabase;
+  private _persistent &#x3D; true;
+  private _hydrated &#x3D; false;
+  private _pending: PendingOperation[] &#x3D; [];
+  private _writes: Promise&lt;void&gt; &#x3D; Promise.resolve();
+  private _ready: Promise&lt;void&gt;;
 
   constructor({
     name &#x3D; &#x27;ODataCache&#x27;,
     store &#x3D; &#x27;cache&#x27;,
     version &#x3D; 1,
-    maxAge,
-  }: {
-    name?: string;
-    store?: string;
-    version?: number;
-    maxAge?: number;
-  } &#x3D; {}) {
-    super({ maxAge });
+    ...options
+  }: ODataCacheOptions &amp; { name?: string; store?: string; version?: number } &#x3D; {}) {
+    super(options);
     this.name &#x3D; name;
     this.store &#x3D; store;
     this.version &#x3D; version;
-    this.entries &#x3D; new Map();
-    this._db &#x3D; this.initDb();
-  }
-
-  private initDb(): Promise&lt;IDBDatabase&gt; {
-    return new Promise&lt;IDBDatabase&gt;((resolve, reject) &#x3D;&gt; {
-      const request &#x3D; indexedDB.open(this.name, this.version);
-      request.onupgradeneeded &#x3D; (event) &#x3D;&gt; {
-        const db &#x3D; (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains(this.store)) {
-          db.createObjectStore(this.store);
-        }
-      };
-      request.onsuccess &#x3D; async (event) &#x3D;&gt; {
-        const db &#x3D; (event.target as IDBOpenDBRequest).result;
-        await this.loadFromDb(db);
-        resolve(db);
-      };
-      request.onerror &#x3D; (event) &#x3D;&gt; {
-        reject((event.target as IDBOpenDBRequest).error);
-      };
+    this._ready &#x3D; this.initialize().catch((error: unknown) &#x3D;&gt; {
+      const flushed &#x3D; this._pending.some((operation) &#x3D;&gt; operation.kind &#x3D;&#x3D;&#x3D; &#x27;flush&#x27;);
+      this.disablePersistence(error);
+      this._hydrated &#x3D; true;
+      this._pending &#x3D; [];
+      if (flushed) this.persist((store) &#x3D;&gt; store.clear(), true);
     });
   }
 
-  private loadFromDb(db: IDBDatabase): Promise&lt;void&gt; {
-    return new Promise((resolve, reject) &#x3D;&gt; {
-      const transaction &#x3D; db.transaction(this.store, &#x27;readonly&#x27;);
-      const store &#x3D; transaction.objectStore(this.store);
-      const request &#x3D; store.openCursor();
-      request.onsuccess &#x3D; (event) &#x3D;&gt; {
-        const cursor &#x3D; (event.target as IDBRequest&lt;IDBCursorWithValue&gt;).result;
-        if (cursor) {
-          this.entries.set(cursor.key as string, cursor.value as ODataCacheEntry&lt;any&gt;);
-          cursor.continue();
-        } else {
-          resolve();
-        }
-      };
-      request.onerror &#x3D; (event) &#x3D;&gt; {
-        reject((event.target as IDBRequest).error);
-      };
-    });
+  /** Wait for hydration and queued writes, or an explicitly reported memory-only fallback. */
+  ready(): Promise&lt;void&gt; {
+    return this._ready.then(() &#x3D;&gt; this._writes).then(() &#x3D;&gt; this.checkError());
   }
 
-  private async withDb&lt;T&gt;(fn: (db: IDBDatabase) &#x3D;&gt; Promise&lt;T&gt;): Promise&lt;T&gt; {
-    const db &#x3D; await this._db!;
-    return fn(db);
-  }
-
-  override put&lt;T&gt;(
-    name: string,
-    payload: T,
-    { maxAge, scope, tags }: { maxAge?: number; scope?: string[]; tags?: string[] } &#x3D; {},
-  ) {
-    const entry &#x3D; this.buildEntry&lt;T&gt;(payload, { maxAge, tags });
-    const key &#x3D; this.buildKey([...(scope ?? []), name]);
-    this.entries.set(key, entry);
-    this.withDb((db) &#x3D;&gt; {
-      return new Promise&lt;void&gt;((resolve, reject) &#x3D;&gt; {
-        const transaction &#x3D; db.transaction(this.store, &#x27;readwrite&#x27;);
-        const store &#x3D; transaction.objectStore(this.store);
-        store.put(entry, key);
-        transaction.oncomplete &#x3D; () &#x3D;&gt; resolve();
-        transaction.onerror &#x3D; (event) &#x3D;&gt; reject((event.target as IDBRequest).error);
-      });
-    });
-  }
-
-  override get&lt;T&gt;(name: string, { scope }: { scope?: string[] } &#x3D; {}): T | undefined {
-    const key &#x3D; this.buildKey([...(scope || []), name]);
-    const entry &#x3D; this.entries.get(key);
-    return entry !&#x3D;&#x3D; undefined &amp;&amp; !this.isExpired(entry) ? entry.payload : undefined;
-  }
-
-  override putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
-    const scope &#x3D; this.scope(req);
-    const tags &#x3D; this.tags(res);
-    this.put&lt;ODataResponseJson&lt;any&gt;&gt;(req.cacheKey, res.toJson(), {
-      maxAge: req.maxAge ?? res.options.maxAge,
-      scope,
-      tags,
-    });
-  }
-
-  override getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
-    const scope &#x3D; this.scope(req);
-    const data &#x3D; this.get&lt;ODataResponseJson&lt;any&gt;&gt;(req.cacheKey, { scope });
-    return data !&#x3D;&#x3D; undefined ? ODataResponse.fromJson(req, data) : undefined;
-  }
-
-  override forget({
-    name,
-    scope &#x3D; [],
-    tags &#x3D; [],
-  }: { name?: string; scope?: string[]; tags?: string[] } &#x3D; {}) {
-    if (name) scope.push(name);
-    const key &#x3D; scope.length &gt; 0 ? this.buildKey(scope) : undefined;
-    const keysToDelete: string[] &#x3D; [];
-    this.entries.forEach((entry, k) &#x3D;&gt; {
-      if (
-        this.isExpired(entry) ||
-        (key !&#x3D;&#x3D; undefined &amp;&amp; k.startsWith(key)) ||
-        (tags.length &gt; 0 &amp;&amp; tags.some((t) &#x3D;&gt; entry.tags.indexOf(t) !&#x3D;&#x3D; -1))
-      ) {
-        keysToDelete.push(k);
-      }
-    });
-    keysToDelete.forEach((k) &#x3D;&gt; this.entries.delete(k));
-    if (keysToDelete.length &gt; 0) {
-      this.withDb((db) &#x3D;&gt; {
-        return new Promise&lt;void&gt;((resolve, reject) &#x3D;&gt; {
-          const transaction &#x3D; db.transaction(this.store, &#x27;readwrite&#x27;);
-          const store &#x3D; transaction.objectStore(this.store);
-          keysToDelete.forEach((k) &#x3D;&gt; store.delete(k));
-          transaction.oncomplete &#x3D; () &#x3D;&gt; resolve();
-          transaction.onerror &#x3D; (event) &#x3D;&gt; reject((event.target as IDBRequest).error);
-        });
-      });
+  protected override reportError(message: string, cause?: unknown): void {
+    // IndexedDB event callbacks cannot throw into the caller&#x27;s observable.
+    try {
+      super.reportError(message, cause);
+    } catch (error) {
+      if (!(error instanceof Error)) throw error;
+      this._error &#x3D; error;
     }
   }
 
-  override flush() {
-    this.entries &#x3D; new Map();
-    this.withDb((db) &#x3D;&gt; {
-      return new Promise&lt;void&gt;((resolve, reject) &#x3D;&gt; {
-        const transaction &#x3D; db.transaction(this.store, &#x27;readwrite&#x27;);
-        const store &#x3D; transaction.objectStore(this.store);
-        store.clear();
-        transaction.oncomplete &#x3D; () &#x3D;&gt; resolve();
-        transaction.onerror &#x3D; (event) &#x3D;&gt; reject((event.target as IDBRequest).error);
-      });
+  // The database stays open after a fallback so flush/forget can still remove persisted data.
+  private disablePersistence(cause: unknown): void {
+    if (!this._persistent) return;
+    this._persistent &#x3D; false;
+    this.reportError(&#x27;IndexedDB cache persistence failed; using memory only&#x27;, cause);
+  }
+
+  private openDb(): Promise&lt;IDBDatabase&gt; {
+    return new Promise((resolve, reject) &#x3D;&gt; {
+      const request &#x3D; indexedDB.open(this.name, this.version);
+      let failed &#x3D; false;
+      const fail &#x3D; (error: unknown) &#x3D;&gt; {
+        failed &#x3D; true;
+        reject(error);
+      };
+      request.onupgradeneeded &#x3D; () &#x3D;&gt; {
+        if (failed) {
+          request.transaction?.abort();
+          return;
+        }
+        const db &#x3D; request.result;
+        if (!db.objectStoreNames.contains(this.store)) db.createObjectStore(this.store);
+      };
+      request.onsuccess &#x3D; () &#x3D;&gt; {
+        const db &#x3D; request.result;
+        if (failed) {
+          db.close();
+          return;
+        }
+        db.onversionchange &#x3D; () &#x3D;&gt; {
+          db.close();
+          this._database &#x3D; undefined;
+          this.disablePersistence(new Error(&#x27;IndexedDB cache version changed&#x27;));
+        };
+        resolve(db);
+      };
+      request.onerror &#x3D; () &#x3D;&gt; fail(request.error);
+      request.onblocked &#x3D; () &#x3D;&gt; fail(new Error(&#x27;IndexedDB cache opening was blocked&#x27;));
     });
   }
 
-  override size() {
-    return this.entries.size;
+  private loadFromDb(db: IDBDatabase): Promise&lt;Map&lt;string, ODataCacheEntry&lt;unknown&gt;&gt;&gt; {
+    return new Promise((resolve, reject) &#x3D;&gt; {
+      const entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;unknown&gt;&gt;();
+      const transaction &#x3D; db.transaction(this.store, &#x27;readwrite&#x27;);
+      const request &#x3D; transaction.objectStore(this.store).openCursor();
+      request.onsuccess &#x3D; () &#x3D;&gt; {
+        const cursor &#x3D; request.result;
+        if (cursor &#x3D;&#x3D;&#x3D; null) return;
+        const value: unknown &#x3D; cursor.value;
+        if (typeof cursor.key !&#x3D;&#x3D; &#x27;string&#x27; || !this.isEntry(value)) {
+          cursor.delete();
+          this.reportCorruption(&#x27;Discarding an invalid IndexedDB cache entry&#x27;);
+        } else if (this.isExpired(value)) {
+          cursor.delete();
+        } else {
+          entries.set(cursor.key, value);
+        }
+        cursor.continue();
+      };
+      transaction.oncomplete &#x3D; () &#x3D;&gt; resolve(entries);
+      transaction.onerror &#x3D; () &#x3D;&gt; reject(transaction.error ?? new Error(&#x27;IndexedDB load failed&#x27;));
+      transaction.onabort &#x3D; () &#x3D;&gt; reject(transaction.error ?? new Error(&#x27;IndexedDB load aborted&#x27;));
+    });
+  }
+
+  private async initialize(): Promise&lt;void&gt; {
+    const db &#x3D; await this.openDb();
+    this._database &#x3D; db;
+    const entries &#x3D; await this.loadFromDb(db);
+    if (!this._persistent) {
+      this._hydrated &#x3D; true;
+      this._pending &#x3D; [];
+      return;
+    }
+    const pending &#x3D; this._pending;
+    this._pending &#x3D; [];
+    super.clearEntries();
+    entries.forEach((entry, key) &#x3D;&gt; super.setEntry(key, entry));
+    this._hydrated &#x3D; true;
+    for (const operation of pending) {
+      switch (operation.kind) {
+        case &#x27;put&#x27;:
+          this.setEntry(operation.key, operation.entry);
+          break;
+        case &#x27;forget&#x27;:
+          this.forget(operation.options);
+          break;
+        case &#x27;flush&#x27;:
+          this.flush();
+          break;
+      }
+    }
+    this.prune();
+    await this._writes;
+  }
+
+  private persist(operation: (store: IDBObjectStore) &#x3D;&gt; void, removal &#x3D; false): void {
+    this._writes &#x3D; this._writes
+      .then(() &#x3D;&gt; {
+        const db &#x3D; this._database;
+        if (db &#x3D;&#x3D;&#x3D; undefined || (!this._persistent &amp;&amp; !removal)) return;
+        return new Promise&lt;void&gt;((resolve, reject) &#x3D;&gt; {
+          const transaction &#x3D; db.transaction(this.store, &#x27;readwrite&#x27;);
+          transaction.oncomplete &#x3D; () &#x3D;&gt; resolve();
+          transaction.onerror &#x3D; () &#x3D;&gt;
+            reject(transaction.error ?? new Error(&#x27;IndexedDB write failed&#x27;));
+          transaction.onabort &#x3D; () &#x3D;&gt;
+            reject(transaction.error ?? new Error(&#x27;IndexedDB write aborted&#x27;));
+          try {
+            operation(transaction.objectStore(this.store));
+          } catch (error) {
+            transaction.abort();
+            reject(error);
+          }
+        });
+      })
+      .catch((error: unknown) &#x3D;&gt; this.disablePersistence(error));
+  }
+
+  protected override setEntry(key: string, entry: ODataCacheEntry&lt;unknown&gt;): void {
+    super.setEntry(key, entry);
+    if (!this._hydrated) this._pending.push({ kind: &#x27;put&#x27;, key, entry });
+    else if (this._persistent) this.persist((store) &#x3D;&gt; store.put(entry, key));
+    else this.persist((store) &#x3D;&gt; store.delete(key), true);
+  }
+
+  protected override deleteEntry(key: string): void {
+    super.deleteEntry(key);
+    if (this._hydrated) this.persist((store) &#x3D;&gt; store.delete(key), true);
+  }
+
+  protected override clearEntries(): void {
+    super.clearEntries();
+    if (!this._hydrated) this._pending.push({ kind: &#x27;flush&#x27; });
+    else this.persist((store) &#x3D;&gt; store.clear(), true);
+  }
+
+  /** Invalidate loaded entries and record filters that must also apply during hydration. */
+  override forget(options: ODataCacheFilter &#x3D; {}): void {
+    if (!this._hydrated) {
+      this._pending.push({
+        kind: &#x27;forget&#x27;,
+        options: { ...options, scope: [...(options.scope ?? [])], tags: [...(options.tags ?? [])] },
+      });
+    }
+    super.forget(options);
   }
 }
 </code></pre>

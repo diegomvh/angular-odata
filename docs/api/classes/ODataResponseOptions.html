@@ -974,15 +974,33 @@ export class ODataResponseOptions implements ResponseOptions {
   }
 
   setCache(cacheControl: string) {
-    cacheControl.split(&#x27;,&#x27;).forEach((directive) &#x3D;&gt; {
-      if (directive.startsWith(MAX_AGE)) {
-        let maxAge &#x3D; Number(directive.split(&#x27;&#x3D;&#x27;)[1]);
-        if (!Number.isNaN(maxAge)) this.maxAge &#x3D; maxAge;
+    const precedence: CacheCacheability[] &#x3D; [&#x27;public&#x27;, &#x27;private&#x27;, &#x27;no-cache&#x27;, &#x27;no-store&#x27;];
+    this.cacheability &#x3D; undefined;
+    this.maxAge &#x3D; undefined;
+    for (const directive of cacheControl.split(&#x27;,&#x27;)) {
+      const separator &#x3D; directive.indexOf(&#x27;&#x3D;&#x27;);
+      const name &#x3D; (separator &lt; 0 ? directive : directive.slice(0, separator)).trim().toLowerCase();
+      const value &#x3D;
+        separator &lt; 0
+          ? &#x27;&#x27;
+          : directive
+              .slice(separator + 1)
+              .trim()
+              .replace(/^&quot;(.*)&quot;$/, &#x27;$1&#x27;);
+      if (name &#x3D;&#x3D;&#x3D; MAX_AGE) {
+        const maxAge &#x3D; /^\d+$/.test(value) ? Number(value) : NaN;
+        const seconds &#x3D; Number.isFinite(maxAge * 1000) ? maxAge : 0;
+        this.maxAge &#x3D; Math.min(this.maxAge ?? Infinity, seconds);
       }
-      if ([&#x27;public&#x27;, &#x27;private&#x27;, &#x27;no-cache&#x27;, &#x27;no-store&#x27;].indexOf(directive) !&#x3D;&#x3D; -1) {
-        this.cacheability &#x3D; directive as CacheCacheability;
+      const cacheability &#x3D; precedence.find((candidate) &#x3D;&gt; candidate &#x3D;&#x3D;&#x3D; name);
+      if (
+        cacheability !&#x3D;&#x3D; undefined &amp;&amp;
+        (this.cacheability &#x3D;&#x3D;&#x3D; undefined ||
+          precedence.indexOf(cacheability) &gt; precedence.indexOf(this.cacheability))
+      ) {
+        this.cacheability &#x3D; cacheability;
       }
-    });
+    }
   }
 }
 </code></pre>
