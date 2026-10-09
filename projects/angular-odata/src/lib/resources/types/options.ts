@@ -1,5 +1,5 @@
 import { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
-import { FetchPolicy, ParserOptions } from '../../types';
+import { CacheInvalidation, FetchPolicy, ParserOptions } from '../../types';
 import { ODataQueryOptionsHandler } from '../query';
 import { ODataStructuredType } from '../../schema';
 
@@ -15,6 +15,8 @@ export type ODataOptions = {
   reportProgress?: boolean;
   withCredentials?: boolean;
   fetchPolicy?: FetchPolicy;
+  ignoreCacheControl?: boolean;
+  cacheInvalidation?: CacheInvalidation;
   maxAge?: number;
   parserOptions?: ParserOptions;
 };

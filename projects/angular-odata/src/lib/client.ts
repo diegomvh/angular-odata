@@ -31,6 +31,8 @@ function addBody<T>(
     body,
     etag: options.etag,
     fetchPolicy: options.fetchPolicy,
+    ignoreCacheControl: options.ignoreCacheControl,
+    cacheInvalidation: options.cacheInvalidation,
     headers: options.headers,
     observe: options.observe,
     params: options.params,

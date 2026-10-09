@@ -31,6 +31,8 @@ Each API is described by an `ODataApiConfig` object.
 | `prefer`                                  | Values for the `Prefer` header: `maxPageSize`, `return` (`'representation'` or `'minimal'`), `continueOnError`, `includeAnnotations`.  |
 | `stripMetadata`                           | Remove annotations from responses down to the given metadata level.                                                                    |
 | `fetchPolicy`                             | Default fetch policy. Defaults to `'network-only'`. See [Caching](caching.html).                                                       |
+| `ignoreCacheControl`                      | Ignore response Cache-Control directives. Defaults to `false`; overridable per request.                                                |
+| `cacheInvalidation`                       | Successful-write invalidation: `'entity-set'` (default) or `'api'`. Overridable per request. Related expanded/navigation responses may need manual clearing. |
 | `bodyQueryOptions`                        | Query options sent in the request body (`GET /$query`) instead of the URL.                                                             |
 | `stringAsEnum`                            | Serialize enum values as plain strings.                                                                                                |
 | `deleteRefBy`                             | Delete references by `'path'` or by `'id'`.                                                                                            |

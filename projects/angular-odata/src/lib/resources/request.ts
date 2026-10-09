@@ -5,13 +5,14 @@ import {
   $QUERY,
   ACCEPT,
   APPLICATION_JSON,
+  CACHE_REPRESENTATION_HEADERS,
   CONTENT_TYPE_ANY,
   IF_MATCH_HEADER,
   IF_NONE_MATCH_HEADER,
   PREFER,
   TEXT_PLAIN,
 } from '../constants';
-import type { FetchPolicy, ParserOptions, QueryOption } from '../types';
+import type { CacheInvalidation, FetchPolicy, ParserOptions, QueryOption } from '../types';
 import { Http, Objects, Types } from '../utils';
 import type { ODataResource } from './resource';
 import type { ODataOptions } from './types';
@@ -24,6 +25,8 @@ export class ODataRequest<T> {
   readonly withCredentials?: boolean;
   readonly bodyQueryOptions: QueryOption[];
   readonly fetchPolicy: FetchPolicy;
+  readonly ignoreCacheControl: boolean;
+  readonly cacheInvalidation: CacheInvalidation;
   readonly maxAge?: number;
   readonly resource: ODataResource<T>;
   private readonly _responseType?:
@@ -66,6 +69,8 @@ export class ODataRequest<T> {
       | 'entity'
       | 'entities';
     fetchPolicy?: FetchPolicy;
+    ignoreCacheControl?: boolean;
+    cacheInvalidation?: CacheInvalidation;
     maxAge?: number;
     parserOptions?: ParserOptions;
     withCredentials?: boolean;
@@ -92,6 +97,8 @@ export class ODataRequest<T> {
 
     this.withCredentials = init.withCredentials ?? apiOptions.withCredentials;
     this.fetchPolicy = init.fetchPolicy ?? apiOptions.fetchPolicy;
+    this.ignoreCacheControl = init.ignoreCacheControl ?? apiOptions.ignoreCacheControl;
+    this.cacheInvalidation = init.cacheInvalidation ?? apiOptions.cacheInvalidation;
     this.maxAge = init.maxAge;
     this.bodyQueryOptions = [
       ...(apiOptions.bodyQueryOptions ?? []),
@@ -222,6 +229,8 @@ export class ODataRequest<T> {
       reportProgress: options.reportProgress,
       responseType: options.responseType,
       fetchPolicy: options.fetchPolicy,
+      ignoreCacheControl: options.ignoreCacheControl,
+      cacheInvalidation: options.cacheInvalidation,
       maxAge: options.maxAge,
       parserOptions: options.parserOptions,
       withCredentials: options.withCredentials,
@@ -282,8 +291,30 @@ export class ODataRequest<T> {
     return `${this.api.serviceRootUrl}${this.pathWithParams}`;
   }
 
+  /** A versioned response identity that includes the API and transport representation. */
   get cacheKey() {
-    return this._params.keys().length > 0 ? `${this._path}?${this._params}` : this._path;
+    return [
+      'v2',
+      this.api.serviceRootUrl,
+      JSON.stringify(this.api.name ?? null),
+      this._path,
+      this._params.toString(),
+      this.responseType ?? 'json',
+      String(this.withCredentials ?? false),
+      String(this.ignoreCacheControl),
+      ...CACHE_REPRESENTATION_HEADERS.map((name) => JSON.stringify(this.headers.getAll(name))),
+    ]
+      .map((part) => part.replace(/%/g, '%25').replace(/\|/g, '%7C'))
+      .join('|');
+  }
+
+  /** The versioned response-cache partition belonging to this API. */
+  get cacheScope(): string[] {
+    return [
+      'request',
+      'v2',
+      encodeURIComponent(JSON.stringify([this.api.serviceRootUrl, this.api.name ?? null])),
+    ];
   }
 
   isQueryBody() {

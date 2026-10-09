@@ -11,6 +11,7 @@ import {
   ODATA_VERSION_HEADERS,
   CONTENT_TYPE,
   CACHE_CONTROL,
+  CACHE_REPRESENTATION_HEADERS,
   LOCATION_HEADER,
   ETAG_HEADERS,
   ODATA_ENTITYID_HEADERS,
@@ -101,6 +102,20 @@ export class ODataResponse<T> extends HttpResponse<T> {
       statusText: this.statusText,
       url: this.url,
     };
+  }
+
+  /** Whether the response can be reused without server validation. */
+  isCacheable(ignoreCacheControl = false): boolean {
+    const vary = (this.headers.getAll('Vary') ?? [])
+      .flatMap((value) => value.split(','))
+      .map((name) => name.trim().toLowerCase())
+      .filter((name) => name.length > 0);
+    return (
+      this.ok &&
+      (ignoreCacheControl ||
+        (this.options.cacheability !== 'no-store' && this.options.cacheability !== 'no-cache')) &&
+      vary.every((name) => CACHE_REPRESENTATION_HEADERS.includes(name))
+    );
   }
 
   private _options?: ODataResponseOptions;

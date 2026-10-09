@@ -4,8 +4,8 @@ import {
   HttpResponse,
   HttpResponseBase,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, Subject } from 'rxjs';
+import { defer, from, Observable, of, race, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import {
   $BATCH,
@@ -29,7 +29,6 @@ import {
   XSSI_PREFIX,
 } from '../../constants';
 import { PathSegment } from '../../types';
-import { Arrays } from '../../utils/arrays';
 import { Http } from '../../utils/http';
 import { Strings } from '../../utils/strings';
 import { ODataPathSegments } from '../path';
@@ -150,109 +149,174 @@ export class ODataBatchResource extends ODataResource<any> {
   }
   //#endregion
 
-  private storeRequester() {
-    const current = this.api.requester;
-    // Switch to the batch requester
-    this.api.requester = (req: ODataRequest<any>): Observable<any> => {
-      if (req.api !== this.api) throw new Error('Batch Request are for the same api.');
-      if (req.observe === 'events')
-        throw new Error("Batch Request does not allows observe == 'events'.");
-      this._requests.push(new ODataBatchRequest<any>(req));
-      return this._requests[this._requests.length - 1];
-    };
-    return current;
-  }
-
-  private restoreRequester(handler: ((req: ODataRequest<any>) => Observable<any>) | undefined) {
-    this.api.requester = handler;
-  }
-
   /**
    * Add to batch request
    * @param ctx The context for the request
    * @returns The result of execute the context
    */
   add<R>(ctx: (batch: this) => R): R {
-    // Store original requester
-    var handler = this.storeRequester();
-    // Execute the context
-    const result = ctx(this);
-    // Restore original requester
-    this.restoreRequester(handler);
-
-    return result;
+    return this.api.captureRequests(
+      (req) => {
+        if (req.api !== this.api) throw new Error('Batch Request are for the same api.');
+        if (req.observe === 'events')
+          throw new Error("Batch Request does not allows observe == 'events'.");
+        const request = new ODataBatchRequest<any>(req);
+        this._requests.push(request);
+        return request;
+      },
+      () => ctx(this),
+    );
   }
 
+  /** Send collected requests, evaluating their cache policies when subscribed. */
   send(options?: ODataOptions): Observable<ODataResponse<any>> {
-    if (this.api.options.jsonBatchFormat) {
-      return this.sendJson(options);
-    } else {
-      return this.sendLegacy(options);
-    }
+    return defer(() => {
+      const readsCache = this._requests.some(
+        ({ request }) =>
+          request.isFetch() &&
+          request.fetchPolicy !== 'network-only' &&
+          request.fetchPolicy !== 'no-cache',
+      );
+      let readiness = defer(() => {
+        const ready = readsCache ? this.api.cache?.ready?.() : undefined;
+        return ready === undefined ? of(undefined) : from(ready);
+      }).pipe(
+        tap({
+          error: (error: unknown) => this._requests.forEach((request) => request.error(error)),
+        }),
+      );
+      if (this.api.errorHandler !== undefined) {
+        readiness = readiness.pipe(catchError(this.api.errorHandler));
+      }
+      return readiness.pipe(switchMap(() => this.sendRequests(options)));
+    });
   }
 
-  private sendJson(options?: ODataOptions): Observable<ODataResponse<Object>> {
+  private sendRequests(options?: ODataOptions): Observable<ODataResponse<any>> {
+    const outgoing: ODataBatchRequest<any>[] = [];
+    const responses = new Map<ODataBatchRequest<any>, Subject<HttpResponseBase>>();
+    const responseErrors = new Set<unknown>();
+    const cacheErrors = new ReplaySubject<never>(1);
+    let dispatchingResponses = false;
+    let pendingCacheError: { error: unknown } | undefined;
+    const subscriptions = new Subscription();
+    for (const request of this._requests) {
+      subscriptions.add(
+        this.api
+          .executeRequest(
+            request.request,
+            () => {
+              const response = new Subject<HttpResponseBase>();
+              responses.set(request, response);
+              outgoing.push(request);
+              return response;
+            },
+            true,
+          )
+          .subscribe({
+            next: (response) => request.next(response),
+            error: (error: unknown) => {
+              request.error(error);
+              if (responseErrors.has(error) || this.api.isCacheMiss(error)) return;
+              if (dispatchingResponses) pendingCacheError ??= { error };
+              else cacheErrors.error(error);
+            },
+            complete: () => request.complete(),
+          }),
+      );
+    }
+    const result: Observable<{ response: ODataResponse<any>; parsed: HttpResponseBase[] }> = defer(
+      () =>
+        this.api.options.jsonBatchFormat
+          ? this.sendJson(outgoing, options).pipe(
+              map((response) => ({
+                response,
+                parsed: ODataBatchResource.parseJsonResponse(outgoing, response),
+              })),
+            )
+          : this.sendLegacy(outgoing, options).pipe(
+              map((response) => ({
+                response,
+                parsed: ODataBatchResource.parseLegacyResponse(outgoing, response),
+              })),
+            ),
+    );
+    const resultWithResponses = result.pipe(
+      map(({ response, parsed }) => {
+        this._responses = [...(this._responses ?? []), ...parsed];
+        dispatchingResponses = true;
+        outgoing.forEach((request, index) => {
+          const result = parsed[index];
+          const stream = responses.get(request)!;
+          if (result === undefined) {
+            const error = new Error('Missing batch response');
+            responseErrors.add(error);
+            stream.error(error);
+          } else if (result.ok) {
+            stream.next(result);
+            stream.complete();
+          } else {
+            responseErrors.add(result);
+            stream.error(result);
+          }
+        });
+        dispatchingResponses = false;
+        if (pendingCacheError !== undefined) cacheErrors.error(pendingCacheError.error);
+        return response;
+      }),
+    );
+    const failures =
+      this.api.errorHandler === undefined
+        ? cacheErrors
+        : cacheErrors.pipe(catchError(this.api.errorHandler));
+    return race(failures, resultWithResponses).pipe(
+      tap({
+        error: (error: unknown) => {
+          responseErrors.add(error);
+          responses.forEach((response) => response.error(error));
+          this._requests.forEach((request) => request.error(error));
+        },
+        complete: () => this._requests.forEach((request) => request.complete()),
+      }),
+      finalize(() => subscriptions.unsubscribe()),
+    );
+  }
+
+  private sendJson(
+    requests: ODataBatchRequest<any>[],
+    options?: ODataOptions,
+  ): Observable<ODataResponse<Object>> {
     const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
     });
-    return this.api
-      .request<object>('POST', this, {
-        body: ODataBatchResource.buildJsonBody(this._requests, this.api.options),
-        responseType: 'json',
-        observe: 'response',
-        headers: headers,
-        params: options ? options.params : undefined,
-        withCredentials: options ? options.withCredentials : undefined,
-      })
-      .pipe(
-        map((response: ODataResponse<Object>) => {
-          if (this._responses == null) {
-            this._responses = [];
-          }
-          this._responses = [
-            ...this._responses,
-            ...ODataBatchResource.parseJsonResponse(this._requests, response),
-          ];
-          //HACK: tuple[1] === undefined
-          Arrays.zip(this._requests, this._responses).forEach((tuple) => {
-            if (!tuple[0].isStopped && tuple[1]) tuple[0].onLoad(tuple[1]);
-          });
-          return response;
-        }),
-      );
+    return this.api.request<object>('POST', this, {
+      body: ODataBatchResource.buildJsonBody(requests, this.api.options),
+      responseType: 'json',
+      observe: 'response',
+      headers: headers,
+      params: options ? options.params : undefined,
+      withCredentials: options ? options.withCredentials : undefined,
+    });
   }
 
-  private sendLegacy(options?: ODataOptions): Observable<ODataResponse<string>> {
+  private sendLegacy(
+    requests: ODataBatchRequest<any>[],
+    options?: ODataOptions,
+  ): Observable<ODataResponse<string>> {
     const bound = Strings.uniqueId({ prefix: BATCH_PREFIX });
     const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
       [ACCEPT]: MULTIPART_MIXED,
     });
-    return this.api
-      .request<ODataResponse<string>>('POST', this, {
-        body: ODataBatchResource.buildLegacyBody(bound, this._requests, this.api.options),
-        responseType: 'text',
-        observe: 'response',
-        headers: headers,
-        params: options ? options.params : undefined,
-        withCredentials: options ? options.withCredentials : undefined,
-      })
-      .pipe(
-        map((response: ODataResponse<string>) => {
-          if (this._responses == null) {
-            this._responses = [];
-          }
-          this._responses = [
-            ...this._responses,
-            ...ODataBatchResource.parseLegacyResponse(this._requests, response),
-          ];
-          Arrays.zip(this._requests, this._responses).forEach((tuple) => {
-            if (!tuple[0].isStopped && tuple[1]) tuple[0].onLoad(tuple[1]);
-          });
-          return response;
-        }),
-      );
+    return this.api.request<ODataResponse<string>>('POST', this, {
+      body: ODataBatchResource.buildLegacyBody(bound, requests, this.api.options),
+      responseType: 'text',
+      observe: 'response',
+      headers: headers,
+      params: options ? options.params : undefined,
+      withCredentials: options ? options.withCredentials : undefined,
+    });
   }
 
   /**
@@ -468,14 +532,27 @@ export class ODataBatchResource extends ODataResource<any> {
     requests: ODataBatchRequest<any>[],
     response: ODataResponse<any>,
   ): HttpResponseBase[] {
-    const responses: Object[] = (response.body ? response.body : {})['responses'] ?? [];
+    const responses: {
+      id?: string;
+      status: number;
+      headers?: { [name: string]: string | string[] };
+      body?: unknown;
+    }[] = response.body?.['responses'] ?? [];
 
-    return responses.map((response: any, index: number) => {
-      let request = requests[index].request;
-      let code = response['status'];
-
-      let headers: HttpHeaders = new HttpHeaders(response['headers']);
-      let body: string | { error: any; text: string } = response['body'];
+    return requests.map(({ request, id }, index) => {
+      const response =
+        responses.find((response) => response.id === id) ??
+        (responses[index]?.id ? undefined : responses[index]);
+      if (response === undefined) {
+        return new HttpErrorResponse({
+          error: new Error('Missing batch response'),
+          status: 0,
+          url: request.urlWithParams,
+        });
+      }
+      let code = response.status;
+      const headers = new HttpHeaders(response.headers);
+      let body: unknown = response.body;
       if (code === 0) {
         code = !!body ? 200 : 0;
       }
@@ -483,9 +560,9 @@ export class ODataBatchResource extends ODataResource<any> {
       let ok = code >= 200 && code < 300;
       if (request.responseType === 'json' && typeof body === 'string') {
         const originalBody = body;
-        body = body.replace(XSSI_PREFIX, '');
+        const text = body.replace(XSSI_PREFIX, '');
         try {
-          body = body !== '' ? JSON.parse(body) : null;
+          body = text !== '' ? JSON.parse(text) : null;
         } catch (error) {
           body = originalBody;
 

@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
+import { ODataApi } from '../api';
 import { ODataPathSegments } from '../resources/path/segments';
+import { ODataRequest } from '../resources/request';
+import { ODataResource } from '../resources/resource';
+import { ODataResponse } from '../resources/response';
 import { PathSegment } from '../types';
 
 import { ODataInMemoryCache } from './memory';
@@ -74,9 +79,42 @@ describe('ODataInMemoryCache', () => {
       cache.forget();
       expect(cache.size()).toBe(0);
     });
+
+    it('should expire at the exact deadline and remove expired entries during writes', () => {
+      const cache = new ODataInMemoryCache({ maxAge: 1 });
+      cache.put('zero', 0, { maxAge: 0 });
+      expect(cache.get('zero')).toBeUndefined();
+      cache.put('old', 1);
+      vi.advanceTimersByTime(999);
+      expect(cache.get('old')).toBe(1);
+      vi.advanceTimersByTime(1);
+      cache.put('new', 2);
+      expect(cache.get('old')).toBeUndefined();
+      expect(cache.size()).toBe(1);
+    });
   });
 
   describe('forget', () => {
+    it('should respect scope boundaries and leave the input scope unchanged', () => {
+      const cache = new ODataInMemoryCache();
+      const scope = ['request', 'People'];
+      cache.put('one', 1, { scope });
+      cache.put('two', 2, { scope: ['request', 'PeopleArchive'] });
+      cache.put('three', 3, { scope: [...scope, 'child'] });
+      cache.forget({ scope });
+      expect(cache.get('two', { scope: ['request', 'PeopleArchive'] })).toBe(2);
+      expect(cache.get('three', { scope: [...scope, 'child'] })).toBeUndefined();
+      cache.forget({ name: 'one', scope });
+      expect(scope).toEqual(['request', 'People']);
+    });
+
+    it('should match names exactly rather than as prefixes', () => {
+      const cache = new ODataInMemoryCache();
+      cache.put('People', 1);
+      cache.put('PeopleArchive', 2);
+      cache.forget({ name: 'People' });
+      expect(cache.get('PeopleArchive')).toBe(2);
+    });
     it('should forget an entry by name', () => {
       const cache = new ODataInMemoryCache();
       cache.put('People', 1);
@@ -117,39 +155,102 @@ describe('ODataInMemoryCache', () => {
   });
 
   describe('putResponse/getResponse', () => {
+    const fixture = (body: unknown = { value: 1 }, maxAge?: number) => {
+      const api = new ODataApi({ serviceRootUrl: 'https://example.test/' });
+      const resource = new ODataResource(api, {
+        segments: new ODataPathSegments([{ name: PathSegment.entitySet, path: 'People' }]),
+      });
+      const req = ODataRequest.factory(api, 'GET', resource, {
+        observe: 'response',
+        maxAge,
+      });
+      const res = ODataResponse.fromHttpResponse(
+        req,
+        new HttpResponse({
+          body,
+          headers: new HttpHeaders({ ETag: '"one"' }),
+          url: req.url,
+        }),
+      );
+      return { req, res };
+    };
+
     it('should round trip a response', () => {
       const cache = new ODataInMemoryCache();
-      const segments = new ODataPathSegments([{ name: PathSegment.entitySet, path: 'People' }]);
-      const req = {
-        cacheKey: 'People(1)',
-        resource: { cloneSegments: () => segments },
-      } as any;
-      const res = {
-        options: {},
-        context: { entitySet: 'People', key: '1', type: 'TripPin.Person' },
-      } as any;
+      const { req, res } = fixture();
       cache.putResponse(req, res);
-      expect(cache.getResponse(req)).toBe(res);
+      const restored = cache.getResponse(req)!;
+      expect(restored).not.toBe(res);
+      expect(restored.body).toEqual(res.body);
+      expect(restored.headers.get('ETag')).toBe('"one"');
+      expect(restored.url).toBe(req.url);
+      expect(restored.status).toBe(200);
     });
 
     it('should return undefined for a missing response', () => {
       const cache = new ODataInMemoryCache();
-      const segments = new ODataPathSegments([{ name: PathSegment.entitySet, path: 'People' }]);
-      const req = { cacheKey: 'People(1)', resource: { cloneSegments: () => segments } } as any;
+      const { req } = fixture();
       expect(cache.getResponse(req)).toBeUndefined();
     });
 
     it('should store the response with the max age of the request', () => {
       const cache = new ODataInMemoryCache({ maxAge: 60 });
-      const segments = new ODataPathSegments([{ name: PathSegment.entitySet, path: 'People' }]);
-      const req = {
-        cacheKey: 'People(1)',
-        maxAge: 120,
-        resource: { cloneSegments: () => segments },
-      } as any;
-      const res = { options: {}, context: { entitySet: 'People' } } as any;
+      const { req, res } = fixture({ value: 1 }, 120);
       cache.putResponse(req, res);
-      expect(cache.entries.get('request:People:People(1)')?.maxAge).toBe(120 * 1000);
+      const key = cache.buildKey([...cache.scope(req), req.cacheKey]);
+      expect(cache.entries.get(key)?.maxAge).toBe(120 * 1000);
+    });
+
+    it('should detach stored and returned response bodies', () => {
+      const cache = new ODataInMemoryCache();
+      const body = { value: 1 };
+      const { req, res } = fixture(body);
+      cache.putResponse(req, res);
+      body.value = 2;
+      cache.getResponse(req)!.body.value = 3;
+      expect(cache.getResponse(req)!.body).toEqual({ value: 1 });
+    });
+
+    it('should reconstruct the response using the current resource', () => {
+      const cache = new ODataInMemoryCache();
+      const { req, res } = fixture();
+      const current = fixture().req;
+      cache.putResponse(req, res);
+      expect(cache.getResponse(current)!.resource).toBe(current.resource);
+    });
+
+    it.each([new Blob(['bytes'], { type: 'text/plain' }), new Uint8Array([1, 2]).buffer])(
+      'should preserve binary response bodies',
+      (body) => {
+        const cache = new ODataInMemoryCache();
+        const { req, res } = fixture(body);
+        cache.putResponse(req, res);
+        const restored = cache.getResponse(req)!.body;
+        expect(restored).not.toBe(body);
+        expect(Object.prototype.toString.call(restored)).toBe(Object.prototype.toString.call(body));
+        expect(restored instanceof Blob ? restored.size : restored.byteLength).toBe(
+          body instanceof Blob ? body.size : body.byteLength,
+        );
+      },
+    );
+
+    it('should report and discard malformed cached response envelopes', () => {
+      const onError = vi.fn();
+      const cache = new ODataInMemoryCache({ onError });
+      const { req } = fixture();
+      cache.put(req.cacheKey, { body: {} }, { scope: cache.scope(req) });
+      expect(cache.getResponse(req)).toBeUndefined();
+      expect(onError).toHaveBeenCalledOnce();
+      expect(cache.size()).toBe(0);
+    });
+
+    it('should keep the cache usable after a malformed response without onError', () => {
+      const cache = new ODataInMemoryCache();
+      const { req } = fixture();
+      cache.put(req.cacheKey, { body: {} }, { scope: cache.scope(req) });
+      expect(cache.getResponse(req)).toBeUndefined();
+      cache.put('item', 1);
+      expect(cache.get('item')).toBe(1);
     });
   });
 });
