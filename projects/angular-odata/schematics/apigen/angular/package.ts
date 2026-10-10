@@ -17,7 +17,7 @@ export class Package {
   metadata: Metadata;
   module: Module;
   config: ApiConfig;
-  index: Index;
+  index?: Index;
   enums: Enum[] = [];
   entities: Entity[] = [];
   services: Service[] = [];
@@ -33,43 +33,61 @@ export class Package {
     this.metadata = new Metadata(this, options, meta);
     this.module = new Module(this, options);
     this.config = new ApiConfig(this, options);
-    this.index = new Index(this, options);
+    if (options.barrel) {
+      this.index = new Index(this, options);
+    }
+    if (this.index !== undefined) {
+      this.index.addDependency(this.module);
+      this.index.addDependency(this.config);
+    }
 
-    this.index.addDependency(this.module);
-    this.index.addDependency(this.config);
     for (let s of meta.Schemas) {
       const namespace = s.Namespace;
       // Enum
       for (const enumType of s.EnumType ?? []) {
         const enu = new Enum(this, options, enumType);
         this.enums.push(enu);
-        this.index.addDependency(enu);
+        if (this.index !== undefined) {
+          this.index.addDependency(enu);
+        }
       }
       // Entity
       for (let entityType of s.EntityType ?? []) {
         const entity = new Entity(this, options, entityType);
         this.entities.push(entity);
-        this.index.addDependency(entity);
+        if (this.index !== undefined) {
+          this.index.addDependency(entity);
+        }
         if (options.models) {
           const model = new Model(this, options, entityType, entity);
-          this.index.addDependency(model);
+          if (this.index !== undefined) {
+            this.index.addDependency(model);
+          }
           this.models.push(model);
           const collection = new Collection(this, options, entityType, entity, model);
-          this.index.addDependency(collection);
+          if (this.index !== undefined) {
+            this.index.addDependency(collection);
+          }
           this.collections.push(collection);
         }
       }
       // Complex
       for (let complexType of s.ComplexType ?? []) {
         const entity = new Entity(this, options, complexType);
-        this.index.addDependency(entity);
+        if (this.index !== undefined) {
+          this.index.addDependency(entity);
+        }
         this.entities.push(entity);
         if (options.models) {
           const model = new Model(this, options, complexType, entity);
-          this.index.addDependency(model);
+          if (this.index !== undefined) {
+            this.index.addDependency(model);
+          }
           this.models.push(model);
           const collection = new Collection(this, options, complexType, entity, model);
-          this.index.addDependency(collection);
+          if (this.index !== undefined) {
+            this.index.addDependency(collection);
+          }
           this.collections.push(collection);
         }
       }
@@ -77,7 +95,9 @@ export class Package {
       for (let entityContainer of s.EntityContainer ?? []) {
         const service = new Service(this, options, entityContainer);
         this.module.addService(service);
-        this.index.addDependency(service);
+        if (this.index !== undefined) {
+          this.index.addDependency(service);
+        }
         this.services.push(service);
         for (let entitySet of entityContainer.EntitySet ?? []) {
           const service = new Service(this, options, entitySet);
@@ -90,13 +110,17 @@ export class Package {
             service.setCollection(collection);
           }
           this.module.addService(service);
-          this.index.addDependency(service);
+          if (this.index !== undefined) {
+            this.index.addDependency(service);
+          }
           this.services.push(service);
         }
         for (let singleton of entityContainer.Singleton ?? []) {
           const service = new Service(this, options, singleton);
           this.module.addService(service);
-          this.index.addDependency(service);
+          if (this.index !== undefined) {
+            this.index.addDependency(service);
+          }
           this.services.push(service);
         }
       }
@@ -183,10 +207,12 @@ export class Package {
       ...this.models,
       ...this.collections,
       ...this.services,
-      this.index,
       this.module,
       this.config,
     ];
+    if (this.index) {
+      sources.push(this.index);
+    }
     if (this.options.staticMetadata) {
       sources.push(this.metadata);
     }

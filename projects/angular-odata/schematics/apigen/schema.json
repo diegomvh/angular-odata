@@ -23,6 +23,11 @@
       "description": "Generate models for the entities and complex types.",
       "default": true
     },
+    "barrel": {
+      "type": "boolean",
+      "description": "Generate barrel export file.",
+      "default": true
+    },
     "staticMetadata": {
       "type": "boolean",
       "description": "Generate metadata.json file with the metadata content and load it at runtime.",

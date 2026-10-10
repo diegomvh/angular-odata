@@ -4,6 +4,7 @@ export interface Schema {
   metadata: string;
   path: string;
   models: boolean;
+  barrel: boolean;
   staticMetadata: boolean;
   serviceRootUrl?: string;
   version?: string;
