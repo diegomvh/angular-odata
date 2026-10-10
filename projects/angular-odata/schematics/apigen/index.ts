@@ -66,6 +66,7 @@ export function apigen(options: ApiGenSchema) {
             .sources()
             .map((b) => {
               const imports = b.imports();
+              const exports = b.exports();
               return apply(b.template(), [
                 template({
                   ...{
@@ -73,6 +74,7 @@ export function apigen(options: ApiGenSchema) {
                     fileName: b.fileName(),
                     fullName: b.fullName(),
                     imports: imports,
+                    exports: exports,
                   },
                   ...b.variables(imports),
                   ...strings,

@@ -12,6 +12,7 @@ import {
 import { makeRelativePath, toTypescriptType } from '../utils';
 import { ODataMetadata } from '../../metadata/metadata';
 import { Package } from './package';
+import { Export } from './export';
 
 export class Callable {
   callables: CsdlCallable[] = [];
@@ -298,6 +299,10 @@ export abstract class Base {
     return imports;
   }
 
+  public exports(): Export[] {
+    return [];
+  }
+
   public importedName(imports: Import[]): string {
     const imp = imports.find((i) => i.absPath === this.path());
     if (imp !== undefined) {
@@ -363,6 +368,35 @@ export class Index extends Base {
   }
   public override importTypes(): string[] {
     return [];
+  }
+
+  override imports(): Import[] {
+    return [];
+  }
+
+  override exports(): Export[] {
+    const groups = this.dependencies
+      .filter((a) => a[2].path() != this.path())
+      .reduce(
+        (acc, i) => {
+          const path = makeRelativePath(this.directory(), i[2].path());
+          if (acc[path] === undefined) {
+            acc[path] = [];
+          }
+          acc[path].push(i);
+          return acc;
+        },
+        {} as { [path: string]: [string, string, Base][] },
+      );
+    const exports = Object.entries(groups).map(([path, items]) => {
+      const names = items.reduce((acc, i) => { 
+        const name = (path.endsWith('entity') || path.endsWith('complex')) ? `type ${i[0]}` : i[0];
+        return [...acc, name];
+      }, [] as string[]);
+      const aliases = items.reduce((acc, i) => [...acc, i[1]], [] as string[]);
+      return new Export(names, aliases, items[0][2].path(), path);
+    });
+    return exports;
   }
 }
 
