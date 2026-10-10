@@ -98,9 +98,9 @@ export class Callable {
     const methodName = strings.camelize(this.callable.Name);
     const { binding, required, optional } = this.parameters();
     const parameters = [...required, ...optional];
-    const bindingType = binding !== undefined ? `${toTypescriptType(binding.Type)}${binding.Collection ? '[]' : ''}` : '';
+    const bindingType = binding !== undefined ? toTypescriptType(binding.Type) : '';
     const returnType = this.returnType();
-    const retType = returnType === undefined ? 'null' : `${toTypescriptType(returnType.Type)}${returnType.Collection ? '[]' : ''}`;
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
     const bindingMethod = !binding?.Collection ? 'entity' : 'entities';
     const baseMethod = isFunction ? 'function' : 'action';
     const keyParameter = !binding?.Collection ? `key: EntityKey<${bindingType}>` : '';
@@ -135,9 +135,9 @@ export class Callable {
           : returnType?.Type.startsWith('Edm.')
             ? 'property'
             : 'entity';
-    const retType = returnType === undefined ? 'null' : `${toTypescriptType(returnType.Type)}${returnType.Collection ? '[]' : ''}`;
+    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
 
-    const bindingType = binding !== undefined ? `${toTypescriptType(binding.Type)}${binding.Collection ? '[]' : ''}` : '';
+    const bindingType = binding !== undefined ? toTypescriptType(binding.Type) : '';
     const baseMethod = isFunction ? 'callFunction' : 'callAction';
     const parametersCall =
       parameters.length === 0 ? 'null' : `{${parameters.map((p) => p.Name).join(', ')}}`;
