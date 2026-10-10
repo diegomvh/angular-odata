@@ -12,7 +12,6 @@ import {
 import { makeRelativePath, toTypescriptType } from '../utils';
 import { ODataMetadata } from '../../metadata/metadata';
 import { Package } from './package';
-import { model } from '@angular/core';
 
 export class Callable {
   callables: CsdlCallable[] = [];
@@ -98,9 +97,9 @@ export class Callable {
     const methodName = strings.camelize(this.callable.Name);
     const { binding, required, optional } = this.parameters();
     const parameters = [...required, ...optional];
-    const bindingType = binding !== undefined ? toTypescriptType(binding.Type) : '';
+    const bindingType = binding !== undefined ? `${toTypescriptType(binding.Type)}${binding.Collection ? '[]' : ''}` : '';
     const returnType = this.returnType();
-    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const retType = returnType === undefined ? 'null' : `${toTypescriptType(returnType.Type)}${returnType.Collection ? '[]' : ''}`;
     const bindingMethod = !binding?.Collection ? 'entity' : 'entities';
     const baseMethod = isFunction ? 'function' : 'action';
     const keyParameter = !binding?.Collection ? `key: EntityKey<${bindingType}>` : '';
@@ -111,7 +110,7 @@ export class Callable {
         : `{${parameters
             .map((p) => {
               const op = optional.includes(p);
-              return `${p.Name}${op ? '?' : ''}: ${toTypescriptType(p.Type)}`;
+              return `${p.Name}${op ? '?' : ''}: ${toTypescriptType(p.Type)}${p.Collection ? '[]' : ''}`;
             })
             .join(', ')}}`;
     return `public ${methodName}(${keyParameter}) {
@@ -135,9 +134,9 @@ export class Callable {
           : returnType?.Type.startsWith('Edm.')
             ? 'property'
             : 'entity';
-    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const retType = returnType === undefined ? 'null' : `${toTypescriptType(returnType.Type)}${returnType.Collection ? '[]' : ''}`;
 
-    const bindingType = binding !== undefined ? toTypescriptType(binding.Type) : '';
+    const bindingType = binding !== undefined ? `${toTypescriptType(binding.Type)}${binding.Collection ? '[]' : ''}` : '';
     const baseMethod = isFunction ? 'callFunction' : 'callAction';
     const parametersCall =
       parameters.length === 0 ? 'null' : `{${parameters.map((p) => p.Name).join(', ')}}`;
@@ -200,7 +199,7 @@ export class Callable {
           : returnType?.Type.startsWith('Edm.')
             ? 'property'
             : 'model';
-    const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
+    const retType = returnType === undefined ? 'null' :  `${toTypescriptType(returnType.Type)}${returnType.Collection ? '[]' : ''}`;
     const callableReturnType =
       returnType === undefined
         ? ``
