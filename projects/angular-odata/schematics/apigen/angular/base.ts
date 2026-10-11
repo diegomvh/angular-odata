@@ -200,7 +200,7 @@ export class Callable {
           : returnType?.Type.startsWith('Edm.')
             ? 'property'
             : 'model';
-    const retType = returnType === undefined ? 'null' :  `${toTypescriptType(returnType.Type)}${returnType.Collection ? '[]' : ''}`;
+    const retType = returnType === undefined ? 'null' :  toTypescriptType(returnType.Type);
     const callableReturnType =
       returnType === undefined
         ? ``
