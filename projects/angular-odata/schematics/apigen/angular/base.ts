@@ -130,10 +130,10 @@ export class Callable {
     const responseType =
       returnType === undefined
         ? 'none'
+        : returnType?.Type.startsWith('Edm.')
+          ? 'property'
         : returnType?.Collection
           ? 'entities'
-          : returnType?.Type.startsWith('Edm.')
-            ? 'property'
             : 'entity';
     const retType = returnType === undefined ? 'null' : toTypescriptType(returnType.Type);
 
@@ -195,10 +195,10 @@ export class Callable {
     const responseType =
       returnType === undefined
         ? 'none'
+        : returnType?.Type.startsWith('Edm.')
+          ? 'property'
         : returnType?.Collection
           ? 'collection'
-          : returnType?.Type.startsWith('Edm.')
-            ? 'property'
             : 'model';
     const retType = returnType === undefined ? 'null' :  toTypescriptType(returnType.Type);
     const callableReturnType =
