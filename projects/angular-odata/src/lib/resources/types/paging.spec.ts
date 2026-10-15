@@ -154,6 +154,25 @@ describe('fetchPages', () => {
       expect(errorHandler).toHaveBeenCalledTimes(1);
     });
 
+    it('should follow a composite skiptoken through every page', async () => {
+      const { api } = setup();
+      const tokens: (string | null)[] = [];
+      const links = [
+        "EventUsers?$skiptoken=EventId-1,UserId-'u%2C2'",
+        'EventUsers?$skiptoken=EventId-2,UserId-%27u%263%27',
+      ];
+      api.requester = (req: ODataRequest<any>) => {
+        tokens.push(req.params.get('$skiptoken'));
+        const next = links[tokens.length - 1];
+        const body: { [name: string]: any } = { value: [{ UserName: `u${tokens.length}` }] };
+        if (next) body['@odata.nextLink'] = `${ROOT}${next}`;
+        return of(new HttpResponse({ body, status: 200 }));
+      };
+      const results = await emissions(api.entitySet<any>('EventUsers').fetchAll());
+      expect(tokens).toEqual([null, "EventId-1,UserId-'u,2'", "EventId-2,UserId-'u&3'"]);
+      expect(names(results[0])).toEqual(['u1', 'u2', 'u3']);
+    });
+
     it('should page through a navigation property with cache-and-network', async () => {
       const { api, requests } = setup();
       const friends = api
