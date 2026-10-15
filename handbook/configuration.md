@@ -34,7 +34,7 @@ Each API is described by an `ODataApiConfig` object.
 | `ignoreCacheControl`                      | Ignore response Cache-Control directives. Defaults to `false`; overridable per request.                                                |
 | `cacheInvalidation`                       | Successful-write invalidation: `'entity-set'` (default) or `'api'`. Overridable per request. Related expanded/navigation responses may need manual clearing. |
 | `bodyQueryOptions`                        | Query options sent in the request body (`GET /$query`) instead of the URL.                                                             |
-| `stringAsEnum`                            | Serialize enum values as plain strings.                                                                                                |
+| `stringAsEnum`                            | Serialize enum values as plain strings. Applies to each item of a `Collection(EnumType)` property, e.g. `['Red', 'Blue']`.             |
 | `deleteRefBy`                             | Delete references by `'path'` or by `'id'`.                                                                                            |
 | `nonParenthesisForEmptyParameterFunction` | Call functions with no parameters without `()`.                                                                                        |
 | `jsonBatchFormat`                         | Send `$batch` requests in JSON format.                                                                                                 |

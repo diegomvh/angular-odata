@@ -136,10 +136,12 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
         ? value.map((v) => this.parse(parser, v, parserOptions))
         : this.parse(parser, value, parserOptions);
     }
-    return this.parser.deserialize(value, {
-      field: this,
-      ...parserOptions,
-    } as StructuredTypeFieldOptions);
+    const fieldOptions = { field: this, ...parserOptions } as StructuredTypeFieldOptions;
+    // Collection(EnumType | EdmType): parse each item of the JSON array
+    if (this.collection && Array.isArray(value)) {
+      return value.map((v) => this.parser.deserialize(v, fieldOptions)) as T[];
+    }
+    return this.parser.deserialize(value, fieldOptions);
   }
   //#endregion
 
@@ -163,20 +165,22 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
         ? (value as any[]).map((v) => this.toJson(parser, v, parserOptions))
         : this.toJson(parser, value, parserOptions);
     }
-    return this.parser.serialize(value, {
-      field: this,
-      ...parserOptions,
-    } as StructuredTypeFieldOptions);
+    const fieldOptions = { field: this, ...parserOptions } as StructuredTypeFieldOptions;
+    if (this.collection && Array.isArray(value)) {
+      return value.map((v) => this.parser.serialize(v, fieldOptions));
+    }
+    return this.parser.serialize(value, fieldOptions);
   }
   //#endregion
 
   //#region Encode
   encode(value: T, options?: ParserOptions): string {
     const parserOptions = { ...this.parserOptions, ...options };
-    return this.parser.encode(value, {
-      field: this,
-      ...parserOptions,
-    } as StructuredTypeFieldOptions);
+    const fieldOptions = { field: this, ...parserOptions } as StructuredTypeFieldOptions;
+    if (this.collection && Array.isArray(value)) {
+      return value.map((v) => this.parser.encode(v, fieldOptions)) as any;
+    }
+    return this.parser.encode(value, fieldOptions);
   }
   //#endregion
 
