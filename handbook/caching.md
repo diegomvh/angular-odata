@@ -144,6 +144,18 @@ from the request's `maxAge` or the cache default. Fetch policies and `Vary` rest
 still apply. Only enable this when your application can safely disregard the server's
 caching requirements.
 
+### Paged fetches
+
+`fetchAll` and `fetchMany` follow the server's next links and emit all pages as one
+result. With `cache-and-network` they walk the pages twice:
+
+1. From the cache. The aggregated result is emitted only when every page is cached. A missing
+   page ends this pass silently; it does not reach the `errorHandler`.
+2. From the server. Every page is requested once, stored, and the aggregated result is emitted.
+
+So the observable emits once (cold or partial cache) or twice (warm cache), never with
+duplicated entities. The other policies apply to each page and emit one result.
+
 ### Response identity and isolation
 
 Response keys include the API partition, resource path and query, transport response
