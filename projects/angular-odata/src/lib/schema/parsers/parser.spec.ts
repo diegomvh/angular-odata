@@ -20,6 +20,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ODataRequest } from '../../resources';
+import { raw } from '../../resources/query';
 import { of } from 'rxjs';
 
 describe('ODataClient', () => {
@@ -31,6 +32,12 @@ describe('ODataClient', () => {
     Orange,
     Green,
     Black,
+  }
+  enum Permission {
+    None = 0,
+    Read = 1,
+    Write = 2,
+    Execute = 4,
   }
 
   beforeEach(async () => {
@@ -64,8 +71,28 @@ describe('ODataClient', () => {
                 Black: { name: 'Black', value: Color.Black },
               },
             },
+            {
+              name: 'Permission',
+              flags: true,
+              members: Permission,
+              fields: {
+                None: { name: 'None', value: Permission.None },
+                Read: { name: 'Read', value: Permission.Read },
+                Write: { name: 'Write', value: Permission.Write },
+                Execute: { name: 'Execute', value: Permission.Execute },
+              },
+            },
           ],
           entities: [
+            {
+              name: 'EnumCollections',
+              fields: {
+                color: { type: 'ParserTesting.Color' },
+                colors: { type: 'ParserTesting.Color', collection: true },
+                permission: { type: 'ParserTesting.Permission' },
+                permissions: { type: 'ParserTesting.Permission', collection: true },
+              },
+            },
             {
               name: 'Entity',
               fields: {
@@ -378,6 +405,68 @@ describe('ODataClient', () => {
     const parser = api.parserForType<any>('ParserTesting.Entity') as Parser<any>;
     const result = parser.deserialize(primitives, api.options);
     expect(parser.serialize(result, api.options)).toEqual(primitives);
+  });
+
+  it('should deserialize collection of enums', () => {
+    const parser = api.parserForType<any>('ParserTesting.EnumCollections') as Parser<any>;
+    expect(
+      parser.deserialize(
+        {
+          color: 'Yellow',
+          colors: ['Red', 'Green', 'Black'],
+          permission: 'Read,Write',
+          permissions: ['Read', 'Read,Execute', 'None'],
+        },
+        api.options,
+      ),
+    ).toEqual({
+      color: Color.Yellow,
+      colors: [Color.Red, Color.Green, Color.Black],
+      permission: Permission.Read | Permission.Write,
+      permissions: [Permission.Read, Permission.Read | Permission.Execute, Permission.None],
+    });
+  });
+
+  it('should serialize collection of enums', () => {
+    const parser = api.parserForType<any>('ParserTesting.EnumCollections') as Parser<any>;
+    const value = {
+      color: Color.Yellow,
+      colors: [Color.Red, Color.Green, Color.Black],
+      permission: Permission.Read | Permission.Write,
+      permissions: [Permission.Read, Permission.Read | Permission.Execute],
+    };
+    expect(parser.serialize(value, api.options)).toEqual({
+      color: 'Yellow',
+      colors: ['Red', 'Green', 'Black'],
+      permission: 'Read,Write',
+      permissions: ['Read', 'Read,Execute'],
+    });
+    expect(parser.serialize(value, { ...api.options, stringAsEnum: false })).toEqual({
+      color: `ParserTesting.Color'Yellow'`,
+      colors: [
+        `ParserTesting.Color'Red'`,
+        `ParserTesting.Color'Green'`,
+        `ParserTesting.Color'Black'`,
+      ],
+      permission: `ParserTesting.Permission'Read,Write'`,
+      permissions: [`ParserTesting.Permission'Read'`, `ParserTesting.Permission'Read,Execute'`],
+    });
+  });
+
+  it('should round-trip empty collection of enums', () => {
+    const parser = api.parserForType<any>('ParserTesting.EnumCollections') as Parser<any>;
+    const result = parser.deserialize({ colors: [], permissions: [] }, api.options);
+    expect(result).toEqual({ colors: [], permissions: [] });
+    expect(parser.serialize(result, api.options)).toEqual({ colors: [], permissions: [] });
+  });
+
+  it('should encode collection of enums', () => {
+    const schema = api.findStructuredType<any>('ParserTesting.EnumCollections');
+    const field = schema!.field('colors') as ODataStructuredTypeFieldParser<any>;
+    expect(field.encode([Color.Red, Color.Black] as any, api.options)).toEqual([
+      raw(`'Red'`),
+      raw(`'Black'`),
+    ]);
   });
 
   it('should serialize callable parameters', () => {
