@@ -129,14 +129,13 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
   }
 
   deserialize(value: any, options?: ParserOptions): T | T[] {
-    const parserOptions = { ...this.parserOptions, ...options };
+    const fieldOptions = { field: this, ...this.parserOptions, ...options } as StructuredTypeFieldOptions;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
-      return Array.isArray(value)
-        ? value.map((v) => this.parse(parser, v, parserOptions))
-        : this.parse(parser, value, parserOptions);
+      return (this.collection && Array.isArray(value))
+        ? value.map((v) => this.parse(parser, v, fieldOptions))
+        : this.parse(parser, value, fieldOptions);
     }
-    const fieldOptions = { field: this, ...parserOptions } as StructuredTypeFieldOptions;
     // Collection(EnumType | EdmType): parse each item of the JSON array
     if (this.collection && Array.isArray(value)) {
       return value.map((v) => this.parser.deserialize(v, fieldOptions)) as T[];
@@ -158,14 +157,13 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions = { ...this.parserOptions, ...options };
+    const fieldOptions = { field: this, ...this.parserOptions, ...options } as StructuredTypeFieldOptions;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
-      return Array.isArray(value)
-        ? (value as any[]).map((v) => this.toJson(parser, v, parserOptions))
-        : this.toJson(parser, value, parserOptions);
+      return (this.collection && Array.isArray(value))
+        ? (value as any[]).map((v) => this.toJson(parser, v, fieldOptions))
+        : this.toJson(parser, value, fieldOptions);
     }
-    const fieldOptions = { field: this, ...parserOptions } as StructuredTypeFieldOptions;
     if (this.collection && Array.isArray(value)) {
       return value.map((v) => this.parser.serialize(v, fieldOptions));
     }
@@ -175,8 +173,7 @@ export class ODataStructuredTypeFieldParser<T> extends ODataAnnotatable implemen
 
   //#region Encode
   encode(value: T, options?: ParserOptions): string {
-    const parserOptions = { ...this.parserOptions, ...options };
-    const fieldOptions = { field: this, ...parserOptions } as StructuredTypeFieldOptions;
+    const fieldOptions = { field: this, ...this.parserOptions, ...options } as StructuredTypeFieldOptions;
     if (this.collection && Array.isArray(value)) {
       return value.map((v) => this.parser.encode(v, fieldOptions)) as any;
     }
