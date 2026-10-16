@@ -181,9 +181,21 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
     return match !== null ? Number(match[1]) : undefined;
   }
 
+  /**
+   * The `$skiptoken` of the next link, as the server sent it.
+   *
+   * Read from the raw link, so separators inside the token (such as `,` between sort keys,
+   * or an encoded `&`) are kept. The value is decoded once; the next request encodes it again.
+   */
   get skiptoken() {
-    let match = (this.nextLink || '').match(/[&?]{1}\$skiptoken=([\d\w\s'\-]+)/);
-    return match !== null ? match[1] : undefined;
+    const link = this.annotations.get(this.helper.ODATA_NEXTLINK);
+    const match = typeof link === 'string' ? link.match(/[?&](?:\$|%24)skiptoken=([^&#]*)/i) : null;
+    if (match === null) return undefined;
+    try {
+      return decodeURIComponent(match[1]);
+    } catch {
+      return match[1];
+    }
   }
 
   private _functions?: { [name: string]: any };

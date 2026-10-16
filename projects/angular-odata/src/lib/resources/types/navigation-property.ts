@@ -1,5 +1,5 @@
-import { EMPTY, Observable, throwError } from 'rxjs';
-import { expand, map, reduce } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import type { ModelInterface, ODataCollection, ODataModel } from '../../models';
 import { PathSegment, QueryOption, ODataStructuredTypeFieldConfig } from '../../types';
@@ -10,6 +10,7 @@ import { ODataEntities, ODataEntity } from '../response';
 import { ODataCountResource } from './count';
 import { ODataMediaResource } from './media';
 import { ODataEntitiesOptions, ODataEntityOptions, ODataOptions } from './options';
+import { fetchPages } from './paging';
 import { ODataPropertyResource } from './property';
 import { ODataReferenceResource } from './reference';
 import { ODataEntitiesAnnotations } from '../../annotations';
@@ -342,27 +343,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOption[];
     } = {},
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
-    let res = this.clone();
+    const res = this.clone();
     // Clean Paging
     res.query((q) => q.removePaging());
-    let fetch = (opts?: {
-      skip?: number;
-      skiptoken?: string;
-      top?: number;
-    }): Observable<ODataEntities<T>> => {
-      if (opts) {
-        res.query((q) => q.paging(opts));
-      }
-      return res.fetch({ responseType: 'entities', ...options });
-    };
-    return fetch().pipe(
-      expand(({ annots }) => (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
-      map(({ entities, annots }) => ({ entities: entities || [], annots })),
-      reduce((acc, { entities, annots }) => ({
-        entities: [...(acc.entities || []), ...(entities || [])],
-        annots: acc.annots.union(annots),
-      })),
-    );
+    return fetchPages(res, (r, opts) => r.fetch({ responseType: 'entities', ...opts }), options);
   }
   //#endregion
 
@@ -373,25 +357,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOption[];
     },
   ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
-    let res = this.clone();
-    let fetch = (opts?: {
-      skip?: number;
-      skiptoken?: string;
-      top?: number;
-    }): Observable<ODataEntities<T>> => {
-      if (opts) {
-        res.query((q) => q.paging(opts));
-      }
-      return res.fetch({ responseType: 'entities', ...options });
-    };
-    return fetch({ top }).pipe(
-      expand(({ annots }) => (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
-      map(({ entities, annots }) => ({ entities: entities || [], annots })),
-      reduce((acc, { entities, annots }) => ({
-        entities: [...(acc.entities || []), ...(entities || [])],
-        annots: acc.annots.union(annots),
-      })),
-    );
+    const res = this.clone();
+    res.query((q) => q.paging({ top }));
+    return fetchPages(res, (r, opts) => r.fetch({ responseType: 'entities', ...opts }), options);
   }
 
   fetchOne(

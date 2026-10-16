@@ -50,6 +50,7 @@ import {
 import type { ODataMetadata } from './metadata/metadata';
 import { ODataEntityAnnotations } from './annotations';
 import { ODataReference } from './schema/reference';
+import { SILENT_CACHE_MISS } from './resources/types/paging';
 
 const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(ODataModel.prototype);
 // Share invalidation generations across API instances using the same cache.
@@ -328,7 +329,17 @@ export class ODataApi {
 
     let res$ = this.handleRequest(req);
 
-    if (this.errorHandler !== undefined) res$ = res$.pipe(catchError(this.errorHandler));
+    if (this.errorHandler !== undefined) {
+      const errorHandler = this.errorHandler;
+      const silentCacheMiss = (options as any)[SILENT_CACHE_MISS] === true;
+      res$ = res$.pipe(
+        catchError((error, caught) =>
+          silentCacheMiss && this.isCacheMiss(error)
+            ? throwError(() => error)
+            : errorHandler(error, caught),
+        ),
+      );
+    }
 
     if (options.observe === 'events') {
       return res$;
