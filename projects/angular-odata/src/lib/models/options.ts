@@ -244,9 +244,10 @@ export const INCLUDE_DEEP = {
 
 export enum ODataModelState {
   Added,
-  Removed,
-  Changed,
+  Deleted,
+  Modified,
   Unchanged,
+  Detached
 }
 
 export type ModelInterface<T> = {
@@ -583,7 +584,7 @@ export class ODataModelAttribute<T> {
   }
 
   get(): T | ODataModel<T> | ODataCollection<T, ODataModel<T>> | null | undefined {
-    return this.state === ODataModelState.Changed ? this.change : this.value;
+    return this.state === ODataModelState.Modified ? this.change : this.value;
   }
 
   set(
@@ -599,7 +600,7 @@ export class ODataModelAttribute<T> {
         //this.value !== current
       );
 
-    const changed =
+    const modified =
       ODataModelOptions.isModel(current) && ODataModelOptions.isModel(value)
         ? !(current as ODataModel<T>).equals(value as ODataModel<T>)
         : ODataModelOptions.isCollection(current) && ODataModelOptions.isCollection(value)
@@ -612,22 +613,22 @@ export class ODataModelAttribute<T> {
       this.state = ODataModelState.Unchanged;
     } else if (Types.isEqual(value, this.value)) {
       this.state = ODataModelState.Unchanged;
-    } else if (changed) {
+    } else if (modified) {
       this.change = value;
-      this.state = ODataModelState.Changed;
+      this.state = current !== undefined ? ODataModelState.Modified : ODataModelState.Added;
     }
     if (ODataModelOptions.isModel(value) || ODataModelOptions.isCollection(value)) {
       this.link(value as ODataModel<T> | ODataCollection<T, ODataModel<T>>, reparent);
     }
-    return changed;
+    return modified;
   }
 
-  isChanged({ include_navigation = false }: { include_navigation?: boolean } = {}): boolean {
+  isModified({ include_navigation = false }: { include_navigation?: boolean } = {}): boolean {
     const current = this.get();
     return (
-      this.state === ODataModelState.Changed ||
+      this.state !== ODataModelState.Unchanged ||
       ((ODataModelOptions.isModel(current) || ODataModelOptions.isCollection(current)) &&
-        (current as ODataModel<T> | ODataCollection<T, ODataModel<T>>).hasChanged({
+        (current as ODataModel<T> | ODataCollection<T, ODataModel<T>>).isModified({
           include_navigation,
         }))
     );
@@ -1216,16 +1217,16 @@ export class ODataModelOptions<T> {
     return !Types.isEmpty(defs) ? defs : undefined;
   }
 
-  hasChanged(
+  isModified(
     self: ODataModel<T>,
     { include_navigation = false }: { include_navigation?: boolean } = {},
   ): boolean {
     return [...self._attributes.values()]
       .filter((attr) => !attr.navigation || include_navigation)
-      .some((attr) => attr.isChanged({ include_navigation }));
+      .some((attr) => attr.isModified({ include_navigation }));
   }
 
-  hasKey(self: ODataModel<T>) {
+  isNew(self: ODataModel<T>) {
     return this.resolveKey(self) !== undefined;
   }
 
@@ -1298,7 +1299,7 @@ export class ODataModelOptions<T> {
       )
       .filter(
         // Changes only
-        (attr) => !changes_only || (changes_only && attr.isChanged({ include_navigation })),
+        (attr) => !changes_only || (changes_only && attr.isModified({ include_navigation })),
       )
       .filter(
         (attr) =>
@@ -1342,7 +1343,7 @@ export class ODataModelOptions<T> {
           return Object.assign(acc, { [name]: value });
         } else if (include_computed && computed) {
           return Object.assign(acc, { [name]: value });
-        } else if (changes_only && attr.isChanged()) {
+        } else if (changes_only && attr.isModified()) {
           return Object.assign(acc, { [name]: value });
         } else if (!changes_only && !concurrency && !computed) {
           return Object.assign(acc, { [name]: value });
@@ -1400,10 +1401,10 @@ export class ODataModelOptions<T> {
     if (name !== undefined) {
       // Reset value
       const attribute = self._attributes.get(name);
-      if (attribute !== undefined && attribute.isChanged({ include_navigation: true })) {
+      if (attribute !== undefined && attribute.isModified({ include_navigation: true })) {
         attribute.reset();
         changes = [name];
-      } else if (attribute?.isChanged()) {
+      } else if (attribute?.isModified()) {
         attribute.reset();
         changes = [name];
       }
@@ -1412,7 +1413,7 @@ export class ODataModelOptions<T> {
       changes = [...self._attributes.keys()];
       //self._changes.clear();
       self._attributes.forEach((attr, key) => {
-        if (attr.isChanged({ include_navigation: true })) {
+        if (attr.isModified({ include_navigation: true })) {
           attr.reset();
           changes.push(key);
         }
@@ -1480,6 +1481,8 @@ export class ODataModelOptions<T> {
         options: { changes },
       });
     }
+    if (reset)
+      self._state = ODataModelState.Unchanged;
     return self;
   }
 
@@ -1558,7 +1561,7 @@ export class ODataModelOptions<T> {
     }
     if (modelField === undefined) throw new Error(`No field with name ${field as string}`);
 
-    let changed = false;
+    let modified = false;
     let attr = self._attributes.get(modelField.name);
 
     // Ensures that the attribute exists
@@ -1573,13 +1576,13 @@ export class ODataModelOptions<T> {
     if (modelField.isStructuredType()) {
       if (value === null) {
         // New value is null
-        changed = attr.set(value as null, reset, reparent);
+        modified = attr.set(value as null, reset, reparent);
       } else if (ODataModelOptions.isCollection(current)) {
         // Current is collection
         const currentCollection = current as ODataCollection<F, ODataModel<F>>;
         if (ODataModelOptions.isCollection(value)) {
           // New value is collection
-          changed = attr.set(value as ODataCollection<F, ODataModel<F>>, reset, reparent);
+          modified = attr.set(value as ODataCollection<F, ODataModel<F>>, reset, reparent);
         } else if (Types.isArray(value)) {
           // New value is array
           currentCollection._annotations = modelField.annotationsFactory(
@@ -1593,14 +1596,14 @@ export class ODataModelOptions<T> {
             reparent,
             silent,
           });
-          changed = currentCollection.hasChanged();
+          modified = currentCollection.isModified();
         }
       } else if (ODataModelOptions.isModel(current)) {
         // Current is model
         const currentModel = current as ODataModel<F>;
         if (ODataModelOptions.isModel(value)) {
           // New value is model
-          changed = attr.set(value as ODataModel<F>, reset, reparent);
+          modified = attr.set(value as ODataModel<F>, reset, reparent);
         } else if (Types.isPlainObject(value)) {
           currentModel._annotations = modelField.annotationsFactory(
             self.annots(),
@@ -1613,12 +1616,12 @@ export class ODataModelOptions<T> {
             reparent,
             silent,
           });
-          changed = currentModel.hasChanged();
+          modified = currentModel.isModified();
         }
       } else {
         // Current is null or undefined
         // create new model/collection for given value
-        changed = attr.set(
+        modified = attr.set(
           ODataModelOptions.isCollection(value) || ODataModelOptions.isModel(value)
             ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
             : modelField.collection
@@ -1650,10 +1653,10 @@ export class ODataModelOptions<T> {
         }
       }
     } else {
-      changed = attr.set(value, reset, reparent);
+      modified = attr.set(value, reset, reparent);
     }
 
-    if (!silent && changed) {
+    if (!silent && modified) {
       self.events$.trigger(ODataModelEventType.Change, {
         attr,
         value,
@@ -1662,7 +1665,7 @@ export class ODataModelOptions<T> {
       });
     }
 
-    return changed;
+    return modified;
   }
 
   private _link<F>(self: ODataModel<T>, attr: ODataModelAttribute<F>) {

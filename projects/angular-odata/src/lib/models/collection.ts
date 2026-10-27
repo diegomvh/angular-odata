@@ -49,7 +49,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   _model: typeof ODataModel;
 
   models() {
-    return this._entries.filter((e) => e.state !== ODataModelState.Removed).map((e) => e.model);
+    return this._entries.filter((e) => e.state !== ODataModelState.Deleted).map((e) => e.model);
   }
 
   get length(): number {
@@ -297,7 +297,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   } = {}): (Partial<T> | { [name: string]: any })[] {
     return this._entries
       .filter(
-        ({ model, state }) => state !== ODataModelState.Removed && chain.every((c) => c !== model),
+        ({ model, state }) => state !== ODataModelState.Deleted && chain.every((c) => c !== model),
       )
       .map(({ model, state }) => {
         var changesOnly = changes_only && state !== ODataModelState.Added;
@@ -320,10 +320,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this.toEntities(INCLUDE_DEEP);
   }
 
-  hasChanged({ include_navigation }: { include_navigation?: boolean } = {}) {
+  isModified({ include_navigation }: { include_navigation?: boolean } = {}) {
     return (
       this._entries.some((e) => e.state !== ODataModelState.Unchanged) ||
-      this.models().some((m) => m.hasChanged({ include_navigation }))
+      this.models().some((m) => m.isModified({ include_navigation }))
     );
   }
 
@@ -510,7 +510,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     const toUpdateContained: M[] = [];
 
     this._entries.forEach(({ model, state }) => {
-      if (state === ODataModelState.Removed) {
+      if (state === ODataModelState.Deleted) {
         if (relModel) {
           toDestroyEntity.push(model);
         } else if (!model.isNew()) {
@@ -526,7 +526,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         } else {
           toCreateContained.push(model);
         }
-      } else if (model.hasChanged()) {
+      } else if (model.isModified()) {
         toUpdateEntity.push(model);
       }
     });
@@ -558,7 +558,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     ]).pipe(defaultIfEmpty(null));
     return this._request(obs$, () => {
       this._entries = this._entries
-        .filter((entry) => entry.state !== ODataModelState.Removed)
+        .filter((entry) => entry.state !== ODataModelState.Deleted)
         .map((entry) => ({ ...entry, state: ODataModelState.Unchanged }));
       return this.models();
     });
@@ -608,14 +608,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     } = {},
   ): M {
     let entry = this._findEntry(model);
-    if (entry !== undefined && entry.state !== ODataModelState.Removed) {
+    if (entry !== undefined && entry.state !== ODataModelState.Deleted) {
       if (merge) {
         entry.model.assign(model.toEntity(INCLUDE_DEEP) as T);
       }
       return entry.model;
     }
 
-    if (entry !== undefined && entry.state === ODataModelState.Removed) {
+    if (entry !== undefined && entry.state === ODataModelState.Deleted) {
       const index = this._entries.indexOf(entry);
       this._entries.splice(index, 1);
     }
@@ -713,7 +713,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     { silent = false, reset = false }: { silent?: boolean; reset?: boolean } = {},
   ): M {
     const entry = this._findEntry(model);
-    if (entry === undefined || entry.state === ODataModelState.Removed) {
+    if (entry === undefined || entry.state === ODataModelState.Deleted) {
       return model;
     }
 
@@ -722,7 +722,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this._entries.splice(index, 1);
     if (!(reset || entry.state === ODataModelState.Added)) {
       // Move to end of array and mark as removed
-      entry.state = ODataModelState.Removed;
+      entry.state = ODataModelState.Deleted;
       this._entries.push(entry);
     }
 
@@ -754,7 +754,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   private _moveModel(model: M, position: number): M {
     const entry = this._findEntry(model);
-    if (entry === undefined || entry.state === ODataModelState.Removed) {
+    if (entry === undefined || entry.state === ODataModelState.Deleted) {
       return model;
     }
 
@@ -828,7 +828,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         const model = this.models()[index];
         if (ODataModelOptions.isModel(model)) {
           const entry = this._findEntry(model) as ODataModelEntry<T, M>;
-          if (entry.state === ODataModelState.Unchanged && entry.model.hasChanged()) {
+          if (entry.state === ODataModelState.Unchanged && entry.model.isModified()) {
             toChange = [entry];
           }
           path = pathArray.slice(1);
@@ -836,9 +836,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       }
     } else {
       // Reset all
-      toAdd = this._entries.filter((e) => e.state === ODataModelState.Removed);
+      toAdd = this._entries.filter((e) => e.state === ODataModelState.Deleted);
       toChange = this._entries.filter(
-        (e) => e.state === ODataModelState.Unchanged && e.model.hasChanged(),
+        (e) => e.state === ODataModelState.Unchanged && e.model.isModified(),
       );
       toRemove = this._entries.filter((e) => e.state === ODataModelState.Added);
     }
@@ -920,7 +920,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
               : (obj as { [name: string]: any });
           entry.model.assign(entity, { add, merge, remove, reset, silent });
           // Model Change?
-          if (entry.model.hasChanged()) toMerge.push(entry.model);
+          if (entry.model.isModified()) toMerge.push(entry.model);
         }
         if (reset) entry.state = ODataModelState.Unchanged;
         if (!models.includes(entry.model)) {
