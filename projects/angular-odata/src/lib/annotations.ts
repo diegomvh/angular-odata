@@ -222,12 +222,12 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
   }
 
   get top() {
-    let match = (this.nextLink ?? '').match(/[?&](?:\$)top=(\d+)/i);
+    let match = (this.nextLink ?? '').match(/[?&](?:\$|%24)top=(\d+)/i);
     return match !== null ? Number(match[1]) : undefined;
   }
 
   get skip() {
-    let match = (this.nextLink ?? '').match(/[?&](?:\$)skip=(\d+)/i);
+    let match = (this.nextLink ?? '').match(/[?&](?:\$|%24)skip=(\d+)/i);
     return match !== null ? Number(match[1]) : undefined;
   }
 
