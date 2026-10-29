@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
-import { EMPTY } from 'rxjs';
-import { expand, map, reduce } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import type { ModelInterface, ODataCollection, ODataModel } from '../../models';
 import { PathSegment, QueryOption, ODataStructuredTypeFieldConfig } from '../../types';
@@ -12,6 +11,7 @@ import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
 import { ODataOptions } from './options';
+import { fetchPages } from './paging';
 import { ODataEntities, ODataEntity } from '../response';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
@@ -126,24 +126,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     const res = this.clone();
     // Clean Paging
     res.query((q) => q.removePaging());
-    const fetch = (opts?: {
-      skip?: number;
-      skiptoken?: string;
-      top?: number;
-    }): Observable<ODataEntities<any>> => {
-      if (opts) {
-        res.query((q) => q.paging(opts));
-      }
-      return res.fetch(options);
-    };
-    return fetch().pipe(
-      expand(({ annots }) => (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
-      map(({ entities, annots }) => ({ entities: entities ?? [], annots })),
-      reduce((acc, { entities, annots }) => ({
-        entities: [...(acc.entities ?? []), ...(entities ?? [])],
-        annots: acc.annots.union(annots),
-      })),
-    );
+    return fetchPages(res, (r, opts) => r.fetch(opts), options);
   }
 
   fetchMany(
@@ -154,24 +137,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     },
   ) {
     const res = this.clone();
-    const fetch = (opts?: {
-      skip?: number;
-      skiptoken?: string;
-      top?: number;
-    }): Observable<ODataEntities<T>> => {
-      if (opts) {
-        res.query((q) => q.paging(opts));
-      }
-      return res.fetch(options);
-    };
-    return fetch({ top }).pipe(
-      expand(({ annots }) => (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
-      map(({ entities, annots }) => ({ entities: entities ?? [], annots })),
-      reduce((acc, { entities, annots }) => ({
-        entities: [...(acc.entities ?? []), ...(entities ?? [])],
-        annots: acc.annots.union(annots),
-      })),
-    );
+    res.query((q) => q.paging({ top }));
+    return fetchPages(res, (r, opts) => r.fetch(opts), options);
   }
 
   fetchOne(
