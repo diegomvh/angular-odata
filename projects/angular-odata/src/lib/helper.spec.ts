@@ -87,7 +87,7 @@ describe('ODataHelper', () => {
     describe('nextLink/readLink/editLink/deltaLink/media*', () => {
       it('should decode the next link', () => {
         const annots = new Map([['@odata.nextLink', 'People?$skip=10%20%26%20more']]);
-        expect(helper.nextLink(annots)).toBe('People?$skip=10 & more');
+        expect(helper.nextLink(annots)).toBe('People?$skip=10%20%26%20more');
       });
 
       it('should return undefined for a missing next link', () => {
@@ -96,22 +96,22 @@ describe('ODataHelper', () => {
 
       it('should decode the read link', () => {
         const annots = new Map([['@odata.readLink', 'People(1)%20']]);
-        expect(helper.readLink(annots)).toBe('People(1) ');
+        expect(helper.readLink(annots)).toBe('People(1)%20');
       });
 
       it('should decode the edit link', () => {
         const annots = new Map([['@odata.editLink', 'People(1)%2F']]);
-        expect(helper.editLink(annots)).toBe('People(1)/');
+        expect(helper.editLink(annots)).toBe('People(1)%2F');
       });
 
       it('should decode the media read link', () => {
         const annots = new Map([['@odata.mediaReadLink', 'Photo%20']]);
-        expect(helper.mediaReadLink(annots)).toBe('Photo ');
+        expect(helper.mediaReadLink(annots)).toBe('Photo%20');
       });
 
       it('should decode the media edit link', () => {
         const annots = new Map([['@odata.mediaEditLink', 'Photo%2Fedit']]);
-        expect(helper.mediaEditLink(annots)).toBe('Photo/edit');
+        expect(helper.mediaEditLink(annots)).toBe('Photo%2Fedit');
       });
 
       it('should decode the delta link', () => {
@@ -121,7 +121,7 @@ describe('ODataHelper', () => {
 
       it('should decode the media content type', () => {
         const annots = new Map([['@odata.mediaContentType', 'image%2Fjpeg']]);
-        expect(helper.mediaContentType(annots)).toBe('image/jpeg');
+        expect(helper.mediaContentType(annots)).toBe('image%2Fjpeg');
       });
     });
 

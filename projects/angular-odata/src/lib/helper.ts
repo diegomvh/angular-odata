@@ -101,14 +101,10 @@ const ODataVersionBaseHelper = <any>{
     return type;
   },
   mediaEtag(annots: Map<string, any>) {
-    return annots.has(this.ODATA_MEDIA_ETAG)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_ETAG) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_ETAG);
   },
   metadataEtag(annots: Map<string, any>) {
-    return annots.has(this.ODATA_METADATA_ETAG)
-      ? decodeURIComponent(annots.get(this.ODATA_METADATA_ETAG) as string)
-      : undefined;
+    return annots.get(this.ODATA_METADATA_ETAG);
   },
   count(annots: Map<string, any>) {
     return annots.has(this.ODATA_COUNT) ? Number(annots.get(this.ODATA_COUNT)) : undefined;
@@ -140,39 +136,25 @@ const ODataVersionBaseHelper = <any>{
       .reduce((acc, e) => ({ ...acc, [e[0]]: e[1] }), {});
   },
   nextLink(annots: Map<string, any>) {
-    return annots.has(this.ODATA_NEXTLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_NEXTLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_NEXTLINK);
   },
   readLink(annots: Map<string, any>) {
-    return annots.has(this.ODATA_READLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_READLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_READLINK);
   },
   mediaReadLink(annots: Map<string, any>) {
-    return annots.has(this.ODATA_MEDIA_READLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_READLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_READLINK);
   },
   editLink(annots: Map<string, any>) {
-    return annots.has(this.ODATA_EDITLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_EDITLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_EDITLINK);
   },
   mediaEditLink(annots: Map<string, any>) {
-    return annots.has(this.ODATA_MEDIA_EDITLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_EDITLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_EDITLINK)
   },
   deltaLink(annots: Map<string, any>) {
-    return annots.has(this.ODATA_DELTALINK)
-      ? decodeURIComponent(annots.get(this.ODATA_DELTALINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_DELTALINK);
   },
   mediaContentType(annots: Map<string, any>) {
-    return annots.has(this.ODATA_MEDIA_CONTENTTYPE)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_CONTENTTYPE) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_CONTENTTYPE);
   },
 };
 
@@ -219,14 +201,6 @@ export const ODataHelper = {
     ODATA_MEDIA_READLINK: '@odata.mediaReadLink',
     //odata.mediaEditLink: the link used to edit/update the stream
     ODATA_MEDIA_EDITLINK: '@odata.mediaEditLink',
-    //http://nb-mdp-dev01:57970/$metadata#recursos/$entity
-    //http://nb-mdp-dev01:57970/$metadata#categorias
-    //http://nb-mdp-dev01:57970/$metadata#juzgados
-    //http://nb-mdp-dev01:57970/$metadata#Collection(SIU.Recursos.RecursoEntry)
-    //http://nb-mdp-dev01:57970/$metadata#categorias/$entity
-    //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
-    //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
-    //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
     context(annots: Map<string, any> | { [name: string]: any }) {
       let ctx: ODataContext = {};
       const str =

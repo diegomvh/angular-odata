@@ -78,31 +78,66 @@ export class ODataEntityAnnotations<T> extends ODataAnnotations<T> {
   }
 
   get mediaEtag() {
-    return this.helper.mediaEtag(this.annotations);
+    const mediaEtag = this.helper.mediaEtag(this.annotations);
+    try {
+      return mediaEtag && decodeURIComponent(mediaEtag);
+    } catch {
+      return mediaEtag;
+    }
   }
 
   get metadataEtag() {
-    return this.helper.metadataEtag(this.annotations);
+    const metadataEtag = this.helper.metadataEtag(this.annotations);
+    try {
+      return metadataEtag && decodeURIComponent(metadataEtag);
+    } catch {
+      return metadataEtag;
+    }
   }
 
   get readLink() {
-    return this.helper.readLink(this.annotations);
+    const readLink = this.helper.readLink(this.annotations);
+    try {
+      return readLink && decodeURIComponent(readLink);
+    } catch {
+      return readLink;
+    }
   }
 
   get editLink() {
-    return this.helper.editLink(this.annotations);
+    const editLink = this.helper.editLink(this.annotations);
+    try {
+      return editLink && decodeURIComponent(editLink);
+    } catch {
+      return editLink;
+    }
   }
 
   get mediaReadLink() {
-    return this.helper.mediaReadLink(this.annotations);
+    const mediaReadLink = this.helper.mediaReadLink(this.annotations);
+    try {
+      return mediaReadLink && decodeURIComponent(mediaReadLink);
+    } catch {
+      return mediaReadLink;
+    }
   }
 
   get mediaEditLink() {
-    return this.helper.mediaEditLink(this.annotations);
+    const mediaEditLink = this.helper.mediaEditLink(this.annotations);
+    try {
+      return mediaEditLink && decodeURIComponent(mediaEditLink);
+    } catch {
+      return mediaEditLink;
+    }
   }
 
   get mediaContentType() {
-    return this.helper.mediaContentType(this.annotations);
+    const mediaContentType = this.helper.mediaContentType(this.annotations);
+    try {
+      return mediaContentType && decodeURIComponent(mediaContentType);
+    } catch {
+      return mediaContentType;
+    }
   }
 
   private _properties?: Map<keyof T, Map<string, any>>;
@@ -156,7 +191,12 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
   }
 
   get readLink() {
-    return this.helper.readLink(this.annotations);
+    const readLink = this.helper.readLink(this.annotations);
+    try {
+      return readLink && decodeURIComponent(readLink);
+    } catch {
+      return readLink;
+    }
   }
 
   get count() {
@@ -164,32 +204,36 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
   }
 
   get nextLink() {
-    return this.helper.nextLink(this.annotations);
+    const nextLink = this.helper.nextLink(this.annotations);
+    try {
+      return nextLink && decodeURIComponent(nextLink);
+    } catch {
+      return nextLink;
+    }
   }
 
   get deltaLink() {
-    return this.helper.deltaLink(this.annotations);
+    const deltaLink = this.helper.deltaLink(this.annotations);
+    try {
+      return deltaLink && decodeURIComponent(deltaLink);
+    } catch {
+      return deltaLink;
+    }
   }
 
   get top() {
-    let match = (this.nextLink || '').match(/[&?]{1}\$top=(\d+)/);
+    let match = (this.nextLink ?? '').match(/[?&](?:\$)top=(\d+)/i);
     return match !== null ? Number(match[1]) : undefined;
   }
 
   get skip() {
-    let match = (this.nextLink || '').match(/[&?]{1}\$skip=(\d+)/);
+    let match = (this.nextLink ?? '').match(/[?&](?:\$)skip=(\d+)/i);
     return match !== null ? Number(match[1]) : undefined;
   }
 
-  /**
-   * The `$skiptoken` of the next link, as the server sent it.
-   *
-   * Read from the raw link, so separators inside the token (such as `,` between sort keys,
-   * or an encoded `&`) are kept. The value is decoded once; the next request encodes it again.
-   */
   get skiptoken() {
-    const link = this.annotations.get(this.helper.ODATA_NEXTLINK);
-    const match = typeof link === 'string' ? link.match(/[?&](?:\$|%24)skiptoken=([^&#]*)/i) : null;
+    const nextLink = this.helper.nextLink(this.annotations);
+    let match = (nextLink ?? '').match(/[?&](?:\$|%24)skiptoken=([^&#]*)/i);
     if (match === null) return undefined;
     try {
       return decodeURIComponent(match[1]);
