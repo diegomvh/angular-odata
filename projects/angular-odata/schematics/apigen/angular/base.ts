@@ -13,6 +13,7 @@ import { makeRelativePath, toTypescriptType } from '../utils';
 import { ODataMetadata } from '../../metadata/metadata';
 import { Package } from './package';
 import { Export } from './export';
+import { OPTIONARL_PARAMETER } from '../../metadata/parser/csdl/csdl-annotation';
 
 export class Callable {
   callables: CsdlCallable[] = [];
@@ -68,15 +69,13 @@ export class Callable {
     const names = parameters.map((p) => p.Name);
     const binding = parameters.find((p) => p.Name === BINDING_PARAMETER_NAME);
     const inAllCallables = names.filter(
-      (n) =>
-        n !== BINDING_PARAMETER_NAME &&
-        this.callables.every((c) => (c.Parameter ?? []).some((p) => p.Name === n)),
+      (n) => n !== BINDING_PARAMETER_NAME && this.callables.every((c) => (c.Parameter ?? []).some((p) => p.Name === n))
     );
     const required = parameters.filter(
-      (p) => p.Name !== BINDING_PARAMETER_NAME && inAllCallables.includes(p.Name),
+      (p) => p.Name !== BINDING_PARAMETER_NAME && inAllCallables.includes(p.Name) && !p.hasAnnotation(OPTIONARL_PARAMETER)
     );
     const optional = parameters.filter(
-      (p) => p.Name !== BINDING_PARAMETER_NAME && !inAllCallables.includes(p.Name),
+      (p) => p.Name !== BINDING_PARAMETER_NAME && (!inAllCallables.includes(p.Name) || p.hasAnnotation(OPTIONARL_PARAMETER))
     );
     return {
       binding,

@@ -2,9 +2,7 @@ import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import {
   CID_FIELD_NAME,
-  COMPUTED,
   DEFAULT_VERSION,
-  OPTIMISTIC_CONCURRENCY,
   EVENT_SPLITTER,
 } from '../constants';
 import { ODataHelper } from '../helper';

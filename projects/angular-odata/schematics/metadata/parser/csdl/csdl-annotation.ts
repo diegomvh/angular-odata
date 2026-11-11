@@ -1,5 +1,7 @@
 import type { CsdlSchema } from './csdl-schema';
 
+export const OPTIONARL_PARAMETER = /.*OptionalParameter$/;
+
 export class CsdlAnnotable {
   Annotation?: CsdlAnnotation[];
   constructor({ Annotation }: { Annotation?: any[] }) {
@@ -12,6 +14,14 @@ export class CsdlAnnotable {
       json['Annotation'] = this.Annotation.map((a) => a.toJson());
     }
     return json;
+  }
+
+  findAnnotation(predicate: (annot: CsdlAnnotation) => boolean) {
+    return this.Annotation?.find(predicate);
+  }
+
+  hasAnnotation(regexp: RegExp) {
+    return this.findAnnotation(a => regexp.test(a.Term)) !== undefined;
   }
 }
 
