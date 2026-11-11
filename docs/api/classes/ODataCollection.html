@@ -320,9 +320,6 @@
                                 <a href="#has" >has</a>
                             </li>
                             <li>
-                                <a href="#hasChanged" >hasChanged</a>
-                            </li>
-                            <li>
                                 <a href="#includes" >includes</a>
                             </li>
                             <li>
@@ -330,6 +327,9 @@
                             </li>
                             <li>
                                 <a href="#isEmpty" >isEmpty</a>
+                            </li>
+                            <li>
+                                <a href="#isModified" >isModified</a>
                             </li>
                             <li>
                                 <a href="#isParentOf" >isParentOf</a>
@@ -3433,76 +3433,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="hasChanged"></a>
-                    <span class="name">
-                        <span ><b>hasChanged</b></span>
-                        <a href="#hasChanged"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>hasChanged(undefined: literal type)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="323"
-                                    class="link-to-prism">projects/angular-odata/src/lib/models/collection.ts:323</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                                <td>Default value</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                        <code>literal type</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-                                            <td>
-                                                    <code>{}</code>
-                                            </td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="includes"></a>
                     <span class="name">
                         <span ><b>includes</b></span>
@@ -3684,6 +3614,76 @@
                             <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
 
                         </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isModified"></a>
+                    <span class="name">
+                        <span ><b>isModified</b></span>
+                        <a href="#isModified"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isModified(undefined: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="323"
+                                    class="link-to-prism">projects/angular-odata/src/lib/models/collection.ts:323</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -5278,7 +5278,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
   _model: typeof ODataModel;
 
   models() {
-    return this._entries.filter((e) &#x3D;&gt; e.state !&#x3D;&#x3D; ODataModelState.Removed).map((e) &#x3D;&gt; e.model);
+    return this._entries.filter((e) &#x3D;&gt; e.state !&#x3D;&#x3D; ODataModelState.Deleted).map((e) &#x3D;&gt; e.model);
   }
 
   get length(): number {
@@ -5526,7 +5526,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
   } &#x3D; {}): (Partial&lt;T&gt; | { [name: string]: any })[] {
     return this._entries
       .filter(
-        ({ model, state }) &#x3D;&gt; state !&#x3D;&#x3D; ODataModelState.Removed &amp;&amp; chain.every((c) &#x3D;&gt; c !&#x3D;&#x3D; model),
+        ({ model, state }) &#x3D;&gt; state !&#x3D;&#x3D; ODataModelState.Deleted &amp;&amp; chain.every((c) &#x3D;&gt; c !&#x3D;&#x3D; model),
       )
       .map(({ model, state }) &#x3D;&gt; {
         var changesOnly &#x3D; changes_only &amp;&amp; state !&#x3D;&#x3D; ODataModelState.Added;
@@ -5549,10 +5549,10 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
     return this.toEntities(INCLUDE_DEEP);
   }
 
-  hasChanged({ include_navigation }: { include_navigation?: boolean } &#x3D; {}) {
+  isModified({ include_navigation }: { include_navigation?: boolean } &#x3D; {}) {
     return (
       this._entries.some((e) &#x3D;&gt; e.state !&#x3D;&#x3D; ODataModelState.Unchanged) ||
-      this.models().some((m) &#x3D;&gt; m.hasChanged({ include_navigation }))
+      this.models().some((m) &#x3D;&gt; m.isModified({ include_navigation }))
     );
   }
 
@@ -5739,7 +5739,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
     const toUpdateContained: M[] &#x3D; [];
 
     this._entries.forEach(({ model, state }) &#x3D;&gt; {
-      if (state &#x3D;&#x3D;&#x3D; ODataModelState.Removed) {
+      if (state &#x3D;&#x3D;&#x3D; ODataModelState.Deleted) {
         if (relModel) {
           toDestroyEntity.push(model);
         } else if (!model.isNew()) {
@@ -5755,7 +5755,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
         } else {
           toCreateContained.push(model);
         }
-      } else if (model.hasChanged()) {
+      } else if (model.isModified()) {
         toUpdateEntity.push(model);
       }
     });
@@ -5787,7 +5787,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
     ]).pipe(defaultIfEmpty(null));
     return this._request(obs$, () &#x3D;&gt; {
       this._entries &#x3D; this._entries
-        .filter((entry) &#x3D;&gt; entry.state !&#x3D;&#x3D; ODataModelState.Removed)
+        .filter((entry) &#x3D;&gt; entry.state !&#x3D;&#x3D; ODataModelState.Deleted)
         .map((entry) &#x3D;&gt; ({ ...entry, state: ODataModelState.Unchanged }));
       return this.models();
     });
@@ -5837,14 +5837,14 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
     } &#x3D; {},
   ): M {
     let entry &#x3D; this._findEntry(model);
-    if (entry !&#x3D;&#x3D; undefined &amp;&amp; entry.state !&#x3D;&#x3D; ODataModelState.Removed) {
+    if (entry !&#x3D;&#x3D; undefined &amp;&amp; entry.state !&#x3D;&#x3D; ODataModelState.Deleted) {
       if (merge) {
         entry.model.assign(model.toEntity(INCLUDE_DEEP) as T);
       }
       return entry.model;
     }
 
-    if (entry !&#x3D;&#x3D; undefined &amp;&amp; entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Removed) {
+    if (entry !&#x3D;&#x3D; undefined &amp;&amp; entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Deleted) {
       const index &#x3D; this._entries.indexOf(entry);
       this._entries.splice(index, 1);
     }
@@ -5942,7 +5942,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
     { silent &#x3D; false, reset &#x3D; false }: { silent?: boolean; reset?: boolean } &#x3D; {},
   ): M {
     const entry &#x3D; this._findEntry(model);
-    if (entry &#x3D;&#x3D;&#x3D; undefined || entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Removed) {
+    if (entry &#x3D;&#x3D;&#x3D; undefined || entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Deleted) {
       return model;
     }
 
@@ -5951,7 +5951,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
     this._entries.splice(index, 1);
     if (!(reset || entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Added)) {
       // Move to end of array and mark as removed
-      entry.state &#x3D; ODataModelState.Removed;
+      entry.state &#x3D; ODataModelState.Deleted;
       this._entries.push(entry);
     }
 
@@ -5983,7 +5983,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
 
   private _moveModel(model: M, position: number): M {
     const entry &#x3D; this._findEntry(model);
-    if (entry &#x3D;&#x3D;&#x3D; undefined || entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Removed) {
+    if (entry &#x3D;&#x3D;&#x3D; undefined || entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Deleted) {
       return model;
     }
 
@@ -6057,7 +6057,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
         const model &#x3D; this.models()[index];
         if (ODataModelOptions.isModel(model)) {
           const entry &#x3D; this._findEntry(model) as ODataModelEntry&lt;T, M&gt;;
-          if (entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Unchanged &amp;&amp; entry.model.hasChanged()) {
+          if (entry.state &#x3D;&#x3D;&#x3D; ODataModelState.Unchanged &amp;&amp; entry.model.isModified()) {
             toChange &#x3D; [entry];
           }
           path &#x3D; pathArray.slice(1);
@@ -6065,9 +6065,9 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
       }
     } else {
       // Reset all
-      toAdd &#x3D; this._entries.filter((e) &#x3D;&gt; e.state &#x3D;&#x3D;&#x3D; ODataModelState.Removed);
+      toAdd &#x3D; this._entries.filter((e) &#x3D;&gt; e.state &#x3D;&#x3D;&#x3D; ODataModelState.Deleted);
       toChange &#x3D; this._entries.filter(
-        (e) &#x3D;&gt; e.state &#x3D;&#x3D;&#x3D; ODataModelState.Unchanged &amp;&amp; e.model.hasChanged(),
+        (e) &#x3D;&gt; e.state &#x3D;&#x3D;&#x3D; ODataModelState.Unchanged &amp;&amp; e.model.isModified(),
       );
       toRemove &#x3D; this._entries.filter((e) &#x3D;&gt; e.state &#x3D;&#x3D;&#x3D; ODataModelState.Added);
     }
@@ -6149,7 +6149,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt; implements 
               : (obj as { [name: string]: any });
           entry.model.assign(entity, { add, merge, remove, reset, silent });
           // Model Change?
-          if (entry.model.hasChanged()) toMerge.push(entry.model);
+          if (entry.model.isModified()) toMerge.push(entry.model);
         }
         if (reset) entry.state &#x3D; ODataModelState.Unchanged;
         if (!models.includes(entry.model)) {

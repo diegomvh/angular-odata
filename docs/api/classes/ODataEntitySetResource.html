@@ -1112,8 +1112,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="202"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:202</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="169"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:169</a></div>
                         </td>
                     </tr>
 
@@ -1179,8 +1179,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="209"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:209</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="176"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:176</a></div>
                         </td>
                     </tr>
 
@@ -1255,8 +1255,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="216"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:216</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="183"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:183</a></div>
                         </td>
                     </tr>
 
@@ -1322,8 +1322,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="193"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:193</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="160"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:160</a></div>
                         </td>
                     </tr>
 
@@ -1389,8 +1389,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="149"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:149</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="132"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:132</a></div>
                         </td>
                     </tr>
 
@@ -1468,8 +1468,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="177"
-                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:177</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:144</a></div>
                         </td>
                     </tr>
 
@@ -4072,8 +4072,7 @@ Create an object handler for mutate the path segments of the resource</p>
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
-import { EMPTY } from &#x27;rxjs&#x27;;
-import { expand, map, reduce } from &#x27;rxjs/operators&#x27;;
+import { map } from &#x27;rxjs/operators&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import type { ModelInterface, ODataCollection, ODataModel } from &#x27;../../models&#x27;;
 import { PathSegment, QueryOption, ODataStructuredTypeFieldConfig } from &#x27;../../types&#x27;;
@@ -4085,6 +4084,7 @@ import { ODataCountResource } from &#x27;./count&#x27;;
 import { ODataEntityResource } from &#x27;./entity&#x27;;
 import { ODataFunctionResource } from &#x27;./function&#x27;;
 import { ODataOptions } from &#x27;./options&#x27;;
+import { fetchPages } from &#x27;./paging&#x27;;
 import { ODataEntities, ODataEntity } from &#x27;../response&#x27;;
 
 export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
@@ -4199,24 +4199,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
     const res &#x3D; this.clone();
     // Clean Paging
     res.query((q) &#x3D;&gt; q.removePaging());
-    const fetch &#x3D; (opts?: {
-      skip?: number;
-      skiptoken?: string;
-      top?: number;
-    }): Observable&lt;ODataEntities&lt;any&gt;&gt; &#x3D;&gt; {
-      if (opts) {
-        res.query((q) &#x3D;&gt; q.paging(opts));
-      }
-      return res.fetch(options);
-    };
-    return fetch().pipe(
-      expand(({ annots }) &#x3D;&gt; (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
-      map(({ entities, annots }) &#x3D;&gt; ({ entities: entities ?? [], annots })),
-      reduce((acc, { entities, annots }) &#x3D;&gt; ({
-        entities: [...(acc.entities ?? []), ...(entities ?? [])],
-        annots: acc.annots.union(annots),
-      })),
-    );
+    return fetchPages(res, (r, opts) &#x3D;&gt; r.fetch(opts), options);
   }
 
   fetchMany(
@@ -4227,24 +4210,8 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
     },
   ) {
     const res &#x3D; this.clone();
-    const fetch &#x3D; (opts?: {
-      skip?: number;
-      skiptoken?: string;
-      top?: number;
-    }): Observable&lt;ODataEntities&lt;T&gt;&gt; &#x3D;&gt; {
-      if (opts) {
-        res.query((q) &#x3D;&gt; q.paging(opts));
-      }
-      return res.fetch(options);
-    };
-    return fetch({ top }).pipe(
-      expand(({ annots }) &#x3D;&gt; (annots.skip || annots.skiptoken ? fetch(annots) : EMPTY)),
-      map(({ entities, annots }) &#x3D;&gt; ({ entities: entities ?? [], annots })),
-      reduce((acc, { entities, annots }) &#x3D;&gt; ({
-        entities: [...(acc.entities ?? []), ...(entities ?? [])],
-        annots: acc.annots.union(annots),
-      })),
-    );
+    res.query((q) &#x3D;&gt; q.paging({ top }));
+    return fetchPages(res, (r, opts) &#x3D;&gt; r.fetch(opts), options);
   }
 
   fetchOne(

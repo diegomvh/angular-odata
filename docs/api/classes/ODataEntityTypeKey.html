@@ -426,17 +426,18 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
   }
 
   deserialize(value: any, options?: ParserOptions): T | T[] {
-    const parserOptions &#x3D; { ...this.parserOptions, ...options };
+    const fieldOptions &#x3D; { field: this, ...this.parserOptions, ...options } as StructuredTypeFieldOptions;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser &#x3D; this.parser as ODataStructuredTypeParser&lt;T&gt;;
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; this.parse(parser, v, parserOptions))
-        : this.parse(parser, value, parserOptions);
+      return (this.collection &amp;&amp; Array.isArray(value))
+        ? value.map((v) &#x3D;&gt; this.parse(parser, v, fieldOptions))
+        : this.parse(parser, value, fieldOptions);
     }
-    return this.parser.deserialize(value, {
-      field: this,
-      ...parserOptions,
-    } as StructuredTypeFieldOptions);
+    // Collection(EnumType | EdmType): parse each item of the JSON array
+    if (this.collection &amp;&amp; Array.isArray(value)) {
+      return value.map((v) &#x3D;&gt; this.parser.deserialize(v, fieldOptions)) as T[];
+    }
+    return this.parser.deserialize(value, fieldOptions);
   }
   //#endregion
 
@@ -453,27 +454,27 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; extends ODataAnnotatable im
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions &#x3D; { ...this.parserOptions, ...options };
+    const fieldOptions &#x3D; { field: this, ...this.parserOptions, ...options } as StructuredTypeFieldOptions;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser &#x3D; this.parser as ODataStructuredTypeParser&lt;T&gt;;
-      return Array.isArray(value)
-        ? (value as any[]).map((v) &#x3D;&gt; this.toJson(parser, v, parserOptions))
-        : this.toJson(parser, value, parserOptions);
+      return (this.collection &amp;&amp; Array.isArray(value))
+        ? (value as any[]).map((v) &#x3D;&gt; this.toJson(parser, v, fieldOptions))
+        : this.toJson(parser, value, fieldOptions);
     }
-    return this.parser.serialize(value, {
-      field: this,
-      ...parserOptions,
-    } as StructuredTypeFieldOptions);
+    if (this.collection &amp;&amp; Array.isArray(value)) {
+      return value.map((v) &#x3D;&gt; this.parser.serialize(v, fieldOptions));
+    }
+    return this.parser.serialize(value, fieldOptions);
   }
   //#endregion
 
   //#region Encode
   encode(value: T, options?: ParserOptions): string {
-    const parserOptions &#x3D; { ...this.parserOptions, ...options };
-    return this.parser.encode(value, {
-      field: this,
-      ...parserOptions,
-    } as StructuredTypeFieldOptions);
+    const fieldOptions &#x3D; { field: this, ...this.parserOptions, ...options } as StructuredTypeFieldOptions;
+    if (this.collection &amp;&amp; Array.isArray(value)) {
+      return value.map((v) &#x3D;&gt; this.parser.encode(v, fieldOptions)) as any;
+    }
+    return this.parser.encode(value, fieldOptions);
   }
   //#endregion
 

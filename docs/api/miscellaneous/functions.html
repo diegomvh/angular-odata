@@ -178,6 +178,9 @@
                             <a href="#escapeIllegalChars" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>escapeIllegalChars</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
+                            <a href="#fetchPages" title="projects/angular-odata/src/lib/resources/types/paging.ts" ><b>fetchPages</b>&nbsp;&nbsp;&nbsp;(projects/.../paging.ts)</a>
+                        </li>
+                        <li>
                             <a href="#forEach" title="projects/angular-odata/src/lib/utils/objects.ts" ><b>forEach</b>&nbsp;&nbsp;&nbsp;(projects/.../objects.ts)</a>
                         </li>
                         <li>
@@ -215,6 +218,9 @@
                         </li>
                         <li>
                             <a href="#Unnamed function" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>Unnamed function</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#walkPages" title="projects/angular-odata/src/lib/resources/types/paging.ts" ><b>walkPages</b>&nbsp;&nbsp;&nbsp;(projects/.../paging.ts)</a>
                         </li>
                     </ul>
                 </td>
@@ -2419,6 +2425,204 @@
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>EnvironmentProviders</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/resources/types/paging.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchPages"></a>
+                    <span class="name">
+                        <span ><b>fetchPages</b></span>
+                        <a href="#fetchPages"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fetchPages(resource: R, fetch, options: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Follow the next links of a paged collection and aggregate every page in one result.</p>
+<p>Every page gets its own clone of the resource, so concurrent pages never share state.
+With <code>cache-and-network</code> (and a cache configured) the pages are walked twice:
+first from the cache (emitted only when every page is cached), then from the network.
+Every other fetch policy is applied page by page and emits one aggregated result.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>resource</td>
+                                            <td>
+                                                        <code>R</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>The resource for the first page, with its paging already set</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>fetch</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>Fetch one page of the given resource with the given options</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ODataOptions" target="_self" >ODataOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Options for the requests</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataPagedEntities&lt;T&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The aggregated entities and annotations</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walkPages"></a>
+                    <span class="name">
+                        <span ><b>walkPages</b></span>
+                        <a href="#walkPages"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>walkPages(resource: R, fetch, options: <a href="../undefineds/ODataOptions.html" target="_self">ODataOptions</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>resource</td>
+                                            <td>
+                                                        <code>R</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>fetch</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ODataOptions" target="_self" >ODataOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataPagedEntities&lt;T&gt;&gt;</a></code>
 
                         </div>
                             <div class="io-description">

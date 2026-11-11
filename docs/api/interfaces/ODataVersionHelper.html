@@ -2357,14 +2357,10 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
     return type;
   },
   mediaEtag(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_MEDIA_ETAG)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_ETAG) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_ETAG);
   },
   metadataEtag(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_METADATA_ETAG)
-      ? decodeURIComponent(annots.get(this.ODATA_METADATA_ETAG) as string)
-      : undefined;
+    return annots.get(this.ODATA_METADATA_ETAG);
   },
   count(annots: Map&lt;string, any&gt;) {
     return annots.has(this.ODATA_COUNT) ? Number(annots.get(this.ODATA_COUNT)) : undefined;
@@ -2396,39 +2392,25 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
       .reduce((acc, e) &#x3D;&gt; ({ ...acc, [e[0]]: e[1] }), {});
   },
   nextLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_NEXTLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_NEXTLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_NEXTLINK);
   },
   readLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_READLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_READLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_READLINK);
   },
   mediaReadLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_MEDIA_READLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_READLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_READLINK);
   },
   editLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_EDITLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_EDITLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_EDITLINK);
   },
   mediaEditLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_MEDIA_EDITLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_EDITLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_EDITLINK)
   },
   deltaLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_DELTALINK)
-      ? decodeURIComponent(annots.get(this.ODATA_DELTALINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_DELTALINK);
   },
   mediaContentType(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_MEDIA_CONTENTTYPE)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_CONTENTTYPE) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_CONTENTTYPE);
   },
 };
 
@@ -2475,14 +2457,6 @@ export const ODataHelper &#x3D; {
     ODATA_MEDIA_READLINK: &#x27;@odata.mediaReadLink&#x27;,
     //odata.mediaEditLink: the link used to edit/update the stream
     ODATA_MEDIA_EDITLINK: &#x27;@odata.mediaEditLink&#x27;,
-    //http://nb-mdp-dev01:57970/$metadata#recursos/$entity
-    //http://nb-mdp-dev01:57970/$metadata#categorias
-    //http://nb-mdp-dev01:57970/$metadata#juzgados
-    //http://nb-mdp-dev01:57970/$metadata#Collection(SIU.Recursos.RecursoEntry)
-    //http://nb-mdp-dev01:57970/$metadata#categorias/$entity
-    //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
-    //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
-    //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
     context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       const str &#x3D;

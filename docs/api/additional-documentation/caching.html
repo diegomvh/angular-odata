@@ -267,6 +267,16 @@ explicit per-request <code>false</code> overrides a global <code>true</code>. Wi
 from the request&#39;s <code>maxAge</code> or the cache default. Fetch policies and <code>Vary</code> restrictions
 still apply. Only enable this when your application can safely disregard the server&#39;s
 caching requirements.</p>
+<h3>Paged fetches</h3>
+<p><code>fetchAll</code> and <code>fetchMany</code> follow the server&#39;s next links and emit all pages as one
+result. With <code>cache-and-network</code> they walk the pages twice:</p>
+<ol>
+<li>From the cache. The aggregated result is emitted only when every page is cached. A missing
+page ends this pass silently; it does not reach the <code>errorHandler</code>.</li>
+<li>From the server. Every page is requested once, stored, and the aggregated result is emitted.</li>
+</ol>
+<p>So the observable emits once (cold or partial cache) or twice (warm cache), never with
+duplicated entities. The other policies apply to each page and emit one result.</p>
 <h3>Response identity and isolation</h3>
 <p>Response keys include the API partition, resource path and query, transport response
 type, credentials mode, <code>ignoreCacheControl</code>, and the <code>Accept</code>, <code>Accept-Language</code>, and

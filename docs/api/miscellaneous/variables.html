@@ -490,6 +490,9 @@
                             <a href="#RETRY_AFTER_HEADERS" title="projects/angular-odata/src/lib/constants.ts" ><b>RETRY_AFTER_HEADERS</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#SILENT_CACHE_MISS" title="projects/angular-odata/src/lib/resources/types/paging.ts" ><b>SILENT_CACHE_MISS</b>&nbsp;&nbsp;&nbsp;(projects/.../paging.ts)</a>
+                        </li>
+                        <li>
                             <a href="#StandardAggregateMethods" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>StandardAggregateMethods</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -3364,14 +3367,6 @@
     ODATA_MEDIA_READLINK: &#x27;@odata.mediaReadLink&#x27;,
     //odata.mediaEditLink: the link used to edit/update the stream
     ODATA_MEDIA_EDITLINK: &#x27;@odata.mediaEditLink&#x27;,
-    //http://nb-mdp-dev01:57970/$metadata#recursos/$entity
-    //http://nb-mdp-dev01:57970/$metadata#categorias
-    //http://nb-mdp-dev01:57970/$metadata#juzgados
-    //http://nb-mdp-dev01:57970/$metadata#Collection(SIU.Recursos.RecursoEntry)
-    //http://nb-mdp-dev01:57970/$metadata#categorias/$entity
-    //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
-    //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
-    //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
     context(annots: Map&lt;string, any&gt; | { [name: string]: any }) {
       let ctx: ODataContext &#x3D; {};
       const str &#x3D;
@@ -3549,14 +3544,10 @@
     return type;
   },
   mediaEtag(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_MEDIA_ETAG)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_ETAG) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_ETAG);
   },
   metadataEtag(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_METADATA_ETAG)
-      ? decodeURIComponent(annots.get(this.ODATA_METADATA_ETAG) as string)
-      : undefined;
+    return annots.get(this.ODATA_METADATA_ETAG);
   },
   count(annots: Map&lt;string, any&gt;) {
     return annots.has(this.ODATA_COUNT) ? Number(annots.get(this.ODATA_COUNT)) : undefined;
@@ -3588,39 +3579,25 @@
       .reduce((acc, e) &#x3D;&gt; ({ ...acc, [e[0]]: e[1] }), {});
   },
   nextLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_NEXTLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_NEXTLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_NEXTLINK);
   },
   readLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_READLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_READLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_READLINK);
   },
   mediaReadLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_MEDIA_READLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_READLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_READLINK);
   },
   editLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_EDITLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_EDITLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_EDITLINK);
   },
   mediaEditLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_MEDIA_EDITLINK)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_EDITLINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_EDITLINK)
   },
   deltaLink(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_DELTALINK)
-      ? decodeURIComponent(annots.get(this.ODATA_DELTALINK) as string)
-      : undefined;
+    return annots.get(this.ODATA_DELTALINK);
   },
   mediaContentType(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_MEDIA_CONTENTTYPE)
-      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_CONTENTTYPE) as string)
-      : undefined;
+    return annots.get(this.ODATA_MEDIA_CONTENTTYPE);
   },
 }</code>
                     </td>
@@ -5426,6 +5403,43 @@
                     </td>
                 </tr>
 
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/angular-odata/src/lib/resources/types/paging.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SILENT_CACHE_MISS"></a>
+                    <span class="name">
+                        <span ><b>SILENT_CACHE_MISS</b></span>
+                        <a href="#SILENT_CACHE_MISS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/functions.html#now" target="_self" >unknown</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Symbol(&#x27;angular-odata:silentCacheMiss&#x27;)</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Internal request option. When set, a cache miss of a <code>cache-only</code> request
+skips the api <code>errorHandler</code> and is passed straight to the caller.
+Not part of the public API.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
