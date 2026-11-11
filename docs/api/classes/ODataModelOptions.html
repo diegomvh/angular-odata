@@ -4477,7 +4477,7 @@ export class ODataModelAttribute&lt;T&gt; {
   }
 
   get(): T | ODataModel&lt;T&gt; | ODataCollection&lt;T, ODataModel&lt;T&gt;&gt; | null | undefined {
-    return this.state &#x3D;&#x3D;&#x3D; ODataModelState.Modified ? this.change : this.value;
+    return this.state &#x3D;&#x3D;&#x3D; ODataModelState.Unchanged ? this.value : this.change;
   }
 
   set(
