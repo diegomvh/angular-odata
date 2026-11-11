@@ -30,7 +30,41 @@ export class ODataInStorageCache extends ODataBaseCache {
   ) {
     const entry = this.buildEntry<T>(payload, { maxAge, tags });
     const key = this.buildKey([...(scope ?? []), name]);
-    this.storage.setItem(key, JSON.stringify(entry));
+    try {
+      this.storage.setItem(key, JSON.stringify(entry));
+    } catch (e) {
+        if (e instanceof Error && e.name === 'QuotaExceededError') {
+          let some = false;
+          let oldest: number | undefined = undefined;
+          let newer: number | undefined = undefined;
+          Object.keys(this.storage)
+            .filter(k => k.startsWith(this.prefix))
+            .forEach(k => {
+              const entry = JSON.parse(this.storage.getItem(k) ?? "{}") as ODataCacheEntry<any>;
+              if (oldest === undefined || oldest > entry.date) oldest = entry.date;
+              if (newer === undefined || newer < entry.date) newer = entry.date;
+              if (this.isExpired(entry)) {
+                some = true;
+                this.storage.removeItem(k);
+              }
+          });
+          if (!some) {
+            const middle = (newer! + oldest!) / 2;
+            Object.keys(this.storage)
+              .filter(k => k.startsWith(this.prefix))
+              .forEach(k => {
+                const entry = JSON.parse(this.storage.getItem(k) ?? "{}") as ODataCacheEntry<any>;
+                if (entry.date < middle) {
+                  some = true;
+                  this.storage.removeItem(k);
+                }
+              });
+            if (!some) {
+              this.flush();
+            }
+          }
+      }
+    }
   }
 
   override get<T>(name: string, { scope }: { scope?: string[] } = {}): T | undefined {

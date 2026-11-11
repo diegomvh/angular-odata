@@ -1,5 +1,5 @@
 import { forkJoin, NEVER, Observable, throwError } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize, map, startWith } from 'rxjs/operators';
 import {
   EntityKey,
   ODataActionOptions,
@@ -26,6 +26,7 @@ import {
   ODataModelEventType,
   ODataModelEventEmitter,
   ModelInterface,
+  ODataModelState,
 } from './options';
 import type { EdmType, ParserOptions } from '../types';
 import type { ODataEntityAnnotations } from '../annotations';
@@ -48,6 +49,7 @@ export class ODataModel<T> {
   }[] = [];
   _attributes: Map<string, ODataModelAttribute<any>> = new Map<string, ODataModelAttribute<any>>();
   _annotations!: ODataEntityAnnotations<T>;
+  _state: ODataModelState = ODataModelState.Detached;
   _meta: ODataModelOptions<T>;
   // Events
   events$: ODataModelEventEmitter<T>;
@@ -426,10 +428,16 @@ export class ODataModel<T> {
         ...options,
       });
     }
+
     return this._request(obs$, ({ entity, annots }) => {
       this._annotations = annots;
       return this.assign(entity ?? {}, { reset: true });
     });
+
+    /*
+    return options.fetchPolicy?.startsWith('cache') && 
+      this._state !== ODataModelState.Deleted ? resp$.pipe(startWith(this)) : resp$;
+    */
   }
 
   save({
@@ -546,8 +554,8 @@ export class ODataModel<T> {
    * @param include_navigation Check in navigation properties
    * @returns true if the model has changed, false otherwise
    */
-  hasChanged({ include_navigation = false }: { include_navigation?: boolean } = {}) {
-    return this._meta.hasChanged(this, { include_navigation });
+  isModified({ include_navigation = false }: { include_navigation?: boolean } = {}) {
+    return this._meta.isModified(this, { include_navigation });
   }
 
   encode<E>(name: keyof T, options?: ParserOptions) {
@@ -558,7 +566,7 @@ export class ODataModel<T> {
   }
 
   isNew() {
-    return !this._meta.hasKey(this);
+    return !this._meta.isNew(this);
   }
 
   withResource<R>(resource: any, ctx: (model: this) => R): R {
