@@ -177,6 +177,6 @@ export class ODataEnumTypeParser<E> extends ODataAnnotatable implements FieldPar
   }
 
   pack(value: string | number | number[]): number {
-    return this.fields(value).reduce((acc, v) => acc | v.value, 0) as any;
+    return this.fields(value).reduce((acc, v) => acc | v.value, 0) as number;
   }
 }

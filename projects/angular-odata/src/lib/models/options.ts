@@ -1197,7 +1197,7 @@ export class ODataModelOptions<T> {
       include_parents: true,
       include_navigation: navigation,
     }).reduce((acc, field) => {
-      const value = (self as any)[field.name];
+      const value = this.get(self, field.name);
       const errs = field.validate(value, { method });
       return errs !== undefined ? Object.assign(acc, { [field.name]: errs }) : acc;
     }, {});

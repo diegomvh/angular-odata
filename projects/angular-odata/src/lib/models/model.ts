@@ -796,7 +796,7 @@ export class ODataModel<T> {
     const field = this._meta.findField<P>(name);
     if (!field) throw Error(`getAttribute: Can't find attribute ${name as string}`);
 
-    let model = (this as any)[name] as P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null;
+    let model = this._meta.get(this, field) as P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null;
     if (field.isStructuredType() && model === undefined) {
       if (field.collection) {
         model = field.collectionFactory({ parent: this });
@@ -804,7 +804,7 @@ export class ODataModel<T> {
         const ref = field.navigation ? (this.referenced(field) as P) : undefined;
         model = ref === null ? null : field.modelFactory({ parent: this, value: ref });
       }
-      (this as any)[name] = model;
+      this._meta.set(this, field, model, {reset: true});
     }
     return model;
   }

@@ -45,6 +45,6 @@ export class ODataAnnotatable {
     return (annot.string ||
       annot.bool ||
       annot.int ||
-      annot.values) as any;
+      annot.values) as T | undefined;
   }
 }

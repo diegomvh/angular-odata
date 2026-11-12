@@ -51,7 +51,7 @@ function setup(
     cache: new ODataInMemoryCache(),
     errorHandler,
     options: { ...config['options'], fetchPolicy },
-  } as any);
+  });
   api.configure();
   api.requester = (req: ODataRequest<any>) => {
     requests.push(req.pathWithParams);
